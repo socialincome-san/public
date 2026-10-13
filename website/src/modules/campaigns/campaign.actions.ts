@@ -209,7 +209,10 @@ export const submitCampaignAction = async (
 			email: formData.get('email'),
 		});
 		if (personalParsed.success) {
-			const accountResult = await getOrCreateContributorFromEmailAndName(personalParsed.data);
+			const accountResult = await getOrCreateContributorFromEmailAndName(
+				{ actor: { type: 'system', id: 'campaign-submission' }, source: 'system' },
+				personalParsed.data,
+			);
 			if (!accountResult.success) {
 				console.error(accountResult.error);
 			}

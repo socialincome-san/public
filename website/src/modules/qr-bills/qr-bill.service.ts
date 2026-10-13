@@ -1,5 +1,6 @@
 import { ContributionStatus, CountryCode, Currency, PaymentEventType } from '@/generated/prisma/enums';
 import { buildQrBillDisplayData, generateQrBillPdf, generateQrBillSvg } from '@/integrations/qr-bills/qr-bill.integration';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { nowMs } from '@/lib/utils/now';
 import { getCampaignById, getFallbackCampaign } from '@/modules/campaigns/campaign.service';
@@ -49,6 +50,9 @@ const DONATION_MONTHLY_INCOME_MIN = 50;
 const DONATION_MONTHLY_INCOME_MAX = 1_000_000;
 const DONATION_AMOUNT_MIN = 1;
 const DONATION_AMOUNT_MAX = 1_000_000;
+
+// The QR bill wizard and its follow-up pages write without a session.
+const qrBillAudit: AuditContext = { actor: { type: 'system', id: 'qr-bill' }, source: 'system' };
 
 export const createWizardQrBill = async (
 	input: CreateWizardQrBillInput,
@@ -194,7 +198,7 @@ export const updateContributorAfterQrPayment = async (
 
 	const { contributor, email } = contributorResult.data;
 
-	return updateContributorSelf(contributor.id, {
+	return updateContributorSelf(qrBillAudit, contributor.id, {
 		...(user.personal.referral !== undefined ? { referral: user.personal.referral } : {}),
 		needsOnboarding: false,
 		contact: {
@@ -221,7 +225,7 @@ export const updateReferralAfterQrPayment = async (
 
 	const { contributor, email } = contributorResult.data;
 
-	return updateContributorSelf(contributor.id, {
+	return updateContributorSelf(qrBillAudit, contributor.id, {
 		referral,
 		contact: { email },
 	});
@@ -262,7 +266,7 @@ const getOrCreateQrReferences = async (
 		return resultFail(referenceResult.error);
 	}
 
-	const contributorResult = await getOrCreateContributorByReferenceId({
+	const contributorResult = await getOrCreateContributorByReferenceId(qrBillAudit, {
 		...contributorData,
 		paymentReferenceId: referenceResult.data,
 	});
@@ -316,7 +320,7 @@ const resolveContributorReferenceId = async (email: string, ownerContributorId?:
 		return getOrCreateReferenceIdByEmail(email);
 	}
 
-	const ownedResult = await getOwnedPaymentReferenceId(ownerContributorId, email);
+	const ownedResult = await getOwnedPaymentReferenceId(qrBillAudit, ownerContributorId, email);
 	if (!ownedResult.success) {
 		return resultFail(ownedResult.error);
 	}
@@ -342,7 +346,7 @@ const createPendingContribution = async (
 			return resultFail(verifiedContributor.error);
 		}
 
-		const contributorResult = await getOrCreateContributorByReferenceId(userData);
+		const contributorResult = await getOrCreateContributorByReferenceId(qrBillAudit, userData);
 		if (!contributorResult.success) {
 			return resultFail('Could not get or create contributor');
 		}

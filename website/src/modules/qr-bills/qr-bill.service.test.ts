@@ -225,7 +225,11 @@ describe('QR bill service', () => {
 		}
 		expect(result.data.contributorReferenceId).toBe('1735689600000');
 		expect(mockGetOrCreateReferenceIdByEmail).not.toHaveBeenCalled();
-		expect(mockGetOwnedPaymentReferenceId).toHaveBeenCalledWith('contributor-new', 'donor@example.com');
+		expect(mockGetOwnedPaymentReferenceId).toHaveBeenCalledWith(
+			{ actor: { type: 'system', id: 'qr-bill' }, source: 'system' },
+			'contributor-new',
+			'donor@example.com',
+		);
 	});
 
 	test('does not return an existing donor payment reference from the wizard', async () => {

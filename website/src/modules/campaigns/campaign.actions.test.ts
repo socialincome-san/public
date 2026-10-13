@@ -156,11 +156,10 @@ describe('submitCampaignAction', () => {
 		const result = await submitCampaignAction(formData);
 
 		expect(result).toEqual({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
-		expect(mockGetOrCreateFromEmailAndName).toHaveBeenCalledWith({
-			email: 'ada@example.com',
-			firstName: 'Ada',
-			lastName: 'Lovelace',
-		});
+		expect(mockGetOrCreateFromEmailAndName).toHaveBeenCalledWith(
+			{ actor: { type: 'system', id: 'campaign-submission' }, source: 'system' },
+			{ email: 'ada@example.com', firstName: 'Ada', lastName: 'Lovelace' },
+		);
 	});
 
 	test('still succeeds when guest account creation fails after submission', async () => {

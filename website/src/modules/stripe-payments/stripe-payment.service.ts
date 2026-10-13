@@ -35,6 +35,7 @@ import {
 	type StripeApiEvent,
 	type StripeApiSubscription,
 } from '@/integrations/stripe/stripe.integration';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { isValidCurrency } from '@/lib/types/currency';
@@ -97,6 +98,10 @@ const STRIPE_CHECKOUT_SESSION_ID_PARAM = 'donation_checkout_session_id';
 const CHECKOUT_SESSION_ID_PLACEHOLDER = '{CHECKOUT_SESSION_ID}';
 const DONATION_MONTHLY_INCOME_MIN = 50;
 const DONATION_MONTHLY_INCOME_MAX = 1_000_000;
+// Checkout pages and webhooks write without a session.
+const stripeCheckoutAudit: AuditContext = { actor: { type: 'system', id: 'stripe-checkout' }, source: 'system' };
+const stripeWebhookAudit: AuditContext = { actor: { type: 'system', id: 'stripe-webhook' }, source: 'system' };
+
 const DONATION_CUSTOM_AMOUNT_MIN = 1;
 const DONATION_CUSTOM_AMOUNT_MAX = 1_000_000;
 
@@ -138,6 +143,7 @@ export const createPortalProgramDonationCheckout = async (
 
 			stripeCustomerId = createCustomerResult.data;
 			const createdContributorResult = await getOrCreateContributorForAccount(
+				{ actor: { type: 'user', id: userId, name }, source: 'portal' },
 				user.accountId,
 				stripeCustomerId,
 				user.contactId,
@@ -342,7 +348,7 @@ export const updateContributorAfterCheckout = async (
 
 		let contributor = existingResult.data;
 		if (!contributor) {
-			const createResult = await getOrCreateContributorWithFirebaseAuth({
+			const createResult = await getOrCreateContributorWithFirebaseAuth(stripeCheckoutAudit, {
 				stripeCustomerId: stripeCustomerResult.data.id,
 				email: contributorEmail,
 				firstName: user.personal.name,
@@ -356,7 +362,7 @@ export const updateContributorAfterCheckout = async (
 			contributor = createResult.data.contributor;
 		}
 
-		return updateContributorSelf(contributor.id, {
+		return updateContributorSelf(stripeCheckoutAudit, contributor.id, {
 			...(user.personal.referral !== undefined ? { referral: user.personal.referral } : {}),
 			needsOnboarding: false,
 			contact: {
@@ -412,7 +418,7 @@ export const updateContributorReferralAfterCheckout = async (
 			return resultFail('Contributor email is required');
 		}
 
-		return updateContributorSelf(contributor.id, {
+		return updateContributorSelf(stripeCheckoutAudit, contributor.id, {
 			referral: input.referral,
 			contact: {
 				email: contributorEmail,
@@ -920,7 +926,12 @@ const resolveContributorForCharge = async (
 			return resultFail(contactIdResult.error);
 		}
 		if (contactIdResult.data) {
-			const portalResult = await getOrCreateContributorForAccount(accountId, stripeCustomer.id, contactIdResult.data);
+			const portalResult = await getOrCreateContributorForAccount(
+				stripeWebhookAudit,
+				accountId,
+				stripeCustomer.id,
+				contactIdResult.data,
+			);
 			if (!portalResult.success) {
 				console.error(portalResult.error);
 
@@ -943,7 +954,7 @@ const resolveContributorForCharge = async (
 			lastName,
 			referral: ContributorReferralSource.other,
 		};
-		const contributorResult = await getOrCreateContributorWithFirebaseAuth(contributorData);
+		const contributorResult = await getOrCreateContributorWithFirebaseAuth(stripeWebhookAudit, contributorData);
 		if (!contributorResult.success) {
 			console.error(contributorResult.error);
 
