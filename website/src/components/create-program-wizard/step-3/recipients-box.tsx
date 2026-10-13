@@ -5,12 +5,13 @@ import { QuantitySelector } from '@socialincome/design-system/forms/quantity-sel
 import { useTranslations } from 'next-intl';
 
 type Props = {
+	title: string;
 	amountOfRecipients: number;
 	filteredRecipients: number;
 	onChange: (value: number) => void;
 };
 
-export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange }: Props) => {
+export const RecipientsBox = ({ title, amountOfRecipients, filteredRecipients, onChange }: Props) => {
 	const t = useTranslations('create-program-wizard');
 	const noCandidates = filteredRecipients === 0;
 
@@ -18,7 +19,7 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 		<div className="flex h-full flex-col overflow-hidden rounded-xl border">
 			<div className="p-8">
 				<QuantitySelector
-					label={t('step3.recipients.title')}
+					label={title}
 					value={noCandidates ? 0 : amountOfRecipients}
 					min={1}
 					max={filteredRecipients}

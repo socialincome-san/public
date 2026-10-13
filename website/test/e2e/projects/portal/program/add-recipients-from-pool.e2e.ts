@@ -20,13 +20,12 @@ test('assigns recipients from the program pool', async ({ page }) => {
 	await expect(page.getByText('2 of 7 candidates match the current filters')).toBeVisible();
 	await page.getByRole('button', { name: 'Continue' }).click();
 
-	const terms = page.getByTestId('pool-terms');
-	await expect(page.getByTestId('pool-program-duration')).toHaveText('12 months');
-	await expect(page.getByTestId('pool-payout-amount')).toHaveText('600');
-	await expect(page.getByTestId('pool-payout-currency')).toHaveText('SLE');
-	await expect(page.getByTestId('pool-payout-interval')).toHaveText('Monthly');
-	await expect(terms.locator('input, select, textarea')).toHaveCount(0);
-	await expect(page.getByTestId('pool-additional-cost')).toHaveText(/7.?200/);
+	const payoutAmount = page.getByTestId('payout-per-interval-amount');
+	await expect(payoutAmount).toContainText('SLE 600');
+	await expect(payoutAmount).toContainText('CHF');
+	await expect(page.getByText('12 months')).toBeVisible();
+	await expect(page.getByTestId('customize-payouts-switch')).toHaveCount(0);
+	await expect(page.getByTestId('total-budget')).not.toHaveText('0');
 
 	await page.getByRole('button', { name: 'Add 1 recipient' }).click();
 	await expect(page.getByText('Added 1 recipient to this program.')).toBeVisible();

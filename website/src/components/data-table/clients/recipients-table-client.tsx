@@ -10,11 +10,11 @@ import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import type { Session } from '@/modules/auth/auth.types';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/modules/recipients/recipient.actions';
 import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
-import { SuccessBanner } from '@socialincome/design-system/feedback/success-banner/success-banner';
 import { DownloadIcon, PlusIcon, UploadIcon, UsersIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
@@ -63,7 +63,6 @@ export const RecipientsTableClient = ({
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
 	const [isPoolDialogOpen, setIsPoolDialogOpen] = useState(false);
 	const [poolDialogKey, setPoolDialogKey] = useState(0);
-	const [poolSuccessCount, setPoolSuccessCount] = useState<number | null>(null);
 
 	const openCreateRecipientDialog = () => {
 		setRecipientError(null);
@@ -125,7 +124,6 @@ export const RecipientsTableClient = ({
 									label: 'Add recipients from pool',
 									icon: <UsersIcon />,
 									onSelect: () => {
-										setPoolSuccessCount(null);
 										setPoolDialogKey((key) => key + 1);
 										setIsPoolDialogOpen(true);
 									},
@@ -144,7 +142,6 @@ export const RecipientsTableClient = ({
 
 	return (
 		<>
-			{poolSuccessCount !== null && <SuccessBanner title={tPool('success', { count: poolSuccessCount })} />}
 			<ConfiguredDataTableClient
 				config={tableConfig}
 				titleInfoTooltip="Shows recipients in programs you can access."
@@ -184,7 +181,7 @@ export const RecipientsTableClient = ({
 					onOpenChange={setIsPoolDialogOpen}
 					onAssigned={(assignedCount) => {
 						setIsPoolDialogOpen(false);
-						setPoolSuccessCount(assignedCount);
+						toast.success(tPool('success', { count: assignedCount }));
 						router.refresh();
 					}}
 				/>

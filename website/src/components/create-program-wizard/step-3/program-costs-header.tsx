@@ -13,6 +13,7 @@ import { InfoTooltip } from '@socialincome/design-system/overlays/info-tooltip/i
 import { useTranslations } from 'next-intl';
 
 type Props = {
+	title: string;
 	totalBudget: number;
 	monthlyCost: number;
 	currency: string;
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export const ProgramCostsHeader = ({
+	title,
 	totalBudget,
 	monthlyCost,
 	currency,
@@ -37,7 +39,7 @@ export const ProgramCostsHeader = ({
 		<div className="text-foreground flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 			<div className="min-w-0 space-y-1">
 				<div className="flex items-center gap-2">
-					<p className="text-sm font-medium">{t('step3.total_costs.title')}</p>
+					<p className="text-sm font-medium">{title}</p>
 					<InfoTooltip label={t('step3.total_costs.aria')}>{totalBudgetTooltipText}</InfoTooltip>
 				</div>
 

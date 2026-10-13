@@ -8,24 +8,15 @@ import {
 } from '@/components/add-recipients-from-pool/add-recipients-from-pool-state';
 import { activeCandidateFilters, canContinueCandidateSelection } from '@/components/candidate-selection/candidate-filters';
 import { CandidateSelectionSection } from '@/components/candidate-selection/candidate-selection-section';
+import { BudgetStep } from '@/components/create-program-wizard/step-3/budget-step';
 import { Currency, Profile } from '@/generated/prisma/enums';
-import { websiteCurrencies } from '@/lib/i18n/utils';
 import {
 	assignProgramRecipientsFromPoolAction,
 	getProgramRecipientPoolSetupAction,
 	previewProgramRecipientPoolAction,
 } from '@/modules/programs/program.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
-import { TermList } from '@socialincome/design-system/data-display/term-list/term-list';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { QuantitySelector } from '@socialincome/design-system/forms/quantity-selector/quantity-selector';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@socialincome/design-system/forms/select/select';
 import { StepIndicator } from '@socialincome/design-system/navigation/step-indicator/step-indicator';
 import { WizardFooter } from '@socialincome/design-system/navigation/wizard-footer/wizard-footer';
 import {
@@ -134,7 +125,7 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 	}, [open, state.isCounting, programId, setup, approach, focusIds, profiles, localPartnerIds]);
 
 	useEffect(() => {
-		if (!state.isCalculatingBudget || displayCurrency === null || quantity < 1 || setup === null) {
+		if (!state.isCalculatingBudget || quantity < 1 || setup === null) {
 			return;
 		}
 
@@ -203,10 +194,6 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 			});
 	};
 
-	const displayCurrencies = setup
-		? [setup.payoutCurrency, ...websiteCurrencies.filter((currency) => currency !== setup.payoutCurrency)]
-		: [];
-
 	return (
 		<Dialog
 			open={open}
@@ -217,7 +204,7 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 			}}
 		>
 			<DialogContent
-				size="lg"
+				size="full"
 				closeOnClickOutside={!saving}
 				closeOnEscape={!saving}
 				hideCloseButton={saving}
@@ -326,109 +313,36 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 										onToggleLocalPartner={(localPartnerId) => dispatch({ type: 'toggleLocalPartner', localPartnerId })}
 									/>
 								) : (
-									<div className="space-y-8">
-										<QuantitySelector
-											label={t('quantity.title')}
-											value={state.quantity}
-											min={1}
-											max={state.matchingCount}
-											disabled={saving}
-											onChange={(quantity) => dispatch({ type: 'setQuantity', quantity })}
-											atMaxHint={t('quantity.max_hint')}
-											emptyMessage={t('quantity.empty')}
-											inputTestId="pool-quantity-input"
-											sliderTestId="pool-quantity-slider"
-										/>
-
-										<TermList
-											title={t('terms.title')}
-											testId="pool-terms"
-											items={[
-												{
-													label: t('terms.duration'),
-													value: t('terms.months', { count: setup.programDurationInMonths }),
-													testId: 'pool-program-duration',
-												},
-												{
-													label: t('terms.payout_amount'),
-													value: setup.payoutPerInterval.toLocaleString('de-CH'),
-													testId: 'pool-payout-amount',
-												},
-												{
-													label: t('terms.payout_currency'),
-													value: setup.payoutCurrency,
-													testId: 'pool-payout-currency',
-												},
-												{
-													label: t('terms.payout_interval'),
-													value: t(`terms.interval.${setup.payoutInterval}`),
-													testId: 'pool-payout-interval',
-												},
-											]}
-										/>
-
-										<div className="space-y-2">
-											<div className="flex items-end justify-between gap-4">
-												<div>
-													<p className="text-sm font-medium">{t('cost.title')}</p>
-													<p
-														data-testid="pool-additional-cost"
-														className="text-3xl font-medium tabular-nums"
-														aria-busy={state.isCalculatingBudget}
-													>
-														{state.displayCurrency}{' '}
-														{state.budget ? Math.round(state.budget.calculatedTotalBudget).toLocaleString('de-CH') : '–'}
-													</p>
-													{state.isCalculatingBudget ? (
-														<p className="text-muted-foreground text-xs">{t('cost.updating')}</p>
-													) : (
-														state.budget?.exchangeRateText && (
-															<p className="text-muted-foreground text-xs">{state.budget.exchangeRateText}</p>
-														)
-													)}
-												</div>
-												<Select
-													value={state.displayCurrency ?? setup.payoutCurrency}
-													onValueChange={(value) => {
-														if (isCurrency(value)) {
-															dispatch({ type: 'setDisplayCurrency', currency: value });
-														}
-													}}
-													disabled={saving}
-												>
-													<div className="w-24">
-														<SelectTrigger aria-label={t('cost.display_currency')}>
-															<SelectValue />
-														</SelectTrigger>
-													</div>
-													<SelectContent>
-														{displayCurrencies.map((currency) => (
-															<SelectItem key={currency} value={currency}>
-																{currency}
-															</SelectItem>
-														))}
-													</SelectContent>
-												</Select>
-											</div>
-										</div>
-									</div>
+									<BudgetStep
+										recipientsTitle={t('quantity.title')}
+										totalCostsTitle={t('cost.title')}
+										amountOfRecipients={state.quantity}
+										filteredRecipients={state.matchingCount}
+										programDuration={setup.programDurationInMonths}
+										payoutPerInterval={setup.payoutPerInterval}
+										payoutInterval={setup.payoutInterval}
+										payoutCurrency={setup.payoutCurrency}
+										displayCurrency={state.displayCurrency}
+										calculatedTotalBudget={state.budget?.calculatedTotalBudget ?? 0}
+										displayMonthlyCost={state.budget?.displayMonthlyCost ?? 0}
+										exchangeRateText={state.budget?.exchangeRateText}
+										payoutToDisplayRate={state.budget?.payoutToDisplayRate}
+										isCalculatingBudget={state.isCalculatingBudget}
+										onRecipientsChange={(quantity) => dispatch({ type: 'setQuantity', quantity })}
+										onCurrencyChange={(value) => {
+											if (isCurrency(value)) {
+												dispatch({ type: 'setDisplayCurrency', currency: value });
+											}
+										}}
+									/>
 								)}
 							</>
 						) : null}
 					</div>
 				</DialogBody>
 				{setup && (state.status === 'selection' || state.status === 'preview' || state.status === 'saving') ? (
-					<div className="px-6 pb-6">
+					<div className="mt-6">
 						<WizardFooter
-							edge="bleed"
-							progress={
-								<StepIndicator
-									variant="dots"
-									ariaLabel={t('steps.label')}
-									activeIndex={state.status === 'selection' ? 0 : 1}
-									steps={[{ label: t('steps.selection') }, { label: t('steps.quantity') }]}
-								/>
-							}
 							back={
 								<Button
 									type="button"
@@ -439,6 +353,7 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 									{t('actions.back')}
 								</Button>
 							}
+							progress={<StepIndicator steps={[{}, {}]} activeIndex={state.status === 'selection' ? 0 : 1} />}
 							primary={
 								state.status === 'selection' ? (
 									<Button type="button" disabled={!canContinue} onClick={() => dispatch({ type: 'continue' })}>

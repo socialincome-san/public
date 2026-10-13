@@ -3,11 +3,6 @@
 	"description": "Weisen Sie bestehende Kandidat:innen aus dem Pool diesem Programm zu. Land und Auszahlungsbedingungen des Programms bleiben unverändert.",
 	"close": "Schliessen",
 	"loading": "Kandidat:innen werden geladen",
-	"steps": {
-		"label": "Empfänger:innen aus dem Pool hinzufügen",
-		"selection": "Empfänger:innen",
-		"quantity": "Anzahl"
-	},
 	"country": {
 		"label": "Land"
 	},
@@ -38,27 +33,10 @@
 		"youth": "Jugendliche"
 	},
 	"quantity": {
-		"title": "Wie viele Empfänger:innen",
-		"max_hint": "Das sind alle passenden Kandidat:innen.",
-		"empty": "Es sind keine passenden Kandidat:innen verfügbar."
-	},
-	"terms": {
-		"title": "Programmbedingungen",
-		"duration": "Programmdauer",
-		"months": "{count, plural, one {# Monat} other {# Monate}}",
-		"payout_amount": "Auszahlungsbetrag",
-		"payout_currency": "Auszahlungswährung",
-		"payout_interval": "Auszahlungsintervall",
-		"interval": {
-			"monthly": "Monatlich",
-			"quarterly": "Vierteljährlich",
-			"yearly": "Jährlich"
-		}
+		"title": "Wie viele Empfänger:innen"
 	},
 	"cost": {
-		"title": "Zusätzliche Kosten",
-		"updating": "Kosten werden aktualisiert",
-		"display_currency": "Anzeigewährung"
+		"title": "Zusätzliche Kosten"
 	},
 	"actions": {
 		"continue": "Weiter",

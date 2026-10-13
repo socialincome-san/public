@@ -155,15 +155,15 @@ describe('AddRecipientsFromPoolDialog', () => {
 		await click(buttonByText('Continue'));
 
 		const country = document.body.querySelector('[data-testid="pool-country"]');
-		const terms = document.body.querySelector('[data-testid="pool-terms"]');
 
 		expect(country?.textContent).toContain('Sierra Leone');
 		expect(country?.querySelector('input, select, textarea')).toBeNull();
-		expect(document.body.querySelector('[data-testid="pool-program-duration"]')?.textContent).toBe('12 months');
-		expect(document.body.querySelector('[data-testid="pool-payout-amount"]')?.textContent).toBe('600');
-		expect(document.body.querySelector('[data-testid="pool-payout-currency"]')?.textContent).toBe('SLE');
-		expect(document.body.querySelector('[data-testid="pool-payout-interval"]')?.textContent).toBe('Monthly');
-		expect(terms?.querySelector('input, select, textarea')).toBeNull();
+		expect(document.body.textContent).toContain('step3.payout_summary.program_duration');
+		expect(document.body.textContent).toContain('12 common.months');
+		expect(document.body.textContent).toContain('common.interval.monthly');
+		expect(document.body.querySelector('[data-testid="customize-payouts-switch"]')).toBeNull();
+		expect(document.body.querySelector('[data-testid="total-budget"]')?.textContent).toMatch(/^7.?200$/);
+		expect(mockPreview).toHaveBeenLastCalledWith(expect.objectContaining({ recipientCount: 1, displayCurrency: 'CHF' }));
 	});
 
 	test('updates the matching count and disables continue when no candidates match', async () => {
@@ -185,7 +185,7 @@ describe('AddRecipientsFromPoolDialog', () => {
 		await click(document.body.querySelector('[data-testid="pill-multi-select-female"]') ?? undefined);
 		await click(buttonByText('Continue'));
 
-		const input = document.body.querySelector('[data-testid="pool-quantity-input"]');
+		const input = document.body.querySelector('[data-testid="recipients-count-input"]');
 		if (!(input instanceof HTMLInputElement)) {
 			throw new Error('Quantity input missing');
 		}
@@ -201,7 +201,7 @@ describe('AddRecipientsFromPoolDialog', () => {
 		});
 		await flush();
 
-		expect(document.body.querySelector('[data-testid="pool-quantity-input"]')).toHaveProperty('value', '2');
+		expect(document.body.querySelector('[data-testid="recipients-count-input"]')).toHaveProperty('value', '2');
 	});
 
 	test('closes through the parent after a successful assignment', async () => {

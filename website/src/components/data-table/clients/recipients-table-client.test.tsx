@@ -7,6 +7,16 @@ import { createRoot } from 'react-dom/client';
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const mockRefresh = jest.fn();
+const mockToastSuccess = jest.fn<void, [string]>();
+
+jest.mock('react-hot-toast', () => ({
+	__esModule: true,
+	default: {
+		success: (message: string) => {
+			mockToastSuccess(message);
+		},
+	},
+}));
 
 jest.mock('next/navigation', () => ({
 	useRouter: () => ({ refresh: mockRefresh }),
@@ -119,7 +129,7 @@ describe('RecipientsTableClient pool assignment menu', () => {
 		clickButton(mounted.container, 'Confirm pool assignment');
 
 		expect(mockRefresh).toHaveBeenCalledTimes(1);
-		expect(mounted.container.textContent).toContain('Added 2 recipients');
+		expect(mockToastSuccess).toHaveBeenCalledWith('Added 2 recipients');
 		expect(mounted.container.textContent).not.toContain('Confirm pool assignment');
 	});
 

@@ -3,11 +3,6 @@
 	"description": "Assign existing candidates from the pool to this program. The program country and payout terms stay as they are.",
 	"close": "Close",
 	"loading": "Loading candidates",
-	"steps": {
-		"label": "Add recipients from pool",
-		"selection": "Recipients",
-		"quantity": "Quantity"
-	},
 	"country": {
 		"label": "Country"
 	},
@@ -38,27 +33,10 @@
 		"youth": "Youth"
 	},
 	"quantity": {
-		"title": "How many recipients",
-		"max_hint": "This is every matching candidate.",
-		"empty": "No matching candidates are available."
-	},
-	"terms": {
-		"title": "Program terms",
-		"duration": "Program duration",
-		"months": "{count, plural, one {# month} other {# months}}",
-		"payout_amount": "Payout amount",
-		"payout_currency": "Payout currency",
-		"payout_interval": "Payout interval",
-		"interval": {
-			"monthly": "Monthly",
-			"quarterly": "Quarterly",
-			"yearly": "Yearly"
-		}
+		"title": "How many recipients"
 	},
 	"cost": {
-		"title": "Additional cost",
-		"updating": "Updating cost",
-		"display_currency": "Display currency"
+		"title": "Additional cost"
 	},
 	"actions": {
 		"continue": "Continue",

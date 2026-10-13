@@ -3,11 +3,6 @@
 	"description": "Affectez des candidats existants du pool à ce programme. Le pays et les conditions de versement du programme restent inchangés.",
 	"close": "Fermer",
 	"loading": "Chargement des candidats",
-	"steps": {
-		"label": "Ajouter des bénéficiaires depuis le pool",
-		"selection": "Bénéficiaires",
-		"quantity": "Quantité"
-	},
 	"country": {
 		"label": "Pays"
 	},
@@ -38,27 +33,10 @@
 		"youth": "Jeunes"
 	},
 	"quantity": {
-		"title": "Combien de bénéficiaires",
-		"max_hint": "Il s'agit de tous les candidats correspondants.",
-		"empty": "Aucun candidat correspondant n'est disponible."
-	},
-	"terms": {
-		"title": "Conditions du programme",
-		"duration": "Durée du programme",
-		"months": "{count, plural, one {# mois} other {# mois}}",
-		"payout_amount": "Montant du versement",
-		"payout_currency": "Devise du versement",
-		"payout_interval": "Intervalle de versement",
-		"interval": {
-			"monthly": "Mensuel",
-			"quarterly": "Trimestriel",
-			"yearly": "Annuel"
-		}
+		"title": "Combien de bénéficiaires"
 	},
 	"cost": {
-		"title": "Coût supplémentaire",
-		"updating": "Mise à jour du coût",
-		"display_currency": "Devise d'affichage"
+		"title": "Coût supplémentaire"
 	},
 	"actions": {
 		"continue": "Continuer",

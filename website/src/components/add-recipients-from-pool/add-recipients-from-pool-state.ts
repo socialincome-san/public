@@ -4,7 +4,7 @@ import {
 	clampCandidateQuantity,
 	type CandidateSelectionApproach,
 } from '@/components/candidate-selection/candidate-filters';
-import type { Currency, Profile } from '@/generated/prisma/enums';
+import { Currency, type Profile } from '@/generated/prisma/enums';
 import type { ProgramBudgetCalculation, ProgramRecipientPoolSetup } from '@/modules/programs/program.types';
 
 export type PoolErrorCode = 'load' | 'generic' | 'not_enough';
@@ -21,7 +21,7 @@ export type AddRecipientsFromPoolState = {
 	matchingCount: number;
 	isCounting: boolean;
 	quantity: number;
-	displayCurrency: Currency | null;
+	displayCurrency: Currency;
 	budget: ProgramBudgetCalculation | null;
 	isCalculatingBudget: boolean;
 	error: PoolErrorCode | null;
@@ -57,7 +57,7 @@ export const initialAddRecipientsFromPoolState: AddRecipientsFromPoolState = {
 	matchingCount: 0,
 	isCounting: false,
 	quantity: 1,
-	displayCurrency: null,
+	displayCurrency: Currency.CHF,
 	budget: null,
 	isCalculatingBudget: false,
 	error: null,
@@ -97,7 +97,6 @@ export const addRecipientsFromPoolReducer = (
 				setup: action.setup,
 				totalCount: action.setup.totalCount,
 				matchingCount: action.setup.totalCount,
-				displayCurrency: action.setup.payoutCurrency,
 				quantity: action.setup.totalCount > 0 ? 1 : 0,
 			};
 		case 'selectApproach':
