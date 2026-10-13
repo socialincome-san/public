@@ -4,7 +4,9 @@ import { useSyncExternalStore } from 'react';
 
 export type AnalyticsConsent = 'granted' | 'denied' | 'undecided';
 
-type EventProperties = Record<string, string | number | boolean | null>;
+type EventValue = string | number | boolean | null | undefined;
+
+type EventProperties = Record<string, EventValue | Record<string, EventValue>[]>;
 
 export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
 
@@ -82,10 +84,16 @@ export const useConsentSettingsOpen = () =>
  * Sends a custom event to Vercel Analytics and, if the visitor consented, to the Google Tag Manager data layer,
  * where its triggers forward it to Google Analytics and Google Ads. Client only.
  * Vercel Analytics is cookieless and needs no consent.
- * @public Not called yet; the entry point for custom events.
  */
 export const trackEvent = (name: string, properties?: EventProperties) => {
-	track(name, properties);
+	// Vercel Analytics only accepts flat values, so lists such as GA4 `items` go to Tag Manager only.
+	track(
+		name,
+		properties &&
+			Object.fromEntries(
+				Object.entries(properties).filter((entry): entry is [string, EventValue] => !Array.isArray(entry[1])),
+			),
+	);
 	if (googleTagManagerId && readConsent() === 'granted') {
 		sendGTMEvent({ event: name, ...properties });
 	}
