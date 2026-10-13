@@ -10,6 +10,10 @@ type EventProperties = Record<string, EventValue | Record<string, EventValue>[]>
 
 export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
 
+// Google tag gateway (Cloudflare) serves GTM from our own domain. Only exists in production.
+export const googleTagGatewayUrl =
+	process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? 'https://www.socialincome.org/metrics/' : undefined;
+
 /** Google Consent Mode v2 signals. One choice covers both statistics (Analytics) and marketing (Ads). */
 export const getConsentModeSignals = (state: 'granted' | 'denied') => ({
 	ad_storage: state,
