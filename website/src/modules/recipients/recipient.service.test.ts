@@ -12,7 +12,7 @@ const mockGetLocalPartnerOptions = jest.fn();
 const mockGetLocalPartnerFilterOption = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 
-jest.mock('./recipient.repository', () => ({
+jest.mock('./recipient.repository.read', () => ({
 	findPublicRecipientTableSource: mockFindPublicRecipientTableSource,
 	findUnassignedRecipientCountries: mockFindUnassignedRecipientCountries,
 	countRecipientsForProgramsAndLocalPartners: mockCountRecipientsForProgramsAndLocalPartners,
@@ -21,6 +21,10 @@ jest.mock('./recipient.repository', () => ({
 }));
 
 jest.mock('@/modules/auth/auth.service', () => ({}));
+jest.mock('./recipient.repository.write', () => ({}));
+jest.mock('@/modules/users/user.service', () => ({
+	isAdmin: jest.fn(),
+}));
 jest.mock('@/modules/local-partners/local-partner.service', () => ({
 	getLocalPartnerFilterOption: mockGetLocalPartnerFilterOption,
 	getLocalPartnerOptions: mockGetLocalPartnerOptions,

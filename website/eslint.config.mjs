@@ -83,6 +83,27 @@ const moduleSyntaxSelectors = [
 	},
 ];
 
+// Models whose writes are audited. Only *.repository.write.ts may write
+// them, each write through auditedWrite (src/lib/audit/README.md).
+const auditedModels = ['recipient'];
+
+// Repositories that still write audited models without an audit event. Move
+// these writes into a write repository; never add to this list.
+const unauditedWriteRepositories = [
+	'src/modules/candidates/candidate.repository.ts',
+	'src/modules/programs/program.repository.ts',
+];
+
+const auditedModelWriteSelector = {
+	selector: `CallExpression[callee.object.property.name=/^(${auditedModels.join('|')})$/][callee.property.name=/^(create|createMany|createManyAndReturn|update|updateMany|updateManyAndReturn|upsert|delete|deleteMany)$/]`,
+	message: 'This model is audited. Write it in a *.repository.write.ts through auditedWrite.',
+};
+
+const repositoryIncludeSelector = {
+	selector: 'Property[key.name="include"], Property[key.value="include"]',
+	message: 'Repositories must use explicit select instead of include.',
+};
+
 const moduleSyntaxRules = {
 	'no-restricted-syntax': ['error', ...moduleSyntaxSelectors],
 	'@typescript-eslint/no-explicit-any': 'error',
@@ -177,7 +198,7 @@ export default [
 							message: 'A module cache wraps its own service, so the service must not import it.',
 						},
 						{
-							group: ['@/modules/*/*.repository', '@/modules/*/*.permissions'],
+							group: ['@/modules/*/*.repository', '@/modules/*/*.repository.*', '@/modules/*/*.permissions'],
 							message: 'Cross-module imports must go through the owning module service, not internals.',
 						},
 					],
@@ -284,17 +305,10 @@ export default [
 		},
 	},
 	{
-		files: ['src/modules/**/*.repository.ts'],
+		files: ['src/modules/**/*.repository{,.read,.write}.ts'],
 		rules: {
 			'backend-architecture/repository-export-naming': 'error',
-			'no-restricted-syntax': [
-				'error',
-				...moduleSyntaxSelectors,
-				{
-					selector: 'Property[key.name="include"], Property[key.value="include"]',
-					message: 'Repositories must use explicit select instead of include.',
-				},
-			],
+			'no-restricted-syntax': ['error', ...moduleSyntaxSelectors, repositoryIncludeSelector, auditedModelWriteSelector],
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
 				{
@@ -323,6 +337,26 @@ export default [
 							message: 'Repositories must not import external provider SDKs.',
 						},
 					],
+				},
+			],
+		},
+	},
+	{
+		files: unauditedWriteRepositories,
+		rules: {
+			'no-restricted-syntax': ['error', ...moduleSyntaxSelectors, repositoryIncludeSelector],
+		},
+	},
+	{
+		files: ['src/modules/**/*.repository.write.ts'],
+		rules: {
+			'no-restricted-syntax': [
+				'error',
+				...moduleSyntaxSelectors,
+				repositoryIncludeSelector,
+				{
+					selector: 'ImportDeclaration[source.value="@/lib/database/prisma"]',
+					message: 'Write repositories write through the transaction auditedWrite passes in.',
 				},
 			],
 		},
@@ -450,6 +484,7 @@ export default [
 								'@/modules/**/*.service',
 								'@/modules/**/*.cache',
 								'@/modules/**/*.repository',
+								'@/modules/**/*.repository.*',
 								'@/modules/**/*.permissions',
 							],
 							message: 'Components may import module actions and type-only contracts, not services or internals.',
@@ -485,7 +520,7 @@ export default [
 							message: 'App boundaries call module services instead of integrations.',
 						},
 						{
-							group: ['@/modules/**/*.repository', '@/modules/**/*.permissions'],
+							group: ['@/modules/**/*.repository', '@/modules/**/*.repository.*', '@/modules/**/*.permissions'],
 							message: 'App boundaries must not import module repositories or permissions directly.',
 						},
 						...providerSdkImportPatterns,

@@ -188,6 +188,14 @@ test('filename-contract enforces approved suffixes', () => {
 	});
 	assert.deepEqual(validCache, []);
 
+	const validWriteRepository = lint({
+		filename: 'src/modules/example/example.repository.write.ts',
+		rules: { 'backend-architecture/filename-contract': 'error' },
+		code: `export const createExample = async () => {};
+`,
+	});
+	assert.deepEqual(validWriteRepository, []);
+
 	const invalid = lint({
 		filename: 'src/modules/example/example.utils.ts',
 		rules: { 'backend-architecture/filename-contract': 'error' },
