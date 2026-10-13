@@ -18,7 +18,7 @@ import {
 	findDonationCertificateByYearAndLanguage,
 	findPaginatedContributorDonationCertificates,
 	findPaginatedDonationCertificates,
-} from './donation-certificate.repository';
+} from './donation-certificate.repository.read';
 
 describe('donation certificate repository', () => {
 	beforeEach(() => {

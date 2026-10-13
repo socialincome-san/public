@@ -1,5 +1,6 @@
 'use server';
 
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import type { ContributorDonationCertificate } from '@/modules/contributors/contributor.types';
@@ -56,7 +57,7 @@ export const createDonationCertificatesAction = async (input: unknown): Promise<
 	}
 
 	const result = await createDonationCertificatesForUser(
-		sessionResult.data.id,
+		sessionResult.data,
 		parsedInput.data.year,
 		parsedInput.data.contributorIds,
 		parsedInput.data.language,
@@ -78,6 +79,7 @@ export const createCurrentContributorDonationCertificateAction = async (input: u
 	}
 
 	const result = await createDonationCertificateForContributor(
+		getSessionAuditContext(sessionResult.data),
 		parsedInput.data.year,
 		sessionResult.data.id,
 		parsedInput.data.language,

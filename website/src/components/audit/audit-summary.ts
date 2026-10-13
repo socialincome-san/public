@@ -117,6 +117,17 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			coverTransactionCosts: 'Covers transaction costs',
 		},
 	},
+	'donation-certificate': {
+		label: 'Donation certificate',
+		namePaths: ['year', 'language'],
+		fieldLabels: {
+			legacyFirestoreId: 'Legacy ID',
+			contributorId: 'Contributor',
+			year: 'Year',
+			language: 'Language',
+			storagePath: 'File',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));

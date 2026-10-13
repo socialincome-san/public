@@ -1,5 +1,6 @@
-import { ProgramPermission } from '@/generated/prisma/enums';
+import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
+import type { UserSession } from '@/modules/users/user.types';
 
 const mockIsFirebaseStorageConfigured = jest.fn();
 const mockUploadFileToFirebaseStorage = jest.fn();
@@ -30,10 +31,13 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 	getAccessiblePrograms: mockGetAccessiblePrograms,
 }));
 
-jest.mock('./donation-certificate.repository', () => ({
+jest.mock('./donation-certificate.repository.read', () => ({
 	findPaginatedDonationCertificates: mockFindPaginatedDonationCertificates,
 	findPaginatedContributorDonationCertificates: mockFindPaginatedContributorDonationCertificates,
 	findDonationCertificateByYearAndLanguage: mockFindDonationCertificateByYearAndLanguage,
+}));
+
+jest.mock('./donation-certificate.repository.write', () => ({
 	createDonationCertificate: mockCreateDonationCertificate,
 }));
 
@@ -42,6 +46,31 @@ import {
 	createDonationCertificatesForUser,
 	getPaginatedDonationCertificates,
 } from './donation-certificate.service';
+
+const website = {
+	actor: { type: 'contributor' as const, id: 'contributor-1', name: 'Ada Lovelace' },
+	source: 'website' as const,
+};
+
+const operator: UserSession = {
+	type: 'user',
+	id: 'user-1',
+	gender: null,
+	email: null,
+	firstName: 'Max',
+	lastName: 'Operator',
+	language: null,
+	street: null,
+	number: null,
+	city: null,
+	zip: null,
+	country: null,
+	role: UserRole.user,
+	activeOrganization: null,
+	organizations: [],
+	programs: [],
+	hasAnyOperatorProgramAccess: true,
+};
 
 const expectFailure = (result: Result<unknown>, error: string): void => {
 	expect(result.success).toBe(false);
@@ -148,7 +177,7 @@ describe('donation certificate service', () => {
 			data: [{ id: 'contributor-1' }],
 		});
 
-		const result = await createDonationCertificatesForUser('user-1', 2025, ['contributor-1', 'contributor-2'], 'en');
+		const result = await createDonationCertificatesForUser(operator, 2025, ['contributor-1', 'contributor-2'], 'en');
 
 		expectFailure(result, 'Permission denied');
 		expect(mockFindDonationCertificateByYearAndLanguage).not.toHaveBeenCalled();
@@ -172,7 +201,7 @@ describe('donation certificate service', () => {
 		mockFindDonationCertificateByYearAndLanguage.mockResolvedValue(null);
 		mockGetSucceededForContributorAndYear.mockResolvedValue({ success: true, data: [] });
 
-		const result = await createDonationCertificateForContributor(2025, 'contributor-1');
+		const result = await createDonationCertificateForContributor(website, 2025, 'contributor-1');
 
 		expect(mockFindDonationCertificateByYearAndLanguage).toHaveBeenCalledWith(2025, 'contributor-1', 'de');
 		expectFailure(result, 'noContributions');
@@ -197,9 +226,44 @@ describe('donation certificate service', () => {
 		});
 		mockFindDonationCertificateByYearAndLanguage.mockResolvedValue({ id: 'certificate-1' });
 
-		const result = await createDonationCertificateForContributor(2025, 'contributor-1', 'en');
+		const result = await createDonationCertificateForContributor(website, 2025, 'contributor-1', 'en');
 
 		expectFailure(result, 'alreadyExists');
 		expect(mockGetSucceededForContributorAndYear).not.toHaveBeenCalled();
+	});
+
+	test('attributes a generated certificate to the caller', async () => {
+		mockGetContributorsByIds.mockResolvedValue({
+			success: true,
+			data: [
+				{
+					id: 'contributor-1',
+					firstName: 'Ada',
+					lastName: 'Lovelace',
+					email: 'ada@example.org',
+					language: 'en',
+					address: null,
+					authId: 'auth-1',
+				},
+			],
+		});
+		mockFindDonationCertificateByYearAndLanguage.mockResolvedValue(null);
+		mockGetSucceededForContributorAndYear.mockResolvedValue({
+			success: true,
+			data: [{ createdAt: new Date('2025-03-01T00:00:00.000Z'), amount: 50, currency: 'CHF' }],
+		});
+		mockUploadFileToFirebaseStorage.mockResolvedValue({ success: true, data: undefined });
+
+		await createDonationCertificatesForUser(operator, 2025, ['contributor-1']);
+
+		expect(mockCreateDonationCertificate).toHaveBeenCalledWith(
+			{ actor: { type: 'user', id: 'user-1', name: 'Max Operator' }, source: 'portal' },
+			{
+				year: 2025,
+				language: 'en',
+				storagePath: 'users/auth-1/donation-certificates/2025_en.pdf',
+				contributorId: 'contributor-1',
+			},
+		);
 	});
 });

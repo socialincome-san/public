@@ -85,7 +85,7 @@ const moduleSyntaxSelectors = [
 
 // Models whose writes are audited. Only *.repository.write.ts may write
 // them, each write through auditedWrite (src/lib/audit/README.md).
-const auditedModels = ['recipient', 'payout', 'contributor', 'contribution', 'subscription'];
+const auditedModels = ['recipient', 'payout', 'contributor', 'contribution', 'subscription', 'donationCertificate'];
 
 const auditedModelWriteSelector = {
 	selector: `CallExpression[callee.object.property.name=/^(${auditedModels.join('|')})$/][callee.property.name=/^(create|createMany|createManyAndReturn|update|updateMany|updateManyAndReturn|upsert|delete|deleteMany)$/]`,

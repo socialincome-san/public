@@ -87,13 +87,6 @@ export const findDonationCertificateByYearAndLanguage = async (
 		},
 	});
 
-export const createDonationCertificate = async (input: {
-	year: number;
-	language: LanguageCode;
-	storagePath: string;
-	contributorId: string;
-}) => prisma.donationCertificate.createMany({ data: input });
-
 const buildDonationCertificateWhere = (
 	programIds: string[],
 	contributorId: string | undefined,
