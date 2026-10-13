@@ -8,18 +8,21 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { SurveyTableViewRow } from '@/modules/surveys/survey.types';
 
-export const makeSurveyColumns = (hideProgramName = false): ColumnDef<SurveyTableViewRow>[] => {
+const recipientColumn: ColumnDef<SurveyTableViewRow> = {
+	accessorKey: 'recipientName',
+	header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,
+	cell: (ctx) => <TextCell ctx={ctx} />,
+};
+
+// Positional like DataTableConfig.makeColumns, so server pages can pass it to the client table as is
+export const makeSurveyColumns = (hideProgramName = false, hideRecipient = false): ColumnDef<SurveyTableViewRow>[] => {
 	const columns: ColumnDef<SurveyTableViewRow>[] = [
 		{
 			accessorKey: 'name',
 			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
-		{
-			accessorKey: 'recipientName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		...(hideRecipient ? [] : [recipientColumn]),
 		{
 			accessorKey: 'questionnaire',
 			header: (ctx) => <SortableHeader ctx={ctx}>Questionnaire</SortableHeader>,

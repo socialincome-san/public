@@ -4,6 +4,7 @@ import { resultFail, type Result } from '@/lib/result';
 import { getOptionalContributor, getSessionByType } from '@/modules/auth/session.service';
 import type { ContributorRecord } from '@/modules/contributors/contributor.types';
 import type {
+	PaidCheckoutDonation,
 	StripeCheckoutOnboardingPrefill,
 	StripeEmbeddedCheckoutResult,
 } from '@/modules/stripe-payments/stripe-payment.types';
@@ -18,6 +19,7 @@ import {
 	createEmbeddedCheckoutSession,
 	createPortalProgramDonationCheckout,
 	getCheckoutOnboardingPrefill,
+	getPaidCheckoutDonation,
 	updateContributorAfterCheckout,
 	updateContributorReferralAfterCheckout,
 } from './stripe-payment.service';
@@ -62,6 +64,15 @@ export const getStripeCheckoutOnboardingPrefillAction = async (
 	}
 
 	return getCheckoutOnboardingPrefill(parsed.data);
+};
+
+export const getPaidStripeCheckoutDonationAction = async (sessionId: unknown): Promise<Result<PaidCheckoutDonation>> => {
+	const parsed = stripeCheckoutSessionIdSchema.safeParse(sessionId);
+	if (!parsed.success) {
+		return resultFail('Missing checkout session id');
+	}
+
+	return getPaidCheckoutDonation(parsed.data);
 };
 
 export const updateContributorAfterWizardCheckoutAction = async (input: unknown): Promise<Result<ContributorRecord>> => {

@@ -48,16 +48,20 @@ export type ContributionTableQuery = {
 	programId?: string;
 	campaignId?: string;
 	paymentEventType?: string;
+	contributorId?: string;
+};
+
+export type ContributionFilterOptions = {
+	programs: { value: string; label: string }[];
+	campaigns: { value: string; label: string }[];
+	paymentEventTypes: { value: string; label: string }[];
+	contributors: { value: string; label: string }[];
 };
 
 export type ContributionPaginatedTableView = {
 	tableRows: ContributionTableViewRow[];
 	totalCount: number;
-	filterOptions: {
-		programs: { value: string; label: string }[];
-		campaigns: { value: string; label: string }[];
-		paymentEventTypes: { value: string; label: string }[];
-	};
+	filterOptions: ContributionFilterOptions;
 };
 
 export type ContributionPayload = {

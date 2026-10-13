@@ -29,20 +29,23 @@ export const findPaginatedExpenses = async (query: ExpenseTableQuery) => {
 	const matchedExpenseType = Object.values(ExpenseType).find((type) => type.toLowerCase() === search.toLowerCase());
 	const parsedYear = Number(search);
 	const hasYearFilter = search.length > 0 && Number.isInteger(parsedYear);
-	const where: Prisma.ExpenseWhereInput | undefined = search
-		? {
-				OR: [
-					{ id: { contains: search, mode: 'insensitive' } },
-					...(matchedExpenseType ? [{ type: { equals: matchedExpenseType } }] : []),
-					{
-						organization: {
-							name: { contains: search, mode: 'insensitive' },
+	const where: Prisma.ExpenseWhereInput = {
+		...(query.organizationId ? { organizationId: query.organizationId } : {}),
+		...(search
+			? {
+					OR: [
+						{ id: { contains: search, mode: 'insensitive' } },
+						...(matchedExpenseType ? [{ type: { equals: matchedExpenseType } }] : []),
+						{
+							organization: {
+								name: { contains: search, mode: 'insensitive' },
+							},
 						},
-					},
-					...(hasYearFilter ? [{ year: parsedYear }] : []),
-				],
-			}
-		: undefined;
+						...(hasYearFilter ? [{ year: parsedYear }] : []),
+					],
+				}
+			: {}),
+	};
 	const [expenses, totalCount] = await Promise.all([
 		prisma.expense.findMany({
 			where,

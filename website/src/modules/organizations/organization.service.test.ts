@@ -16,6 +16,7 @@ const mockUpdateOrganizationName = jest.fn();
 const mockFindOrganizationIdentity = jest.fn();
 const mockFindOrganizationUsageCounts = jest.fn();
 const mockDeleteOrganization = jest.fn();
+const mockFindPaginatedOrganizationMembers = jest.fn();
 
 jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
@@ -39,12 +40,14 @@ jest.mock('./organization.repository', () => ({
 	findOrganizationIdentity: mockFindOrganizationIdentity,
 	findOrganizationUsageCounts: mockFindOrganizationUsageCounts,
 	deleteOrganization: mockDeleteOrganization,
+	findPaginatedOrganizationMembers: mockFindPaginatedOrganizationMembers,
 }));
 
 import {
 	createOrganization,
 	deleteOrganization,
 	getActiveOrganizationSummary,
+	getPaginatedOrganizationAdminMembersTableView,
 	getPaginatedOrganizationAdminTableView,
 	renameActiveOrganization,
 } from './organization.service';
@@ -101,6 +104,41 @@ describe('organization service', () => {
 			ownedProgramsCount: 1,
 			operatedProgramsCount: 1,
 			usersCount: 2,
+		});
+	});
+
+	test('loads members for the selected organization in admin scope', async () => {
+		mockFindPaginatedOrganizationMembers.mockResolvedValue({
+			members: [
+				{
+					user: {
+						id: 'user-1',
+						role: UserRole.user,
+						contact: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.org' },
+					},
+				},
+			],
+			totalCount: 1,
+		});
+
+		const result = await getPaginatedOrganizationAdminMembersTableView('admin-1', {
+			organizationId: 'organization-1',
+			page: 1,
+			pageSize: 10,
+			search: '',
+		});
+
+		expect(mockFindPaginatedOrganizationMembers).toHaveBeenCalledWith('organization-1', {
+			page: 1,
+			pageSize: 10,
+			search: '',
+		});
+		expect(expectSuccess(result).tableRows[0]).toEqual({
+			id: 'user-1',
+			firstName: 'Ada',
+			lastName: 'Lovelace',
+			email: 'ada@example.org',
+			role: UserRole.user,
 		});
 	});
 

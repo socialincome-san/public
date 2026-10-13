@@ -16,6 +16,10 @@ export type OrganizationMemberTableQuery = {
 	sortDirection?: 'asc' | 'desc';
 };
 
+export type OrganizationAdminMemberTableQuery = OrganizationMemberTableQuery & {
+	organizationId: string;
+};
+
 export type OrganizationMemberPaginatedTableView = {
 	tableRows: OrganizationMemberTableViewRow[];
 	totalCount: number;

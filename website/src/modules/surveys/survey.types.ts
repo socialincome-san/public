@@ -30,12 +30,14 @@ export type SurveyTableQuery = {
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
 	programId?: string;
+	recipientId?: string;
 };
 
 export type SurveyPaginatedTableView = {
 	tableRows: SurveyTableViewRow[];
 	totalCount: number;
 	programFilterOptions: SurveyProgramFilterOption[];
+	recipientFilterOptions: { id: string; name: string }[];
 };
 
 type SurveyProgramFilterOption = {

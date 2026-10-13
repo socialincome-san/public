@@ -19,3 +19,8 @@ export const countriesTableConfig: DataTableConfig<CountryTableViewRow> = {
 	makeColumns: makeCountryColumns,
 	showColumnVisibilitySelector: true,
 };
+
+export const mobileMoneyProviderCountriesTableConfig: DataTableConfig<CountryTableViewRow> = {
+	...countriesTableConfig,
+	id: 'mobile-money-provider-countries',
+};

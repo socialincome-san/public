@@ -13,12 +13,15 @@ const mockFindSurveyByRecipientAndName = jest.fn();
 const mockFindSurveySchedulesByProgramIds = jest.fn();
 const mockFindCompletedSurveyImpactSource = jest.fn();
 const mockCreateSurvey = jest.fn();
+const mockGetRecipientFilterOption = jest.fn();
+const mockFindSurveyTableSource = jest.fn();
 
 jest.mock('@/modules/program-access/program-access.service', () => ({
 	getAccessiblePrograms: mockGetAccessiblePrograms,
 }));
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
+	getRecipientFilterOption: mockGetRecipientFilterOption,
 	getRecipientProgramAssignment: mockGetRecipientProgramAssignment,
 	getSurveyRecipients: mockGetSurveyRecipients,
 }));
@@ -36,7 +39,7 @@ jest.mock('./survey.repository', () => ({
 	findSurveySchedulesByProgramIds: mockFindSurveySchedulesByProgramIds,
 	findCompletedSurveyImpactSource: mockFindCompletedSurveyImpactSource,
 	createSurvey: mockCreateSurvey,
-	findSurveyTableSource: jest.fn(),
+	findSurveyTableSource: mockFindSurveyTableSource,
 	findSurveyByIdAndRecipient: jest.fn(),
 	findExistingSurveyIdentities: jest.fn(),
 	updateSurvey: jest.fn(),
@@ -51,6 +54,7 @@ jest.mock('@/lib/utils/now', () => ({
 
 import {
 	createSurvey,
+	getPaginatedSurveyTableView,
 	getSurvey,
 	getSurveyImpactMeasurements,
 	getSurveySchedulesByProgramIds,
@@ -98,6 +102,48 @@ const surveyPayload = {
 	createdAt: new Date('2026-06-01T00:00:00.000Z'),
 	updatedAt: null,
 };
+
+describe('getPaginatedSurveyTableView recipient filter', () => {
+	const query = { page: 1, pageSize: 10, search: '', recipientId: 'recipient-1' };
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: operatorAccess });
+		mockFindSurveyTableSource.mockResolvedValue({ surveys: [], totalCount: 0 });
+	});
+
+	test('filters by an accessible recipient and offers it as filter option', async () => {
+		mockGetRecipientFilterOption.mockResolvedValue({ success: true, data: { id: 'recipient-1', name: 'Aminata Kamara' } });
+
+		const data = expectSuccess(await getPaginatedSurveyTableView('user-1', query));
+
+		expect(mockGetRecipientFilterOption).toHaveBeenCalledWith('recipient-1', ['program-1']);
+		expect(mockFindSurveyTableSource).toHaveBeenCalledWith(expect.objectContaining({ recipientId: 'recipient-1' }));
+		expect(data.recipientFilterOptions).toEqual([{ id: 'recipient-1', name: 'Aminata Kamara' }]);
+	});
+
+	test('ignores a recipient outside the operated programs', async () => {
+		mockGetRecipientFilterOption.mockResolvedValue({ success: true, data: null });
+
+		const data = expectSuccess(await getPaginatedSurveyTableView('user-1', query));
+
+		expect(mockFindSurveyTableSource).toHaveBeenCalledWith(expect.objectContaining({ recipientId: undefined }));
+		expect(data.recipientFilterOptions).toEqual([]);
+	});
+
+	test('returns no surveys without operator access', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [{ programId: 'program-1', programName: 'Program One', permission: ProgramPermission.owner }],
+		});
+
+		const data = expectSuccess(await getPaginatedSurveyTableView('user-1', query));
+
+		expect(data.tableRows).toEqual([]);
+		expect(mockGetRecipientFilterOption).not.toHaveBeenCalled();
+		expect(mockFindSurveyTableSource).not.toHaveBeenCalled();
+	});
+});
 
 describe('survey CRUD and access', () => {
 	beforeEach(() => {

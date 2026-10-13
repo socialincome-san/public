@@ -15,6 +15,7 @@ export type ExpenseTableQuery = {
 	search: string;
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
+	organizationId?: string;
 };
 
 export type ExpensePaginatedTableView = {

@@ -26,6 +26,7 @@ const SurveysDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const rows: SurveyTableViewRow[] = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
 	const programFilterOptions = result.success ? result.data.programFilterOptions : [];
+	const recipientFilterOptions = result.success ? result.data.recipientFilterOptions : [];
 
 	return (
 		<SurveysTableClient
@@ -33,6 +34,7 @@ const SurveysDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 			error={error}
 			query={{ ...tableQuery, totalRows }}
 			programFilterOptions={programFilterOptions}
+			recipientFilterOptions={recipientFilterOptions}
 		/>
 	);
 };

@@ -8,35 +8,46 @@ import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { ContributionTableViewRow } from '@/modules/contributions/contribution.types';
 import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
-export const makeContributionsColumns = (): ColumnDef<ContributionTableViewRow>[] => {
+const contributorColumns: ColumnDef<ContributionTableViewRow>[] = [
+	{
+		id: 'contributor',
+		accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
+		header: (ctx) => <SortableHeader ctx={ctx}>Contributor</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
+		accessorKey: 'email',
+		header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+];
+
+const campaignColumns: ColumnDef<ContributionTableViewRow>[] = [
+	{
+		accessorKey: 'campaignTitle',
+		header: (ctx) => <SortableHeader ctx={ctx}>Campaign</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
+		accessorKey: 'programName',
+		header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+];
+
+export const makeContributionsColumns = ({
+	hideContributor = false,
+	hideCampaign = false,
+}: { hideContributor?: boolean; hideCampaign?: boolean } = {}): ColumnDef<ContributionTableViewRow>[] => {
 	return [
-		{
-			id: 'contributor',
-			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
-			header: (ctx) => <SortableHeader ctx={ctx}>Contributor</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'email',
-			header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		...(hideContributor ? [] : contributorColumns),
 		{
 			id: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,
 			accessorFn: (row) => row.amount,
 			cell: (ctx) => <CurrencyCell ctx={ctx} currency={ctx.row.original.currency} />,
 		},
-		{
-			accessorKey: 'campaignTitle',
-			header: (ctx) => <SortableHeader ctx={ctx}>Campaign</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'programName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		...(hideCampaign ? [] : campaignColumns),
 		{
 			accessorKey: 'createdAt',
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,

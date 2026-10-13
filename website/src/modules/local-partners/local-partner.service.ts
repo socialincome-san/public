@@ -195,6 +195,20 @@ export const getLocalPartnerOptions = async (): Promise<Result<LocalPartnerOptio
 	}
 };
 
+// Label for a local partner filter set by a link; null when the partner has no recipients in the given programs
+export const getLocalPartnerFilterOption = async (
+	localPartnerId: string,
+	programIds: string[],
+): Promise<Result<LocalPartnerOption | null>> => {
+	try {
+		return resultOk(await localPartnerRepository.findLocalPartnerFilterOption(localPartnerId, programIds));
+	} catch (error) {
+		console.error('Could not fetch local partner filter option', { localPartnerId, error });
+
+		return resultFail('Could not fetch local partner filter option');
+	}
+};
+
 export const getLocalPartnerMessagingTargets = async (
 	localPartnerIds: string[],
 ): Promise<Result<LocalPartnerMessagingTarget[]>> => {

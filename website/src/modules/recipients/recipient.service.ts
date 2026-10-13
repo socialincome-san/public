@@ -13,7 +13,7 @@ import {
 	updateFirebaseUserByPhoneNumber,
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
-import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
+import { getLocalPartnerFilterOption, getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 import { getProgramNameById } from '@/modules/programs/program-reference.service';
@@ -43,6 +43,7 @@ import {
 	OBFUSCATED_SENTINEL,
 	PublicRecipientTableView,
 	PublicRecipientTableViewRow,
+	RecipientFilterOption,
 	RecipientFormOptions,
 	RecipientLifecycleStatus,
 	RecipientLifecycleStatusFromExpectedIntervalsInput,
@@ -639,6 +640,24 @@ export const getRecipientById = async (session: Session, recipientId: string): P
 	}
 };
 
+// Label for a recipient filter set by a link; null when the recipient is outside the given programs
+export const getRecipientFilterOption = async (
+	recipientId: string,
+	programIds: string[],
+): Promise<Result<RecipientFilterOption | null>> => {
+	try {
+		const recipient = await recipientRepository.findRecipientFilterOption(recipientId, programIds);
+
+		return resultOk(
+			recipient ? { id: recipient.id, name: `${recipient.contact.firstName} ${recipient.contact.lastName}`.trim() } : null,
+		);
+	} catch (error) {
+		console.error('Could not fetch recipient filter option', { recipientId, error });
+
+		return resultFail('Could not fetch recipient filter option');
+	}
+};
+
 export const getEditableRecipientOptions = async (userId: string): Promise<Result<RecipientOption[]>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
@@ -1030,6 +1049,7 @@ export const getPaginatedRecipientTableViewByLocalPartnerId = async (
 			totalCount: shouldProcessStatus ? tableRows.length : totalCount,
 			permission: ProgramPermission.operator,
 			programFilterOptions,
+			localPartnerFilterOptions: [],
 		});
 	} catch (error) {
 		console.error(error);
@@ -1367,19 +1387,30 @@ const getPaginatedTableViewForPrograms = async (
 	const permission = getTablePermission(programs);
 	const programFilterOptions = getProgramFilterOptions(programs);
 	if (programs.length === 0) {
-		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions });
+		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions: [] });
 	}
 
-	const selectedProgramId = normalizeOptionalFilter(query.programId);
 	const programIds = programs.map(({ programId }) => programId);
+	const requestedLocalPartnerId = normalizeOptionalFilter(query.localPartnerId);
+	// Unknown or inaccessible local partners are ignored, so the filter never hides rows behind an invisible value
+	const localPartnerOptionResult = requestedLocalPartnerId
+		? await getLocalPartnerFilterOption(requestedLocalPartnerId, programIds)
+		: resultOk(null);
+	if (!localPartnerOptionResult.success) {
+		return resultFail(localPartnerOptionResult.error);
+	}
+	const localPartnerOption = localPartnerOptionResult.data;
+	const localPartnerFilterOptions = localPartnerOption ? [localPartnerOption] : [];
+	const selectedProgramId = normalizeOptionalFilter(query.programId);
 	if (selectedProgramId && !programIds.includes(selectedProgramId)) {
-		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions });
+		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions });
 	}
 
 	const selectedStatus = parseRecipientStatusFilter(query.recipientStatus);
 	const shouldProcessStatus = query.sortBy === 'status' || Boolean(selectedStatus);
 	const { recipients, totalCount } = await recipientRepository.findRecipientTableSource({
 		programIds,
+		localPartnerId: localPartnerOption?.id,
 		query,
 		canSearchRecipientNames: permission === ProgramPermission.operator,
 		paginate: !shouldProcessStatus,
@@ -1394,6 +1425,7 @@ const getPaginatedTableViewForPrograms = async (
 		totalCount: shouldProcessStatus ? tableRows.length : totalCount,
 		permission,
 		programFilterOptions,
+		localPartnerFilterOptions,
 	});
 };
 

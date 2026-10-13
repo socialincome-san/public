@@ -4,8 +4,12 @@ import type { LanguageCode } from '@/lib/types/language';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { DonationCertificateTableQuery, YourDonationCertificateTableQuery } from './donation-certificate.types';
 
-export const findPaginatedDonationCertificates = async (programIds: string[], query: DonationCertificateTableQuery) => {
-	const where = buildDonationCertificateWhere(programIds, query.search);
+export const findPaginatedDonationCertificates = async (
+	programIds: string[],
+	contributorId: string | undefined,
+	query: DonationCertificateTableQuery,
+) => {
+	const where = buildDonationCertificateWhere(programIds, contributorId, query.search);
 	const [certificates, totalCount] = await Promise.all([
 		prisma.donationCertificate.findMany({
 			where,
@@ -90,11 +94,16 @@ export const createDonationCertificate = async (input: {
 	contributorId: string;
 }) => prisma.donationCertificate.createMany({ data: input });
 
-const buildDonationCertificateWhere = (programIds: string[], searchInput: string): Prisma.DonationCertificateWhereInput => {
+const buildDonationCertificateWhere = (
+	programIds: string[],
+	contributorId: string | undefined,
+	searchInput: string,
+): Prisma.DonationCertificateWhereInput => {
 	const search = searchInput.trim();
 	const parsedYear = Number(search);
 	const hasYearFilter = search.length > 0 && Number.isInteger(parsedYear);
 	const baseWhere: Prisma.DonationCertificateWhereInput = {
+		...(contributorId ? { contributorId } : {}),
 		contributor: {
 			contributions: {
 				some: {

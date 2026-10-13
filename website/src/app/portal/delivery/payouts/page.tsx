@@ -28,6 +28,7 @@ const PayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const programFilterOptions = result.success ? result.data.programFilterOptions : [];
 	const statusFilterOptions = result.success ? result.data.statusFilterOptions : [];
 	const mobileMoneyProviderFilterOptions = result.success ? result.data.mobileMoneyProviderFilterOptions : [];
+	const recipientFilterOptions = result.success ? result.data.recipientFilterOptions : [];
 
 	return (
 		<PayoutsTableClient
@@ -37,6 +38,7 @@ const PayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 			programFilterOptions={programFilterOptions}
 			statusFilterOptions={statusFilterOptions}
 			mobileMoneyProviderFilterOptions={mobileMoneyProviderFilterOptions}
+			recipientFilterOptions={recipientFilterOptions}
 		/>
 	);
 };

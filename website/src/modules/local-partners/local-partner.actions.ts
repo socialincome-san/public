@@ -4,6 +4,7 @@ import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import type {
 	LocalPartnerDashboardStats,
+	LocalPartnerPaginatedTableView,
 	LocalPartnerPayload,
 	LocalPartnerPrograms,
 	PublicLocalPartnerOverviewStatsMap,
@@ -23,9 +24,28 @@ import {
 	localPartnerOverviewSlugsSchema,
 	localPartnerProgramSummariesSchema,
 	localPartnerSessionTypeSchema,
+	localPartnerTableQuerySchema,
 	localPartnerUpdateSchema,
 } from './local-partner.schemas';
-import { createLocalPartner, deleteLocalPartner, getLocalPartner, updateLocalPartner } from './local-partner.service';
+import {
+	createLocalPartner,
+	deleteLocalPartner,
+	getLocalPartner,
+	getPaginatedLocalPartnerTableView,
+	updateLocalPartner,
+} from './local-partner.service';
+
+export const getLocalPartnerTableViewAction = async (query: unknown): Promise<Result<LocalPartnerPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedQuery = localPartnerTableQuerySchema.safeParse(query);
+
+	return parsedQuery.success
+		? getPaginatedLocalPartnerTableView(sessionResult.data.id, parsedQuery.data)
+		: resultFail('Invalid local partner query.');
+};
 
 export const createLocalPartnerAction = async (input: unknown): Promise<Result<LocalPartnerPayload>> => {
 	const sessionResult = await getSessionByType('user');

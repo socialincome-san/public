@@ -2,6 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { countriesTableConfig } from '@/components/data-table/configs/countries-table.config';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { CountryTableViewRow } from '@/modules/countries/country.types';
 import { PlusIcon } from 'lucide-react';
@@ -17,20 +18,17 @@ export default function CountriesTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [open, setOpen] = useState(false);
+	const { recordId: countryId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('countryId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [countryId, setCountryId] = useState<string | undefined>(undefined);
 
 	const openEmptyForm = () => {
-		setCountryId(undefined);
 		setErrorMessage(null);
-		setOpen(true);
+		openCreate();
 	};
 
 	const openEditForm = (row: CountryTableViewRow) => {
-		setCountryId(row.id);
 		setErrorMessage(null);
-		setOpen(true);
+		openRecord(row.id);
 	};
 
 	return (
@@ -53,7 +51,7 @@ export default function CountriesTable({
 
 			<CountryDialog
 				open={open}
-				onOpenChange={setOpen}
+				onOpenChange={onOpenChange}
 				countryId={countryId}
 				errorMessage={errorMessage}
 				onError={setErrorMessage}

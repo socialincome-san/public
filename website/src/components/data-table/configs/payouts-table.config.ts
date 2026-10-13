@@ -2,6 +2,7 @@ import { makePayoutColumns } from '@/components/data-table/columns/payouts';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
 import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
+import { linkedRecordFilter } from './linked-record-filter';
 
 type PayoutsFilterArgs = {
 	query?: TableQueryState & { totalRows: number };
@@ -9,6 +10,7 @@ type PayoutsFilterArgs = {
 		programs: { value: string; label: string }[];
 		statuses: { value: string; label: string }[];
 		mobileMoneyProviders: { value: string; label: string }[];
+		recipients: { value: string; label: string }[];
 	};
 };
 
@@ -25,8 +27,24 @@ export const payoutsTableConfig: DataTableConfig<PayoutTableViewRow> = {
 		{ id: 'status', label: 'Status' },
 		{ id: 'paymentAt', label: 'Payment date' },
 	],
-	makeColumns: makePayoutColumns,
+	makeColumns: () => makePayoutColumns(),
 	showColumnVisibilitySelector: true,
+};
+
+export const recipientPayoutsTableConfig: DataTableConfig<PayoutTableViewRow> = {
+	...payoutsTableConfig,
+	id: 'recipient-payouts',
+	searchKeys: ['id', 'mobileMoneyProviderName'],
+	sortOptions: payoutsTableConfig.sortOptions?.filter(({ id }) => id !== 'recipient' && id !== 'programName'),
+	makeColumns: () => makePayoutColumns({ hideRecipient: true, hideProgramName: true }),
+};
+
+export const mobileMoneyProviderPayoutsTableConfig: DataTableConfig<PayoutTableViewRow> = {
+	...payoutsTableConfig,
+	id: 'mobile-money-provider-payouts',
+	searchKeys: ['id', 'recipientFirstName', 'recipientLastName', 'programName'],
+	sortOptions: payoutsTableConfig.sortOptions?.filter(({ id }) => id !== 'mobileMoneyProviderName'),
+	makeColumns: () => makePayoutColumns({ hideMobileMoneyProvider: true }),
 };
 
 export const getPayoutsTableFilters = ({ query, filterOptions }: PayoutsFilterArgs): TableFilterConfig[] => {
@@ -59,5 +77,13 @@ export const getPayoutsTableFilters = ({ query, filterOptions }: PayoutsFilterAr
 			value: query.mobileMoneyProviderId,
 			options: filterOptions.mobileMoneyProviders,
 		},
+		...linkedRecordFilter({
+			id: 'recipient',
+			queryKey: 'recipientId',
+			label: 'Recipient',
+			placeholder: 'All recipients',
+			value: query.recipientId,
+			options: filterOptions.recipients,
+		}),
 	];
 };

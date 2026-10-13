@@ -76,6 +76,7 @@ export type PayoutTableQuery = {
 	programId?: string;
 	payoutStatus?: string;
 	mobileMoneyProviderId?: string;
+	recipientId?: string;
 };
 
 export type PayoutPaginatedTableView = {
@@ -84,6 +85,7 @@ export type PayoutPaginatedTableView = {
 	programFilterOptions: { id: string; name: string }[];
 	statusFilterOptions: { value: string; label: string }[];
 	mobileMoneyProviderFilterOptions: { id: string; name: string }[];
+	recipientFilterOptions: { id: string; name: string }[];
 };
 
 export type PayoutConfirmationTableViewRow = {

@@ -7,7 +7,11 @@ import { getLocalPartnerIdBySlug } from '@/modules/local-partners/local-partner.
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccesses } from '@/modules/program-access/program-access.types';
 import { getProgramPayoutForecastSource } from '@/modules/programs/program-reference.service';
-import { getRecipientProgramAssignment, recipientStatusService } from '@/modules/recipients/recipient.service';
+import {
+	getRecipientFilterOption,
+	getRecipientProgramAssignment,
+	recipientStatusService,
+} from '@/modules/recipients/recipient.service';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { canReadPayout, canWritePayout } from './payout.permissions';
 import * as payoutRepository from './payout.repository';
@@ -126,7 +130,16 @@ export const getPaginatedPayoutTableView = async (
 		const filteredProgramIds = selectedProgramId
 			? programIds.filter((programId) => programId === selectedProgramId)
 			: programIds;
-		const mobileMoneyProviderFilterOptions = await payoutRepository.findPayoutMobileMoneyProviderOptions(programIds);
+		const requestedRecipientId = normalizeOptionalFilter(query.recipientId);
+		// Unknown or inaccessible recipients are ignored, so the filter never hides rows behind an invisible value
+		const [mobileMoneyProviderFilterOptions, recipientOptionResult] = await Promise.all([
+			payoutRepository.findPayoutMobileMoneyProviderOptions(programIds),
+			requestedRecipientId ? getRecipientFilterOption(requestedRecipientId, programIds) : resultOk(null),
+		]);
+		if (!recipientOptionResult.success) {
+			return resultFail(recipientOptionResult.error);
+		}
+		const recipientOption = recipientOptionResult.data;
 		const selectedMobileMoneyProviderId = normalizeOptionalFilter(query.mobileMoneyProviderId);
 		const statusValues = Object.values(PayoutStatus);
 		const selectedStatus = statusValues.find((status) => status === query.payoutStatus);
@@ -134,12 +147,14 @@ export const getPaginatedPayoutTableView = async (
 			value: status,
 			label: `${status.charAt(0).toUpperCase()}${status.slice(1)}`,
 		}));
+		const recipientFilterOptions = recipientOption ? [recipientOption] : [];
 		const baseResult = {
 			tableRows: [],
 			totalCount: 0,
 			programFilterOptions,
 			statusFilterOptions,
 			mobileMoneyProviderFilterOptions,
+			recipientFilterOptions,
 		};
 
 		if (selectedProgramId && filteredProgramIds.length === 0) {
@@ -155,36 +170,12 @@ export const getPaginatedPayoutTableView = async (
 		const { payouts, totalCount } = await payoutRepository.findPayoutTableSource({
 			programIds: filteredProgramIds,
 			mobileMoneyProviderId: selectedMobileMoneyProviderId,
+			recipientId: recipientOption?.id,
 			status: selectedStatus,
 			query,
 		});
-		const tableRows: PayoutTableViewRow[] = payouts.flatMap((payout) => {
-			if (!payout.recipient.program) {
-				return [];
-			}
 
-			return [
-				{
-					id: payout.id,
-					recipientFirstName: payout.recipient.contact.firstName,
-					recipientLastName: payout.recipient.contact.lastName,
-					programName: payout.recipient.program.name,
-					mobileMoneyProviderName: payout.recipient.paymentInformation?.mobileMoneyProvider?.name ?? null,
-					amount: Number(payout.amount),
-					currency: payout.currency,
-					status: payout.status,
-					paymentAt: payout.paymentAt,
-				},
-			];
-		});
-
-		return resultOk({
-			tableRows,
-			totalCount,
-			programFilterOptions,
-			statusFilterOptions,
-			mobileMoneyProviderFilterOptions,
-		});
+		return resultOk({ ...baseResult, tableRows: toPayoutTableViewRows(payouts), totalCount });
 	} catch (error) {
 		console.error('Could not fetch payouts', { userId, error });
 
@@ -756,6 +747,29 @@ const toPayoutRecord = (
 	updatedAt: payout.updatedAt,
 });
 
+const toPayoutTableViewRows = (
+	payouts: Awaited<ReturnType<typeof payoutRepository.findPayoutTableSource>>['payouts'],
+): PayoutTableViewRow[] =>
+	payouts.flatMap((payout) => {
+		if (!payout.recipient.program) {
+			return [];
+		}
+
+		return [
+			{
+				id: payout.id,
+				recipientFirstName: payout.recipient.contact.firstName,
+				recipientLastName: payout.recipient.contact.lastName,
+				programName: payout.recipient.program.name,
+				mobileMoneyProviderName: payout.recipient.paymentInformation?.mobileMoneyProvider?.name ?? null,
+				amount: Number(payout.amount),
+				currency: payout.currency,
+				status: payout.status,
+				paymentAt: payout.paymentAt,
+			},
+		];
+	});
+
 const getOperatorPrograms = (accesses: ProgramAccesses): ProgramAccesses =>
 	accesses.filter(({ permission }) => permission === ProgramPermission.operator);
 
@@ -770,6 +784,7 @@ const emptyPayoutTableView = (): PayoutPaginatedTableView => ({
 	programFilterOptions: [],
 	statusFilterOptions: [],
 	mobileMoneyProviderFilterOptions: [],
+	recipientFilterOptions: [],
 });
 
 const normalizeOptionalFilter = (value: string | undefined): string | undefined => {

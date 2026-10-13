@@ -8,6 +8,7 @@ import type {
 	SurveyGenerationPreviewResult,
 	SurveyGenerationResult,
 	SurveyImpactFilterOptions,
+	SurveyPaginatedTableView,
 	SurveyPayload,
 	SurveyWithRecipient,
 } from '@/modules/surveys/survey.types';
@@ -18,17 +19,33 @@ import {
 	surveyIdSchema,
 	surveyPublicLookupSchema,
 	surveySaveActionSchema,
+	surveyTableQuerySchema,
 	surveyUpdateSchema,
 } from './survey.schemas';
 import {
 	createSurvey,
 	generateSurveys,
+	getPaginatedSurveyTableView,
 	getSurvey,
 	getSurveyByIdAndRecipient,
 	previewSurveyGeneration,
 	saveSurveyChanges,
 	updateSurvey,
 } from './survey.service';
+
+export const getSurveyTableViewAction = async (query: unknown): Promise<Result<SurveyPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const queryResult = surveyTableQuerySchema.safeParse(query);
+	if (!queryResult.success) {
+		return resultFail('Invalid table query.');
+	}
+
+	return getPaginatedSurveyTableView(sessionResult.data.id, queryResult.data);
+};
 
 export const createSurveyAction = async (input: unknown): Promise<Result<SurveyPayload>> => {
 	const sessionResult = await getSessionByType('user');
