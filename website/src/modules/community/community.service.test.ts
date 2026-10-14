@@ -124,6 +124,7 @@ describe('getPersonContributions', () => {
 				}),
 				story('Elsewhere', 'pages/elsewhere', { communityContributors: [{ label: 'Content', people: ['p2'] }] }),
 				story('Empty', 'pages/empty', {}),
+				story('Unfinished', 'pages/unfinished', { communityContributors: [{ label: 'Content' }, { people: ['p1'] }] }),
 			],
 		});
 

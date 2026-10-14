@@ -21,7 +21,7 @@ export const LinkList = ({ items, initialCount = 5, showMoreLabel, showLessLabel
 	<ShowMoreToggle initialCount={initialCount} showMoreLabel={showMoreLabel} showLessLabel={showLessLabel}>
 		{items.map((item) => (
 			<NextLink
-				key={item.href}
+				key={`${item.href}-${item.label}`}
 				href={item.href}
 				className="group border-border focus-visible:ring-ring flex items-center justify-between gap-4 border-b py-4 focus-visible:ring-2 focus-visible:outline-none"
 			>

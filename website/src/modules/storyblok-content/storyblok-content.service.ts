@@ -209,12 +209,18 @@ export const getAllPersons = async (language: string): Promise<Result<ISbStoryDa
 		content_type: CONTENT_TYPE.person,
 	});
 
-export const getCommunityPages = async (language: string): Promise<Result<ISbStoryData<CommunityPageContent>[]>> =>
-	fetchStoryblokStories<ISbStoryData<CommunityPageContent>>({
+export const getCommunityPages = async (language: string): Promise<Result<ISbStoryData<CommunityPageContent>[]>> => {
+	const result = await fetchStoryblokStories<ISbStoryData<CommunityPageContent>>({
 		...(await getStoryParams(language)),
 		starts_with: `${STORYBLOK_PAGES_FOLDER}/`,
 		filter_query: { communityEnabled: { is: true } },
+		excluding_fields: CONTENT_FIELD,
 	});
+
+	return result.success
+		? resultOk(result.data.filter((story) => !isCampaignStory(story) || isListedCampaignStory(story)))
+		: result;
+};
 
 export const getOverviewArticleTypes = async (language: string): Promise<Result<ISbStoryData<ArticleType>[]>> => {
 	const result = await fetchStoryblokStories<ISbStoryData<ArticleType>>({

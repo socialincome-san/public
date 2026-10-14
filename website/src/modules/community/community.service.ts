@@ -21,7 +21,7 @@ import {
 	getPrimaryRoleLabels,
 } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
-import type { CommunityPage, StoryReference } from './community.schemas';
+import { communityPageSchema, type CommunityPage, type StoryReference } from './community.schemas';
 import type { CommunityPanelData, CommunityPerson, PersonContribution } from './community.types';
 
 const ARTICLE_IMAGE_SIZE = 128;
@@ -159,7 +159,8 @@ export const getPersonContributions = async (
 
 	return resultOk(
 		pagesResult.data.flatMap((story) => {
-			const roles = (story.content.communityContributors ?? [])
+			const page = communityPageSchema.safeParse(story.content);
+			const roles = (page.success ? (page.data.communityContributors ?? []) : [])
 				.filter((group) => group.people.some((reference) => toUuid(reference) === personUuid))
 				.map((group) => group.label.trim())
 				.filter(Boolean);

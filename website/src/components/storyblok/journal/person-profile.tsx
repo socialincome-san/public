@@ -114,12 +114,9 @@ export const PersonProfile = ({
 		.filter((circle) => circle.status === 'active')
 		.map((circle) => circle.label);
 
-	const roleCounts = new Map<string, number>();
-	contributions
+	const roleCounts = contributions
 		.flatMap((contribution) => contribution.roles)
-		.forEach((role) => {
-			roleCounts.set(role, (roleCounts.get(role) ?? 0) + 1);
-		});
+		.reduce((counts, role) => counts.set(role, (counts.get(role) ?? 0) + 1), new Map<string, number>());
 
 	const externalLinkCue = (
 		<>

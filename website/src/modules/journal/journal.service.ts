@@ -12,6 +12,7 @@ import {
 	createWebsitePersonLink,
 	getArticleTitle,
 	getArticleTypeLabel,
+	getPersonAvatarSrc,
 	getPersonDisplayName,
 	toStringArray,
 } from '@/lib/storyblok/storyblok-utils';
@@ -36,7 +37,7 @@ const OTHER_PERSONS_COUNT = 8;
 const pickOtherPersons = (person: ISbStoryData<Person>, persons: ISbStoryData<Person>[]) => {
 	const circles = new Set(toStringArray(person.content.activeCircleMember));
 	const candidates = persons.filter(
-		(other) => other.uuid !== person.uuid && other.content.volunteerStatus === 'active' && other.content.avatar?.filename,
+		(other) => other.uuid !== person.uuid && other.content.volunteerStatus === 'active' && getPersonAvatarSrc(other),
 	);
 	const sharesCircle = (other: ISbStoryData<Person>) =>
 		toStringArray(other.content.activeCircleMember).some((circle) => circles.has(circle));
