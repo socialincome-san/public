@@ -108,6 +108,12 @@ export const getTimeCommitmentLabels = async (language: string): Promise<Result<
 	return withStoryblokCache(service.getTimeCommitmentLabels(language));
 };
 
+export const getContributionAreaLabels = async (language: string): Promise<Result<Record<string, string>>> => {
+	'use cache';
+
+	return withStoryblokCache(service.getContributionAreaLabels(language));
+};
+
 export const getAllPersons = async (language: string): Promise<Result<ISbStoryData<Person>[]>> => {
 	'use cache';
 
