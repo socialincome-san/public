@@ -18,21 +18,6 @@
 			"description": "Make a donation and we'll create your account automatically."
 		}
 	},
-	"destinations": {
-		"title": "Where you'll land",
-		"dashboard": {
-			"title": "Dashboard",
-			"description": "For contributors: contributions and receipts"
-		},
-		"partner-space": {
-			"title": "Partner Space",
-			"description": "For local partners"
-		},
-		"portal": {
-			"title": "Portal",
-			"description": "For organizations running programs"
-		}
-	},
 	"sent": {
 		"title": "Check your inbox",
 		"description": "If an account exists for <strong>{email}</strong>, we'll email you a login link shortly.",

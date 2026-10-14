@@ -18,21 +18,6 @@
 			"description": "Spende und wir erstellen dein Konto automatisch."
 		}
 	},
-	"destinations": {
-		"title": "Hier landest du",
-		"dashboard": {
-			"title": "Dashboard",
-			"description": "Für Contributors: Beiträge und Belege"
-		},
-		"partner-space": {
-			"title": "Partner Space",
-			"description": "Für lokale Partner"
-		},
-		"portal": {
-			"title": "Portal",
-			"description": "Für Organisationen, die Programme führen"
-		}
-	},
 	"sent": {
 		"title": "Schau in dein Postfach",
 		"description": "Wenn ein Konto für <strong>{email}</strong> existiert, senden wir dir in Kürze einen Anmeldelink per E-Mail.",

@@ -18,21 +18,6 @@
 			"description": "Fai una donazione e creeremo il tuo account automaticamente."
 		}
 	},
-	"destinations": {
-		"title": "Dove arriverai",
-		"dashboard": {
-			"title": "Dashboard",
-			"description": "Per i contributori: contributi e ricevute"
-		},
-		"partner-space": {
-			"title": "Partner Space",
-			"description": "Per i partner locali"
-		},
-		"portal": {
-			"title": "Portal",
-			"description": "Per le organizzazioni che gestiscono programmi"
-		}
-	},
 	"sent": {
 		"title": "Controlla la tua casella di posta",
 		"description": "Se esiste un account per <strong>{email}</strong>, ti invieremo a breve un link di accesso via e-mail.",

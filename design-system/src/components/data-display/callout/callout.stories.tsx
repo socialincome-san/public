@@ -16,7 +16,11 @@ const meta = {
 	args: {
 		title: 'No account yet?',
 		description: 'Make a donation and we’ll create your account automatically.',
-		action: <Button size="sm">Donate now</Button>,
+		action: (
+			<Button variant="outline" size="sm">
+				Donate now
+			</Button>
+		),
 	},
 	parameters: {
 		docs: {

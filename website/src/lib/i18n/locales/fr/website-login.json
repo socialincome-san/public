@@ -18,21 +18,6 @@
 			"description": "Fais un don et nous créerons ton compte automatiquement."
 		}
 	},
-	"destinations": {
-		"title": "Où tu arriveras",
-		"dashboard": {
-			"title": "Dashboard",
-			"description": "Pour les contributeurs : contributions et reçus"
-		},
-		"partner-space": {
-			"title": "Partner Space",
-			"description": "Pour les partenaires locaux"
-		},
-		"portal": {
-			"title": "Portal",
-			"description": "Pour les organisations qui gèrent des programmes"
-		}
-	},
 	"sent": {
 		"title": "Vérifie ta boîte mail",
 		"description": "Si un compte existe pour <strong>{email}</strong>, tu recevras bientôt un lien de connexion par e-mail.",

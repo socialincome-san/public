@@ -1,10 +1,7 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/nextjs-vite';
-import { Building2, Handshake, LayoutDashboard } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '../../actions/button/button';
 import { Callout } from '../../data-display/callout/callout';
-import { IconList } from '../../data-display/icon-list/icon-list';
-import { Separator } from '../../data-display/separator/separator';
 import { AuthStatus } from '../../feedback/auth-status/auth-status';
 import { MagicLinkForm } from '../../forms/magic-link-form/magic-link-form';
 import { LoginLink } from '../../navigation/login-link/login-link';
@@ -14,17 +11,6 @@ import { SiteHeader } from '../../navigation/site-header/site-header';
 import { SiteMenuDesktop } from '../../navigation/site-header/site-menu-desktop';
 import { BlockWrapper } from '../block-wrapper/block-wrapper';
 import { AuthPanel, AuthPanelQuote } from './auth-panel';
-
-const destinations = [
-	{
-		id: 'dashboard',
-		icon: <LayoutDashboard />,
-		title: 'Dashboard',
-		description: 'For contributors: contributions and receipts',
-	},
-	{ id: 'partner-space', icon: <Handshake />, title: 'Partner Space', description: 'For local partners' },
-	{ id: 'portal', icon: <Building2 />, title: 'Portal', description: 'For organizations running programs' },
-];
 
 const MagicLinkDemo = () => {
 	const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
@@ -72,12 +58,14 @@ const MagicLinkDemo = () => {
 				sending={state === 'sending'}
 				onSubmit={submit}
 			/>
-			<Separator />
-			<IconList title="Where you’ll land" items={destinations} />
 			<Callout
 				title="No account yet?"
 				description="Make a donation and we’ll create your account automatically."
-				action={<Button size="sm">Donate now</Button>}
+				action={
+					<Button variant="outline" size="sm">
+						Donate now
+					</Button>
+				}
 			/>
 		</div>
 	);
