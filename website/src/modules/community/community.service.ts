@@ -2,6 +2,7 @@ import type { Person } from '@/generated/storyblok/types/109655/storyblok-compon
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import { getWebsitePathTailFromStoryblokSlug, getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	createWebsiteJournalArticleLink,
 	createWebsitePersonLink,
@@ -16,11 +17,12 @@ import {
 	getAllPersons,
 	getArticlesByUuids,
 	getCommunityGlobals,
+	getCommunityPages,
 	getPrimaryRoleLabels,
 } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type { CommunityPage, StoryReference } from './community.schemas';
-import type { CommunityPanelData, CommunityPerson } from './community.types';
+import type { CommunityPanelData, CommunityPerson, PersonContribution } from './community.types';
 
 const ARTICLE_IMAGE_SIZE = 128;
 
@@ -143,4 +145,36 @@ export const getCommunityPanelData = async (
 				: undefined,
 		})),
 	});
+};
+
+export const getPersonContributions = async (
+	personUuid: string,
+	language: string,
+	currency: WebsiteCurrency,
+): Promise<Result<PersonContribution[]>> => {
+	const pagesResult = await getCommunityPages(language);
+	if (!pagesResult.success) {
+		return resultFail('Could not load the person contributions.');
+	}
+
+	return resultOk(
+		pagesResult.data.flatMap((story) => {
+			const roles = (story.content.communityContributors ?? [])
+				.filter((group) => group.people.some((reference) => toUuid(reference) === personUuid))
+				.map((group) => group.label.trim())
+				.filter(Boolean);
+			if (roles.length === 0) {
+				return [];
+			}
+			const { title } = story.content;
+
+			return [
+				{
+					title: typeof title === 'string' && title.trim() ? title.trim() : story.name,
+					href: getWebsitePublicPath(language, currency, getWebsitePathTailFromStoryblokSlug(story.full_slug)),
+					roles: [...new Set(roles)],
+				},
+			];
+		}),
+	);
 };

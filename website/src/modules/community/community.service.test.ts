@@ -2,16 +2,18 @@ const mockGetCommunityGlobals = jest.fn();
 const mockGetAllPersons = jest.fn();
 const mockGetPrimaryRoleLabels = jest.fn();
 const mockGetArticlesByUuids = jest.fn();
+const mockGetCommunityPages = jest.fn();
 
 jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getCommunityGlobals: mockGetCommunityGlobals,
 	getAllPersons: mockGetAllPersons,
 	getPrimaryRoleLabels: mockGetPrimaryRoleLabels,
 	getArticlesByUuids: mockGetArticlesByUuids,
+	getCommunityPages: mockGetCommunityPages,
 }));
 
 import type { CommunityPage } from './community.schemas';
-import { getCommunityPanelData } from './community.service';
+import { getCommunityPanelData, getPersonContributions } from './community.service';
 
 const person = (uuid: string, firstName: string, volunteerStatus: string, country: string) => ({
 	uuid,
@@ -95,5 +97,52 @@ describe('getCommunityPanelData', () => {
 
 		expect(result.success).toBe(false);
 		expect(consoleError).toHaveBeenCalled();
+	});
+});
+
+describe('getPersonContributions', () => {
+	const story = (name: string, fullSlug: string, content: Record<string, unknown>) => ({
+		name,
+		full_slug: fullSlug,
+		content,
+	});
+
+	it('lists the pages that name the person, with the labels of their groups as roles', async () => {
+		mockGetCommunityPages.mockResolvedValue({
+			success: true,
+			data: [
+				story('Mission', 'pages/mission', {
+					communityContributors: [
+						{ label: 'Content', people: ['p1', 'p2'] },
+						{ label: 'Research', people: [{ uuid: 'p1' }] },
+						{ label: ' Content ', people: ['p1'] },
+					],
+				}),
+				story('sierra-leone', 'pages/countries/sierra-leone', {
+					title: 'Sierra Leone',
+					communityContributors: [{ label: 'Translation', people: ['p1'] }],
+				}),
+				story('Elsewhere', 'pages/elsewhere', { communityContributors: [{ label: 'Content', people: ['p2'] }] }),
+				story('Empty', 'pages/empty', {}),
+			],
+		});
+
+		const result = await getPersonContributions('p1', 'en', 'USD');
+
+		expect(result).toEqual({
+			success: true,
+			data: [
+				{ title: 'Mission', href: '/en/usd/mission', roles: ['Content', 'Research'] },
+				{ title: 'Sierra Leone', href: '/en/usd/countries/sierra-leone', roles: ['Translation'] },
+			],
+		});
+	});
+
+	it('fails when the pages cannot be loaded', async () => {
+		mockGetCommunityPages.mockResolvedValue({ success: false, error: 'Not found', status: 404 });
+
+		const result = await getPersonContributions('p1', 'en', 'USD');
+
+		expect(result.success).toBe(false);
 	});
 });
