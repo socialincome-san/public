@@ -1,8 +1,10 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
+import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
 
@@ -14,7 +16,6 @@ type PayoutFormDialogProps = {
 
 export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDialogProps) => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const dialogTitle = payoutId ? 'Edit payout' : 'Add payout';
 
 	const onError = (error?: unknown) => {
 		const message = retrieveErrorMessage(error);
@@ -29,26 +30,43 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDia
 		}
 	};
 
+	const form = (
+		<>
+			{errorMessage && (
+				<Alert variant="destructive">
+					<AlertTitle>Error</AlertTitle>
+					<AlertDescription>{errorMessage}</AlertDescription>
+				</Alert>
+			)}
+
+			<PayoutForm
+				payoutId={payoutId}
+				onSuccess={() => onOpenChange(false)}
+				onCancel={() => onOpenChange(false)}
+				onError={onError}
+			/>
+		</>
+	);
+
+	if (payoutId) {
+		return (
+			<TabbedDialog
+				open={open}
+				onOpenChange={handleOpenChange}
+				title="Edit payout"
+				tabs={[{ value: 'details', label: 'Details', content: form }, auditLogTab('payout', payoutId)]}
+			/>
+		);
+	}
+
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogContent size="md">
 				<DialogHeader>
-					<DialogTitle>{dialogTitle}</DialogTitle>
+					<DialogTitle>Add payout</DialogTitle>
 				</DialogHeader>
 
-				{errorMessage && (
-					<Alert variant="destructive">
-						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>{errorMessage}</AlertDescription>
-					</Alert>
-				)}
-
-				<PayoutForm
-					payoutId={payoutId}
-					onSuccess={() => onOpenChange(false)}
-					onCancel={() => onOpenChange(false)}
-					onError={onError}
-				/>
+				{form}
 			</DialogContent>
 		</Dialog>
 	);

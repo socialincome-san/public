@@ -9,7 +9,14 @@ export const auditTableConfig: DataTableConfig<AuditTableViewRow> = {
 	title: 'Audit log',
 	emptyMessage: 'No audit events found',
 	searchKeys: ['entityName', 'entityId', 'actorName'],
-	makeColumns: makeAuditColumns,
+	makeColumns: () => makeAuditColumns(),
+};
+
+export const entityAuditTableConfig: DataTableConfig<AuditTableViewRow> = {
+	...auditTableConfig,
+	id: 'entity-audit',
+	searchKeys: [],
+	makeColumns: () => makeAuditColumns({ hideEntity: true }),
 };
 
 export const getAuditTableFilters = (query?: TableQueryState): TableFilterConfig[] =>

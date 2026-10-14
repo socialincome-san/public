@@ -1,9 +1,10 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
+import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
 import { Settings } from 'lucide-react';
 import { useState } from 'react';
 import { ProgramSettingsForm } from './program-settings-form';
@@ -37,28 +38,36 @@ export const ProgramSettingsDialog = ({ programId, readOnly }: ProgramSettingsDi
 				Program settings
 			</Button>
 
-			<Dialog open={isOpen} onOpenChange={closeDialog}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{readOnly ? 'View program settings' : 'Program settings'}</DialogTitle>
-					</DialogHeader>
+			<TabbedDialog
+				open={isOpen}
+				onOpenChange={closeDialog}
+				title={readOnly ? 'View program settings' : 'Program settings'}
+				tabs={[
+					{
+						value: 'details',
+						label: 'Details',
+						content: (
+							<>
+								{errorMessage && (
+									<Alert variant="destructive">
+										<AlertTitle>Error</AlertTitle>
+										<AlertDescription>{errorMessage}</AlertDescription>
+									</Alert>
+								)}
 
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-
-					<ProgramSettingsForm
-						programId={programId}
-						readOnly={readOnly}
-						onSuccess={() => closeDialog(false)}
-						onCancel={() => closeDialog(false)}
-						onError={handleError}
-					/>
-				</DialogContent>
-			</Dialog>
+								<ProgramSettingsForm
+									programId={programId}
+									readOnly={readOnly}
+									onSuccess={() => closeDialog(false)}
+									onCancel={() => closeDialog(false)}
+									onError={handleError}
+								/>
+							</>
+						),
+					},
+					auditLogTab('program', programId),
+				]}
+			/>
 		</>
 	);
 };

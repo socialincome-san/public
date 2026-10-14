@@ -1,14 +1,32 @@
 const mockIsAdmin = jest.fn();
 const mockFindAuditEventPage = jest.fn();
 const mockFindAuditEventHistory = jest.fn();
+const mockGetRecipientById = jest.fn();
+const mockGetAccessiblePrograms = jest.fn();
+const mockGetCampaignFilterOption = jest.fn();
 
-jest.mock('@/modules/users/user.service', () => ({ isAdmin: mockIsAdmin }));
+jest.mock('@/modules/users/user.service', () => ({ isAdmin: mockIsAdmin, getUser: jest.fn() }));
+jest.mock('@/modules/recipients/recipient.service', () => ({ getRecipientById: mockGetRecipientById }));
+jest.mock('@/modules/program-access/program-access.service', () => ({ getAccessiblePrograms: mockGetAccessiblePrograms }));
+jest.mock('@/modules/campaigns/campaign.service', () => ({ getCampaignFilterOption: mockGetCampaignFilterOption }));
+jest.mock('@/modules/contributions/contribution.service', () => ({ getContribution: jest.fn() }));
+jest.mock('@/modules/contributors/contributor.service', () => ({ getContributor: jest.fn() }));
+jest.mock('@/modules/countries/country.service', () => ({ getCountry: jest.fn() }));
+jest.mock('@/modules/expenses/expense.service', () => ({ getExpense: jest.fn() }));
+jest.mock('@/modules/focuses/focus.service', () => ({ getFocus: jest.fn() }));
+jest.mock('@/modules/local-partners/local-partner.service', () => ({ getLocalPartner: jest.fn() }));
+jest.mock('@/modules/mobile-money-providers/mobile-money-provider.service', () => ({ getMobileMoneyProvider: jest.fn() }));
+jest.mock('@/modules/organizations/organization.service', () => ({ getOrganization: jest.fn() }));
+jest.mock('@/modules/payouts/payout.service', () => ({ getPayout: jest.fn() }));
+jest.mock('@/modules/programs/program.service', () => ({ getProgramSettings: jest.fn() }));
+jest.mock('@/modules/surveys/survey.service', () => ({ getSurvey: jest.fn() }));
 jest.mock('./audit.repository', () => ({
 	findAuditEventPage: mockFindAuditEventPage,
 	findAuditEventHistory: mockFindAuditEventHistory,
 }));
 
-import { getAuditTableView } from './audit.service';
+import type { UserSession } from '@/modules/users/user.types';
+import { getAuditTableView, getEntityAuditTableView } from './audit.service';
 
 const event = (id: string, action: string, snapshot: object | null, entityName: string | null) => ({
 	id,
@@ -70,5 +88,68 @@ describe('getAuditTableView', () => {
 				],
 			},
 		});
+	});
+});
+
+describe('getEntityAuditTableView', () => {
+	const session = { id: 'user-1' } as UserSession;
+	const history = [
+		event('v1', 'create', { firstName: 'Ada' }, 'Ada'),
+		event('v2', 'update', { firstName: 'Ada', lastName: 'King' }, 'Ada King'),
+		event('v3', 'update', { firstName: 'Augusta', lastName: 'King' }, 'Augusta King'),
+	];
+	const entityQuery = { ...query, pageSize: 2, entityType: 'recipient' as const, entityId: 'recipient-1' };
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockGetRecipientById.mockResolvedValue({ success: true, data: {} });
+		mockFindAuditEventHistory.mockResolvedValue(history);
+	});
+
+	test('is only available to those who may read the entity', async () => {
+		mockGetRecipientById.mockResolvedValue({ success: false, error: 'Permission denied' });
+
+		await expect(getEntityAuditTableView(session, entityQuery)).resolves.toEqual({
+			success: false,
+			error: 'Permission denied',
+		});
+		expect(mockGetRecipientById).toHaveBeenCalledWith(session, 'recipient-1');
+		expect(mockFindAuditEventHistory).not.toHaveBeenCalled();
+	});
+
+	test('pages the history newest first, each row diffed against the previous event', async () => {
+		const result = await getEntityAuditTableView(session, entityQuery);
+
+		expect(mockFindAuditEventHistory).toHaveBeenCalledWith([{ entityType: 'recipient', entityId: 'recipient-1' }]);
+		expect(result).toMatchObject({
+			success: true,
+			data: {
+				totalCount: 3,
+				tableRows: [
+					{ id: 'v3', entityName: 'Augusta King', changes: [{ path: 'firstName', old: 'Ada', new: 'Augusta' }] },
+					{ id: 'v2', changes: [{ path: 'lastName', old: null, new: 'King' }] },
+				],
+			},
+		});
+		await expect(getEntityAuditTableView(session, { ...entityQuery, page: 2 })).resolves.toMatchObject({
+			data: { tableRows: [{ id: 'v1' }] },
+		});
+	});
+
+	test('shows campaigns only to operators of their program', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [
+				{ programId: 'program-1', permission: 'operator' },
+				{ programId: 'program-2', permission: 'owner' },
+			],
+		});
+		mockGetCampaignFilterOption.mockResolvedValue({ success: true, data: null });
+
+		await expect(
+			getEntityAuditTableView(session, { ...entityQuery, entityType: 'campaign', entityId: 'campaign-1' }),
+		).resolves.toMatchObject({ success: false });
+		expect(mockGetCampaignFilterOption).toHaveBeenCalledWith('campaign-1', ['program-1']);
+		expect(mockFindAuditEventHistory).not.toHaveBeenCalled();
 	});
 });

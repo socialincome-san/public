@@ -25,3 +25,23 @@ export type AuditTableView = {
 	tableRows: AuditTableViewRow[];
 	totalCount: number;
 };
+
+/** Entity types whose edit dialogs show their audit log. */
+export const entityAuditTypes = [
+	'recipient',
+	'payout',
+	'contributor',
+	'contribution',
+	'campaign',
+	'survey',
+	'expense',
+	'country',
+	'focus',
+	'local-partner',
+	'mobile-money-provider',
+	'program',
+	'organization',
+	'user',
+] as const;
+
+export type EntityAuditType = (typeof entityAuditTypes)[number];
