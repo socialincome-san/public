@@ -1,5 +1,6 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { recipientPayoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
 import { recipientSurveysTableConfig } from '@/components/data-table/configs/surveys-table.config';
@@ -90,6 +91,7 @@ export const RecipientDialog = ({
 							/>
 						),
 					},
+					auditLogTab('recipient', recipientId),
 				]}
 			/>
 		);
@@ -97,7 +99,7 @@ export const RecipientDialog = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent size="md">
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>{recipientId ? 'Edit Recipient' : 'New Recipient'}</DialogTitle>
 				</DialogHeader>

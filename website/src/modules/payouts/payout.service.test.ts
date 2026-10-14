@@ -369,6 +369,16 @@ describe('payout writes', () => {
 		expectFailure(await getPayout('user-1', 'payout-1'), 'Access denied to this payout');
 	});
 
+	test('denies reading a payout of a recipient without program', async () => {
+		mockFindPayout.mockResolvedValue({
+			...payoutPayloadSource,
+			recipient: { ...payoutPayloadSource.recipient, program: null },
+		});
+		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: [] });
+
+		expectFailure(await getPayout('user-1', 'payout-1'), 'Access denied to this payout');
+	});
+
 	test('denies updating a payout without operator access', async () => {
 		mockFindPayoutForUpdate.mockResolvedValue({ recipient: { programId: 'program-1' } });
 		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: [] });

@@ -71,6 +71,11 @@ listed, they only give the first change its diff. Type labels and field
 labels come from `auditEntityTypes` in
 `src/components/audit/audit-summary.ts`.
 
+The edit dialog of an entity has an "Audit log" tab (`auditLogTab`) with
+the events of that entity. Whoever may open the entity may read them:
+`getEntityAuditTableView` checks access with the module's own getter,
+listed per type in `audit.service.ts`.
+
 ## Notes
 
 - Firebase cannot join the transaction; services update it before the
@@ -92,3 +97,7 @@ labels come from `auditEntityTypes` in
    each step safe to retry.
 4. Add the type to `auditEntityTypes` in
    `src/components/audit/audit-summary.ts`: label and field labels.
+5. For its edit dialog's "Audit log" tab, add the type to
+   `entityAuditTypes` in `src/modules/audit/audit.types.ts`, its access
+   check to `readEntity` in `audit.service.ts`, and `auditLogTab` to the
+   dialog.

@@ -1,5 +1,6 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { campaignContributionsTableConfig } from '@/components/data-table/configs/contributions-table.config';
 import { subscriptionsTableConfig } from '@/components/data-table/configs/subscriptions-table.config';
@@ -47,6 +48,7 @@ export const CampaignDialog = ({ open, onOpenChange, campaign }: Props) => {
 						/>
 					),
 				},
+				auditLogTab('campaign', campaignId),
 			]}
 		/>
 	);

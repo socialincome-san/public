@@ -1,8 +1,9 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
+import { RecordDialog } from '@/components/data-table/clients/record-dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
 
@@ -14,7 +15,6 @@ type PayoutFormDialogProps = {
 
 export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDialogProps) => {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const dialogTitle = payoutId ? 'Edit payout' : 'Add payout';
 
 	const onError = (error?: unknown) => {
 		const message = retrieveErrorMessage(error);
@@ -30,26 +30,25 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDia
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent size="md">
-				<DialogHeader>
-					<DialogTitle>{dialogTitle}</DialogTitle>
-				</DialogHeader>
+		<RecordDialog
+			open={open}
+			onOpenChange={handleOpenChange}
+			title={payoutId ? 'Edit payout' : 'Add payout'}
+			tabs={payoutId ? [auditLogTab('payout', payoutId)] : []}
+		>
+			{errorMessage && (
+				<Alert variant="destructive">
+					<AlertTitle>Error</AlertTitle>
+					<AlertDescription>{errorMessage}</AlertDescription>
+				</Alert>
+			)}
 
-				{errorMessage && (
-					<Alert variant="destructive">
-						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>{errorMessage}</AlertDescription>
-					</Alert>
-				)}
-
-				<PayoutForm
-					payoutId={payoutId}
-					onSuccess={() => onOpenChange(false)}
-					onCancel={() => onOpenChange(false)}
-					onError={onError}
-				/>
-			</DialogContent>
-		</Dialog>
+			<PayoutForm
+				payoutId={payoutId}
+				onSuccess={() => onOpenChange(false)}
+				onCancel={() => onOpenChange(false)}
+				onError={onError}
+			/>
+		</RecordDialog>
 	);
 };

@@ -15,12 +15,7 @@ import type { AuditTableViewRow } from '@/modules/audit/audit.types';
 import { ChangeList } from '@socialincome/design-system/data-display/change-list/change-list';
 import { DataTableTextCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
-export const makeAuditColumns = (): ColumnDef<AuditTableViewRow>[] => [
-	{
-		accessorKey: 'createdAt',
-		header: 'Date',
-		cell: (ctx) => <DateCell ctx={ctx} options={{ dateStyle: 'short', timeStyle: 'short' }} />,
-	},
+const entityColumns: ColumnDef<AuditTableViewRow>[] = [
 	{
 		id: 'entityType',
 		header: 'Type',
@@ -31,6 +26,15 @@ export const makeAuditColumns = (): ColumnDef<AuditTableViewRow>[] => [
 		header: 'Name',
 		cell: ({ row }) => <DataTableTextCell value={getAuditEntityName(row.original)} />,
 	},
+];
+
+export const makeAuditColumns = ({ hideEntity = false }: { hideEntity?: boolean } = {}): ColumnDef<AuditTableViewRow>[] => [
+	{
+		accessorKey: 'createdAt',
+		header: 'Date',
+		cell: (ctx) => <DateCell ctx={ctx} options={{ dateStyle: 'short', timeStyle: 'short' }} />,
+	},
+	...(hideEntity ? [] : entityColumns),
 	{
 		id: 'changes',
 		header: 'Changes',

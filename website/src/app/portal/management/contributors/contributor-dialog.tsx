@@ -1,5 +1,6 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { contributorContributionsTableConfig } from '@/components/data-table/configs/contributions-table.config';
 import { contributorDonationCertificatesTableConfig } from '@/components/data-table/configs/donation-certificates-table.config';
@@ -80,6 +81,7 @@ export const ContributorDialog = ({ open, onOpenChange, contributorId, errorMess
 							/>
 						),
 					},
+					auditLogTab('contributor', contributorId),
 				]}
 			/>
 		);
@@ -87,7 +89,7 @@ export const ContributorDialog = ({ open, onOpenChange, contributorId, errorMess
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>New Contributor</DialogTitle>
 				</DialogHeader>

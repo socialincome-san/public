@@ -381,14 +381,13 @@ export const getPayout = async (userId: string, payoutId: string): Promise<Resul
 			return resultFail('Payout not found');
 		}
 
-		if (payout.recipient.program) {
-			const accessResult = await getAccessiblePrograms(userId);
-			if (!accessResult.success) {
-				return resultFail(accessResult.error);
-			}
-			if (!canWritePayout(accessResult.data, payout.recipient.program.id)) {
-				return resultFail('Access denied to this payout');
-			}
+		const accessResult = await getAccessiblePrograms(userId);
+		if (!accessResult.success) {
+			return resultFail(accessResult.error);
+		}
+		const programId = payout.recipient.program?.id;
+		if (!programId || !canWritePayout(accessResult.data, programId)) {
+			return resultFail('Access denied to this payout');
 		}
 
 		return resultOk(toPayoutPayload(payout));
