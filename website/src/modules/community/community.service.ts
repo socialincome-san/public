@@ -18,6 +18,7 @@ import {
 	getArticlesByUuids,
 	getCommunityGlobals,
 	getCommunityPages,
+	getContributionAreaLabels,
 	getPrimaryRoleLabels,
 } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
@@ -36,6 +37,9 @@ const toHref = (link: StoryblokMultilink | undefined, language: string, currency
 
 const blankToUndefined = (value: string | undefined) => (value?.trim() ? value.trim() : undefined);
 
+// Labels written before the field became a datasource dropdown are free text and shown as is
+const toAreaLabel = (value: string, areaLabels: Record<string, string>) => areaLabels[value.trim()] ?? value.trim();
+
 export const getCommunityPanelData = async (
 	page: CommunityPage,
 	language: string,
@@ -53,17 +57,19 @@ export const getCommunityPanelData = async (
 			: globalsPromise.then((result) =>
 					getArticlesByUuids(language, result.success ? (result.data.content.defaultArticles ?? []).map(toUuid) : []),
 				);
-	const [globalsResult, personsResult, roleLabelsResult, articlesResult] = await Promise.all([
+	const [globalsResult, personsResult, roleLabelsResult, areaLabelsResult, articlesResult] = await Promise.all([
 		globalsPromise,
 		getAllPersons(language),
 		getPrimaryRoleLabels(language),
+		getContributionAreaLabels(language),
 		articlesPromise,
 	]);
-	if (!globalsResult.success || !personsResult.success || !roleLabelsResult.success) {
+	if (!globalsResult.success || !personsResult.success || !roleLabelsResult.success || !areaLabelsResult.success) {
 		console.error('Could not load the community panel', {
 			globals: globalsResult.success || globalsResult.error,
 			persons: personsResult.success || personsResult.error,
 			roleLabels: roleLabelsResult.success || roleLabelsResult.error,
+			areaLabels: areaLabelsResult.success || areaLabelsResult.error,
 		});
 
 		return resultFail('Could not load the community panel.');
@@ -72,6 +78,7 @@ export const getCommunityPanelData = async (
 	const globals = globalsResult.data.content;
 	const persons = personsResult.data;
 	const roleLabels = roleLabelsResult.data;
+	const areaLabels = areaLabelsResult.data;
 	const personsByUuid = new Map(persons.map((person) => [person.uuid, person]));
 
 	const toPerson = (person: ISbStoryData<Person>): CommunityPerson => ({
@@ -107,7 +114,7 @@ export const getCommunityPanelData = async (
 		mistakeText: blankToUndefined(globals.mistakeText),
 		contactEmail: blankToUndefined(page.communityContactEmail),
 		maintainers: (page.communityContributors ?? [])
-			.map((group) => ({ label: group.label, people: findPeople(group.people) }))
+			.map((group) => ({ label: toAreaLabel(group.label, areaLabels), people: findPeople(group.people) }))
 			.filter((group) => group.people.length > 0),
 		worldsTitle: blankToUndefined(globals.worldsTitle),
 		worlds: (globals.worlds ?? []).map((world) => ({
@@ -152,8 +159,11 @@ export const getPersonContributions = async (
 	language: string,
 	currency: WebsiteCurrency,
 ): Promise<Result<PersonContribution[]>> => {
-	const pagesResult = await getCommunityPages(language);
-	if (!pagesResult.success) {
+	const [pagesResult, areaLabelsResult] = await Promise.all([
+		getCommunityPages(language),
+		getContributionAreaLabels(language),
+	]);
+	if (!pagesResult.success || !areaLabelsResult.success) {
 		return resultFail('Could not load the person contributions.');
 	}
 
@@ -162,7 +172,7 @@ export const getPersonContributions = async (
 			const page = communityPageSchema.safeParse(story.content);
 			const roles = (page.success ? (page.data.communityContributors ?? []) : [])
 				.filter((group) => group.people.some((reference) => toUuid(reference) === personUuid))
-				.map((group) => group.label.trim())
+				.map((group) => toAreaLabel(group.label, areaLabelsResult.data))
 				.filter(Boolean);
 			if (roles.length === 0) {
 				return [];
