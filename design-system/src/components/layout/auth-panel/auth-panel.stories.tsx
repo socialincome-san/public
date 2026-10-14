@@ -104,10 +104,7 @@ const meta = {
 		),
 		footer: (
 			<>
-				Trouble signing in?{' '}
-				<a className="text-foreground underline underline-offset-4" href="mailto:support@socialincome.org">
-					support@socialincome.org
-				</a>
+				Trouble signing in? <a href="mailto:support@socialincome.org">support@socialincome.org</a>
 			</>
 		),
 		children: <MagicLinkDemo />,

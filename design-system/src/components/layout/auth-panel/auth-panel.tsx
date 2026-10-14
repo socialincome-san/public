@@ -11,7 +11,7 @@ type AuthPanelProps = {
 	image: AuthPanelImage;
 	// Shown on the image on medium screens and up, e.g. an `AuthPanelQuote`
 	caption?: ReactNode;
-	// Below the form, e.g. a support contact
+	// Below the form, e.g. a support contact with a link
 	footer?: ReactNode;
 	children: ReactNode;
 };
@@ -22,7 +22,11 @@ export const AuthPanel = ({ image, caption, footer, children }: AuthPanelProps) 
 			<div className="flex flex-1 items-center">
 				<div className="w-full max-w-sm">{children}</div>
 			</div>
-			{footer ? <div className="text-muted-foreground text-xs">{footer}</div> : null}
+			{footer ? (
+				<div className="text-muted-foreground [&_a]:text-foreground text-xs [&_a]:underline [&_a]:underline-offset-4">
+					{footer}
+				</div>
+			) : null}
 		</div>
 
 		<div className="bg-foreground relative order-first min-h-48 overflow-hidden rounded-3xl sm:min-h-64 md:order-none md:min-h-144">

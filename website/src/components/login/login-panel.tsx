@@ -13,11 +13,7 @@ export const LoginPanel = ({ children }: { children: ReactNode }) => {
 					image={{ src: '/assets/sdg-town.jpg', alt: t('page.image-alt') }}
 					caption={<AuthPanelQuote quote={t('page.quote')} author={t('page.quote-author')} />}
 					footer={t.rich('page.support', {
-						link: (chunks) => (
-							<a className="text-foreground underline underline-offset-4" href="mailto:support@socialincome.org">
-								{chunks}
-							</a>
-						),
+						link: (chunks) => <a href="mailto:support@socialincome.org">{chunks}</a>,
 					})}
 				>
 					{children}

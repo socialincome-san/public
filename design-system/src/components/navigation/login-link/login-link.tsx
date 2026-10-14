@@ -7,9 +7,10 @@ type LoginLinkProps = {
 	label: string;
 };
 
+// Shown on every page, so prefetching would request the dynamic login route for every visitor
 export const LoginLink = ({ href, label }: LoginLinkProps) => (
 	<Button asChild variant="ghost" size="md">
-		<NextLink href={href} data-testid="login-button">
+		<NextLink href={href} prefetch={false} data-testid="login-button">
 			<UserRound />
 			{label}
 		</NextLink>

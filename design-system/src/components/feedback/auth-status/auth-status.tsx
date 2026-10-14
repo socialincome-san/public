@@ -13,6 +13,14 @@ const iconVariants = cva('flex size-14 items-center justify-center rounded-2xl [
 	},
 });
 
+// Only steps that follow an action are announced; the confirm step is a page of its own
+const liveRoles = {
+	sent: 'status',
+	confirm: undefined,
+	loading: 'status',
+	error: 'alert',
+} as const;
+
 const icons = {
 	sent: <MailCheck />,
 	confirm: <LogIn />,
@@ -32,12 +40,12 @@ type AuthStatusProps = {
 };
 
 export const AuthStatus = ({ status, title, description, hint, children }: AuthStatusProps) => (
-	<div className="flex flex-col gap-8" role={status === 'error' ? 'alert' : 'status'}>
+	<div className="flex flex-col gap-8">
 		<div className={iconVariants({ status })} aria-hidden>
 			{icons[status]}
 		</div>
 
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-2" role={liveRoles[status]}>
 			<h1 className="text-foreground text-3xl font-medium tracking-tight">{title}</h1>
 			{description ? (
 				<p className="text-muted-foreground [&_strong]:text-foreground text-base [&_strong]:font-medium">{description}</p>
