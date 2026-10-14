@@ -2,9 +2,7 @@
 	"metadata": {
 		"title": "Login | Social Income"
 	},
-	"header": {
-		"login-button": "Anmelden"
-	},
+	"nav-label": "Anmelden",
 	"page": {
 		"title": "Bei Social Income anmelden",
 		"description": "Ein Login für Contributors, Partner und Programmteams. Wir bringen dich an den richtigen Ort.",
@@ -14,7 +12,11 @@
 		"image-alt": "Frauen tragen Waren auf dem Kopf durch eine Marktstrasse in Sierra Leone",
 		"quote": "Wir leben in einer Welt voller Möglichkeiten – sorgen wir dafür, dass wir dieses Privileg mit allen anderen teilen.",
 		"quote-author": "Carlos, Vereinigte Staaten",
-		"support": "Probleme beim Anmelden? Kontaktiere <link>support@socialincome.org</link>"
+		"support": "Probleme beim Anmelden? Kontaktiere <link>support@socialincome.org</link>",
+		"no-account": {
+			"title": "Noch kein Konto?",
+			"description": "Spende und wir erstellen dein Konto automatisch."
+		}
 	},
 	"destinations": {
 		"title": "Hier landest du",

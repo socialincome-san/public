@@ -2,6 +2,7 @@ import type { Decorator, Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Building2, Handshake, LayoutDashboard } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '../../actions/button/button';
+import { Callout } from '../../data-display/callout/callout';
 import { IconList } from '../../data-display/icon-list/icon-list';
 import { Separator } from '../../data-display/separator/separator';
 import { AuthStatus } from '../../feedback/auth-status/auth-status';
@@ -73,6 +74,11 @@ const MagicLinkDemo = () => {
 			/>
 			<Separator />
 			<IconList title="Where you’ll land" items={destinations} />
+			<Callout
+				title="No account yet?"
+				description="Make a donation and we’ll create your account automatically."
+				action={<Button size="sm">Donate now</Button>}
+			/>
 		</div>
 	);
 };

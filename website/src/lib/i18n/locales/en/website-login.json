@@ -2,9 +2,7 @@
 	"metadata": {
 		"title": "Login | Social Income"
 	},
-	"header": {
-		"login-button": "Login"
-	},
+	"nav-label": "Login",
 	"page": {
 		"title": "Sign in to Social Income",
 		"description": "One login for contributors, partners and program teams. We'll take you to the right place.",
@@ -14,7 +12,11 @@
 		"image-alt": "Women carrying goods on their heads through a market street in Sierra Leone",
 		"quote": "We are living in a world of opportunities, let's make sure we share this privilege with everyone else.",
 		"quote-author": "Carlos, United States",
-		"support": "Trouble signing in? Contact <link>support@socialincome.org</link>"
+		"support": "Trouble signing in? Contact <link>support@socialincome.org</link>",
+		"no-account": {
+			"title": "No account yet?",
+			"description": "Make a donation and we'll create your account automatically."
+		}
 	},
 	"destinations": {
 		"title": "Where you'll land",

@@ -51,7 +51,7 @@ export const AccountSlot = (props: Props) => {
 	return current?.session ? (
 		<AccountMenu sessions={current.sessions} scope={props.scope} />
 	) : (
-		<LoginLink href={loginPath} label={t('header.login-button')} />
+		<LoginLink href={loginPath} label={t('nav-label')} />
 	);
 };
 

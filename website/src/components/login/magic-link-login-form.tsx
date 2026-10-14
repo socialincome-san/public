@@ -1,9 +1,11 @@
 'use client';
 
+import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
 import { useAuth } from '@/lib/firebase/hooks/use-auth';
 import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { Callout } from '@socialincome/design-system/data-display/callout/callout';
 import { IconList } from '@socialincome/design-system/data-display/icon-list/icon-list';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
 import { AuthStatus } from '@socialincome/design-system/feedback/auth-status/auth-status';
@@ -25,6 +27,7 @@ export const MagicLinkLoginForm = ({ prefilledEmail = '' }: Props) => {
 	const { auth } = useAuth();
 	const websiteBasePath = useWebsiteBasePath();
 	const t = useTranslations('website-login');
+	const tDonate = useTranslations('website-donate');
 
 	const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
 	const [email, setEmail] = useState(prefilledEmail);
@@ -104,6 +107,17 @@ export const MagicLinkLoginForm = ({ prefilledEmail = '' }: Props) => {
 						description: t('destinations.portal.description'),
 					},
 				]}
+			/>
+			<Callout
+				title={t('page.no-account.title')}
+				description={t('page.no-account.description')}
+				action={
+					<OpenDonationWizardButton
+						label={tDonate('donation-form.donate-now')}
+						size="sm"
+						analyticsEvent="donate_login_page_click"
+					/>
+				}
 			/>
 		</div>
 	);

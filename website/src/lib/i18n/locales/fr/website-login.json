@@ -2,9 +2,7 @@
 	"metadata": {
 		"title": "Connexion | Social Income"
 	},
-	"header": {
-		"login-button": "Connexion"
-	},
+	"nav-label": "Connexion",
 	"page": {
 		"title": "Se connecter à Social Income",
 		"description": "Une seule connexion pour les contributeurs, les partenaires et les équipes de programme. Nous t'emmenons au bon endroit.",
@@ -14,7 +12,11 @@
 		"image-alt": "Des femmes portant des marchandises sur la tête dans une rue commerçante en Sierra Leone",
 		"quote": "Nous vivons dans un monde d'opportunités, veillons à partager ce privilège avec tout le monde.",
 		"quote-author": "Carlos, États-Unis",
-		"support": "Un problème de connexion ? Contacte <link>support@socialincome.org</link>"
+		"support": "Un problème de connexion ? Contacte <link>support@socialincome.org</link>",
+		"no-account": {
+			"title": "Pas encore de compte ?",
+			"description": "Fais un don et nous créerons ton compte automatiquement."
+		}
 	},
 	"destinations": {
 		"title": "Où tu arriveras",
