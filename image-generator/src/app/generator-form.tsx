@@ -1,20 +1,36 @@
 "use client";
 
 import { Button } from "@socialincome/design-system/actions/button/button";
-import Image from "next/image";
-import { useActionState } from "react";
-import { generateImage } from "./generate-actions";
 import { Textarea } from "@socialincome/design-system/forms/textarea/textarea";
+import { useState } from "react";
+import Image from "next/image";
+
+type GenerateResponse = { error: string | null; imageUrl: string | null };
 
 export function GeneratorForm() {
-  const [state, formAction, isPending] = useActionState(generateImage, {
-    error: null,
-    imageUrl: null,
-  });
+  const [error, setError] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsPending(true);
+    setError(null);
+    const formData = new FormData(event.currentTarget);
+    const prompt = formData.get("prompt");
+    const response = await fetch("/api/generate-image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+    const json = (await response.json()) as GenerateResponse;
+    setError(json.error);
+    setImageUrl(json.imageUrl);
+    setIsPending(false);
+  };
 
   return (
-    <form action={formAction}>
-      {state.error && <p className="text-destructive text-sm">{state.error}</p>}
+    <form onSubmit={handleSubmit}>
+      {error && <p className="text-destructive text-sm">{error}</p>}
       <Textarea name="prompt" />
       <Button type="submit" disabled={isPending}>
         {isPending ? "Generating..." : "Generate"}
@@ -29,16 +45,16 @@ export function GeneratorForm() {
           </div>
         </>
       )}
-      {state.imageUrl && (
+      {imageUrl && (
         <>
           <Image
-            src={state.imageUrl}
+            src={imageUrl}
             width={1920}
             height={1080}
             alt="Generated"
             className="h-auto w-full max-w-xl rounded-lg shadow-lg"
           />
-          <a href={`/download?url=${encodeURIComponent(state.imageUrl)}`}>
+          <a href={`/download?url=${encodeURIComponent(imageUrl)}`}>
             Download PNG
           </a>
         </>
