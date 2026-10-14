@@ -7,6 +7,7 @@ import type {
 	RichTextLinkProps,
 	RichTextTableCellProps,
 } from '@/components/storyblok/rich-text/rich-text.types';
+import { getWebsiteRelativePathFromStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
 import { cn } from '@socialincome/design-system/cn';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/design-system/data-display/table/table';
 import { headingStyles } from '@socialincome/design-system/layout/section-heading/heading-styles';
@@ -55,7 +56,11 @@ export const buildLinkRel = (target?: string, rel?: string) => {
 	return [...tokens].join(' ');
 };
 
-export const removeStoryblokPagesFolder = (href: string) => href.replace(/^(https?:\/\/[^/]+)?\/?pages(?=\/|$)/, '$1');
+export const resolveRichTextHref = (href: string) => {
+	const match = href.match(/^(https?:\/\/[^/]+)?\/?(pages\/.*)$/);
+
+	return match ? `${match[1] ?? ''}${getWebsiteRelativePathFromStoryblokSlug(match[2])}` : href;
+};
 
 export const storyblokRichTextMarkResolvers = {
 	[MARK_LINK]: (children: ReactNode, props: RichTextLinkProps) => {
@@ -67,7 +72,7 @@ export const storyblokRichTextMarkResolvers = {
 
 		return (
 			<NextLink
-				href={removeStoryblokPagesFolder(href)}
+				href={resolveRichTextHref(href)}
 				className={cn(linkClassName, 'hover:underline')}
 				target={props.target}
 				rel={buildLinkRel(props.target, props.rel)}
