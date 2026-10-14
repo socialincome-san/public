@@ -45,11 +45,10 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 
 	await page.goto('/en/usd');
 	await page.getByTestId('login-button').click();
+	await page.waitForURL((url) => url.pathname.endsWith('/login'));
 
-	const dialog = page.getByRole('dialog');
-	await expect(dialog).toBeVisible();
-	await dialog.locator('input[type="email"]').fill(email);
-	await dialog.locator('button[type="submit"]').click();
+	await page.locator('input[type="email"]').fill(email);
+	await page.locator('form button[type="submit"]').click();
 	await expect
 		.poll(
 			async () => {

@@ -22,11 +22,13 @@ export const WebsiteAppShell = ({ children, sessions, lang, currency, scope }: W
 		<DonationModalProvider>
 			<div className="bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
 				<Navbar sessions={sessions} lang={lang} currency={currency} scope={scope} />
+				{/* Next.js keeps previously visited pages in the DOM, hidden with an inline `display: none`, so only a
+				    visible hero may remove the space below the floating header. */}
 				<main
 					className={
 						isContained
 							? 'w-site-width max-w-content mx-auto mt-20 flex-1 overflow-x-clip pb-8'
-							: 'overflow-x-clip [&:not(:has(>.full-bleed-hero))]:lg:mt-20'
+							: "overflow-x-clip [&:not(:has(>.full-bleed-hero:not([style*='display:_none'])))]:lg:mt-20"
 					}
 				>
 					{children}

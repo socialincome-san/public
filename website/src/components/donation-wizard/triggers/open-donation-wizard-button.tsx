@@ -9,9 +9,9 @@ type Props = {
 	label: string;
 	onBeforeOpen?: () => void;
 	analyticsEvent?: string;
-} & Pick<ComponentProps<typeof Button>, 'size' | 'fullWidth'>;
+} & Pick<ComponentProps<typeof Button>, 'variant' | 'size' | 'fullWidth'>;
 
-export const OpenDonationWizardButton = ({ label, size, fullWidth, onBeforeOpen, analyticsEvent }: Props) => {
+export const OpenDonationWizardButton = ({ label, variant, size, fullWidth, onBeforeOpen, analyticsEvent }: Props) => {
 	const { openWizardAtAmountStep } = useDonationModal();
 
 	return (
@@ -19,6 +19,7 @@ export const OpenDonationWizardButton = ({ label, size, fullWidth, onBeforeOpen,
 			type="button"
 			data-testid="donation-wizard-trigger"
 			aria-haspopup="dialog"
+			variant={variant}
 			size={size}
 			fullWidth={fullWidth}
 			onClick={() => {

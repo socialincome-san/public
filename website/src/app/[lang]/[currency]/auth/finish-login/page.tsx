@@ -1,15 +1,19 @@
 'use client';
 
 import { claimPendingCampaignsFromLogin } from '@/components/login/claim-pending-campaigns-from-login';
+import { LoginPanel } from '@/components/login/login-panel';
 import { parseCampaignsQueryParam } from '@/components/login/parse-campaigns-query-param';
 import { finishSignInWithEmailLink, isSignInLink, signOut } from '@/lib/firebase/client-auth';
 import { useAuth } from '@/lib/firebase/hooks/use-auth';
 import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { useWebsiteBasePath, useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { createSessionAction, getRedirectPathAfterLoginAction } from '@/modules/auth/auth.actions';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { AuthStatus } from '@socialincome/design-system/feedback/auth-status/auth-status';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const getEmailFromLoginUrl = (url: string): string | null => {
 	const searchParams = new URL(url).searchParams;
@@ -32,10 +36,18 @@ export default function FinishLoginPage() {
 	const params = useParams<{ lang?: string }>();
 	const currency = useWebsiteCurrency();
 	const websiteBasePath = useWebsiteBasePath();
+	const t = useTranslations('website-login');
 
 	const [status, setStatus] = useState<'checking' | 'signing-in' | 'error'>('checking');
+	const started = useRef(false);
 
 	useEffect(() => {
+		// The one-time link code can only be used once, so a second run (e.g. Strict Mode) would fail.
+		if (started.current) {
+			return;
+		}
+		started.current = true;
+
 		const run = async () => {
 			const url = window.location.href;
 
@@ -94,20 +106,29 @@ export default function FinishLoginPage() {
 		void run();
 	}, [auth, params.lang, currency, router]);
 
-	if (status === 'checking') {
-		return <div className="flex min-h-screen items-center justify-center">Checking login…</div>;
-	}
-
-	if (status === 'signing-in') {
-		return <div className="flex min-h-screen items-center justify-center">Signing you in…</div>;
+	if (status === 'error') {
+		return (
+			<LoginPanel>
+				<AuthStatus status="error" title={t('finish-login.error-title')} description={t('finish-login.error-description')}>
+					<Button size="md" fullWidth asChild>
+						<Link href={`${websiteBasePath}/login`}>{t('finish-login.error-cta')}</Link>
+					</Button>
+				</AuthStatus>
+			</LoginPanel>
+		);
 	}
 
 	return (
-		<div className="flex min-h-screen flex-col items-center justify-center gap-4 text-center">
-			<p>Login failed.</p>
-			<Link className="underline" href={websiteBasePath}>
-				Return home
-			</Link>
-		</div>
+		<LoginPanel>
+			{status === 'checking' ? (
+				<AuthStatus status="loading" title={t('finish-login.checking')} />
+			) : (
+				<AuthStatus
+					status="loading"
+					title={t('finish-login.signing-in')}
+					description={t('finish-login.signing-in-description')}
+				/>
+			)}
+		</LoginPanel>
 	);
 }

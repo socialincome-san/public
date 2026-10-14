@@ -1,2 +1,11 @@
 @import '@socialincome/design-system/styles.css';
 @source '../../../design-system/src';
+
+/* The site header floats over the page top on large screens (5rem incl. its offset). After a client navigation
+   Next.js keeps the scroll position while the new page's top is in view, which can leave that top under the
+   header; with this padding a hidden top counts as out of view and Next.js scrolls to the top instead. */
+@media (width >= 64rem) {
+	html {
+		scroll-padding-top: 6rem;
+	}
+}
