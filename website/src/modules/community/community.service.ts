@@ -38,7 +38,11 @@ const toHref = (link: StoryblokMultilink | undefined, language: string, currency
 const blankToUndefined = (value: string | undefined) => (value?.trim() ? value.trim() : undefined);
 
 // Labels written before the field became a datasource dropdown are free text and shown as is
-const toAreaLabel = (value: string, areaLabels: Record<string, string>) => areaLabels[value.trim()] ?? value.trim();
+const toAreaLabel = (value: string | number, areaLabels: Record<string, string>) => {
+	const code = String(value).trim();
+
+	return areaLabels[code] ?? code;
+};
 
 export const getCommunityPanelData = async (
 	page: CommunityPage,
