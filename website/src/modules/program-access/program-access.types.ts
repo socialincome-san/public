@@ -7,9 +7,3 @@ export type ProgramAccess = {
 };
 
 export type ProgramAccesses = ProgramAccess[];
-
-export type CreateInitialProgramAccessesInput = {
-	programId: string;
-	ownerOrganizationId: string;
-	operatorFallbackOrganizationId: string;
-};

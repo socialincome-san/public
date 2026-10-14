@@ -1,8 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
-import { ContributionStatus, PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/enums';
+import { ContributionStatus, PayoutStatus, SurveyStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { ProgramCreateInput, ProgramSettingsUpdateInput } from './program.schemas';
 import type { ProgramTableQuery } from './program.types';
 
 const completedPayoutStatuses = [PayoutStatus.paid, PayoutStatus.confirmed];
@@ -290,76 +289,14 @@ export const findProgramDashboardSource = async (programId: string) =>
 		},
 	});
 
-export const createProgram = async (input: ProgramCreateInput, name: string, slug: string) =>
-	prisma.program.create({
-		data: {
-			name,
-			slug,
-			countryId: input.countryId,
-			amountOfRecipientsForStart: input.amountOfRecipientsForStart,
-			coveredByReserves: false,
-			programDurationInMonths: input.programDurationInMonths,
-			payoutPerInterval: input.payoutPerInterval,
-			payoutInterval: input.payoutInterval,
-			targetFocuses: {
-				create: input.targetFocuses.map((focusId) => ({ focusId })),
-			},
-			targetProfiles: input.targetProfiles,
-		},
-		select: { id: true },
-	});
+export const findProgramIdsByOrganization = async (organizationId: string) =>
+	prisma.programAccess.findMany({ where: { organizationId }, select: { programId: true } });
 
 export const findProgramByName = async (name: string) =>
 	prisma.program.findUnique({ where: { name }, select: { id: true } });
 
 export const findProgramBySlug = async (slug: string) =>
 	prisma.program.findUnique({ where: { slug }, select: { id: true } });
-
-export const updateProgramSettings = async (input: ProgramSettingsUpdateInput, slug: string) => {
-	const ownerOrganizationIds = [...new Set(input.ownerOrganizationIds)];
-	const operatorOrganizationIds = [...new Set(input.operatorOrganizationIds)];
-	const programAccesses: Prisma.ProgramAccessCreateManyInput[] = [
-		...ownerOrganizationIds.map((organizationId) => ({
-			programId: input.id,
-			organizationId,
-			permission: ProgramPermission.owner,
-		})),
-		...operatorOrganizationIds.map((organizationId) => ({
-			programId: input.id,
-			organizationId,
-			permission: ProgramPermission.operator,
-		})),
-	];
-
-	await prisma.$transaction(async (transaction) => {
-		await transaction.program.update({
-			where: { id: input.id },
-			data: {
-				name: input.name,
-				slug,
-				countryId: input.countryId,
-				coveredByReserves: input.coveredByReserves,
-				programDurationInMonths: input.programDurationInMonths,
-				payoutPerInterval: input.payoutPerInterval,
-				payoutInterval: input.payoutInterval,
-				targetFocuses: {
-					deleteMany: {},
-					create: input.targetFocuses.map((focusId) => ({ focusId })),
-				},
-				targetProfiles: input.targetProfiles,
-			},
-		});
-		await transaction.programAccess.deleteMany({
-			where: {
-				programId: input.id,
-				permission: { in: [ProgramPermission.owner, ProgramPermission.operator] },
-			},
-		});
-		if (programAccesses.length > 0) {
-			await transaction.programAccess.createMany({ data: programAccesses });
-		}
-	});
-};
 
 export const findProgramDeletionBlockers = async (programId: string) => {
 	const [payout, contribution] = await Promise.all([
@@ -374,14 +311,6 @@ export const findProgramDeletionBlockers = async (programId: string) => {
 	]);
 
 	return { hasPayouts: Boolean(payout), hasContributions: Boolean(contribution) };
-};
-
-export const deleteProgram = async (programId: string) => {
-	await prisma.$transaction(async (transaction) => {
-		await transaction.surveySchedule.deleteMany({ where: { programId } });
-		await transaction.programAccess.deleteMany({ where: { programId } });
-		await transaction.program.delete({ where: { id: programId } });
-	});
 };
 
 export const findEligiblePublicSubmissionPrograms = async (slugs: string[]) =>

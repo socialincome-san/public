@@ -14,7 +14,7 @@ import {
 	getOrganizationReferenceOptions,
 	validateOrganizationIds,
 } from '@/modules/organizations/organization.service';
-import { createInitialAccessesForProgram, getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { removeRecipientsFromProgram } from '@/modules/recipients/recipient.service';
 import { detachProgramSurveys } from '@/modules/surveys/survey.service';
 import {
@@ -25,7 +25,8 @@ import {
 } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { isReadyForFirstPayoutInterval } from './program-stats.service';
-import * as programRepository from './program.repository';
+import * as programRepository from './program.repository.read';
+import * as programWriteRepository from './program.repository.write';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput, PublicOnboardingUserDetailsInput } from './program.schemas';
 import type {
 	ProgramPaginatedTableView,
@@ -391,7 +392,12 @@ export const createProgram = async (
 		}
 
 		const programName = `${getCountryNameByCode(countryResult.data)} Program ${Math.floor(10000 + Math.random() * 90000)}`;
-		const program = await programRepository.createProgram(input, programName, slugify(programName));
+		const program = await programWriteRepository.createProgram(audit, input, {
+			name: programName,
+			slug: slugify(programName),
+			ownerOrganizationId: activeOrganizationResult.data,
+			operatorOrganizationId: operatorOrganizationResult.data,
+		});
 		const campaignEndDate = now();
 		campaignEndDate.setFullYear(campaignEndDate.getFullYear() + 10);
 		const campaignResult = await createDefaultCampaign(
@@ -401,14 +407,6 @@ export const createProgram = async (
 		);
 		if (!campaignResult.success) {
 			return resultFail(campaignResult.error);
-		}
-		const accessResult = await createInitialAccessesForProgram({
-			programId: program.id,
-			ownerOrganizationId: activeOrganizationResult.data,
-			operatorFallbackOrganizationId: operatorOrganizationResult.data,
-		});
-		if (!accessResult.success) {
-			return resultFail(accessResult.error);
 		}
 		if (input.amountOfRecipientsForStart > 0) {
 			const assignmentResult = await assignRandomCandidatesToProgram(
@@ -434,11 +432,11 @@ export const createProgram = async (
 };
 
 export const updateProgramSettings = async (
-	userId: string,
+	session: UserSession,
 	input: ProgramSettingsUpdateInput,
 ): Promise<Result<{ id: string }>> => {
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -477,13 +475,37 @@ export const updateProgramSettings = async (
 			return resultFail('One or more selected organizations do not exist.');
 		}
 
-		await programRepository.updateProgramSettings(input, normalizedSlug);
+		await programWriteRepository.updateProgramSettings(getSessionAuditContext(session), input, normalizedSlug);
 
 		return resultOk({ id: input.id });
 	} catch (error) {
 		console.error('Could not update program settings', { programId: input.id, error });
 
 		return resultFail('Could not update program settings');
+	}
+};
+
+/** Replaces which programs an organization owns and operates, as set in the organization form. The caller authorizes. */
+export const updateOrganizationProgramAccesses = async (
+	audit: AuditContext,
+	input: { organizationId: string; ownedProgramIds: string[]; operatedProgramIds: string[] },
+): Promise<Result<void>> => {
+	try {
+		const currentAccesses = await programRepository.findProgramIdsByOrganization(input.organizationId);
+		const programIds = [
+			...new Set([
+				...currentAccesses.map(({ programId }) => programId),
+				...input.ownedProgramIds,
+				...input.operatedProgramIds,
+			]),
+		];
+		await programWriteRepository.updateOrganizationProgramAccesses(audit, programIds, input);
+
+		return resultOk(undefined);
+	} catch (error) {
+		console.error('Could not update organization program accesses', { organizationId: input.organizationId, error });
+
+		return resultFail('Could not update organization program accesses');
 	}
 };
 
@@ -529,7 +551,7 @@ export const deleteProgram = async (session: UserSession, programId: string): Pr
 		if (!surveysResult.success) {
 			return resultFail(surveysResult.error);
 		}
-		await programRepository.deleteProgram(programId);
+		await programWriteRepository.deleteProgram(deletionAudit, programId);
 
 		return resultOk(undefined);
 	} catch (error) {

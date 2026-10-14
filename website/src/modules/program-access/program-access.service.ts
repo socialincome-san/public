@@ -1,6 +1,6 @@
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import * as programAccessRepository from './program-access.repository';
-import type { CreateInitialProgramAccessesInput, ProgramAccesses } from './program-access.types';
+import type { ProgramAccesses } from './program-access.types';
 
 export const getAccessiblePrograms = async (userId: string): Promise<Result<ProgramAccesses>> => {
 	try {
@@ -22,17 +22,5 @@ export const getAccessiblePrograms = async (userId: string): Promise<Result<Prog
 		console.error('Could not get accessible programs', { userId, error });
 
 		return resultFail('Could not get accessible programs');
-	}
-};
-
-export const createInitialAccessesForProgram = async (input: CreateInitialProgramAccessesInput): Promise<Result<void>> => {
-	try {
-		await programAccessRepository.createInitialProgramAccesses(input);
-
-		return resultOk(undefined);
-	} catch (error) {
-		console.error('Could not create initial program accesses', { programId: input.programId, error });
-
-		return resultFail('Could not create program accesses');
 	}
 };

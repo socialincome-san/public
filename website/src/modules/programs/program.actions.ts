@@ -124,7 +124,7 @@ export const updateProgramSettingsAction = async (input: unknown): Promise<Resul
 		return resultFail('Invalid program input.');
 	}
 
-	const result = await updateProgramSettings(sessionResult.data.id, parsedInput.data);
+	const result = await updateProgramSettings(sessionResult.data, parsedInput.data);
 	if (result.success) {
 		revalidatePath('/portal/programs/[programId]', 'layout');
 	}

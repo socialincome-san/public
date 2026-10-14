@@ -240,6 +240,24 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			parentId: 'Parent provider',
 		},
 	},
+	program: {
+		label: 'Program',
+		namePaths: ['name'],
+		fieldLabels: {
+			name: 'Name',
+			slug: 'Slug',
+			amountOfRecipientsForStart: 'Recipients at start',
+			coveredByReserves: 'Covered by reserves',
+			programDurationInMonths: 'Duration (months)',
+			payoutPerInterval: 'Payout per interval',
+			payoutInterval: 'Payout interval',
+			targetProfiles: 'Target profiles',
+			countryId: 'Country',
+			targetFocuses: 'Target focuses',
+			programAccesses: 'Organization accesses',
+			surveySchedules: 'Survey schedules',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));
