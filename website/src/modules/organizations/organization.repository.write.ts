@@ -34,7 +34,7 @@ const organizationAuditSnapshotSelect = {
 	isOperatorFallback: true,
 } satisfies Prisma.OrganizationSelect;
 
-const organizationEntity = defineAuditedEntity({
+export const organizationEntity = defineAuditedEntity({
 	type: 'organization',
 	findSnapshot: (transaction, organizationId) =>
 		transaction.organization.findUnique({ where: { id: organizationId }, select: organizationAuditSnapshotSelect }),

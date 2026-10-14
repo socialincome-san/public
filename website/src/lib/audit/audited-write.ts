@@ -102,3 +102,41 @@ const getReturnedIds = (data: unknown): string[] =>
 
 		throw new Error('An audited write without entityId must return the written rows with their ids.');
 	});
+
+/**
+ * Stores the current state of an entity without audit events, e.g. one
+ * created before auditing, so its first change shows a diff. The audit log
+ * lists no baseline events. Returns whether one was stored.
+ */
+export const recordAuditBaseline = async <Snapshot extends Prisma.InputJsonObject>(
+	entity: AuditedEntity<Snapshot>,
+	context: AuditContext,
+	entityId: string,
+): Promise<boolean> =>
+	prisma.$transaction(async (transaction) => {
+		const hasEvent = await transaction.auditEvent.findFirst({
+			where: { entityType: entity.type, entityId },
+			select: { id: true },
+		});
+		const snapshot = hasEvent ? null : await entity.findSnapshot(transaction, entityId);
+		if (!snapshot) {
+			return false;
+		}
+
+		await transaction.auditEvent.create({
+			data: {
+				entityType: entity.type,
+				entityId,
+				action: 'baseline',
+				actorType: context.actor.type,
+				actorId: context.actor.id,
+				entityName: entity.getName(snapshot),
+				actorName: context.actor.name,
+				source: context.source,
+				snapshot,
+				metadata: context.metadata,
+			},
+		});
+
+		return true;
+	});

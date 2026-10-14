@@ -46,7 +46,7 @@ const expenseAuditSnapshotSelect = {
 	amountChf: true,
 } satisfies Prisma.ExpenseSelect;
 
-const expenseEntity = defineAuditedEntity({
+export const expenseEntity = defineAuditedEntity({
 	type: 'expense',
 	findSnapshot: (transaction, expenseId) =>
 		transaction.expense.findUnique({ where: { id: expenseId }, select: expenseAuditSnapshotSelect }),

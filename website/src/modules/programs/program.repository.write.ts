@@ -143,7 +143,7 @@ const programAuditSnapshotSelect = {
 	},
 } satisfies Prisma.ProgramSelect;
 
-const programEntity = defineAuditedEntity({
+export const programEntity = defineAuditedEntity({
 	type: 'program',
 	findSnapshot: (transaction, programId) =>
 		transaction.program.findUnique({ where: { id: programId }, select: programAuditSnapshotSelect }),

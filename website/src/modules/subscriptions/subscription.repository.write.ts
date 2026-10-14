@@ -106,7 +106,7 @@ const subscriptionAuditSnapshotSelect = {
 	coverTransactionCosts: true,
 } satisfies Prisma.SubscriptionSelect;
 
-const subscriptionEntity = defineAuditedEntity({
+export const subscriptionEntity = defineAuditedEntity({
 	type: 'subscription',
 	findSnapshot: (transaction, subscriptionId) =>
 		transaction.subscription.findUnique({ where: { id: subscriptionId }, select: subscriptionAuditSnapshotSelect }),

@@ -23,6 +23,8 @@ export const findAuditEventPage = async ({
 		: [];
 	const where: Prisma.AuditEventWhereInput = {
 		entityType,
+		// Baselines are only the starting point for diffs, not changes.
+		action: { not: 'baseline' },
 		OR: search
 			? [
 					{ entityId: { contains: search, mode: 'insensitive' } },

@@ -130,7 +130,7 @@ const contributionAuditSnapshotSelect = {
 	campaignId: true,
 } satisfies Prisma.ContributionSelect;
 
-const contributionEntity = defineAuditedEntity({
+export const contributionEntity = defineAuditedEntity({
 	type: 'contribution',
 	findSnapshot: (transaction, contributionId) =>
 		transaction.contribution.findUnique({ where: { id: contributionId }, select: contributionAuditSnapshotSelect }),

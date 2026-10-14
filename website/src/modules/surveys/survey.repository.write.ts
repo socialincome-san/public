@@ -57,7 +57,7 @@ const surveyAuditSnapshotSelect = {
 	surveyScheduleId: true,
 } satisfies Prisma.SurveySelect;
 
-const surveyEntity = defineAuditedEntity({
+export const surveyEntity = defineAuditedEntity({
 	type: 'survey',
 	findSnapshot: (transaction, surveyId) =>
 		transaction.survey.findUnique({ where: { id: surveyId }, select: surveyAuditSnapshotSelect }),

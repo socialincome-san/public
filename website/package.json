@@ -41,6 +41,7 @@
 		"db:seed:cms-campaigns:apply:all": "dotenv -e .env.local -e .env.development -- tsx src/scripts/campaign/seed-cms-campaigns.ts --apply --all",
 		"db:backfill:stripe-subscriptions": "tsx src/scripts/stripe/backfill-stripe-subscriptions.ts",
 		"db:backfill:bank-subscriptions": "tsx src/scripts/bank/backfill-bank-subscriptions.ts",
+		"db:backfill:audit-baselines": "tsx src/scripts/audit/record-audit-baselines.ts",
 		"globe:generate-fallback": "tsx src/scripts/globe/generate-globe-fallback.ts",
 		"db:studio": "prisma studio",
 		"db:up": "docker compose up -d postgres",

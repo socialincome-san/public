@@ -104,7 +104,7 @@ const payoutAuditSnapshotSelect = {
 	comments: true,
 } satisfies Prisma.PayoutSelect;
 
-const payoutEntity = defineAuditedEntity({
+export const payoutEntity = defineAuditedEntity({
 	type: 'payout',
 	findSnapshot: (transaction, payoutId) =>
 		transaction.payout.findUnique({ where: { id: payoutId }, select: payoutAuditSnapshotSelect }),

@@ -22,6 +22,11 @@ jest.mock('@/lib/database/prisma', () => ({
 
 						return Promise.resolve();
 					},
+					create: ({ data }: { data: StoredEvent }) => {
+						events.push(data);
+
+						return Promise.resolve();
+					},
 				},
 			};
 			mockTransactionRows.set(transaction, rows);
@@ -35,7 +40,7 @@ jest.mock('@/lib/database/prisma', () => ({
 }));
 
 import type { AuditContext } from './audit-types';
-import { auditedWrite, defineAuditedEntity } from './audited-write';
+import { auditedWrite, defineAuditedEntity, recordAuditBaseline } from './audited-write';
 
 const rowsOf = (transaction: object): Map<string, string> => {
 	const rows = mockTransactionRows.get(transaction);
@@ -186,5 +191,34 @@ describe('auditedWrite', () => {
 			}),
 		).rejects.toThrow('Audit event insert failed');
 		expect(mockCommitted.rows.get('a')).toBe('Ada');
+	});
+});
+
+describe('recordAuditBaseline', () => {
+	const system: AuditContext = { actor: { type: 'system', id: 'audit-baseline' }, source: 'system' };
+
+	beforeEach(() => {
+		mockCommitted.rows = new Map([['a', 'Ada']]);
+		mockCommitted.events = [];
+	});
+
+	test('stores the current state of an entity without audit events', async () => {
+		await expect(recordAuditBaseline(entity, system, 'a')).resolves.toBe(true);
+
+		expect(mockCommitted.events).toMatchObject([
+			{ entityId: 'a', entityName: 'Ada', action: 'baseline', snapshot: { name: 'Ada' } },
+		]);
+	});
+
+	test('stores nothing for an entity that already has audit events', async () => {
+		mockCommitted.events = [{ entityId: 'a', snapshot: { name: 'Ada' } }];
+
+		await expect(recordAuditBaseline(entity, system, 'a')).resolves.toBe(false);
+		expect(mockCommitted.events).toHaveLength(1);
+	});
+
+	test('stores nothing for a missing entity', async () => {
+		await expect(recordAuditBaseline(entity, system, 'missing')).resolves.toBe(false);
+		expect(mockCommitted.events).toEqual([]);
 	});
 });

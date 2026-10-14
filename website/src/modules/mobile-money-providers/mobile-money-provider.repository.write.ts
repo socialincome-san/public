@@ -48,7 +48,7 @@ const mobileMoneyProviderAuditSnapshotSelect = {
 	parentId: true,
 } satisfies Prisma.MobileMoneyProviderSelect;
 
-const mobileMoneyProviderEntity = defineAuditedEntity({
+export const mobileMoneyProviderEntity = defineAuditedEntity({
 	type: 'mobile-money-provider',
 	findSnapshot: (transaction, providerId) =>
 		transaction.mobileMoneyProvider.findUnique({

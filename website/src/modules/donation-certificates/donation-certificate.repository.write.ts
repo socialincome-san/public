@@ -27,7 +27,7 @@ const donationCertificateAuditSnapshotSelect = {
 	storagePath: true,
 } satisfies Prisma.DonationCertificateSelect;
 
-const donationCertificateEntity = defineAuditedEntity({
+export const donationCertificateEntity = defineAuditedEntity({
 	type: 'donation-certificate',
 	findSnapshot: (transaction, certificateId) =>
 		transaction.donationCertificate.findUnique({

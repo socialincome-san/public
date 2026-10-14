@@ -40,7 +40,7 @@ const focusAuditSnapshotSelect = {
 	slug: true,
 } satisfies Prisma.FocusSelect;
 
-const focusEntity = defineAuditedEntity({
+export const focusEntity = defineAuditedEntity({
 	type: 'focus',
 	findSnapshot: (transaction, focusId) =>
 		transaction.focus.findUnique({ where: { id: focusId }, select: focusAuditSnapshotSelect }),

@@ -119,7 +119,7 @@ const countryAuditSnapshotSelect = {
 	sanctions: true,
 } satisfies Prisma.CountrySelect;
 
-const countryEntity = defineAuditedEntity({
+export const countryEntity = defineAuditedEntity({
 	type: 'country',
 	findSnapshot: (transaction, countryId) =>
 		transaction.country.findUnique({ where: { id: countryId }, select: countryAuditSnapshotSelect }),

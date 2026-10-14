@@ -97,7 +97,7 @@ const localPartnerAuditSnapshotSelect = {
 	},
 } satisfies Prisma.LocalPartnerSelect;
 
-const localPartnerEntity = defineAuditedEntity({
+export const localPartnerEntity = defineAuditedEntity({
 	type: 'local-partner',
 	findSnapshot: (transaction, localPartnerId) =>
 		transaction.localPartner.findUnique({ where: { id: localPartnerId }, select: localPartnerAuditSnapshotSelect }),

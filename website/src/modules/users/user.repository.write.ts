@@ -222,7 +222,7 @@ const userAuditSnapshotSelect = {
 	},
 } satisfies Prisma.UserSelect;
 
-const userEntity = defineAuditedEntity({
+export const userEntity = defineAuditedEntity({
 	type: 'user',
 	findSnapshot: (transaction, userId) =>
 		transaction.user.findUnique({ where: { id: userId }, select: userAuditSnapshotSelect }),

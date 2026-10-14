@@ -114,7 +114,7 @@ const campaignAuditSnapshotSelect = {
 	campaignPendings: { select: { claimId: true }, orderBy: { claimId: 'asc' } },
 } satisfies Prisma.CampaignSelect;
 
-const campaignEntity = defineAuditedEntity({
+export const campaignEntity = defineAuditedEntity({
 	type: 'campaign',
 	findSnapshot: (transaction, campaignId) =>
 		transaction.campaign.findUnique({ where: { id: campaignId }, select: campaignAuditSnapshotSelect }),
