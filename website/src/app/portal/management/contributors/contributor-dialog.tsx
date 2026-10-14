@@ -89,7 +89,7 @@ export const ContributorDialog = ({ open, onOpenChange, contributorId, errorMess
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>New Contributor</DialogTitle>
 				</DialogHeader>

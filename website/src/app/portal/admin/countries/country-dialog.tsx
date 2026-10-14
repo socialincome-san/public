@@ -86,7 +86,7 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add country</DialogTitle>
 				</DialogHeader>

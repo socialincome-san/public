@@ -2,14 +2,13 @@
 
 import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { RecordDialog } from '@/components/data-table/clients/record-dialog';
 import { usersTableConfig } from '@/components/data-table/configs/users-table.config';
 import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { UserTableViewRow } from '@/modules/users/user.types';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
-import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import UsersForm from './users-form';
@@ -42,24 +41,6 @@ export default function UsersTable({
 		console.error('User Form Error', { error });
 	};
 
-	const form = (
-		<>
-			{errorMessage && (
-				<Alert variant="destructive">
-					<AlertTitle>Error</AlertTitle>
-					<AlertDescription>{errorMessage}</AlertDescription>
-				</Alert>
-			)}
-
-			<UsersForm
-				userId={userId}
-				onSuccess={() => onOpenChange(false)}
-				onCancel={() => onOpenChange(false)}
-				onError={onError}
-			/>
-		</>
-	);
-
 	return (
 		<>
 			<ConfiguredDataTableClient
@@ -78,23 +59,26 @@ export default function UsersTable({
 				onRowClick={openEditForm}
 			/>
 
-			{userId ? (
-				<TabbedDialog
-					open={open}
-					onOpenChange={onOpenChange}
-					title="Edit user"
-					tabs={[{ value: 'details', label: 'Details', content: form }, auditLogTab('user', userId)]}
+			<RecordDialog
+				open={open}
+				onOpenChange={onOpenChange}
+				title={userId ? 'Edit user' : 'Add user'}
+				tabs={userId ? [auditLogTab('user', userId)] : []}
+			>
+				{errorMessage && (
+					<Alert variant="destructive">
+						<AlertTitle>Error</AlertTitle>
+						<AlertDescription>{errorMessage}</AlertDescription>
+					</Alert>
+				)}
+
+				<UsersForm
+					userId={userId}
+					onSuccess={() => onOpenChange(false)}
+					onCancel={() => onOpenChange(false)}
+					onError={onError}
 				/>
-			) : (
-				<Dialog open={open} onOpenChange={onOpenChange}>
-					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>Add user</DialogTitle>
-						</DialogHeader>
-						{form}
-					</DialogContent>
-				</Dialog>
-			)}
+			</RecordDialog>
 		</>
 	);
 }

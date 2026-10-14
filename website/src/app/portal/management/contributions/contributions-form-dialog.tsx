@@ -1,10 +1,9 @@
 'use client';
 
 import { auditLogTab } from '@/components/audit/audit-log-tab';
+import { RecordDialog } from '@/components/data-table/clients/record-dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
-import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
 import { useState } from 'react';
 import { ContributionForm } from './contribution-form';
 
@@ -32,8 +31,13 @@ export const ContributionFormDialog = ({
 		}
 	};
 
-	const form = (
-		<>
+	return (
+		<RecordDialog
+			open={open}
+			onOpenChange={handleOpenChange}
+			title={contributionId ? 'Edit Contribution' : 'Add Contribution'}
+			tabs={contributionId ? [auditLogTab('contribution', contributionId)] : []}
+		>
 			{errorMessage && (
 				<Alert variant="destructive">
 					<AlertTitle>Error</AlertTitle>
@@ -47,29 +51,6 @@ export const ContributionFormDialog = ({
 				onCancel={() => handleOpenChange(false)}
 				onError={onError}
 			/>
-		</>
-	);
-
-	if (contributionId) {
-		return (
-			<TabbedDialog
-				open={open}
-				onOpenChange={handleOpenChange}
-				title="Edit Contribution"
-				tabs={[{ value: 'details', label: 'Details', content: form }, auditLogTab('contribution', contributionId)]}
-			/>
-		);
-	}
-
-	return (
-		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>Add Contribution</DialogTitle>
-				</DialogHeader>
-
-				{form}
-			</DialogContent>
-		</Dialog>
+		</RecordDialog>
 	);
 };

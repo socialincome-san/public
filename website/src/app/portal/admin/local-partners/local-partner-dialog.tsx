@@ -77,7 +77,7 @@ export const LocalPartnerDialog = ({ open, onOpenChange, localPartnerId, errorMe
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add local partner</DialogTitle>
 				</DialogHeader>

@@ -85,7 +85,7 @@ export const FocusDialog = ({ open, onOpenChange, focusId, errorMessage, onError
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add focus</DialogTitle>
 				</DialogHeader>

@@ -2,6 +2,7 @@ import { ProgramPermission } from '@/generated/prisma/enums';
 import { diffSnapshots } from '@/lib/audit/audit-diff';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCampaignFilterOption } from '@/modules/campaigns/campaign.service';
+import { getCandidate } from '@/modules/candidates/candidate.service';
 import { getContribution } from '@/modules/contributions/contribution.service';
 import { getContributor } from '@/modules/contributors/contributor.service';
 import { getCountry } from '@/modules/countries/country.service';
@@ -63,7 +64,16 @@ export const getAuditTableView = async (userId: string, query: AuditTableQuery):
 
 // Whoever may open an entity may read its audit log.
 const readEntity: Record<EntityAuditType, (session: UserSession, entityId: string) => Promise<Result<unknown>>> = {
-	recipient: getRecipientById,
+	recipient: async (session, id) => {
+		const recipientResult = await getRecipientById(session, id);
+		if (recipientResult.success) {
+			return recipientResult;
+		}
+		// Candidates are recipients without a program, which only the candidate getter lets admins read.
+		const candidateResult = await getCandidate(session, id);
+
+		return candidateResult.success ? candidateResult : recipientResult;
+	},
 	payout: (session, id) => getPayout(session.id, id),
 	contributor: (session, id) => getContributor(session.id, id),
 	contribution: (session, id) => getContribution(session.id, id),

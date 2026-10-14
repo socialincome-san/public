@@ -102,7 +102,7 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Pr
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add mobile money provider</DialogTitle>
 				</DialogHeader>

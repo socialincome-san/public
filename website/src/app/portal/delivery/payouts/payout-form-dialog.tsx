@@ -1,10 +1,9 @@
 'use client';
 
 import { auditLogTab } from '@/components/audit/audit-log-tab';
+import { RecordDialog } from '@/components/data-table/clients/record-dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
-import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
 
@@ -30,8 +29,13 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDia
 		}
 	};
 
-	const form = (
-		<>
+	return (
+		<RecordDialog
+			open={open}
+			onOpenChange={handleOpenChange}
+			title={payoutId ? 'Edit payout' : 'Add payout'}
+			tabs={payoutId ? [auditLogTab('payout', payoutId)] : []}
+		>
 			{errorMessage && (
 				<Alert variant="destructive">
 					<AlertTitle>Error</AlertTitle>
@@ -45,29 +49,6 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDia
 				onCancel={() => onOpenChange(false)}
 				onError={onError}
 			/>
-		</>
-	);
-
-	if (payoutId) {
-		return (
-			<TabbedDialog
-				open={open}
-				onOpenChange={handleOpenChange}
-				title="Edit payout"
-				tabs={[{ value: 'details', label: 'Details', content: form }, auditLogTab('payout', payoutId)]}
-			/>
-		);
-	}
-
-	return (
-		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent size="md">
-				<DialogHeader>
-					<DialogTitle>Add payout</DialogTitle>
-				</DialogHeader>
-
-				{form}
-			</DialogContent>
-		</Dialog>
+		</RecordDialog>
 	);
 };

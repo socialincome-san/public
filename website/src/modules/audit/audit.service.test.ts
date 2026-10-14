@@ -4,11 +4,13 @@ const mockFindAuditEventHistory = jest.fn();
 const mockGetRecipientById = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 const mockGetCampaignFilterOption = jest.fn();
+const mockGetCandidate = jest.fn();
 
 jest.mock('@/modules/users/user.service', () => ({ isAdmin: mockIsAdmin, getUser: jest.fn() }));
 jest.mock('@/modules/recipients/recipient.service', () => ({ getRecipientById: mockGetRecipientById }));
 jest.mock('@/modules/program-access/program-access.service', () => ({ getAccessiblePrograms: mockGetAccessiblePrograms }));
 jest.mock('@/modules/campaigns/campaign.service', () => ({ getCampaignFilterOption: mockGetCampaignFilterOption }));
+jest.mock('@/modules/candidates/candidate.service', () => ({ getCandidate: mockGetCandidate }));
 jest.mock('@/modules/contributions/contribution.service', () => ({ getContribution: jest.fn() }));
 jest.mock('@/modules/contributors/contributor.service', () => ({ getContributor: jest.fn() }));
 jest.mock('@/modules/countries/country.service', () => ({ getCountry: jest.fn() }));
@@ -103,6 +105,7 @@ describe('getEntityAuditTableView', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockGetRecipientById.mockResolvedValue({ success: true, data: {} });
+		mockGetCandidate.mockResolvedValue({ success: false, error: 'Not a candidate' });
 		mockFindAuditEventHistory.mockResolvedValue(history);
 	});
 
@@ -115,6 +118,14 @@ describe('getEntityAuditTableView', () => {
 		});
 		expect(mockGetRecipientById).toHaveBeenCalledWith(session, 'recipient-1');
 		expect(mockFindAuditEventHistory).not.toHaveBeenCalled();
+	});
+
+	test('shows candidates to those who may read the candidate', async () => {
+		mockGetRecipientById.mockResolvedValue({ success: false, error: 'Permission denied' });
+		mockGetCandidate.mockResolvedValue({ success: true, data: {} });
+
+		await expect(getEntityAuditTableView(session, entityQuery)).resolves.toMatchObject({ success: true });
+		expect(mockGetCandidate).toHaveBeenCalledWith(session, 'recipient-1');
 	});
 
 	test('pages the history newest first, each row diffed against the previous event', async () => {

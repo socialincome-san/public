@@ -123,7 +123,7 @@ export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add organization</DialogTitle>
 				</DialogHeader>

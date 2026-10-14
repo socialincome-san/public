@@ -99,7 +99,7 @@ export const RecipientDialog = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent size="md">
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>{recipientId ? 'Edit Recipient' : 'New Recipient'}</DialogTitle>
 				</DialogHeader>
