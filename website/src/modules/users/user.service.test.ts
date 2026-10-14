@@ -14,15 +14,23 @@ const mockCreateFirebaseUserByEmail = jest.fn();
 const mockUpdateFirebaseUserByUid = jest.fn();
 const mockDeleteFirebaseUserByUidIfExists = jest.fn();
 
-jest.mock('./user.repository', () => ({
+const mockFindOrganizationMemberIds = jest.fn();
+const mockUpdateOrganizationMembers = jest.fn();
+
+jest.mock('./user.repository.read', () => ({
 	findUserRole: mockFindUserRole,
 	findContactByEmail: mockFindContactByEmail,
-	createUser: mockCreateUser,
 	findUserForSelfUpdate: mockFindUserForSelfUpdate,
-	updateUserSelf: mockUpdateUserSelf,
 	findUserSessionByFirebaseAuthUserId: mockFindUserSessionByFirebaseAuthUserId,
 	findUserForDeletion: mockFindUserForDeletion,
-	deleteUserData: mockDeleteUserData,
+	findOrganizationMemberIds: mockFindOrganizationMemberIds,
+}));
+
+jest.mock('./user.repository.write', () => ({
+	createUser: mockCreateUser,
+	updateUserSelf: mockUpdateUserSelf,
+	deleteUser: mockDeleteUserData,
+	updateOrganizationMembers: mockUpdateOrganizationMembers,
 }));
 
 jest.mock('@/modules/auth/auth.service', () => ({
@@ -32,7 +40,36 @@ jest.mock('@/modules/auth/auth.service', () => ({
 	deleteFirebaseUserByUidIfExists: mockDeleteFirebaseUserByUidIfExists,
 }));
 
-import { createUser, deleteUser, getCurrentUserSession, isAdmin, updateUserSelf } from './user.service';
+import {
+	createUser,
+	deleteUser,
+	getCurrentUserSession,
+	isAdmin,
+	updateOrganizationMembers,
+	updateUserSelf,
+} from './user.service';
+import type { UserSession } from './user.types';
+
+const sessionOf = (id: string, firstName: string): UserSession => ({
+	type: 'user',
+	id,
+	gender: null,
+	email: null,
+	firstName,
+	lastName: 'Admin',
+	language: null,
+	street: null,
+	number: null,
+	city: null,
+	zip: null,
+	country: null,
+	role: UserRole.admin,
+	activeOrganization: null,
+	organizations: [],
+	programs: [],
+	hasAnyOperatorProgramAccess: false,
+});
+const admin = sessionOf('admin-1', 'Max');
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -90,7 +127,7 @@ describe('user service', () => {
 		});
 		mockUpdateFirebaseUserByUid.mockResolvedValue({ success: true, data: { uid: 'firebase-1' } });
 
-		const result = await createUser('admin-1', input);
+		const result = await createUser(admin, input);
 
 		expect(expectSuccess(result)).toEqual({
 			id: 'user-1',
@@ -102,7 +139,12 @@ describe('user service', () => {
 			organizationIds: ['organization-1'],
 		});
 		expect(mockCreateFirebaseUserByEmail).not.toHaveBeenCalled();
-		expect(mockCreateUser).toHaveBeenCalledWith(input, 'firebase-1', 'organization-1');
+		expect(mockCreateUser).toHaveBeenCalledWith(
+			{ actor: { type: 'user', id: 'admin-1', name: 'Max Admin' }, source: 'portal' },
+			input,
+			'firebase-1',
+			'organization-1',
+		);
 		expect(mockUpdateFirebaseUserByUid).toHaveBeenCalledWith('firebase-1', {
 			email: 'ada@example.org',
 			displayName: 'Ada Lovelace',
@@ -116,7 +158,7 @@ describe('user service', () => {
 			organizationAccesses: [],
 		});
 
-		const result = await updateUserSelf('user-1', { email: 'next@example.org' });
+		const result = await updateUserSelf(sessionOf('user-1', 'Ada'), { email: 'next@example.org' });
 
 		expectFailure(result, 'You cannot change your email yourself.');
 		expect(mockUpdateUserSelf).not.toHaveBeenCalled();
@@ -155,10 +197,22 @@ describe('user service', () => {
 	});
 
 	test('prevents admins from deleting their own account', async () => {
-		const result = await deleteUser('admin-1', 'admin-1');
+		const result = await deleteUser(admin, 'admin-1');
 
 		expectFailure(result, 'You cannot delete your own user account.');
 		expect(mockFindUserForDeletion).not.toHaveBeenCalled();
 		expect(mockDeleteUserData).not.toHaveBeenCalled();
+	});
+
+	test('stores an event for every user whose organization membership changes', async () => {
+		const audit = { actor: { type: 'user' as const, id: 'admin-1' }, source: 'portal' as const };
+		mockFindOrganizationMemberIds.mockResolvedValue([{ userId: 'user-old' }, { userId: 'user-1' }]);
+
+		await updateOrganizationMembers(audit, { organizationId: 'organization-1', memberIds: ['user-1', 'user-new'] });
+
+		expect(mockUpdateOrganizationMembers).toHaveBeenCalledWith(audit, ['user-old', 'user-1', 'user-new'], {
+			organizationId: 'organization-1',
+			memberIds: ['user-1', 'user-new'],
+		});
 	});
 });

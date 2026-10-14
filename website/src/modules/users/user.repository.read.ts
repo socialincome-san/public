@@ -1,7 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { CreateUserInput, UpdateUserInput, UpdateUserSelfInput } from './user.schemas';
 import type { UserTableQuery } from './user.types';
 
 export const findUserStripeCheckoutContext = async (userId: string) =>
@@ -176,48 +175,8 @@ export const findContactByEmail = async (email: string) =>
 		select: { id: true },
 	});
 
-export const createUser = async (input: CreateUserInput, firebaseAuthUserId: string, activeOrganizationId: string) =>
-	prisma.user.create({
-		data: {
-			role: input.role,
-			activeOrganization: {
-				connect: {
-					id: activeOrganizationId,
-				},
-			},
-			contact: {
-				create: {
-					firstName: input.firstName,
-					lastName: input.lastName,
-					email: input.email,
-				},
-			},
-			account: {
-				create: {
-					firebaseAuthUserId,
-				},
-			},
-			organizationAccesses: {
-				createMany: {
-					data: getAccessRows(input.organizationIds),
-				},
-			},
-		},
-		select: {
-			id: true,
-			role: true,
-			contact: {
-				select: {
-					firstName: true,
-					lastName: true,
-					email: true,
-				},
-			},
-			activeOrganization: {
-				select: { id: true },
-			},
-		},
-	});
+export const findOrganizationMemberIds = async (organizationId: string) =>
+	prisma.organizationAccess.findMany({ where: { organizationId }, select: { userId: true } });
 
 export const findUserForUpdate = async (userId: string) =>
 	prisma.user.findUnique({
@@ -236,42 +195,6 @@ export const findUserForUpdate = async (userId: string) =>
 				select: {
 					firebaseAuthUserId: true,
 				},
-			},
-		},
-	});
-
-export const updateUser = async (input: UpdateUserInput, activeOrganizationId: string | null) =>
-	prisma.user.update({
-		where: { id: input.id },
-		data: {
-			role: input.role,
-			activeOrganization: activeOrganizationId ? { connect: { id: activeOrganizationId } } : undefined,
-			contact: {
-				update: {
-					firstName: input.firstName,
-					lastName: input.lastName,
-					email: input.email,
-				},
-			},
-			organizationAccesses: {
-				deleteMany: { userId: input.id },
-				createMany: {
-					data: getAccessRows(input.organizationIds),
-				},
-			},
-		},
-		select: {
-			id: true,
-			role: true,
-			contact: {
-				select: {
-					firstName: true,
-					lastName: true,
-					email: true,
-				},
-			},
-			activeOrganization: {
-				select: { id: true },
 			},
 		},
 	});
@@ -304,49 +227,6 @@ export const findUserForSelfUpdate = async (userId: string) =>
 		},
 	});
 
-export const updateUserSelf = async (userId: string, input: UpdateUserSelfInput, activeOrganizationId: string | undefined) =>
-	prisma.user.update({
-		where: { id: userId },
-		data: {
-			activeOrganization: activeOrganizationId ? { connect: { id: activeOrganizationId } } : undefined,
-			contact: {
-				update: {
-					firstName: input.firstName,
-					lastName: input.lastName,
-					gender: input.gender,
-					language: input.language,
-					address: input.address
-						? {
-								upsert: {
-									update: input.address,
-									create: input.address,
-								},
-							}
-						: undefined,
-				},
-			},
-		},
-		select: {
-			id: true,
-			role: true,
-			contact: {
-				select: {
-					firstName: true,
-					lastName: true,
-					email: true,
-				},
-			},
-			activeOrganization: {
-				select: { id: true },
-			},
-			organizationAccesses: {
-				select: {
-					organizationId: true,
-				},
-			},
-		},
-	});
-
 export const findUserForDeletion = async (userId: string) =>
 	prisma.user.findUnique({
 		where: { id: userId },
@@ -361,25 +241,6 @@ export const findUserForDeletion = async (userId: string) =>
 			},
 		},
 	});
-
-export const deleteUserData = async (userId: string, contactId: string, accountId: string) =>
-	prisma.$transaction(async (transaction) => {
-		await transaction.organizationAccess.deleteMany({
-			where: { userId },
-		});
-		await transaction.user.delete({
-			where: { id: userId },
-		});
-		await transaction.contact.delete({
-			where: { id: contactId },
-		});
-		await transaction.account.delete({
-			where: { id: accountId },
-		});
-	});
-
-const getAccessRows = (organizationIds: string[]) =>
-	Array.from(new Set(organizationIds)).map((organizationId) => ({ organizationId }));
 
 const buildUserOrderBy = (query: UserTableQuery): Prisma.UserOrderByWithRelationInput[] => {
 	const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

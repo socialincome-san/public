@@ -1,4 +1,6 @@
 import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	createFirebaseUserByEmail,
@@ -7,7 +9,8 @@ import {
 	updateFirebaseUserByUid,
 } from '@/modules/auth/auth.service';
 import { isAdminRole } from './user.permissions';
-import * as userRepository from './user.repository';
+import * as userRepository from './user.repository.read';
+import * as userWriteRepository from './user.repository.write';
 import type { CreateUserInput, UpdateUserInput, UpdateUserSelfInput } from './user.schemas';
 import type {
 	UserPaginatedTableView,
@@ -229,9 +232,9 @@ export const isUserEmailAvailable = async (email: string): Promise<Result<boolea
 	}
 };
 
-export const createUser = async (actorUserId: string, input: CreateUserInput): Promise<Result<UserPayload>> => {
+export const createUser = async (session: UserSession, input: CreateUserInput): Promise<Result<UserPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(actorUserId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -265,9 +268,14 @@ export const createUser = async (actorUserId: string, input: CreateUserInput): P
 
 		const firebaseUser = firebaseUserResult.data;
 		const didCreateFirebaseUser = !existingFirebaseUserResult.data;
-		let createdUser: Awaited<ReturnType<typeof userRepository.createUser>>;
+		let createdUser: Awaited<ReturnType<typeof userWriteRepository.createUser>>;
 		try {
-			createdUser = await userRepository.createUser(input, firebaseUser.uid, activeOrganizationId);
+			createdUser = await userWriteRepository.createUser(
+				getSessionAuditContext(session),
+				input,
+				firebaseUser.uid,
+				activeOrganizationId,
+			);
 		} catch (error) {
 			if (didCreateFirebaseUser) {
 				const rollbackResult = await deleteFirebaseUserByUidIfExists(firebaseUser.uid);
@@ -279,7 +287,7 @@ export const createUser = async (actorUserId: string, input: CreateUserInput): P
 				}
 			}
 
-			console.error('Could not persist user', { actorUserId, error });
+			console.error('Could not persist user', { actorUserId: session.id, error });
 
 			return resultFail('Could not create user. Please try again later.');
 		}
@@ -298,7 +306,7 @@ export const createUser = async (actorUserId: string, input: CreateUserInput): P
 
 		return resultOk(toUserPayload(createdUser, input.organizationIds));
 	} catch (error) {
-		console.error('Could not create user', { actorUserId, error });
+		console.error('Could not create user', { actorUserId: session.id, error });
 
 		return resultFail('Could not create user. Please try again later.');
 	}
@@ -334,7 +342,8 @@ export const createPublicOnboardingUser = async (input: {
 
 		const didCreateFirebaseUser = !existingFirebaseUserResult.data;
 		try {
-			const user = await userRepository.createUser(
+			const user = await userWriteRepository.createUser(
+				{ actor: { type: 'system', id: 'public-onboarding' }, source: 'system' },
 				{
 					email: input.email,
 					firstName: input.firstName,
@@ -368,9 +377,9 @@ export const createPublicOnboardingUser = async (input: {
 	}
 };
 
-export const updateUser = async (actorUserId: string, input: UpdateUserInput): Promise<Result<UserPayload>> => {
+export const updateUser = async (session: UserSession, input: UpdateUserInput): Promise<Result<UserPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(actorUserId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -386,7 +395,7 @@ export const updateUser = async (actorUserId: string, input: UpdateUserInput): P
 		}
 
 		const activeOrganizationId = getPreferredActiveOrganizationId(input.organizationIds, existingUser.activeOrganizationId);
-		const updatedUser = await userRepository.updateUser(input, activeOrganizationId);
+		const updatedUser = await userWriteRepository.updateUser(getSessionAuditContext(session), input, activeOrganizationId);
 		const newDisplayName = `${input.firstName} ${input.lastName}`.trim();
 		const oldDisplayName = `${existingUser.contact.firstName} ${existingUser.contact.lastName}`.trim();
 		const shouldSyncFirebaseUser = input.email !== existingUser.contact.email || newDisplayName !== oldDisplayName;
@@ -407,13 +416,14 @@ export const updateUser = async (actorUserId: string, input: UpdateUserInput): P
 
 		return resultOk(toUserPayload(updatedUser, input.organizationIds));
 	} catch (error) {
-		console.error('Could not update user', { actorUserId, userId: input.id, error });
+		console.error('Could not update user', { actorUserId: session.id, userId: input.id, error });
 
 		return resultFail('Could not update user. Please try again later.');
 	}
 };
 
-export const updateUserSelf = async (userId: string, input: UpdateUserSelfInput): Promise<Result<UserPayload>> => {
+export const updateUserSelf = async (session: UserSession, input: UpdateUserSelfInput): Promise<Result<UserPayload>> => {
+	const userId = session.id;
 	try {
 		const existingUser = await userRepository.findUserForSelfUpdate(userId);
 		if (!existingUser) {
@@ -427,7 +437,12 @@ export const updateUserSelf = async (userId: string, input: UpdateUserSelfInput)
 		const allowedOrganizationIds = existingUser.organizationAccesses.map((access) => access.organizationId);
 		const activeOrganizationId =
 			input.organizationId && allowedOrganizationIds.includes(input.organizationId) ? input.organizationId : undefined;
-		const updatedUser = await userRepository.updateUserSelf(userId, input, activeOrganizationId);
+		const updatedUser = await userWriteRepository.updateUserSelf(
+			getSessionAuditContext(session),
+			userId,
+			input,
+			activeOrganizationId,
+		);
 
 		return resultOk(
 			toUserPayload(
@@ -442,14 +457,32 @@ export const updateUserSelf = async (userId: string, input: UpdateUserSelfInput)
 	}
 };
 
-export const deleteUser = async (actorUserId: string, targetUserId: string): Promise<Result<void>> => {
+/** Replaces the members of an organization, as set in the organization form. The caller authorizes. */
+export const updateOrganizationMembers = async (
+	audit: AuditContext,
+	input: { organizationId: string; memberIds: string[] },
+): Promise<Result<void>> => {
 	try {
-		const isAdminResult = await isAdmin(actorUserId);
+		const currentMembers = await userRepository.findOrganizationMemberIds(input.organizationId);
+		const userIds = [...new Set([...currentMembers.map(({ userId }) => userId), ...input.memberIds])];
+		await userWriteRepository.updateOrganizationMembers(audit, userIds, input);
+
+		return resultOk(undefined);
+	} catch (error) {
+		console.error('Could not update organization members', { organizationId: input.organizationId, error });
+
+		return resultFail('Could not update organization members');
+	}
+};
+
+export const deleteUser = async (session: UserSession, targetUserId: string): Promise<Result<void>> => {
+	try {
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
 
-		if (actorUserId === targetUserId) {
+		if (session.id === targetUserId) {
 			return resultFail('You cannot delete your own user account.');
 		}
 
@@ -458,7 +491,7 @@ export const deleteUser = async (actorUserId: string, targetUserId: string): Pro
 			return resultFail('User not found');
 		}
 
-		await userRepository.deleteUserData(targetUserId, existingUser.contactId, existingUser.accountId);
+		await userWriteRepository.deleteUser(getSessionAuditContext(session), targetUserId);
 
 		const firebaseDeleteResult = await deleteFirebaseUserByUidIfExists(existingUser.account.firebaseAuthUserId);
 		if (!firebaseDeleteResult.success) {
@@ -471,7 +504,7 @@ export const deleteUser = async (actorUserId: string, targetUserId: string): Pro
 
 		return resultOk(undefined);
 	} catch (error) {
-		console.error('Could not delete user', { actorUserId, targetUserId, error });
+		console.error('Could not delete user', { actorUserId: session.id, targetUserId, error });
 
 		return resultFail('Could not delete user. Please try again later.');
 	}
