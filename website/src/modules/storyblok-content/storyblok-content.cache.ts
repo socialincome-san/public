@@ -7,6 +7,7 @@ import type {
 	Country,
 	Focus,
 	LocalPartner,
+	Page,
 	Person,
 	Program,
 	Tag,
@@ -101,12 +102,6 @@ export const getCircleLabels = async (language: string): Promise<Result<Record<s
 	return withStoryblokCache(service.getCircleLabels(language));
 };
 
-export const getWorkStyleLabels = async (language: string): Promise<Result<Record<string, string>>> => {
-	'use cache';
-
-	return withStoryblokCache(service.getWorkStyleLabels(language));
-};
-
 export const getTimeCommitmentLabels = async (language: string): Promise<Result<Record<string, string>>> => {
 	'use cache';
 
@@ -117,6 +112,14 @@ export const getAllPersons = async (language: string): Promise<Result<ISbStoryDa
 	'use cache';
 
 	return withStoryblokCache(service.getAllPersons(language));
+};
+
+export const getCommunityPages = async (
+	language: string,
+): Promise<Result<ISbStoryData<Page | Country | Program | Focus | LocalPartner | Campaign>[]>> => {
+	'use cache';
+
+	return withStoryblokCache(service.getCommunityPages(language));
 };
 
 export const getOverviewArticleTypes = async (language: string): Promise<Result<ISbStoryData<ArticleType>[]>> => {

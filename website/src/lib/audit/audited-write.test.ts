@@ -14,11 +14,11 @@ jest.mock('@/lib/database/prisma', () => ({
 				auditEvent: {
 					findFirst: ({ where }: { where: { entityId: string } }) =>
 						Promise.resolve(mockCommitted.events.filter(({ entityId }) => entityId === where.entityId).at(-1) ?? null),
-					create: ({ data }: { data: StoredEvent }) => {
+					createMany: ({ data }: { data: StoredEvent[] }) => {
 						if (mockFailEventInsert.value) {
 							return Promise.reject(new Error('Audit event insert failed'));
 						}
-						events.push(data);
+						events.push(...data);
 
 						return Promise.resolve();
 					},
@@ -35,7 +35,7 @@ jest.mock('@/lib/database/prisma', () => ({
 }));
 
 import type { AuditContext } from './audit-types';
-import { auditedWrite, type AuditedEntity } from './audited-write';
+import { auditedWrite, defineAuditedEntity } from './audited-write';
 
 const rowsOf = (transaction: object): Map<string, string> => {
 	const rows = mockTransactionRows.get(transaction);
@@ -46,14 +46,15 @@ const rowsOf = (transaction: object): Map<string, string> => {
 	return rows;
 };
 
-const entity: AuditedEntity = {
+const entity = defineAuditedEntity({
 	type: 'thing',
 	findSnapshot: (transaction, id) => {
 		const name = rowsOf(transaction).get(id);
 
 		return Promise.resolve(name === undefined ? null : { name });
 	},
-};
+	getName: ({ name }) => name,
+});
 
 const portal: AuditContext = {
 	actor: { type: 'user', id: 'user-1', name: 'Max Operator' },
@@ -80,6 +81,7 @@ describe('auditedWrite', () => {
 			{
 				entityType: 'thing',
 				entityId: 'a',
+				entityName: 'Grace',
 				action: 'update',
 				actorType: 'user',
 				actorId: 'user-1',
@@ -101,6 +103,52 @@ describe('auditedWrite', () => {
 		expect(mockCommitted.events).toMatchObject([{ entityId: 'b', action: 'create', snapshot: { name: 'Bob' } }]);
 	});
 
+	test('takes the ids of several created rows from the result', async () => {
+		await auditedWrite({ entity, context: portal, action: 'create' }, (transaction) => {
+			rowsOf(transaction).set('b', 'Bob');
+			rowsOf(transaction).set('c', 'Cleo');
+
+			return Promise.resolve([{ id: 'b' }, { id: 'c' }]);
+		});
+
+		expect(mockCommitted.events).toMatchObject([
+			{ entityId: 'b', snapshot: { name: 'Bob' } },
+			{ entityId: 'c', snapshot: { name: 'Cleo' } },
+		]);
+	});
+
+	test('stores an event per changed entity when one write updates several', async () => {
+		mockCommitted.rows.set('b', 'Bob');
+		await auditedWrite({ entity, context: portal, action: 'update', entityId: ['a', 'b'] }, (transaction) => {
+			rowsOf(transaction).set('a', 'Grace');
+			rowsOf(transaction).set('b', 'Bea');
+
+			return Promise.resolve({ count: 2 });
+		});
+		await auditedWrite({ entity, context: portal, action: 'update', entityId: ['a', 'b'] }, (transaction) => {
+			rowsOf(transaction).set('b', 'Bob');
+
+			return Promise.resolve({ count: 2 });
+		});
+
+		expect(mockCommitted.events).toMatchObject([
+			{ entityId: 'a', snapshot: { name: 'Grace' } },
+			{ entityId: 'b', snapshot: { name: 'Bea' } },
+			{ entityId: 'b', snapshot: { name: 'Bob' } },
+		]);
+	});
+
+	test('takes the ids of updated rows from the result when they are only known afterwards', async () => {
+		mockCommitted.rows.set('b', 'Bob');
+		await auditedWrite({ entity, context: portal, action: 'update' }, (transaction) => {
+			rowsOf(transaction).set('b', 'Bea');
+
+			return Promise.resolve([{ id: 'b' }]);
+		});
+
+		expect(mockCommitted.events).toMatchObject([{ entityId: 'b', action: 'update', snapshot: { name: 'Bea' } }]);
+	});
+
 	test('stores no snapshot for a delete', async () => {
 		await auditedWrite({ entity, context: portal, action: 'delete', entityId: 'a' }, (transaction) => {
 			rowsOf(transaction).delete('a');
@@ -108,7 +156,9 @@ describe('auditedWrite', () => {
 			return Promise.resolve();
 		});
 
-		expect(mockCommitted.events).toMatchObject([{ entityId: 'a', action: 'delete', snapshot: undefined }]);
+		expect(mockCommitted.events).toMatchObject([
+			{ entityId: 'a', entityName: 'Ada', action: 'delete', snapshot: undefined },
+		]);
 	});
 
 	test('stores no audit event for an update that changes nothing', async () => {

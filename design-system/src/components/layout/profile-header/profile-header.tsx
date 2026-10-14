@@ -1,6 +1,7 @@
 import NextImage from 'next/image';
-import { Children, type ReactNode } from 'react';
-import { cn } from '../../../cn';
+import { type ReactNode } from 'react';
+import { Stat } from '../../data-display/stat/stat';
+import { TagList } from '../../data-display/tag-list/tag-list';
 import { SectionHeading } from '../section-heading/section-heading';
 
 type ProfileHeaderImage = {
@@ -8,65 +9,65 @@ type ProfileHeaderImage = {
 	alt: string;
 };
 
+type ProfileHeaderFact = {
+	label: string;
+	value: string;
+};
+
 type ProfileHeaderProps = {
 	name: string;
+	description?: string;
 	image?: ProfileHeaderImage | null;
 	// Shown on the top left of the portrait, e.g. a duration badge
 	imageBadge?: ReactNode;
-	// Shown below the name, e.g. links to social profiles
+	facts?: ProfileHeaderFact[];
+	tags?: { label: string; items: string[] };
+	// Shown last, e.g. links to social profiles
 	actions?: ReactNode;
-	description?: string;
-	// Fact cards
-	children?: ReactNode;
 };
 
-export const ProfileHeader = ({ name, image, imageBadge, actions, description, children }: ProfileHeaderProps) => {
-	const facts = Children.toArray(children);
-	const count = facts.length;
-
-	return (
-		<header className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
-			{image && (
-				<div className="bg-muted relative mx-auto aspect-4/5 w-44 shrink-0 overflow-hidden rounded-2xl sm:mx-0 sm:w-48">
-					{imageBadge && <div className="absolute top-3 left-3 z-20">{imageBadge}</div>}
-					<NextImage
-						src={image.src}
-						alt={image.alt}
-						fill
-						sizes="(min-width: 640px) 192px, 176px"
-						className="object-cover object-top"
-						priority
-					/>
-				</div>
-			)}
-
-			<div className="flex min-w-0 flex-1 flex-col gap-6 text-center sm:text-left">
-				<div className="flex flex-col gap-4">
-					<SectionHeading as="h1" size={1} align="left" bold>
-						{name}
-					</SectionHeading>
-					{actions && <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">{actions}</div>}
-				</div>
-
-				{/* All facts share a row where there is room; in between, an odd last fact spans a row of its own.
-				A lone fact fills the row rather than leaving half of it empty. */}
-				{count > 0 && (
-					<div className={cn('grid gap-4 text-left', count > 1 && 'sm:grid-cols-2', count > 2 && 'lg:grid-cols-3')}>
-						{facts.map((fact, index) => (
-							<div
-								key={index}
-								className={cn(count > 1 && count % 2 === 1 && index === count - 1 && 'sm:col-span-2 lg:col-span-1')}
-							>
-								{fact}
-							</div>
-						))}
-					</div>
-				)}
-
-				{description && (
-					<p className="text-foreground max-w-2xl text-base leading-7 sm:text-lg sm:leading-8">{description}</p>
-				)}
+export const ProfileHeader = ({ name, description, image, imageBadge, facts, tags, actions }: ProfileHeaderProps) => (
+	<header className="grid items-start gap-10 md:grid-cols-[minmax(0,1fr)_18rem] lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
+		<div className="flex flex-col gap-8 max-md:order-2">
+			<div className="flex flex-col gap-6">
+				<SectionHeading as="h1" size={1} align="left" bold>
+					{name}
+				</SectionHeading>
+				{description ? (
+					<p className="text-foreground max-w-2xl text-lg leading-8 sm:text-xl sm:leading-9">{description}</p>
+				) : null}
 			</div>
-		</header>
-	);
-};
+
+			{facts && facts.length > 0 ? (
+				<div className="flex flex-wrap gap-x-12 gap-y-4">
+					{facts.map((fact) => (
+						<Stat key={fact.label} label={fact.label} value={fact.value} size="lg" />
+					))}
+				</div>
+			) : null}
+
+			{tags && tags.items.length > 0 ? (
+				<div className="flex flex-col gap-2">
+					<p className="text-muted-foreground text-xs">{tags.label}</p>
+					<TagList items={tags.items.map((label) => ({ label }))} ariaLabel={tags.label} />
+				</div>
+			) : null}
+
+			{actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
+		</div>
+
+		{image ? (
+			<div className="bg-muted shadow-card relative mx-auto aspect-4/5 w-64 overflow-hidden rounded-4xl md:w-full">
+				{imageBadge ? <div className="absolute top-4 left-4 z-20">{imageBadge}</div> : null}
+				<NextImage
+					src={image.src}
+					alt={image.alt}
+					fill
+					sizes="(min-width: 1024px) 352px, (min-width: 768px) 288px, 256px"
+					className="object-cover object-top"
+					priority
+				/>
+			</div>
+		) : null}
+	</header>
+);

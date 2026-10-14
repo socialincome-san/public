@@ -45,7 +45,7 @@ export const createPayoutAction = async (input: unknown): Promise<Result<PayoutP
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createPayout(sessionResult.data.id, inputResult.data);
+	const result = await createPayout(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/delivery/payouts');
 
 	return result;
@@ -62,7 +62,7 @@ export const updatePayoutAction = async (input: unknown): Promise<Result<PayoutP
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updatePayout(sessionResult.data.id, inputResult.data);
+	const result = await updatePayout(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/delivery/payouts');
 
 	return result;
@@ -79,7 +79,7 @@ export const deletePayoutAction = async (payoutId: unknown): Promise<Result<{ id
 		return resultFail('Payout id is required.');
 	}
 
-	const result = await deletePayout(sessionResult.data.id, payoutIdResult.data);
+	const result = await deletePayout(sessionResult.data, payoutIdResult.data);
 	revalidatePath('/portal/delivery/payouts');
 	revalidatePath('/portal/management/ongoing-payouts');
 	revalidatePath('/portal/management/recipients');
@@ -141,7 +141,7 @@ export const confirmPayoutAction = async (payoutId: unknown): Promise<Result<str
 		return resultFail('Payout id is required.');
 	}
 
-	const result = await updatePayoutStatus(sessionResult.data.id, payoutIdResult.data, PayoutStatus.confirmed);
+	const result = await updatePayoutStatus(sessionResult.data, payoutIdResult.data, PayoutStatus.confirmed);
 	revalidatePath('/portal/monitoring/payout-confirmation');
 
 	return result;
@@ -158,7 +158,7 @@ export const contestPayoutAction = async (payoutId: unknown): Promise<Result<str
 		return resultFail('Payout id is required.');
 	}
 
-	const result = await updatePayoutStatus(sessionResult.data.id, payoutIdResult.data, PayoutStatus.contested);
+	const result = await updatePayoutStatus(sessionResult.data, payoutIdResult.data, PayoutStatus.contested);
 	revalidatePath('/portal/monitoring/payout-confirmation');
 
 	return result;

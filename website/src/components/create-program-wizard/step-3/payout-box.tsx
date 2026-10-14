@@ -7,32 +7,30 @@ import { PayoutControls } from './payout-controls';
 import { type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 import { PayoutSummary } from './payout-summary';
 
-type Props = {
-	programDuration: number;
+export type PayoutCustomization = {
+	enabled: boolean;
 	payoutPerIntervalMin: number;
 	payoutPerIntervalMax: number;
-	payoutInterval: PayoutInterval;
-	customizePayouts: boolean;
+	onToggle: () => void;
 	onDurationChange: (value: number) => void;
 	onPayoutChange: (value: number) => void;
 	onIntervalChange: (value: PayoutInterval) => void;
-	onToggleCustomizePayouts: () => void;
+};
+
+type Props = {
+	programDuration: number;
+	payoutInterval: PayoutInterval;
+	customization?: PayoutCustomization;
 } & PayoutPerIntervalAmountProps;
 
 export const PayoutBox = ({
 	programDuration,
-	payoutPerIntervalMin,
-	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
 	payoutCurrency,
 	displayCurrency,
 	payoutToDisplayRate,
-	customizePayouts,
-	onDurationChange,
-	onPayoutChange,
-	onIntervalChange,
-	onToggleCustomizePayouts,
+	customization,
 }: Props) => {
 	const t = useTranslations('create-program-wizard');
 
@@ -41,19 +39,19 @@ export const PayoutBox = ({
 			<h3 className="font-medium">{t('step3.payouts.title')}</h3>
 
 			<div className="mt-6">
-				{customizePayouts ? (
+				{customization?.enabled ? (
 					<PayoutControls
 						programDuration={programDuration}
-						payoutPerIntervalMin={payoutPerIntervalMin}
-						payoutPerIntervalMax={payoutPerIntervalMax}
+						payoutPerIntervalMin={customization.payoutPerIntervalMin}
+						payoutPerIntervalMax={customization.payoutPerIntervalMax}
 						payoutPerInterval={payoutPerInterval}
 						payoutInterval={payoutInterval}
 						payoutCurrency={payoutCurrency}
 						displayCurrency={displayCurrency}
 						payoutToDisplayRate={payoutToDisplayRate}
-						onDurationChange={onDurationChange}
-						onPayoutChange={onPayoutChange}
-						onIntervalChange={onIntervalChange}
+						onDurationChange={customization.onDurationChange}
+						onPayoutChange={customization.onPayoutChange}
+						onIntervalChange={customization.onIntervalChange}
 					/>
 				) : (
 					<PayoutSummary
@@ -67,14 +65,16 @@ export const PayoutBox = ({
 				)}
 			</div>
 
-			<div className="flex items-center gap-3 pt-6">
-				<Switch
-					data-testid="customize-payouts-switch"
-					checked={customizePayouts}
-					onCheckedChange={onToggleCustomizePayouts}
-				/>
-				<span className="text-sm font-medium">{t('step3.payouts.customize')}</span>
-			</div>
+			{customization ? (
+				<div className="flex items-center gap-3 pt-6">
+					<Switch
+						data-testid="customize-payouts-switch"
+						checked={customization.enabled}
+						onCheckedChange={customization.onToggle}
+					/>
+					<span className="text-sm font-medium">{t('step3.payouts.customize')}</span>
+				</div>
+			) : null}
 		</div>
 	);
 };

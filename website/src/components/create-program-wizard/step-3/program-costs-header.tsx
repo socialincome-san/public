@@ -13,22 +13,26 @@ import { InfoTooltip } from '@socialincome/design-system/overlays/info-tooltip/i
 import { useTranslations } from 'next-intl';
 
 type Props = {
+	title: string;
 	totalBudget: number;
 	monthlyCost: number;
 	currency: string;
 	exchangeRateText?: string;
 	totalBudgetTooltipText: string;
 	isCalculatingBudget: boolean;
+	disabled?: boolean;
 	onCurrencyChange: (value: string) => void;
 };
 
 export const ProgramCostsHeader = ({
+	title,
 	totalBudget,
 	monthlyCost,
 	currency,
 	exchangeRateText,
 	totalBudgetTooltipText,
 	isCalculatingBudget,
+	disabled = false,
 	onCurrencyChange,
 }: Props) => {
 	const t = useTranslations('create-program-wizard');
@@ -37,7 +41,7 @@ export const ProgramCostsHeader = ({
 		<div className="text-foreground flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 			<div className="min-w-0 space-y-1">
 				<div className="flex items-center gap-2">
-					<p className="text-sm font-medium">{t('step3.total_costs.title')}</p>
+					<p className="text-sm font-medium">{title}</p>
 					<InfoTooltip label={t('step3.total_costs.aria')}>{totalBudgetTooltipText}</InfoTooltip>
 				</div>
 
@@ -57,7 +61,7 @@ export const ProgramCostsHeader = ({
 			</div>
 
 			<div className="flex flex-col items-start gap-1 sm:items-end">
-				<Select value={currency} onValueChange={onCurrencyChange}>
+				<Select value={currency} onValueChange={onCurrencyChange} disabled={disabled}>
 					<div className="w-24">
 						<SelectTrigger>
 							<SelectValue />

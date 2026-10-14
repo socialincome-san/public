@@ -18,7 +18,7 @@ jest.mock('@/modules/recipients/recipient.service', () => ({
 		isRecipientEligibleForPayout: jest.fn(),
 	},
 }));
-jest.mock('./program.repository', () => ({
+jest.mock('./program.repository.read', () => ({
 	findProgramDashboardSource: mockFindProgramDashboardSource,
 }));
 

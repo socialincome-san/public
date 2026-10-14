@@ -8,7 +8,7 @@ const mockFindEligibleProgram = jest.fn();
 jest.mock('@/integrations/storyblok/storyblok-program.integration', () => ({
 	fetchStoryblokPrograms: mockFetchStoryblokPrograms,
 }));
-jest.mock('./program.repository', () => ({
+jest.mock('./program.repository.read', () => ({
 	findEligiblePublicSubmissionPrograms: mockFindEligiblePrograms,
 	findEligiblePublicSubmissionProgram: mockFindEligibleProgram,
 }));

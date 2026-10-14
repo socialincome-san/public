@@ -1,3 +1,4 @@
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	createFirebaseUserByEmail,
@@ -7,7 +8,9 @@ import {
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
 import { isAdmin } from '@/modules/users/user.service';
-import * as localPartnerRepository from './local-partner.repository';
+import type { UserSession } from '@/modules/users/user.types';
+import * as localPartnerRepository from './local-partner.repository.read';
+import * as localPartnerWriteRepository from './local-partner.repository.write';
 import type { LocalPartnerCreateInput, LocalPartnerUpdateInput } from './local-partner.schemas';
 import type {
 	LocalPartnerMessagingTarget,
@@ -269,10 +272,10 @@ export const getCurrentLocalPartnerSession = async (firebaseAuthUserId: string):
 };
 
 export const createLocalPartner = async (
-	userId: string,
+	session: UserSession,
 	input: LocalPartnerCreateInput,
 ): Promise<Result<LocalPartnerPayload>> => {
-	const adminResult = await isAdmin(userId);
+	const adminResult = await isAdmin(session.id);
 	if (!adminResult.success) {
 		return resultFail(adminResult.error);
 	}
@@ -308,7 +311,11 @@ export const createLocalPartner = async (
 			});
 		}
 
-		const partner = await localPartnerRepository.createLocalPartner(input, firebaseUserResult.data.uid);
+		const partner = await localPartnerWriteRepository.createLocalPartner(
+			getSessionAuditContext(session),
+			input,
+			firebaseUserResult.data.uid,
+		);
 
 		return resultOk(toLocalPartnerPayload(partner));
 	} catch (error) {
@@ -358,23 +365,12 @@ export const updateLocalPartner = async (
 			}
 		}
 
-		const updated = await localPartnerRepository.updateLocalPartner(partnerId, input, {
+		const updated = await localPartnerWriteRepository.updateLocalPartner(getSessionAuditContext(session), partnerId, input, {
 			contactId: existing.contact.id,
 			phoneId: existing.contact.phone?.id,
 			phoneNumber: existing.contact.phone?.number,
 			addressId: existing.contact.address?.id,
 		});
-		if (existing.contact.phone?.id && (!input.contact.phone || input.contact.phone !== existing.contact.phone.number)) {
-			await localPartnerRepository.deletePhoneIfOrphaned(existing.contact.phone.id);
-		}
-		if (
-			existing.contact.address?.id &&
-			![input.contact.street, input.contact.number, input.contact.city, input.contact.zip, input.contact.country].some(
-				Boolean,
-			)
-		) {
-			await localPartnerRepository.deleteAddressIfOrphaned(existing.contact.address.id);
-		}
 
 		return resultOk(toLocalPartnerPayload(updated));
 	} catch (error) {
@@ -384,8 +380,8 @@ export const updateLocalPartner = async (
 	}
 };
 
-export const deleteLocalPartner = async (userId: string, localPartnerId: string): Promise<Result<{ id: string }>> => {
-	const adminResult = await isAdmin(userId);
+export const deleteLocalPartner = async (session: UserSession, localPartnerId: string): Promise<Result<{ id: string }>> => {
+	const adminResult = await isAdmin(session.id);
 	if (!adminResult.success) {
 		return resultFail(adminResult.error);
 	}
@@ -399,17 +395,7 @@ export const deleteLocalPartner = async (userId: string, localPartnerId: string)
 			return resultFail('Cannot delete local partner because recipients are still assigned.');
 		}
 
-		const deletePhone = partner.contact?.phoneId
-			? await localPartnerRepository.findShouldDeletePhone(partner.contact.phoneId)
-			: false;
-		await localPartnerRepository.deleteLocalPartnerData({
-			localPartnerId,
-			contactId: partner.contactId,
-			accountId: partner.accountId,
-			addressId: partner.contact?.addressId ?? null,
-			phoneId: partner.contact?.phoneId ?? null,
-			deletePhone,
-		});
+		await localPartnerWriteRepository.deleteLocalPartner(getSessionAuditContext(session), localPartnerId);
 
 		const firebaseResult = await deleteFirebaseUserByUidIfExists(partner.account.firebaseAuthUserId);
 		if (!firebaseResult.success) {

@@ -4,6 +4,7 @@ import {
 	SubscriptionStatus,
 	type SubscriptionCancellationReason,
 } from '@/generated/prisma/enums';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import { getCampaignFilterOption } from '@/modules/campaigns/campaign.service';
@@ -16,11 +17,13 @@ import type { StripeSubscriptionDetails } from '@/modules/stripe-payments/stripe
 import { subscriptionAmount } from './subscription-amount.service';
 import { subscriptionPaymentSchedule } from './subscription-payment-schedule.service';
 import { canListSubscriptions } from './subscription.permissions';
-import * as subscriptionRepository from './subscription.repository';
+import * as subscriptionRepository from './subscription.repository.read';
+import * as subscriptionWriteRepository from './subscription.repository.write';
 import type {
 	ActiveSubscriptionView,
 	MonthlyContributionSummary,
 	OwnedBankTransferQrBill,
+	StripeSubscriptionInput,
 	SubscriptionPaginatedTableView,
 	SubscriptionsDashboardView,
 	SubscriptionTableQuery,
@@ -209,6 +212,7 @@ export const getOwnedActiveBankTransferQrBill = async (input: {
 };
 
 export const upsertFromBankStandingOrder = async (
+	audit: AuditContext,
 	input: UpsertBankStandingOrderInput,
 ): Promise<Result<SubscriptionUpsertResult>> => {
 	try {
@@ -217,7 +221,9 @@ export const upsertFromBankStandingOrder = async (
 			return resultFail('Standing order reference is already in use');
 		}
 
-		const subscription = await subscriptionRepository.updateBankStandingOrder(input);
+		const subscription = existing
+			? await subscriptionWriteRepository.updateBankStandingOrder(audit, existing.id, input)
+			: await subscriptionWriteRepository.createBankStandingOrder(audit, input);
 
 		return resultOk(subscription);
 	} catch (error) {
@@ -227,11 +233,14 @@ export const upsertFromBankStandingOrder = async (
 	}
 };
 
-export const updateBankTransferAmount = async (input: {
-	contributorId: string;
-	subscriptionId: string;
-	amount: number;
-}): Promise<Result<{ amount: number; currency: string }>> => {
+export const updateBankTransferAmount = async (
+	audit: AuditContext,
+	input: {
+		contributorId: string;
+		subscriptionId: string;
+		amount: number;
+	},
+): Promise<Result<{ amount: number; currency: string }>> => {
 	try {
 		if (!subscriptionAmount.isSubscriptionAmountInRange(input.amount)) {
 			return resultFail('Amount must be an integer between 1 and 1000000');
@@ -245,7 +254,7 @@ export const updateBankTransferAmount = async (input: {
 			return resultFail('Subscription not found');
 		}
 
-		await subscriptionRepository.updateBankTransferSubscriptionAmount(subscription.id, input.amount);
+		await subscriptionWriteRepository.updateSubscriptionAmount(audit, subscription.id, input.amount);
 
 		return resultOk({ amount: input.amount, currency: subscription.currency });
 	} catch (error) {
@@ -255,11 +264,14 @@ export const updateBankTransferAmount = async (input: {
 	}
 };
 
-export const cancelBankTransfer = async (input: {
-	contributorId: string;
-	subscriptionId: string;
-	reason: SubscriptionCancellationReason;
-}): Promise<Result<void>> => {
+export const cancelBankTransfer = async (
+	audit: AuditContext,
+	input: {
+		contributorId: string;
+		subscriptionId: string;
+		reason: SubscriptionCancellationReason;
+	},
+): Promise<Result<void>> => {
 	try {
 		const subscription = await subscriptionRepository.findOwnedBankTransferSubscription(
 			input.contributorId,
@@ -269,10 +281,11 @@ export const cancelBankTransfer = async (input: {
 			return resultFail('Subscription not found');
 		}
 
-		await subscriptionRepository.updateBankTransferSubscriptionCancellation({
+		await subscriptionWriteRepository.updateSubscriptionLifecycle(audit, {
 			subscriptionId: subscription.id,
-			reason: input.reason,
+			status: SubscriptionStatus.ended,
 			canceledAt: now(),
+			cancellationReason: input.reason,
 		});
 
 		return resultOk(undefined);
@@ -280,6 +293,45 @@ export const cancelBankTransfer = async (input: {
 		console.error(error);
 
 		return resultFail('Could not cancel subscription');
+	}
+};
+
+/** Creates or updates the subscription of a Stripe subscription. */
+export const syncStripeSubscription = async (
+	audit: AuditContext,
+	input: StripeSubscriptionInput,
+): Promise<Result<{ id: string }>> => {
+	try {
+		const existing = await subscriptionRepository.findSubscriptionIdByStripeId(input.stripeSubscriptionId);
+
+		return resultOk(
+			existing
+				? await subscriptionWriteRepository.updateStripeSubscription(audit, existing.id, input)
+				: await subscriptionWriteRepository.createStripeSubscription(audit, input),
+		);
+	} catch (error) {
+		console.error(error);
+
+		return resultFail('Could not sync Stripe subscription');
+	}
+};
+
+/** Status changes of a subscription, e.g. from Stripe or a cancellation. The caller authorizes. */
+export const updateSubscriptionLifecycle = async (
+	audit: AuditContext,
+	input: {
+		subscriptionId: string;
+		status: SubscriptionStatus;
+		canceledAt: Date | null;
+		cancellationReason?: SubscriptionCancellationReason;
+	},
+): Promise<Result<{ id: string }>> => {
+	try {
+		return resultOk(await subscriptionWriteRepository.updateSubscriptionLifecycle(audit, input));
+	} catch (error) {
+		console.error(error);
+
+		return resultFail('Could not update subscription status');
 	}
 };
 

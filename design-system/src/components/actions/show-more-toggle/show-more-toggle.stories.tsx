@@ -90,3 +90,21 @@ export const ShortList: Story = {
 		</ShowMoreToggle>
 	),
 };
+
+export const Grid: Story = {
+	args: {
+		initialCount: 3,
+		layout: 'grid',
+		showMoreLabel: 'Show more',
+		showLessLabel: 'Show less',
+	},
+	render: (args) => (
+		<ShowMoreToggle {...args}>
+			{referenceItems.map((item) => (
+				<div key={item} className="bg-muted rounded-xl p-6">
+					{item}
+				</div>
+			))}
+		</ShowMoreToggle>
+	),
+};

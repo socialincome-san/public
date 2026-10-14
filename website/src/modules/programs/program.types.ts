@@ -222,6 +222,24 @@ export type ProgramDashboardSource = {
 	}[];
 };
 
+export type ProgramRecipientPoolSetup = {
+	programId: string;
+	countryCode: CountryCode;
+	programDurationInMonths: number;
+	payoutPerInterval: number;
+	payoutCurrency: Currency;
+	payoutInterval: PayoutInterval;
+	focusOptions: { id: string; name: string }[];
+	localPartnerOptions: { id: string; name: string }[];
+	totalCount: number;
+};
+
+export type ProgramRecipientPoolPreview = {
+	totalCount: number;
+	matchingCount: number;
+	budget: ProgramBudgetCalculation | null;
+};
+
 export type ProgramBudgetCalculation = {
 	calculatedTotalBudget: number;
 	displayMonthlyCost: number;

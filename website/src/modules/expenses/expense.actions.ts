@@ -43,7 +43,7 @@ export const createExpenseAction = async (input: unknown): Promise<Result<Expens
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createExpense(sessionResult.data.id, parsedInput.data);
+	const result = await createExpense(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -59,7 +59,7 @@ export const updateExpenseAction = async (input: unknown): Promise<Result<Expens
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateExpense(sessionResult.data.id, parsedInput.data);
+	const result = await updateExpense(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;

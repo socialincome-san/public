@@ -50,7 +50,7 @@ export const createContributionAction = async (input: unknown): Promise<Result<C
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createContribution(sessionResult.data.id, inputResult.data);
+	const result = await createContribution(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/contributions');
 
 	return result;
@@ -67,7 +67,7 @@ export const updateContributionAction = async (input: unknown): Promise<Result<C
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateContribution(sessionResult.data.id, inputResult.data);
+	const result = await updateContribution(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/contributions');
 
 	return result;

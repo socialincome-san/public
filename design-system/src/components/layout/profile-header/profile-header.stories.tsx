@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Button } from '../../actions/button/button';
-import { Badge } from '../../data-display/badge/badge';
 import { DurationBadge } from '../../data-display/duration-badge/duration-badge';
-import { FactCard } from '../../data-display/fact-card/fact-card';
 import { GithubIcon, LinkedinIcon } from '../../icons/social-icons/social-icons';
 import { ProfileHeader } from './profile-header';
 
@@ -19,7 +17,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'The header of a profile page: portrait, name, actions such as social links, fact cards in a grid that adapts to their number, and a short bio.',
+					'The header of a profile page: name, short bio, key facts, tags such as circles and actions such as social links next to a large portrait.',
 			},
 		},
 	},
@@ -37,7 +35,13 @@ export const WithoutImage: Story = {
 
 export const Complete: Story = {
 	args: {
-		imageBadge: <DurationBadge label="3 years" since="Since Mar 4, 2023" />,
+		imageBadge: <DurationBadge label="3 years +" since="Since Mar 4, 2023" />,
+		facts: [
+			{ label: 'Role', value: 'Program Lead' },
+			{ label: 'Volunteering since', value: 'Mar 4, 2023' },
+			{ label: 'Time commitment', value: '4-8 hrs / week' },
+		],
+		tags: { label: 'Circles', items: ['Technology', 'Partnerships', 'Community'] },
 		actions: (
 			<>
 				<Button asChild size="sm" variant="outline">
@@ -54,33 +58,5 @@ export const Complete: Story = {
 				</Button>
 			</>
 		),
-		children: [
-			<FactCard key="role" label="Role" value="Program Lead" />,
-			<FactCard
-				key="commitment"
-				label="Time commitment"
-				value="4-8 hrs / week"
-				details={{ title: 'Volunteer commitment', facts: [{ label: 'Work style', value: 'Async' }] }}
-			/>,
-			<FactCard key="circles" label="Circles">
-				<div className="flex flex-wrap gap-2">
-					<Badge variant="primary" size="lg">
-						Tech Circle
-					</Badge>
-					<Badge variant="primary-outline" size="lg">
-						Partnership Circle
-					</Badge>
-				</div>
-			</FactCard>,
-		],
-	},
-};
-
-export const TwoFacts: Story = {
-	args: {
-		children: [
-			<FactCard key="role" label="Role" value="Program Lead" />,
-			<FactCard key="commitment" label="Time commitment" value="4-8 hrs / week" />,
-		],
 	},
 };
