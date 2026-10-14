@@ -109,6 +109,13 @@ const auditedModelWriteSelector = {
 	message: 'This model is audited. Write it in a *.repository.write.ts through auditedWrite.',
 };
 
+// Raw SQL can write audited models without the selector above noticing, so
+// only write repositories may use it, on the transaction auditedWrite passes in.
+const rawSqlSelector = {
+	selector: 'CallExpression[callee.property.name=/^\\$(executeRaw|queryRaw)(Unsafe)?$/], TaggedTemplateExpression[tag.property.name=/^\\$(executeRaw|queryRaw)(Unsafe)?$/]',
+	message: 'Raw SQL may write audited models. Use it in a *.repository.write.ts inside auditedWrite.',
+};
+
 const repositoryIncludeSelector = {
 	selector: 'Property[key.name="include"], Property[key.value="include"]',
 	message: 'Repositories must use explicit select instead of include.',
@@ -318,7 +325,13 @@ export default [
 		files: ['src/modules/**/*.repository{,.read,.write}.ts'],
 		rules: {
 			'backend-architecture/repository-export-naming': 'error',
-			'no-restricted-syntax': ['error', ...moduleSyntaxSelectors, repositoryIncludeSelector, auditedModelWriteSelector],
+			'no-restricted-syntax': [
+				'error',
+				...moduleSyntaxSelectors,
+				repositoryIncludeSelector,
+				auditedModelWriteSelector,
+				rawSqlSelector,
+			],
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
 				{
