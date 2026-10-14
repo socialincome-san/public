@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const storyReferenceSchema = z.union([z.string(), z.object({ uuid: z.string() })]);
 
-const communityPageSchema = z.object({
+export const communityPageSchema = z.object({
 	communityEnabled: z.boolean().optional(),
 	communityContactEmail: z.string().optional(),
 	communityContributors: z
