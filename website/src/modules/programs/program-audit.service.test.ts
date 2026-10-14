@@ -156,6 +156,14 @@ describe('program recipient write attribution', () => {
 		);
 	});
 
+	test('keeps recipients assigned when campaigns cannot be deleted', async () => {
+		mockDeleteProgramCampaigns.mockResolvedValue({ success: false, error: 'Could not delete program campaigns' });
+
+		await expect(deleteProgram(operator, 'program-1')).resolves.toMatchObject({ success: false });
+		expect(mockRemoveRecipientsFromProgram).not.toHaveBeenCalled();
+		expect(mockDeleteProgram).not.toHaveBeenCalled();
+	});
+
 	test('keeps the program when unassigning fails', async () => {
 		mockRemoveRecipientsFromProgram.mockResolvedValue({ success: false, error: 'Could not unassign' });
 

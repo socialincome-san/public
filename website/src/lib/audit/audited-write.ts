@@ -24,26 +24,28 @@ export const auditedWrite = async <T>(
 ): Promise<T> =>
 	prisma.$transaction(async (transaction) => {
 		const result = await write(transaction);
-		const entityIds = 'entityId' in options ? [options.entityId].flat() : getCreatedIds(result);
+		const entityIds = new Set('entityId' in options ? [options.entityId].flat() : getCreatedIds(result));
+		const events: Prisma.AuditEventCreateManyInput[] = [];
 		for (const entityId of entityIds) {
 			const snapshot = options.action === 'delete' ? null : await options.entity.findSnapshot(transaction, entityId);
 			if (options.action === 'update' && !(await hasChanged(transaction, options.entity.type, entityId, snapshot))) {
 				continue;
 			}
 
-			await transaction.auditEvent.create({
-				data: {
-					entityType: options.entity.type,
-					entityId,
-					action: options.action,
-					actorType: options.context.actor.type,
-					actorId: options.context.actor.id,
-					actorName: options.context.actor.name,
-					source: options.context.source,
-					snapshot: snapshot ?? undefined,
-					metadata: options.context.metadata,
-				},
+			events.push({
+				entityType: options.entity.type,
+				entityId,
+				action: options.action,
+				actorType: options.context.actor.type,
+				actorId: options.context.actor.id,
+				actorName: options.context.actor.name,
+				source: options.context.source,
+				snapshot: snapshot ?? undefined,
+				metadata: options.context.metadata,
 			});
+		}
+		if (events.length > 0) {
+			await transaction.auditEvent.createMany({ data: events });
 		}
 
 		return result;

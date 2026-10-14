@@ -295,7 +295,8 @@ export const createOrganization = async (
 		const organization = await organizationWriteRepository.createOrganization(audit, input.name);
 		const relationsResult = await updateOrganizationRelations(audit, organization.id, input);
 		if (!relationsResult.success) {
-			return relationsResult;
+			// Creating again would fail on the taken name, so point to editing.
+			return resultFail('The organization was created, but its programs or members could not be saved. Edit it to retry.');
 		}
 
 		return resultOk(toOrganizationPayload(organization, input));

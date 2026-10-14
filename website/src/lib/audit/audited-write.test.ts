@@ -14,11 +14,11 @@ jest.mock('@/lib/database/prisma', () => ({
 				auditEvent: {
 					findFirst: ({ where }: { where: { entityId: string } }) =>
 						Promise.resolve(mockCommitted.events.filter(({ entityId }) => entityId === where.entityId).at(-1) ?? null),
-					create: ({ data }: { data: StoredEvent }) => {
+					createMany: ({ data }: { data: StoredEvent[] }) => {
 						if (mockFailEventInsert.value) {
 							return Promise.reject(new Error('Audit event insert failed'));
 						}
-						events.push(data);
+						events.push(...data);
 
 						return Promise.resolve();
 					},

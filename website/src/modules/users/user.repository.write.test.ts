@@ -26,7 +26,7 @@ const mockTransactionWith = (remainingAccess: { organizationId: string } | null)
 			},
 			auditEvent: {
 				findFirst: jest.fn().mockResolvedValue(null),
-				create: jest.fn().mockResolvedValue(undefined),
+				createMany: jest.fn().mockResolvedValue({ count: 1 }),
 			},
 		}),
 	);

@@ -532,17 +532,15 @@ export const deleteProgram = async (session: UserSession, programId: string): Pr
 			return resultFail('Program cannot be deleted because related campaigns already have contributions.');
 		}
 
-		// Recipients, campaigns and surveys belong to other modules, so they are removed
-		// in separate steps before the program. Each step is safe to retry
-		// after a failed deletion.
+		// Campaigns, surveys and recipients belong to other modules, so they are
+		// removed in separate steps before the program. Each step is safe to
+		// retry after a failed deletion. Campaigns go first: subscriptions or
+		// pending claims can block their deletion, and recipients must stay
+		// assigned when that happens.
 		const deletionAudit: AuditContext = {
 			...getSessionAuditContext(session),
 			metadata: { operation: 'program-deletion', programId },
 		};
-		const removalResult = await removeRecipientsFromProgram(deletionAudit, programId);
-		if (!removalResult.success) {
-			return resultFail(removalResult.error);
-		}
 		const campaignsResult = await deleteProgramCampaigns(deletionAudit, programId);
 		if (!campaignsResult.success) {
 			return resultFail(campaignsResult.error);
@@ -550,6 +548,10 @@ export const deleteProgram = async (session: UserSession, programId: string): Pr
 		const surveysResult = await detachProgramSurveys(deletionAudit, programId);
 		if (!surveysResult.success) {
 			return resultFail(surveysResult.error);
+		}
+		const removalResult = await removeRecipientsFromProgram(deletionAudit, programId);
+		if (!removalResult.success) {
+			return resultFail(removalResult.error);
 		}
 		await programWriteRepository.deleteProgram(deletionAudit, programId);
 

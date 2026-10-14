@@ -185,7 +185,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			status: 'Status',
 			data: 'Answers',
 			accessEmail: 'Access email',
-			accessPw: 'Access password',
 			recipientId: 'Recipient',
 			surveyScheduleId: 'Survey schedule',
 		},

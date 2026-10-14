@@ -42,6 +42,7 @@ const surveyRecordSelect = {
 	updatedAt: true,
 } satisfies Prisma.SurveySelect;
 
+// The access password stays out: audit events are kept forever and shown to admins.
 const surveyAuditSnapshotSelect = {
 	legacyFirestoreId: true,
 	name: true,
@@ -52,7 +53,6 @@ const surveyAuditSnapshotSelect = {
 	status: true,
 	data: true,
 	accessEmail: true,
-	accessPw: true,
 	recipientId: true,
 	surveyScheduleId: true,
 } satisfies Prisma.SurveySelect;

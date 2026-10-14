@@ -2,7 +2,7 @@ import { Currency, PayoutStatus } from '@/generated/prisma/enums';
 import type { PreviewPayout } from '@/modules/payout-processes/payout-process.types';
 
 const mockCreateManyAndReturn = jest.fn();
-const mockCreateAuditEvent = jest.fn();
+const mockCreateAuditEvents = jest.fn();
 
 jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
@@ -12,7 +12,7 @@ jest.mock('@/lib/database/prisma', () => ({
 					createManyAndReturn: mockCreateManyAndReturn,
 					findUnique: ({ where }: { where: { id: string } }) => Promise.resolve({ recipientId: `recipient-of-${where.id}` }),
 				},
-				auditEvent: { create: mockCreateAuditEvent },
+				auditEvent: { createMany: mockCreateAuditEvents },
 			}),
 	},
 }));
@@ -62,9 +62,12 @@ describe('payout write repository', () => {
 	test('stores one audit event per created payout', async () => {
 		await createPayoutProcessPayouts(audit, []);
 
-		expect(mockCreateAuditEvent.mock.calls.map(([{ data }]: [{ data: object }]) => data)).toMatchObject([
-			{ entityType: 'payout', entityId: 'payout-1', action: 'create', actorId: 'user-1' },
-			{ entityType: 'payout', entityId: 'payout-2', action: 'create', actorId: 'user-1' },
-		]);
+		expect(mockCreateAuditEvents).toHaveBeenCalledTimes(1);
+		expect(mockCreateAuditEvents).toHaveBeenCalledWith({
+			data: [
+				expect.objectContaining({ entityType: 'payout', entityId: 'payout-1', action: 'create', actorId: 'user-1' }),
+				expect.objectContaining({ entityType: 'payout', entityId: 'payout-2', action: 'create', actorId: 'user-1' }),
+			],
+		});
 	});
 });

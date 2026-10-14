@@ -252,6 +252,25 @@ describe('organization service', () => {
 		});
 	});
 
+	test('points to editing when a created organization has no programs or members saved', async () => {
+		mockIsAdmin.mockResolvedValue({ success: true, data: true });
+		mockFindOrganizationByName.mockResolvedValue(null);
+		mockFindUsersByIds.mockResolvedValue([]);
+		mockValidateProgramIds.mockResolvedValue({ success: true, data: true });
+		mockCreateOrganization.mockResolvedValue({ id: 'organization-1', name: 'Organization' });
+		mockUpdateOrganizationProgramAccesses.mockResolvedValue({ success: false, error: 'Could not update' });
+
+		const result = await createOrganization(admin, {
+			name: 'Organization',
+			userIds: [],
+			ownedProgramIds: ['program-1'],
+			operatedProgramIds: [],
+		});
+
+		expectFailure(result, 'The organization was created, but its programs or members could not be saved. Edit it to retry.');
+		expect(mockUpdateOrganizationMembers).not.toHaveBeenCalled();
+	});
+
 	test('removes memberships before deleting an organization', async () => {
 		mockIsAdmin.mockResolvedValue({ success: true, data: true });
 		mockFindOrganizationIdentity.mockResolvedValue({ id: 'organization-1', name: 'Organization' });
