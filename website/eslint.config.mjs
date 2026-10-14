@@ -93,6 +93,13 @@ const auditedModels = [
 	'subscription',
 	'donationCertificate',
 	'localPartner',
+	'campaign',
+	'survey',
+	'expense',
+	'country',
+	'focus',
+	'mobileMoneyProvider',
+	'program',
 ];
 
 const auditedModelWriteSelector = {
