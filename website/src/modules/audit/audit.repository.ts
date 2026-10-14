@@ -12,10 +12,23 @@ export const findAuditEventPage = async ({
 	skip: number;
 	take: number;
 }) => {
+	// A name search lists every event of a matching entity, also those
+	// stored under an earlier name or without one, like deletes.
+	const namedEntities = search
+		? await prisma.auditEvent.findMany({
+				where: { entityType, entityName: { contains: search, mode: 'insensitive' } },
+				distinct: ['entityType', 'entityId'],
+				select: { entityType: true, entityId: true },
+			})
+		: [];
 	const where: Prisma.AuditEventWhereInput = {
 		entityType,
 		OR: search
-			? [{ entityId: { contains: search, mode: 'insensitive' } }, { actorName: { contains: search, mode: 'insensitive' } }]
+			? [
+					{ entityId: { contains: search, mode: 'insensitive' } },
+					{ actorName: { contains: search, mode: 'insensitive' } },
+					...namedEntities,
+				]
 			: undefined,
 	};
 	const [events, totalCount] = await Promise.all([
@@ -43,6 +56,7 @@ const auditEventSelect = {
 	id: true,
 	entityType: true,
 	entityId: true,
+	entityName: true,
 	action: true,
 	actorType: true,
 	actorName: true,

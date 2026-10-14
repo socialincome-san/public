@@ -22,6 +22,8 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 }));
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
+	getRecipientAuditContext: (id: string, source: string) =>
+		Promise.resolve({ success: true, data: { actor: { type: 'recipient', id, name: 'Ada Lovelace' }, source } }),
 	getRecipientFilterOption: mockGetRecipientFilterOption,
 	getRecipientProgramAssignment: mockGetRecipientProgramAssignment,
 	getSurveyRecipients: mockGetSurveyRecipients,
@@ -319,7 +321,7 @@ describe('saveSurveyChanges', () => {
 		await saveSurveyChanges('survey-1', { data: { q1: 'yes' }, status: SurveyStatus.in_progress });
 
 		expect(mockUpdateSurvey).toHaveBeenCalledWith(
-			{ actor: { type: 'recipient', id: 'recipient-1' }, source: 'website' },
+			{ actor: { type: 'recipient', id: 'recipient-1', name: 'Ada Lovelace' }, source: 'website' },
 			'survey-1',
 			expect.objectContaining({ status: SurveyStatus.in_progress }),
 		);

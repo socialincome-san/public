@@ -175,9 +175,6 @@ export const findContactByEmail = async (email: string) =>
 		select: { id: true },
 	});
 
-export const findOrganizationMemberIds = async (organizationId: string) =>
-	prisma.organizationAccess.findMany({ where: { organizationId }, select: { userId: true } });
-
 export const findUserForUpdate = async (userId: string) =>
 	prisma.user.findUnique({
 		where: { id: userId },

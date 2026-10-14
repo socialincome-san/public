@@ -39,7 +39,7 @@ export const getAuditTableView = async (userId: string, query: AuditTableQuery):
 				createdAt: event.createdAt,
 				entityType: event.entityType,
 				entityId: event.entityId,
-				latestSnapshot: entityHistory.findLast(({ snapshot }) => snapshot !== null)?.snapshot ?? null,
+				entityName: entityHistory.findLast(({ entityName }) => entityName !== null)?.entityName ?? null,
 				action: event.action,
 				actorType: event.actorType,
 				actorName: event.actorName,

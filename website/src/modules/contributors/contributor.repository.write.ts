@@ -1,7 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { ContributorReferralSource } from '@/generated/prisma/enums';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { contributorRecordSelect, contributorWithContactSelect } from './contributor.repository.read';
 import type { CreateContributorInput, UpdateContributorInput, UpdateContributorSelfInput } from './contributor.schemas';
 
@@ -243,11 +243,12 @@ const contributorAuditSnapshotSelect = {
 	},
 } satisfies Prisma.ContributorSelect;
 
-const contributorEntity: AuditedEntity = {
+const contributorEntity = defineAuditedEntity({
 	type: 'contributor',
 	findSnapshot: (transaction, contributorId) =>
 		transaction.contributor.findUnique({ where: { id: contributorId }, select: contributorAuditSnapshotSelect }),
-};
+	getName: ({ contact }) => `${contact.firstName} ${contact.lastName}`,
+});
 
 const findRelationIds = async (transaction: Prisma.TransactionClient, contributorId: string) => {
 	const contributor = await transaction.contributor.findUniqueOrThrow({

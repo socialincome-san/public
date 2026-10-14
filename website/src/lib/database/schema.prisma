@@ -1252,6 +1252,8 @@ model AuditEvent {
   id         String   @id @default(cuid()) @map("id")
   entityType String   @map("entity_type")
   entityId   String   @map("entity_id")
+  /// Display name from the entity's state at the write; searchable in the audit log.
+  entityName String?  @map("entity_name")
   action     String   @map("action")
   actorType  String   @map("actor_type")
   actorId    String   @map("actor_id")

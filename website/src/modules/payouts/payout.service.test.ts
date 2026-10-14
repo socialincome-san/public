@@ -59,6 +59,8 @@ jest.mock('@/modules/programs/program-reference.service', () => ({
 }));
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
+	getRecipientAuditContext: (id: string, source: string) =>
+		Promise.resolve({ success: true, data: { actor: { type: 'recipient', id, name: 'Ada Lovelace' }, source } }),
 	getRecipientFilterOption: mockGetRecipientFilterOption,
 	getRecipientProgramAssignment: mockGetRecipientProgramAssignment,
 	recipientStatusService: {
@@ -429,7 +431,7 @@ describe('payout writes', () => {
 		await updatePayoutStatusByRecipient('recipient-1', 'payout-1', PayoutStatus.confirmed, null);
 
 		expect(mockUpdatePayoutStatusByRecipient).toHaveBeenCalledWith(
-			{ actor: { type: 'recipient', id: 'recipient-1' }, source: 'mobile-app' },
+			{ actor: { type: 'recipient', id: 'recipient-1', name: 'Ada Lovelace' }, source: 'mobile-app' },
 			'payout-1',
 			PayoutStatus.confirmed,
 			null,

@@ -4,8 +4,6 @@ import type { ChangeListItem } from '@socialincome/design-system/data-display/ch
 
 type AuditEntityType = {
 	label: string;
-	/** Snapshot paths joined to the entity name; the entity id is the fallback. */
-	namePaths: string[];
 	/** Readable names for snapshot paths. Unknown paths show as is. */
 	fieldLabels: Record<string, string>;
 };
@@ -13,7 +11,6 @@ type AuditEntityType = {
 const auditEntityTypes: Record<string, AuditEntityType> = {
 	recipient: {
 		label: 'Recipient',
-		namePaths: ['contact.firstName', 'contact.lastName'],
 		fieldLabels: {
 			programId: 'Program',
 			localPartnerId: 'Local partner',
@@ -44,7 +41,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	payout: {
 		label: 'Payout',
-		namePaths: ['currency', 'amount', 'paymentAt'],
 		fieldLabels: {
 			legacyFirestoreId: 'Legacy ID',
 			recipientId: 'Recipient',
@@ -59,7 +55,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	contributor: {
 		label: 'Contributor',
-		namePaths: ['contact.firstName', 'contact.lastName'],
 		fieldLabels: {
 			legacyFirestoreId: 'Legacy ID',
 			referral: 'Referral',
@@ -87,7 +82,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	contribution: {
 		label: 'Contribution',
-		namePaths: ['currency', 'amount'],
 		fieldLabels: {
 			legacyFirestoreId: 'Legacy ID',
 			amount: 'Amount',
@@ -101,7 +95,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	subscription: {
 		label: 'Subscription',
-		namePaths: ['currency', 'amount', 'interval'],
 		fieldLabels: {
 			contributorId: 'Contributor',
 			campaignId: 'Campaign',
@@ -119,7 +112,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	'donation-certificate': {
 		label: 'Donation certificate',
-		namePaths: ['year', 'language'],
 		fieldLabels: {
 			legacyFirestoreId: 'Legacy ID',
 			contributorId: 'Contributor',
@@ -130,7 +122,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	'local-partner': {
 		label: 'Local partner',
-		namePaths: ['name'],
 		fieldLabels: {
 			legacyFirestoreId: 'Legacy ID',
 			name: 'Name',
@@ -157,7 +148,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	campaign: {
 		label: 'Campaign',
-		namePaths: ['slug'],
 		fieldLabels: {
 			legacyFirestoreId: 'Legacy ID',
 			goal: 'Goal',
@@ -174,7 +164,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	survey: {
 		label: 'Survey',
-		namePaths: ['name'],
 		fieldLabels: {
 			legacyFirestoreId: 'Legacy ID',
 			name: 'Name',
@@ -191,7 +180,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	expense: {
 		label: 'Expense',
-		namePaths: ['type', 'year'],
 		fieldLabels: {
 			legacyFirestoreId: 'Legacy ID',
 			organizationId: 'Organization',
@@ -202,7 +190,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	country: {
 		label: 'Country',
-		namePaths: ['isoCode'],
 		fieldLabels: {
 			isoCode: 'ISO code',
 			isActive: 'Active',
@@ -224,7 +211,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	focus: {
 		label: 'Focus',
-		namePaths: ['name'],
 		fieldLabels: {
 			name: 'Name',
 			slug: 'Slug',
@@ -232,7 +218,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	'mobile-money-provider': {
 		label: 'Mobile money provider',
-		namePaths: ['name'],
 		fieldLabels: {
 			name: 'Name',
 			payoutProcess: 'Payout process',
@@ -241,7 +226,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	program: {
 		label: 'Program',
-		namePaths: ['name'],
 		fieldLabels: {
 			name: 'Name',
 			slug: 'Slug',
@@ -259,7 +243,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	organization: {
 		label: 'Organization',
-		namePaths: ['name'],
 		fieldLabels: {
 			name: 'Name',
 			isOperatorFallback: 'Operator fallback',
@@ -267,7 +250,6 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 	},
 	user: {
 		label: 'User',
-		namePaths: ['contact.firstName', 'contact.lastName'],
 		fieldLabels: {
 			role: 'Role',
 			activeOrganizationId: 'Active organization',
@@ -298,24 +280,11 @@ export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([val
 export const getAuditEntityTypeLabel = ({ entityType }: AuditTableViewRow): string =>
 	auditEntityTypes[entityType]?.label ?? entityType;
 
-export const getAuditEntityName = ({ entityType, entityId, latestSnapshot }: AuditTableViewRow): string =>
-	(auditEntityTypes[entityType]?.namePaths ?? [])
-		.map((path) => formatValue(readPath(latestSnapshot, path)))
-		.filter((part) => part !== null)
-		.join(' ') || entityId;
+export const getAuditEntityName = ({ entityId, entityName }: AuditTableViewRow): string => entityName ?? entityId;
 
 /** Self-updates from the app store no actor name; they are made by the entity itself. */
 export const getAuditActorName = (row: AuditTableViewRow): string =>
 	row.actorName ?? (row.actorType === row.entityType ? getAuditEntityName(row) : row.actorType);
-
-const readPath = (value: JsonValue, path: string): JsonValue =>
-	path
-		.split('.')
-		.reduce<JsonValue>(
-			(current, key) =>
-				current !== null && typeof current === 'object' && !Array.isArray(current) ? (current[key] ?? null) : null,
-			value,
-		);
 
 const formatValue = (value: JsonValue): string | null => {
 	if (value === null || value === '') {

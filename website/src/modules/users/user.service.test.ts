@@ -14,7 +14,6 @@ const mockCreateFirebaseUserByEmail = jest.fn();
 const mockUpdateFirebaseUserByUid = jest.fn();
 const mockDeleteFirebaseUserByUidIfExists = jest.fn();
 
-const mockFindOrganizationMemberIds = jest.fn();
 const mockUpdateOrganizationMembers = jest.fn();
 
 jest.mock('./user.repository.read', () => ({
@@ -23,7 +22,6 @@ jest.mock('./user.repository.read', () => ({
 	findUserForSelfUpdate: mockFindUserForSelfUpdate,
 	findUserSessionByFirebaseAuthUserId: mockFindUserSessionByFirebaseAuthUserId,
 	findUserForDeletion: mockFindUserForDeletion,
-	findOrganizationMemberIds: mockFindOrganizationMemberIds,
 }));
 
 jest.mock('./user.repository.write', () => ({
@@ -204,15 +202,12 @@ describe('user service', () => {
 		expect(mockDeleteUserData).not.toHaveBeenCalled();
 	});
 
-	test('stores an event for every user whose organization membership changes', async () => {
+	test('reports a failed membership update with a fixed message', async () => {
 		const audit = { actor: { type: 'user' as const, id: 'admin-1' }, source: 'portal' as const };
-		mockFindOrganizationMemberIds.mockResolvedValue([{ userId: 'user-old' }, { userId: 'user-1' }]);
+		mockUpdateOrganizationMembers.mockRejectedValue(new Error('connection lost'));
 
-		await updateOrganizationMembers(audit, { organizationId: 'organization-1', memberIds: ['user-1', 'user-new'] });
+		const result = await updateOrganizationMembers(audit, { organizationId: 'organization-1', memberIds: ['user-1'] });
 
-		expect(mockUpdateOrganizationMembers).toHaveBeenCalledWith(audit, ['user-old', 'user-1', 'user-new'], {
-			organizationId: 'organization-1',
-			memberIds: ['user-1', 'user-new'],
-		});
+		expectFailure(result, 'Could not update organization members');
 	});
 });

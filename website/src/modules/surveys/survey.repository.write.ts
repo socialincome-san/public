@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import type { SurveyCreateData, SurveyResponseUpdateInput, SurveyUpdateData } from './survey.types';
 
 // Every write here stores a survey audit event in the same transaction.
@@ -57,8 +57,9 @@ const surveyAuditSnapshotSelect = {
 	surveyScheduleId: true,
 } satisfies Prisma.SurveySelect;
 
-const surveyEntity: AuditedEntity = {
+const surveyEntity = defineAuditedEntity({
 	type: 'survey',
 	findSnapshot: (transaction, surveyId) =>
 		transaction.survey.findUnique({ where: { id: surveyId }, select: surveyAuditSnapshotSelect }),
-};
+	getName: ({ name }) => name,
+});

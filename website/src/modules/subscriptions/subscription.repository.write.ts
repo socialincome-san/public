@@ -6,7 +6,7 @@ import {
 	type SubscriptionCancellationReason,
 } from '@/generated/prisma/enums';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { subscriptionUpsertSelect } from './subscription.repository.read';
 import type { StripeSubscriptionInput, UpsertBankStandingOrderInput } from './subscription.types';
 
@@ -106,11 +106,12 @@ const subscriptionAuditSnapshotSelect = {
 	coverTransactionCosts: true,
 } satisfies Prisma.SubscriptionSelect;
 
-const subscriptionEntity: AuditedEntity = {
+const subscriptionEntity = defineAuditedEntity({
 	type: 'subscription',
 	findSnapshot: (transaction, subscriptionId) =>
 		transaction.subscription.findUnique({ where: { id: subscriptionId }, select: subscriptionAuditSnapshotSelect }),
-};
+	getName: ({ currency, amount, interval }) => `${currency} ${amount.toString()} ${interval}`,
+});
 
 const toBankStandingOrderData = (input: UpsertBankStandingOrderInput) => ({
 	campaignId: input.campaignId,

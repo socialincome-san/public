@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { countryPayloadSelect } from './country.repository.read';
 import type { CountryCreateInput, CountryUpdateInput } from './country.schemas';
 
@@ -119,8 +119,9 @@ const countryAuditSnapshotSelect = {
 	sanctions: true,
 } satisfies Prisma.CountrySelect;
 
-const countryEntity: AuditedEntity = {
+const countryEntity = defineAuditedEntity({
 	type: 'country',
 	findSnapshot: (transaction, countryId) =>
 		transaction.country.findUnique({ where: { id: countryId }, select: countryAuditSnapshotSelect }),
-};
+	getName: ({ isoCode }) => isoCode,
+});

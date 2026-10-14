@@ -10,10 +10,11 @@ jest.mock('./audit.repository', () => ({
 
 import { getAuditTableView } from './audit.service';
 
-const event = (id: string, action: string, snapshot: object | null) => ({
+const event = (id: string, action: string, snapshot: object | null, entityName: string | null) => ({
 	id,
 	entityType: 'recipient',
 	entityId: 'recipient-1',
+	entityName,
 	action,
 	actorType: 'user',
 	actorName: 'Max Operator',
@@ -26,9 +27,9 @@ const query = { page: 1, pageSize: 10, search: '' };
 
 describe('getAuditTableView', () => {
 	const history = [
-		event('v1', 'create', { paymentInformation: { phone: { number: '+232111' } } }),
-		event('v2', 'update', { paymentInformation: { phone: { number: '+232222' } } }),
-		event('v3', 'delete', null),
+		event('v1', 'create', { paymentInformation: { phone: { number: '+232111' } } }, 'Ada Lovelace'),
+		event('v2', 'update', { paymentInformation: { phone: { number: '+232222' } } }, 'Ada King'),
+		event('v3', 'delete', null, null),
 	];
 
 	beforeEach(() => {
@@ -52,7 +53,7 @@ describe('getAuditTableView', () => {
 		expect(mockFindAuditEventHistory).toHaveBeenCalledWith([{ entityType: 'recipient', entityId: 'recipient-1' }]);
 	});
 
-	test('diffs each row against the previous event and keeps the latest snapshot of deleted entities', async () => {
+	test('diffs each row against the previous event and keeps the latest name of deleted entities', async () => {
 		await expect(getAuditTableView('user-1', query)).resolves.toMatchObject({
 			success: true,
 			data: {
@@ -62,7 +63,7 @@ describe('getAuditTableView', () => {
 						id: 'v2',
 						entityType: 'recipient',
 						entityId: 'recipient-1',
-						latestSnapshot: { paymentInformation: { phone: { number: '+232222' } } },
+						entityName: 'Ada King',
 						actorName: 'Max Operator',
 						changes: [{ path: 'paymentInformation.phone.number', old: '+232111', new: '+232222' }],
 					},

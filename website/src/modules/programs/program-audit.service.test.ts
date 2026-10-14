@@ -51,7 +51,6 @@ jest.mock('./program.repository.write', () => ({
 jest.mock('./program.repository.read', () => ({
 	findProgramNameById: () => Promise.resolve({ name: 'Program 1' }),
 	findProgramDeletionBlockers: () => Promise.resolve({ hasPayouts: false, hasContributions: false }),
-	findProgramIdsByOrganization: () => Promise.resolve([{ programId: 'program-old' }, { programId: 'program-1' }]),
 }));
 
 import type { UserSession } from '@/modules/users/user.types';
@@ -171,16 +170,12 @@ describe('program recipient write attribution', () => {
 		expect(mockDeleteProgram).not.toHaveBeenCalled();
 	});
 
-	test('stores an event for every program whose accesses an organization change touches', async () => {
+	test('writes the program accesses an organization form sets', async () => {
 		const audit = { actor: { type: 'user' as const, id: 'admin-1' }, source: 'portal' as const };
 		const input = { organizationId: 'organization-1', ownedProgramIds: ['program-1'], operatedProgramIds: ['program-new'] };
 
 		await updateOrganizationProgramAccesses(audit, input);
 
-		expect(mockUpdateOrganizationProgramAccesses).toHaveBeenCalledWith(
-			audit,
-			['program-old', 'program-1', 'program-new'],
-			input,
-		);
+		expect(mockUpdateOrganizationProgramAccesses).toHaveBeenCalledWith(audit, input);
 	});
 });

@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import type { CreateUserInput, UpdateUserInput, UpdateUserSelfInput } from './user.schemas';
 
 // Every write here stores a user audit event in the same transaction.
@@ -159,15 +159,20 @@ export const deleteUser = async (audit: AuditContext, userId: string) =>
 
 /**
  * Replaces the members of an organization. Members who lose their active
- * organization fall back to their oldest remaining one. `userIds` are all
- * users whose accesses change.
+ * organization fall back to their oldest remaining one. Stores an event for
+ * every previous and new member whose state changed.
  */
 export const updateOrganizationMembers = async (
 	audit: AuditContext,
-	userIds: string[],
 	input: { organizationId: string; memberIds: string[] },
 ) =>
-	auditedWrite({ entity: userEntity, context: audit, action: 'update', entityId: userIds }, async (transaction) => {
+	auditedWrite({ entity: userEntity, context: audit, action: 'update' }, async (transaction) => {
+		const previousMembers = await transaction.organizationAccess.findMany({
+			where: { organizationId: input.organizationId },
+			select: { userId: true },
+		});
+		const userIds = [...new Set([...previousMembers.map(({ userId }) => userId), ...input.memberIds])];
+
 		await transaction.organizationAccess.deleteMany({ where: { organizationId: input.organizationId } });
 		const accesses = [...new Set(input.memberIds)].map((userId) => ({ userId, organizationId: input.organizationId }));
 		if (accesses.length > 0) {
@@ -189,6 +194,8 @@ export const updateOrganizationMembers = async (
 				data: { activeOrganizationId: remainingAccess?.organizationId ?? null },
 			});
 		}
+
+		return userIds.map((id) => ({ id }));
 	});
 
 // The contact with its phone and address, the account and the organization
@@ -215,11 +222,12 @@ const userAuditSnapshotSelect = {
 	},
 } satisfies Prisma.UserSelect;
 
-const userEntity: AuditedEntity = {
+const userEntity = defineAuditedEntity({
 	type: 'user',
 	findSnapshot: (transaction, userId) =>
 		transaction.user.findUnique({ where: { id: userId }, select: userAuditSnapshotSelect }),
-};
+	getName: ({ contact }) => `${contact.firstName} ${contact.lastName}`,
+});
 
 const getAccessRows = (organizationIds: string[]) =>
 	Array.from(new Set(organizationIds)).map((organizationId) => ({ organizationId }));

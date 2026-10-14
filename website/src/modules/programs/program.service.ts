@@ -492,15 +492,7 @@ export const updateOrganizationProgramAccesses = async (
 	input: { organizationId: string; ownedProgramIds: string[]; operatedProgramIds: string[] },
 ): Promise<Result<void>> => {
 	try {
-		const currentAccesses = await programRepository.findProgramIdsByOrganization(input.organizationId);
-		const programIds = [
-			...new Set([
-				...currentAccesses.map(({ programId }) => programId),
-				...input.ownedProgramIds,
-				...input.operatedProgramIds,
-			]),
-		];
-		await programWriteRepository.updateOrganizationProgramAccesses(audit, programIds, input);
+		await programWriteRepository.updateOrganizationProgramAccesses(audit, input);
 
 		return resultOk(undefined);
 	} catch (error) {

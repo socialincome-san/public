@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { localPartnerPayloadSelect } from './local-partner.repository.read';
 import type { LocalPartnerCreateInput, LocalPartnerUpdateInput } from './local-partner.schemas';
 
@@ -97,11 +97,12 @@ const localPartnerAuditSnapshotSelect = {
 	},
 } satisfies Prisma.LocalPartnerSelect;
 
-const localPartnerEntity: AuditedEntity = {
+const localPartnerEntity = defineAuditedEntity({
 	type: 'local-partner',
 	findSnapshot: (transaction, localPartnerId) =>
 		transaction.localPartner.findUnique({ where: { id: localPartnerId }, select: localPartnerAuditSnapshotSelect }),
-};
+	getName: ({ name }) => name,
+});
 
 const findRelationIds = async (transaction: Prisma.TransactionClient, localPartnerId: string) => {
 	const localPartner = await transaction.localPartner.findUniqueOrThrow({

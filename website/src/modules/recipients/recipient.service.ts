@@ -346,7 +346,14 @@ export const updateRecipientSelf = async (
 		}
 
 		const updatedRecipient = await recipientWriteRepository.updateRecipientSelf(
-			{ actor: { type: 'recipient', id: recipientIdResult.data }, source: 'mobile-app' },
+			{
+				actor: {
+					type: 'recipient',
+					id: recipientIdResult.data,
+					name: `${existing.contact.firstName} ${existing.contact.lastName}`,
+				},
+				source: 'mobile-app',
+			},
 			recipientIdResult.data,
 			inputResult.data,
 			existing.paymentInformation?.code ?? null,
@@ -467,6 +474,32 @@ export const removeRecipientsFromProgram = async (audit: AuditContext, programId
 		return resultFail('Could not unassign recipients from program');
 	}
 };
+
+/** Who acts when a recipient writes, e.g. in the app or on a survey page, with the name the audit log shows. */
+export const getRecipientAuditContext = async (
+	recipientId: string,
+	source: AuditContext['source'],
+): Promise<Result<AuditContext>> => {
+	try {
+		const recipient = await recipientRepository.findRecipientName(recipientId);
+
+		return resultOk({
+			actor: {
+				type: 'recipient',
+				id: recipientId,
+				name: recipient ? `${recipient.contact.firstName} ${recipient.contact.lastName}` : null,
+			},
+			source,
+		});
+	} catch (error) {
+		console.error('Could not load recipient for the audit context', { recipientId, error });
+
+		return resultFail('Could not load recipient');
+	}
+};
+
+/** Candidates are recipient rows, so the candidates module stores their audit events with this entity. */
+export const recipientAuditedEntity = recipientWriteRepository.recipientEntity;
 
 export const getRecipientById = async (session: Session, recipientId: string): Promise<Result<RecipientPayload>> => {
 	try {

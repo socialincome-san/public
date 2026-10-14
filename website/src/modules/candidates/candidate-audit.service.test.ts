@@ -1,5 +1,6 @@
 import { UserRole } from '@/generated/prisma/enums';
 
+const mockRecipientEntity = { type: 'recipient' };
 const mockWriteRepository = {
 	createCandidate: jest.fn(),
 	updateCandidate: jest.fn(),
@@ -26,6 +27,7 @@ jest.mock('./candidate.repository.read', () => ({
 jest.mock('@/modules/auth/auth.service', () => ({}));
 jest.mock('@/modules/countries/country.service', () => ({ getCountryIsoCode: jest.fn() }));
 jest.mock('@/modules/users/user.service', () => ({ isAdmin: mockIsAdmin }));
+jest.mock('@/modules/recipients/recipient.service', () => ({ recipientAuditedEntity: mockRecipientEntity }));
 
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import type { UserSession } from '@/modules/users/user.types';
@@ -107,13 +109,14 @@ describe('candidate write attribution', () => {
 		await updateCandidate(partner, input);
 		await deleteCandidate(admin, 'candidate-1');
 
-		expect(mockWriteRepository.createCandidate).toHaveBeenCalledWith(portal, input, 'partner-1');
+		expect(mockWriteRepository.createCandidate).toHaveBeenCalledWith(mockRecipientEntity, portal, input, 'partner-1');
 		expect(mockWriteRepository.updateCandidate).toHaveBeenCalledWith(
+			mockRecipientEntity,
 			partnerSpace,
 			{ ...input, localPartnerId: undefined },
 			expect.anything(),
 		);
-		expect(mockWriteRepository.deleteCandidate).toHaveBeenCalledWith(portal, 'candidate-1');
+		expect(mockWriteRepository.deleteCandidate).toHaveBeenCalledWith(mockRecipientEntity, portal, 'candidate-1');
 	});
 
 	test('links CSV imported candidates with one import id', async () => {
@@ -124,7 +127,7 @@ describe('candidate write attribution', () => {
 
 		await expect(importCandidatesCsv(admin, csv)).resolves.toMatchObject({ success: true, data: { created: 2 } });
 
-		const [first, second] = mockWriteRepository.createCandidate.mock.calls.map(([audit]: unknown[]) => audit);
+		const [first, second] = mockWriteRepository.createCandidate.mock.calls.map(([, audit]: unknown[]) => audit);
 		expect(first).toMatchObject({ ...portal, metadata: { operation: 'csv-import' } });
 		expect(first).toHaveProperty('metadata.importId');
 		expect(second).toEqual(first);

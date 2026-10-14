@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 
 // Every write here stores an organization audit event in the same
 // transaction. Program accesses belong to programs and memberships to
@@ -34,8 +34,9 @@ const organizationAuditSnapshotSelect = {
 	isOperatorFallback: true,
 } satisfies Prisma.OrganizationSelect;
 
-const organizationEntity: AuditedEntity = {
+const organizationEntity = defineAuditedEntity({
 	type: 'organization',
 	findSnapshot: (transaction, organizationId) =>
 		transaction.organization.findUnique({ where: { id: organizationId }, select: organizationAuditSnapshotSelect }),
-};
+	getName: ({ name }) => name,
+});

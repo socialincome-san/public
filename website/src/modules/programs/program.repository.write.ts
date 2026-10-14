@@ -1,7 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput } from './program.schemas';
 
 // Every write here stores a program audit event in the same transaction.
@@ -79,13 +79,27 @@ export const updateProgramSettings = async (audit: AuditContext, input: ProgramS
 		}
 	});
 
-/** Replaces which programs an organization owns and operates. `programIds` are all programs whose accesses change. */
+/**
+ * Replaces which programs an organization owns and operates. Stores an event
+ * for every previously and newly accessed program whose state changed.
+ */
 export const updateOrganizationProgramAccesses = async (
 	audit: AuditContext,
-	programIds: string[],
 	input: { organizationId: string; ownedProgramIds: string[]; operatedProgramIds: string[] },
 ) =>
-	auditedWrite({ entity: programEntity, context: audit, action: 'update', entityId: programIds }, async (transaction) => {
+	auditedWrite({ entity: programEntity, context: audit, action: 'update' }, async (transaction) => {
+		const previousAccesses = await transaction.programAccess.findMany({
+			where: { organizationId: input.organizationId },
+			select: { programId: true },
+		});
+		const programIds = [
+			...new Set([
+				...previousAccesses.map(({ programId }) => programId),
+				...input.ownedProgramIds,
+				...input.operatedProgramIds,
+			]),
+		];
+
 		await transaction.programAccess.deleteMany({ where: { organizationId: input.organizationId } });
 		const programAccesses = [
 			...[...new Set(input.ownedProgramIds)].map((programId) => ({ programId, permission: ProgramPermission.owner })),
@@ -97,6 +111,8 @@ export const updateOrganizationProgramAccesses = async (
 		if (programAccesses.length > 0) {
 			await transaction.programAccess.createMany({ data: programAccesses });
 		}
+
+		return programIds.map((id) => ({ id }));
 	});
 
 export const deleteProgram = async (audit: AuditContext, programId: string) =>
@@ -127,8 +143,9 @@ const programAuditSnapshotSelect = {
 	},
 } satisfies Prisma.ProgramSelect;
 
-const programEntity: AuditedEntity = {
+const programEntity = defineAuditedEntity({
 	type: 'program',
 	findSnapshot: (transaction, programId) =>
 		transaction.program.findUnique({ where: { id: programId }, select: programAuditSnapshotSelect }),
-};
+	getName: ({ name }) => name,
+});

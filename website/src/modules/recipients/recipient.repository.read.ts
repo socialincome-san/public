@@ -99,12 +99,20 @@ export const findRecipientForUpdate = async (recipientId: string) =>
 		select: recipientUpdateContextSelect,
 	});
 
+export const findRecipientName = async (recipientId: string) =>
+	prisma.recipient.findUnique({
+		where: { id: recipientId },
+		select: { contact: { select: { firstName: true, lastName: true } } },
+	});
+
 export const findRecipientForSelfUpdate = async (recipientId: string) =>
 	prisma.recipient.findUnique({
 		where: { id: recipientId },
 		select: {
 			contact: {
 				select: {
+					firstName: true,
+					lastName: true,
 					phone: { select: { id: true } },
 				},
 			},

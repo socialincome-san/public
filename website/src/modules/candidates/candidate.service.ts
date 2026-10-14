@@ -10,6 +10,7 @@ import {
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
+import { recipientAuditedEntity } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import * as candidateRepository from './candidate.repository.read';
 import * as candidateWriteRepository from './candidate.repository.write';
@@ -206,6 +207,7 @@ export const createCandidate = async (
 		try {
 			return resultOk(
 				await candidateWriteRepository.createCandidate(
+					recipientAuditedEntity,
 					{ ...getSessionAuditContext(session), metadata: auditMetadata },
 					input,
 					localPartnerId,
@@ -278,15 +280,20 @@ export const updateCandidate = async (session: Session, input: CandidateUpdateIn
 			firebaseChange = 'changed';
 		}
 
-		const updated = await candidateWriteRepository.updateCandidate(getSessionAuditContext(session), effectiveInput, {
-			contactId: existing.contact.id,
-			contactPhoneId: existing.contact.phone?.id,
-			contactPhoneNumber: existing.contact.phone?.number,
-			contactAddressId: existing.contact.address?.id,
-			paymentInformationId: existing.paymentInformation?.id,
-			paymentPhoneId: existing.paymentInformation?.phone?.id,
-			paymentPhoneNumber: existing.paymentInformation?.phone?.number,
-		});
+		const updated = await candidateWriteRepository.updateCandidate(
+			recipientAuditedEntity,
+			getSessionAuditContext(session),
+			effectiveInput,
+			{
+				contactId: existing.contact.id,
+				contactPhoneId: existing.contact.phone?.id,
+				contactPhoneNumber: existing.contact.phone?.number,
+				contactAddressId: existing.contact.address?.id,
+				paymentInformationId: existing.paymentInformation?.id,
+				paymentPhoneId: existing.paymentInformation?.phone?.id,
+				paymentPhoneNumber: existing.paymentInformation?.phone?.number,
+			},
+		);
 
 		return resultOk(updated);
 	} catch (error) {
@@ -312,7 +319,7 @@ export const deleteCandidate = async (session: Session, candidateId: string): Pr
 			return accessResult;
 		}
 
-		await candidateWriteRepository.deleteCandidate(getSessionAuditContext(session), candidateId);
+		await candidateWriteRepository.deleteCandidate(recipientAuditedEntity, getSessionAuditContext(session), candidateId);
 
 		const paymentPhone = existing.paymentInformation?.phone?.number;
 		if (paymentPhone) {
@@ -395,6 +402,7 @@ export const assignRandomCandidatesToProgram = async (
 	try {
 		const candidates = await candidateRepository.findUnassignedCandidateIds(filter);
 		const assignment = await candidateWriteRepository.updateUnassignedCandidateAssignments(
+			recipientAuditedEntity,
 			audit,
 			candidates.map(({ id }) => id),
 			programId,

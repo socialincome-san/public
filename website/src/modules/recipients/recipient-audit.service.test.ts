@@ -21,7 +21,8 @@ const updateContext = {
 jest.mock('./recipient.repository.write', () => mockWriteRepository);
 jest.mock('./recipient.repository.read', () => ({
 	findRecipientForUpdate: () => Promise.resolve(updateContext),
-	findRecipientForSelfUpdate: () => Promise.resolve({ contact: { phone: null }, paymentInformation: null }),
+	findRecipientForSelfUpdate: () =>
+		Promise.resolve({ contact: { firstName: 'Ada', lastName: 'Lovelace', phone: null }, paymentInformation: null }),
 	findRecipientForProgramRemoval: () =>
 		Promise.resolve({ id: 'recipient-1', programId: 'program-1', _count: { payouts: 0 } }),
 	findRecipientForDeletion: () =>
@@ -149,7 +150,7 @@ describe('recipient write attribution', () => {
 		await updateRecipientSelf('recipient-1', { termsAccepted: true });
 
 		expect(mockWriteRepository.updateRecipientSelf).toHaveBeenCalledWith(
-			{ actor: { type: 'recipient', id: 'recipient-1' }, source: 'mobile-app' },
+			{ actor: { type: 'recipient', id: 'recipient-1', name: 'Ada Lovelace' }, source: 'mobile-app' },
 			'recipient-1',
 			{ termsAccepted: true },
 			null,

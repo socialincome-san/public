@@ -8,7 +8,7 @@ export const auditTableConfig: DataTableConfig<AuditTableViewRow> = {
 	id: 'audit',
 	title: 'Audit log',
 	emptyMessage: 'No audit events found',
-	searchKeys: ['entityId', 'actorName'],
+	searchKeys: ['entityName', 'entityId', 'actorName'],
 	makeColumns: makeAuditColumns,
 };
 

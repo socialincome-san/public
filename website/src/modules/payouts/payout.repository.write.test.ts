@@ -10,7 +10,13 @@ jest.mock('@/lib/database/prisma', () => ({
 			work({
 				payout: {
 					createManyAndReturn: mockCreateManyAndReturn,
-					findUnique: ({ where }: { where: { id: string } }) => Promise.resolve({ recipientId: `recipient-of-${where.id}` }),
+					findUnique: ({ where }: { where: { id: string } }) =>
+						Promise.resolve({
+							recipientId: `recipient-of-${where.id}`,
+							currency: 'SLE',
+							amount: 250,
+							paymentAt: new Date('2026-09-01T00:00:00.000Z'),
+						}),
 				},
 				auditEvent: { createMany: mockCreateAuditEvents },
 			}),
@@ -65,7 +71,13 @@ describe('payout write repository', () => {
 		expect(mockCreateAuditEvents).toHaveBeenCalledTimes(1);
 		expect(mockCreateAuditEvents).toHaveBeenCalledWith({
 			data: [
-				expect.objectContaining({ entityType: 'payout', entityId: 'payout-1', action: 'create', actorId: 'user-1' }),
+				expect.objectContaining({
+					entityType: 'payout',
+					entityId: 'payout-1',
+					entityName: 'SLE 250 2026-09-01',
+					action: 'create',
+					actorId: 'user-1',
+				}),
 				expect.objectContaining({ entityType: 'payout', entityId: 'payout-2', action: 'create', actorId: 'user-1' }),
 			],
 		});

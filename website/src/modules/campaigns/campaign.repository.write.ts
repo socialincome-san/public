@@ -1,7 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { Currency } from '@/generated/prisma/enums';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 
 // Every write here stores a campaign audit event in the same transaction.
 // Pending claims belong to the campaign. Reads live in
@@ -114,11 +114,12 @@ const campaignAuditSnapshotSelect = {
 	campaignPendings: { select: { claimId: true }, orderBy: { claimId: 'asc' } },
 } satisfies Prisma.CampaignSelect;
 
-const campaignEntity: AuditedEntity = {
+const campaignEntity = defineAuditedEntity({
 	type: 'campaign',
 	findSnapshot: (transaction, campaignId) =>
 		transaction.campaign.findUnique({ where: { id: campaignId }, select: campaignAuditSnapshotSelect }),
-};
+	getName: ({ slug }) => slug,
+});
 
 const isUniqueConstraintError = (error: unknown): boolean => {
 	if (typeof error !== 'object' || error === null || !('code' in error)) {

@@ -1,7 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { PayoutStatus } from '@/generated/prisma/enums';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { payoutPayloadSelect, payoutRecordSelect } from './payout.repository.read';
 import type { CreatePayoutInput, UpdatePayoutInput } from './payout.schemas';
 import type { PayoutProcessCreateInput } from './payout.types';
@@ -104,8 +104,9 @@ const payoutAuditSnapshotSelect = {
 	comments: true,
 } satisfies Prisma.PayoutSelect;
 
-const payoutEntity: AuditedEntity = {
+const payoutEntity = defineAuditedEntity({
 	type: 'payout',
 	findSnapshot: (transaction, payoutId) =>
 		transaction.payout.findUnique({ where: { id: payoutId }, select: payoutAuditSnapshotSelect }),
-};
+	getName: ({ currency, amount, paymentAt }) => `${currency} ${amount.toString()} ${paymentAt.toISOString().slice(0, 10)}`,
+});

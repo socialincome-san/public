@@ -1,4 +1,4 @@
-import type { AuditChange, JsonValue } from '@/lib/audit/audit-types';
+import type { AuditChange } from '@/lib/audit/audit-types';
 
 export type AuditTableQuery = {
 	page: number;
@@ -12,8 +12,8 @@ export type AuditTableViewRow = {
 	createdAt: Date;
 	entityType: string;
 	entityId: string;
-	/** Most recent snapshot of the entity, also for deleted ones; the entity name is read from it. */
-	latestSnapshot: JsonValue;
+	/** Latest name of the entity, also for deleted ones. */
+	entityName: string | null;
 	action: string;
 	actorType: string;
 	actorName: string | null;

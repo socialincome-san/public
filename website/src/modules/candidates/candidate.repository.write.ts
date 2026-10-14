@@ -5,10 +5,18 @@ import { candidatePayloadSelect } from './candidate.repository.read';
 import type { CandidateCreateInput, CandidateUpdateInput } from './candidate.schemas';
 
 // Candidates are recipients without a program, so every write here stores a
-// recipient audit event in the same transaction. Reads live in
+// recipient audit event in the same transaction, with the recipients module's
+// entity (recipientAuditedEntity) that the service passes in. Reads live in
 // candidate.repository.read.ts.
 
-export const createCandidate = async (audit: AuditContext, input: CandidateCreateInput, localPartnerId: string) =>
+type RecipientEntity<Snapshot extends Prisma.InputJsonObject> = AuditedEntity<Snapshot>;
+
+export const createCandidate = async <Snapshot extends Prisma.InputJsonObject>(
+	recipientEntity: RecipientEntity<Snapshot>,
+	audit: AuditContext,
+	input: CandidateCreateInput,
+	localPartnerId: string,
+) =>
 	auditedWrite({ entity: recipientEntity, context: audit, action: 'create' }, (transaction) =>
 		transaction.recipient.create({
 			data: buildCandidateCreateData(input, localPartnerId),
@@ -16,7 +24,8 @@ export const createCandidate = async (audit: AuditContext, input: CandidateCreat
 		}),
 	);
 
-export const updateCandidate = async (
+export const updateCandidate = async <Snapshot extends Prisma.InputJsonObject>(
+	recipientEntity: RecipientEntity<Snapshot>,
 	audit: AuditContext,
 	input: CandidateUpdateInput,
 	context: CandidateUpdatePersistenceContext,
@@ -33,7 +42,11 @@ export const updateCandidate = async (
 		return candidate;
 	});
 
-export const deleteCandidate = async (audit: AuditContext, candidateId: string) =>
+export const deleteCandidate = async <Snapshot extends Prisma.InputJsonObject>(
+	recipientEntity: RecipientEntity<Snapshot>,
+	audit: AuditContext,
+	candidateId: string,
+) =>
 	auditedWrite({ entity: recipientEntity, context: audit, action: 'delete', entityId: candidateId }, async (transaction) => {
 		const relations = await findRelationIds(transaction, candidateId);
 		await transaction.recipient.delete({ where: { id: candidateId } });
@@ -45,7 +58,8 @@ export const deleteCandidate = async (audit: AuditContext, candidateId: string) 
 	});
 
 /** Assigns `amount` random candidates of `candidateIds` that are still unassigned, or none. */
-export const updateUnassignedCandidateAssignments = async (
+export const updateUnassignedCandidateAssignments = async <Snapshot extends Prisma.InputJsonObject>(
+	recipientEntity: RecipientEntity<Snapshot>,
 	audit: AuditContext,
 	candidateIds: string[],
 	programId: string,
@@ -90,46 +104,6 @@ export const updateUnassignedCandidateAssignments = async (
 };
 
 const INSUFFICIENT_CANDIDATES = 'INSUFFICIENT_CANDIDATES';
-
-// Must match recipientAuditSnapshotSelect in recipient.repository.write.ts:
-// both write the history of the same recipient rows, and any difference
-// would show up as a change.
-const recipientAuditSnapshotSelect = {
-	programId: true,
-	localPartnerId: true,
-	startDate: true,
-	suspendedAt: true,
-	suspensionReason: true,
-	successorName: true,
-	termsAccepted: true,
-	contact: {
-		select: {
-			firstName: true,
-			lastName: true,
-			callingName: true,
-			email: true,
-			gender: true,
-			language: true,
-			dateOfBirth: true,
-			profession: true,
-			phone: { select: { number: true, hasWhatsApp: true } },
-			address: { select: { street: true, number: true, city: true, zip: true, country: true } },
-		},
-	},
-	paymentInformation: {
-		select: {
-			code: true,
-			mobileMoneyProviderId: true,
-			phone: { select: { number: true } },
-		},
-	},
-} satisfies Prisma.RecipientSelect;
-
-const recipientEntity: AuditedEntity = {
-	type: 'recipient',
-	findSnapshot: (transaction, recipientId) =>
-		transaction.recipient.findUnique({ where: { id: recipientId }, select: recipientAuditSnapshotSelect }),
-};
 
 const findRelationIds = async (transaction: Prisma.TransactionClient, candidateId: string) => {
 	const candidate = await transaction.recipient.findUniqueOrThrow({

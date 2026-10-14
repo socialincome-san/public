@@ -463,9 +463,7 @@ export const updateOrganizationMembers = async (
 	input: { organizationId: string; memberIds: string[] },
 ): Promise<Result<void>> => {
 	try {
-		const currentMembers = await userRepository.findOrganizationMemberIds(input.organizationId);
-		const userIds = [...new Set([...currentMembers.map(({ userId }) => userId), ...input.memberIds])];
-		await userWriteRepository.updateOrganizationMembers(audit, userIds, input);
+		await userWriteRepository.updateOrganizationMembers(audit, input);
 
 		return resultOk(undefined);
 	} catch (error) {

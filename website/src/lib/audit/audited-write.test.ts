@@ -35,7 +35,7 @@ jest.mock('@/lib/database/prisma', () => ({
 }));
 
 import type { AuditContext } from './audit-types';
-import { auditedWrite, type AuditedEntity } from './audited-write';
+import { auditedWrite, defineAuditedEntity } from './audited-write';
 
 const rowsOf = (transaction: object): Map<string, string> => {
 	const rows = mockTransactionRows.get(transaction);
@@ -46,14 +46,15 @@ const rowsOf = (transaction: object): Map<string, string> => {
 	return rows;
 };
 
-const entity: AuditedEntity = {
+const entity = defineAuditedEntity({
 	type: 'thing',
 	findSnapshot: (transaction, id) => {
 		const name = rowsOf(transaction).get(id);
 
 		return Promise.resolve(name === undefined ? null : { name });
 	},
-};
+	getName: ({ name }) => name,
+});
 
 const portal: AuditContext = {
 	actor: { type: 'user', id: 'user-1', name: 'Max Operator' },
@@ -80,6 +81,7 @@ describe('auditedWrite', () => {
 			{
 				entityType: 'thing',
 				entityId: 'a',
+				entityName: 'Grace',
 				action: 'update',
 				actorType: 'user',
 				actorId: 'user-1',
@@ -154,7 +156,9 @@ describe('auditedWrite', () => {
 			return Promise.resolve();
 		});
 
-		expect(mockCommitted.events).toMatchObject([{ entityId: 'a', action: 'delete', snapshot: undefined }]);
+		expect(mockCommitted.events).toMatchObject([
+			{ entityId: 'a', entityName: 'Ada', action: 'delete', snapshot: undefined },
+		]);
 	});
 
 	test('stores no audit event for an update that changes nothing', async () => {

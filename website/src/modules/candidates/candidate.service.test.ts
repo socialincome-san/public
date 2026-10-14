@@ -1,11 +1,14 @@
 import { CountryCode } from '@/generated/prisma/enums';
 
 const mockIsAdmin = jest.fn();
+const mockRecipientEntity = { type: 'recipient' };
 const mockFindCandidateById = jest.fn();
 const mockCountCandidates = jest.fn();
 const mockFindUnassignedCandidateIds = jest.fn();
 const mockUpdateUnassignedCandidateAssignments = jest.fn();
 const audit = { actor: { type: 'user' as const, id: 'user-1' }, source: 'portal' as const };
+
+jest.mock('@/modules/recipients/recipient.service', () => ({ recipientAuditedEntity: mockRecipientEntity }));
 
 jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
@@ -112,6 +115,7 @@ describe('candidate service', () => {
 		});
 		expect(mockFindUnassignedCandidateIds).toHaveBeenCalledWith(filter);
 		expect(mockUpdateUnassignedCandidateAssignments).toHaveBeenCalledWith(
+			mockRecipientEntity,
 			audit,
 			['candidate-1', 'candidate-2'],
 			'program-1',

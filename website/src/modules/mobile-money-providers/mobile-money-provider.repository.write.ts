@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { mobileMoneyProviderPayloadSelect } from './mobile-money-provider.repository.read';
 import type { MobileMoneyProviderCreateInput, MobileMoneyProviderUpdateInput } from './mobile-money-provider.schemas';
 
@@ -48,11 +48,12 @@ const mobileMoneyProviderAuditSnapshotSelect = {
 	parentId: true,
 } satisfies Prisma.MobileMoneyProviderSelect;
 
-const mobileMoneyProviderEntity: AuditedEntity = {
+const mobileMoneyProviderEntity = defineAuditedEntity({
 	type: 'mobile-money-provider',
 	findSnapshot: (transaction, providerId) =>
 		transaction.mobileMoneyProvider.findUnique({
 			where: { id: providerId },
 			select: mobileMoneyProviderAuditSnapshotSelect,
 		}),
-};
+	getName: ({ name }) => name,
+});

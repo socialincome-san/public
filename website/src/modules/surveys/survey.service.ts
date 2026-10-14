@@ -7,6 +7,7 @@ import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { createFirebaseSurveyUser, synchronizeFirebaseSurveyUser } from '@/modules/auth/auth.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import {
+	getRecipientAuditContext,
 	getRecipientFilterOption,
 	getRecipientProgramAssignment,
 	getSurveyRecipients,
@@ -413,13 +414,13 @@ export const updateSurvey = async (session: UserSession, input: SurveyUpdateInpu
 export const generateSurveys = async (session: UserSession): Promise<Result<SurveyGenerationResult>> => {
 	try {
 		const previewResult = await previewSurveyGeneration(session.id);
+		if (!previewResult.success) {
+			return resultFail(previewResult.error);
+		}
 		const audit: AuditContext = {
 			...getSessionAuditContext(session),
 			metadata: { operation: 'survey-generation', generationId: crypto.randomUUID() },
 		};
-		if (!previewResult.success) {
-			return resultFail(previewResult.error);
-		}
 		if (previewResult.data.surveys.length === 0) {
 			return resultOk({ surveysCreated: 0, message: 'No surveys to create' });
 		}
@@ -462,15 +463,12 @@ export const saveSurveyChanges = async (
 			return resultFail('Survey not found');
 		}
 
-		return resultOk(
-			toSurveyPayload(
-				await surveyWriteRepository.updateSurvey(
-					{ actor: { type: 'recipient', id: existing.recipientId }, source: 'website' },
-					surveyId,
-					inputResult.data,
-				),
-			),
-		);
+		const auditResult = await getRecipientAuditContext(existing.recipientId, 'website');
+		if (!auditResult.success) {
+			return resultFail(auditResult.error);
+		}
+
+		return resultOk(toSurveyPayload(await surveyWriteRepository.updateSurvey(auditResult.data, surveyId, inputResult.data)));
 	} catch (error) {
 		console.error('Failed to save survey changes', { surveyId, error });
 

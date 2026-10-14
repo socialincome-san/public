@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { expensePayloadSelect } from './expense.repository.read';
 import type { ExpenseCreateInput, ExpenseUpdateInput } from './expense.schemas';
 
@@ -46,8 +46,9 @@ const expenseAuditSnapshotSelect = {
 	amountChf: true,
 } satisfies Prisma.ExpenseSelect;
 
-const expenseEntity: AuditedEntity = {
+const expenseEntity = defineAuditedEntity({
 	type: 'expense',
 	findSnapshot: (transaction, expenseId) =>
 		transaction.expense.findUnique({ where: { id: expenseId }, select: expenseAuditSnapshotSelect }),
-};
+	getName: ({ type, year }) => `${type} ${year}`,
+});

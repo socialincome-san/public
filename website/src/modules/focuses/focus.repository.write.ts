@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { focusPayloadSelect } from './focus.repository.read';
 import type { FocusCreateInput, FocusUpdateInput } from './focus.schemas';
 
@@ -40,8 +40,9 @@ const focusAuditSnapshotSelect = {
 	slug: true,
 } satisfies Prisma.FocusSelect;
 
-const focusEntity: AuditedEntity = {
+const focusEntity = defineAuditedEntity({
 	type: 'focus',
 	findSnapshot: (transaction, focusId) =>
 		transaction.focus.findUnique({ where: { id: focusId }, select: focusAuditSnapshotSelect }),
-};
+	getName: ({ name }) => name,
+});

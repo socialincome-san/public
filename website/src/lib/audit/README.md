@@ -1,8 +1,9 @@
 # Audit log
 
 Every write to an audited entity stores an audit event in `audit_event`:
-who wrote it, from where, and a snapshot of the entity afterwards. What
-changed is computed when reading, by comparing consecutive snapshots.
+who wrote it, from where, the entity's name and a snapshot of the entity
+afterwards. What changed is computed when reading, by comparing
+consecutive snapshots.
 
 Audited models (`auditedModels` in `eslint.config.mjs`): recipient
 (candidates are recipients too), payout, contributor, contribution,
@@ -49,8 +50,9 @@ known afterwards.
 
 Services pass who is acting: `getSessionAuditContext(session)` for
 portal and partner space,
-`{ actor: { type: 'recipient', id }, source: 'mobile-app' }` for the app
-(survey answers use `source: 'website'`),
+`getRecipientAuditContext(recipientId, 'mobile-app')` from the recipient
+service for the app, with the recipient's name (survey answers use
+`'website'`),
 `{ actor: { type: 'system', id: '<job-or-route-name>' }, source: 'system' }`
 for writes without a session (cron jobs, webhooks). `metadata` is flat
 context such as `{ operation: 'csv-import', importId }`.
@@ -59,11 +61,12 @@ context such as `{ operation: 'csv-import', importId }`.
 
 `/portal/admin/audit-log` lists every audit event to admins, newest
 first, paginated in the database and filtered by entity type or a search
-on entity id and actor name. Each row is diffed against the entity's
+on entity name, entity id and actor name. A name search lists every
+event of a matching entity. Each row is diffed against the entity's
 previous snapshot (`diffSnapshots`, paths like
-`paymentInformation.phone.number`). Deleted entities stay listed. Type
-label, entity name (read from the latest snapshot) and field labels come
-from `auditEntityTypes` in `src/components/audit/audit-summary.ts`.
+`paymentInformation.phone.number`) and shows the entity's latest name.
+Deleted entities stay listed. Type labels and field labels come from
+`auditEntityTypes` in `src/components/audit/audit-summary.ts`.
 
 ## Notes
 
@@ -76,13 +79,13 @@ from `auditEntityTypes` in `src/components/audit/audit-summary.ts`.
 1. Add the model to `auditedModels` in `eslint.config.mjs`; lint lists
    every write to move.
 2. Rename `<module>.repository.ts` to `<module>.repository.read.ts` and
-   move the writes into `<module>.repository.write.ts`, with an
-   `AuditedEntity` whose `findSnapshot` selects every field of the
+   move the writes into `<module>.repository.write.ts`, with an entity
+   from `defineAuditedEntity`: `findSnapshot` selects every field of the
    entity and its owned relations, ordering lists so equal states
-   compare equal.
+   compare equal, and `getName` builds the name the audit log shows and
+   searches.
 3. Pass an `AuditContext` from the service. Writes to other modules'
    data go through their services; if that splits a transaction, make
    each step safe to retry.
 4. Add the type to `auditEntityTypes` in
-   `src/components/audit/audit-summary.ts`: label, name paths and field
-   labels.
+   `src/components/audit/audit-summary.ts`: label and field labels.

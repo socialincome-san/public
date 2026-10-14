@@ -7,7 +7,6 @@ jest.mock('@/lib/database/prisma', () => ({
 			work({
 				recipient: {
 					updateManyAndReturn: mockUpdateManyAndReturn,
-					findUnique: ({ where }: { where: { id: string } }) => Promise.resolve({ programId: `program-of-${where.id}` }),
 				},
 				auditEvent: {
 					findFirst: () => Promise.resolve(null),
@@ -17,7 +16,14 @@ jest.mock('@/lib/database/prisma', () => ({
 	},
 }));
 
+import { defineAuditedEntity } from '@/lib/audit/audited-write';
 import { updateUnassignedCandidateAssignments } from './candidate.repository.write';
+
+const recipientEntity = defineAuditedEntity({
+	type: 'recipient',
+	findSnapshot: (_transaction, id) => Promise.resolve({ programId: `program-of-${id}` }),
+	getName: ({ programId }) => `Recipient in ${programId}`,
+});
 
 const audit = { actor: { type: 'user' as const, id: 'user-1' }, source: 'portal' as const };
 
@@ -27,7 +33,9 @@ describe('updateUnassignedCandidateAssignments', () => {
 	});
 
 	test('returns a failure without updating when fewer candidates match than requested', async () => {
-		await expect(updateUnassignedCandidateAssignments(audit, ['candidate-1'], 'program-1', 2)).resolves.toEqual({
+		await expect(
+			updateUnassignedCandidateAssignments(recipientEntity, audit, ['candidate-1'], 'program-1', 2),
+		).resolves.toEqual({
 			outcome: 'insufficient',
 		});
 		expect(mockUpdateManyAndReturn).not.toHaveBeenCalled();
@@ -37,7 +45,7 @@ describe('updateUnassignedCandidateAssignments', () => {
 		mockUpdateManyAndReturn.mockResolvedValue([{ id: 'candidate-1' }]);
 
 		await expect(
-			updateUnassignedCandidateAssignments(audit, ['candidate-1', 'candidate-2'], 'program-1', 2),
+			updateUnassignedCandidateAssignments(recipientEntity, audit, ['candidate-1', 'candidate-2'], 'program-1', 2),
 		).resolves.toEqual({ outcome: 'insufficient' });
 		expect(mockCreateAuditEvents).not.toHaveBeenCalled();
 	});
@@ -46,7 +54,7 @@ describe('updateUnassignedCandidateAssignments', () => {
 		mockUpdateManyAndReturn.mockResolvedValue([{ id: 'candidate-2' }]);
 
 		await expect(
-			updateUnassignedCandidateAssignments(audit, ['candidate-1', 'candidate-2'], 'program-1', 1),
+			updateUnassignedCandidateAssignments(recipientEntity, audit, ['candidate-1', 'candidate-2'], 'program-1', 1),
 		).resolves.toEqual({ outcome: 'assigned', assigned: 1 });
 		expect(mockUpdateManyAndReturn).toHaveBeenCalledWith({
 			where: { id: { in: [expect.stringMatching(/^candidate-[12]$/)] }, programId: null },
@@ -58,7 +66,7 @@ describe('updateUnassignedCandidateAssignments', () => {
 	test('stores a recipient audit event only for the assigned candidates', async () => {
 		mockUpdateManyAndReturn.mockResolvedValue([{ id: 'candidate-2' }]);
 
-		await updateUnassignedCandidateAssignments(audit, ['candidate-1', 'candidate-2'], 'program-1', 1);
+		await updateUnassignedCandidateAssignments(recipientEntity, audit, ['candidate-1', 'candidate-2'], 'program-1', 1);
 
 		expect(mockCreateAuditEvents).toHaveBeenCalledWith({
 			data: [
@@ -67,6 +75,7 @@ describe('updateUnassignedCandidateAssignments', () => {
 					entityId: 'candidate-2',
 					action: 'update',
 					actorId: 'user-1',
+					entityName: 'Recipient in program-of-candidate-2',
 					snapshot: { programId: 'program-of-candidate-2' },
 				}),
 			],

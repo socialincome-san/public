@@ -1,7 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { ContributionStatus, Currency } from '@/generated/prisma/enums';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { DateTime } from 'luxon';
 import {
 	contributionPayloadSelect,
@@ -130,11 +130,12 @@ const contributionAuditSnapshotSelect = {
 	campaignId: true,
 } satisfies Prisma.ContributionSelect;
 
-const contributionEntity: AuditedEntity = {
+const contributionEntity = defineAuditedEntity({
 	type: 'contribution',
 	findSnapshot: (transaction, contributionId) =>
 		transaction.contribution.findUnique({ where: { id: contributionId }, select: contributionAuditSnapshotSelect }),
-};
+	getName: ({ currency, amount }) => `${currency} ${amount.toString()}`,
+});
 
 const toContributionData = (input: ContributionInput) => ({
 	amount: input.amount,

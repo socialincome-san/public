@@ -6,7 +6,7 @@ const row: AuditTableViewRow = {
 	createdAt: new Date('2026-10-01T00:00:00.000Z'),
 	entityType: 'recipient',
 	entityId: 'recipient-1',
-	latestSnapshot: { contact: { firstName: 'Ada', lastName: 'Lovelace' } },
+	entityName: 'Ada Lovelace',
 	action: 'update',
 	actorType: 'recipient',
 	actorName: null,
@@ -15,23 +15,9 @@ const row: AuditTableViewRow = {
 };
 
 describe('getAuditEntityName', () => {
-	test('reads the name from the latest snapshot', () => {
+	test('shows the stored name and falls back to the entity id', () => {
 		expect(getAuditEntityName(row)).toBe('Ada Lovelace');
-	});
-
-	test('formats dates in names', () => {
-		expect(
-			getAuditEntityName({
-				...row,
-				entityType: 'payout',
-				latestSnapshot: { currency: 'SLE', amount: '250', paymentAt: '2026-09-01T00:00:00.000Z' },
-			}),
-		).toBe('SLE 250 01.09.26');
-	});
-
-	test('falls back to the entity id', () => {
-		expect(getAuditEntityName({ ...row, latestSnapshot: null })).toBe('recipient-1');
-		expect(getAuditEntityName({ ...row, entityType: 'unknown' })).toBe('recipient-1');
+		expect(getAuditEntityName({ ...row, entityName: null })).toBe('recipient-1');
 	});
 });
 

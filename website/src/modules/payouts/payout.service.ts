@@ -9,6 +9,7 @@ import { getAccessiblePrograms } from '@/modules/program-access/program-access.s
 import type { ProgramAccesses } from '@/modules/program-access/program-access.types';
 import { getProgramPayoutForecastSource } from '@/modules/programs/program-reference.service';
 import {
+	getRecipientAuditContext,
 	getRecipientFilterOption,
 	getRecipientProgramAssignment,
 	recipientStatusService,
@@ -637,12 +638,11 @@ export const updatePayoutStatusByRecipient = async (
 			return resultFail('Payout not found for recipient');
 		}
 
-		const updated = await payoutWriteRepository.updatePayoutStatusByRecipient(
-			{ actor: { type: 'recipient', id: recipientId }, source: 'mobile-app' },
-			payout.id,
-			status,
-			comments,
-		);
+		const auditResult = await getRecipientAuditContext(recipientId, 'mobile-app');
+		if (!auditResult.success) {
+			return resultFail(auditResult.error);
+		}
+		const updated = await payoutWriteRepository.updatePayoutStatusByRecipient(auditResult.data, payout.id, status, comments);
 
 		return resultOk(toPayoutRecord(updated));
 	} catch (error) {

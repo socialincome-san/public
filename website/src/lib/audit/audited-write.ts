@@ -2,13 +2,20 @@ import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
 import type { AuditContext } from './audit-types';
 
-export type AuditedEntity = {
+export type AuditedEntity<Snapshot extends Prisma.InputJsonObject = Prisma.InputJsonObject> = {
 	type: string;
-	findSnapshot: (transaction: Prisma.TransactionClient, id: string) => Promise<Prisma.InputJsonObject | null>;
+	findSnapshot: (transaction: Prisma.TransactionClient, id: string) => Promise<Snapshot | null>;
+	/** Stored with every event, so the audit log can show and search an entity, also once it is deleted. */
+	getName: (snapshot: Snapshot) => string | null;
 };
 
-type AuditedWriteOptions = {
-	entity: AuditedEntity;
+/** Infers the snapshot type from `findSnapshot`, so `getName` can read it. */
+export const defineAuditedEntity = <Snapshot extends Prisma.InputJsonObject>(
+	entity: AuditedEntity<Snapshot>,
+): AuditedEntity<Snapshot> => entity;
+
+type AuditedWriteOptions<Snapshot extends Prisma.InputJsonObject> = {
+	entity: AuditedEntity<Snapshot>;
 	context: AuditContext;
 } & ({ action: 'create' | 'update' } | { action: 'update' | 'delete'; entityId: string | string[] });
 
@@ -18,11 +25,22 @@ type AuditedWriteOptions = {
  * stored. Updates that change nothing store no event. Without `entityId` the
  * ids come from the returned row or rows (`createManyAndReturn`, `updateManyAndReturn`).
  */
-export const auditedWrite = async <T>(
-	options: AuditedWriteOptions,
+export const auditedWrite = async <T, Snapshot extends Prisma.InputJsonObject>(
+	options: AuditedWriteOptions<Snapshot>,
 	write: (transaction: Prisma.TransactionClient) => Promise<T>,
 ): Promise<T> =>
 	prisma.$transaction(async (transaction) => {
+		// A deleted entity has no state afterwards, so its name is read before the write.
+		const namesBeforeDelete = new Map<string, string | null>();
+		if (options.action === 'delete') {
+			for (const entityId of [options.entityId].flat()) {
+				const snapshot = await options.entity.findSnapshot(transaction, entityId);
+				if (snapshot) {
+					namesBeforeDelete.set(entityId, options.entity.getName(snapshot));
+				}
+			}
+		}
+
 		const result = await write(transaction);
 		const entityIds = new Set('entityId' in options ? [options.entityId].flat() : getReturnedIds(result));
 		const events: Prisma.AuditEventCreateManyInput[] = [];
@@ -38,6 +56,7 @@ export const auditedWrite = async <T>(
 				action: options.action,
 				actorType: options.context.actor.type,
 				actorId: options.context.actor.id,
+				entityName: (snapshot ? options.entity.getName(snapshot) : namesBeforeDelete.get(entityId)) ?? null,
 				actorName: options.context.actor.name,
 				source: options.context.source,
 				snapshot: snapshot ?? undefined,

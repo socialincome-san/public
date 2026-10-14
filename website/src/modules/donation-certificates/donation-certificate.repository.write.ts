@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import type { LanguageCode } from '@/lib/types/language';
 
 // Every write here stores a donation certificate audit event in the same
@@ -27,11 +27,12 @@ const donationCertificateAuditSnapshotSelect = {
 	storagePath: true,
 } satisfies Prisma.DonationCertificateSelect;
 
-const donationCertificateEntity: AuditedEntity = {
+const donationCertificateEntity = defineAuditedEntity({
 	type: 'donation-certificate',
 	findSnapshot: (transaction, certificateId) =>
 		transaction.donationCertificate.findUnique({
 			where: { id: certificateId },
 			select: donationCertificateAuditSnapshotSelect,
 		}),
-};
+	getName: ({ year, language }) => `${year} ${language}`,
+});

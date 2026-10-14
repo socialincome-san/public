@@ -301,9 +301,6 @@ export const findProgramDashboardSource = async (programId: string) =>
 		},
 	});
 
-export const findProgramIdsByOrganization = async (organizationId: string) =>
-	prisma.programAccess.findMany({ where: { organizationId }, select: { programId: true } });
-
 export const findProgramByName = async (name: string) =>
 	prisma.program.findUnique({ where: { name }, select: { id: true } });
 
