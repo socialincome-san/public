@@ -1,12 +1,12 @@
-const mockQueryRaw = jest.fn<Promise<{ id: string }[]>, [TemplateStringsArray, ...unknown[]]>();
+const mockUpdateManyAndReturn = jest.fn();
 const mockCreateAuditEvents = jest.fn();
 
 jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
 		$transaction: (work: (transaction: unknown) => Promise<unknown>) =>
 			work({
-				$queryRaw: mockQueryRaw,
 				recipient: {
+					updateManyAndReturn: mockUpdateManyAndReturn,
 					findUnique: ({ where }: { where: { id: string } }) => Promise.resolve({ programId: `program-of-${where.id}` }),
 				},
 				auditEvent: {
@@ -30,11 +30,11 @@ describe('updateUnassignedCandidateAssignments', () => {
 		await expect(updateUnassignedCandidateAssignments(audit, ['candidate-1'], 'program-1', 2)).resolves.toEqual({
 			outcome: 'insufficient',
 		});
-		expect(mockQueryRaw).not.toHaveBeenCalled();
+		expect(mockUpdateManyAndReturn).not.toHaveBeenCalled();
 	});
 
 	test('does not keep an assignment when a concurrent request already claimed a selected candidate', async () => {
-		mockQueryRaw.mockResolvedValue([{ id: 'candidate-1' }]);
+		mockUpdateManyAndReturn.mockResolvedValue([{ id: 'candidate-1' }]);
 
 		await expect(
 			updateUnassignedCandidateAssignments(audit, ['candidate-1', 'candidate-2'], 'program-1', 2),
@@ -42,23 +42,21 @@ describe('updateUnassignedCandidateAssignments', () => {
 		expect(mockCreateAuditEvents).not.toHaveBeenCalled();
 	});
 
-	test('assigns a random subset of unclaimed candidates while leaving startDate unset', async () => {
-		mockQueryRaw.mockResolvedValue([{ id: 'candidate-2' }]);
+	test('assigns a random subset of still unassigned candidates while leaving startDate unset', async () => {
+		mockUpdateManyAndReturn.mockResolvedValue([{ id: 'candidate-2' }]);
 
 		await expect(
 			updateUnassignedCandidateAssignments(audit, ['candidate-1', 'candidate-2'], 'program-1', 1),
 		).resolves.toEqual({ outcome: 'assigned', assigned: 1 });
-		const [strings, ...values] = mockQueryRaw.mock.calls[0] ?? [];
-		const sql = strings?.join('?') ?? '';
-		expect(sql).toContain('program_id IS NULL');
-		expect(sql).toContain('FOR UPDATE SKIP LOCKED');
-		expect(sql).toContain('RETURNING id');
-		expect(sql).not.toContain('start_date');
-		expect(values).toEqual(['program-1', ['candidate-1', 'candidate-2'], 1]);
+		expect(mockUpdateManyAndReturn).toHaveBeenCalledWith({
+			where: { id: { in: [expect.stringMatching(/^candidate-[12]$/)] }, programId: null },
+			data: { programId: 'program-1' },
+			select: { id: true },
+		});
 	});
 
 	test('stores a recipient audit event only for the assigned candidates', async () => {
-		mockQueryRaw.mockResolvedValue([{ id: 'candidate-2' }]);
+		mockUpdateManyAndReturn.mockResolvedValue([{ id: 'candidate-2' }]);
 
 		await updateUnassignedCandidateAssignments(audit, ['candidate-1', 'candidate-2'], 'program-1', 1);
 

@@ -56,20 +56,21 @@ export const updateUnassignedCandidateAssignments = async (
 	}
 
 	try {
+		const selectedIds = candidateIds
+			.map((id) => ({ id, order: Math.random() }))
+			.sort((left, right) => left.order - right.order)
+			.slice(0, amount)
+			.map(({ id }) => id);
 		const assigned = await auditedWrite(
 			{ entity: recipientEntity, context: audit, action: 'update' },
 			async (transaction) => {
-				// SKIP LOCKED lets concurrent assignments pick disjoint candidates instead of colliding on the same rows.
-				const rows = await transaction.$queryRaw<{ id: string }[]>`
-				UPDATE recipient SET program_id = ${programId}, updated_at = now()
-				WHERE id IN (
-					SELECT id FROM recipient
-					WHERE id = ANY(${candidateIds}) AND program_id IS NULL
-					ORDER BY random()
-					LIMIT ${amount}
-					FOR UPDATE SKIP LOCKED
-				)
-				RETURNING id`;
+				// programId: null skips candidates a concurrent assignment took; the count
+				// check then rolls this one back instead of assigning fewer.
+				const rows = await transaction.recipient.updateManyAndReturn({
+					where: { id: { in: selectedIds }, programId: null },
+					data: { programId },
+					select: { id: true },
+				});
 				if (rows.length !== amount) {
 					throw new Error(INSUFFICIENT_CANDIDATES);
 				}

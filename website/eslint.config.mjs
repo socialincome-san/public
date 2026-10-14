@@ -109,13 +109,6 @@ const auditedModelWriteSelector = {
 	message: 'This model is audited. Write it in a *.repository.write.ts through auditedWrite.',
 };
 
-// Raw SQL can write audited models without the selector above noticing, so
-// only write repositories may use it, on the transaction auditedWrite passes in.
-const rawSqlSelector = {
-	selector: 'CallExpression[callee.property.name=/^\\$(executeRaw|queryRaw)(Unsafe)?$/], TaggedTemplateExpression[tag.property.name=/^\\$(executeRaw|queryRaw)(Unsafe)?$/]',
-	message: 'Raw SQL may write audited models. Use it in a *.repository.write.ts inside auditedWrite.',
-};
-
 const repositoryIncludeSelector = {
 	selector: 'Property[key.name="include"], Property[key.value="include"]',
 	message: 'Repositories must use explicit select instead of include.',
@@ -325,13 +318,7 @@ export default [
 		files: ['src/modules/**/*.repository{,.read,.write}.ts'],
 		rules: {
 			'backend-architecture/repository-export-naming': 'error',
-			'no-restricted-syntax': [
-				'error',
-				...moduleSyntaxSelectors,
-				repositoryIncludeSelector,
-				auditedModelWriteSelector,
-				rawSqlSelector,
-			],
+			'no-restricted-syntax': ['error', ...moduleSyntaxSelectors, repositoryIncludeSelector, auditedModelWriteSelector],
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
 				{
@@ -519,7 +506,7 @@ export default [
 	},
 	{
 		files: ['src/app/**/*.{ts,tsx}'],
-		ignores: ['src/app/api/health/database/route.ts', 'src/app/api/v1/twilio/**/*.{ts,tsx}'],
+		ignores: ['src/app/api/v1/twilio/**/*.{ts,tsx}'],
 		rules: {
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
@@ -551,6 +538,14 @@ export default [
 		ignores: ['src/generated/**', 'src/lib/database/migrations/**'],
 		rules: {
 			'backend-architecture/kebab-case-paths': 'error',
+			// Raw SQL bypasses select, the audited-model guard and auditedWrite.
+			'no-restricted-properties': [
+				'error',
+				...['$executeRaw', '$executeRawUnsafe', '$queryRaw', '$queryRawUnsafe'].map((property) => ({
+					property,
+					message: 'Use the Prisma query API instead of raw SQL.',
+				})),
+			],
 		},
 	},
 	{

@@ -44,8 +44,8 @@ store no event; a delete stores an event without snapshot.
 A write that changes several rows in one statement stores one event per
 row: pass `entityId` as a list for `updateMany`/`deleteMany`. Without
 `entityId`, the ids come from the returned rows, e.g. of
-`createManyAndReturn` or of an update that only knows its rows
-afterwards (`UPDATE … RETURNING id`).
+`createManyAndReturn` or `updateManyAndReturn` when the rows are only
+known afterwards.
 
 Services pass who is acting: `getSessionAuditContext(session)` for
 portal and partner space,

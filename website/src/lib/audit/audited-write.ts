@@ -16,7 +16,7 @@ type AuditedWriteOptions = {
  * Runs `write` and stores an audit event per entity with its state afterwards
  * in the same transaction, so the write rolls back if an event cannot be
  * stored. Updates that change nothing store no event. Without `entityId` the
- * ids come from the returned row or rows (`createManyAndReturn`, `RETURNING id`).
+ * ids come from the returned row or rows (`createManyAndReturn`, `updateManyAndReturn`).
  */
 export const auditedWrite = async <T>(
 	options: AuditedWriteOptions,
