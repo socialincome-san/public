@@ -1,3 +1,4 @@
+import { activeCandidateFilters } from '@/components/candidate-selection/candidate-filters';
 import { Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
 import { getIsAuthenticatedUserAction } from '@/modules/auth/auth.actions';
@@ -142,14 +143,14 @@ export const createProgramWizardMachine = setup({
 			}: {
 				input: {
 					countryId: string | null;
-					focuses?: string[];
-					profiles?: Profile[];
-					localPartnerIds?: string[];
+					focusIds: string[];
+					profiles: Profile[];
+					localPartnerIds: string[];
 				};
 			}) => {
 				const [total, filtered] = await Promise.all([
 					getCandidateCountAction([], [], input.countryId, []),
-					getCandidateCountAction(input.focuses ?? [], input.profiles ?? [], input.countryId, input.localPartnerIds ?? []),
+					getCandidateCountAction(input.focusIds, input.profiles, input.countryId, input.localPartnerIds),
 				]);
 
 				if (!total.success) {
@@ -315,9 +316,11 @@ export const createProgramWizardMachine = setup({
 				src: 'loadCandidateCounts',
 				input: ({ context }) => ({
 					countryId: context.selectedCountryId,
-					focuses: context.recipientApproach === 'targeted' ? context.targetFocuses : [],
-					profiles: context.recipientApproach === 'targeted' ? context.targetProfiles : [],
-					localPartnerIds: context.recipientApproach === 'targeted' ? context.targetLocalPartnerIds : [],
+					...activeCandidateFilters(context.recipientApproach, {
+						focusIds: context.targetFocuses,
+						profiles: context.targetProfiles,
+						localPartnerIds: context.targetLocalPartnerIds,
+					}),
 				}),
 				onDone: {
 					actions: assign(({ context, event }) => {

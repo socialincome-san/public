@@ -83,7 +83,8 @@
 			},
 			"focuses": "Schwerpunkte",
 			"profiles": "Profile",
-			"local_partners": "Lokale Partner"
+			"local_partners": "Lokale Partner",
+			"loading": "Kandidatenzahlen werden aktualisiert"
 		},
 		"profiles": {
 			"male": "Männlich",

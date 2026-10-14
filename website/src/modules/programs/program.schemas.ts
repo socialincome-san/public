@@ -76,8 +76,26 @@ export const programFinancesStatsSchema = z.object({
 
 export const programDisplayCurrencySchema = z.enum(['CHF', 'EUR', 'USD']);
 
+const programRecipientPoolFilterSchema = z.object({
+	programId: z.string().trim().min(1, 'Program id is required.'),
+	focusIds: z.array(z.string().trim().min(1)).default([]),
+	profiles: z.array(z.nativeEnum(Profile)).default([]),
+	localPartnerIds: z.array(z.string().trim().min(1)).default([]),
+});
+
+export const programRecipientPoolPreviewSchema = programRecipientPoolFilterSchema.extend({
+	recipientCount: z.number().int().min(0).optional(),
+	displayCurrency: z.nativeEnum(Currency).optional(),
+});
+
+export const programRecipientPoolAssignSchema = programRecipientPoolFilterSchema.extend({
+	recipientCount: positiveIntegerSchema,
+});
+
 export type ProgramCreateInput = z.infer<typeof programCreateSchema>;
 export type PublicOnboardingUserDetailsInput = z.infer<typeof publicOnboardingUserDetailsSchema>;
 export type ProgramSettingsUpdateInput = z.infer<typeof programSettingsUpdateSchema>;
 export type ProgramBudgetCalculationInput = z.infer<typeof programBudgetCalculationSchema>;
 export type ProgramFinancesStatsInput = z.infer<typeof programFinancesStatsSchema>;
+export type ProgramRecipientPoolPreviewInput = z.infer<typeof programRecipientPoolPreviewSchema>;
+export type ProgramRecipientPoolAssignInput = z.infer<typeof programRecipientPoolAssignSchema>;

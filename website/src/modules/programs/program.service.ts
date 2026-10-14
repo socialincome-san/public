@@ -19,6 +19,7 @@ import {
 	isUserEmailAvailable,
 } from '@/modules/users/user.service';
 import { isReadyForFirstPayoutInterval } from './program-stats.service';
+import { hasOperatorAccess } from './program.permissions';
 import * as programRepository from './program.repository';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput, PublicOnboardingUserDetailsInput } from './program.schemas';
 import type {
@@ -392,14 +393,12 @@ export const createProgram = async (
 			return resultFail(accessResult.error);
 		}
 		if (input.amountOfRecipientsForStart > 0) {
-			const assignmentResult = await assignRandomCandidatesToProgram(
-				program.id,
-				input.amountOfRecipientsForStart,
-				countryResult.data,
-				input.targetFocuses,
-				input.targetProfiles,
-				input.targetLocalPartnerIds,
-			);
+			const assignmentResult = await assignRandomCandidatesToProgram(program.id, input.amountOfRecipientsForStart, {
+				countryCode: countryResult.data,
+				focusIds: input.targetFocuses,
+				profiles: input.targetProfiles,
+				localPartnerIds: input.targetLocalPartnerIds,
+			});
 			if (!assignmentResult.success) {
 				return resultFail(assignmentResult.error);
 			}
@@ -422,9 +421,7 @@ export const updateProgramSettings = async (
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
-		if (
-			!accessResult.data.some((access) => access.programId === input.id && access.permission === ProgramPermission.operator)
-		) {
+		if (!hasOperatorAccess(accessResult.data, input.id)) {
 			return resultFail('Permission denied');
 		}
 
@@ -473,9 +470,7 @@ export const deleteProgram = async (userId: string, programId: string): Promise<
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
-		if (
-			!accessResult.data.some((access) => access.programId === programId && access.permission === ProgramPermission.operator)
-		) {
+		if (!hasOperatorAccess(accessResult.data, programId)) {
 			return resultFail('Permission denied');
 		}
 		if (!(await programRepository.findProgramNameById(programId))) {
