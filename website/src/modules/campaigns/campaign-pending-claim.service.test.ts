@@ -1,15 +1,23 @@
-jest.mock('./campaign.repository', () => ({
+jest.mock('./campaign.repository.read', () => ({
 	findCampaignPendingByClaimId: jest.fn(),
+}));
+jest.mock('./campaign.repository.write', () => ({
 	updateCampaignContributorForClaim: jest.fn(),
 	deleteCampaignPending: jest.fn(),
 }));
 
 import { claimPendingCampaigns } from './campaign-pending-claim.service';
-import * as campaignRepository from './campaign.repository';
+import * as campaignRepository from './campaign.repository.read';
+import * as campaignWriteRepository from './campaign.repository.write';
 
 const mockFindCampaignPendingByClaimId = campaignRepository.findCampaignPendingByClaimId as jest.Mock;
-const mockClaimUnownedPendingCampaign = campaignRepository.updateCampaignContributorForClaim as jest.Mock;
-const mockDeleteCampaignPending = campaignRepository.deleteCampaignPending as jest.Mock;
+const mockClaimUnownedPendingCampaign = campaignWriteRepository.updateCampaignContributorForClaim as jest.Mock;
+const mockDeleteCampaignPending = campaignWriteRepository.deleteCampaignPending as jest.Mock;
+
+const website = {
+	actor: { type: 'contributor' as const, id: 'contributor-1', name: 'Ada Lovelace' },
+	source: 'website' as const,
+};
 
 describe('claimPendingCampaigns', () => {
 	beforeEach(() => {
@@ -21,7 +29,7 @@ describe('claimPendingCampaigns', () => {
 	test('treats a missing pending row as success without campaignSlug', async () => {
 		mockFindCampaignPendingByClaimId.mockResolvedValue(null);
 
-		const result = await claimPendingCampaigns('contributor-1', ['missing-claim']);
+		const result = await claimPendingCampaigns(website, 'contributor-1', ['missing-claim']);
 
 		expect(result.success).toBe(true);
 		if (result.success) {
@@ -38,13 +46,13 @@ describe('claimPendingCampaigns', () => {
 			campaign: { id: 'campaign-1', contributorId: null, slug: 'my-campaign' },
 		});
 
-		const result = await claimPendingCampaigns('contributor-1', ['Ab12Cd34']);
+		const result = await claimPendingCampaigns(website, 'contributor-1', ['Ab12Cd34']);
 
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data).toEqual({ successfulClaimIds: ['Ab12Cd34'], campaignSlug: 'my-campaign' });
 		}
-		expect(mockClaimUnownedPendingCampaign).toHaveBeenCalledWith('campaign-1', 'Ab12Cd34', 'contributor-1');
+		expect(mockClaimUnownedPendingCampaign).toHaveBeenCalledWith(website, 'campaign-1', 'Ab12Cd34', 'contributor-1');
 		expect(mockDeleteCampaignPending).not.toHaveBeenCalled();
 	});
 
@@ -66,7 +74,7 @@ describe('claimPendingCampaigns', () => {
 				campaign: { id: 'campaign-3', contributorId: null, slug: 'newest-campaign' },
 			});
 
-		const result = await claimPendingCampaigns('contributor-1', ['claim-old', 'claim-owned', 'claim-new']);
+		const result = await claimPendingCampaigns(website, 'contributor-1', ['claim-old', 'claim-owned', 'claim-new']);
 
 		expect(result.success).toBe(true);
 		if (result.success) {
@@ -82,14 +90,14 @@ describe('claimPendingCampaigns', () => {
 			campaign: { id: 'campaign-1', contributorId: 'other-contributor', slug: 'owned-campaign' },
 		});
 
-		const result = await claimPendingCampaigns('contributor-1', ['Ab12Cd34']);
+		const result = await claimPendingCampaigns(website, 'contributor-1', ['Ab12Cd34']);
 
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data).toEqual({ successfulClaimIds: ['Ab12Cd34'] });
 		}
 		expect(mockClaimUnownedPendingCampaign).not.toHaveBeenCalled();
-		expect(mockDeleteCampaignPending).toHaveBeenCalledWith('Ab12Cd34');
+		expect(mockDeleteCampaignPending).toHaveBeenCalledWith(website, 'campaign-1', 'Ab12Cd34');
 	});
 
 	test('returns campaignSlug when the campaign is already owned by the claiming contributor', async () => {
@@ -99,14 +107,14 @@ describe('claimPendingCampaigns', () => {
 			campaign: { id: 'campaign-1', contributorId: 'contributor-1', slug: 'my-campaign' },
 		});
 
-		const result = await claimPendingCampaigns('contributor-1', ['Ab12Cd34']);
+		const result = await claimPendingCampaigns(website, 'contributor-1', ['Ab12Cd34']);
 
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data).toEqual({ successfulClaimIds: ['Ab12Cd34'], campaignSlug: 'my-campaign' });
 		}
 		expect(mockClaimUnownedPendingCampaign).not.toHaveBeenCalled();
-		expect(mockDeleteCampaignPending).toHaveBeenCalledWith('Ab12Cd34');
+		expect(mockDeleteCampaignPending).toHaveBeenCalledWith(website, 'campaign-1', 'Ab12Cd34');
 	});
 
 	test('omits claim ids that fail during write', async () => {
@@ -119,7 +127,7 @@ describe('claimPendingCampaigns', () => {
 			.mockResolvedValueOnce(null);
 		mockClaimUnownedPendingCampaign.mockRejectedValue(new Error('db-down'));
 
-		const result = await claimPendingCampaigns('contributor-1', ['Ab12Cd34', 'other']);
+		const result = await claimPendingCampaigns(website, 'contributor-1', ['Ab12Cd34', 'other']);
 
 		expect(result.success).toBe(true);
 		if (result.success) {
@@ -130,7 +138,7 @@ describe('claimPendingCampaigns', () => {
 	test('dedupes and ignores empty claim ids', async () => {
 		mockFindCampaignPendingByClaimId.mockResolvedValue(null);
 
-		const result = await claimPendingCampaigns('contributor-1', ['Ab12Cd34', ' Ab12Cd34 ', '', 'Xy98Zk76']);
+		const result = await claimPendingCampaigns(website, 'contributor-1', ['Ab12Cd34', ' Ab12Cd34 ', '', 'Xy98Zk76']);
 
 		expect(result.success).toBe(true);
 		if (result.success) {
@@ -146,7 +154,7 @@ describe('claimPendingCampaigns', () => {
 			campaign: { id: 'campaign-1', contributorId: null, slug: null },
 		});
 
-		const result = await claimPendingCampaigns('contributor-1', ['Ab12Cd34']);
+		const result = await claimPendingCampaigns(website, 'contributor-1', ['Ab12Cd34']);
 
 		expect(result.success).toBe(true);
 		if (result.success) {

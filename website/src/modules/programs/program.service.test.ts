@@ -1,5 +1,6 @@
-import { CountryCode, Currency, ProgramPermission } from '@/generated/prisma/enums';
+import { CountryCode, Currency, ProgramPermission, UserRole } from '@/generated/prisma/enums';
 import { resultOk } from '@/lib/result';
+import type { UserSession } from '@/modules/users/user.types';
 
 const mockGetAccessiblePrograms = jest.fn();
 const mockIsReadyForFirstPayoutInterval = jest.fn();
@@ -15,12 +16,25 @@ const mockValidateOrganizationIds = jest.fn();
 const mockIsAdmin = jest.fn();
 const mockFindPaginatedPrograms = jest.fn();
 
+const mockCreateDefaultCampaign = jest.fn();
+const mockDetachProgramSurveys = jest.fn();
+const mockDeleteProgramCampaigns = jest.fn();
+
 jest.mock('@/modules/program-access/program-access.service', () => ({
-	createInitialAccessesForProgram: jest.fn(),
 	getAccessiblePrograms: mockGetAccessiblePrograms,
 }));
 jest.mock('@/modules/candidates/candidate.service', () => ({
 	assignRandomCandidatesToProgram: jest.fn(),
+}));
+jest.mock('@/modules/surveys/survey.service', () => ({
+	detachProgramSurveys: mockDetachProgramSurveys,
+}));
+jest.mock('@/modules/campaigns/campaign.service', () => ({
+	createDefaultCampaign: mockCreateDefaultCampaign,
+	deleteProgramCampaigns: mockDeleteProgramCampaigns,
+}));
+jest.mock('@/modules/recipients/recipient.service', () => ({
+	removeRecipientsFromProgram: jest.fn(),
 }));
 jest.mock('@/modules/countries/country.service', () => ({
 	getCountryIsoCode: mockGetCountryIsoCode,
@@ -40,14 +54,17 @@ jest.mock('@/modules/users/user.service', () => ({
 jest.mock('./program-stats.service', () => ({
 	isReadyForFirstPayoutInterval: mockIsReadyForFirstPayoutInterval,
 }));
-jest.mock('./program.repository', () => ({
+jest.mock('./program.repository.write', () => ({
+	updateProgramSettings: mockUpdateProgramSettings,
+}));
+
+jest.mock('./program.repository.read', () => ({
 	findProgramWallets: mockFindProgramWallets,
 	findPublicProgramStatsBySlugs: mockFindPublicProgramStatsBySlugs,
 	findPublicTargetFocusesByProgramId: mockFindPublicTargetFocusesByProgramId,
 	findProgramByName: mockFindProgramByName,
 	findProgramBySlug: mockFindProgramBySlug,
 	findProgramSettings: mockFindProgramSettings,
-	updateProgramSettings: mockUpdateProgramSettings,
 	findPaginatedPrograms: mockFindPaginatedPrograms,
 }));
 
@@ -58,6 +75,26 @@ import {
 	getPublicTargetFocusesByProgramId,
 	updateProgramSettings,
 } from './program.service';
+
+const operator: UserSession = {
+	type: 'user',
+	id: 'user-1',
+	gender: null,
+	email: null,
+	firstName: 'Max',
+	lastName: 'Operator',
+	language: null,
+	street: null,
+	number: null,
+	city: null,
+	zip: null,
+	country: null,
+	role: UserRole.user,
+	activeOrganization: null,
+	organizations: [],
+	programs: [],
+	hasAnyOperatorProgramAccess: true,
+};
 
 describe('program service', () => {
 	beforeEach(() => {
@@ -199,7 +236,7 @@ describe('program service', () => {
 			]),
 		);
 
-		const result = await updateProgramSettings('user-1', {
+		const result = await updateProgramSettings(operator, {
 			id: 'program-1',
 			name: 'Program',
 			slug: 'program',

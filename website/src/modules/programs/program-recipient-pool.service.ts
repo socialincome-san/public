@@ -1,3 +1,4 @@
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	assignRandomCandidatesToProgram,
@@ -7,9 +8,10 @@ import {
 import type { UnassignedCandidateFilter } from '@/modules/candidates/candidate.types';
 import { getFocusOptions } from '@/modules/focuses/focus.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { calculateProgramBudget } from './program-stats.service';
 import { hasOperatorAccess } from './program.permissions';
-import * as programRepository from './program.repository';
+import * as programRepository from './program.repository.read';
 import type { ProgramRecipientPoolAssignInput, ProgramRecipientPoolPreviewInput } from './program.schemas';
 import type { ProgramRecipientPoolPreview, ProgramRecipientPoolSetup } from './program.types';
 
@@ -102,15 +104,19 @@ export const previewProgramRecipientPool = async (
 };
 
 export const assignProgramRecipientsFromPool = async (
-	userId: string,
+	session: UserSession,
 	input: ProgramRecipientPoolAssignInput,
 ): Promise<Result<{ assigned: number }>> => {
-	const programResult = await requireOperatorProgram(userId, input.programId);
+	const programResult = await requireOperatorProgram(session.id, input.programId);
 	if (!programResult.success) {
 		return programResult;
 	}
 
 	return assignRandomCandidatesToProgram(
+		{
+			...getSessionAuditContext(session),
+			metadata: { operation: 'recipient-pool-assignment', programId: programResult.data.id },
+		},
 		programResult.data.id,
 		input.recipientCount,
 		candidateFilter(programResult.data.country.isoCode, input),

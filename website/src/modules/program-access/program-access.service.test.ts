@@ -3,15 +3,13 @@ import type { Result } from '@/lib/result';
 
 const mockFindActiveOrganizationId = jest.fn();
 const mockFindProgramAccessesByOrganizationId = jest.fn();
-const mockCreateInitialProgramAccesses = jest.fn();
 
 jest.mock('./program-access.repository', () => ({
 	findActiveOrganizationId: mockFindActiveOrganizationId,
 	findProgramAccessesByOrganizationId: mockFindProgramAccessesByOrganizationId,
-	createInitialProgramAccesses: mockCreateInitialProgramAccesses,
 }));
 
-import { createInitialAccessesForProgram, getAccessiblePrograms } from './program-access.service';
+import { getAccessiblePrograms } from './program-access.service';
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -74,20 +72,6 @@ describe('program access service', () => {
 			},
 		]);
 		expect(mockFindProgramAccessesByOrganizationId).toHaveBeenCalledWith('organization-1');
-	});
-
-	test('creates owner and operator accesses through the repository', async () => {
-		const input = {
-			programId: 'program-1',
-			ownerOrganizationId: 'owner-organization',
-			operatorFallbackOrganizationId: 'operator-organization',
-		};
-		mockCreateInitialProgramAccesses.mockResolvedValue({ count: 2 });
-
-		const result = await createInitialAccessesForProgram(input);
-
-		expect(expectSuccess(result)).toBeUndefined();
-		expect(mockCreateInitialProgramAccesses).toHaveBeenCalledWith(input);
 	});
 
 	test('does not leak persistence errors', async () => {

@@ -59,7 +59,7 @@ export const createLocalPartnerAction = async (input: unknown): Promise<Result<L
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createLocalPartner(sessionResult.data.id, inputResult.data);
+	const result = await createLocalPartner(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/admin/local-partners');
 
 	return result;
@@ -115,7 +115,7 @@ export const deleteLocalPartnerAction = async (localPartnerId: unknown): Promise
 		return resultFail('Invalid input.');
 	}
 
-	const result = await deleteLocalPartner(sessionResult.data.id, idResult.data);
+	const result = await deleteLocalPartner(sessionResult.data, idResult.data);
 	revalidatePath('/portal/admin/local-partners');
 
 	return result;

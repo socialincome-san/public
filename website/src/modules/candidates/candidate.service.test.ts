@@ -1,9 +1,14 @@
 import { CountryCode } from '@/generated/prisma/enums';
 
 const mockIsAdmin = jest.fn();
+const mockRecipientEntity = { type: 'recipient' };
 const mockFindCandidateById = jest.fn();
 const mockCountCandidates = jest.fn();
+const mockFindUnassignedCandidateIds = jest.fn();
 const mockUpdateUnassignedCandidateAssignments = jest.fn();
+const audit = { actor: { type: 'user' as const, id: 'user-1' }, source: 'portal' as const };
+
+jest.mock('@/modules/recipients/recipient.service', () => ({ recipientAuditedEntity: mockRecipientEntity }));
 
 jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
@@ -15,9 +20,12 @@ jest.mock('@/modules/countries/country.service', () => ({
 
 jest.mock('@/modules/auth/auth.service', () => ({}));
 
-jest.mock('./candidate.repository', () => ({
+jest.mock('./candidate.repository.read', () => ({
 	findCandidateById: mockFindCandidateById,
 	countCandidates: mockCountCandidates,
+	findUnassignedCandidateIds: mockFindUnassignedCandidateIds,
+}));
+jest.mock('./candidate.repository.write', () => ({
 	updateUnassignedCandidateAssignments: mockUpdateUnassignedCandidateAssignments,
 }));
 
@@ -98,19 +106,29 @@ describe('candidate service', () => {
 		};
 		mockUpdateUnassignedCandidateAssignments.mockResolvedValue({ outcome: 'assigned', assigned: 1 });
 
-		await expect(assignRandomCandidatesToProgram('program-1', 1, filter)).resolves.toEqual({
+		mockFindUnassignedCandidateIds.mockResolvedValue([{ id: 'candidate-1' }, { id: 'candidate-2' }]);
+
+		await expect(assignRandomCandidatesToProgram(audit, 'program-1', 1, filter)).resolves.toEqual({
 			success: true,
 			data: { assigned: 1 },
 			status: undefined,
 		});
-		expect(mockUpdateUnassignedCandidateAssignments).toHaveBeenCalledWith(filter, 'program-1', 1);
+		expect(mockFindUnassignedCandidateIds).toHaveBeenCalledWith(filter);
+		expect(mockUpdateUnassignedCandidateAssignments).toHaveBeenCalledWith(
+			mockRecipientEntity,
+			audit,
+			['candidate-1', 'candidate-2'],
+			'program-1',
+			1,
+		);
 	});
 
 	test('returns a fixed failure when the pool does not have enough candidates', async () => {
+		mockFindUnassignedCandidateIds.mockResolvedValue([]);
 		mockUpdateUnassignedCandidateAssignments.mockResolvedValue({ outcome: 'insufficient' });
 
 		await expect(
-			assignRandomCandidatesToProgram('program-1', 2, {
+			assignRandomCandidatesToProgram(audit, 'program-1', 2, {
 				countryCode: CountryCode.SL,
 				focusIds: [],
 				profiles: [],

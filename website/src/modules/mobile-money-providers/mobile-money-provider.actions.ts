@@ -52,7 +52,7 @@ export const createMobileMoneyProviderAction = async (input: unknown): Promise<R
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createMobileMoneyProvider(sessionResult.data.id, inputResult.data);
+	const result = await createMobileMoneyProvider(sessionResult.data, inputResult.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -68,7 +68,7 @@ export const updateMobileMoneyProviderAction = async (input: unknown): Promise<R
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateMobileMoneyProvider(sessionResult.data.id, inputResult.data);
+	const result = await updateMobileMoneyProvider(sessionResult.data, inputResult.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -97,7 +97,7 @@ export const deleteMobileMoneyProviderAction = async (providerId: unknown): Prom
 		return resultFail('Invalid input.');
 	}
 
-	const result = await deleteMobileMoneyProvider(sessionResult.data.id, providerIdResult.data);
+	const result = await deleteMobileMoneyProvider(sessionResult.data, providerIdResult.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;

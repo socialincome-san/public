@@ -1,6 +1,6 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
-import type * as ContributionRepository from './contribution.repository';
+import type * as ContributionRepository from './contribution.repository.read';
 import type { ContributionPaginatedTableView, ContributionTableQuery, GlobeContribution } from './contribution.types';
 
 type ContributionRow = {
@@ -57,8 +57,10 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getCampaigns: jest.fn().mockResolvedValue({ success: true, data: [] }),
 }));
 
-jest.mock('./contribution.repository', () => ({
-	...jest.requireActual<typeof ContributionRepository>('./contribution.repository'),
+jest.mock('./contribution.repository.write', () => ({}));
+
+jest.mock('./contribution.repository.read', () => ({
+	...jest.requireActual<typeof ContributionRepository>('./contribution.repository.read'),
 	findCampaignsByProgramIds: mockFindCampaignsByProgramIds,
 	findContributionTableSource: mockFindContributionTableSource,
 }));

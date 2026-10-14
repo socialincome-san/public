@@ -1,5 +1,6 @@
-import { ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
+import { ProgramPermission, SurveyQuestionnaire, SurveyStatus, UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
+import type { UserSession } from '@/modules/users/user.types';
 
 const mockGetAccessiblePrograms = jest.fn();
 const mockGetRecipientProgramAssignment = jest.fn();
@@ -21,6 +22,8 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 }));
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
+	getRecipientAuditContext: (id: string, source: string) =>
+		Promise.resolve({ success: true, data: { actor: { type: 'recipient', id, name: 'Ada Lovelace' }, source } }),
 	getRecipientFilterOption: mockGetRecipientFilterOption,
 	getRecipientProgramAssignment: mockGetRecipientProgramAssignment,
 	getSurveyRecipients: mockGetSurveyRecipients,
@@ -31,18 +34,23 @@ jest.mock('@/modules/auth/auth.service', () => ({
 	synchronizeFirebaseSurveyUser: mockSynchronizeFirebaseSurveyUser,
 }));
 
-jest.mock('./survey.repository', () => ({
+const mockUpdateSurvey = jest.fn();
+
+jest.mock('./survey.repository.write', () => ({
+	createSurvey: mockCreateSurvey,
+	updateSurvey: mockUpdateSurvey,
+}));
+
+jest.mock('./survey.repository.read', () => ({
 	findSurveyById: mockFindSurveyById,
 	findSurveyByRecipientId: mockFindSurveyByRecipientId,
 	findSurveyByAccessEmail: mockFindSurveyByAccessEmail,
 	findSurveyByRecipientAndName: mockFindSurveyByRecipientAndName,
 	findSurveySchedulesByProgramIds: mockFindSurveySchedulesByProgramIds,
 	findCompletedSurveyImpactSource: mockFindCompletedSurveyImpactSource,
-	createSurvey: mockCreateSurvey,
 	findSurveyTableSource: mockFindSurveyTableSource,
 	findSurveyByIdAndRecipient: jest.fn(),
 	findExistingSurveyIdentities: jest.fn(),
-	updateSurvey: jest.fn(),
 	findSurveyImpactFilterSource: jest.fn(),
 	findSurveyImpactStudySource: jest.fn(),
 }));
@@ -59,7 +67,28 @@ import {
 	getSurveyImpactMeasurements,
 	getSurveySchedulesByProgramIds,
 	getSurveysByRecipientId,
+	saveSurveyChanges,
 } from './survey.service';
+
+const operator: UserSession = {
+	type: 'user',
+	id: 'user-1',
+	gender: null,
+	email: null,
+	firstName: 'Max',
+	lastName: 'Operator',
+	language: null,
+	street: null,
+	number: null,
+	city: null,
+	zip: null,
+	country: null,
+	role: UserRole.user,
+	activeOrganization: null,
+	organizations: [],
+	programs: [],
+	hasAnyOperatorProgramAccess: true,
+};
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -160,7 +189,7 @@ describe('survey CRUD and access', () => {
 	});
 
 	test('creates a survey after validation, operator access, uniqueness, and Firebase synchronization', async () => {
-		const result = await createSurvey('user-1', {
+		const result = await createSurvey(operator, {
 			name: ' Onboarding ',
 			recipientId: 'recipient-1',
 			questionnaire: SurveyQuestionnaire.onboarding,
@@ -177,12 +206,13 @@ describe('survey CRUD and access', () => {
 			nextPassword: 'secret',
 		});
 		expect(mockCreateSurvey).toHaveBeenCalledWith(
+			{ actor: { type: 'user', id: 'user-1', name: 'Max Operator' }, source: 'portal' },
 			expect.objectContaining({ name: 'Onboarding', recipientId: 'recipient-1', data: {} }),
 		);
 	});
 
 	test('rejects invalid create input before persistence', async () => {
-		const result = await createSurvey('user-1', {
+		const result = await createSurvey(operator, {
 			name: '',
 			recipientId: 'recipient-1',
 			questionnaire: SurveyQuestionnaire.onboarding,
@@ -280,5 +310,20 @@ describe('survey impact aggregation', () => {
 			count: 1,
 			percentage: 50,
 		});
+	});
+});
+
+describe('saveSurveyChanges', () => {
+	test('attributes answers to the surveyed recipient', async () => {
+		mockFindSurveyById.mockResolvedValue({ id: 'survey-1', recipientId: 'recipient-1' });
+		mockUpdateSurvey.mockResolvedValue(surveyPayload);
+
+		await saveSurveyChanges('survey-1', { data: { q1: 'yes' }, status: SurveyStatus.in_progress });
+
+		expect(mockUpdateSurvey).toHaveBeenCalledWith(
+			{ actor: { type: 'recipient', id: 'recipient-1', name: 'Ada Lovelace' }, source: 'website' },
+			'survey-1',
+			expect.objectContaining({ status: SurveyStatus.in_progress }),
+		);
 	});
 });

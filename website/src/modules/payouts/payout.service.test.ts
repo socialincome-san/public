@@ -1,5 +1,6 @@
-import { Currency, PayoutInterval, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
+import { Currency, PayoutInterval, PayoutStatus, ProgramPermission, UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
+import type { UserSession } from '@/modules/users/user.types';
 import { PAYOUT_FORECAST_MONTHS_AHEAD } from './payout.types';
 
 const mockGetAccessiblePrograms = jest.fn();
@@ -15,20 +16,31 @@ const mockCreatePayout = jest.fn();
 const mockUpdatePayout = jest.fn();
 const mockUpdatePayoutStatus = jest.fn();
 const mockDeletePayout = jest.fn();
+const mockFindPayoutForRecipientStatusUpdate = jest.fn();
+const mockUpdatePayoutStatusByRecipient = jest.fn();
+const mockCreatePayoutProcessPayouts = jest.fn();
 const mockFindPaidOrConfirmedPayoutTotal = jest.fn();
 const mockFindPayoutMobileMoneyProviderOptions = jest.fn();
 const mockGetRecipientFilterOption = jest.fn();
 const mockFindPayoutTableSource = jest.fn();
 
-jest.mock('./payout.repository', () => ({
-	findPayout: mockFindPayout,
-	findPayoutForStatusUpdate: mockFindPayoutForStatusUpdate,
-	findPayoutForUpdate: mockFindPayoutForUpdate,
-	findPayoutForDeletion: mockFindPayoutForDeletion,
+jest.mock('./payout.repository.write', () => ({
 	createPayout: mockCreatePayout,
 	updatePayout: mockUpdatePayout,
 	updatePayoutStatus: mockUpdatePayoutStatus,
 	deletePayout: mockDeletePayout,
+	updatePayoutStatusByRecipient: mockUpdatePayoutStatusByRecipient,
+	createPayoutProcessPayouts: mockCreatePayoutProcessPayouts,
+}));
+
+jest.mock('./payout.repository.read', () => ({
+	findPayout: mockFindPayout,
+	findPayoutForStatusUpdate: mockFindPayoutForStatusUpdate,
+	findPayoutForUpdate: mockFindPayoutForUpdate,
+	findPayoutForDeletion: mockFindPayoutForDeletion,
+	findPayoutForRecipientStatusUpdate: mockFindPayoutForRecipientStatusUpdate,
+	findPayoutProcessRecipientPrograms: () => Promise.resolve([{ id: 'recipient-1', programId: 'program-1' }]),
+	findExistingPayoutProcessRecipientIds: () => Promise.resolve([]),
 	findPaidOrConfirmedPayoutTotal: mockFindPaidOrConfirmedPayoutTotal,
 	findPayoutMobileMoneyProviderOptions: mockFindPayoutMobileMoneyProviderOptions,
 	findPayoutTableSource: mockFindPayoutTableSource,
@@ -47,6 +59,8 @@ jest.mock('@/modules/programs/program-reference.service', () => ({
 }));
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
+	getRecipientAuditContext: (id: string, source: string) =>
+		Promise.resolve({ success: true, data: { actor: { type: 'recipient', id, name: 'Ada Lovelace' }, source } }),
 	getRecipientFilterOption: mockGetRecipientFilterOption,
 	getRecipientProgramAssignment: mockGetRecipientProgramAssignment,
 	recipientStatusService: {
@@ -64,6 +78,7 @@ jest.mock('@/lib/utils/now', () => ({
 
 import {
 	createPayout,
+	createPayoutProcessPayouts,
 	deletePayout,
 	getPaginatedPayoutTableView,
 	getPaidOrConfirmedPayoutTotal,
@@ -72,7 +87,30 @@ import {
 	getPublicPayoutForecastTableView,
 	updatePayout,
 	updatePayoutStatus,
+	updatePayoutStatusByRecipient,
 } from './payout.service';
+
+const user: UserSession = {
+	type: 'user',
+	id: 'user-1',
+	gender: null,
+	email: null,
+	firstName: 'Max',
+	lastName: 'Operator',
+	language: null,
+	street: null,
+	number: null,
+	city: null,
+	zip: null,
+	country: null,
+	role: UserRole.user,
+	activeOrganization: null,
+	organizations: [],
+	programs: [],
+	hasAnyOperatorProgramAccess: true,
+};
+
+const portal = { actor: { type: 'user', id: 'user-1', name: 'Max Operator' }, source: 'portal' };
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -289,14 +327,14 @@ describe('payout writes', () => {
 	});
 
 	test('creates a payout for a recipient in an operated program', async () => {
-		const data = expectSuccess(await createPayout('user-1', payoutInput));
+		const data = expectSuccess(await createPayout(user, payoutInput));
 
 		expect(data).toMatchObject({
 			id: 'payout-1',
 			amount: 100,
 			recipient: { id: 'recipient-1', programId: 'program-1' },
 		});
-		expect(mockCreatePayout).toHaveBeenCalledWith(payoutInput);
+		expect(mockCreatePayout).toHaveBeenCalledWith(portal, payoutInput);
 	});
 
 	test('denies payout creation without operator access', async () => {
@@ -311,7 +349,7 @@ describe('payout writes', () => {
 			],
 		});
 
-		expectFailure(await createPayout('user-1', payoutInput), 'No edit access for this program');
+		expectFailure(await createPayout(user, payoutInput), 'No edit access for this program');
 		expect(mockCreatePayout).not.toHaveBeenCalled();
 	});
 
@@ -335,7 +373,7 @@ describe('payout writes', () => {
 		mockFindPayoutForUpdate.mockResolvedValue({ recipient: { programId: 'program-1' } });
 		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: [] });
 
-		expectFailure(await updatePayout('user-1', { id: 'payout-1', ...payoutInput }), 'No edit permission for this payout');
+		expectFailure(await updatePayout(user, { id: 'payout-1', ...payoutInput }), 'No edit permission for this payout');
 		expect(mockUpdatePayout).not.toHaveBeenCalled();
 	});
 
@@ -346,10 +384,10 @@ describe('payout writes', () => {
 			recipient: { programId: 'program-1' },
 		});
 
-		expect(expectSuccess(await updatePayoutStatus('user-1', 'payout-1', PayoutStatus.confirmed))).toBe(
+		expect(expectSuccess(await updatePayoutStatus(user, 'payout-1', PayoutStatus.confirmed))).toBe(
 			'Payout updated to "confirmed"',
 		);
-		expect(mockUpdatePayoutStatus).toHaveBeenCalledWith('payout-1', PayoutStatus.confirmed);
+		expect(mockUpdatePayoutStatus).toHaveBeenCalledWith(portal, 'payout-1', PayoutStatus.confirmed);
 	});
 
 	test('denies status updates without operator access', async () => {
@@ -360,7 +398,7 @@ describe('payout writes', () => {
 			recipient: { programId: 'program-1' },
 		});
 
-		expectFailure(await updatePayoutStatus('user-1', 'payout-1', PayoutStatus.confirmed), 'Access denied for this payout');
+		expectFailure(await updatePayoutStatus(user, 'payout-1', PayoutStatus.confirmed), 'Access denied for this payout');
 	});
 
 	test('only deletes failed payouts', async () => {
@@ -370,7 +408,52 @@ describe('payout writes', () => {
 			recipient: { programId: 'program-1' },
 		});
 
-		expectFailure(await deletePayout('user-1', 'payout-1'), 'Only payouts with status "failed" can be deleted');
+		expectFailure(await deletePayout(user, 'payout-1'), 'Only payouts with status "failed" can be deleted');
 		expect(mockDeletePayout).not.toHaveBeenCalled();
+	});
+
+	test('deletes a failed payout as the session user', async () => {
+		mockFindPayoutForDeletion.mockResolvedValue({
+			id: 'payout-1',
+			status: PayoutStatus.failed,
+			recipient: { programId: 'program-1' },
+		});
+		mockDeletePayout.mockResolvedValue({ id: 'payout-1' });
+
+		expectSuccess(await deletePayout(user, 'payout-1'));
+		expect(mockDeletePayout).toHaveBeenCalledWith(portal, 'payout-1');
+	});
+
+	test('attributes confirmations from the app to the recipient', async () => {
+		mockFindPayoutForRecipientStatusUpdate.mockResolvedValue({ id: 'payout-1' });
+		mockUpdatePayoutStatusByRecipient.mockResolvedValue(payoutPayloadSource);
+
+		await updatePayoutStatusByRecipient('recipient-1', 'payout-1', PayoutStatus.confirmed, null);
+
+		expect(mockUpdatePayoutStatusByRecipient).toHaveBeenCalledWith(
+			{ actor: { type: 'recipient', id: 'recipient-1', name: 'Ada Lovelace' }, source: 'mobile-app' },
+			'payout-1',
+			PayoutStatus.confirmed,
+			null,
+		);
+	});
+
+	test('marks payouts created by a payout process', async () => {
+		const preview = {
+			recipientId: 'recipient-1',
+			amount: 100,
+			amountChf: null,
+			currency: Currency.SLE,
+			status: PayoutStatus.paid,
+			paymentAt: new Date('2025-06-01T00:00:00.000Z'),
+			phoneNumber: '+23270000001',
+			firstName: 'Ada',
+			lastName: 'Lovelace',
+		};
+
+		expectSuccess(await createPayoutProcessPayouts(user, [preview], preview.paymentAt));
+		expect(mockCreatePayoutProcessPayouts).toHaveBeenCalledWith({ ...portal, metadata: { operation: 'payout-process' } }, [
+			preview,
+		]);
 	});
 });

@@ -90,20 +90,19 @@ export const findRecipient = async (recipientId: string) =>
 		select: recipientDetailSelect,
 	});
 
-export const findRecipientsForAuditLog = async (programIds: string[]) =>
-	prisma.recipient.findMany({
-		where: { programId: { in: programIds } },
-		select: {
-			id: true,
-			contact: { select: { firstName: true, lastName: true } },
-			program: { select: { id: true, name: true } },
-		},
-	});
+export const findRecipientIdsByProgram = async (programId: string) =>
+	prisma.recipient.findMany({ where: { programId }, select: { id: true } });
 
 export const findRecipientForUpdate = async (recipientId: string) =>
 	prisma.recipient.findUnique({
 		where: { id: recipientId },
 		select: recipientUpdateContextSelect,
+	});
+
+export const findRecipientName = async (recipientId: string) =>
+	prisma.recipient.findUnique({
+		where: { id: recipientId },
+		select: { contact: { select: { firstName: true, lastName: true } } },
 	});
 
 export const findRecipientForSelfUpdate = async (recipientId: string) =>
@@ -112,6 +111,8 @@ export const findRecipientForSelfUpdate = async (recipientId: string) =>
 		select: {
 			contact: {
 				select: {
+					firstName: true,
+					lastName: true,
 					phone: { select: { id: true } },
 				},
 			},

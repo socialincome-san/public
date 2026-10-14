@@ -322,7 +322,10 @@ const createOrUpdateContributions = async (bankContributions: BankContribution[]
 				},
 			};
 			try {
-				const paymentEventResult = await upsertFromBankTransfer(paymentEvent);
+				const paymentEventResult = await upsertFromBankTransfer(
+					{ actor: { type: 'system', id: 'payment-files-import' }, source: 'system' },
+					paymentEvent,
+				);
 				if (!paymentEventResult.success) {
 					failedPaymentEvents.push(contributionReferenceId);
 				} else {

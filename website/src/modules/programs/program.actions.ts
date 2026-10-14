@@ -81,7 +81,7 @@ export const createProgramAction = async (input: unknown, userDetails?: unknown)
 
 	const sessionResult = await getSessionByType('user');
 	if (sessionResult.success) {
-		return createProgram(parsedInput.data, { userId: sessionResult.data.id });
+		return createProgram(parsedInput.data, sessionResult.data);
 	}
 	const parsedUserDetails = publicOnboardingUserDetailsSchema.safeParse(userDetails);
 	if (!parsedUserDetails.success) {
@@ -133,7 +133,7 @@ export const updateProgramSettingsAction = async (input: unknown): Promise<Resul
 		return resultFail('Invalid program input.');
 	}
 
-	const result = await updateProgramSettings(sessionResult.data.id, parsedInput.data);
+	const result = await updateProgramSettings(sessionResult.data, parsedInput.data);
 	if (result.success) {
 		revalidatePath('/portal/programs/[programId]', 'layout');
 	}
@@ -151,7 +151,7 @@ export const deleteProgramAction = async (programId: unknown): Promise<Result<vo
 		return resultFail('Invalid program id.');
 	}
 
-	const result = await deleteProgram(sessionResult.data.id, parsedProgramId.data);
+	const result = await deleteProgram(sessionResult.data, parsedProgramId.data);
 	if (result.success) {
 		revalidatePath('/portal');
 		revalidatePath('/portal/programs/[programId]', 'layout');
@@ -194,7 +194,7 @@ export const assignProgramRecipientsFromPoolAction = async (input: unknown): Pro
 		return resultFail('Invalid input.');
 	}
 
-	const result = await assignProgramRecipientsFromPool(sessionResult.data.id, parsedInput.data);
+	const result = await assignProgramRecipientsFromPool(sessionResult.data, parsedInput.data);
 	if (result.success) {
 		revalidatePath('/portal/programs/[programId]', 'layout');
 	}

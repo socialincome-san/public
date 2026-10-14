@@ -5,6 +5,7 @@ import {
 	retrieveStripeSubscription,
 	voidStripeInvoice,
 } from '@/integrations/stripe/stripe.integration';
+import { updateSubscriptionLifecycle } from '@/modules/subscriptions/subscription.service';
 import * as stripePaymentRepository from './stripe-payment.repository';
 import { cancelContributorSubscription } from './stripe-payment.service';
 
@@ -60,7 +61,11 @@ jest.mock('@/integrations/stripe/stripe.integration', () => ({
 
 jest.mock('./stripe-payment.repository', () => ({
 	findOwnedStripeSubscription: jest.fn(),
-	updateOwnedStripeSubscriptionCancellation: jest.fn(),
+}));
+
+jest.mock('@/modules/subscriptions/subscription.service', () => ({
+	syncStripeSubscription: jest.fn(),
+	updateSubscriptionLifecycle: jest.fn(),
 }));
 
 jest.mock('@/modules/campaigns/campaign.service', () => ({
@@ -90,13 +95,16 @@ jest.mock('@/modules/users/user.service', () => ({
 	getUserStripeCheckoutContext: jest.fn(),
 }));
 
+const mockUpdateSubscriptionLifecycle = jest.mocked(updateSubscriptionLifecycle);
 const mockRetrieveStripeSubscription = retrieveStripeSubscription as jest.Mock;
 const mockCancelStripeSubscription = cancelStripeSubscription as jest.Mock;
 const mockListOpenStripeInvoices = listOpenStripeInvoices as jest.Mock;
 const mockVoidStripeInvoice = voidStripeInvoice as jest.Mock;
 const mockFindOwnedStripeSubscription = stripePaymentRepository.findOwnedStripeSubscription as jest.Mock;
-const mockUpdateOwnedStripeSubscriptionCancellation =
-	stripePaymentRepository.updateOwnedStripeSubscriptionCancellation as jest.Mock;
+const audit = {
+	actor: { type: 'contributor' as const, id: 'contributor_1', name: 'Ada Lovelace' },
+	source: 'website' as const,
+};
 
 const canceledStripeSubscription = {
 	id: 'sub_stripe_1',
@@ -126,11 +134,11 @@ describe('cancelContributorSubscription', () => {
 		mockCancelStripeSubscription.mockResolvedValue({ success: true, data: canceledStripeSubscription });
 		mockListOpenStripeInvoices.mockResolvedValue({ success: true, data: [{ id: 'in_open_1' }] });
 		mockVoidStripeInvoice.mockResolvedValue({ success: true, data: undefined });
-		mockUpdateOwnedStripeSubscriptionCancellation.mockResolvedValue({ id: 'sub_db_1' });
+		mockUpdateSubscriptionLifecycle.mockResolvedValue({ success: true, data: { id: 'sub_db_1' } });
 	});
 
 	test('cancels immediately, voids open invoices, and persists reason', async () => {
-		const result = await cancelContributorSubscription({
+		const result = await cancelContributorSubscription(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_db_1',
 			reason: 'financial_situation_changed',
@@ -141,9 +149,9 @@ describe('cancelContributorSubscription', () => {
 		expect(mockListOpenStripeInvoices).toHaveBeenCalledWith('sub_stripe_1');
 		expect(mockVoidStripeInvoice).toHaveBeenCalledWith('in_open_1');
 		expect(mockCancelStripeSubscription).toHaveBeenCalledWith('sub_stripe_1', 'too_expensive');
-		expect(mockUpdateOwnedStripeSubscriptionCancellation).toHaveBeenCalledTimes(1);
-		expect(mockUpdateOwnedStripeSubscriptionCancellation).toHaveBeenCalledWith({
-			id: 'sub_db_1',
+		expect(mockUpdateSubscriptionLifecycle).toHaveBeenCalledTimes(1);
+		expect(mockUpdateSubscriptionLifecycle).toHaveBeenCalledWith(audit, {
+			subscriptionId: 'sub_db_1',
 			status: SubscriptionStatus.ended,
 			cancellationReason: 'financial_situation_changed',
 			canceledAt: new Date(1_700_200_000 * 1000),
@@ -161,7 +169,7 @@ describe('cancelContributorSubscription', () => {
 			},
 		});
 
-		const result = await cancelContributorSubscription({
+		const result = await cancelContributorSubscription(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_db_1',
 			reason: 'other',
@@ -177,7 +185,7 @@ describe('cancelContributorSubscription', () => {
 			data: canceledStripeSubscription,
 		});
 
-		const result = await cancelContributorSubscription({
+		const result = await cancelContributorSubscription(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_db_1',
 			reason: 'other',
@@ -186,13 +194,13 @@ describe('cancelContributorSubscription', () => {
 		expect(result.success).toBe(true);
 		expect(mockCancelStripeSubscription).not.toHaveBeenCalled();
 		expect(mockVoidStripeInvoice).not.toHaveBeenCalled();
-		expect(mockUpdateOwnedStripeSubscriptionCancellation).toHaveBeenCalledTimes(1);
+		expect(mockUpdateSubscriptionLifecycle).toHaveBeenCalledTimes(1);
 	});
 
 	test('fails when subscription is not found', async () => {
 		mockFindOwnedStripeSubscription.mockResolvedValueOnce(null);
 
-		const result = await cancelContributorSubscription({
+		const result = await cancelContributorSubscription(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_missing',
 			reason: 'other',

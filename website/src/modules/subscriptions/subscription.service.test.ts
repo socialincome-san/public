@@ -1,22 +1,30 @@
-import { Currency, ProgramPermission, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/enums';
+import {
+	Currency,
+	DonationInterval,
+	ProgramPermission,
+	SubscriptionPaymentMethod,
+	SubscriptionStatus,
+} from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
 import { getCampaignFilterOption } from '@/modules/campaigns/campaign.service';
 import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
 import { getContributorFilterOption } from '@/modules/contributors/contributor.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { getSubscriptionStripeDetails } from '@/modules/stripe-payments/stripe-payment.service';
-import * as subscriptionRepository from './subscription.repository';
+import * as subscriptionRepository from './subscription.repository.read';
+import * as subscriptionWriteRepository from './subscription.repository.write';
 import {
 	cancelBankTransfer,
 	getDashboardView,
 	getPaginatedTableView,
+	syncStripeSubscription,
 	updateBankTransferAmount,
 	upsertFromBankStandingOrder,
 } from './subscription.service';
 import type { SubscriptionTableQuery } from './subscription.types';
 import { UPCOMING_PAYMENTS_PER_SUBSCRIPTION } from './subscription.types';
 
-jest.mock('./subscription.repository', () => ({
+jest.mock('./subscription.repository.read', () => ({
 	findActiveSubscriptionsByContributorId: jest.fn(),
 	findSubscriptionTableSource: jest.fn(),
 	findOwnedSubscriptionPaymentMethod: jest.fn(),
@@ -24,9 +32,16 @@ jest.mock('./subscription.repository', () => ({
 	findOwnedActiveBankTransferQrBill: jest.fn(),
 	findOwnedBankTransferSubscription: jest.fn(),
 	findBankStandingOrderByReference: jest.fn(),
+	findSubscriptionIdByStripeId: jest.fn(),
+}));
+
+jest.mock('./subscription.repository.write', () => ({
+	createBankStandingOrder: jest.fn(),
 	updateBankStandingOrder: jest.fn(),
-	updateBankTransferSubscriptionAmount: jest.fn(),
-	updateBankTransferSubscriptionCancellation: jest.fn(),
+	updateSubscriptionAmount: jest.fn(),
+	updateSubscriptionLifecycle: jest.fn(),
+	createStripeSubscription: jest.fn(),
+	updateStripeSubscription: jest.fn(),
 }));
 
 jest.mock('@/modules/contributions/contribution.service', () => ({
@@ -62,11 +77,15 @@ const mockFindOwnedActiveBankTransferSubscription = jest.mocked(
 );
 const mockFindOwnedBankTransferSubscription = jest.mocked(subscriptionRepository.findOwnedBankTransferSubscription);
 const mockFindBankStandingOrderByReference = jest.mocked(subscriptionRepository.findBankStandingOrderByReference);
-const mockUpdateBankStandingOrder = jest.mocked(subscriptionRepository.updateBankStandingOrder);
-const mockUpdateBankTransferSubscriptionAmount = jest.mocked(subscriptionRepository.updateBankTransferSubscriptionAmount);
-const mockUpdateBankTransferSubscriptionCancellation = jest.mocked(
-	subscriptionRepository.updateBankTransferSubscriptionCancellation,
-);
+const mockCreateBankStandingOrder = jest.mocked(subscriptionWriteRepository.createBankStandingOrder);
+const mockUpdateBankStandingOrder = jest.mocked(subscriptionWriteRepository.updateBankStandingOrder);
+const mockUpdateSubscriptionAmount = jest.mocked(subscriptionWriteRepository.updateSubscriptionAmount);
+const mockUpdateSubscriptionLifecycle = jest.mocked(subscriptionWriteRepository.updateSubscriptionLifecycle);
+
+const website = {
+	actor: { type: 'contributor' as const, id: 'contributor-1', name: 'Ada Lovelace' },
+	source: 'website' as const,
+};
 
 const mockGetContributorContributionSummary = getContributorContributionSummary as jest.MockedFunction<
 	typeof getContributorContributionSummary
@@ -491,7 +510,7 @@ describe('bank transfer mutations', () => {
 	});
 
 	it('rejects invalid amounts and missing or ended subscriptions', async () => {
-		const invalidAmount = await updateBankTransferAmount({
+		const invalidAmount = await updateBankTransferAmount(website, {
 			contributorId: 'contributor-1',
 			subscriptionId: 'sub-bank',
 			amount: 0,
@@ -500,22 +519,35 @@ describe('bank transfer mutations', () => {
 		expect(mockFindOwnedActiveBankTransferSubscription).not.toHaveBeenCalled();
 
 		mockFindOwnedActiveBankTransferSubscription.mockResolvedValueOnce(null);
-		const missing = await updateBankTransferAmount({
+		const missing = await updateBankTransferAmount(website, {
 			contributorId: 'contributor-1',
 			subscriptionId: 'sub-bank',
 			amount: 50,
 		});
 		expect(missing).toEqual({ success: false, error: 'Subscription not found' });
-		expect(mockUpdateBankTransferSubscriptionAmount).not.toHaveBeenCalled();
+		expect(mockUpdateSubscriptionAmount).not.toHaveBeenCalled();
 
 		mockFindOwnedBankTransferSubscription.mockResolvedValueOnce({ id: 'sub-bank', status: SubscriptionStatus.ended });
-		const ended = await cancelBankTransfer({
+		const ended = await cancelBankTransfer(website, {
 			contributorId: 'contributor-1',
 			subscriptionId: 'sub-bank',
 			reason: 'other',
 		});
 		expect(ended).toEqual({ success: false, error: 'Subscription not found' });
-		expect(mockUpdateBankTransferSubscriptionCancellation).not.toHaveBeenCalled();
+		expect(mockUpdateSubscriptionLifecycle).not.toHaveBeenCalled();
+	});
+
+	it('attributes amount changes and cancellations to the caller', async () => {
+		mockFindOwnedActiveBankTransferSubscription.mockResolvedValueOnce({ id: 'sub-bank', currency: Currency.CHF });
+		await updateBankTransferAmount(website, { contributorId: 'contributor-1', subscriptionId: 'sub-bank', amount: 50 });
+		mockFindOwnedBankTransferSubscription.mockResolvedValueOnce({ id: 'sub-bank', status: SubscriptionStatus.active });
+		await cancelBankTransfer(website, { contributorId: 'contributor-1', subscriptionId: 'sub-bank', reason: 'other' });
+
+		expect(mockUpdateSubscriptionAmount).toHaveBeenCalledWith(website, 'sub-bank', 50);
+		expect(mockUpdateSubscriptionLifecycle).toHaveBeenCalledWith(
+			website,
+			expect.objectContaining({ subscriptionId: 'sub-bank', status: SubscriptionStatus.ended, cancellationReason: 'other' }),
+		);
 	});
 });
 
@@ -538,7 +570,7 @@ describe('upsertFromBankStandingOrder', () => {
 			contributorId: 'contributor-a',
 		});
 
-		const result = await upsertFromBankStandingOrder(standingOrderInput);
+		const result = await upsertFromBankStandingOrder(website, standingOrderInput);
 
 		expect(result).toEqual({ success: false, error: 'Standing order reference is already in use' });
 		expect(mockUpdateBankStandingOrder).not.toHaveBeenCalled();
@@ -551,19 +583,51 @@ describe('upsertFromBankStandingOrder', () => {
 		});
 		mockUpdateBankStandingOrder.mockResolvedValue({ id: 'sub-b' } as never);
 
-		const result = await upsertFromBankStandingOrder(standingOrderInput);
+		const result = await upsertFromBankStandingOrder(website, standingOrderInput);
 
 		expect(result).toEqual({ success: true, data: { id: 'sub-b' } });
-		expect(mockUpdateBankStandingOrder).toHaveBeenCalledWith(standingOrderInput);
+		expect(mockUpdateBankStandingOrder).toHaveBeenCalledWith(website, 'sub-b', standingOrderInput);
 	});
 
 	it('creates a standing order when the reference is unused', async () => {
 		mockFindBankStandingOrderByReference.mockResolvedValue(null);
-		mockUpdateBankStandingOrder.mockResolvedValue({ id: 'sub-new' } as never);
+		mockCreateBankStandingOrder.mockResolvedValue({ id: 'sub-new' } as never);
 
-		const result = await upsertFromBankStandingOrder(standingOrderInput);
+		const result = await upsertFromBankStandingOrder(website, standingOrderInput);
 
 		expect(result).toEqual({ success: true, data: { id: 'sub-new' } });
-		expect(mockUpdateBankStandingOrder).toHaveBeenCalledWith(standingOrderInput);
+		expect(mockCreateBankStandingOrder).toHaveBeenCalledWith(website, standingOrderInput);
+	});
+});
+
+describe('syncStripeSubscription', () => {
+	const webhook = { actor: { type: 'system' as const, id: 'stripe-webhook' }, source: 'system' as const };
+	const input = {
+		stripeSubscriptionId: 'sub_stripe_1',
+		contributorId: 'contributor-1',
+		campaignId: 'campaign-1',
+		amount: 50,
+		currency: Currency.CHF,
+		interval: DonationInterval.monthly,
+		status: SubscriptionStatus.active,
+		canceledAt: null,
+		coverTransactionCosts: false,
+	};
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	it('creates unknown and updates known Stripe subscriptions', async () => {
+		jest.mocked(subscriptionRepository.findSubscriptionIdByStripeId).mockResolvedValueOnce(null);
+		jest.mocked(subscriptionWriteRepository.createStripeSubscription).mockResolvedValueOnce({ id: 'sub-new' });
+		await expect(syncStripeSubscription(webhook, input)).resolves.toMatchObject({ data: { id: 'sub-new' } });
+
+		jest.mocked(subscriptionRepository.findSubscriptionIdByStripeId).mockResolvedValueOnce({ id: 'sub-1' });
+		jest.mocked(subscriptionWriteRepository.updateStripeSubscription).mockResolvedValueOnce({ id: 'sub-1' });
+		await expect(syncStripeSubscription(webhook, input)).resolves.toMatchObject({ data: { id: 'sub-1' } });
+
+		expect(subscriptionWriteRepository.createStripeSubscription).toHaveBeenCalledWith(webhook, input);
+		expect(subscriptionWriteRepository.updateStripeSubscription).toHaveBeenCalledWith(webhook, 'sub-1', input);
 	});
 });

@@ -3,7 +3,7 @@ import { fetchStoryblokPrograms } from '@/integrations/storyblok/storyblok-progr
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
-import * as programRepository from './program.repository';
+import * as programRepository from './program.repository.read';
 import type { PublicSubmissionProgramOption } from './program.types';
 
 const PROGRAM_DETAILS_IMAGE_WIDTH = 248;

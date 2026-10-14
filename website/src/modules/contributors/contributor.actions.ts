@@ -1,5 +1,6 @@
 'use server';
 
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, type Result } from '@/lib/result';
 import { getOptionalContributor, getSessionByType } from '@/modules/auth/session.service';
 import type {
@@ -29,7 +30,7 @@ export const createContributorAction = async (input: unknown): Promise<Result<Co
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createContributor(sessionResult.data.id, inputResult.data);
+	const result = await createContributor(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/contributors');
 
 	return result;
@@ -46,7 +47,7 @@ export const updateContributorAction = async (input: unknown): Promise<Result<Co
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateContributor(sessionResult.data.id, inputResult.data);
+	const result = await updateContributor(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/contributors');
 
 	return result;
@@ -79,7 +80,11 @@ export const updateContributorSelfAction = async (input: unknown): Promise<Resul
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateContributorSelf(sessionResult.data.id, inputResult.data);
+	const result = await updateContributorSelf(
+		getSessionAuditContext(sessionResult.data),
+		sessionResult.data.id,
+		inputResult.data,
+	);
 	revalidatePath('/dashboard/profile');
 
 	return result;

@@ -1,10 +1,8 @@
-const mockGetRecipientsForAuditLog = jest.fn();
+const mockIsAdmin = jest.fn();
 const mockFindAuditEventPage = jest.fn();
 const mockFindAuditEventHistory = jest.fn();
 
-jest.mock('@/modules/recipients/recipient.service', () => ({
-	getRecipientsForAuditLog: mockGetRecipientsForAuditLog,
-}));
+jest.mock('@/modules/users/user.service', () => ({ isAdmin: mockIsAdmin }));
 jest.mock('./audit.repository', () => ({
 	findAuditEventPage: mockFindAuditEventPage,
 	findAuditEventHistory: mockFindAuditEventHistory,
@@ -12,14 +10,15 @@ jest.mock('./audit.repository', () => ({
 
 import { getAuditTableView } from './audit.service';
 
-const event = (id: string, action: string, snapshot: object | null, actorName: string | null) => ({
+const event = (id: string, action: string, snapshot: object | null, entityName: string | null) => ({
 	id,
 	entityType: 'recipient',
 	entityId: 'recipient-1',
+	entityName,
 	action,
-	actorType: actorName ? 'user' : 'recipient',
-	actorName,
-	source: actorName ? 'portal' : 'mobile-app',
+	actorType: 'user',
+	actorName: 'Max Operator',
+	source: 'portal',
 	snapshot,
 	createdAt: new Date('2026-10-01T00:00:00.000Z'),
 });
@@ -27,76 +26,49 @@ const event = (id: string, action: string, snapshot: object | null, actorName: s
 const query = { page: 1, pageSize: 10, search: '' };
 
 describe('getAuditTableView', () => {
+	const history = [
+		event('v1', 'create', { paymentInformation: { phone: { number: '+232111' } } }, 'Ada Lovelace'),
+		event('v2', 'update', { paymentInformation: { phone: { number: '+232222' } } }, 'Ada King'),
+		event('v3', 'delete', null, null),
+	];
+
 	beforeEach(() => {
 		jest.clearAllMocks();
-		mockGetRecipientsForAuditLog.mockResolvedValue({
-			success: true,
-			data: [
-				{ id: 'recipient-1', name: 'Ada Lovelace', context: 'Program 1' },
-				{ id: 'recipient-2', name: 'Grace Hopper', context: 'Program 1' },
-			],
-		});
-		const history = [
-			event('v1', 'create', { paymentInformation: { phone: { number: '+232111' } } }, 'Max Operator'),
-			event('v2', 'update', { paymentInformation: { phone: { number: '+232222' } } }, null),
-		];
-		mockFindAuditEventPage.mockResolvedValue({ events: [history[1]], totalCount: 2 });
+		mockIsAdmin.mockResolvedValue({ success: true, data: true });
+		mockFindAuditEventPage.mockResolvedValue({ events: [history[1]], totalCount: 3 });
 		mockFindAuditEventHistory.mockResolvedValue(history);
 	});
 
-	test('only reads events of entities the user may see', async () => {
-		await getAuditTableView('user-1', query);
+	test('is only available to admins', async () => {
+		mockIsAdmin.mockResolvedValue({ success: false, error: 'Permission denied' });
 
-		expect(mockGetRecipientsForAuditLog).toHaveBeenCalledWith('user-1');
-		expect(mockFindAuditEventPage).toHaveBeenCalledWith({
-			scopes: [{ entityType: 'recipient', entityIds: ['recipient-1', 'recipient-2'] }],
-			skip: 0,
-			take: 10,
-		});
-	});
-
-	test('returns nothing when the user may see nothing', async () => {
-		mockGetRecipientsForAuditLog.mockResolvedValue({ success: true, data: [] });
-
-		await expect(getAuditTableView('user-1', query)).resolves.toMatchObject({
-			success: true,
-			data: { tableRows: [], totalCount: 0 },
-		});
+		await expect(getAuditTableView('user-1', query)).resolves.toMatchObject({ success: false });
 		expect(mockFindAuditEventPage).not.toHaveBeenCalled();
 	});
 
-	test('diffs each row against the previous event, also from an earlier page', async () => {
+	test('pages, filters and searches in the database', async () => {
+		await getAuditTableView('user-1', { ...query, page: 2, search: ' max ', entityType: 'recipient' });
+
+		expect(mockFindAuditEventPage).toHaveBeenCalledWith({ entityType: 'recipient', search: 'max', skip: 10, take: 10 });
+		expect(mockFindAuditEventHistory).toHaveBeenCalledWith([{ entityType: 'recipient', entityId: 'recipient-1' }]);
+	});
+
+	test('diffs each row against the previous event and keeps the latest name of deleted entities', async () => {
 		await expect(getAuditTableView('user-1', query)).resolves.toMatchObject({
 			success: true,
 			data: {
-				totalCount: 2,
-				entityTypeFilterOptions: [{ value: 'recipient', label: 'Recipient' }],
+				totalCount: 3,
 				tableRows: [
 					{
 						id: 'v2',
-						entityTypeLabel: 'Recipient',
-						entityName: 'Ada Lovelace',
-						context: 'Program 1',
-						actorName: 'Ada Lovelace',
-						source: 'mobile-app',
+						entityType: 'recipient',
+						entityId: 'recipient-1',
+						entityName: 'Ada King',
+						actorName: 'Max Operator',
 						changes: [{ path: 'paymentInformation.phone.number', old: '+232111', new: '+232222' }],
 					},
 				],
 			},
 		});
-	});
-
-	test('searches names before paging and filters by type', async () => {
-		await getAuditTableView('user-1', { ...query, page: 2, search: 'grace' });
-
-		expect(mockFindAuditEventPage).toHaveBeenCalledWith({
-			scopes: [{ entityType: 'recipient', entityIds: ['recipient-2'] }],
-			skip: 10,
-			take: 10,
-		});
-
-		mockFindAuditEventPage.mockClear();
-		await getAuditTableView('user-1', { ...query, entityType: 'contributor' });
-		expect(mockFindAuditEventPage).not.toHaveBeenCalled();
 	});
 });

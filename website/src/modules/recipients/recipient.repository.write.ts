@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { recipientWithPaymentInformationSelect } from './recipient.repository.read';
 import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 
@@ -61,6 +61,14 @@ export const removeRecipientFromProgram = async (audit: AuditContext, recipientI
 		}),
 	);
 
+export const removeRecipientsFromProgram = async (audit: AuditContext, recipientIds: string[], programId: string) =>
+	auditedWrite({ entity: recipientEntity, context: audit, action: 'update', entityId: recipientIds }, (transaction) =>
+		transaction.recipient.updateMany({
+			where: { id: { in: recipientIds }, programId },
+			data: { programId: null },
+		}),
+	);
+
 export const deleteRecipient = async (audit: AuditContext, recipientId: string) =>
 	auditedWrite({ entity: recipientEntity, context: audit, action: 'delete', entityId: recipientId }, async (transaction) => {
 		const relations = await findRelationIds(transaction, recipientId);
@@ -108,11 +116,12 @@ const recipientAuditSnapshotSelect = {
 	},
 } satisfies Prisma.RecipientSelect;
 
-const recipientEntity: AuditedEntity = {
+export const recipientEntity = defineAuditedEntity({
 	type: 'recipient',
 	findSnapshot: (transaction, recipientId) =>
 		transaction.recipient.findUnique({ where: { id: recipientId }, select: recipientAuditSnapshotSelect }),
-};
+	getName: ({ contact }) => `${contact.firstName} ${contact.lastName}`,
+});
 
 const findRelationIds = async (transaction: Prisma.TransactionClient, recipientId: string) => {
 	const recipient = await transaction.recipient.findUniqueOrThrow({

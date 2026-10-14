@@ -1,6 +1,7 @@
 'use server';
 
 import { SubscriptionPaymentMethod } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import {
@@ -49,16 +50,16 @@ export const updateSubscriptionAmountAction = async (
 		return resultFail('Invalid subscription amount update');
 	}
 
-	const { contributorId, paymentMethod } = ownership.data;
+	const { audit, contributorId, paymentMethod } = ownership.data;
 	if (paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
-		return updateBankTransferAmount({
+		return updateBankTransferAmount(audit, {
 			contributorId,
 			subscriptionId: parsed.data.subscriptionId,
 			amount: parsed.data.amount,
 		});
 	}
 
-	return updateContributorSubscriptionAmount({
+	return updateContributorSubscriptionAmount(audit, {
 		contributorId,
 		subscriptionId: parsed.data.subscriptionId,
 		amount: parsed.data.amount,
@@ -96,16 +97,16 @@ export const cancelSubscriptionAction = async (input: unknown): Promise<Result<v
 		return ownership;
 	}
 
-	const { contributorId, paymentMethod } = ownership.data;
+	const { audit, contributorId, paymentMethod } = ownership.data;
 	if (paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
-		return cancelBankTransfer({
+		return cancelBankTransfer(audit, {
 			contributorId,
 			subscriptionId: parsed.data.subscriptionId,
 			reason: parsed.data.reason,
 		});
 	}
 
-	return cancelContributorSubscription({
+	return cancelContributorSubscription(audit, {
 		contributorId,
 		subscriptionId: parsed.data.subscriptionId,
 		reason: parsed.data.reason,
@@ -136,6 +137,7 @@ const resolveOwnedSubscriptionPaymentMethod = async (input: unknown) => {
 	return {
 		success: true as const,
 		data: {
+			audit: getSessionAuditContext(sessionResult.data),
 			contributorId: sessionResult.data.id,
 			stripeCustomerId: sessionResult.data.stripeCustomerId,
 			language: sessionResult.data.language,
