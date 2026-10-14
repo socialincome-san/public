@@ -1,7 +1,6 @@
 import { Prisma, ProgramPermission } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { CreateOrganizationInput, UpdateOrganizationInput } from './organization.schemas';
 import type { OrganizationMemberTableQuery, OrganizationTableQuery } from './organization.types';
 
 export const findActiveOrganizationId = async (userId: string) => {
@@ -189,101 +188,10 @@ export const findUsersByIds = async (userIds: string[]) =>
 		select: { id: true },
 	});
 
-export const createOrganizationFromEmail = async (email: string) =>
-	prisma.organization.create({
-		data: {
-			name: `${email.toLowerCase().trim()} organization`,
-		},
-		select: {
-			id: true,
-			name: true,
-		},
-	});
-
-export const createOrganization = async (input: CreateOrganizationInput) =>
-	prisma.$transaction(async (transaction) => {
-		const organization = await transaction.organization.create({
-			data: {
-				name: input.name,
-			},
-			select: {
-				id: true,
-				name: true,
-			},
-		});
-
-		const organizationAccesses = buildOrganizationAccessRows(organization.id, input.userIds);
-		if (organizationAccesses.length > 0) {
-			await transaction.organizationAccess.createMany({ data: organizationAccesses });
-		}
-
-		const programAccesses = buildProgramAccessRows(organization.id, input.ownedProgramIds, input.operatedProgramIds);
-		if (programAccesses.length > 0) {
-			await transaction.programAccess.createMany({ data: programAccesses });
-		}
-
-		return organization;
-	});
-
 export const findOrganizationIdentity = async (organizationId: string) =>
 	prisma.organization.findUnique({
 		where: { id: organizationId },
 		select: { id: true, name: true },
-	});
-
-export const updateOrganization = async (input: UpdateOrganizationInput) =>
-	prisma.$transaction(async (transaction) => {
-		const previousMembers = await transaction.organizationAccess.findMany({
-			where: { organizationId: input.id },
-			select: { userId: true },
-		});
-		const nextUserIds = new Set(input.userIds);
-		const removedUserIds = previousMembers.map(({ userId }) => userId).filter((userId) => !nextUserIds.has(userId));
-
-		const organization = await transaction.organization.update({
-			where: { id: input.id },
-			data: { name: input.name },
-			select: { id: true, name: true },
-		});
-
-		await transaction.organizationAccess.deleteMany({
-			where: { organizationId: input.id },
-		});
-		const organizationAccesses = buildOrganizationAccessRows(input.id, input.userIds);
-		if (organizationAccesses.length > 0) {
-			await transaction.organizationAccess.createMany({ data: organizationAccesses });
-		}
-
-		await transaction.programAccess.deleteMany({
-			where: { organizationId: input.id },
-		});
-		const programAccesses = buildProgramAccessRows(input.id, input.ownedProgramIds, input.operatedProgramIds);
-		if (programAccesses.length > 0) {
-			await transaction.programAccess.createMany({ data: programAccesses });
-		}
-
-		for (const removedUserId of removedUserIds) {
-			const user = await transaction.user.findUnique({
-				where: { id: removedUserId },
-				select: { activeOrganizationId: true },
-			});
-			if (user?.activeOrganizationId !== input.id) {
-				continue;
-			}
-
-			const remainingAccess = await transaction.organizationAccess.findFirst({
-				where: { userId: removedUserId },
-				select: { organizationId: true },
-				orderBy: { createdAt: 'asc' },
-			});
-
-			await transaction.user.update({
-				where: { id: removedUserId },
-				data: { activeOrganizationId: remainingAccess?.organizationId ?? null },
-			});
-		}
-
-		return organization;
 	});
 
 export const findOperatorProgramAccess = async (organizationId: string) =>
@@ -295,13 +203,6 @@ export const findOperatorProgramAccess = async (organizationId: string) =>
 		select: { id: true },
 	});
 
-export const updateOrganizationName = async (organizationId: string, name: string) =>
-	prisma.organization.update({
-		where: { id: organizationId },
-		data: { name },
-		select: { id: true, name: true },
-	});
-
 export const findOrganizationUsageCounts = async (organizationId: string) => {
 	const [activeUsersCount, expensesCount, programAccessesCount] = await Promise.all([
 		prisma.user.count({ where: { activeOrganizationId: organizationId } }),
@@ -311,35 +212,6 @@ export const findOrganizationUsageCounts = async (organizationId: string) => {
 
 	return { activeUsersCount, expensesCount, programAccessesCount };
 };
-
-export const deleteOrganization = async (organizationId: string) =>
-	prisma.$transaction(async (transaction) => {
-		await transaction.organizationAccess.deleteMany({
-			where: { organizationId },
-		});
-		await transaction.organization.delete({
-			where: { id: organizationId },
-		});
-	});
-
-const buildOrganizationAccessRows = (organizationId: string, userIds: string[]) =>
-	Array.from(new Set(userIds)).map((userId) => ({
-		organizationId,
-		userId,
-	}));
-
-const buildProgramAccessRows = (organizationId: string, ownedProgramIds: string[], operatedProgramIds: string[]) => [
-	...Array.from(new Set(ownedProgramIds)).map((programId) => ({
-		organizationId,
-		programId,
-		permission: ProgramPermission.owner,
-	})),
-	...Array.from(new Set(operatedProgramIds)).map((programId) => ({
-		organizationId,
-		programId,
-		permission: ProgramPermission.operator,
-	})),
-];
 
 const buildOrganizationOrderBy = (query: OrganizationTableQuery): Prisma.OrganizationOrderByWithRelationInput[] => {
 	const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

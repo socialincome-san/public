@@ -100,6 +100,8 @@ const auditedModels = [
 	'focus',
 	'mobileMoneyProvider',
 	'program',
+	'user',
+	'organization',
 ];
 
 const auditedModelWriteSelector = {

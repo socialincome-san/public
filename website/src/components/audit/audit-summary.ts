@@ -258,6 +258,14 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			surveySchedules: 'Survey schedules',
 		},
 	},
+	organization: {
+		label: 'Organization',
+		namePaths: ['name'],
+		fieldLabels: {
+			name: 'Name',
+			isOperatorFallback: 'Operator fallback',
+		},
+	},
 	user: {
 		label: 'User',
 		namePaths: ['contact.firstName', 'contact.lastName'],
