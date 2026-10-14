@@ -136,6 +136,21 @@ describe('getEntityAuditTableView', () => {
 		});
 	});
 
+	test('lists no baseline, but diffs the first change against it', async () => {
+		mockFindAuditEventHistory.mockResolvedValue([
+			event('v0', 'baseline', { firstName: 'Ada' }, 'Ada'),
+			event('v1', 'update', { firstName: 'Augusta' }, 'Augusta'),
+		]);
+
+		await expect(getEntityAuditTableView(session, entityQuery)).resolves.toMatchObject({
+			success: true,
+			data: {
+				totalCount: 1,
+				tableRows: [{ id: 'v1', changes: [{ path: 'firstName', old: 'Ada', new: 'Augusta' }] }],
+			},
+		});
+	});
+
 	test('shows campaigns only to operators of their program', async () => {
 		mockGetAccessiblePrograms.mockResolvedValue({
 			success: true,

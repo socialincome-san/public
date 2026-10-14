@@ -107,13 +107,15 @@ export const getEntityAuditTableView = async (
 		const history = await auditRepository.findAuditEventHistory([
 			{ entityType: query.entityType, entityId: query.entityId },
 		]);
+		// Baselines are only the starting point for diffs, not changes.
+		const changes = history.filter(({ action }) => action !== 'baseline');
 		const skip = (query.page - 1) * query.pageSize;
-		const tableRows = history
+		const tableRows = changes
 			.toReversed()
 			.slice(skip, skip + query.pageSize)
 			.map((event) => toTableRow(event, history));
 
-		return resultOk({ tableRows, totalCount: history.length });
+		return resultOk({ tableRows, totalCount: changes.length });
 	} catch (error) {
 		console.error('Could not fetch entity audit events', {
 			userId: session.id,
