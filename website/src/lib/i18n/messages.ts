@@ -1,4 +1,5 @@
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
+import addRecipientsFromPool from './locales/en/add-recipients-from-pool.json';
 import common from './locales/en/common.json';
 import countries from './locales/en/countries.json';
 import createProgramWizard from './locales/en/create-program-wizard.json';
@@ -18,6 +19,7 @@ import websiteOpenSource from './locales/en/website-open-source.json';
 import websiteSurvey from './locales/en/website-survey.json';
 
 const englishMessages = {
+	'add-recipients-from-pool': addRecipientsFromPool,
 	common,
 	countries,
 	'create-program-wizard': createProgramWizard,
@@ -41,6 +43,7 @@ export type Messages = typeof englishMessages;
 
 // Only the namespaces read by `useTranslations` / `useMessages` are sent to the browser.
 export const pickClientMessages = (messages: Messages) => ({
+	'add-recipients-from-pool': messages['add-recipients-from-pool'],
 	common: messages.common,
 	countries: messages.countries,
 	'create-program-wizard': messages['create-program-wizard'],

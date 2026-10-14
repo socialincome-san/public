@@ -4,7 +4,9 @@ import { prisma } from '@/lib/database/prisma';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { CandidateCreateInput, CandidateUpdateInput } from './candidate.schemas';
-import type { CandidatesTableQuery } from './candidate.types';
+import type { CandidatesTableQuery, UnassignedCandidateFilter } from './candidate.types';
+
+const INSUFFICIENT_CANDIDATES = 'INSUFFICIENT_CANDIDATES';
 
 export const findCandidateById = async (candidateId: string) =>
 	prisma.recipient.findUnique({
@@ -166,29 +168,59 @@ export const deleteAddressIfOrphaned = async (addressId: string) => {
 	return true;
 };
 
-export const countCandidates = async (
-	focuses?: string[],
-	profiles?: Profile[],
-	countryCode?: CountryCode | null,
-	localPartnerIds?: string[],
-) => prisma.recipient.count({ where: buildCandidateWhere(focuses, profiles, countryCode, localPartnerIds) });
+export const countCandidates = async (filter: UnassignedCandidateFilter) =>
+	prisma.recipient.count({ where: buildCandidateWhere(filter) });
 
-export const findCandidateIdsForAssignment = async (
-	focuses: string[] | undefined,
-	profiles: Profile[] | undefined,
-	countryCode: CountryCode,
-	localPartnerIds?: string[],
-) =>
-	prisma.recipient.findMany({
-		where: buildCandidateWhere(focuses, profiles, countryCode, localPartnerIds),
-		select: { id: true },
+export const findLocalPartnersWithUnassignedCandidates = async (countryCode: CountryCode) =>
+	prisma.localPartner.findMany({
+		where: {
+			recipients: {
+				some: buildCandidateWhere({ countryCode, focusIds: [], profiles: [], localPartnerIds: [] }),
+			},
+		},
+		select: { id: true, name: true },
+		orderBy: { name: 'asc' },
 	});
 
-export const updateCandidateProgramAssignments = async (candidateIds: string[], programId: string) =>
-	prisma.recipient.updateMany({
-		where: { id: { in: candidateIds } },
-		data: { programId },
-	});
+export const updateUnassignedCandidateAssignments = async (
+	filter: UnassignedCandidateFilter,
+	programId: string,
+	amount: number,
+): Promise<{ outcome: 'assigned'; assigned: number } | { outcome: 'insufficient' }> => {
+	try {
+		return await prisma.$transaction(async (transaction) => {
+			const candidates = await transaction.recipient.findMany({
+				where: buildCandidateWhere(filter),
+				select: { id: true },
+			});
+			if (candidates.length < amount) {
+				throw new Error(INSUFFICIENT_CANDIDATES);
+			}
+
+			// SKIP LOCKED lets concurrent assignments pick disjoint candidates instead of colliding on the same rows.
+			const assigned = await transaction.$executeRaw`
+				UPDATE recipient SET program_id = ${programId}, updated_at = now()
+				WHERE id IN (
+					SELECT id FROM recipient
+					WHERE id = ANY(${candidates.map(({ id }) => id)}) AND program_id IS NULL
+					ORDER BY random()
+					LIMIT ${amount}
+					FOR UPDATE SKIP LOCKED
+				)`;
+			if (assigned !== amount) {
+				throw new Error(INSUFFICIENT_CANDIDATES);
+			}
+
+			return { outcome: 'assigned' as const, assigned };
+		});
+	} catch (error) {
+		if (error instanceof Error && error.message === INSUFFICIENT_CANDIDATES) {
+			return { outcome: 'insufficient' };
+		}
+
+		throw error;
+	}
+};
 
 type CandidateUpdatePersistenceContext = {
 	contactId: string;
@@ -400,51 +432,69 @@ const buildCountryFilter = (countryCode: CountryCode): Prisma.RecipientWhereInpu
 	],
 });
 
-const buildCandidateWhere = (
-	focuses?: string[],
-	profiles?: Profile[],
-	countryCode?: CountryCode | null,
-	localPartnerIds?: string[],
-): Prisma.RecipientWhereInput => {
+const buildCandidateWhere = (filter: UnassignedCandidateFilter): Prisma.RecipientWhereInput => {
 	const andFilters: Prisma.RecipientWhereInput[] = [];
-	if (countryCode) {
-		andFilters.push(buildCountryFilter(countryCode));
+	if (filter.countryCode) {
+		andFilters.push(buildCountryFilter(filter.countryCode));
 	}
-	if (localPartnerIds?.length) {
-		andFilters.push({ localPartnerId: { in: localPartnerIds } });
+	if (filter.localPartnerIds.length) {
+		andFilters.push({ localPartnerId: { in: filter.localPartnerIds } });
 	}
-	if (focuses?.length) {
-		andFilters.push(
-			...focuses.map((focusId) => ({
+	if (filter.focusIds.length) {
+		andFilters.push({
+			OR: filter.focusIds.map((focusId) => ({
 				localPartner: { focuses: { some: { focusId } } },
 			})),
-		);
+		});
 	}
-	if (profiles?.length) {
-		const contactFilters: Prisma.ContactWhereInput[] = [];
-		if (profiles.includes(Profile.male)) {
-			contactFilters.push({ gender: Gender.male });
-		}
-		if (profiles.includes(Profile.female)) {
-			contactFilters.push({ gender: Gender.female });
-		}
-		if (profiles.includes(Profile.youth)) {
-			const currentDate = now();
-			contactFilters.push({
-				dateOfBirth: {
-					gte: new Date(currentDate.getFullYear() - 25, currentDate.getMonth(), currentDate.getDate()),
-				},
-			});
-		}
-		if (contactFilters.length) {
-			andFilters.push({ contact: { AND: contactFilters } });
-		}
+
+	const profileFilter = buildProfileFilter(filter.profiles);
+	if (profileFilter) {
+		andFilters.push(profileFilter);
 	}
 
 	return {
 		programId: null,
 		...(andFilters.length ? { AND: andFilters } : {}),
 	};
+};
+
+const buildProfileFilter = (profiles: Profile[]): Prisma.RecipientWhereInput | null => {
+	const genderFilters: Prisma.ContactWhereInput[] = [];
+	if (profiles.includes(Profile.male)) {
+		genderFilters.push({ gender: Gender.male });
+	}
+	if (profiles.includes(Profile.female)) {
+		genderFilters.push({ gender: Gender.female });
+	}
+
+	const contactFilters: Prisma.ContactWhereInput[] = [];
+	if (genderFilters.length === 1) {
+		const [genderFilter] = genderFilters;
+		if (genderFilter) {
+			contactFilters.push(genderFilter);
+		}
+	} else if (genderFilters.length > 1) {
+		contactFilters.push({ OR: genderFilters });
+	}
+	if (profiles.includes(Profile.youth)) {
+		const currentDate = now();
+		contactFilters.push({
+			dateOfBirth: {
+				gte: new Date(currentDate.getFullYear() - 25, currentDate.getMonth(), currentDate.getDate()),
+			},
+		});
+	}
+	if (contactFilters.length === 1) {
+		const [contactFilter] = contactFilters;
+
+		return contactFilter ? { contact: contactFilter } : null;
+	}
+	if (contactFilters.length > 1) {
+		return { contact: { AND: contactFilters } };
+	}
+
+	return null;
 };
 
 const buildCandidateCreateData = (input: CandidateCreateInput, localPartnerId: string): Prisma.RecipientCreateInput => {
