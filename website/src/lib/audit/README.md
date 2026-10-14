@@ -65,8 +65,11 @@ on entity name, entity id and actor name. A name search lists every
 event of a matching entity. Each row is diffed against the entity's
 previous snapshot (`diffSnapshots`, paths like
 `paymentInformation.phone.number`) and shows the entity's latest name.
-Deleted entities stay listed. Type labels and field labels come from
-`auditEntityTypes` in `src/components/audit/audit-summary.ts`.
+Deleted entities stay listed. Entities that existed before auditing have
+a `baseline` event with their state at that time; baselines are not
+listed, they only give the first change its diff. Type labels and field
+labels come from `auditEntityTypes` in
+`src/components/audit/audit-summary.ts`.
 
 ## Notes
 

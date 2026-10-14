@@ -27,6 +27,7 @@ describe('findAuditEventPage', () => {
 		expect(mockCount).toHaveBeenCalledWith({
 			where: {
 				entityType: 'recipient',
+				action: { not: 'baseline' },
 				OR: [
 					{ entityId: { contains: 'ada', mode: 'insensitive' } },
 					{ actorName: { contains: 'ada', mode: 'insensitive' } },
@@ -40,6 +41,6 @@ describe('findAuditEventPage', () => {
 		await findAuditEventPage({ search: '', skip: 0, take: 10 });
 
 		expect(mockFindMany).toHaveBeenCalledTimes(1);
-		expect(mockCount).toHaveBeenCalledWith({ where: { entityType: undefined, OR: undefined } });
+		expect(mockCount).toHaveBeenCalledWith({ where: { entityType: undefined, action: { not: 'baseline' }, OR: undefined } });
 	});
 });
