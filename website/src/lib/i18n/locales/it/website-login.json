@@ -2,26 +2,54 @@
 	"metadata": {
 		"title": "Login | Social Income"
 	},
-	"title": "Accedi al tuo account",
-	"email": "Email",
-	"signing-in": "Accedendo...",
-	"password": "Password",
-	"submit-button": "Invia link per accedere",
+	"header": {
+		"login-button": "Accedi"
+	},
+	"page": {
+		"title": "Accedi a Social Income",
+		"description": "Un solo accesso per contributori, partner e team di programma. Ti portiamo nel posto giusto.",
+		"email": "Email",
+		"submit-button": "Invia link per accedere",
+		"sending": "Invio in corso…",
+		"image-alt": "Donne che portano merci sulla testa in una strada del mercato in Sierra Leone",
+		"quote": "Viviamo in un mondo pieno di opportunità: facciamo in modo di condividere questo privilegio con tutti gli altri.",
+		"quote-author": "Carlos, Stati Uniti",
+		"support": "Problemi di accesso? Contatta <link>support@socialincome.org</link>"
+	},
+	"destinations": {
+		"title": "Dove arriverai",
+		"dashboard": {
+			"title": "Dashboard",
+			"description": "Per i contributori: contributi e ricevute"
+		},
+		"partner-space": {
+			"title": "Partner Space",
+			"description": "Per i partner locali"
+		},
+		"portal": {
+			"title": "Portal",
+			"description": "Per le organizzazioni che gestiscono programmi"
+		}
+	},
+	"sent": {
+		"title": "Controlla la tua casella di posta",
+		"description": "Se esiste un account per <strong>{email}</strong>, ti invieremo a breve un link di accesso via e-mail.",
+		"retry": "Usa un'altra email",
+		"hint": "Non è arrivato nulla? Controlla la cartella spam."
+	},
 	"confirm-login": {
 		"title": "Completa l'accesso",
 		"body": "Clicca il pulsante qui sotto per completare l'accesso.",
 		"cta": "Completa l'accesso",
 		"return-home": "Torna alla home"
 	},
-	"flyout": {
-		"login-button": "Accedi",
-		"title": "Accedi",
-		"magic-link-description": "Ti invieremo un link magico per accedere.",
-		"sending": "Invio in corso...",
-		"sent-message": "Se esiste un account per {email}, ti invieremo a breve un link di accesso via e-mail.",
-		"retry": "Riprova",
-		"support-prefix": "Se non arriva, contatta",
-		"no-account": "Non hai un account?"
+	"finish-login": {
+		"checking": "Verifica del link…",
+		"signing-in": "Accesso in corso…",
+		"signing-in-description": "Ci vuole solo un momento.",
+		"error-title": "Accesso non riuscito",
+		"error-description": "Il link non è valido o è già stato usato. Richiedine uno nuovo per accedere.",
+		"error-cta": "Richiedi un nuovo link"
 	},
 	"error": {
 		"invalid-email": "Indirizzo email non valido"

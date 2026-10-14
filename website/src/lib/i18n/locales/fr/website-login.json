@@ -2,26 +2,54 @@
 	"metadata": {
 		"title": "Connexion | Social Income"
 	},
-	"title": "Connexion",
-	"email": "E-mail",
-	"signing-in": "Connexion...",
-	"password": "Mot de passe",
-	"submit-button": "Envoyer le lien de connexion",
+	"header": {
+		"login-button": "Connexion"
+	},
+	"page": {
+		"title": "Se connecter à Social Income",
+		"description": "Une seule connexion pour les contributeurs, les partenaires et les équipes de programme. Nous t'emmenons au bon endroit.",
+		"email": "E-mail",
+		"submit-button": "Envoyer le lien de connexion",
+		"sending": "Envoi en cours…",
+		"image-alt": "Des femmes portant des marchandises sur la tête dans une rue commerçante en Sierra Leone",
+		"quote": "Nous vivons dans un monde d'opportunités, veillons à partager ce privilège avec tout le monde.",
+		"quote-author": "Carlos, États-Unis",
+		"support": "Un problème de connexion ? Contacte <link>support@socialincome.org</link>"
+	},
+	"destinations": {
+		"title": "Où tu arriveras",
+		"dashboard": {
+			"title": "Dashboard",
+			"description": "Pour les contributeurs : contributions et reçus"
+		},
+		"partner-space": {
+			"title": "Partner Space",
+			"description": "Pour les partenaires locaux"
+		},
+		"portal": {
+			"title": "Portal",
+			"description": "Pour les organisations qui gèrent des programmes"
+		}
+	},
+	"sent": {
+		"title": "Vérifie ta boîte mail",
+		"description": "Si un compte existe pour <strong>{email}</strong>, tu recevras bientôt un lien de connexion par e-mail.",
+		"retry": "Utiliser une autre adresse e-mail",
+		"hint": "Rien reçu ? Vérifie ton dossier spam."
+	},
 	"confirm-login": {
 		"title": "Terminer la connexion",
 		"body": "Clique sur le bouton ci-dessous pour terminer la connexion.",
 		"cta": "Terminer la connexion",
 		"return-home": "Retour à l'accueil"
 	},
-	"flyout": {
-		"login-button": "Connexion",
-		"title": "Se connecter",
-		"magic-link-description": "Nous t’enverrons un lien magique pour te connecter.",
-		"sending": "Envoi en cours...",
-		"sent-message": "Si un compte existe pour {email}, tu recevras bientôt un lien de connexion par e-mail.",
-		"retry": "Réessayer",
-		"support-prefix": "Si tu ne le reçois pas, contacte",
-		"no-account": "Tu n’as pas de compte ?"
+	"finish-login": {
+		"checking": "Vérification du lien…",
+		"signing-in": "Connexion en cours…",
+		"signing-in-description": "Cela ne prend qu'un instant.",
+		"error-title": "La connexion a échoué",
+		"error-description": "Le lien est invalide ou a déjà été utilisé. Demandes-en un nouveau pour te connecter.",
+		"error-cta": "Demander un nouveau lien"
 	},
 	"error": {
 		"invalid-email": "Adresse e-mail invalide"

@@ -2,26 +2,54 @@
 	"metadata": {
 		"title": "Login | Social Income"
 	},
-	"title": "Sign in to your account",
-	"email": "Email",
-	"signing-in": "Signing in...",
-	"password": "Password",
-	"submit-button": "Send login link",
+	"header": {
+		"login-button": "Login"
+	},
+	"page": {
+		"title": "Sign in to Social Income",
+		"description": "One login for contributors, partners and program teams. We'll take you to the right place.",
+		"email": "Email",
+		"submit-button": "Send login link",
+		"sending": "Sending…",
+		"image-alt": "Women carrying goods on their heads through a market street in Sierra Leone",
+		"quote": "We are living in a world of opportunities, let's make sure we share this privilege with everyone else.",
+		"quote-author": "Carlos, United States",
+		"support": "Trouble signing in? Contact <link>support@socialincome.org</link>"
+	},
+	"destinations": {
+		"title": "Where you'll land",
+		"dashboard": {
+			"title": "Dashboard",
+			"description": "For contributors: contributions and receipts"
+		},
+		"partner-space": {
+			"title": "Partner Space",
+			"description": "For local partners"
+		},
+		"portal": {
+			"title": "Portal",
+			"description": "For organizations running programs"
+		}
+	},
+	"sent": {
+		"title": "Check your inbox",
+		"description": "If an account exists for <strong>{email}</strong>, we'll email you a login link shortly.",
+		"retry": "Use a different email",
+		"hint": "Nothing arrived? Check your spam folder."
+	},
 	"confirm-login": {
 		"title": "Complete sign in",
 		"body": "Click the button below to complete sign in.",
 		"cta": "Complete sign in",
 		"return-home": "Return home"
 	},
-	"flyout": {
-		"login-button": "Login",
-		"title": "Sign in",
-		"magic-link-description": "We'll send you a magic link to sign in.",
-		"sending": "Sending...",
-		"sent-message": "If an account exists for {email}, we'll email you a login link shortly.",
-		"retry": "Retry",
-		"support-prefix": "If it doesn't arrive, contact",
-		"no-account": "Don't have an account?"
+	"finish-login": {
+		"checking": "Checking your link…",
+		"signing-in": "Signing you in…",
+		"signing-in-description": "This only takes a moment.",
+		"error-title": "Sign in failed",
+		"error-description": "The link is invalid or has already been used. Request a new one to sign in.",
+		"error-cta": "Request a new link"
 	},
 	"error": {
 		"invalid-email": "Invalid email address"
