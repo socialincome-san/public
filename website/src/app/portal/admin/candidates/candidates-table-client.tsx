@@ -5,6 +5,7 @@ import { CsvUploadDialog } from '@/components/data-table/clients/csv-upload-dial
 import { makeCandidateColumns } from '@/components/data-table/columns/candidates';
 import { candidatesTableConfig, getCandidatesTableFilters } from '@/components/data-table/configs/candidates-table.config';
 import type { ActionMenuItem } from '@/components/data-table/elements/action-menu';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableTranslator } from '@/components/data-table/table-config.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
@@ -46,26 +47,23 @@ export const CandidatesTableClient = ({
 		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, t?: DataTableTranslator) =>
 			makeCandidateColumns(hideProgramName, hideLocalPartner, t, isReadOnly),
 	};
-	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
-	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();
+	const candidateDialog = useRecordDialog('candidateId');
 	const [candidateError, setCandidateError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
 
 	const openCreateDialog = () => {
 		setCandidateError(null);
-		setSelectedCandidateId(undefined);
-		setIsCandidateDialogOpen(true);
+		candidateDialog.openCreate();
 	};
 
-	const openEditDialog = (_row: CandidatesTableViewRow) => {
+	const openEditDialog = (row: CandidatesTableViewRow) => {
 		setCandidateError(null);
-		setSelectedCandidateId(_row.id);
-		setIsCandidateDialogOpen(true);
+		candidateDialog.openRecord(row.id);
 	};
 
 	const closeCandidateDialog = () => {
-		setIsCandidateDialogOpen(false);
+		candidateDialog.close();
 		setCandidateError(null);
 	};
 
@@ -136,9 +134,9 @@ export const CandidatesTableClient = ({
 
 			{!isReadOnly && (
 				<CandidateDialog
-					open={isCandidateDialogOpen}
+					open={candidateDialog.open}
 					onOpenChange={closeCandidateDialog}
-					candidateId={selectedCandidateId}
+					candidateId={candidateDialog.recordId}
 					sessionType={sessionType}
 					errorMessage={candidateError}
 					onError={setCandidateError}

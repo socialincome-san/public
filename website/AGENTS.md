@@ -39,6 +39,10 @@ Module files (`src/modules/recipients` is the reference):
 - `*.repository.ts`: the only Prisma access. Exports start with
   `find|create|update|delete|remove|count|group`, use `select` (never
   `include`), return raw data.
+- `*.repository.read.ts` / `*.repository.write.ts`: audited modules
+  (recipients) split their repository. Each write export takes an
+  `AuditContext` first and writes through `auditedWrite`; lint rejects
+  writes to audited models elsewhere. See `src/lib/audit/README.md`.
 - `*.permissions.ts`: pure predicates `can…|has…|is…|assert…`.
 - `*.schemas.ts`: Zod schemas named `…Schema` and their inferred types.
 - `*.types.ts`: serializable DTOs and inert constants, no functions.

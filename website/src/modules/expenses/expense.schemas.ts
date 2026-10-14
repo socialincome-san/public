@@ -1,4 +1,5 @@
 import { ExpenseType } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 
 const requiredTrimmedString = (label: string) => z.string().trim().min(1, `${label} is required.`);
@@ -19,6 +20,10 @@ export const expenseUpdateInputSchema = expenseCreateInputSchema.extend({
 });
 
 export const expenseIdSchema = requiredTrimmedString('Expense id');
+
+export const expenseTableQuerySchema = tableQuerySchema.extend({
+	organizationId: tableQueryFilterSchema,
+});
 
 export type ExpenseCreateInput = z.infer<typeof expenseCreateInputSchema>;
 export type ExpenseUpdateInput = z.infer<typeof expenseUpdateInputSchema>;

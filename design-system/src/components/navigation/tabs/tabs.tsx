@@ -40,4 +40,16 @@ const TabsTrigger = (props: WithoutClassName<React.ComponentProps<typeof TabsPri
 		/>
 	);
 };
-export { Tabs, TabsList, TabsTrigger };
+
+// Inactive panels stay in the DOM when rendered with `forceMount`, so their state survives tab switches
+const TabsContent = (props: WithoutClassName<React.ComponentProps<typeof TabsPrimitive.Content>>) => {
+	return (
+		<TabsPrimitive.Content
+			data-slot="tabs-content"
+			className="focus-visible:ring-ring/50 rounded-sm outline-none focus-visible:ring-[3px] data-[state=inactive]:hidden"
+			{...props}
+		/>
+	);
+};
+
+export { Tabs, TabsContent, TabsList, TabsTrigger };

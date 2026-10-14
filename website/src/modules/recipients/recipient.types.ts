@@ -137,6 +137,11 @@ export type RecipientLifecycleStatusFromExpectedIntervalsInput = {
 	nowDate: Date;
 };
 
+export type RecipientFilterOption = {
+	id: string;
+	name: string;
+};
+
 export type RecipientTableViewRow = {
 	id: string;
 	firebaseAuthUserId: string;
@@ -166,6 +171,7 @@ export type RecipientTableQuery = {
 	sortDirection?: 'asc' | 'desc';
 	programId?: string;
 	recipientStatus?: string;
+	localPartnerId?: string;
 };
 
 export type RecipientProgramFilterOption = {
@@ -178,6 +184,7 @@ export type RecipientPaginatedTableView = {
 	totalCount: number;
 	permission: ProgramPermission;
 	programFilterOptions: RecipientProgramFilterOption[];
+	localPartnerFilterOptions: { id: string; name: string }[];
 };
 
 export type PublicRecipientTableViewRow = {

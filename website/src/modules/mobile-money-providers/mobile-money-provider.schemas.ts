@@ -1,4 +1,5 @@
 import { PayoutProcess } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import z from 'zod';
 
 const requiredTrimmedString = (label: string) => z.string().trim().min(1, `${label} is required.`);
@@ -14,6 +15,11 @@ export const mobileMoneyProviderUpdateSchema = mobileMoneyProviderCreateSchema.e
 });
 
 export const mobileMoneyProviderIdSchema = requiredTrimmedString('Mobile money provider id');
+
+export const mobileMoneyProviderTableQuerySchema = tableQuerySchema.extend({
+	countryId: tableQueryFilterSchema,
+	parentProviderId: tableQueryFilterSchema,
+});
 
 export const mobileMoneyProviderSessionTypeSchema = z.enum(['user', 'local-partner', 'contributor']);
 

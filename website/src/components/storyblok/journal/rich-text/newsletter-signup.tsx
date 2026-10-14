@@ -1,5 +1,6 @@
 'use client';
 
+import { trackEvent } from '@/lib/analytics/analytics';
 import type { LanguageCode } from '@/lib/types/language';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,7 +32,13 @@ export const NewsletterSignup = ({ lang }: Props) => {
 		};
 
 		try {
-			await subscribeToNewsletterAction(subscription);
+			const result = await subscribeToNewsletterAction(subscription);
+			if (!result.success) {
+				toast.error(t('popup.toast-failure'));
+
+				return;
+			}
+			trackEvent('newsletter_signup_completed');
 			toast.success(t('popup.toast-success'));
 			form.reset();
 		} catch {

@@ -38,7 +38,12 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency }: Pro
 			}}
 			renderDonateAction={(closeMenu) => (
 				<SignedOutSlot sessions={sessions} scope={scope}>
-					<OpenDonationWizardButton label={tDonate('donation-form.donate-now')} size="md" onBeforeOpen={closeMenu} />
+					<OpenDonationWizardButton
+						label={tDonate('donation-form.donate-now')}
+						size="md"
+						onBeforeOpen={closeMenu}
+						analyticsEvent="donate_nav_click"
+					/>
 				</SignedOutSlot>
 			)}
 			footerControls={

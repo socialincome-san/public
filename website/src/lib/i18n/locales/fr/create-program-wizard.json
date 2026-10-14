@@ -7,7 +7,6 @@
 		"continue": "Continuer",
 		"retry": "Reessayer",
 		"search": "Rechercher",
-		"coming_soon": "Bientot disponible",
 		"recommended": "Recommande",
 		"months": "mois",
 		"per_month": "/ mois",
@@ -68,17 +67,6 @@
 		}
 	},
 	"step2": {
-		"program_management": {
-			"title": "Gestion du programme",
-			"social_income": {
-				"label": "Programme gere par Social Income",
-				"description": "Social Income gere les beneficiaires, les paiements et les operations."
-			},
-			"self_run": {
-				"label": "Gerer le programme vous-meme",
-				"description": "Vous gerez les beneficiaires et les operations de maniere autonome."
-			}
-		},
 		"recipient_selection": {
 			"title": "Selection des beneficiaires",
 			"universal": {
@@ -89,16 +77,13 @@
 			},
 			"targeted": {
 				"label": "Approche ciblee",
-				"description": "Le soutien est fourni aux beneficiaires qui correspondent aux axes et profils selectionnes.",
+				"description": "Le soutien est fourni aux beneficiaires qui correspondent aux axes, profils ou partenaires locaux selectionnes.",
 				"matching": "beneficiaires correspondent au pays et aux filtres selectionnes",
 				"empty_error": "Veuillez ajuster les filtres afin qu'au moins un beneficiaire corresponde."
 			},
 			"focuses": "Axes",
 			"profiles": "Profils",
-			"custom": {
-				"label": "Choisir vos propres beneficiaires",
-				"description": "Selectionnez et gerez manuellement des beneficiaires individuels."
-			}
+			"local_partners": "Partenaires locaux"
 		},
 		"profiles": {
 			"male": "Homme",
@@ -109,8 +94,8 @@
 	"step3": {
 		"recipients": {
 			"title": "Beneficiaires au demarrage",
-			"no_candidates": "Aucun candidat n'est actuellement disponible dans le pool. Revenez a l'etape 2 et ajustez les axes selectionnes ou assurez-vous que des candidats sont disponibles.",
-			"max_hint": "Le maximum est determine par le nombre de candidats actuellement disponibles pour les axes selectionnes."
+			"no_candidates": "Aucun candidat n'est actuellement disponible dans le pool. Revenez a l'etape 2 et ajustez les filtres selectionnes ou assurez-vous que des candidats sont disponibles.",
+			"max_hint": "Le maximum est determine par le nombre de candidats actuellement disponibles pour les filtres selectionnes."
 		},
 		"indirect_notice": {
 			"prefix": "{recipients} beneficiaires profitent",

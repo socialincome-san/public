@@ -11,12 +11,14 @@ describe('program schemas', () => {
 			payoutInterval: PayoutInterval.monthly,
 			targetFocuses: ['focus-1'],
 			targetProfiles: [Profile.female],
+			targetLocalPartnerIds: ['partner-1'],
 		});
 
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.amountOfRecipientsForStart).toBe(10);
 			expect(result.data.payoutPerInterval).toBe(25);
+			expect(result.data.targetLocalPartnerIds).toEqual(['partner-1']);
 		}
 	});
 

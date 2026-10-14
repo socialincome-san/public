@@ -20,3 +20,9 @@ export const getStoryblokCampaignTitleForSlug = (campaigns: CampaignStory[], slu
 
 	return campaign ? getCampaignTitle(campaign.content) : slug;
 };
+
+export const getStoryblokCampaignLabel = (campaigns: CampaignStory[], campaign: { id: string; slug: string | null }) => {
+	const slug = campaign.slug?.trim();
+
+	return slug ? getStoryblokCampaignTitleForSlug(campaigns, slug) : `Campaign ${campaign.id}`;
+};

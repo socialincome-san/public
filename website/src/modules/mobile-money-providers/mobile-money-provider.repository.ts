@@ -13,11 +13,15 @@ export const findMobileMoneyProviderById = async (providerId: string) =>
 
 export const findPaginatedMobileMoneyProviders = async (query: MobileMoneyProviderTableQuery) => {
 	const search = query.search.trim();
-	const where: Prisma.MobileMoneyProviderWhereInput | undefined = search
-		? {
-				OR: [{ id: { contains: search, mode: 'insensitive' } }, { name: { contains: search, mode: 'insensitive' } }],
-			}
-		: undefined;
+	const where: Prisma.MobileMoneyProviderWhereInput = {
+		...(query.countryId ? { countries: { some: { countryId: query.countryId } } } : {}),
+		...(query.parentProviderId ? { parentId: query.parentProviderId } : {}),
+		...(search
+			? {
+					OR: [{ id: { contains: search, mode: 'insensitive' } }, { name: { contains: search, mode: 'insensitive' } }],
+				}
+			: {}),
+	};
 
 	const [providers, totalCount] = await Promise.all([
 		prisma.mobileMoneyProvider.findMany({

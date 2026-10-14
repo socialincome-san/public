@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { SiteFooter } from './site-footer';
+import { SiteFooter, SiteFooterButton } from './site-footer';
 
 const meta = {
 	title: 'Navigation/SiteFooter',
@@ -59,5 +59,12 @@ export const Default: Story = {
 			},
 		],
 		copyright: '© 2026 Social Income. All rights reserved.',
+	},
+};
+
+export const WithLegalAction: Story = {
+	args: {
+		...Default.args,
+		legal: <SiteFooterButton>Cookie settings</SiteFooterButton>,
 	},
 };

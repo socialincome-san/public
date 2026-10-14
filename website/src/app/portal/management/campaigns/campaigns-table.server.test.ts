@@ -85,6 +85,20 @@ describe('campaign table server helpers', () => {
 		expect(result.tableRows.map(({ title }) => title)).toEqual(['Campaign two', 'Campaign one']);
 	});
 
+	it('includes campaigns without a slug and does not generate a public link', () => {
+		const result = getCampaignTableView([{ ...entries[0], id: 'internal-campaign', slug: null }], [], [], {
+			page: 1,
+			pageSize: 10,
+			search: '',
+		});
+		expect(result.tableRows[0]).toMatchObject({
+			id: 'internal-campaign',
+			slug: null,
+			title: 'Campaign internal-campaign',
+			link: null,
+		});
+	});
+
 	it('searches and sorts using the CMS program title before paginating', () => {
 		const result = getCampaignTableView(entries, campaigns, [createProgram('health', 'CMS health')], {
 			page: 1,

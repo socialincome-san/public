@@ -102,16 +102,15 @@ export const findCampaignsForPublicStats = async (campaignIds: string[]) =>
 		select: campaignStatsSelect,
 	});
 
-export const findEditableCampaignOptions = async (programIds: string[]) =>
-	prisma.campaign.findMany({
-		where: { programId: { in: programIds }, slug: { not: null } },
+export const findCampaignFilterOption = async (campaignId: string, programIds: string[]) =>
+	prisma.campaign.findFirst({
+		where: { id: campaignId, programId: { in: programIds } },
 		select: { id: true, slug: true },
-		orderBy: { slug: 'asc' },
 	});
 
 export const findCampaignTableEntries = async (programIds: string[]) =>
 	prisma.campaign.findMany({
-		where: { programId: { in: programIds }, slug: { not: null } },
+		where: { programId: { in: programIds } },
 		select: campaignTableSelect,
 	});
 

@@ -6,6 +6,7 @@ import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { CampaignTableViewRow } from '@/modules/campaigns/campaign.types';
+import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 import { CopyUrlCell } from '../elements/copy-url-cell';
 
 export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
@@ -45,10 +46,16 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 			accessorFn: (row) => {
 				const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
-				return `${origin}${row.link}`;
+				return row.link ? `${origin}${row.link}` : null;
 			},
 			header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
-			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
+			cell: (ctx) => (ctx.getValue() ? <CopyUrlCell ctx={ctx} /> : null),
+		},
+		{
+			id: 'actions',
+			header: '',
+			enableHiding: false,
+			cell: () => <DataTableRowChevronCell />,
 		},
 	];
 };

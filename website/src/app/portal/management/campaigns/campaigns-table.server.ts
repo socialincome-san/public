@@ -1,5 +1,5 @@
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
-import { getStoryblokCampaignTitleForSlug } from '@/components/storyblok/campaign/campaign.utils';
+import { getStoryblokCampaignLabel } from '@/components/storyblok/campaign/campaign.utils';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { defaultCurrency, defaultLanguage, getWebsiteBasePath } from '@/lib/i18n/utils';
@@ -26,6 +26,8 @@ const compareRows = (left: CampaignTableViewRow, right: CampaignTableViewRow, so
 			return left.endDate.getTime() - right.endDate.getTime();
 		case 'isActive':
 			return Number(left.isActive) - Number(right.isActive);
+		case 'link':
+			return compareNullableStrings(left.link, right.link);
 		case 'programName':
 			return compareNullableStrings(left.programName, right.programName);
 		case 'createdAt':
@@ -59,8 +61,8 @@ export const getCampaignTableView = (
 
 		return {
 			...entry,
-			title: getStoryblokCampaignTitleForSlug(campaignStories, entry.slug),
-			link: `${getWebsiteBasePath(defaultLanguage, defaultCurrency)}/campaigns/${entry.slug}`,
+			title: getStoryblokCampaignLabel(campaignStories, entry),
+			link: entry.slug ? `${getWebsiteBasePath(defaultLanguage, defaultCurrency)}/campaigns/${entry.slug}` : null,
 			programName: programStory ? getProgramTitle(programStory.content) : entry.programName,
 		};
 	});

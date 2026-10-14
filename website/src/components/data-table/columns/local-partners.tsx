@@ -9,8 +9,8 @@ import type { LocalPartnerTableViewRow } from '@/modules/local-partners/local-pa
 import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 import { CountryFlagCell } from '../elements/country-flag-cell';
 
-export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[] => {
-	return [
+export const makeLocalPartnerColumns = (hideFocuses = false): ColumnDef<LocalPartnerTableViewRow>[] => {
+	const columns: ColumnDef<LocalPartnerTableViewRow>[] = [
 		{
 			accessorKey: 'country',
 			header: (ctx) => <SortableHeader ctx={ctx}>Flag</SortableHeader>,
@@ -41,11 +41,17 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 			header: (ctx) => <SortableHeader ctx={ctx}>Contact Number</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
-		{
+	];
+
+	if (!hideFocuses) {
+		columns.push({
 			accessorKey: 'focuses',
 			header: (ctx) => <SortableHeader ctx={ctx}>Focuses</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		});
+	}
+
+	columns.push(
 		{
 			accessorKey: 'recipientsCount',
 			header: 'Recipients',
@@ -67,5 +73,7 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 			enableHiding: false,
 			cell: () => <DataTableRowChevronCell />,
 		},
-	];
+	);
+
+	return columns;
 };

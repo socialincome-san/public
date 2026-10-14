@@ -6,9 +6,12 @@ import {
 	SUBSCRIPTION_STATUS_LABELS,
 	type SubscriptionTableViewRow,
 } from '@/modules/subscriptions/subscription.types';
+import { linkedRecordFilter } from './linked-record-filter';
 
 type SubscriptionFiltersArgs = {
 	query?: TableQueryState & { totalRows: number };
+	contributorFilterOptions: { id: string; name: string }[];
+	campaignFilterOptions: { id: string; name: string }[];
 };
 
 export const subscriptionsTableConfig: DataTableConfig<SubscriptionTableViewRow> = {
@@ -27,11 +30,23 @@ export const subscriptionsTableConfig: DataTableConfig<SubscriptionTableViewRow>
 		{ id: 'bankStandingOrderReference', label: 'Bank standing-order reference' },
 		{ id: 'createdAt', label: 'Created' },
 	],
-	makeColumns: makeSubscriptionsColumns,
+	makeColumns: () => makeSubscriptionsColumns(),
 	showColumnVisibilitySelector: true,
 };
 
-export const getSubscriptionsTableFilters = ({ query }: SubscriptionFiltersArgs): TableFilterConfig[] => {
+export const contributorSubscriptionsTableConfig: DataTableConfig<SubscriptionTableViewRow> = {
+	...subscriptionsTableConfig,
+	id: 'contributor-subscriptions',
+	searchKeys: ['id', 'stripeSubscriptionId', 'bankStandingOrderReference'],
+	sortOptions: subscriptionsTableConfig.sortOptions?.filter(({ id }) => id !== 'contributor' && id !== 'email'),
+	makeColumns: () => makeSubscriptionsColumns({ hideContributor: true }),
+};
+
+export const getSubscriptionsTableFilters = ({
+	query,
+	contributorFilterOptions,
+	campaignFilterOptions,
+}: SubscriptionFiltersArgs): TableFilterConfig[] => {
 	if (!query) {
 		return [];
 	}
@@ -53,5 +68,21 @@ export const getSubscriptionsTableFilters = ({ query }: SubscriptionFiltersArgs)
 			value: query.subscriptionPaymentMethod,
 			options: Object.entries(SUBSCRIPTION_PAYMENT_METHOD_LABELS).map(([value, label]) => ({ value, label })),
 		},
+		...linkedRecordFilter({
+			id: 'contributor',
+			queryKey: 'contributorId',
+			label: 'Contributor',
+			placeholder: 'All contributors',
+			value: query.contributorId,
+			options: contributorFilterOptions.map((contributor) => ({ value: contributor.id, label: contributor.name })),
+		}),
+		...linkedRecordFilter({
+			id: 'campaign',
+			queryKey: 'campaignId',
+			label: 'Campaign',
+			placeholder: 'All campaigns',
+			value: query.campaignId,
+			options: campaignFilterOptions.map((campaign) => ({ value: campaign.id, label: campaign.name })),
+		}),
 	];
 };

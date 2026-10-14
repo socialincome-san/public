@@ -65,6 +65,7 @@ import {
 	type CheckoutMetadata,
 	type CreateManageSubscriptionsSessionInput,
 	type DonationWizardAmountContext,
+	type PaidCheckoutDonation,
 	type PortalProgramDonationCheckoutInput,
 	type StripeBillingPortalSessionUrl,
 	type StripeCheckoutCustomerPrefill,
@@ -229,6 +230,36 @@ export const createEmbeddedCheckoutSession = async (
 		console.error(error);
 
 		return resultFail('Could not create embedded checkout session');
+	}
+};
+
+export const getPaidCheckoutDonation = async (sessionId: string): Promise<Result<PaidCheckoutDonation>> => {
+	try {
+		const sessionResult = await retrieveStripeCheckoutSession(sessionId);
+		if (!sessionResult.success) {
+			return sessionResult;
+		}
+
+		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		if (!paidCheck.success) {
+			return paidCheck;
+		}
+
+		const { id, amount_total: amountTotal, currency, mode } = sessionResult.data;
+		if (amountTotal === null || currency === null) {
+			return resultFail('Checkout session has no amount');
+		}
+
+		return resultOk({
+			checkoutSessionId: id,
+			amount: amountTotal / 100,
+			currency: currency.toUpperCase(),
+			recurring: mode === 'subscription',
+		});
+	} catch (error) {
+		console.error(error);
+
+		return resultFail('Could not load paid checkout donation');
 	}
 };
 

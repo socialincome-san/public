@@ -445,5 +445,11 @@
 		"title": "Non abbiamo trovato questa pagina",
 		"description": "La pagina potrebbe essere stata spostata o il link potrebbe non essere più valido.",
 		"home-link": "Vai alla homepage"
+	},
+	"cookie-consent": {
+		"message": "Utilizziamo i <link>cookie</link> per migliorare la tua esperienza.",
+		"accept": "Accetta",
+		"decline": "Rifiuta",
+		"settings": "Impostazioni dei cookie"
 	}
 }

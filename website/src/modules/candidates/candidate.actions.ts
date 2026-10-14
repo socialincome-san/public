@@ -2,7 +2,7 @@
 
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
-import type { CandidatePayload } from '@/modules/candidates/candidate.types';
+import type { CandidatePayload, CandidatesPaginatedTableView } from '@/modules/candidates/candidate.types';
 import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
 import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';
 import { revalidatePath } from 'next/cache';
@@ -12,6 +12,7 @@ import {
 	candidateCsvFileSchema,
 	candidateIdSchema,
 	candidateSessionTypeSchema,
+	candidateTableQuerySchema,
 	candidateUpdateSchema,
 } from './candidate.schemas';
 import {
@@ -20,12 +21,28 @@ import {
 	exportCandidatesCsv,
 	getCandidate,
 	getCandidateCount,
+	getPaginatedCandidateTableView,
 	importCandidatesCsv,
 	updateCandidate,
 } from './candidate.service';
 
 const ADMIN_CANDIDATES_PATH = '/portal/admin/candidates';
 const PARTNER_CANDIDATES_PATH = '/partner-space/candidates';
+
+// Admin only; the service rejects users without the admin role
+export const getCandidateTableViewAction = async (query: unknown): Promise<Result<CandidatesPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const queryResult = candidateTableQuerySchema.safeParse(query);
+	if (!queryResult.success) {
+		return resultFail('Invalid table query.');
+	}
+
+	return getPaginatedCandidateTableView(sessionResult.data.id, queryResult.data);
+};
 
 export const createCandidateAction = async (
 	input: unknown,
@@ -126,13 +143,19 @@ export const getCandidateCountAction = async (
 	focuses: unknown,
 	profiles: unknown,
 	countryId: unknown,
+	localPartnerIds: unknown,
 ): Promise<Result<{ count: number }>> => {
-	const inputResult = candidateCountSchema.safeParse({ focuses, profiles, countryId });
+	const inputResult = candidateCountSchema.safeParse({ focuses, profiles, countryId, localPartnerIds });
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
 	}
 
-	return getCandidateCount(inputResult.data.focuses, inputResult.data.profiles, inputResult.data.countryId);
+	return getCandidateCount(
+		inputResult.data.focuses,
+		inputResult.data.profiles,
+		inputResult.data.countryId,
+		inputResult.data.localPartnerIds,
+	);
 };
 
 export const importCandidatesCsvAction = async (

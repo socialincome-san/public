@@ -11,7 +11,11 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
-import { findContributorById, getEditableContributorOptions } from '@/modules/contributors/contributor.service';
+import {
+	findContributorById,
+	getContributorFilterOption,
+	getEditableContributorOptions,
+} from '@/modules/contributors/contributor.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { getCampaigns } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
@@ -29,6 +33,7 @@ import type {
 	ContributionCountryRow,
 	ContributionDateRange,
 	ContributionDonationEntry,
+	ContributionFilterOptions,
 	ContributionFormOptions,
 	ContributionPaginatedTableView,
 	ContributionPayload,
@@ -170,7 +175,7 @@ export const getPaginatedTableView = async (
 			return resultOk({
 				tableRows: [],
 				totalCount: 0,
-				filterOptions: { programs: [], campaigns: [], paymentEventTypes: [] },
+				filterOptions: { programs: [], campaigns: [], paymentEventTypes: [], contributors: [] },
 			});
 		}
 
@@ -183,7 +188,7 @@ export const getPaginatedTableView = async (
 			return resultOk({
 				tableRows: [],
 				totalCount: 0,
-				filterOptions: { programs: [], campaigns: [], paymentEventTypes: [] },
+				filterOptions: { programs: [], campaigns: [], paymentEventTypes: [], contributors: [] },
 			});
 		}
 
@@ -191,10 +196,19 @@ export const getPaginatedTableView = async (
 		const selectedProgramId = emptyToUndefined(query.programId);
 		const selectedCampaignId = emptyToUndefined(query.campaignId);
 		const selectedPaymentEventType = parsePaymentEventType(emptyToUndefined(query.paymentEventType));
-		const campaignStories = await getCampaignStories();
-		const campaigns = await contributionRepository.findCampaignsByProgramIds(accessibleProgramIds);
+		const requestedContributorId = emptyToUndefined(query.contributorId);
+		// Unknown or inaccessible contributors are ignored, so the filter never hides rows behind an invisible value
+		const [campaignStories, campaigns, contributorOptionResult] = await Promise.all([
+			getCampaignStories(),
+			contributionRepository.findCampaignsByProgramIds(accessibleProgramIds),
+			requestedContributorId ? getContributorFilterOption(requestedContributorId, accessibleProgramIds) : resultOk(null),
+		]);
+		if (!contributorOptionResult.success) {
+			return resultFail(contributorOptionResult.error);
+		}
+		const contributorOption = contributorOptionResult.data;
 		const campaignIds = campaigns.map((campaign) => campaign.id);
-		const filterOptions = {
+		const filterOptions: ContributionFilterOptions = {
 			programs: Array.from(
 				new Map(
 					campaigns
@@ -202,11 +216,10 @@ export const getPaginatedTableView = async (
 						.map((campaign) => [campaign.program.id, { value: campaign.program.id, label: campaign.program.name }]),
 				).values(),
 			),
-			campaigns: campaigns.flatMap((campaign) =>
-				campaign.slug
-					? [{ value: campaign.id, label: getStoryblokCampaignTitleForSlug(campaignStories, campaign.slug) }]
-					: [],
-			),
+			campaigns: campaigns.map((campaign) => ({
+				value: campaign.id,
+				label: getCampaignLabel(campaignStories, campaign),
+			})),
 			paymentEventTypes: PAYMENT_EVENT_TYPES.map((type) => ({
 				value: type,
 				label:
@@ -214,6 +227,7 @@ export const getPaginatedTableView = async (
 						? 'Wire transfer'
 						: type.replace(UNDERSCORE_REGEX, ' ').replace(START_CHARACTER_REGEX, (character) => character.toUpperCase()),
 			})),
+			contributors: contributorOption ? [{ value: contributorOption.id, label: contributorOption.name }] : [],
 		};
 		const filteredCampaignIds = selectedCampaignId
 			? campaignIds.filter((id) => id === selectedCampaignId)
@@ -226,18 +240,15 @@ export const getPaginatedTableView = async (
 
 		const campaignIdsMatchingTitle = search
 			? campaigns
-					.filter(
-						(campaign) =>
-							campaign.slug &&
-							getStoryblokCampaignTitleForSlug(campaignStories, campaign.slug)
-								.toLocaleLowerCase()
-								.includes(search.toLocaleLowerCase()),
+					.filter((campaign) =>
+						getCampaignLabel(campaignStories, campaign).toLocaleLowerCase().includes(search.toLocaleLowerCase()),
 					)
 					.map((campaign) => campaign.id)
 			: [];
 		const sortByCampaignTitle = query.sortBy === 'campaignTitle';
 		const { contributions, totalCount } = await contributionRepository.findContributionTableSource({
 			campaignIds: filteredCampaignIds,
+			contributorId: contributorOption?.id,
 			paymentEventType: selectedPaymentEventType,
 			search,
 			campaignIdsMatchingTitle,
@@ -252,9 +263,7 @@ export const getPaginatedTableView = async (
 			amount: contribution.amount ? Number(contribution.amount) : 0,
 			currency: contribution.currency,
 			campaignId: contribution.campaign.id,
-			campaignTitle: contribution.campaign.slug
-				? getStoryblokCampaignTitleForSlug(campaignStories, contribution.campaign.slug)
-				: '',
+			campaignTitle: getCampaignLabel(campaignStories, contribution.campaign),
 			paymentEventType: contribution.paymentEvent?.type ?? null,
 			programName: contribution.campaign.program?.name ?? null,
 			createdAt: contribution.createdAt,
@@ -432,9 +441,10 @@ export const getContributionFormOptions = async (userId: string): Promise<Result
 
 		return resultOk({
 			contributorOptions: contributorOptionsResult.data,
-			campaignOptions: campaigns.flatMap((campaign) =>
-				campaign.slug ? [{ id: campaign.id, name: getStoryblokCampaignTitleForSlug(campaignStories, campaign.slug) }] : [],
-			),
+			campaignOptions: campaigns.map((campaign) => ({
+				id: campaign.id,
+				name: getCampaignLabel(campaignStories, campaign),
+			})),
 		});
 	} catch (error) {
 		console.error(error);
@@ -615,6 +625,12 @@ const getStoryblokCampaignTitleForSlug = (campaigns: ISbStoryData<Campaign>[], s
 	const campaign = campaigns.find((story) => getCampaignPortalSlug(story.content) === slug);
 
 	return campaign ? getCampaignTitle(campaign.content) : slug;
+};
+
+const getCampaignLabel = (campaigns: ISbStoryData<Campaign>[], campaign: { id: string; slug: string | null }): string => {
+	const slug = campaign.slug?.trim();
+
+	return slug ? getStoryblokCampaignTitleForSlug(campaigns, slug) : `Campaign ${campaign.id}`;
 };
 
 const toContributionPayload = (contribution: {

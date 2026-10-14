@@ -1,5 +1,8 @@
 'use client';
 
+import { trackEvent } from '@/lib/analytics/analytics';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
+import { getPaidStripeCheckoutDonationAction } from '@/modules/stripe-payments/stripe-payment.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	Dialog,
@@ -11,7 +14,7 @@ import {
 } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
 import {
@@ -20,16 +23,50 @@ import {
 	STRIPE_CHECKOUT_SESSION_ID_PARAM,
 } from '../steps/step-stripe-checkout/stripe-checkout-return';
 import type { DonationAmountContext } from '../utils/donation-amount';
+import { getDonationCompletedEvent, getDonationFunnelEvent } from '../wizard/donation-analytics';
 import { donationWizardMachine } from '../wizard/donation-machine';
 import { DonationSteps } from '../wizard/donation-steps';
 import { DonationWizard } from '../wizard/donation-wizard';
+import type { DonationWizardSend } from '../wizard/types';
 
 type Props = {
 	children: ReactNode;
 };
 
 export const DonationModalProvider = ({ children }: Props) => {
-	const [state, send] = useMachine(donationWizardMachine);
+	const [state, , actorRef] = useMachine(donationWizardMachine);
+	const currency = useWebsiteCurrency();
+
+	// Every step sends through here, so the funnel is tracked in one place with the context after the transition.
+	const send = useCallback<DonationWizardSend>(
+		(event) => {
+			const previousStep = actorRef.getSnapshot().value;
+			actorRef.send(event);
+			const next = actorRef.getSnapshot();
+			const changedStep = next.value !== previousStep;
+
+			const funnelEvent = getDonationFunnelEvent(event.type, changedStep, next.context, currency);
+			if (funnelEvent) {
+				trackEvent(funnelEvent.name, funnelEvent.properties);
+			}
+
+			const { stripeCheckoutSessionId } = next.context;
+			if (
+				changedStep &&
+				stripeCheckoutSessionId &&
+				(event.type === 'STRIPE_CHECKOUT_COMPLETE' || event.type === 'OPEN_FROM_STRIPE_RETURN')
+			) {
+				// Only a checkout that Stripe reports as paid counts as a completed donation.
+				void getPaidStripeCheckoutDonationAction(stripeCheckoutSessionId).then((result) => {
+					if (result.success) {
+						const completedEvent = getDonationCompletedEvent(result.data);
+						trackEvent(completedEvent.name, completedEvent.properties);
+					}
+				});
+			}
+		},
+		[actorRef, currency],
+	);
 	const [closeConfirmOpen, setCloseConfirmOpen] = useState(false);
 	const t = useTranslations('donation-wizard');
 

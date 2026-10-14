@@ -8,8 +8,33 @@ import {
 	createManageSubscriptionsSession,
 	updateContributorSubscriptionAmount,
 } from '@/modules/stripe-payments/stripe-payment.service';
-import { cancelSubscriptionSchema, subscriptionIdSchema, updateSubscriptionAmountSchema } from './subscription.schemas';
-import { cancelBankTransfer, getOwnedSubscriptionPaymentMethod, updateBankTransferAmount } from './subscription.service';
+import {
+	cancelSubscriptionSchema,
+	subscriptionIdSchema,
+	subscriptionTableQuerySchema,
+	updateSubscriptionAmountSchema,
+} from './subscription.schemas';
+import {
+	cancelBankTransfer,
+	getOwnedSubscriptionPaymentMethod,
+	getPaginatedTableView,
+	updateBankTransferAmount,
+} from './subscription.service';
+import type { SubscriptionPaginatedTableView } from './subscription.types';
+
+export const getSubscriptionTableViewAction = async (query: unknown): Promise<Result<SubscriptionPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const queryResult = subscriptionTableQuerySchema.safeParse(query);
+	if (!queryResult.success) {
+		return resultFail('Invalid table query.');
+	}
+
+	return getPaginatedTableView(sessionResult.data.id, queryResult.data);
+};
 
 export const updateSubscriptionAmountAction = async (
 	input: unknown,

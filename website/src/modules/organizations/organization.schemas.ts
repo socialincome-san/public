@@ -1,3 +1,4 @@
+import { tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 
 const requiredTrimmedString = (label: string) => z.string().trim().min(1, `${label} is required.`);
@@ -21,6 +22,10 @@ export const organizationRenameSchema = z.object({
 });
 
 export const organizationIdSchema = requiredTrimmedString('Organization id');
+
+export const organizationMemberTableQuerySchema = tableQuerySchema.extend({
+	organizationId: organizationIdSchema,
+});
 
 export type CreateOrganizationInput = z.infer<typeof organizationCreateSchema>;
 export type UpdateOrganizationInput = z.infer<typeof organizationUpdateSchema>;

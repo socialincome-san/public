@@ -54,6 +54,12 @@ export const findContributor = async (contributorId: string, accessibleProgramId
 		select: contributorDetailSelect,
 	});
 
+export const findContributorFilterOption = async (contributorId: string, accessibleProgramIds: string[]) =>
+	prisma.contributor.findFirst({
+		where: { id: contributorId, OR: contributorAccessOr(accessibleProgramIds) },
+		select: { id: true, contact: { select: { firstName: true, lastName: true } } },
+	});
+
 export const findEditableContributorOptions = async (accessibleProgramIds: string[]) =>
 	prisma.contributor.findMany({
 		where: {

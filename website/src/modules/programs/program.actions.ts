@@ -6,6 +6,7 @@ import type {
 	ProgramBudgetCalculation,
 	ProgramDashboardStats,
 	ProgramFinancesDisplayAmounts,
+	ProgramPaginatedTableView,
 	ProgramSettingsPayload,
 	ProgramWallets,
 	PublicPreviewProgram,
@@ -38,16 +39,30 @@ import {
 	programSettingsUpdateSchema,
 	programSlugSchema,
 	programSlugsSchema,
+	programTableQuerySchema,
 	publicOnboardingUserDetailsSchema,
 } from './program.schemas';
 import {
 	createProgram,
 	deleteProgram,
+	getPaginatedProgramTableView,
 	getProgramOrganizationOptions,
 	getProgramSettings,
 	getProgramWallets,
 	updateProgramSettings,
 } from './program.service';
+
+export const getProgramTableViewAction = async (query: unknown): Promise<Result<ProgramPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedQuery = programTableQuerySchema.safeParse(query);
+
+	return parsedQuery.success
+		? getPaginatedProgramTableView(sessionResult.data.id, parsedQuery.data)
+		: resultFail('Invalid program query.');
+};
 
 export const createProgramAction = async (input: unknown, userDetails?: unknown): Promise<Result<{ programId: string }>> => {
 	const parsedInput = programCreateSchema.safeParse(input);

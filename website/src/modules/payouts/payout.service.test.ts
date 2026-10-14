@@ -16,6 +16,9 @@ const mockUpdatePayout = jest.fn();
 const mockUpdatePayoutStatus = jest.fn();
 const mockDeletePayout = jest.fn();
 const mockFindPaidOrConfirmedPayoutTotal = jest.fn();
+const mockFindPayoutMobileMoneyProviderOptions = jest.fn();
+const mockGetRecipientFilterOption = jest.fn();
+const mockFindPayoutTableSource = jest.fn();
 
 jest.mock('./payout.repository', () => ({
 	findPayout: mockFindPayout,
@@ -27,6 +30,8 @@ jest.mock('./payout.repository', () => ({
 	updatePayoutStatus: mockUpdatePayoutStatus,
 	deletePayout: mockDeletePayout,
 	findPaidOrConfirmedPayoutTotal: mockFindPaidOrConfirmedPayoutTotal,
+	findPayoutMobileMoneyProviderOptions: mockFindPayoutMobileMoneyProviderOptions,
+	findPayoutTableSource: mockFindPayoutTableSource,
 }));
 
 jest.mock('@/modules/program-access/program-access.service', () => ({
@@ -42,6 +47,7 @@ jest.mock('@/modules/programs/program-reference.service', () => ({
 }));
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
+	getRecipientFilterOption: mockGetRecipientFilterOption,
 	getRecipientProgramAssignment: mockGetRecipientProgramAssignment,
 	recipientStatusService: {
 		isRecipientEligibleForPayout: mockIsRecipientEligibleForPayout,
@@ -59,6 +65,7 @@ jest.mock('@/lib/utils/now', () => ({
 import {
 	createPayout,
 	deletePayout,
+	getPaginatedPayoutTableView,
 	getPaidOrConfirmedPayoutTotal,
 	getPayout,
 	getPayoutForecastTableView,
@@ -221,6 +228,52 @@ describe('payout forecasts', () => {
 			'Access denied for this program',
 		);
 		expect(mockGetProgramPayoutForecastSource).not.toHaveBeenCalled();
+	});
+});
+
+describe('getPaginatedPayoutTableView recipient filter', () => {
+	const query = { page: 1, pageSize: 10, search: '', recipientId: 'recipient-1' };
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: operatorAccess });
+		mockFindPayoutMobileMoneyProviderOptions.mockResolvedValue([]);
+		mockFindPayoutTableSource.mockResolvedValue({ payouts: [], totalCount: 0 });
+	});
+
+	test('filters by an accessible recipient and offers it as filter option', async () => {
+		mockGetRecipientFilterOption.mockResolvedValue({
+			success: true,
+			data: { id: 'recipient-1', name: 'Aminata Kamara' },
+		});
+
+		const data = expectSuccess(await getPaginatedPayoutTableView('user-1', query));
+
+		expect(mockGetRecipientFilterOption).toHaveBeenCalledWith('recipient-1', ['program-1']);
+		expect(mockFindPayoutTableSource).toHaveBeenCalledWith(expect.objectContaining({ recipientId: 'recipient-1' }));
+		expect(data.recipientFilterOptions).toEqual([{ id: 'recipient-1', name: 'Aminata Kamara' }]);
+	});
+
+	test('returns no payouts for a recipient without operator access', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [{ programId: 'program-1', programName: 'Program 1', permission: ProgramPermission.owner }],
+		});
+
+		const data = expectSuccess(await getPaginatedPayoutTableView('user-1', query));
+
+		expect(data.tableRows).toEqual([]);
+		expect(mockGetRecipientFilterOption).not.toHaveBeenCalled();
+		expect(mockFindPayoutTableSource).not.toHaveBeenCalled();
+	});
+
+	test('ignores a recipient outside the operated programs', async () => {
+		mockGetRecipientFilterOption.mockResolvedValue({ success: true, data: null });
+
+		const data = expectSuccess(await getPaginatedPayoutTableView('user-1', query));
+
+		expect(mockFindPayoutTableSource).toHaveBeenCalledWith(expect.objectContaining({ recipientId: undefined }));
+		expect(data.recipientFilterOptions).toEqual([]);
 	});
 });
 

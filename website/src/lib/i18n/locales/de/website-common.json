@@ -445,5 +445,11 @@
 		"title": "Diese Seite haben wir nicht gefunden",
 		"description": "Die Seite wurde möglicherweise verschoben, oder der Link ist nicht mehr gültig.",
 		"home-link": "Zur Startseite"
+	},
+	"cookie-consent": {
+		"message": "Wir verwenden <link>Cookies</link>, um dein Erlebnis zu verbessern.",
+		"accept": "Akzeptieren",
+		"decline": "Ablehnen",
+		"settings": "Cookie-Einstellungen"
 	}
 }

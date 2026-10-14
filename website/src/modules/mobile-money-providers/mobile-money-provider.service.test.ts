@@ -49,6 +49,21 @@ describe('mobile money provider service', () => {
 		expect(mockFindPaginatedMobileMoneyProviders).not.toHaveBeenCalled();
 	});
 
+	test('passes country and parent filters to the provider repository', async () => {
+		const query = {
+			page: 1,
+			pageSize: 10,
+			search: '',
+			countryId: 'country-1',
+			parentProviderId: 'provider-parent',
+		};
+		mockFindPaginatedMobileMoneyProviders.mockResolvedValue({ providers: [], totalCount: 0 });
+
+		await getPaginatedMobileMoneyProviderTableView('admin-1', query);
+
+		expect(mockFindPaginatedMobileMoneyProviders).toHaveBeenCalledWith(query);
+	});
+
 	test('groups Telecel providers into one payout process option', async () => {
 		mockFindMobileMoneyProvidersWithPayoutProcess.mockResolvedValue([
 			{
