@@ -3,7 +3,22 @@
 Every write to an audited entity stores an audit event in `audit_event`:
 who wrote it, from where, and a snapshot of the entity afterwards. What
 changed is computed when reading, by comparing consecutive snapshots.
-Only recipients are audited so far.
+
+Audited models (`auditedModels` in `eslint.config.mjs`): recipient
+(candidates are recipients too), payout, contributor, contribution,
+subscription, donation certificate, local partner, campaign, survey,
+expense, country, focus, mobile money provider, program, user and
+organization. Pure logs and machine data are not audited: messages, sent
+emails, exchange rates, payment events, reserves and bank accounts.
+
+Child and join tables belong to one owner's snapshot and are written in
+that owner's write repository: contacts, phones, addresses and payment
+information to their person, program accesses, target focuses and survey
+schedules to the program, organization accesses to the user, focus links
+to the local partner, pending claims to the campaign. A module that
+writes another module's data goes through that module's service, e.g.
+the organization form sets program accesses through the programs service
+and members through the users service.
 
 ## Writing
 
@@ -32,8 +47,8 @@ row: pass `entityId` as a list for `updateMany`/`deleteMany`, and
 
 Services pass who is acting: `getSessionAuditContext(session)` for
 portal and partner space,
-`{ actor: { type: 'recipient', id }, source: 'mobile-app' }` for the
-app,
+`{ actor: { type: 'recipient', id }, source: 'mobile-app' }` for the app
+(survey answers use `source: 'website'`),
 `{ actor: { type: 'system', id: '<job-or-route-name>' }, source: 'system' }`
 for writes without a session (cron jobs, webhooks). `metadata` is flat
 context such as `{ operation: 'csv-import', importId }`.
@@ -60,8 +75,12 @@ from `auditEntityTypes` in `src/components/audit/audit-summary.ts`.
    every write to move.
 2. Rename `<module>.repository.ts` to `<module>.repository.read.ts` and
    move the writes into `<module>.repository.write.ts`, with an
-   `AuditedEntity` whose `findSnapshot` selects the fields to keep.
-3. Pass an `AuditContext` from the service.
+   `AuditedEntity` whose `findSnapshot` selects every field of the
+   entity and its owned relations, ordering lists so equal states
+   compare equal.
+3. Pass an `AuditContext` from the service. Writes to other modules'
+   data go through their services; if that splits a transaction, make
+   each step safe to retry.
 4. Add the type to `auditEntityTypes` in
    `src/components/audit/audit-summary.ts`: label, name paths and field
    labels.
