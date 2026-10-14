@@ -1,0 +1,55 @@
+{
+	"title": "Add recipients from pool",
+	"description": "Assign existing candidates from the pool to this program. The program country and payout terms stay as they are.",
+	"close": "Close",
+	"loading": "Loading candidates",
+	"country": {
+		"label": "Country"
+	},
+	"selection": {
+		"title": "Recipient selection",
+		"recommended": "Recommended",
+		"loading": "Updating candidate counts",
+		"clear_filters": "Use all available candidates",
+		"focuses": "Focuses",
+		"profiles": "Profiles",
+		"local_partners": "Local partners",
+		"all": {
+			"label": "All available candidates",
+			"description": "Add unassigned candidates from the program country without extra filters.",
+			"available": "unassigned candidates available in this country",
+			"empty": "There are no unassigned candidates in this country."
+		},
+		"targeted": {
+			"label": "Targeted selection",
+			"description": "Limit the pool by focus, profile, or local partner.",
+			"matching": "{matching} of {total} candidates match the current filters",
+			"empty": "No candidates match these filters."
+		}
+	},
+	"profiles": {
+		"male": "Male",
+		"female": "Female",
+		"youth": "Youth"
+	},
+	"quantity": {
+		"title": "How many recipients"
+	},
+	"cost": {
+		"title": "Additional cost"
+	},
+	"actions": {
+		"continue": "Continue",
+		"back": "Back",
+		"retry": "Try again",
+		"add": "{count, plural, one {Add # recipient} other {Add # recipients}}",
+		"adding": "Adding recipients"
+	},
+	"success": "{count, plural, one {Added # recipient to this program.} other {Added # recipients to this program.}}",
+	"error": {
+		"title": "Error",
+		"generic": "Recipients could not be added. Please try again.",
+		"not_enough": "Not enough candidates are available. Adjust the selection and try again.",
+		"load": "The candidate pool could not be loaded."
+	}
+}

@@ -25,6 +25,7 @@ import {
 } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { isReadyForFirstPayoutInterval } from './program-stats.service';
+import { hasOperatorAccess } from './program.permissions';
 import * as programRepository from './program.repository.read';
 import * as programWriteRepository from './program.repository.write';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput, PublicOnboardingUserDetailsInput } from './program.schemas';
@@ -413,10 +414,12 @@ export const createProgram = async (
 				{ ...audit, metadata: { operation: 'program-creation', programId: program.id } },
 				program.id,
 				input.amountOfRecipientsForStart,
-				countryResult.data,
-				input.targetFocuses,
-				input.targetProfiles,
-				input.targetLocalPartnerIds,
+				{
+					countryCode: countryResult.data,
+					focusIds: input.targetFocuses,
+					profiles: input.targetProfiles,
+					localPartnerIds: input.targetLocalPartnerIds,
+				},
 			);
 			if (!assignmentResult.success) {
 				return resultFail(assignmentResult.error);
@@ -440,9 +443,7 @@ export const updateProgramSettings = async (
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
-		if (
-			!accessResult.data.some((access) => access.programId === input.id && access.permission === ProgramPermission.operator)
-		) {
+		if (!hasOperatorAccess(accessResult.data, input.id)) {
 			return resultFail('Permission denied');
 		}
 
@@ -515,9 +516,7 @@ export const deleteProgram = async (session: UserSession, programId: string): Pr
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
-		if (
-			!accessResult.data.some((access) => access.programId === programId && access.permission === ProgramPermission.operator)
-		) {
+		if (!hasOperatorAccess(accessResult.data, programId)) {
 			return resultFail('Permission denied');
 		}
 		if (!(await programRepository.findProgramNameById(programId))) {

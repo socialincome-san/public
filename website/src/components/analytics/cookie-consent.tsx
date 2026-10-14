@@ -2,6 +2,7 @@
 
 import {
 	getConsentModeSignals,
+	googleTagGatewayUrl,
 	googleTagManagerId,
 	setAnalyticsConsent,
 	useAnalyticsConsent,
@@ -32,7 +33,7 @@ export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string
 window.gtag = function () { window.dataLayer.push(arguments); };
 window.gtag('consent', 'default', ${JSON.stringify(getConsentModeSignals('granted'))});`}
 					</Script>
-					<GoogleTagManager gtmId={googleTagManagerId} />
+					<GoogleTagManager gtmId={googleTagManagerId} gtmScriptUrl={googleTagGatewayUrl} />
 				</>
 			)}
 			{(consent === 'undecided' || settingsOpen) && (

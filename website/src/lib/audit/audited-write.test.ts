@@ -136,6 +136,17 @@ describe('auditedWrite', () => {
 		]);
 	});
 
+	test('takes the ids of updated rows from the result when they are only known afterwards', async () => {
+		mockCommitted.rows.set('b', 'Bob');
+		await auditedWrite({ entity, context: portal, action: 'update' }, (transaction) => {
+			rowsOf(transaction).set('b', 'Bea');
+
+			return Promise.resolve([{ id: 'b' }]);
+		});
+
+		expect(mockCommitted.events).toMatchObject([{ entityId: 'b', action: 'update', snapshot: { name: 'Bea' } }]);
+	});
+
 	test('stores no snapshot for a delete', async () => {
 		await auditedWrite({ entity, context: portal, action: 'delete', entityId: 'a' }, (transaction) => {
 			rowsOf(transaction).delete('a');

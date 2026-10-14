@@ -65,11 +65,11 @@ export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
 	if (state.matches('budget')) {
 		return (
 			<BudgetStep
+				recipientsTitle={t('step3.recipients.title')}
+				totalCostsTitle={t('step3.total_costs.title')}
 				amountOfRecipients={state.context.amountOfRecipients}
 				filteredRecipients={state.context.filteredRecipients}
 				programDuration={state.context.programDuration}
-				payoutPerIntervalMin={state.context.payoutPerIntervalMin}
-				payoutPerIntervalMax={state.context.payoutPerIntervalMax}
 				payoutPerInterval={state.context.payoutPerInterval}
 				payoutInterval={state.context.payoutInterval}
 				payoutCurrency={state.context.payoutCurrency}
@@ -78,15 +78,18 @@ export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
 				displayMonthlyCost={state.context.displayMonthlyCost}
 				exchangeRateText={state.context.exchangeRateText}
 				payoutToDisplayRate={state.context.payoutToDisplayRate}
-				totalBudgetTooltipText={state.context.totalBudgetTooltipText}
 				isCalculatingBudget={state.context.isCalculatingBudget}
-				customizePayouts={state.context.customizePayouts}
+				payoutCustomization={{
+					enabled: state.context.customizePayouts,
+					payoutPerIntervalMin: state.context.payoutPerIntervalMin,
+					payoutPerIntervalMax: state.context.payoutPerIntervalMax,
+					onToggle: () => send({ type: 'TOGGLE_CUSTOMIZE_PAYOUTS' }),
+					onDurationChange: (v) => send({ type: 'SET_PROGRAM_DURATION', value: v }),
+					onPayoutChange: (v) => send({ type: 'SET_PAYOUT_PER_INTERVAL', value: v }),
+					onIntervalChange: (v) => send({ type: 'SET_PAYOUT_INTERVAL', value: v }),
+				}}
 				onRecipientsChange={(v) => send({ type: 'SET_AMOUNT_OF_RECIPIENTS', value: v })}
-				onDurationChange={(v) => send({ type: 'SET_PROGRAM_DURATION', value: v })}
-				onPayoutChange={(v) => send({ type: 'SET_PAYOUT_PER_INTERVAL', value: v })}
-				onIntervalChange={(v) => send({ type: 'SET_PAYOUT_INTERVAL', value: v })}
 				onCurrencyChange={(v) => send({ type: 'SET_CURRENCY', value: v as Currency })}
-				onToggleCustomizePayouts={() => send({ type: 'TOGGLE_CUSTOMIZE_PAYOUTS' })}
 			/>
 		);
 	}

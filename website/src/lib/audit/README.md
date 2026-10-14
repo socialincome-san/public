@@ -42,8 +42,10 @@ the audit event fails, the write rolls back. Updates that change nothing
 store no event; a delete stores an event without snapshot.
 
 A write that changes several rows in one statement stores one event per
-row: pass `entityId` as a list for `updateMany`/`deleteMany`, and
-`create` takes the ids from the returned rows of `createManyAndReturn`.
+row: pass `entityId` as a list for `updateMany`/`deleteMany`. Without
+`entityId`, the ids come from the returned rows, e.g. of
+`createManyAndReturn` or of an update that only knows its rows
+afterwards (`UPDATE … RETURNING id`).
 
 Services pass who is acting: `getSessionAuditContext(session)` for
 portal and partner space,

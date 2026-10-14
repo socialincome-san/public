@@ -44,13 +44,51 @@ export const deleteCandidate = async (audit: AuditContext, candidateId: string) 
 		await deleteOrphanedRelations(transaction, relations);
 	});
 
-export const updateCandidateProgramAssignments = async (audit: AuditContext, candidateIds: string[], programId: string) =>
-	auditedWrite({ entity: recipientEntity, context: audit, action: 'update', entityId: candidateIds }, (transaction) =>
-		transaction.recipient.updateMany({
-			where: { id: { in: candidateIds } },
-			data: { programId },
-		}),
-	);
+/** Assigns `amount` random candidates of `candidateIds` that are still unassigned, or none. */
+export const updateUnassignedCandidateAssignments = async (
+	audit: AuditContext,
+	candidateIds: string[],
+	programId: string,
+	amount: number,
+): Promise<{ outcome: 'assigned'; assigned: number } | { outcome: 'insufficient' }> => {
+	if (candidateIds.length < amount) {
+		return { outcome: 'insufficient' };
+	}
+
+	try {
+		const assigned = await auditedWrite(
+			{ entity: recipientEntity, context: audit, action: 'update' },
+			async (transaction) => {
+				// SKIP LOCKED lets concurrent assignments pick disjoint candidates instead of colliding on the same rows.
+				const rows = await transaction.$queryRaw<{ id: string }[]>`
+				UPDATE recipient SET program_id = ${programId}, updated_at = now()
+				WHERE id IN (
+					SELECT id FROM recipient
+					WHERE id = ANY(${candidateIds}) AND program_id IS NULL
+					ORDER BY random()
+					LIMIT ${amount}
+					FOR UPDATE SKIP LOCKED
+				)
+				RETURNING id`;
+				if (rows.length !== amount) {
+					throw new Error(INSUFFICIENT_CANDIDATES);
+				}
+
+				return rows;
+			},
+		);
+
+		return { outcome: 'assigned', assigned: assigned.length };
+	} catch (error) {
+		if (error instanceof Error && error.message === INSUFFICIENT_CANDIDATES) {
+			return { outcome: 'insufficient' };
+		}
+
+		throw error;
+	}
+};
+
+const INSUFFICIENT_CANDIDATES = 'INSUFFICIENT_CANDIDATES';
 
 // Must match recipientAuditSnapshotSelect in recipient.repository.write.ts:
 // both write the history of the same recipient rows, and any difference

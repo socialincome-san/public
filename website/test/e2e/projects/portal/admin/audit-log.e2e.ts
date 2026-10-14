@@ -32,7 +32,7 @@ test('recipient create, edit and delete in the portal are audited', async ({ pag
 	const { firstName, lastName } = createRecipientName();
 
 	await page.goto('/portal/management/recipients');
-	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
+	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient-manually');
 	await selectOptionByTestId(page, 'program', 'Sierra Leone Unconditional');
 	await selectOptionByTestId(page, 'localPartner', 'Local Partner SL Operations');
 	await page.getByTestId('form-accordion-trigger-contact').click();

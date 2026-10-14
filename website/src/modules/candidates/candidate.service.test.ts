@@ -3,8 +3,9 @@ import { CountryCode } from '@/generated/prisma/enums';
 const mockIsAdmin = jest.fn();
 const mockFindCandidateById = jest.fn();
 const mockCountCandidates = jest.fn();
-const mockFindCandidateIdsForAssignment = jest.fn();
-const mockUpdateCandidateProgramAssignments = jest.fn();
+const mockFindUnassignedCandidateIds = jest.fn();
+const mockUpdateUnassignedCandidateAssignments = jest.fn();
+const audit = { actor: { type: 'user' as const, id: 'user-1' }, source: 'portal' as const };
 
 jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
@@ -19,10 +20,10 @@ jest.mock('@/modules/auth/auth.service', () => ({}));
 jest.mock('./candidate.repository.read', () => ({
 	findCandidateById: mockFindCandidateById,
 	countCandidates: mockCountCandidates,
-	findCandidateIdsForAssignment: mockFindCandidateIdsForAssignment,
+	findUnassignedCandidateIds: mockFindUnassignedCandidateIds,
 }));
 jest.mock('./candidate.repository.write', () => ({
-	updateCandidateProgramAssignments: mockUpdateCandidateProgramAssignments,
+	updateUnassignedCandidateAssignments: mockUpdateUnassignedCandidateAssignments,
 }));
 
 import { assignRandomCandidatesToProgram, getCandidate, getCandidateCount } from './candidate.service';
@@ -85,23 +86,54 @@ describe('candidate service', () => {
 			data: { count: 4 },
 			status: undefined,
 		});
-		expect(mockCountCandidates).toHaveBeenCalledWith([], [], null, ['partner-1']);
+		expect(mockCountCandidates).toHaveBeenCalledWith({
+			countryCode: null,
+			focusIds: [],
+			profiles: [],
+			localPartnerIds: ['partner-1'],
+		});
 	});
 
 	test('assigns random candidates only from selected local partners', async () => {
-		mockFindCandidateIdsForAssignment.mockResolvedValue([{ id: 'candidate-1' }]);
-		mockUpdateCandidateProgramAssignments.mockResolvedValue({ count: 1 });
+		const filter = {
+			countryCode: CountryCode.SL,
+			focusIds: [],
+			profiles: [],
+			localPartnerIds: ['partner-1'],
+		};
+		mockUpdateUnassignedCandidateAssignments.mockResolvedValue({ outcome: 'assigned', assigned: 1 });
 
-		const audit = { actor: { type: 'user' as const, id: 'user-1' }, source: 'portal' as const };
+		mockFindUnassignedCandidateIds.mockResolvedValue([{ id: 'candidate-1' }, { id: 'candidate-2' }]);
 
-		await expect(
-			assignRandomCandidatesToProgram(audit, 'program-1', 1, CountryCode.SL, [], [], ['partner-1']),
-		).resolves.toEqual({
+		await expect(assignRandomCandidatesToProgram(audit, 'program-1', 1, filter)).resolves.toEqual({
 			success: true,
 			data: { assigned: 1 },
 			status: undefined,
 		});
-		expect(mockFindCandidateIdsForAssignment).toHaveBeenCalledWith([], [], CountryCode.SL, ['partner-1']);
-		expect(mockUpdateCandidateProgramAssignments).toHaveBeenCalledWith(audit, ['candidate-1'], 'program-1');
+		expect(mockFindUnassignedCandidateIds).toHaveBeenCalledWith(filter);
+		expect(mockUpdateUnassignedCandidateAssignments).toHaveBeenCalledWith(
+			audit,
+			['candidate-1', 'candidate-2'],
+			'program-1',
+			1,
+		);
+	});
+
+	test('returns a fixed failure when the pool does not have enough candidates', async () => {
+		mockFindUnassignedCandidateIds.mockResolvedValue([]);
+		mockUpdateUnassignedCandidateAssignments.mockResolvedValue({ outcome: 'insufficient' });
+
+		await expect(
+			assignRandomCandidatesToProgram(audit, 'program-1', 2, {
+				countryCode: CountryCode.SL,
+				focusIds: [],
+				profiles: [],
+				localPartnerIds: [],
+			}),
+		).resolves.toEqual({
+			success: false,
+			error: 'Not enough candidates available',
+			status: undefined,
+		});
 	});
 });

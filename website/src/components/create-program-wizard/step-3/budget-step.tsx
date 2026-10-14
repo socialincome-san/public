@@ -2,16 +2,16 @@
 
 import { Currency, PayoutInterval } from '@/generated/prisma/enums';
 import { useTranslations } from 'next-intl';
-import { PayoutBox } from './payout-box';
+import { PayoutBox, type PayoutCustomization } from './payout-box';
 import { ProgramCostsHeader } from './program-costs-header';
 import { RecipientsBox } from './recipients-box';
 
 type Props = {
+	recipientsTitle: string;
+	totalCostsTitle: string;
 	amountOfRecipients: number;
 	filteredRecipients: number;
 	programDuration: number;
-	payoutPerIntervalMin: number;
-	payoutPerIntervalMax: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
 	payoutCurrency: Currency;
@@ -20,74 +20,20 @@ type Props = {
 	displayMonthlyCost: number;
 	exchangeRateText?: string;
 	payoutToDisplayRate?: number;
-	totalBudgetTooltipText: string;
 	isCalculatingBudget: boolean;
-	customizePayouts: boolean;
-
+	disabled?: boolean;
+	// Without it the payouts are fixed and only summarized
+	payoutCustomization?: PayoutCustomization;
 	onRecipientsChange: (value: number) => void;
-	onDurationChange: (value: number) => void;
-	onPayoutChange: (value: number) => void;
-	onIntervalChange: (value: PayoutInterval) => void;
 	onCurrencyChange: (value: string) => void;
-	onToggleCustomizePayouts: () => void;
 };
 
 export const BudgetStep = ({
+	recipientsTitle,
+	totalCostsTitle,
 	amountOfRecipients,
 	filteredRecipients,
 	programDuration,
-	payoutPerIntervalMin,
-	payoutPerIntervalMax,
-	payoutPerInterval,
-	payoutInterval,
-	payoutCurrency,
-	displayCurrency,
-	calculatedTotalBudget,
-	displayMonthlyCost,
-	exchangeRateText,
-	payoutToDisplayRate,
-	totalBudgetTooltipText,
-	isCalculatingBudget,
-	customizePayouts,
-	onRecipientsChange,
-	onDurationChange,
-	onPayoutChange,
-	onIntervalChange,
-	onCurrencyChange,
-	onToggleCustomizePayouts,
-}: Props) => (
-	<BudgetStepContent
-		amountOfRecipients={amountOfRecipients}
-		filteredRecipients={filteredRecipients}
-		programDuration={programDuration}
-		payoutPerIntervalMin={payoutPerIntervalMin}
-		payoutPerIntervalMax={payoutPerIntervalMax}
-		payoutPerInterval={payoutPerInterval}
-		payoutInterval={payoutInterval}
-		payoutCurrency={payoutCurrency}
-		displayCurrency={displayCurrency}
-		calculatedTotalBudget={calculatedTotalBudget}
-		displayMonthlyCost={displayMonthlyCost}
-		exchangeRateText={exchangeRateText}
-		payoutToDisplayRate={payoutToDisplayRate}
-		totalBudgetTooltipText={totalBudgetTooltipText}
-		isCalculatingBudget={isCalculatingBudget}
-		customizePayouts={customizePayouts}
-		onRecipientsChange={onRecipientsChange}
-		onDurationChange={onDurationChange}
-		onPayoutChange={onPayoutChange}
-		onIntervalChange={onIntervalChange}
-		onCurrencyChange={onCurrencyChange}
-		onToggleCustomizePayouts={onToggleCustomizePayouts}
-	/>
-);
-
-const BudgetStepContent = ({
-	amountOfRecipients,
-	filteredRecipients,
-	programDuration,
-	payoutPerIntervalMin,
-	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
 	payoutCurrency,
@@ -97,13 +43,10 @@ const BudgetStepContent = ({
 	exchangeRateText,
 	payoutToDisplayRate,
 	isCalculatingBudget,
-	customizePayouts,
+	disabled = false,
+	payoutCustomization,
 	onRecipientsChange,
-	onDurationChange,
-	onPayoutChange,
-	onIntervalChange,
 	onCurrencyChange,
-	onToggleCustomizePayouts,
 }: Props) => {
 	const t = useTranslations('create-program-wizard');
 	const numberOfIntervals =
@@ -131,36 +74,34 @@ const BudgetStepContent = ({
 	return (
 		<div className="space-y-8">
 			<ProgramCostsHeader
+				title={totalCostsTitle}
 				totalBudget={calculatedTotalBudget}
 				monthlyCost={displayMonthlyCost}
 				currency={displayCurrency}
 				exchangeRateText={exchangeRateText}
 				totalBudgetTooltipText={localizedTooltipText}
 				isCalculatingBudget={isCalculatingBudget}
+				disabled={disabled}
 				onCurrencyChange={onCurrencyChange}
 			/>
 
 			<div className="grid gap-6 md:grid-cols-2">
 				<RecipientsBox
+					title={recipientsTitle}
 					amountOfRecipients={amountOfRecipients}
 					filteredRecipients={filteredRecipients}
+					disabled={disabled}
 					onChange={onRecipientsChange}
 				/>
 
 				<PayoutBox
 					programDuration={programDuration}
-					payoutPerIntervalMin={payoutPerIntervalMin}
-					payoutPerIntervalMax={payoutPerIntervalMax}
 					payoutPerInterval={payoutPerInterval}
 					payoutInterval={payoutInterval}
 					payoutCurrency={payoutCurrency}
 					displayCurrency={displayCurrency}
 					payoutToDisplayRate={payoutToDisplayRate}
-					customizePayouts={customizePayouts}
-					onDurationChange={onDurationChange}
-					onPayoutChange={onPayoutChange}
-					onIntervalChange={onIntervalChange}
-					onToggleCustomizePayouts={onToggleCustomizePayouts}
+					customization={payoutCustomization}
 				/>
 			</div>
 		</div>

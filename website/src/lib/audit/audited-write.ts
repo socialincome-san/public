@@ -10,13 +10,13 @@ export type AuditedEntity = {
 type AuditedWriteOptions = {
 	entity: AuditedEntity;
 	context: AuditContext;
-} & ({ action: 'create' } | { action: 'update' | 'delete'; entityId: string | string[] });
+} & ({ action: 'create' | 'update' } | { action: 'update' | 'delete'; entityId: string | string[] });
 
 /**
  * Runs `write` and stores an audit event per entity with its state afterwards
  * in the same transaction, so the write rolls back if an event cannot be
- * stored. Updates that change nothing store no event. `create` takes the ids
- * from the returned row or rows (`createManyAndReturn`).
+ * stored. Updates that change nothing store no event. Without `entityId` the
+ * ids come from the returned row or rows (`createManyAndReturn`, `RETURNING id`).
  */
 export const auditedWrite = async <T>(
 	options: AuditedWriteOptions,
@@ -24,7 +24,7 @@ export const auditedWrite = async <T>(
 ): Promise<T> =>
 	prisma.$transaction(async (transaction) => {
 		const result = await write(transaction);
-		const entityIds = new Set('entityId' in options ? [options.entityId].flat() : getCreatedIds(result));
+		const entityIds = new Set('entityId' in options ? [options.entityId].flat() : getReturnedIds(result));
 		const events: Prisma.AuditEventCreateManyInput[] = [];
 		for (const entityId of entityIds) {
 			const snapshot = options.action === 'delete' ? null : await options.entity.findSnapshot(transaction, entityId);
@@ -75,11 +75,11 @@ const toStableJson = (value: unknown): string =>
 			: item,
 	);
 
-const getCreatedIds = (data: unknown): string[] =>
+const getReturnedIds = (data: unknown): string[] =>
 	(Array.isArray(data) ? data : [data]).map((row: unknown) => {
 		if (typeof row === 'object' && row !== null && 'id' in row && typeof row.id === 'string') {
 			return row.id;
 		}
 
-		throw new Error('Audited create must return the created rows with their ids.');
+		throw new Error('An audited write without entityId must return the written rows with their ids.');
 	});

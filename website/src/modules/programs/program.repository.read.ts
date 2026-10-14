@@ -216,6 +216,18 @@ export const findProgramPayoutForecastSource = async (programId: string) =>
 		},
 	});
 
+export const findProgramRecipientPoolContext = async (programId: string) =>
+	prisma.program.findUnique({
+		where: { id: programId },
+		select: {
+			id: true,
+			programDurationInMonths: true,
+			payoutPerInterval: true,
+			payoutInterval: true,
+			country: { select: { isoCode: true, currency: true } },
+		},
+	});
+
 export const findProgramSettings = async (programId: string) =>
 	prisma.program.findUnique({
 		where: { id: programId },

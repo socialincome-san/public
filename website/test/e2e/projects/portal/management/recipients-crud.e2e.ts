@@ -111,7 +111,7 @@ test('Add new recipient', async ({ page }) => {
 	await assertContactExistsByEmail('power@portal.test');
 
 	await page.goto('/portal/management/recipients');
-	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
+	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient-manually');
 
 	await selectOptionByTestId(page, 'program', ADD_RECIPIENT.programName);
 	await selectOptionByTestId(page, 'localPartner', ADD_RECIPIENT.localPartnerName);
@@ -138,7 +138,7 @@ test('add recipient with payment phone keeps Firebase user in sync', async ({ pa
 
 	try {
 		await page.goto('/portal/management/recipients');
-		await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
+		await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient-manually');
 		await selectOptionByTestId(page, 'program', ADD_RECIPIENT.programName);
 		await selectOptionByTestId(page, 'localPartner', ADD_RECIPIENT.localPartnerName);
 		await page.getByTestId('form-accordion-trigger-contact').click();
@@ -222,7 +222,7 @@ test('shows uniqueness error when recipient email already exists', async ({ page
 	expect(existingContact?.email).toBeTruthy();
 
 	await page.goto('/portal/management/recipients');
-	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
+	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient-manually');
 	await selectOptionByTestId(page, 'program', ADD_RECIPIENT.programName);
 	await selectOptionByTestId(page, 'localPartner', ADD_RECIPIENT.localPartnerName);
 	await page.getByTestId('form-accordion-trigger-contact').click();
@@ -241,7 +241,7 @@ test('shows uniqueness error when recipient payment code already exists', async 
 	expect(existingPaymentInfo?.code).toBeTruthy();
 
 	await page.goto('/portal/management/recipients');
-	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient');
+	await clickDataTableActionItem(page, 'data-table-action-item-add-new-recipient-manually');
 	await selectOptionByTestId(page, 'program', ADD_RECIPIENT.programName);
 	await selectOptionByTestId(page, 'localPartner', ADD_RECIPIENT.localPartnerName);
 	await page.getByTestId('form-accordion-trigger-contact').click();

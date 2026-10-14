@@ -3,7 +3,7 @@ import { Gender, Profile, type CountryCode } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { CandidatesTableQuery } from './candidate.types';
+import type { CandidatesTableQuery, UnassignedCandidateFilter } from './candidate.types';
 
 export const findCandidateById = async (candidateId: string) =>
 	prisma.recipient.findUnique({
@@ -107,22 +107,21 @@ export const findPhoneByNumber = async (number: string) =>
 export const findPaymentInformationByCode = async (code: string) =>
 	prisma.paymentInformation.findUnique({ where: { code }, select: { id: true } });
 
-export const countCandidates = async (
-	focuses?: string[],
-	profiles?: Profile[],
-	countryCode?: CountryCode | null,
-	localPartnerIds?: string[],
-) => prisma.recipient.count({ where: buildCandidateWhere(focuses, profiles, countryCode, localPartnerIds) });
+export const countCandidates = async (filter: UnassignedCandidateFilter) =>
+	prisma.recipient.count({ where: buildCandidateWhere(filter) });
 
-export const findCandidateIdsForAssignment = async (
-	focuses: string[] | undefined,
-	profiles: Profile[] | undefined,
-	countryCode: CountryCode,
-	localPartnerIds?: string[],
-) =>
-	prisma.recipient.findMany({
-		where: buildCandidateWhere(focuses, profiles, countryCode, localPartnerIds),
-		select: { id: true },
+export const findUnassignedCandidateIds = async (filter: UnassignedCandidateFilter) =>
+	prisma.recipient.findMany({ where: buildCandidateWhere(filter), select: { id: true } });
+
+export const findLocalPartnersWithUnassignedCandidates = async (countryCode: CountryCode) =>
+	prisma.localPartner.findMany({
+		where: {
+			recipients: {
+				some: buildCandidateWhere({ countryCode, focusIds: [], profiles: [], localPartnerIds: [] }),
+			},
+		},
+		select: { id: true, name: true },
+		orderBy: { name: 'asc' },
 	});
 
 export const candidatePayloadSelect = {
@@ -325,49 +324,67 @@ const buildCountryFilter = (countryCode: CountryCode): Prisma.RecipientWhereInpu
 	],
 });
 
-const buildCandidateWhere = (
-	focuses?: string[],
-	profiles?: Profile[],
-	countryCode?: CountryCode | null,
-	localPartnerIds?: string[],
-): Prisma.RecipientWhereInput => {
+const buildCandidateWhere = (filter: UnassignedCandidateFilter): Prisma.RecipientWhereInput => {
 	const andFilters: Prisma.RecipientWhereInput[] = [];
-	if (countryCode) {
-		andFilters.push(buildCountryFilter(countryCode));
+	if (filter.countryCode) {
+		andFilters.push(buildCountryFilter(filter.countryCode));
 	}
-	if (localPartnerIds?.length) {
-		andFilters.push({ localPartnerId: { in: localPartnerIds } });
+	if (filter.localPartnerIds.length) {
+		andFilters.push({ localPartnerId: { in: filter.localPartnerIds } });
 	}
-	if (focuses?.length) {
-		andFilters.push(
-			...focuses.map((focusId) => ({
+	if (filter.focusIds.length) {
+		andFilters.push({
+			OR: filter.focusIds.map((focusId) => ({
 				localPartner: { focuses: { some: { focusId } } },
 			})),
-		);
+		});
 	}
-	if (profiles?.length) {
-		const contactFilters: Prisma.ContactWhereInput[] = [];
-		if (profiles.includes(Profile.male)) {
-			contactFilters.push({ gender: Gender.male });
-		}
-		if (profiles.includes(Profile.female)) {
-			contactFilters.push({ gender: Gender.female });
-		}
-		if (profiles.includes(Profile.youth)) {
-			const currentDate = now();
-			contactFilters.push({
-				dateOfBirth: {
-					gte: new Date(currentDate.getFullYear() - 25, currentDate.getMonth(), currentDate.getDate()),
-				},
-			});
-		}
-		if (contactFilters.length) {
-			andFilters.push({ contact: { AND: contactFilters } });
-		}
+
+	const profileFilter = buildProfileFilter(filter.profiles);
+	if (profileFilter) {
+		andFilters.push(profileFilter);
 	}
 
 	return {
 		programId: null,
 		...(andFilters.length ? { AND: andFilters } : {}),
 	};
+};
+
+const buildProfileFilter = (profiles: Profile[]): Prisma.RecipientWhereInput | null => {
+	const genderFilters: Prisma.ContactWhereInput[] = [];
+	if (profiles.includes(Profile.male)) {
+		genderFilters.push({ gender: Gender.male });
+	}
+	if (profiles.includes(Profile.female)) {
+		genderFilters.push({ gender: Gender.female });
+	}
+
+	const contactFilters: Prisma.ContactWhereInput[] = [];
+	if (genderFilters.length === 1) {
+		const [genderFilter] = genderFilters;
+		if (genderFilter) {
+			contactFilters.push(genderFilter);
+		}
+	} else if (genderFilters.length > 1) {
+		contactFilters.push({ OR: genderFilters });
+	}
+	if (profiles.includes(Profile.youth)) {
+		const currentDate = now();
+		contactFilters.push({
+			dateOfBirth: {
+				gte: new Date(currentDate.getFullYear() - 25, currentDate.getMonth(), currentDate.getDate()),
+			},
+		});
+	}
+	if (contactFilters.length === 1) {
+		const [contactFilter] = contactFilters;
+
+		return contactFilter ? { contact: contactFilter } : null;
+	}
+	if (contactFilters.length > 1) {
+		return { contact: { AND: contactFilters } };
+	}
+
+	return null;
 };
