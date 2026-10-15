@@ -5,9 +5,6 @@ import '../src/styles.css';
 const preview: Preview = {
 	parameters: {
 		layout: 'centered',
-		nextjs: {
-			appDirectory: true,
-		},
 		docs: {
 			codePanel: true,
 		},
