@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@socialincome/design-system": "*",
-    "ai": "^7.0.141",
+    "ai": "7.0.140",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0"
