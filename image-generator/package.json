@@ -12,12 +12,19 @@
     "@socialincome/design-system": "*",
     "ai": "7.0.137",
     "next": "16.4.0",
+    "pg": "^8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+<<<<<<< Updated upstream
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "20.19.43",
+=======
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/pg": "^8.23.1",
+>>>>>>> Stashed changes
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
