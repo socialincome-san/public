@@ -1,7 +1,5 @@
-import { isSessionValid } from "../session";
 import { Pool } from "pg";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 export const instant = false;
 
 const pool = new Pool({
@@ -12,9 +10,6 @@ type GeneratedImageRow = {
   media_type: string;
 };
 export default async function ImagesPage() {
-  if (!(await isSessionValid())) {
-    redirect("/");
-  }
   const result = await pool.query<GeneratedImageRow>(
     "SELECT image_base64, media_type FROM generated_images",
   );

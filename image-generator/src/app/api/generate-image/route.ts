@@ -1,5 +1,4 @@
 import { generateImage } from "ai";
-import { isSessionValid } from "@/app/session";
 import { buildPrompt } from "@/app/style-template";
 import { Pool } from "pg";
 
@@ -13,14 +12,9 @@ type GeneratedImage = {
 };
 
 type PromptResult =
-  | { prompt: string; error: null }
-  | { prompt: null; error: string };
+  { prompt: string; error: null } | { prompt: null; error: string };
 
 export async function POST(request: Request) {
-  if (!(await isSessionValid())) {
-    return errorResponse("Unauthorized", 401);
-  }
-
   const promptResult = await getPrompt(request);
   if (promptResult.error !== null) {
     return errorResponse(promptResult.error, 400);
