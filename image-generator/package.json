@@ -17,14 +17,9 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
-<<<<<<< Updated upstream
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "20.19.43",
-=======
-    "@tailwindcss/turbopack": "^4",
-    "@types/node": "^20",
     "@types/pg": "^8.23.1",
->>>>>>> Stashed changes
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
