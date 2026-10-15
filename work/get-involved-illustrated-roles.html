@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Social Income — Illustrated roles proposal</title>
+	<!--
+		Aligned with origin/main design-system (Oct 2026):
+		tokens   -> design-system/src/styles/tokens.css + theme.css
+		header   -> navigation/site-header (SiteHeader + SiteMenuDesktop)
+		headings -> layout/section-heading (400 weight, <strong> bold closing phrase)
+		cards    -> data-display/card (rounded-3xl, raised, interactive, surface default|gradient)
+		paths    -> actions/link-pill
+		buttons  -> actions/button (default gradient, outline)
+		layout   -> layout/block-wrapper (w-site-width max-w-content px-6), card-grid (gap-6, lg:3 cols)
+	-->
+	<style>
+		@font-face { font-family:'Unica77'; src:url('fonts/Unica77LLWeb-Light.woff2') format('woff2'); font-weight:300; font-display:swap; }
+		@font-face { font-family:'Unica77'; src:url('fonts/Unica77LLWeb-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
+		@font-face { font-family:'Unica77'; src:url('fonts/Unica77LLWeb-Medium.woff2') format('woff2'); font-weight:500; font-display:swap; }
+		@font-face { font-family:'Unica77'; src:url('fonts/Unica77LLWeb-Bold.woff2') format('woff2'); font-weight:700; font-display:swap; }
+
+		/* tokens.css */
+		:root {
+			--background: 0 0% 100%;
+			--foreground: 197 79% 15%;
+			--card: 0 0% 100%;
+			--primary: 197 79% 15%;
+			--primary-foreground: 210 40% 98%;
+			--muted: 210 40% 96%;
+			--muted-foreground: 215 16% 44%;
+			--accent: 210 40% 96%;
+			--border: 214 32% 91%;
+			--input: 213 27% 84%;
+			--ring: 215 20% 65%;
+			--gradient-button-from: 201 90% 27%;
+			--gradient-button-to: 160 16% 66%;
+			--gradient-background-from: rgba(251, 237, 209, 0.6);
+			--gradient-background-to: rgba(202, 221, 233, 0.6);
+			--banner-blue: 202 41% 83%;
+			--backstage: 202 42% 91%;
+			--highlight: 37 87% 96%;
+			/* theme.css */
+			--shadow-card: 0 4px 28px 0 rgb(0 30 101 / 0.07);
+			--shadow-raised: 0 4px 28px 0 rgb(0 30 101 / 0.12);
+			--shadow-overlay: 0 24px 80px 0 rgb(31 65 101 / 0.12);
+			--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+			--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+			--content: 1400px;
+			--site-width: 94vw;
+			--ease-glide: cubic-bezier(0.32, 0.72, 0, 1);
+		}
+
+		* { box-sizing:border-box; }
+		html, body { font-feature-settings:'ss04' on; }
+		html { min-height:100%; }
+		body {
+			margin:0; min-height:100vh; padding-bottom:1px;
+			font-family:'Unica77', ui-sans-serif, system-ui, sans-serif;
+			color:hsl(var(--foreground));
+			/* utilities.css .bg-website-gradient */
+			background:repeating-linear-gradient(330deg, var(--gradient-background-from) 0px, var(--gradient-background-to) 600px, var(--gradient-background-from) 1200px), white;
+		}
+		a { color:inherit; text-decoration:none; }
+		::selection { background:hsl(var(--primary)); color:hsl(var(--primary-foreground)); }
+		svg.icon { width:16px; height:16px; flex-shrink:0; }
+
+		/* BlockWrapper */
+		.block { width:var(--site-width); max-width:var(--content); margin-inline:auto; padding-inline:24px; position:relative; }
+
+		/* SiteHeader */
+		.site-header {
+			position:absolute; inset-inline:0; top:20px; z-index:50; margin-inline:auto;
+			width:var(--site-width); max-width:var(--content); height:56px; padding:8px;
+			display:flex; align-items:center; justify-content:space-between;
+			background:hsl(var(--card)); border-radius:9999px; box-shadow:var(--shadow-card);
+		}
+		.site-header .logo { margin-left:16px; display:flex; color:hsl(var(--foreground)); }
+		.menu { display:flex; align-items:center; gap:4px; }
+		.menu a, .menu button, .header-actions .item {
+			display:flex; align-items:center; gap:6px; padding:8px 12px; border-radius:6px;
+			font-size:14px; line-height:20px; font-weight:700; transition:background-color .15s;
+		}
+		.menu a:hover, .menu button:hover, .header-actions .item:hover { background:hsl(var(--muted)); }
+		.menu a[aria-current], .menu button[aria-current] { background:hsl(var(--muted)); }
+		.menu button { font:inherit; font-size:14px; font-weight:700; color:inherit; border:0; background:none; cursor:pointer; }
+		.menu svg { width:14px; height:14px; }
+		/* SiteMenuDesktop dropdown: opens on click below the header (top: 100% + 1rem), enterFromTop / fadeOut */
+		.menu-trigger svg { transition:transform .15s; }
+		.menu-trigger[aria-expanded="true"] { background:hsl(var(--muted)); }
+		.menu-trigger[aria-expanded="true"] svg { transform:rotate(180deg); }
+		.mega { position:absolute; inset-inline:0; top:calc(100% + 16px); z-index:50; }
+		.mega[hidden] { display:none; }
+		.mega.is-entering { animation:enter-from-top .1s ease-out; }
+		.mega.is-leaving { animation:fade-out 75ms ease-out forwards; }
+		@keyframes enter-from-top { from { opacity:0; transform:translateY(-25px) scale(.9); } }
+		@keyframes fade-out { to { opacity:0; transform:scale(.95); } }
+		.mega-roles { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); border-radius:24px; overflow:hidden; box-shadow:var(--shadow-overlay); }
+		.mega-role { display:grid; grid-template-columns:minmax(0,1fr) 112px; grid-template-rows:auto auto; align-content:start; column-gap:16px; padding:24px; }
+		.mega-role.surface-cream { background:hsl(var(--card)); }
+		.mega-role.surface-blue { background:#d9eaf3; }
+		.mega-role.surface-yellow { background:#f5cf57; }
+		/* Audience as the heading of each column */
+		.mega-role .label { grid-column:1; font-size:1.5rem; line-height:2rem; font-weight:400; color:hsl(var(--primary)); }
+		.mega-role img { grid-column:2; grid-row:1 / span 2; align-self:start; width:112px; height:112px; object-fit:contain; }
+		.mega-role ul { grid-column:1 / -1; align-self:start; list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; }
+		.mega-role ul a {
+			display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 0;
+			border-top:1px solid hsl(var(--foreground) / .12); font-size:14px; line-height:20px; font-weight:700;
+		}
+		/* Variant B: like the other site menus, a bg-muted panel (rounded-3xl, p-8) with the joined role block inset */
+		/* Shadow as on the live menus (the site uses its own value instead of the shadow-overlay token) */
+		.mega[data-variant="inset"] { padding:32px; border-radius:24px; background:hsl(var(--muted)); box-shadow:0 24px 48px rgba(15, 23, 42, 0.16); }
+		/* 31px + 1px border: the role labels start where the group titles of the other menus start (32px into the content) */
+		.mega[data-variant="inset"] .mega-role { padding:31px; }
+		/* The coloured block is visible edge to edge, so it needs more air than the invisible group grid of the other menus */
+		#mega-get-involved[data-variant="inset"] { padding:48px; }
+		.mega[data-variant="inset"] .mega-roles { box-shadow:none; border:1px solid hsl(var(--border)); }
+
+		/* Separate simulated pages, sharing the site header. */
+		[hidden] { display:none !important; }
+		body[data-page="home"] .menu button[aria-current]:not([aria-expanded="true"]):not(:hover) { background:none; }
+		.home-shot { position:relative; }
+		.home-shot img { display:block; width:100%; height:auto; }
+		.hotspot { position:absolute; border-radius:9999px; }
+		.hotspot:focus-visible { outline:2px solid hsl(var(--ring)); }
+
+		/* Programs / About: SiteMenuDesktop content (groups grid-cols-3 gap-8 p-8, aside w-96) */
+		.site-menu { display:flex; align-items:flex-start; gap:40px; }
+		.site-menu-groups { flex:1; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:32px; padding:32px; }
+		.site-menu-group h3 { margin:0 0 16px; font-size:18px; line-height:1; font-weight:700; color:hsl(var(--foreground)); }
+		.site-menu-group ul { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+		.site-menu-group ul a { font-weight:500; color:hsl(var(--muted-foreground)); transition:color .15s; }
+		.site-menu-group ul a:hover { color:hsl(var(--foreground)); }
+		.site-menu-group .overview { display:inline-flex; align-items:center; gap:6px; margin-top:22px; font-size:14px; font-weight:700; color:hsl(var(--muted-foreground)); transition:color .15s; }
+		.site-menu-group .overview:hover { color:hsl(var(--foreground)); }
+		.site-menu-group .overview svg { width:16px; height:16px; transition:transform .2s; }
+		.site-menu-group .overview:hover svg { transform:translateX(4px); }
+		.site-menu-aside { width:384px; flex-shrink:0; display:flex; flex-direction:column; gap:16px; padding:24px; border-radius:24px; border:1px solid hsl(var(--border)); background:hsl(var(--card)); }
+		.site-menu-aside h3 { margin:0; font-size:1.5rem; line-height:2rem; font-weight:700; }
+		.site-menu-aside p { margin:0; font-size:14px; line-height:20px; color:hsl(var(--muted-foreground)); }
+		.mega-more { display:inline-flex; align-items:center; gap:6px; margin-top:20px; font-size:14px; font-weight:700; color:hsl(var(--muted-foreground)); }
+		.mega-more:hover { color:hsl(var(--foreground)); }
+		.mega-more svg { width:16px; height:16px; }
+		.mega:not([data-variant="inset"]) .mega-more { display:none; }
+
+		.mega-role ul li:last-child a { border-bottom:1px solid hsl(var(--foreground) / .12); }
+		.mega-role ul a svg { width:14px; height:14px; transition:transform .2s; }
+		.mega-role ul a:hover svg { transform:translateX(3px); }
+		.header-actions { display:flex; align-items:center; gap:16px; }
+		.mobile-menu { display:none !important; border:0; background:none; color:inherit; padding:8px !important; }
+
+		/* Button */
+		.btn {
+			position:relative; z-index:0; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+			border-radius:9999px; font:inherit; font-size:14px; line-height:20px; font-weight:500; white-space:nowrap;
+			transition:background-color .15s, color .15s; cursor:pointer; border:0;
+		}
+		.btn-default { color:hsl(var(--primary-foreground)); background:hsl(var(--primary) / .9); box-shadow:0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1); }
+		.btn-default::after {
+			content:''; position:absolute; inset:0; z-index:-1; border-radius:9999px; transition:opacity .15s;
+			background:linear-gradient(to right, hsl(var(--gradient-button-from)), hsl(var(--gradient-button-to)));
+		}
+		.btn-default:hover::after { opacity:0; }
+		.btn-outline { border:1px solid hsl(var(--input)); background:hsl(var(--background)); color:hsl(var(--primary)); }
+		.btn-outline:hover { background:hsl(var(--accent)); }
+		.btn-md { height:40px; padding-inline:16px; }
+		.btn-lg { padding:12px 24px; }
+		/* Primary action of the donate view: larger than the other controls */
+		.btn-cta { height:56px; padding:0 32px; font-size:16px; line-height:24px; }
+		.btn-cta svg { width:18px; height:18px; transition:transform .2s var(--ease-glide); }
+		.btn-cta:hover svg { transform:translateX(4px); }
+
+		/* Breadcrumb */
+		.breadcrumb { display:flex; align-items:center; gap:6px; padding-top:116px; font-size:14px; color:hsl(var(--muted-foreground)); }
+		.breadcrumb a:hover { color:hsl(var(--foreground)); }
+		.breadcrumb [aria-current] { color:hsl(var(--foreground)); }
+		.breadcrumb svg { width:14px; height:14px; }
+
+		/* PageIntro / SectionHeading size 1, left */
+		/* PageIntro: title with the description underneath */
+		.intro { display:flex; flex-direction:column; align-items:flex-start; gap:20px; margin-top:48px; }
+		.heading { margin:0; color:hsl(var(--primary)); font-weight:400; line-height:1.25; }
+		.heading strong { font-weight:700; }
+		/* MediaHero light: text-6xl without leading class -> line-height 1 */
+		.h1 { font-size:3.75rem; line-height:1; }
+		.h4 { font-size:1.875rem; }
+		.intro p { margin:0; max-width:42rem; font-size:18px; line-height:28px; color:hsl(var(--muted-foreground)); }
+
+		/* One joined block: rounded-3xl surface with three colored panels */
+		main.block { padding-bottom:128px; }
+		.roles {
+			list-style:none; margin:48px 0 0; padding:0; display:flex;
+			border-radius:24px; overflow:hidden; box-shadow:var(--shadow-card);
+		}
+		.roles > li { display:flex; flex:0 0 33.333%; min-width:0; }
+
+		.card {
+			position:relative; width:100%;
+			display:flex; flex-direction:column; gap:16px;
+			--pad:40px; padding:var(--pad);
+			/* lets the illustrations size against the panel width */
+			container-type:inline-size;
+		}
+		/* Colors from the illustrated roles proposal (v1) */
+		.card.surface-cream { background:hsl(var(--card)); }
+		.card.surface-blue { background:#d9eaf3; }
+		.card.surface-yellow { background:#f5cf57; }
+		.card.surface-yellow .label, .card.surface-yellow .summary { color:hsl(var(--foreground) / .72); }
+		.card .label { font-size:14px; line-height:20px; font-weight:500; color:hsl(var(--muted-foreground)); }
+		.card .summary { margin:0; font-size:16px; line-height:24px; color:hsl(var(--muted-foreground)); }
+		.art { flex:1; display:flex; align-items:center; justify-content:center; min-height:330px; position:relative; margin-block:8px; margin-inline:calc(-1 * var(--pad)); }
+		/* Same height for every illustration so the main figures match; the square-format illus are portrait after cutout, so cap at 90% of the panel width */
+		.art img { position:relative; width:auto; max-width:100%; height:min(320px, calc((100cqi + 2 * var(--pad)) * 0.9)); object-fit:contain; }
+		/* One path per row: bold label + arrow in a round button, like the menu overview links */
+		.paths { display:flex; flex-direction:column; min-height:calc(4 * 61px); }
+		.path {
+			display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 0;
+			border-top:1px solid hsl(var(--foreground) / .12); font-size:16px; line-height:24px; font-weight:700;
+		}
+		.path .arrow {
+			display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:9999px;
+			background:hsl(var(--background)); transition:transform .2s, background-color .2s, color .2s;
+		}
+		.surface-cream .path .arrow { background:hsl(var(--muted)); }
+		.path:hover .arrow { transform:translateX(4px); background:hsl(var(--primary)); color:hsl(var(--primary-foreground)); }
+
+		.roles > li:first-child .card { border-radius:24px 0 0 24px; }
+		.roles > li:last-child .card { border-radius:0 24px 24px 0; }
+
+		/* Standalone page blocks reuse the calculator and section-heading layout. */
+		.breadcrumb { flex-wrap:wrap; }
+		.roles-block { scroll-margin-top:24px; }
+		.donation-block { display:flex; flex-direction:column; margin-top:48px; border-radius:24px; background:hsl(var(--muted)); box-shadow:var(--shadow-card); }
+		.detail-content { margin-top:48px; }
+		.detail-hero .summary { margin:0; font-size:18px; line-height:28px; color:hsl(var(--muted-foreground)); }
+		.detail-hero .donate-grid { gap:32px; padding:16px 0; justify-content:center; }
+		.detail-steps, .detail-related { margin-top:64px; }
+		.detail-steps ol { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:40px; padding:0; margin:32px 0 0; list-style:none; }
+		.detail-steps li { border-top:1px solid hsl(var(--foreground) / .16); padding-top:24px; }
+		.detail-steps .amount-label { display:block; margin-bottom:16px; }
+		.detail-steps p { font-size:16px; line-height:24px; color:hsl(var(--muted-foreground)); }
+		.detail-related .paths { min-height:0; margin-top:24px; }
+		.detail-related .path:last-child { border-bottom:1px solid hsl(var(--foreground) / .12); }
+		/* CmsHeader and the standard CMS page wrapper: no eyebrow, bold title, 32px section spacing. */
+		.detail-page .breadcrumb { padding-top:112px; gap:10px; }
+		.detail-page .intro { margin-top:32px; }
+		.detail-page .intro .h1 { font-weight:700; line-height:1.25; }
+		.detail-page .intro .h1.income-heading { font-weight:400; }
+		.detail-page .intro p { max-width:none; color:hsl(var(--foreground)); }
+		.detail-page .donation-block, .detail-page .detail-content { margin-top:32px; }
+
+		/* focus-visible:ring-1 ring-ring */
+		.text-link:focus-visible, .path:focus-visible, .why:focus-visible { outline:none; box-shadow:0 0 0 1px hsl(var(--ring)); }
+
+		/* One left-aligned column for the amount calculator and donation actions. */
+		.donate-grid { flex:1; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:40px; padding:0 0 32px; width:100%; max-width:none; }
+		.donate-intro { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
+		.donate-intro .summary { max-width:520px; }
+		.h3 { font-size:2.25rem; }
+		/* Calculator column on the left, the illustration centred in the right column with the same bottom spacing as the calculator */
+		.donate-body { flex:1; display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:48px; }
+		.donate-art { display:flex; align-items:center; justify-content:flex-start; padding:32px 0; }
+		.donate-art img { width:auto; max-width:100%; max-height:460px; object-fit:contain; }
+		.text-link { margin-top:8px; padding:0; border:0; background:none; font:inherit; font-size:14px; line-height:20px; font-weight:500; color:hsl(var(--foreground)); text-decoration:underline; text-underline-offset:4px; text-decoration-color:hsl(var(--foreground) / .3); cursor:pointer; transition:text-decoration-color .15s; }
+		.text-link:hover { text-decoration-color:hsl(var(--foreground)); }
+		.donate-calc { width:100%; display:flex; flex-direction:column; align-items:flex-start; gap:8px; }
+		.amount-label { font-size:14px; line-height:20px; font-weight:500; color:hsl(var(--muted-foreground)); }
+		.amount-row { display:flex; align-items:baseline; gap:12px; margin-bottom:16px; }
+		.currency { font-size:1.5rem; line-height:1; font-weight:400; color:hsl(var(--muted-foreground)); }
+		.amount {
+			font-size:clamp(4.5rem, 9vw, 7rem); line-height:1; font-weight:300; letter-spacing:-0.02em; color:hsl(var(--primary));
+		}
+		.per { font-size:16px; color:hsl(var(--muted-foreground)); }
+		.per[hidden] { display:none; }
+
+		/* Big slider: Slider track (muted, gradient range) with the borderless white Switch thumb, scaled up for the hero */
+		.big-slider { width:min(100%, 560px); }
+		.big-slider input {
+			--p:50%; width:100%; height:32px; margin:0; background:none; cursor:pointer; -webkit-appearance:none; appearance:none;
+		}
+		.big-slider input::-webkit-slider-runnable-track {
+			height:8px; border-radius:9999px;
+			background:linear-gradient(to right, hsl(var(--gradient-button-from)), hsl(var(--gradient-button-to))) 0 / var(--p) 100% no-repeat, hsl(var(--muted));
+		}
+		.big-slider input::-moz-range-track { height:8px; border-radius:9999px; background:hsl(var(--muted)); }
+		.big-slider input::-moz-range-progress { height:8px; border-radius:9999px; background:linear-gradient(to right, hsl(var(--gradient-button-from)), hsl(var(--gradient-button-to))); }
+		.big-slider input::-webkit-slider-thumb {
+			-webkit-appearance:none; width:32px; height:32px; margin-top:-12px; border-radius:9999px;
+			background:hsl(var(--background)); border:0; box-shadow:0 1px 3px 0 rgb(0 0 0 / .14), 0 4px 14px 0 rgb(0 30 101 / .14);
+			transition:transform .2s var(--ease-glide), box-shadow .2s;
+		}
+		.big-slider input::-moz-range-thumb { width:32px; height:32px; border-radius:9999px; background:hsl(var(--background)); border:0; box-shadow:0 1px 3px 0 rgb(0 0 0 / .14), 0 4px 14px 0 rgb(0 30 101 / .14); }
+		.big-slider input:hover::-webkit-slider-thumb { box-shadow:0 1px 3px 0 rgb(0 0 0 / .14), 0 4px 14px 0 rgb(0 30 101 / .14), 0 0 0 6px hsl(var(--ring) / .2); }
+		.big-slider input:active::-webkit-slider-thumb { transform:scale(1.12); }
+		.big-slider input:focus-visible { outline:none; }
+		.big-slider input:focus-visible::-webkit-slider-thumb { box-shadow:0 1px 3px 0 rgb(0 0 0 / .14), 0 4px 14px 0 rgb(0 30 101 / .14), 0 0 0 6px hsl(var(--ring) / .4); }
+
+		/* AvatarStack (size lg): 36px photos, 2px card-coloured ring, 8px overlap */
+		.community { display:inline-flex; align-items:center; gap:12px; font-size:14px; color:hsl(var(--foreground)); }
+		.avatars { display:flex; }
+		.avatars img { width:36px; height:36px; border-radius:9999px; object-fit:cover; box-shadow:0 0 0 2px hsl(var(--card)); margin-left:-8px; background:hsl(var(--muted)); }
+		.avatars img:first-child { margin-left:0; }
+
+		/* Statistic card (transparency page): muted shell, white inner card, footer row on the muted shell */
+		.donate-sheet {
+			flex:1; display:flex; flex-direction:column; padding:48px 56px 56px; border:1px solid hsl(var(--border)); border-radius:24px;
+			background:hsl(var(--card)); box-shadow:0 4px 6px -1px rgba(0, 0, 0, 0.05);
+		}
+		.donate-footer { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:24px 56px; }
+		.donate-footer .community, .donate-footer .why { font-size:14px; line-height:24px; font-weight:500; color:hsl(var(--foreground)); }
+		/* ExplainerVideoTrigger, layout inline */
+		.why { display:inline-flex; align-items:center; gap:12px; font-size:16px; text-align:left; }
+		.why .thumb { position:relative; flex-shrink:0; width:64px; height:40px; border-radius:9999px; overflow:hidden; box-shadow:0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1); }
+		.why .thumb img { width:100%; height:100%; object-fit:cover; }
+		.why .thumb::after { content:''; position:absolute; inset:0; background:hsl(var(--foreground) / .1); }
+		.why .play {
+			position:absolute; z-index:1; top:50%; left:50%; width:32px; height:32px; transform:translate(-50%,-50%);
+			display:flex; align-items:center; justify-content:center; border-radius:9999px; background:hsl(var(--foreground) / .35);
+			color:hsl(var(--primary-foreground)); transition:transform .2s ease-out;
+		}
+		.why:hover .play { transform:translate(-50%,-50%) scale(1.05); }
+		/* Donation action with the opposite interval as a text action alongside it. */
+		.donate-actions { display:flex; align-items:center; flex-wrap:wrap; gap:16px 24px; width:100%; margin-top:8px; }
+		.donate-actions .text-link { margin-top:0; }
+
+		@media (prefers-reduced-motion:reduce) {
+			.roles, .roles * { transition:none !important; animation:none !important; }
+		}
+
+		/* LinkPill (interactive) */
+		.link-pill {
+			display:inline-flex; width:fit-content; align-items:center; gap:6px; padding:6px 8px 6px 12px;
+			border-radius:9999px; font-size:12px; line-height:16px; font-weight:700;
+			background:hsl(var(--muted)); color:hsl(var(--foreground)); transition:background-color .15s;
+		}
+		.link-pill:hover { background:hsl(var(--muted) / .8); }
+
+
+		@media (max-width:1023px) {
+			.site-header { position:static; width:100%; height:72px; padding:8px 16px; border-radius:0; box-shadow:none; }
+			.site-header .logo { margin-left:0; }
+			.menu, .header-actions .hide-lg { display:none; }
+			.mobile-menu { display:flex !important; }
+			.breadcrumb { padding-top:24px; }
+			.detail-page .breadcrumb { padding-top:32px; }
+		}
+		@media (max-width:767px) {
+			.h1 br { display:none; }
+			.intro { display:block; margin-top:32px; }
+			.intro p { margin-top:20px; font-size:16px; line-height:24px; }
+			.h1 { font-size:3rem; }
+			.h4 { font-size:1.5rem; }
+			.roles { flex-direction:column; }
+			.roles > li { flex-basis:auto; }
+				main.block { padding-bottom:48px; }
+			.card { --pad:24px; padding:32px var(--pad); }
+			.roles > li:first-child .card { border-radius:24px 24px 0 0; }
+			.roles > li:last-child .card { border-radius:0 0 24px 24px; }
+				.detail-steps ol { grid-template-columns:minmax(0,1fr); gap:24px; }
+			.detail-steps, .detail-related { margin-top:40px; }
+			.donate-grid { gap:28px; }
+			.donate-body { grid-template-columns:minmax(0,1fr); }
+			.donate-art { display:none; }
+			.amount-row { gap:10px; }
+			.amount { font-size:3.75rem; }
+			.currency { font-size:1.25rem; }
+			.donate-sheet { padding:24px 24px 32px; }
+			.donate-footer { padding:16px 24px; flex-wrap:wrap; }
+			.why { display:none; }
+			.donate-actions #donate-cta { width:100%; }
+			}
+		@media (min-width:640px) and (max-width:767px) {
+			.detail-page .intro p { font-size:18px; line-height:28px; }
+		}
+		@media (max-width:639px) {
+			.header-actions .hide-sm { display:none; }
+			.detail-page .breadcrumb { gap:6px; }
+		}
+	</style>
+</head>
+<body>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+		<symbol id="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></symbol>
+		<symbol id="arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></symbol>
+		<symbol id="play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></symbol>
+		<symbol id="arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+		<symbol id="user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></symbol>
+		<symbol id="menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M4 6h16"/><path d="M4 18h16"/></symbol>
+	</svg>
+
+	<nav class="site-header" aria-label="Main">
+		<a class="logo" href="#home" data-goto="#home" aria-label="Social Income home">
+			<svg xmlns="http://www.w3.org/2000/svg" width="153" height="16" viewBox="0 0 153 16" fill="none" aria-hidden="true"><path fill="currentColor" d="m8.393 6.766-2.23-.642c-2-.577-2.524-.962-2.524-1.892 0-1.026 1.016-1.763 2.393-1.763 1.672 0 2.688 1.154 2.688 2.661h3.344C11.966 1.988 9.77 0 6.262 0 2.754 0 .295 1.828.295 4.553c0 1.988 1.279 3.56 3.54 4.2l2.59.738c2.033.577 2.722 1.09 2.722 2.116 0 1.155-1.05 1.892-2.656 1.892-1.869 0-3.082-1.186-3.082-3.014H0C0 13.884 2.524 16 6.426 16c3.639 0 6.065-1.988 6.065-4.938 0-2.18-1.345-3.495-4.098-4.296ZM19.572 4.457c-3.475 0-5.672 2.276-5.672 5.772 0 3.494 2.197 5.771 5.672 5.771 3.475 0 5.704-2.277 5.704-5.771-.033-3.463-2.23-5.772-5.704-5.772Zm0 9.266c-1.64 0-2.492-1.346-2.492-3.495 0-2.18.853-3.495 2.492-3.495s2.524 1.283 2.524 3.496c-.033 2.148-.885 3.494-2.524 3.494ZM32.03 13.723c-1.378 0-2.263-1.475-2.263-3.559s.853-3.463 2.262-3.463c1.115 0 1.803.738 1.935 2.02h3.147c-.033-2.533-1.902-4.264-5.082-4.264-3.278 0-5.409 2.276-5.409 5.772 0 3.462 2.131 5.771 5.41 5.771 3.015 0 5.08-1.764 5.08-4.297h-3.18c-.032 1.219-.753 2.02-1.9 2.02ZM42.127.32h-3.049v2.886h3.049V.32ZM42.127 4.777h-3.049v10.934h3.049V4.777ZM54.453 9.395c0-2.02-.164-2.95-1.049-3.784-.852-.801-2.032-1.154-3.672-1.154-3.081 0-5.08 1.282-5.212 3.655h3.147c.066-.962.754-1.603 2.033-1.603 1.114 0 1.803.61 1.803 1.7v.545c-3.41.352-7.41.64-7.41 3.88 0 2.148 1.607 3.206 4.066 3.206 1.836 0 2.787-.578 3.704-1.604.033.417.066.866.164 1.38h2.754c-.23-.899-.295-2.245-.295-3.784V9.395h-.033Zm-2.95 1.667c0 1.956-.918 2.822-2.525 2.822-.983 0-1.704-.45-1.704-1.283 0-1.603 2.065-1.635 4.229-1.892v.353ZM83.5.32h-3.18V15.68h3.18V.32ZM92.744 4.585c-1.41 0-2.72.61-3.54 1.635V4.778H86.35V15.71h3.05v-5.418c0-2.533.786-3.463 2.196-3.463 1.508 0 1.803 1.218 1.803 2.821v6.06h3.049V9.62c.032-2.821-.525-5.034-3.705-5.034ZM103.76 13.724c-1.377 0-2.262-1.475-2.262-3.56 0-2.084.852-3.462 2.262-3.462 1.114 0 1.803.737 1.934 2.02h3.147c-.033-2.534-1.901-4.265-5.081-4.265-3.278 0-5.41 2.277-5.41 5.772 0 3.463 2.132 5.771 5.41 5.771 3.016 0 5.081-1.763 5.081-4.296h-3.18c-.033 1.218-.754 2.02-1.901 2.02ZM115.824 4.457c-3.475 0-5.672 2.276-5.672 5.772 0 3.494 2.197 5.771 5.672 5.771 3.475 0 5.704-2.277 5.704-5.771 0-3.463-2.197-5.772-5.704-5.772Zm0 9.266c-1.64 0-2.492-1.346-2.492-3.495 0-2.18.852-3.495 2.492-3.495 1.639 0 2.524 1.283 2.524 3.496 0 2.148-.885 3.494-2.524 3.494ZM136.674 4.585c-1.606 0-2.95.48-3.704 1.7-.656-1.251-1.639-1.7-3.213-1.7-1.475 0-2.819.641-3.508 1.7l.033-1.54h-2.688V15.68h3.049v-5.355c0-2.404.655-3.495 2.131-3.495 1.114 0 1.671.802 1.671 2.213v6.67h3.049v-5.388c0-2.404.689-3.495 2.131-3.495 1.148 0 1.639.802 1.639 2.213v6.67h3.049v-6.67c-.033-2.694-.787-4.457-3.639-4.457ZM153 10.421c0-3.655-1.803-5.964-5.246-5.964-3.409 0-5.54 2.405-5.54 5.675 0 3.56 1.869 5.836 5.573 5.836 2.852 0 4.491-1.186 5.147-3.56h-3.213c-.328.867-.918 1.444-1.967 1.444-1.803 0-2.458-1.219-2.458-2.822h7.638c.066-.288.066-.513.066-.609Zm-7.803-1.41c.066-1.572 1.148-2.47 2.393-2.47 1.246 0 2.262.898 2.328 2.47h-4.721ZM75.347.64l-6.636 13.92 2.882 1.315 6.636-13.92L75.347.641ZM68.668 3.644 56.64 13.517l2.044 2.382 12.028-9.873-2.044-2.382Z"/></svg>
+		</a>
+		<div class="menu">
+			<button class="menu-trigger" type="button" aria-expanded="false" aria-controls="mega-programs">Programs<svg class="icon"><use href="#chevron-down"/></svg></button>
+			<button class="menu-trigger" type="button" aria-expanded="false" aria-controls="mega-about">About<svg class="icon"><use href="#chevron-down"/></svg></button>
+			<a href="#">Journal</a>
+			<button class="menu-trigger" type="button" aria-current="page" aria-expanded="false" aria-controls="mega-get-involved">Get involved<svg class="icon"><use href="#chevron-down"/></svg></button>
+		</div>
+		<div class="mega" id="mega-programs" data-variant="inset" hidden><div class="site-menu"><div class="site-menu-groups"><div class="site-menu-group"><h3>Active programs</h3><ul><li><a href="#">Mothers and Newborns</a></li><li><a href="#">Skills for Sustainability</a></li><li><a href="#">Ebola Survivors</a></li><li><a href="#">Craftspeople</a></li><li><a href="#">Sierra Leone Unconditional</a></li><li><a href="#">Gender-Based Violence</a></li><li><a href="#">Cacao Farmers</a></li><li><a href="#">Financial Skills for Women</a></li></ul><a class="overview" href="#">All programs<svg class="icon"><use href="#arrow-right"/></svg></a></div><div class="site-menu-group"><h3>Where we work</h3><ul><li><a href="#">Sierra Leone</a></li><li><a href="#">Liberia</a></li><li><a href="#">Ghana</a></li></ul><a class="overview" href="#">All countries<svg class="icon"><use href="#arrow-right"/></svg></a></div><div class="site-menu-group"><h3>Our focus areas</h3><ul><li><a href="#">Poverty</a></li><li><a href="#">Skills Trainees</a></li><li><a href="#">Gender Based Violence</a></li><li><a href="#">Mothers in Need</a></li><li><a href="#">Financial Inclusion</a></li><li><a href="#">Entrepreneurship</a></li><li><a href="#">Ebola Survivors</a></li><li><a href="#">Climate Change</a></li></ul><a class="overview" href="#">All focus areas<svg class="icon"><use href="#arrow-right"/></svg></a></div></div><aside class="site-menu-aside"><h3>Make a donation</h3><p>100% of your donation goes directly to people living in extreme poverty.</p><a class="btn btn-default btn-lg" href="#individual-donate" data-goto="#individual-donate">Donate now</a></aside></div></div>
+		<div class="mega" id="mega-about" data-variant="inset" hidden><div class="site-menu"><div class="site-menu-groups"><div class="site-menu-group"><h3>Social Income</h3><ul><li><a href="#">Mission</a></li><li><a href="#">Our Team</a></li><li><a href="#">Our Work</a></li><li><a href="#">Why Cash Transfers</a></li><li><a href="#">Campaigns</a></li></ul></div><div class="site-menu-group"><h3>Local Partners</h3><ul><li><a href="#">Aurora Foundation</a></li><li><a href="#">United Polio Brothers & Sisters</a></li><li><a href="#">One Village Partner</a></li><li><a href="#">Reachout Salone</a></li><li><a href="#">Help a Mother & Newborn</a></li><li><a href="#">Rainbo Initiative</a></li></ul><a class="overview" href="#">All local partners<svg class="icon"><use href="#arrow-right"/></svg></a></div><div class="site-menu-group"><h3>Transparency</h3><ul><li><a href="#">Financials</a></li><li><a href="#">Recipient Selection</a></li><li><a href="#">Impact Measurement</a></li><li><a href="#">Open Source</a></li><li><a href="#">Downloads</a></li><li><a href="#">FAQ</a></li></ul></div></div><aside class="site-menu-aside"><h3>Make a donation</h3><p>100% of your donation goes directly to people living in extreme poverty.</p><a class="btn btn-default btn-lg" href="#individual-donate" data-goto="#individual-donate">Donate now</a></aside></div></div>
+		<div class="mega" id="mega-get-involved" data-variant="inset" hidden><div class="mega-roles"></div><a class="mega-more" href="#get-involved" data-goto="#get-involved">All ways to get involved<svg class="icon"><use href="#arrow-right"/></svg></a></div>
+		<div class="header-actions">
+			<a class="item hide-sm" href="#">USD<svg class="icon" style="width:14px;height:14px"><use href="#chevron-down"/></svg></a>
+			<a class="item hide-lg" href="#"><svg class="icon"><use href="#user"/></svg>Login</a>
+			<a class="btn btn-default btn-md" href="#individual-donate" data-goto="#individual-donate">Donate now</a>
+			<button class="item mobile-menu" type="button" aria-label="Open menu"><svg class="icon" style="width:24px;height:24px"><use href="#menu"/></svg></button>
+		</div>
+	</nav>
+
+	<main class="home">
+		<div class="home-shot">
+			<img src="assets/home-full.jpg" width="1440" height="5394" alt="Social Income homepage">
+			<a class="hotspot" href="#individual-donate" data-goto="#individual-donate" aria-label="Donate now" style="left:2.6%; top:9%; width:10.6%; height:1.1%"></a>
+			<a class="hotspot" href="#individual-donate" data-goto="#individual-donate" aria-label="Make a donation" style="left:70.6%; top:3.6%; width:26.6%; height:7.6%; border-radius:24px"></a>
+		</div>
+	</main>
+
+	<main class="block overview-page" aria-labelledby="overview-title">
+		<nav class="breadcrumb" aria-label="Breadcrumb">
+			<a href="#home" data-goto="#home">Home</a><svg class="icon"><use href="#chevron-right"/></svg><span aria-current="page">Get involved</span>
+		</nav>
+
+		<header class="intro">
+			<h1 class="heading h1" id="overview-title" tabindex="-1">Start with <strong>who you are.</strong></h1>
+			<p>Pick your perspective first. We’ll show you the ways to help that make sense for you.</p>
+		</header>
+
+		<section class="roles-block" aria-label="Ways to get involved">
+		<ul class="roles" aria-label="Choose your role">
+			<li>
+				<article class="card surface-cream" id="individual">
+					<span class="label">For individuals</span>
+					<h2 class="heading h4">Use <strong>what you have.</strong></h2>
+					<p class="summary">A little income, a good idea or a skill can already move things.</p>
+					<div class="art"><img class="individual-art" src="generated-illus/roles-individual-bike.png" alt="A woman with her bicycle checking her phone"></div>
+					<div class="paths">
+						<a class="path" href="#individual-donate" data-route="individual-donate">Donate<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+						<a class="path" href="#individual-fundraise" data-route="individual-fundraise" data-title="Start <strong>your own fundraiser.</strong>">Fundraise<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+						<a class="path" href="#individual-program" data-route="individual-program" data-title="Start <strong>your own cash program.</strong>">Start a cash program<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+						<a class="path" href="#individual-volunteer" data-route="individual-volunteer" data-title="Volunteer <strong>your skills.</strong>">Volunteer<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+					</div>
+				</article>
+			</li>
+			<li>
+				<article class="card surface-blue" id="company">
+					<span class="label">For companies</span>
+					<h2 class="heading h4">Turn purpose <strong>into action.</strong></h2>
+					<p class="summary">Give as a team, create a program or bring the conversation into your company.</p>
+					<div class="art"><img src="generated-illus/roles-company-yellow-screen.png" alt="A woman presenting at a yellow screen to her colleagues around a table"></div>
+					<div class="paths">
+						<a class="path" href="#company-donate" data-route="company-donate" data-title="Donate <strong>as a company.</strong>">Donate as a company<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+						<a class="path" href="#company-fundraiser" data-route="company-fundraiser" data-title="Start a <strong>company fundraiser.</strong>">Start a company fundraiser<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+						<a class="path" href="#company-program" data-route="company-program" data-title="Start a <strong>cash program.</strong>">Start a cash program<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+						<a class="path" href="#company-talk" data-route="company-talk" data-title="Invite us <strong>for a talk.</strong>">Invite us for a talk<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+					</div>
+				</article>
+			</li>
+			<li>
+				<article class="card surface-yellow" id="ngo">
+					<span class="label">For NGOs</span>
+					<h2 class="heading h4">Reach <strong>more people.</strong></h2>
+					<p class="summary">Add unconditional cash to the support your organisation already provides.</p>
+					<div class="art"><img src="generated-illus/roles-ngo-tailoring.png" alt="A tailoring trainer of a local NGO checking her phone while apprentices sew behind her"></div>
+					<div class="paths">
+						<a class="path" href="#ngo-program" data-route="ngo-program" data-title="Start a <strong>cash program.</strong>">Start a cash program<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+						<a class="path" href="#ngo-local-partner" data-route="ngo-local-partner" data-title="Become a <strong>local program partner.</strong>">Become a local partner<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>
+					</div>
+				</article>
+			</li>
+		</ul>
+		</section>
+	</main>
+
+	<main class="block detail-page" hidden aria-labelledby="detail-page-title">
+		<nav class="breadcrumb" aria-label="Breadcrumb">
+			<a href="#home" data-goto="#home">Home</a><svg class="icon"><use href="#chevron-right"/></svg>
+			<a href="#get-involved" data-goto="#get-involved">Get involved</a><svg class="icon"><use href="#chevron-right"/></svg>
+			<a data-page-parent></a><svg class="icon"><use href="#chevron-right"/></svg>
+			<span aria-current="page" data-page-label></span>
+		</nav>
+		<header class="intro">
+			<h1 class="heading h1" id="detail-page-title" tabindex="-1"></h1>
+			<p data-page-description></p>
+		</header>
+					<div class="donation-block" data-page-donation hidden aria-labelledby="detail-page-title">
+						<div class="donate-sheet">
+						<div class="donate-body">
+							<div class="donate-grid">
+								<div class="donate-calc">
+									<span class="amount-label" id="question">Your monthly income</span>
+									<div class="amount-row">
+										<span class="currency">CHF</span>
+										<output class="amount" id="amount" for="slider">5’930</output>
+									</div>
+									<div class="big-slider">
+										<input id="slider" type="range" min="1000" max="15000" step="10" value="5930" aria-labelledby="question">
+									</div>
+									<button class="text-link" type="button" data-toggle-mode>Or choose own amount</button>
+								</div>
+								<div class="donate-actions">
+									<a class="btn btn-default btn-cta" href="#" id="donate-cta"><span id="result">Donate CHF 59 per month</span><svg class="icon"><use href="#arrow-right"/></svg></a>
+									<button class="text-link" type="button" data-toggle-interval>Donate CHF 59 once</button>
+								</div>
+							</div>
+							<div class="donate-art"><img src="generated-illus/roles-individual-bike.png" alt=""></div>
+						</div>
+						</div>
+						<div class="donate-footer">
+							<span class="community"><span class="avatars" aria-hidden="true"><img src="https://a.storyblok.com/f/109655/400x500/bd37ba879d/sandino-scheidegger.jpg/m/96x96/smart" alt=""><img src="https://a.storyblok.com/f/109655/400x500/d594daaa53/kerrin-dieckmann.jpeg/m/96x96/smart" alt=""><img src="https://a.storyblok.com/f/109655/5304x5304/5678cc8dbd/aurelie-schmiedlin-2025.jpeg/m/96x96/smart" alt=""><img src="https://a.storyblok.com/f/109655/400x500/55f1238472/kabelo-ruffo.jpeg/m/96x96/smart" alt=""></span>Join a community of 132 supporters</span>
+							<a class="why" href="#"><span class="thumb"><img src="assets/explainer-thumbnail.jpg" alt=""><span class="play"><svg class="icon"><use href="#play"/></svg></span></span>Why donating 1%?</a>
+						</div>
+					</div>
+
+		<div class="detail-content" data-page-information hidden>
+			<section class="detail-hero donate-sheet">
+				<div class="donate-body">
+					<div class="donate-grid">
+						<span class="link-pill" data-page-effort></span>
+						<div class="donate-intro">
+							<h2 class="heading h3" data-page-benefit></h2>
+							<p class="summary" data-page-explanation></p>
+						</div>
+					</div>
+					<div class="donate-art"><img data-page-image alt=""></div>
+				</div>
+			</section>
+			<section class="detail-steps" aria-labelledby="steps-title">
+				<h2 class="heading h3" id="steps-title">How it <strong>works.</strong></h2>
+				<ol data-page-steps></ol>
+			</section>
+			<aside class="detail-related" aria-labelledby="related-title">
+				<h2 class="heading h4" id="related-title">Other ways <strong>to get involved.</strong></h2>
+				<div class="paths" data-page-related></div>
+			</aside>
+		</div>
+	</main>
+
+	<script>
+		const roles = document.querySelector('.roles');
+		const routeLinks = [...roles.querySelectorAll('[data-route]')];
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const overviewPage = document.querySelector('.overview-page');
+		const detailPage = document.querySelector('.detail-page');
+		const homePage = document.querySelector('.home');
+		const donationPage = document.querySelector('[data-page-donation]');
+		const informationPage = document.querySelector('[data-page-information]');
+		const pageTitle = document.getElementById('detail-page-title');
+		const pageData = {
+	"individual-donate": {
+		"description": "Give 1% of your income, monthly or once. 100% of your donation goes directly to people living in extreme poverty.",
+		"effort": "Takes less than a minute",
+		"benefit": "CHF 30 = one month of income for one person",
+		"explanation": "Give 1% of your income, monthly or once. 100% of your donation goes directly to people living in extreme poverty.",
+		"steps": [
+			[
+				"Create your fundraiser",
+				"Pick a goal, an end date and a story. Optionally choose a focus or a program."
+			],
+			[
+				"Share it",
+				"Send your personal link to friends, family or colleagues. Everyone can donate in a few clicks."
+			],
+			[
+				"Follow the impact",
+				"Watch your progress live. 100% of donations go to recipients."
+			]
+		]
+	},
+	"individual-fundraise": {
+		"description": "Start your own fundraiser for a birthday, a run or just because – and activate your network.",
+		"effort": "Takes about 5 minutes",
+		"benefit": "Turn a birthday, a run or any occasion into income for someone",
+		"explanation": "Start your own fundraiser as an individual or company and activate your community to support people living in extreme poverty.",
+		"steps": [
+			[
+				"Create your fundraiser",
+				"Pick a goal, an end date and a story. Optionally choose a focus or a program."
+			],
+			[
+				"Share it",
+				"Send your personal link to friends, family or colleagues. Everyone can donate in a few clicks."
+			],
+			[
+				"Follow the impact",
+				"Watch your progress live. 100% of donations go to recipients."
+			]
+		]
+	},
+	"individual-program": {
+		"description": "Design and name your own cash program. We run it end to end, from verification to payouts.",
+		"effort": "From CHF 300 a month",
+		"benefit": "CHF 300 a month = 10 people with a basic income",
+		"explanation": "Start a cash program without the overhead. Ideal for non-profits trying cash transfers for the first time, companies with a social responsibility program and individuals who want to give more.",
+		"steps": [
+			[
+				"Choose your focus",
+				"Pick a country and the people you want your program to support."
+			],
+			[
+				"Name your program",
+				"Set a monthly budget and duration. Your program starts from CHF 300 a month."
+			],
+			[
+				"Follow every payout",
+				"We manage verification and monthly mobile-money payouts. You follow your program’s impact."
+			]
+		]
+	},
+	"individual-volunteer": {
+		"description": "Social Income is run by volunteers. Contribute your skills in tech, communications or operations.",
+		"effort": "Flexible",
+		"benefit": "No money needed – just your skills and some time",
+		"explanation": "Social Income is run by volunteers. Contribute your skills in tech, communications or operations.",
+		"steps": [
+			[
+				"Find your fit",
+				"Bring your skills in technology, communications or operations."
+			],
+			[
+				"Meet the team",
+				"Tell us what you enjoy doing and how much time you can give."
+			],
+			[
+				"Make a contribution",
+				"Join a volunteer project and help bring unconditional income to more people."
+			]
+		]
+	},
+	"company-donate": {
+		"description": "Make a one-time or recurring corporate donation. Donation certificates included.",
+		"effort": "Takes less than a minute",
+		"benefit": "Donation certificate included",
+		"explanation": "Make a one-time or recurring corporate donation. Donation certificates included.",
+		"steps": [
+			[
+				"Create your fundraiser",
+				"Pick a goal, an end date and a story. Optionally choose a focus or a program."
+			],
+			[
+				"Share it",
+				"Send your personal link to friends, family or colleagues. Everyone can donate in a few clicks."
+			],
+			[
+				"Follow the impact",
+				"Watch your progress live. 100% of donations go to recipients."
+			]
+		]
+	},
+	"company-fundraiser": {
+		"description": "Start a fundraiser in the name of your company and let employees join by donating themselves. Choose a focus to align with your values.",
+		"effort": "Takes about 5 minutes",
+		"benefit": "Employees give – and the company can match",
+		"explanation": "Start your own fundraiser as an individual or company and activate your community to support people living in extreme poverty.",
+		"steps": [
+			[
+				"Create your fundraiser",
+				"Pick a goal, an end date and a story. Optionally choose a focus or a program."
+			],
+			[
+				"Share it",
+				"Send your personal link to friends, family or colleagues. Everyone can donate in a few clicks."
+			],
+			[
+				"Follow the impact",
+				"Watch your progress live. 100% of donations go to recipients."
+			]
+		]
+	},
+	"company-program": {
+		"description": "Design and name your own program as part of your social responsibility. We operate it end to end, at zero overhead to your company.",
+		"effort": "From CHF 300 a month",
+		"benefit": "A named program your team and customers can follow",
+		"explanation": "Start a cash program without the overhead. Ideal for non-profits trying cash transfers for the first time, companies with a social responsibility program and individuals who want to give more.",
+		"steps": [
+			[
+				"Choose your focus",
+				"Pick a country and the people you want your program to support."
+			],
+			[
+				"Name your program",
+				"Set a monthly budget and duration. Your program starts from CHF 300 a month."
+			],
+			[
+				"Follow every payout",
+				"We manage verification and monthly mobile-money payouts. You follow your program’s impact."
+			]
+		]
+	},
+	"company-talk": {
+		"description": "A 30–45 minute talk about Social Income, open source and inequality – on site or online, for your team or an event.",
+		"effort": "Free of charge",
+		"benefit": "Free of charge, on site or online",
+		"explanation": "A 30–45 minute talk about Social Income, open source and inequality – on site or online, for your team or an event.",
+		"steps": [
+			[
+				"Choose your audience",
+				"Invite your team or include Social Income in a company event."
+			],
+			[
+				"Pick a format",
+				"A 30–45 minute talk, on site or online, free of charge."
+			],
+			[
+				"Start a conversation",
+				"Explore unconditional income, open source and inequality with your colleagues."
+			]
+		]
+	},
+	"ngo-program": {
+		"description": "You design and name the program. We operate it end to end, including verification and payouts, at zero overhead to your organization.",
+		"effort": "From CHF 300 a month",
+		"benefit": "You design it, we run verification and payouts",
+		"explanation": "Start a cash program without the overhead. Ideal for non-profits trying cash transfers for the first time, companies with a social responsibility program and individuals who want to give more.",
+		"steps": [
+			[
+				"Choose your focus",
+				"Pick a country and the people you want your program to support."
+			],
+			[
+				"Name your program",
+				"Set a monthly budget and duration. Your program starts from CHF 300 a month."
+			],
+			[
+				"Follow every payout",
+				"We manage verification and monthly mobile-money payouts. You follow your program’s impact."
+			]
+		]
+	},
+	"ngo-local-partner": {
+		"description": "Our pool of candidates is built up with program partners who are already in the field fighting poverty.",
+		"effort": "Learn how the assessment works",
+		"benefit": "Bring the people you already support into our candidate pool",
+		"explanation": "Our pool of candidates is built up with program partners who are already in the field fighting poverty.",
+		"steps": [
+			[
+				"Introduce your organisation",
+				"Tell us where you work and about the communities you already support."
+			],
+			[
+				"Assess candidates together",
+				"Learn how the assessment works and bring eligible people into the candidate pool."
+			],
+			[
+				"Stay close to your community",
+				"Work with us while Social Income coordinates the program and monthly payouts."
+			]
+		]
+	}
+};
+		const audienceLabels = { individual: 'For individuals', company: 'For companies', ngo: 'For NGOs' };
+		const pageHash = (route) => `#get-involved/${route.replace('-', '/')}`;
+		const linkFor = (hash) => routeLinks.find((link) => pageHash(link.dataset.route) === hash || `#${link.dataset.route}` === hash) ?? null;
+		let currentRoute = null;
+
+		routeLinks.forEach((link) => {
+			link.href = pageHash(link.dataset.route);
+			link.dataset.goto = link.getAttribute('href');
+		});
+		document.querySelectorAll('[data-goto]').forEach((link) => {
+			const target = linkFor(link.dataset.goto);
+			if (target) link.href = link.dataset.goto = pageHash(target.dataset.route);
+		});
+
+		const applyRoute = ({ focus = false } = {}) => {
+			const link = linkFor(location.hash);
+			const page = location.hash === '#home' ? 'home' : link ? 'detail' : 'get-involved';
+			document.body.dataset.page = page;
+			homePage.hidden = page !== 'home';
+			overviewPage.hidden = page !== 'get-involved';
+			detailPage.hidden = page !== 'detail';
+			currentRoute = link?.dataset.route ?? null;
+			if (link) {
+				const route = link.dataset.route;
+				const audience = route.split('-')[0];
+				const parentHash = `#get-involved/${audience}`;
+				const card = link.closest('.card');
+				const data = pageData[route];
+				const label = link.firstChild.textContent.trim();
+				const parent = detailPage.querySelector('[data-page-parent]');
+				parent.textContent = audienceLabels[audience];
+				parent.href = parent.dataset.goto = parentHash;
+				detailPage.querySelector('[data-page-label]').textContent = label;
+				pageTitle.innerHTML = link.dataset.title ?? 'Donate 1% of <strong>your income</strong>.';
+				pageTitle.classList.toggle('income-heading', route === 'individual-donate');
+				detailPage.querySelector('[data-page-description]').textContent = data.description;
+				document.title = `${label} | Get involved | Social Income`;
+				const isDonation = route.endsWith('-donate');
+				donationPage.hidden = !isDonation;
+				informationPage.hidden = isDonation;
+				if (isDonation) {
+					donationPage.querySelector('.donate-art img').src = card.querySelector(':scope > .art img').getAttribute('src');
+					if (typeof setMode === 'function') {
+						setMode(audience === 'company' ? 'other' : 'percent');
+						modeToggle.textContent = modeLabel();
+					}
+				} else {
+					detailPage.querySelector('[data-page-effort]').textContent = data.effort;
+					detailPage.querySelector('[data-page-benefit]').textContent = data.benefit;
+					detailPage.querySelector('[data-page-explanation]').textContent = data.explanation;
+					const image = detailPage.querySelector('[data-page-image]');
+					const originalImage = card.querySelector(':scope > .art img');
+					image.src = originalImage.getAttribute('src');
+					image.alt = originalImage.alt;
+					detailPage.querySelector('[data-page-steps]').innerHTML = data.steps.map(([heading, text], index) => `
+						<li><span class="amount-label">0${index + 1}</span><h3 class="heading h4">${heading}</h3><p>${text}</p></li>`).join('');
+					detailPage.querySelector('[data-page-related]').innerHTML = [...card.querySelectorAll('.paths [data-route]')].filter((other) => other !== link).map((other) => `
+						<a class="path" href="${other.getAttribute('href')}" data-goto="${other.getAttribute('href')}">${other.firstChild.textContent.trim()}<span class="arrow"><svg class="icon"><use href="#arrow-right"/></svg></span></a>`).join('');
+				}
+			} else {
+				document.title = page === 'home' ? 'Social Income — Home' : 'Get involved | Social Income';
+			}
+			window.scrollTo(0, 0);
+			if (focus && page !== 'home') {
+				const heading = page === 'detail' ? pageTitle : document.getElementById('overview-title');
+				heading.focus({ preventScroll: true });
+			}
+		};
+		const go = (hash) => {
+			if (location.hash === hash) return;
+			history.pushState({ route: hash }, '', hash);
+			applyRoute({ focus: true });
+		};
+		window.addEventListener('popstate', () => applyRoute({ focus: true }));
+		window.addEventListener('hashchange', () => applyRoute({ focus: true }));
+
+		// Get involved dropdown: a mini version of the three role panels, built from the cards on the page
+		const mega = document.getElementById('mega-get-involved');
+		mega.querySelector('.mega-roles').innerHTML = [...roles.querySelectorAll(':scope > li > .card')].map((card) => `
+			<section class="mega-role ${[...card.classList].find((name) => name.startsWith('surface-'))}">
+				<span class="label">${card.querySelector(':scope > .label').textContent}</span>
+				<img src="${card.querySelector(':scope > .art img').getAttribute('src')}" alt="">
+				<ul>${[...card.querySelectorAll(':scope > .paths [data-route]')].map((link) => `
+					<li><a href="${pageHash(link.dataset.route)}" data-goto="${pageHash(link.dataset.route)}">${link.firstChild.textContent.trim()}<svg class="icon"><use href="#arrow-right"/></svg></a></li>`).join('')}
+				</ul>
+			</section>`).join('');
+
+		// Header menus: one open at a time, opened by click (SiteMenuDesktop)
+		const menuTriggers = [...document.querySelectorAll('.menu-trigger')];
+		const panelOf = (trigger) => document.getElementById(trigger.getAttribute('aria-controls'));
+		const openMenu = (target) => {
+			menuTriggers.forEach((trigger) => {
+				const expanded = trigger === target;
+				if ((trigger.getAttribute('aria-expanded') === 'true') === expanded) return;
+				trigger.setAttribute('aria-expanded', String(expanded));
+				const panel = panelOf(trigger);
+				panel.classList.remove('is-entering', 'is-leaving');
+				if (expanded) {
+					panel.hidden = false;
+					panel.classList.add('is-entering');
+				} else if (target || reduceMotion.matches) {
+					// switching between menus: no overlapping fade
+					panel.hidden = true;
+				} else {
+					panel.classList.add('is-leaving');
+					panel.addEventListener('animationend', () => {
+						if (trigger.getAttribute('aria-expanded') === 'false') panel.hidden = true;
+					}, { once: true });
+				}
+			});
+		};
+		menuTriggers.forEach((trigger) => trigger.addEventListener('click', () => {
+			openMenu(trigger.getAttribute('aria-expanded') === 'true' ? null : trigger);
+		}));
+		document.addEventListener('click', (event) => {
+			const goto = event.target.closest('[data-goto]');
+			if (goto) {
+				if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+				event.preventDefault();
+				openMenu(null);
+				go(goto.dataset.goto);
+				return;
+			}
+			if (event.target.closest('.mega a[href="#"]')) {
+				event.preventDefault();
+				openMenu(null);
+				return;
+			}
+			if (!event.target.closest('.mega, .menu-trigger')) openMenu(null);
+		});
+		document.addEventListener('keydown', (event) => {
+			const open = menuTriggers.find((trigger) => trigger.getAttribute('aria-expanded') === 'true');
+			if (event.key === 'Escape' && open) {
+				openMenu(null);
+				open.focus();
+			}
+		});
+
+		// Amount calculator
+		const slider = document.getElementById('slider');
+		const amount = document.getElementById('amount');
+		const question = document.getElementById('question');
+		const result = document.getElementById('result');
+		const intervalToggle = document.querySelector('[data-toggle-interval]');
+		const format = (value) => value.toLocaleString('de-CH');
+
+		const modes = {
+			percent: { question: 'Your monthly income', min: 1000, max: 15000, step: 10, value: 5930, donation: (v) => Math.round(v / 100) },
+			other: { question: 'Amount', min: 10, max: 500, step: 5, value: 50, donation: (v) => v },
+		};
+		let mode = 'percent';
+		let interval = 'monthly';
+		const modeLabel = () => mode === 'percent' ? 'Or choose own amount' : currentRoute === 'company-donate' ? 'Calculate 1 % of company income' : 'Calculate 1 % of my income';
+
+		const render = () => {
+			const value = Number(slider.value);
+			const config = modes[mode];
+			const donation = config.donation(value);
+			slider.style.setProperty('--p', `${((value - config.min) / (config.max - config.min)) * 100}%`);
+			amount.textContent = format(value);
+			result.textContent = `Donate CHF ${format(donation)} ${interval === 'one-time' ? 'once' : 'per month'}`;
+			intervalToggle.textContent = `Donate CHF ${format(donation)} ${interval === 'one-time' ? 'per month' : 'once'}`;
+		};
+
+		const setMode = (next) => {
+			mode = next;
+			interval = mode === 'percent' ? 'monthly' : 'one-time';
+			const config = modes[mode];
+			Object.assign(slider, { min: config.min, max: config.max, step: config.step, value: config.value });
+			const companyIncome = mode === 'percent' && currentRoute === 'company-donate';
+			question.textContent = companyIncome ? 'Your company’s monthly income' : config.question;
+			render();
+		};
+
+		const modeToggle = document.querySelector('[data-toggle-mode]');
+		modeToggle.addEventListener('click', () => {
+			setMode(mode === 'percent' ? 'other' : 'percent');
+			modeToggle.textContent = modeLabel();
+		});
+		intervalToggle.addEventListener('click', () => {
+			interval = interval === 'monthly' ? 'one-time' : 'monthly';
+			render();
+		});
+		slider.addEventListener('input', render);
+		render();
+		applyRoute();
+	</script>
+</body>
+</html>
