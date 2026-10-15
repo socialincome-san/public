@@ -61,35 +61,45 @@ export function GeneratorForm() {
     imageBase64 && mediaType ? `data:${mediaType};base64,${imageBase64}` : null;
 
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <p className="text-destructive text-sm">{error}</p>}
-      <Textarea name="prompt" />
-      <Button type="submit" disabled={isPending}>
-        {isPending ? "Generating..." : "Generate"}
-      </Button>
+    <form
+      className="mt-8 flex w-full flex-col items-center sm:mt-10"
+      onSubmit={handleSubmit}
+    >
+      {error && <p className="text-destructive mb-4 text-sm font-medium">{error}</p>}
+      <Textarea
+        name="prompt"
+        placeholder="Beschreibe dein Bild ..."
+        rows={6}
+      />
+      <div className="mt-8 flex justify-center">
+        <Button type="submit" disabled={isPending}>
+          {isPending ? "Generating..." : "Generate"}
+          <span aria-hidden="true">→</span>
+        </Button>
+      </div>
       {isPending && (
-        <>
+        <div className="mt-6 flex w-full flex-col items-center gap-3">
           <p className="text-muted-foreground text-sm">
             Generating your image, this can take up to a minute...
           </p>
           <div className="bg-muted h-2 w-full max-w-xl overflow-hidden rounded-full">
             <div className="bg-primary h-full w-1/3 animate-pulse rounded-full"></div>
           </div>
-        </>
+        </div>
       )}
       {imageSrc && (
-        <>
+        <div className="mt-10 flex flex-col items-center gap-6">
           <Image
             src={imageSrc}
             width={1920}
             height={1080}
             alt="Generated"
-            className="h-auto w-full max-w-xl rounded-lg shadow-lg"
+            className="h-auto w-full max-w-xl rounded-2xl shadow-card"
           />
-          <Button type="button" onClick={handleDownload}>
+          <Button type="button" variant="outline" size="md" onClick={handleDownload}>
             Download PNG
           </Button>
-        </>
+        </div>
       )}
     </form>
   );
