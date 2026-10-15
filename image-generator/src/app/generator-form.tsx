@@ -5,11 +5,15 @@ import { Textarea } from "@socialincome/design-system/forms/textarea/textarea";
 import { useState } from "react";
 import Image from "next/image";
 
-type GenerateResponse = { error: string | null; imageUrl: string | null };
-
+type GenerateResponse = {
+  error: string | null;
+  imageBase64: string | null;
+  mediaType: string | null;
+};
 export function GeneratorForm() {
   const [error, setError] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageBase64, setImageBase64] = useState<string | null>(null);
+  const [mediaType, setMediaType] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,9 +28,37 @@ export function GeneratorForm() {
     });
     const json = (await response.json()) as GenerateResponse;
     setError(json.error);
-    setImageUrl(json.imageUrl);
+    setImageBase64(json.imageBase64);
+    setMediaType(json.mediaType);
     setIsPending(false);
   };
+
+  const handleDownload = async () => {
+    if (!imageBase64 || !mediaType) {
+      return;
+    }
+    const response = await fetch("/download", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageBase64, mediaType }),
+    });
+    if (!response.ok) {
+      setError("Download failed");
+      return;
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "image.png";
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const imageSrc =
+    imageBase64 && mediaType ? `data:${mediaType};base64,${imageBase64}` : null;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -45,18 +77,18 @@ export function GeneratorForm() {
           </div>
         </>
       )}
-      {imageUrl && (
+      {imageSrc && (
         <>
           <Image
-            src={imageUrl}
+            src={imageSrc}
             width={1920}
             height={1080}
             alt="Generated"
             className="h-auto w-full max-w-xl rounded-lg shadow-lg"
           />
-          <a href={`/download?url=${encodeURIComponent(imageUrl)}`}>
+          <Button type="button" onClick={handleDownload}>
             Download PNG
-          </a>
+          </Button>
         </>
       )}
     </form>
