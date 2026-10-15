@@ -9,8 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@fal-ai/client": "^1.10.1",
     "@socialincome/design-system": "*",
+    "ai": "^6.0.33",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0"
