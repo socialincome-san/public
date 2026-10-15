@@ -7,7 +7,9 @@ export const communityPageSchema = z.object({
 	communityEnabled: z.boolean().optional(),
 	communityContactEmail: z.string().optional(),
 	communityContributors: z
-		.array(z.object({ label: z.string().default(''), people: z.array(storyReferenceSchema).default([]) }))
+		.array(
+			z.object({ label: z.union([z.string(), z.number()]).default(''), people: z.array(storyReferenceSchema).default([]) }),
+		)
 		.optional(),
 	communityArticles: z.array(storyReferenceSchema).optional(),
 });

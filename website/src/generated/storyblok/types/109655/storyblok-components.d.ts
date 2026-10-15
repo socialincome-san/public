@@ -123,7 +123,7 @@ export interface CampaignOverview {
 }
 
 export interface CommunityContributorGroup {
-  label: string;
+  label: number | string;
   people: (ISbStoryData<Person> | string)[];
   component: "communityContributorGroup";
   _uid: string;
