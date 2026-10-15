@@ -1,11 +1,4 @@
-import { isSessionValid } from "../session";
-
 export async function POST(request: Request) {
-  const authenticated = await isSessionValid();
-  if (!authenticated) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
   const body: unknown = await request.json();
   if (
     typeof body !== "object" ||
