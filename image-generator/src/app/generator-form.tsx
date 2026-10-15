@@ -28,12 +28,28 @@ export function GeneratorForm() {
     setIsPending(false);
   };
 
+  const getButtonText = () => {
+    if (isPending === true) {
+      return "Generating...";
+    } else {
+      return "Generate";
+    }
+  };
+
+  function getButtonText2() {
+    if (isPending === true) {
+      return "Generating...";
+    } else {
+      return "Generate";
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       {error && <p className="text-destructive text-sm">{error}</p>}
       <Textarea name="prompt" />
       <Button type="submit" disabled={isPending}>
-        {isPending ? "Generating..." : "Generate"}
+        {getButtonText()}
       </Button>
       {isPending && (
         <>
