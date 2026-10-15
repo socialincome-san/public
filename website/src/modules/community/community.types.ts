@@ -28,4 +28,10 @@ export type CommunityPanelData = {
 	articles: { title: string; author: string; href: string; imageSrc?: string }[];
 };
 
+export type PersonContribution = {
+	title: string;
+	href: string;
+	roles: string[];
+};
+
 export const COMMUNITY_CACHE_TAG = 'community';

@@ -38,6 +38,11 @@ jest.mock('./stripe-payment.repository', () => ({
 	findOwnedActiveStripeSubscription: jest.fn(),
 }));
 
+jest.mock('@/modules/subscriptions/subscription.service', () => ({
+	syncStripeSubscription: jest.fn(),
+	updateSubscriptionLifecycle: jest.fn(),
+}));
+
 jest.mock('@/modules/campaigns/campaign.service', () => ({
 	getCampaignById: jest.fn(),
 	getDefaultCampaignForProgram: jest.fn(),

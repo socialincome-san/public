@@ -8,17 +8,20 @@ import {
 	countryIsoCodesSchema,
 	countryPageIsoCodeSchema,
 	countryStatisticsComparisonSchema,
+	countryTableQuerySchema,
 	countryUpdateInputSchema,
 } from '@/modules/countries/country.schemas';
 import {
 	createCountry,
 	deleteCountry,
 	getCountry,
+	getPaginatedCountryTableView,
 	getProgramCountryFeasibility,
 	updateCountry,
 } from '@/modules/countries/country.service';
 import type {
 	CountryPageStats,
+	CountryPaginatedTableView,
 	CountryPayload,
 	CountryStatisticRow,
 	ProgramCountryFeasibilityView,
@@ -28,6 +31,18 @@ import { revalidatePath } from 'next/cache';
 import { getCountryPageStats, getCountryStatisticsComparison, getPublicCountryStatsByIsoCodes } from './country.cache';
 
 const REVALIDATE_PATH = '/portal/admin/countries';
+
+export const getCountryTableViewAction = async (query: unknown): Promise<Result<CountryPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedQuery = countryTableQuerySchema.safeParse(query);
+
+	return parsedQuery.success
+		? getPaginatedCountryTableView(sessionResult.data.id, parsedQuery.data)
+		: resultFail('Invalid country query.');
+};
 
 export const createCountryAction = async (input: unknown): Promise<Result<CountryPayload>> => {
 	const sessionResult = await getSessionByType('user');
@@ -39,7 +54,7 @@ export const createCountryAction = async (input: unknown): Promise<Result<Countr
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createCountry(sessionResult.data.id, parsedInput.data);
+	const result = await createCountry(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -55,7 +70,7 @@ export const updateCountryAction = async (input: unknown): Promise<Result<Countr
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateCountry(sessionResult.data.id, parsedInput.data);
+	const result = await updateCountry(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -71,7 +86,7 @@ export const deleteCountryAction = async (input: unknown): Promise<Result<{ id: 
 		return resultFail('Invalid input.');
 	}
 
-	const result = await deleteCountry(sessionResult.data.id, parsedInput.data);
+	const result = await deleteCountry(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;

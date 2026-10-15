@@ -1,8 +1,11 @@
 import { PayoutProcess } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { formatPayoutProcessLabel } from '@/lib/payout-process-options';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { isAdmin } from '@/modules/users/user.service';
-import * as mobileMoneyProviderRepository from './mobile-money-provider.repository';
+import type { UserSession } from '@/modules/users/user.types';
+import * as mobileMoneyProviderRepository from './mobile-money-provider.repository.read';
+import * as mobileMoneyProviderWriteRepository from './mobile-money-provider.repository.write';
 import type { MobileMoneyProviderCreateInput, MobileMoneyProviderUpdateInput } from './mobile-money-provider.schemas';
 import type {
 	MobileMoneyProviderOption,
@@ -187,11 +190,11 @@ export const getMobileMoneyProviderIdsByPayoutProcess = async (payoutProcess: Pa
 };
 
 export const createMobileMoneyProvider = async (
-	userId: string,
+	session: UserSession,
 	input: MobileMoneyProviderCreateInput,
 ): Promise<Result<MobileMoneyProviderPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -206,7 +209,9 @@ export const createMobileMoneyProvider = async (
 			return parentValidationResult;
 		}
 
-		return resultOk(await mobileMoneyProviderRepository.createMobileMoneyProvider(input));
+		return resultOk(
+			await mobileMoneyProviderWriteRepository.createMobileMoneyProvider(getSessionAuditContext(session), input),
+		);
 	} catch (error) {
 		console.error('Could not create mobile money provider', { error });
 
@@ -215,11 +220,11 @@ export const createMobileMoneyProvider = async (
 };
 
 export const updateMobileMoneyProvider = async (
-	userId: string,
+	session: UserSession,
 	input: MobileMoneyProviderUpdateInput,
 ): Promise<Result<MobileMoneyProviderPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -241,7 +246,9 @@ export const updateMobileMoneyProvider = async (
 			return parentValidationResult;
 		}
 
-		return resultOk(await mobileMoneyProviderRepository.updateMobileMoneyProvider(input));
+		return resultOk(
+			await mobileMoneyProviderWriteRepository.updateMobileMoneyProvider(getSessionAuditContext(session), input),
+		);
 	} catch (error) {
 		console.error('Could not update mobile money provider', {
 			providerId: input.id,
@@ -252,9 +259,12 @@ export const updateMobileMoneyProvider = async (
 	}
 };
 
-export const deleteMobileMoneyProvider = async (userId: string, providerId: string): Promise<Result<{ id: string }>> => {
+export const deleteMobileMoneyProvider = async (
+	session: UserSession,
+	providerId: string,
+): Promise<Result<{ id: string }>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -267,7 +277,7 @@ export const deleteMobileMoneyProvider = async (userId: string, providerId: stri
 			return resultFail('Cannot delete mobile money provider because it is still in use');
 		}
 
-		await mobileMoneyProviderRepository.deleteMobileMoneyProvider(providerId);
+		await mobileMoneyProviderWriteRepository.deleteMobileMoneyProvider(getSessionAuditContext(session), providerId);
 
 		return resultOk({ id: providerId });
 	} catch (error) {

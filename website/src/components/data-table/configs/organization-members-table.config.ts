@@ -14,3 +14,10 @@ export const organizationMembersTableConfig: DataTableConfig<OrganizationMemberT
 	makeColumns: makeOrganizationMemberColumns,
 	showColumnVisibilitySelector: true,
 };
+
+export const organizationAdminMembersTableConfig: DataTableConfig<OrganizationMemberTableViewRow> = {
+	...organizationMembersTableConfig,
+	id: 'organization-admin-members',
+	title: 'Members',
+	makeColumns: () => makeOrganizationMemberColumns(true),
+};

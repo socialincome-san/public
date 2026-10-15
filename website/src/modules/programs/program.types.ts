@@ -29,6 +29,34 @@ export type ProgramOption = {
 	name: string;
 };
 
+export type ProgramTableViewRow = {
+	id: string;
+	name: string;
+	country: CountryCode;
+	ownerOrganizations: string;
+	operatorOrganizations: string;
+	focuses: string;
+	recipientsCount: number;
+	createdAt: Date;
+};
+
+export type ProgramTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+	organizationId?: string;
+	programPermission?: ProgramPermission;
+	countryId?: string;
+	focusId?: string;
+};
+
+export type ProgramPaginatedTableView = {
+	tableRows: ProgramTableViewRow[];
+	totalCount: number;
+};
+
 export type ProgramPayoutForecastSource = {
 	programDurationInMonths: number;
 	payoutPerInterval: number;
@@ -192,6 +220,24 @@ export type ProgramDashboardSource = {
 			paymentEvent: { type: PaymentEventType } | null;
 		}[];
 	}[];
+};
+
+export type ProgramRecipientPoolSetup = {
+	programId: string;
+	countryCode: CountryCode;
+	programDurationInMonths: number;
+	payoutPerInterval: number;
+	payoutCurrency: Currency;
+	payoutInterval: PayoutInterval;
+	focusOptions: { id: string; name: string }[];
+	localPartnerOptions: { id: string; name: string }[];
+	totalCount: number;
+};
+
+export type ProgramRecipientPoolPreview = {
+	totalCount: number;
+	matchingCount: number;
+	budget: ProgramBudgetCalculation | null;
 };
 
 export type ProgramBudgetCalculation = {

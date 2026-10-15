@@ -15,6 +15,10 @@ export type TableQueryState = {
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
 	programId?: string;
+	organizationId?: string;
+	countryId?: string;
+	focusId?: string;
+	parentProviderId?: string;
 	localPartnerId?: string;
 	country?: string;
 	currency?: string;
@@ -26,6 +30,9 @@ export type TableQueryState = {
 	mobileMoneyProviderId?: string;
 	subscriptionStatus?: string;
 	subscriptionPaymentMethod?: string;
+	recipientId?: string;
+	contributorId?: string;
+	entityType?: string;
 };
 
 type QueryValue = string | string[] | number | null | undefined;
@@ -37,6 +44,10 @@ type TableQueryInput = {
 	sortBy?: QueryValue;
 	sortDirection?: QueryValue;
 	programId?: QueryValue;
+	organizationId?: QueryValue;
+	countryId?: QueryValue;
+	focusId?: QueryValue;
+	parentProviderId?: QueryValue;
 	localPartnerId?: QueryValue;
 	country?: QueryValue;
 	currency?: QueryValue;
@@ -48,6 +59,9 @@ type TableQueryInput = {
 	mobileMoneyProviderId?: QueryValue;
 	subscriptionStatus?: QueryValue;
 	subscriptionPaymentMethod?: QueryValue;
+	recipientId?: QueryValue;
+	contributorId?: QueryValue;
+	entityType?: QueryValue;
 };
 
 const takeFirst = (value: QueryValue): string | undefined => {
@@ -101,6 +115,10 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const rawSortDirection = normalizeToken(input.sortDirection, MAX_QUERY_TOKEN_LENGTH).toLowerCase();
 	const sortDirection = rawSortDirection === 'asc' || rawSortDirection === 'desc' ? rawSortDirection : undefined;
 	const programId = normalizeToken(input.programId, MAX_QUERY_TOKEN_LENGTH);
+	const organizationId = normalizeToken(input.organizationId, MAX_QUERY_TOKEN_LENGTH);
+	const countryId = normalizeToken(input.countryId, MAX_QUERY_TOKEN_LENGTH);
+	const focusId = normalizeToken(input.focusId, MAX_QUERY_TOKEN_LENGTH);
+	const parentProviderId = normalizeToken(input.parentProviderId, MAX_QUERY_TOKEN_LENGTH);
 	const localPartnerId = normalizeToken(input.localPartnerId, MAX_QUERY_TOKEN_LENGTH);
 	const country = normalizeToken(input.country, MAX_QUERY_TOKEN_LENGTH);
 	const currency = normalizeToken(input.currency, MAX_QUERY_TOKEN_LENGTH);
@@ -112,6 +130,9 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const mobileMoneyProviderId = normalizeToken(input.mobileMoneyProviderId, MAX_QUERY_TOKEN_LENGTH);
 	const subscriptionStatus = normalizeToken(input.subscriptionStatus, MAX_QUERY_TOKEN_LENGTH);
 	const subscriptionPaymentMethod = normalizeToken(input.subscriptionPaymentMethod, MAX_QUERY_TOKEN_LENGTH);
+	const recipientId = normalizeToken(input.recipientId, MAX_QUERY_TOKEN_LENGTH);
+	const contributorId = normalizeToken(input.contributorId, MAX_QUERY_TOKEN_LENGTH);
+	const entityType = normalizeToken(input.entityType, MAX_QUERY_TOKEN_LENGTH);
 
 	return {
 		page,
@@ -120,6 +141,10 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		sortBy: sortBy || undefined,
 		sortDirection: sortBy ? sortDirection : undefined,
 		programId: programId || undefined,
+		organizationId: organizationId || undefined,
+		countryId: countryId || undefined,
+		focusId: focusId || undefined,
+		parentProviderId: parentProviderId || undefined,
 		localPartnerId: localPartnerId || undefined,
 		country: country || undefined,
 		currency: currency || undefined,
@@ -131,6 +156,9 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		mobileMoneyProviderId: mobileMoneyProviderId || undefined,
 		subscriptionStatus: subscriptionStatus || undefined,
 		subscriptionPaymentMethod: subscriptionPaymentMethod || undefined,
+		recipientId: recipientId || undefined,
+		contributorId: contributorId || undefined,
+		entityType: entityType || undefined,
 	};
 };
 
@@ -142,6 +170,10 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		sortBy: searchParams.sortBy,
 		sortDirection: searchParams.sortDirection,
 		programId: searchParams.programId,
+		organizationId: searchParams.organizationId,
+		countryId: searchParams.countryId,
+		focusId: searchParams.focusId,
+		parentProviderId: searchParams.parentProviderId,
 		localPartnerId: searchParams.localPartnerId,
 		country: searchParams.country,
 		currency: searchParams.currency,
@@ -153,6 +185,9 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		mobileMoneyProviderId: searchParams.mobileMoneyProviderId,
 		subscriptionStatus: searchParams.subscriptionStatus,
 		subscriptionPaymentMethod: searchParams.subscriptionPaymentMethod,
+		recipientId: searchParams.recipientId,
+		contributorId: searchParams.contributorId,
+		entityType: searchParams.entityType,
 	});
 };
 
@@ -169,6 +204,10 @@ export const applyTableQueryPatch = (
 		sortBy: hasPatchKey('sortBy') ? patch.sortBy : currentSearchParams.get('sortBy'),
 		sortDirection: hasPatchKey('sortDirection') ? patch.sortDirection : currentSearchParams.get('sortDirection'),
 		programId: hasPatchKey('programId') ? patch.programId : currentSearchParams.get('programId'),
+		organizationId: hasPatchKey('organizationId') ? patch.organizationId : currentSearchParams.get('organizationId'),
+		countryId: hasPatchKey('countryId') ? patch.countryId : currentSearchParams.get('countryId'),
+		focusId: hasPatchKey('focusId') ? patch.focusId : currentSearchParams.get('focusId'),
+		parentProviderId: hasPatchKey('parentProviderId') ? patch.parentProviderId : currentSearchParams.get('parentProviderId'),
 		localPartnerId: hasPatchKey('localPartnerId') ? patch.localPartnerId : currentSearchParams.get('localPartnerId'),
 		country: hasPatchKey('country') ? patch.country : currentSearchParams.get('country'),
 		currency: hasPatchKey('currency') ? patch.currency : currentSearchParams.get('currency'),
@@ -186,6 +225,9 @@ export const applyTableQueryPatch = (
 		subscriptionPaymentMethod: hasPatchKey('subscriptionPaymentMethod')
 			? patch.subscriptionPaymentMethod
 			: currentSearchParams.get('subscriptionPaymentMethod'),
+		recipientId: hasPatchKey('recipientId') ? patch.recipientId : currentSearchParams.get('recipientId'),
+		contributorId: hasPatchKey('contributorId') ? patch.contributorId : currentSearchParams.get('contributorId'),
+		entityType: hasPatchKey('entityType') ? patch.entityType : currentSearchParams.get('entityType'),
 	});
 
 	const nextParams = new URLSearchParams(currentSearchParams.toString());
@@ -208,6 +250,26 @@ export const applyTableQueryPatch = (
 		nextParams.set('programId', nextQuery.programId);
 	} else {
 		nextParams.delete('programId');
+	}
+	if (nextQuery.organizationId) {
+		nextParams.set('organizationId', nextQuery.organizationId);
+	} else {
+		nextParams.delete('organizationId');
+	}
+	if (nextQuery.countryId) {
+		nextParams.set('countryId', nextQuery.countryId);
+	} else {
+		nextParams.delete('countryId');
+	}
+	if (nextQuery.focusId) {
+		nextParams.set('focusId', nextQuery.focusId);
+	} else {
+		nextParams.delete('focusId');
+	}
+	if (nextQuery.parentProviderId) {
+		nextParams.set('parentProviderId', nextQuery.parentProviderId);
+	} else {
+		nextParams.delete('parentProviderId');
 	}
 	if (nextQuery.localPartnerId) {
 		nextParams.set('localPartnerId', nextQuery.localPartnerId);
@@ -263,6 +325,21 @@ export const applyTableQueryPatch = (
 		nextParams.set('subscriptionPaymentMethod', nextQuery.subscriptionPaymentMethod);
 	} else {
 		nextParams.delete('subscriptionPaymentMethod');
+	}
+	if (nextQuery.recipientId) {
+		nextParams.set('recipientId', nextQuery.recipientId);
+	} else {
+		nextParams.delete('recipientId');
+	}
+	if (nextQuery.contributorId) {
+		nextParams.set('contributorId', nextQuery.contributorId);
+	} else {
+		nextParams.delete('contributorId');
+	}
+	if (nextQuery.entityType) {
+		nextParams.set('entityType', nextQuery.entityType);
+	} else {
+		nextParams.delete('entityType');
 	}
 
 	return nextParams;

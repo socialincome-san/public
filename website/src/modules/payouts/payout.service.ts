@@ -1,4 +1,5 @@
 import { PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { isValidCountryCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
@@ -7,10 +8,17 @@ import { getLocalPartnerIdBySlug } from '@/modules/local-partners/local-partner.
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccesses } from '@/modules/program-access/program-access.types';
 import { getProgramPayoutForecastSource } from '@/modules/programs/program-reference.service';
-import { getRecipientProgramAssignment, recipientStatusService } from '@/modules/recipients/recipient.service';
+import {
+	getRecipientAuditContext,
+	getRecipientFilterOption,
+	getRecipientProgramAssignment,
+	recipientStatusService,
+} from '@/modules/recipients/recipient.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { canReadPayout, canWritePayout } from './payout.permissions';
-import * as payoutRepository from './payout.repository';
+import * as payoutRepository from './payout.repository.read';
+import * as payoutWriteRepository from './payout.repository.write';
 import { payoutCreateSchema, payoutUpdateSchema, type CreatePayoutInput, type UpdatePayoutInput } from './payout.schemas';
 import type {
 	CountryPayoutTotals,
@@ -126,7 +134,16 @@ export const getPaginatedPayoutTableView = async (
 		const filteredProgramIds = selectedProgramId
 			? programIds.filter((programId) => programId === selectedProgramId)
 			: programIds;
-		const mobileMoneyProviderFilterOptions = await payoutRepository.findPayoutMobileMoneyProviderOptions(programIds);
+		const requestedRecipientId = normalizeOptionalFilter(query.recipientId);
+		// Unknown or inaccessible recipients are ignored, so the filter never hides rows behind an invisible value
+		const [mobileMoneyProviderFilterOptions, recipientOptionResult] = await Promise.all([
+			payoutRepository.findPayoutMobileMoneyProviderOptions(programIds),
+			requestedRecipientId ? getRecipientFilterOption(requestedRecipientId, programIds) : resultOk(null),
+		]);
+		if (!recipientOptionResult.success) {
+			return resultFail(recipientOptionResult.error);
+		}
+		const recipientOption = recipientOptionResult.data;
 		const selectedMobileMoneyProviderId = normalizeOptionalFilter(query.mobileMoneyProviderId);
 		const statusValues = Object.values(PayoutStatus);
 		const selectedStatus = statusValues.find((status) => status === query.payoutStatus);
@@ -134,12 +151,14 @@ export const getPaginatedPayoutTableView = async (
 			value: status,
 			label: `${status.charAt(0).toUpperCase()}${status.slice(1)}`,
 		}));
+		const recipientFilterOptions = recipientOption ? [recipientOption] : [];
 		const baseResult = {
 			tableRows: [],
 			totalCount: 0,
 			programFilterOptions,
 			statusFilterOptions,
 			mobileMoneyProviderFilterOptions,
+			recipientFilterOptions,
 		};
 
 		if (selectedProgramId && filteredProgramIds.length === 0) {
@@ -155,36 +174,12 @@ export const getPaginatedPayoutTableView = async (
 		const { payouts, totalCount } = await payoutRepository.findPayoutTableSource({
 			programIds: filteredProgramIds,
 			mobileMoneyProviderId: selectedMobileMoneyProviderId,
+			recipientId: recipientOption?.id,
 			status: selectedStatus,
 			query,
 		});
-		const tableRows: PayoutTableViewRow[] = payouts.flatMap((payout) => {
-			if (!payout.recipient.program) {
-				return [];
-			}
 
-			return [
-				{
-					id: payout.id,
-					recipientFirstName: payout.recipient.contact.firstName,
-					recipientLastName: payout.recipient.contact.lastName,
-					programName: payout.recipient.program.name,
-					mobileMoneyProviderName: payout.recipient.paymentInformation?.mobileMoneyProvider?.name ?? null,
-					amount: Number(payout.amount),
-					currency: payout.currency,
-					status: payout.status,
-					paymentAt: payout.paymentAt,
-				},
-			];
-		});
-
-		return resultOk({
-			tableRows,
-			totalCount,
-			programFilterOptions,
-			statusFilterOptions,
-			mobileMoneyProviderFilterOptions,
-		});
+		return resultOk({ ...baseResult, tableRows: toPayoutTableViewRows(payouts), totalCount });
 	} catch (error) {
 		console.error('Could not fetch payouts', { userId, error });
 
@@ -386,14 +381,13 @@ export const getPayout = async (userId: string, payoutId: string): Promise<Resul
 			return resultFail('Payout not found');
 		}
 
-		if (payout.recipient.program) {
-			const accessResult = await getAccessiblePrograms(userId);
-			if (!accessResult.success) {
-				return resultFail(accessResult.error);
-			}
-			if (!canWritePayout(accessResult.data, payout.recipient.program.id)) {
-				return resultFail('Access denied to this payout');
-			}
+		const accessResult = await getAccessiblePrograms(userId);
+		if (!accessResult.success) {
+			return resultFail(accessResult.error);
+		}
+		const programId = payout.recipient.program?.id;
+		if (!programId || !canWritePayout(accessResult.data, programId)) {
+			return resultFail('Access denied to this payout');
 		}
 
 		return resultOk(toPayoutPayload(payout));
@@ -436,7 +430,7 @@ export const getPayoutByRecipientAndId = async (
 };
 
 export const createPayoutProcessPayouts = async (
-	userId: string,
+	session: UserSession,
 	inputs: PayoutProcessCreateInput[],
 	selectedDate: Date,
 ): Promise<Result<PayoutProcessCreateSummary>> => {
@@ -445,7 +439,7 @@ export const createPayoutProcessPayouts = async (
 	}
 
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -465,7 +459,10 @@ export const createPayoutProcessPayouts = async (
 		const existingRecipientIds = new Set(existingPayouts.map(({ recipientId }) => recipientId));
 		const toCreate = inputs.filter(({ recipientId }) => !existingRecipientIds.has(recipientId));
 		if (toCreate.length > 0) {
-			await payoutRepository.createPayoutProcessPayouts(toCreate);
+			await payoutWriteRepository.createPayoutProcessPayouts(
+				{ ...getSessionAuditContext(session), metadata: { operation: 'payout-process' } },
+				toCreate,
+			);
 		}
 
 		return resultOk({
@@ -473,19 +470,19 @@ export const createPayoutProcessPayouts = async (
 			skippedCount: inputs.length - toCreate.length,
 		});
 	} catch (error) {
-		console.error('Could not generate payouts', { userId, error });
+		console.error('Could not generate payouts', { userId: session.id, error });
 
 		return resultFail('Could not generate payouts');
 	}
 };
 
 export const updatePayoutStatus = async (
-	userId: string,
+	session: UserSession,
 	payoutId: string,
 	newStatus: PayoutStatus,
 ): Promise<Result<string>> => {
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -504,17 +501,17 @@ export const updatePayoutStatus = async (
 			return resultFail('Only payouts with status "paid" can be updated');
 		}
 
-		await payoutRepository.updatePayoutStatus(payoutId, newStatus);
+		await payoutWriteRepository.updatePayoutStatus(getSessionAuditContext(session), payoutId, newStatus);
 
 		return resultOk(`Payout updated to "${newStatus}"`);
 	} catch (error) {
-		console.error('Could not update payout status', { userId, payoutId, newStatus, error });
+		console.error('Could not update payout status', { userId: session.id, payoutId, newStatus, error });
 
 		return resultFail('Could not update payout');
 	}
 };
 
-export const createPayout = async (userId: string, input: CreatePayoutInput): Promise<Result<PayoutPayload>> => {
+export const createPayout = async (session: UserSession, input: CreatePayoutInput): Promise<Result<PayoutPayload>> => {
 	const inputResult = payoutCreateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -532,7 +529,7 @@ export const createPayout = async (userId: string, input: CreatePayoutInput): Pr
 			return resultFail('Recipient is not assigned to a program');
 		}
 
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -540,15 +537,17 @@ export const createPayout = async (userId: string, input: CreatePayoutInput): Pr
 			return resultFail('No edit access for this program');
 		}
 
-		return resultOk(toPayoutPayload(await payoutRepository.createPayout(inputResult.data)));
+		return resultOk(
+			toPayoutPayload(await payoutWriteRepository.createPayout(getSessionAuditContext(session), inputResult.data)),
+		);
 	} catch (error) {
-		console.error('Could not create payout', { userId, error });
+		console.error('Could not create payout', { userId: session.id, error });
 
 		return resultFail('Could not create payout');
 	}
 };
 
-export const updatePayout = async (userId: string, input: UpdatePayoutInput): Promise<Result<PayoutPayload>> => {
+export const updatePayout = async (session: UserSession, input: UpdatePayoutInput): Promise<Result<PayoutPayload>> => {
 	const inputResult = payoutUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -563,7 +562,7 @@ export const updatePayout = async (userId: string, input: UpdatePayoutInput): Pr
 			return resultFail('Recipient is not assigned to a program');
 		}
 
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -585,17 +584,19 @@ export const updatePayout = async (userId: string, input: UpdatePayoutInput): Pr
 			return resultFail('No edit access for selected recipient');
 		}
 
-		return resultOk(toPayoutPayload(await payoutRepository.updatePayout(inputResult.data)));
+		return resultOk(
+			toPayoutPayload(await payoutWriteRepository.updatePayout(getSessionAuditContext(session), inputResult.data)),
+		);
 	} catch (error) {
-		console.error('Could not update payout', { userId, payoutId: input.id, error });
+		console.error('Could not update payout', { userId: session.id, payoutId: input.id, error });
 
 		return resultFail('Could not update payout');
 	}
 };
 
-export const deletePayout = async (userId: string, payoutId: string): Promise<Result<{ id: string }>> => {
+export const deletePayout = async (session: UserSession, payoutId: string): Promise<Result<{ id: string }>> => {
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -614,9 +615,9 @@ export const deletePayout = async (userId: string, payoutId: string): Promise<Re
 			return resultFail('Only payouts with status "failed" can be deleted');
 		}
 
-		return resultOk(await payoutRepository.deletePayout(payoutId));
+		return resultOk(await payoutWriteRepository.deletePayout(getSessionAuditContext(session), payoutId));
 	} catch (error) {
-		console.error('Could not delete payout', { userId, payoutId, error });
+		console.error('Could not delete payout', { userId: session.id, payoutId, error });
 
 		return resultFail('Could not delete payout');
 	}
@@ -636,7 +637,11 @@ export const updatePayoutStatusByRecipient = async (
 			return resultFail('Payout not found for recipient');
 		}
 
-		const updated = await payoutRepository.updatePayoutStatusByRecipient(payout.id, status, comments);
+		const auditResult = await getRecipientAuditContext(recipientId, 'mobile-app');
+		if (!auditResult.success) {
+			return resultFail(auditResult.error);
+		}
+		const updated = await payoutWriteRepository.updatePayoutStatusByRecipient(auditResult.data, payout.id, status, comments);
 
 		return resultOk(toPayoutRecord(updated));
 	} catch (error) {
@@ -756,6 +761,29 @@ const toPayoutRecord = (
 	updatedAt: payout.updatedAt,
 });
 
+const toPayoutTableViewRows = (
+	payouts: Awaited<ReturnType<typeof payoutRepository.findPayoutTableSource>>['payouts'],
+): PayoutTableViewRow[] =>
+	payouts.flatMap((payout) => {
+		if (!payout.recipient.program) {
+			return [];
+		}
+
+		return [
+			{
+				id: payout.id,
+				recipientFirstName: payout.recipient.contact.firstName,
+				recipientLastName: payout.recipient.contact.lastName,
+				programName: payout.recipient.program.name,
+				mobileMoneyProviderName: payout.recipient.paymentInformation?.mobileMoneyProvider?.name ?? null,
+				amount: Number(payout.amount),
+				currency: payout.currency,
+				status: payout.status,
+				paymentAt: payout.paymentAt,
+			},
+		];
+	});
+
 const getOperatorPrograms = (accesses: ProgramAccesses): ProgramAccesses =>
 	accesses.filter(({ permission }) => permission === ProgramPermission.operator);
 
@@ -770,6 +798,7 @@ const emptyPayoutTableView = (): PayoutPaginatedTableView => ({
 	programFilterOptions: [],
 	statusFilterOptions: [],
 	mobileMoneyProviderFilterOptions: [],
+	recipientFilterOptions: [],
 });
 
 const normalizeOptionalFilter = (value: string | undefined): string | undefined => {

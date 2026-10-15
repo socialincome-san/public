@@ -13,6 +13,7 @@ import { getAccessiblePrograms } from '@/modules/program-access/program-access.s
 import { isReadyForFirstPayoutInterval } from '@/modules/programs/program-stats.service';
 import { getPayoutProcessRecipients, recipientStatusService } from '@/modules/recipients/recipient.service';
 import type { PayoutProcessRecipient } from '@/modules/recipients/recipient.types';
+import type { UserSession } from '@/modules/users/user.types';
 import { format, isSameMonth, startOfMonth } from 'date-fns';
 import type {
 	OrangeMoneyPayoutProcessInput,
@@ -124,15 +125,15 @@ export const previewOrangeCurrentMonthPayouts = async (
 };
 
 export const generateOrangeCurrentMonthPayouts = async (
-	userId: string,
+	session: UserSession,
 	input: OrangeMoneyPayoutProcessInput,
 ): Promise<Result<string>> => {
-	const previewResult = await previewOrangeCurrentMonthPayouts(userId, input);
+	const previewResult = await previewOrangeCurrentMonthPayouts(session.id, input);
 	if (!previewResult.success) {
 		return resultFail(previewResult.error);
 	}
 
-	return generateCurrentMonthPayouts(userId, previewResult.data, input.selectedDate);
+	return generateCurrentMonthPayouts(session, previewResult.data, input.selectedDate);
 };
 
 export const generateTelecelPayoutCsv = async (userId: string, input: PayoutProcessDateInput): Promise<Result<string>> => {
@@ -157,15 +158,15 @@ export const previewTelecelCurrentMonthPayouts = async (
 };
 
 export const generateTelecelCurrentMonthPayouts = async (
-	userId: string,
+	session: UserSession,
 	input: PayoutProcessDateInput,
 ): Promise<Result<string>> => {
-	const previewResult = await previewTelecelCurrentMonthPayouts(userId, input);
+	const previewResult = await previewTelecelCurrentMonthPayouts(session.id, input);
 	if (!previewResult.success) {
 		return resultFail(previewResult.error);
 	}
 
-	return generateCurrentMonthPayouts(userId, previewResult.data, input.selectedDate);
+	return generateCurrentMonthPayouts(session, previewResult.data, input.selectedDate);
 };
 
 export const getPayoutRecipientCounts = async (
@@ -329,7 +330,7 @@ const previewCurrentMonthPayouts = async (
 };
 
 const generateCurrentMonthPayouts = async (
-	userId: string,
+	session: UserSession,
 	previewPayouts: PreviewPayout[],
 	selectedDate: Date,
 ): Promise<Result<string>> => {
@@ -337,7 +338,7 @@ const generateCurrentMonthPayouts = async (
 		return resultOk('No payouts to create for this month');
 	}
 
-	const createResult = await createPayoutProcessPayouts(userId, previewPayouts, selectedDate);
+	const createResult = await createPayoutProcessPayouts(session, previewPayouts, selectedDate);
 	if (!createResult.success) {
 		return resultFail(createResult.error);
 	}

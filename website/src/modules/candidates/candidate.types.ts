@@ -1,4 +1,4 @@
-import type { CountryCode, Gender } from '@/generated/prisma/enums';
+import type { CountryCode, Gender, Profile } from '@/generated/prisma/enums';
 
 type CandidatePhone = {
 	id: string;
@@ -75,6 +75,13 @@ export type CandidatesTableQuery = {
 type CandidateFilterOption = {
 	value: string;
 	label: string;
+};
+
+export type UnassignedCandidateFilter = {
+	countryCode: CountryCode | null;
+	focusIds: string[];
+	profiles: Profile[];
+	localPartnerIds: string[];
 };
 
 export type CandidatesPaginatedTableView = {

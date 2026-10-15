@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { LayoutDashboard, Users } from 'lucide-react';
 import { Button } from '../../actions/button/button';
 import { LocaleCurrencySwitcher } from '../locale-currency-switcher/locale-currency-switcher';
-import { LoginFlyout } from '../login-flyout/login-flyout';
+import { LoginLink } from '../login-link/login-link';
 import { SiteAccountMenu } from '../site-account-menu/site-account-menu';
 import { SiteHeader, type SiteMenuEntry } from './site-header';
 import { SiteMenuDesktop } from './site-menu-desktop';
@@ -75,11 +75,7 @@ const localeSwitcher = (variant: 'ghost' | 'outline') => (
 	/>
 );
 
-const loginFlyout = (
-	<LoginFlyout buttonLabel="Log in" title="Log in to Social Income">
-		<p className="text-sm">Login form</p>
-	</LoginFlyout>
-);
+const loginLink = <LoginLink href="/en/usd/login" label="Log in" />;
 
 const mobileMenu = (
 	<SiteMenuMobile
@@ -96,7 +92,7 @@ const mobileMenu = (
 		footerControls={
 			<>
 				{localeSwitcher('outline')}
-				{loginFlyout}
+				{loginLink}
 			</>
 		}
 	/>
@@ -128,7 +124,7 @@ export const LoggedOut: Story = {
 		homeLinkLabel: 'Social Income home',
 		desktopMenu: <SiteMenuDesktop entries={siteMenuEntries} dropdownAside={<DonationFormPlaceholder />} />,
 		localeSwitcher: localeSwitcher('ghost'),
-		account: loginFlyout,
+		account: loginLink,
 		donateAction: <DonateButton />,
 		mobileMenu,
 	},

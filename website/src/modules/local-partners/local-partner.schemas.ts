@@ -1,4 +1,5 @@
 import { CountryCode, Gender } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { SLUG_REGEX } from '@/lib/utils/regex';
 import z from 'zod';
 
@@ -58,6 +59,9 @@ export const localPartnerUpdateSchema = localPartnerCreateSchema.extend({
 });
 
 export const localPartnerIdSchema = z.string().trim().min(1, 'Local partner id is required.');
+export const localPartnerTableQuerySchema = tableQuerySchema.extend({
+	focusId: tableQueryFilterSchema,
+});
 export const localPartnerSessionTypeSchema = z.enum(['user', 'local-partner', 'contributor']);
 
 export const localPartnerOverviewSlugsSchema = z.array(z.string());

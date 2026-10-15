@@ -4,6 +4,8 @@ import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import type {
 	LocalPartnerDashboardStats,
+	LocalPartnerOption,
+	LocalPartnerPaginatedTableView,
 	LocalPartnerPayload,
 	LocalPartnerPrograms,
 	PublicLocalPartnerOverviewStatsMap,
@@ -23,9 +25,29 @@ import {
 	localPartnerOverviewSlugsSchema,
 	localPartnerProgramSummariesSchema,
 	localPartnerSessionTypeSchema,
+	localPartnerTableQuerySchema,
 	localPartnerUpdateSchema,
 } from './local-partner.schemas';
-import { createLocalPartner, deleteLocalPartner, getLocalPartner, updateLocalPartner } from './local-partner.service';
+import {
+	createLocalPartner,
+	deleteLocalPartner,
+	getLocalPartner,
+	getLocalPartnerOptions,
+	getPaginatedLocalPartnerTableView,
+	updateLocalPartner,
+} from './local-partner.service';
+
+export const getLocalPartnerTableViewAction = async (query: unknown): Promise<Result<LocalPartnerPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedQuery = localPartnerTableQuerySchema.safeParse(query);
+
+	return parsedQuery.success
+		? getPaginatedLocalPartnerTableView(sessionResult.data.id, parsedQuery.data)
+		: resultFail('Invalid local partner query.');
+};
 
 export const createLocalPartnerAction = async (input: unknown): Promise<Result<LocalPartnerPayload>> => {
 	const sessionResult = await getSessionByType('user');
@@ -37,7 +59,7 @@ export const createLocalPartnerAction = async (input: unknown): Promise<Result<L
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createLocalPartner(sessionResult.data.id, inputResult.data);
+	const result = await createLocalPartner(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/admin/local-partners');
 
 	return result;
@@ -93,7 +115,7 @@ export const deleteLocalPartnerAction = async (localPartnerId: unknown): Promise
 		return resultFail('Invalid input.');
 	}
 
-	const result = await deleteLocalPartner(sessionResult.data.id, idResult.data);
+	const result = await deleteLocalPartner(sessionResult.data, idResult.data);
 	revalidatePath('/portal/admin/local-partners');
 
 	return result;
@@ -109,6 +131,8 @@ export const getPublicLocalPartnersByProgramIdAction = async (
 
 	return getPublicLocalPartnersByProgramId(idResult.data);
 };
+
+export const getLocalPartnerOptionsAction = async (): Promise<Result<LocalPartnerOption[]>> => getLocalPartnerOptions();
 
 export const getLocalPartnerDashboardStatsAction = async (input: unknown): Promise<Result<LocalPartnerDashboardStats>> => {
 	const parsedInput = localPartnerDashboardSlugSchema.safeParse(input);

@@ -1,8 +1,9 @@
 'use client';
 
 import { applyTableQueryPatch, TableQueryState } from '@/components/data-table/query-state';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useRef, useTransition } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useTransition } from 'react';
+import { useDebouncedRunner } from './use-debounced-runner';
 
 type UpdateOptions = {
 	debounceMs?: number;
@@ -11,31 +12,18 @@ type UpdateOptions = {
 export const useTableQueryNavigation = () => {
 	const pathname = usePathname();
 	const router = useRouter();
-	const searchParams = useSearchParams();
 	const [isPending, startTransition] = useTransition();
-	const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const runDebounced = useDebouncedRunner();
 
 	const updateQuery = (patch: Partial<TableQueryState>, options?: UpdateOptions) => {
-		const execute = () => {
-			const nextSearchParams = applyTableQueryPatch(new URLSearchParams(searchParams.toString()), patch);
+		runDebounced(() => {
+			// Read the live URL: an open record dialog may have set its param after this update was scheduled
+			const nextSearchParams = applyTableQueryPatch(new URLSearchParams(window.location.search), patch);
 			const query = nextSearchParams.toString();
 			startTransition(() => {
 				router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
 			});
-		};
-
-		if (debounceTimeoutRef.current) {
-			clearTimeout(debounceTimeoutRef.current);
-			debounceTimeoutRef.current = null;
-		}
-
-		if (options?.debounceMs && options.debounceMs > 0) {
-			debounceTimeoutRef.current = setTimeout(execute, options.debounceMs);
-
-			return;
-		}
-
-		execute();
+		}, options?.debounceMs);
 	};
 
 	return {

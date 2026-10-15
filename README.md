@@ -425,8 +425,6 @@ failures that must not stay silent:
   function instance. Only the message goes to Slack; details stay in the
   logs. Staging leaves the webhook unset and does not page Slack,
   because its Stripe and campaign data is incomplete.
-- Health endpoints for uptime monitoring: `/api/health/website`,
-  `/api/health/database`, and the public homepage `/en/int`.
 - Cron runs and function errors are visible in the Vercel dashboard
   (Logs and Observability).
 

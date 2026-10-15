@@ -6,7 +6,7 @@ const mockFindProgramsByIds = jest.fn();
 const mockCountProgramsCreatedBetween = jest.fn();
 const mockFindProgramPayoutForecastSource = jest.fn();
 
-jest.mock('./program.repository', () => ({
+jest.mock('./program.repository.read', () => ({
 	findProgramNameById: mockFindProgramNameById,
 	findProgramOptions: mockFindProgramOptions,
 	findProgramsByIds: mockFindProgramsByIds,

@@ -73,7 +73,7 @@ export const generateOrangeCurrentMonthPayoutsAction = async (input: unknown): P
 		return resultFail('Invalid payout process input.');
 	}
 
-	const result = await generateOrangeCurrentMonthPayouts(sessionResult.data.id, inputResult.data);
+	const result = await generateOrangeCurrentMonthPayouts(sessionResult.data, inputResult.data);
 	if (result.success) {
 		revalidatePayoutProcessPaths();
 	}
@@ -120,7 +120,7 @@ export const generateTelecelCurrentMonthPayoutsAction = async (input: unknown): 
 		return resultFail('Invalid payout process input.');
 	}
 
-	const result = await generateTelecelCurrentMonthPayouts(sessionResult.data.id, inputResult.data);
+	const result = await generateTelecelCurrentMonthPayouts(sessionResult.data, inputResult.data);
 	if (result.success) {
 		revalidatePayoutProcessPaths();
 	}

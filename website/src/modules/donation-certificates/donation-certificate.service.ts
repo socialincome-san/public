@@ -3,6 +3,8 @@ import {
 	isFirebaseStorageConfigured,
 	uploadFileToFirebaseStorage,
 } from '@/integrations/firebase/firebase-storage.integration';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { loadMessages } from '@/lib/i18n/messages';
 import { TIME_ZONE } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
@@ -10,15 +12,17 @@ import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, type LanguageCod
 import { now } from '@/lib/utils/now';
 import { getSucceededForContributorAndYear } from '@/modules/contributions/contribution.service';
 import type { ContributionDonationEntry } from '@/modules/contributions/contribution.types';
-import { getContributorsByIds } from '@/modules/contributors/contributor.service';
+import { getContributorFilterOption, getContributorsByIds } from '@/modules/contributors/contributor.service';
 import type { ContributorDonationCertificate } from '@/modules/contributors/contributor.types';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { createTranslator } from 'next-intl';
 import { createWriteStream } from 'node:fs';
 import * as path from 'node:path';
 import PDFDocument from 'pdfkit';
 import { withFile } from 'tmp-promise';
-import * as donationCertificateRepository from './donation-certificate.repository';
+import * as donationCertificateRepository from './donation-certificate.repository.read';
+import * as donationCertificateWriteRepository from './donation-certificate.repository.write';
 import type {
 	DonationCertificateError,
 	DonationCertificatePaginatedTableView,
@@ -47,11 +51,22 @@ export const getPaginatedDonationCertificates = async (
 			),
 		);
 		if (accessibleProgramIds.length === 0) {
-			return resultOk({ tableRows: [], totalCount: 0 });
+			return resultOk({ tableRows: [], totalCount: 0, contributorFilterOptions: [] });
 		}
+
+		const requestedContributorId = query.contributorId?.trim();
+		// Unknown or inaccessible contributors are ignored, so the filter never hides rows behind an invisible value
+		const contributorOptionResult = requestedContributorId
+			? await getContributorFilterOption(requestedContributorId, accessibleProgramIds)
+			: resultOk(null);
+		if (!contributorOptionResult.success) {
+			return resultFail(contributorOptionResult.error);
+		}
+		const contributorOption = contributorOptionResult.data;
 
 		const { certificates, totalCount } = await donationCertificateRepository.findPaginatedDonationCertificates(
 			accessibleProgramIds,
+			contributorOption?.id,
 			query,
 		);
 		const tableRows: DonationCertificateTableViewRow[] = certificates.map((certificate) => ({
@@ -64,7 +79,7 @@ export const getPaginatedDonationCertificates = async (
 			createdAt: certificate.createdAt,
 		}));
 
-		return resultOk({ tableRows, totalCount });
+		return resultOk({ tableRows, totalCount, contributorFilterOptions: contributorOption ? [contributorOption] : [] });
 	} catch (error) {
 		console.error('Could not fetch donation certificates', { userId, error });
 
@@ -102,13 +117,13 @@ export const getDonationCertificateContributorOptions = async (
 ): Promise<Result<ContributorDonationCertificate[]>> => getContributorsByIds({ actorUserId: userId });
 
 export const createDonationCertificatesForUser = async (
-	userId: string,
+	session: UserSession,
 	year: number,
 	contributorIds: string[],
 	language?: LanguageCode,
 ): Promise<Result<string>> => {
 	const scopedContributorsResult = await getContributorsByIds({
-		actorUserId: userId,
+		actorUserId: session.id,
 		contributorIds,
 	});
 	if (!scopedContributorsResult.success) {
@@ -119,6 +134,7 @@ export const createDonationCertificatesForUser = async (
 	}
 
 	return createDonationCertificates(
+		getSessionAuditContext(session),
 		year,
 		scopedContributorsResult.data.map(({ id }) => id),
 		language,
@@ -126,6 +142,7 @@ export const createDonationCertificatesForUser = async (
 };
 
 export const createDonationCertificateForContributor = async (
+	audit: AuditContext,
 	year: number,
 	contributorId: string,
 	language?: LanguageCode,
@@ -191,7 +208,7 @@ export const createDonationCertificateForContributor = async (
 			return resultFail(DONATION_CERTIFICATE_TECHNICAL_ERROR);
 		}
 
-		await donationCertificateRepository.createDonationCertificate({
+		await donationCertificateWriteRepository.createDonationCertificate(audit, {
 			year,
 			language: certificateLanguage,
 			storagePath: destinationFilePath,
@@ -208,6 +225,7 @@ export const createDonationCertificateForContributor = async (
 };
 
 const createDonationCertificates = async (
+	audit: AuditContext,
 	year: number,
 	contributorIds: string[],
 	language?: LanguageCode,
@@ -220,7 +238,7 @@ const createDonationCertificates = async (
 
 		await Promise.all(
 			contributorIds.map(async (contributorId) => {
-				const result = await createDonationCertificateForContributor(year, contributorId, language);
+				const result = await createDonationCertificateForContributor(audit, year, contributorId, language);
 				if (result.success) {
 					successCount++;
 

@@ -30,6 +30,7 @@ export type CountryTableQuery = {
 	search: string;
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
+	mobileMoneyProviderId?: string;
 };
 
 export type CountryPaginatedTableView = {

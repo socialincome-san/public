@@ -443,5 +443,11 @@
 		"title": "We could not find that page",
 		"description": "The page may have moved, or the link may no longer be valid.",
 		"home-link": "Go to homepage"
+	},
+	"cookie-consent": {
+		"message": "We use <link>cookies</link> to improve your experience.",
+		"accept": "Accept",
+		"decline": "Decline",
+		"settings": "Cookie settings"
 	}
 }

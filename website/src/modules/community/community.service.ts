@@ -2,6 +2,7 @@ import type { Person } from '@/generated/storyblok/types/109655/storyblok-compon
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import { getWebsitePathTailFromStoryblokSlug, getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	createWebsiteJournalArticleLink,
 	createWebsitePersonLink,
@@ -16,11 +17,13 @@ import {
 	getAllPersons,
 	getArticlesByUuids,
 	getCommunityGlobals,
+	getCommunityPages,
+	getContributionAreaLabels,
 	getPrimaryRoleLabels,
 } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
-import type { CommunityPage, StoryReference } from './community.schemas';
-import type { CommunityPanelData, CommunityPerson } from './community.types';
+import { communityPageSchema, type CommunityPage, type StoryReference } from './community.schemas';
+import type { CommunityPanelData, CommunityPerson, PersonContribution } from './community.types';
 
 const ARTICLE_IMAGE_SIZE = 128;
 
@@ -33,6 +36,13 @@ const toHref = (link: StoryblokMultilink | undefined, language: string, currency
 };
 
 const blankToUndefined = (value: string | undefined) => (value?.trim() ? value.trim() : undefined);
+
+// Labels written before the field became a datasource dropdown are free text and shown as is
+const toAreaLabel = (value: string | number, areaLabels: Record<string, string>) => {
+	const code = String(value).trim();
+
+	return areaLabels[code] ?? code;
+};
 
 export const getCommunityPanelData = async (
 	page: CommunityPage,
@@ -51,17 +61,19 @@ export const getCommunityPanelData = async (
 			: globalsPromise.then((result) =>
 					getArticlesByUuids(language, result.success ? (result.data.content.defaultArticles ?? []).map(toUuid) : []),
 				);
-	const [globalsResult, personsResult, roleLabelsResult, articlesResult] = await Promise.all([
+	const [globalsResult, personsResult, roleLabelsResult, areaLabelsResult, articlesResult] = await Promise.all([
 		globalsPromise,
 		getAllPersons(language),
 		getPrimaryRoleLabels(language),
+		getContributionAreaLabels(language),
 		articlesPromise,
 	]);
-	if (!globalsResult.success || !personsResult.success || !roleLabelsResult.success) {
+	if (!globalsResult.success || !personsResult.success || !roleLabelsResult.success || !areaLabelsResult.success) {
 		console.error('Could not load the community panel', {
 			globals: globalsResult.success || globalsResult.error,
 			persons: personsResult.success || personsResult.error,
 			roleLabels: roleLabelsResult.success || roleLabelsResult.error,
+			areaLabels: areaLabelsResult.success || areaLabelsResult.error,
 		});
 
 		return resultFail('Could not load the community panel.');
@@ -70,6 +82,7 @@ export const getCommunityPanelData = async (
 	const globals = globalsResult.data.content;
 	const persons = personsResult.data;
 	const roleLabels = roleLabelsResult.data;
+	const areaLabels = areaLabelsResult.data;
 	const personsByUuid = new Map(persons.map((person) => [person.uuid, person]));
 
 	const toPerson = (person: ISbStoryData<Person>): CommunityPerson => ({
@@ -105,7 +118,7 @@ export const getCommunityPanelData = async (
 		mistakeText: blankToUndefined(globals.mistakeText),
 		contactEmail: blankToUndefined(page.communityContactEmail),
 		maintainers: (page.communityContributors ?? [])
-			.map((group) => ({ label: group.label, people: findPeople(group.people) }))
+			.map((group) => ({ label: toAreaLabel(group.label, areaLabels), people: findPeople(group.people) }))
 			.filter((group) => group.people.length > 0),
 		worldsTitle: blankToUndefined(globals.worldsTitle),
 		worlds: (globals.worlds ?? []).map((world) => ({
@@ -143,4 +156,40 @@ export const getCommunityPanelData = async (
 				: undefined,
 		})),
 	});
+};
+
+export const getPersonContributions = async (
+	personUuid: string,
+	language: string,
+	currency: WebsiteCurrency,
+): Promise<Result<PersonContribution[]>> => {
+	const [pagesResult, areaLabelsResult] = await Promise.all([
+		getCommunityPages(language),
+		getContributionAreaLabels(language),
+	]);
+	if (!pagesResult.success || !areaLabelsResult.success) {
+		return resultFail('Could not load the person contributions.');
+	}
+
+	return resultOk(
+		pagesResult.data.flatMap((story) => {
+			const page = communityPageSchema.safeParse(story.content);
+			const roles = (page.success ? (page.data.communityContributors ?? []) : [])
+				.filter((group) => group.people.some((reference) => toUuid(reference) === personUuid))
+				.map((group) => toAreaLabel(group.label, areaLabelsResult.data))
+				.filter(Boolean);
+			if (roles.length === 0) {
+				return [];
+			}
+			const { title } = story.content;
+
+			return [
+				{
+					title: typeof title === 'string' && title.trim() ? title.trim() : story.name,
+					href: getWebsitePublicPath(language, currency, getWebsitePathTailFromStoryblokSlug(story.full_slug)),
+					roles: [...new Set(roles)],
+				},
+			];
+		}),
+	);
 };

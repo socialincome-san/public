@@ -1,8 +1,11 @@
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getOrganization, getOrganizationOptions } from '@/modules/organizations/organization.service';
 import type { OrganizationOption } from '@/modules/organizations/organization.types';
 import { isAdmin } from '@/modules/users/user.service';
-import * as expenseRepository from './expense.repository';
+import type { UserSession } from '@/modules/users/user.types';
+import * as expenseRepository from './expense.repository.read';
+import * as expenseWriteRepository from './expense.repository.write';
 import type { ExpenseCreateInput, ExpenseUpdateInput } from './expense.schemas';
 import type { ExpensePaginatedTableView, ExpensePayload, ExpenseTableQuery } from './expense.types';
 
@@ -58,21 +61,21 @@ export const getPaginatedExpenseTableView = async (
 export const getExpenseOptions = async (userId: string): Promise<Result<OrganizationOption[]>> =>
 	getOrganizationOptions(userId);
 
-export const createExpense = async (userId: string, input: ExpenseCreateInput): Promise<Result<ExpensePayload>> => {
+export const createExpense = async (session: UserSession, input: ExpenseCreateInput): Promise<Result<ExpensePayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
 
-		const organizationResult = await getOrganization(userId, input.organizationId);
+		const organizationResult = await getOrganization(session.id, input.organizationId);
 		if (!organizationResult.success) {
 			return resultFail(
 				organizationResult.error === 'Organization not found' ? 'Organization not found.' : organizationResult.error,
 			);
 		}
 
-		return resultOk(toExpensePayload(await expenseRepository.createExpense(input)));
+		return resultOk(toExpensePayload(await expenseWriteRepository.createExpense(getSessionAuditContext(session), input)));
 	} catch (error) {
 		console.error('Could not create expense', { error });
 
@@ -80,21 +83,21 @@ export const createExpense = async (userId: string, input: ExpenseCreateInput): 
 	}
 };
 
-export const updateExpense = async (userId: string, input: ExpenseUpdateInput): Promise<Result<ExpensePayload>> => {
+export const updateExpense = async (session: UserSession, input: ExpenseUpdateInput): Promise<Result<ExpensePayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
 
-		const organizationResult = await getOrganization(userId, input.organizationId);
+		const organizationResult = await getOrganization(session.id, input.organizationId);
 		if (!organizationResult.success) {
 			return resultFail(
 				organizationResult.error === 'Organization not found' ? 'Organization not found.' : organizationResult.error,
 			);
 		}
 
-		return resultOk(toExpensePayload(await expenseRepository.updateExpense(input)));
+		return resultOk(toExpensePayload(await expenseWriteRepository.updateExpense(getSessionAuditContext(session), input)));
 	} catch (error) {
 		console.error('Could not update expense', { expenseId: input.id, error });
 

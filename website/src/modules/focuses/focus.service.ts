@@ -1,11 +1,14 @@
 import type { CountryCode } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	countCandidatesForLocalPartners,
 	countRecipientsForProgramsAndLocalPartners,
 } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
-import * as focusRepository from './focus.repository';
+import type { UserSession } from '@/modules/users/user.types';
+import * as focusRepository from './focus.repository.read';
+import * as focusWriteRepository from './focus.repository.write';
 import type { FocusCreateInput, FocusUpdateInput } from './focus.schemas';
 import type {
 	FocusOption,
@@ -97,9 +100,9 @@ export const getPublicFocusStatsBySlugs = async (focusSlugs: string[]): Promise<
 	}
 };
 
-export const createFocus = async (userId: string, input: FocusCreateInput): Promise<Result<FocusPayload>> => {
+export const createFocus = async (session: UserSession, input: FocusCreateInput): Promise<Result<FocusPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -113,7 +116,7 @@ export const createFocus = async (userId: string, input: FocusCreateInput): Prom
 			return resultFail('A focus with this slug already exists.');
 		}
 
-		return resultOk(await focusRepository.createFocus(input));
+		return resultOk(await focusWriteRepository.createFocus(getSessionAuditContext(session), input));
 	} catch (error) {
 		console.error('Could not create focus', { error });
 
@@ -121,9 +124,9 @@ export const createFocus = async (userId: string, input: FocusCreateInput): Prom
 	}
 };
 
-export const updateFocus = async (userId: string, input: FocusUpdateInput): Promise<Result<FocusPayload>> => {
+export const updateFocus = async (session: UserSession, input: FocusUpdateInput): Promise<Result<FocusPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -145,7 +148,7 @@ export const updateFocus = async (userId: string, input: FocusUpdateInput): Prom
 			}
 		}
 
-		return resultOk(await focusRepository.updateFocus(input));
+		return resultOk(await focusWriteRepository.updateFocus(getSessionAuditContext(session), input));
 	} catch (error) {
 		console.error('Could not update focus', { focusId: input.id, error });
 
@@ -153,9 +156,9 @@ export const updateFocus = async (userId: string, input: FocusUpdateInput): Prom
 	}
 };
 
-export const deleteFocus = async (userId: string, focusId: string): Promise<Result<{ id: string }>> => {
+export const deleteFocus = async (session: UserSession, focusId: string): Promise<Result<{ id: string }>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -168,7 +171,7 @@ export const deleteFocus = async (userId: string, focusId: string): Promise<Resu
 			return resultFail('Cannot delete focus because it is still in use');
 		}
 
-		await focusRepository.deleteFocus(focusId);
+		await focusWriteRepository.deleteFocus(getSessionAuditContext(session), focusId);
 
 		return resultOk({ id: focusId });
 	} catch (error) {

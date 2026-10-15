@@ -1,8 +1,11 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
+import { createDefaultCampaign, deleteProgramCampaigns } from '@/modules/campaigns/campaign.service';
 import { assignRandomCandidatesToProgram } from '@/modules/candidates/candidate.service';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
 import {
@@ -11,13 +14,25 @@ import {
 	getOrganizationReferenceOptions,
 	validateOrganizationIds,
 } from '@/modules/organizations/organization.service';
-import { createInitialAccessesForProgram, getAccessiblePrograms } from '@/modules/program-access/program-access.service';
-import { createPublicOnboardingUser, getActiveOrganizationId, isUserEmailAvailable } from '@/modules/users/user.service';
+import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import { removeRecipientsFromProgram } from '@/modules/recipients/recipient.service';
+import { detachProgramSurveys } from '@/modules/surveys/survey.service';
+import {
+	createPublicOnboardingUser,
+	getActiveOrganizationId,
+	isAdmin,
+	isUserEmailAvailable,
+} from '@/modules/users/user.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { isReadyForFirstPayoutInterval } from './program-stats.service';
-import * as programRepository from './program.repository';
+import { hasOperatorAccess } from './program.permissions';
+import * as programRepository from './program.repository.read';
+import * as programWriteRepository from './program.repository.write';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput, PublicOnboardingUserDetailsInput } from './program.schemas';
 import type {
+	ProgramPaginatedTableView,
 	ProgramSettingsPayload,
+	ProgramTableQuery,
 	ProgramWallet,
 	ProgramWallets,
 	PublicPreviewProgram,
@@ -30,6 +45,44 @@ import type {
 
 type PublicProgramRecord = NonNullable<Awaited<ReturnType<typeof programRepository.findPublicProgramBySlug>>>;
 type PublicProgramStatsRecord = NonNullable<Awaited<ReturnType<typeof programRepository.findPublicProgramStatsById>>>;
+
+export const getPaginatedProgramTableView = async (
+	userId: string,
+	query: ProgramTableQuery,
+): Promise<Result<ProgramPaginatedTableView>> => {
+	try {
+		const isAdminResult = await isAdmin(userId);
+		if (!isAdminResult.success) {
+			return resultFail(isAdminResult.error);
+		}
+
+		const { programs, totalCount } = await programRepository.findPaginatedPrograms(query);
+
+		return resultOk({
+			tableRows: programs.map((program) => ({
+				id: program.id,
+				name: program.name,
+				country: program.country.isoCode,
+				ownerOrganizations: program.programAccesses
+					.filter(({ permission }) => permission === ProgramPermission.owner)
+					.map(({ organization }) => organization.name)
+					.join(', '),
+				operatorOrganizations: program.programAccesses
+					.filter(({ permission }) => permission === ProgramPermission.operator)
+					.map(({ organization }) => organization.name)
+					.join(', '),
+				focuses: program.targetFocuses.map(({ focus }) => focus.name).join(', '),
+				recipientsCount: program._count.recipients,
+				createdAt: program.createdAt,
+			})),
+			totalCount,
+		});
+	} catch (error) {
+		console.error('Could not fetch programs', { userId, error });
+
+		return resultFail('Could not fetch programs');
+	}
+};
 
 export const getPublicProgramFilterDataByPortalSlugs = async (
 	portalSlugs: string[],
@@ -290,12 +343,14 @@ export const getProgramOrganizationOptions = async (
 
 export const createProgram = async (
 	input: ProgramCreateInput,
-	actor: { userId: string } | PublicOnboardingUserDetailsInput,
+	actor: UserSession | PublicOnboardingUserDetailsInput,
 ): Promise<Result<{ programId: string }>> => {
 	try {
 		let userId: string;
-		if ('userId' in actor) {
-			userId = actor.userId;
+		let audit: AuditContext;
+		if ('type' in actor) {
+			userId = actor.id;
+			audit = getSessionAuditContext(actor);
 		} else {
 			const emailAvailableResult = await isUserEmailAvailable(actor.email);
 			if (!emailAvailableResult.success) {
@@ -316,6 +371,10 @@ export const createProgram = async (
 				return resultFail(userResult.error);
 			}
 			userId = userResult.data.userId;
+			audit = {
+				actor: { type: 'user', id: userId, name: `${actor.firstName} ${actor.lastName}` },
+				source: 'website',
+			};
 		}
 
 		const [activeOrganizationResult, operatorOrganizationResult, countryResult] = await Promise.all([
@@ -334,25 +393,33 @@ export const createProgram = async (
 		}
 
 		const programName = `${getCountryNameByCode(countryResult.data)} Program ${Math.floor(10000 + Math.random() * 90000)}`;
-		const program = await programRepository.createProgram(input, programName, slugify(programName));
+		const program = await programWriteRepository.createProgram(audit, input, {
+			name: programName,
+			slug: slugify(programName),
+			ownerOrganizationId: activeOrganizationResult.data,
+			operatorOrganizationId: operatorOrganizationResult.data,
+		});
 		const campaignEndDate = now();
 		campaignEndDate.setFullYear(campaignEndDate.getFullYear() + 10);
-		await programRepository.createDefaultCampaign(program.id, campaignEndDate);
-		const accessResult = await createInitialAccessesForProgram({
-			programId: program.id,
-			ownerOrganizationId: activeOrganizationResult.data,
-			operatorFallbackOrganizationId: operatorOrganizationResult.data,
-		});
-		if (!accessResult.success) {
-			return resultFail(accessResult.error);
+		const campaignResult = await createDefaultCampaign(
+			{ ...audit, metadata: { operation: 'program-creation', programId: program.id } },
+			program.id,
+			campaignEndDate,
+		);
+		if (!campaignResult.success) {
+			return resultFail(campaignResult.error);
 		}
 		if (input.amountOfRecipientsForStart > 0) {
 			const assignmentResult = await assignRandomCandidatesToProgram(
+				{ ...audit, metadata: { operation: 'program-creation', programId: program.id } },
 				program.id,
 				input.amountOfRecipientsForStart,
-				countryResult.data,
-				input.targetFocuses,
-				input.targetProfiles,
+				{
+					countryCode: countryResult.data,
+					focusIds: input.targetFocuses,
+					profiles: input.targetProfiles,
+					localPartnerIds: input.targetLocalPartnerIds,
+				},
 			);
 			if (!assignmentResult.success) {
 				return resultFail(assignmentResult.error);
@@ -368,17 +435,15 @@ export const createProgram = async (
 };
 
 export const updateProgramSettings = async (
-	userId: string,
+	session: UserSession,
 	input: ProgramSettingsUpdateInput,
 ): Promise<Result<{ id: string }>> => {
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
-		if (
-			!accessResult.data.some((access) => access.programId === input.id && access.permission === ProgramPermission.operator)
-		) {
+		if (!hasOperatorAccess(accessResult.data, input.id)) {
 			return resultFail('Permission denied');
 		}
 
@@ -411,7 +476,7 @@ export const updateProgramSettings = async (
 			return resultFail('One or more selected organizations do not exist.');
 		}
 
-		await programRepository.updateProgramSettings(input, normalizedSlug);
+		await programWriteRepository.updateProgramSettings(getSessionAuditContext(session), input, normalizedSlug);
 
 		return resultOk({ id: input.id });
 	} catch (error) {
@@ -421,15 +486,29 @@ export const updateProgramSettings = async (
 	}
 };
 
-export const deleteProgram = async (userId: string, programId: string): Promise<Result<void>> => {
+/** Replaces which programs an organization owns and operates, as set in the organization form. The caller authorizes. */
+export const updateOrganizationProgramAccesses = async (
+	audit: AuditContext,
+	input: { organizationId: string; ownedProgramIds: string[]; operatedProgramIds: string[] },
+): Promise<Result<void>> => {
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		await programWriteRepository.updateOrganizationProgramAccesses(audit, input);
+
+		return resultOk(undefined);
+	} catch (error) {
+		console.error('Could not update organization program accesses', { organizationId: input.organizationId, error });
+
+		return resultFail('Could not update organization program accesses');
+	}
+};
+
+export const deleteProgram = async (session: UserSession, programId: string): Promise<Result<void>> => {
+	try {
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
-		if (
-			!accessResult.data.some((access) => access.programId === programId && access.permission === ProgramPermission.operator)
-		) {
+		if (!hasOperatorAccess(accessResult.data, programId)) {
 			return resultFail('Permission denied');
 		}
 		if (!(await programRepository.findProgramNameById(programId))) {
@@ -444,7 +523,28 @@ export const deleteProgram = async (userId: string, programId: string): Promise<
 			return resultFail('Program cannot be deleted because related campaigns already have contributions.');
 		}
 
-		await programRepository.deleteProgram(programId);
+		// Campaigns, surveys and recipients belong to other modules, so they are
+		// removed in separate steps before the program. Each step is safe to
+		// retry after a failed deletion. Campaigns go first: subscriptions or
+		// pending claims can block their deletion, and recipients must stay
+		// assigned when that happens.
+		const deletionAudit: AuditContext = {
+			...getSessionAuditContext(session),
+			metadata: { operation: 'program-deletion', programId },
+		};
+		const campaignsResult = await deleteProgramCampaigns(deletionAudit, programId);
+		if (!campaignsResult.success) {
+			return resultFail(campaignsResult.error);
+		}
+		const surveysResult = await detachProgramSurveys(deletionAudit, programId);
+		if (!surveysResult.success) {
+			return resultFail(surveysResult.error);
+		}
+		const removalResult = await removeRecipientsFromProgram(deletionAudit, programId);
+		if (!removalResult.success) {
+			return resultFail(removalResult.error);
+		}
+		await programWriteRepository.deleteProgram(deletionAudit, programId);
 
 		return resultOk(undefined);
 	} catch (error) {

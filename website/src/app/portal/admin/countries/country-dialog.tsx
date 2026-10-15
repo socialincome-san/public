@@ -1,8 +1,15 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
+import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
+import { countryMobileMoneyProvidersTableConfig } from '@/components/data-table/configs/mobile-money-providers-table.config';
+import { countryProgramsTableConfig } from '@/components/data-table/configs/programs-table.config';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import { getMobileMoneyProviderTableViewAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
+import { getProgramTableViewAction } from '@/modules/programs/program.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
+import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
 import CountriesForm from './countries-form';
 
 type Props = {
@@ -21,26 +28,69 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 		console.error('Country Form Error', { error });
 	};
 
+	const form = (
+		<>
+			{errorMessage && (
+				<Alert variant="destructive">
+					<AlertTitle>Error</AlertTitle>
+					<AlertDescription>{errorMessage}</AlertDescription>
+				</Alert>
+			)}
+
+			<CountriesForm
+				countryId={countryId}
+				onSuccess={() => onOpenChange(false)}
+				onCancel={() => onOpenChange(false)}
+				onError={handleError}
+			/>
+		</>
+	);
+
+	if (countryId) {
+		return (
+			<TabbedDialog
+				open={open}
+				onOpenChange={onOpenChange}
+				title="Edit country"
+				tabs={[
+					{ value: 'details', label: 'Details', content: form },
+					{
+						value: 'programs',
+						label: 'Programs',
+						content: (
+							<RecordTableTab
+								config={countryProgramsTableConfig}
+								load={(query) => getProgramTableViewAction({ ...query, countryId })}
+								getRowHref={(row) => `/portal/programs/${row.id}/overview`}
+							/>
+						),
+					},
+					{
+						value: 'mobile-money-providers',
+						label: 'Mobile money providers',
+						content: (
+							<RecordTableTab
+								config={countryMobileMoneyProvidersTableConfig}
+								load={(query) => getMobileMoneyProviderTableViewAction({ ...query, countryId })}
+								getRowHref={(row) =>
+									`/portal/admin/mobile-money-providers?${new URLSearchParams({ countryId, providerId: row.id })}`
+								}
+							/>
+						),
+					},
+					auditLogTab('country', countryId),
+				]}
+			/>
+		);
+	}
+
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
-					<DialogTitle>{countryId ? 'Edit' : 'Add'} country</DialogTitle>
+					<DialogTitle>Add country</DialogTitle>
 				</DialogHeader>
-
-				{errorMessage && (
-					<Alert variant="destructive">
-						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>{errorMessage}</AlertDescription>
-					</Alert>
-				)}
-
-				<CountriesForm
-					countryId={countryId}
-					onSuccess={() => onOpenChange(false)}
-					onCancel={() => onOpenChange(false)}
-					onError={handleError}
-				/>
+				{form}
 			</DialogContent>
 		</Dialog>
 	);

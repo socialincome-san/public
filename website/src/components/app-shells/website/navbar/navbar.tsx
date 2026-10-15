@@ -41,7 +41,11 @@ export const Navbar = async ({ sessions, lang, currency, scope }: Props) => {
 			account={<AccountSlot sessions={sessions} scope={scope} />}
 			donateAction={
 				<SignedOutSlot sessions={sessions} scope={scope}>
-					<OpenDonationWizardButton label={tDonate('donation-form.donate-now')} size="md" />
+					<OpenDonationWizardButton
+						label={tDonate('donation-form.donate-now')}
+						size="md"
+						analyticsEvent="donate_nav_click"
+					/>
 				</SignedOutSlot>
 			}
 			mobileMenu={<MenuMobile sessions={sessions} scope={scope} lang={lang} menuEntries={menuEntries} currency={currency} />}

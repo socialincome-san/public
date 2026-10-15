@@ -27,6 +27,14 @@ const DonationCertificatesDataLoader = async ({ searchParams }: SearchParamsPage
 		? certificatesResult.data.tableRows
 		: [];
 	const totalRows = certificatesResult.success ? certificatesResult.data.totalCount : 0;
+	const contributorFilterOptions = certificatesResult.success ? certificatesResult.data.contributorFilterOptions : [];
 
-	return <DonationCertificateTable error={error} rows={certificateRows} query={{ ...tableQuery, totalRows }} />;
+	return (
+		<DonationCertificateTable
+			error={error}
+			rows={certificateRows}
+			query={{ ...tableQuery, totalRows }}
+			contributorFilterOptions={contributorFilterOptions}
+		/>
+	);
 };

@@ -7,7 +7,6 @@
 		"continue": "Weiter",
 		"retry": "Erneut versuchen",
 		"search": "Suchen",
-		"coming_soon": "Bald verfügbar",
 		"recommended": "Empfohlen",
 		"months": "Monate",
 		"per_month": "/ Monat",
@@ -68,17 +67,6 @@
 		}
 	},
 	"step2": {
-		"program_management": {
-			"title": "Programmverwaltung",
-			"social_income": {
-				"label": "Programm wird von Social Income betrieben",
-				"description": "Social Income verwaltet Empfänger, Auszahlungen und den Betrieb."
-			},
-			"self_run": {
-				"label": "Programm selbst betreiben",
-				"description": "Sie verwalten Empfänger und Abläufe eigenständig."
-			}
-		},
 		"recipient_selection": {
 			"title": "Empfängerauswahl",
 			"universal": {
@@ -89,16 +77,14 @@
 			},
 			"targeted": {
 				"label": "Gezielter Ansatz",
-				"description": "Unterstützung erhalten Empfänger, die zu ausgewählten Schwerpunkten und Profilen passen.",
+				"description": "Unterstützung erhalten Empfänger, die zu den ausgewählten Schwerpunkten, Profilen oder lokalen Partnern passen.",
 				"matching": "Empfänger entsprechen dem ausgewählten Land und den Filtern",
 				"empty_error": "Bitte passen Sie die Filter an, damit mindestens ein Empfänger passt."
 			},
 			"focuses": "Schwerpunkte",
 			"profiles": "Profile",
-			"custom": {
-				"label": "Empfänger selbst auswählen",
-				"description": "Einzelne Empfänger manuell auswählen und verwalten."
-			}
+			"local_partners": "Lokale Partner",
+			"loading": "Kandidatenzahlen werden aktualisiert"
 		},
 		"profiles": {
 			"male": "Männlich",
@@ -109,8 +95,8 @@
 	"step3": {
 		"recipients": {
 			"title": "Empfänger zum Programmstart",
-			"no_candidates": "Derzeit sind keine Kandidatinnen und Kandidaten im Pool verfügbar. Gehen Sie zu Schritt 2 zurück und passen Sie die ausgewählten Schwerpunkte an oder stellen Sie sicher, dass Kandidaten verfügbar sind.",
-			"max_hint": "Das Maximum richtet sich nach der Anzahl der aktuell verfügbaren Kandidatinnen und Kandidaten für Ihre ausgewählten Schwerpunkte."
+			"no_candidates": "Derzeit sind keine Kandidatinnen und Kandidaten im Pool verfügbar. Gehen Sie zu Schritt 2 zurück und passen Sie die ausgewählten Filter an oder stellen Sie sicher, dass Kandidaten verfügbar sind.",
+			"max_hint": "Das Maximum richtet sich nach der Anzahl der aktuell verfügbaren Kandidatinnen und Kandidaten für Ihre ausgewählten Filter."
 		},
 		"indirect_notice": {
 			"prefix": "{recipients} Empfänger profitieren",

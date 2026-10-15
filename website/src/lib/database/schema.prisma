@@ -1243,3 +1243,26 @@ model SourceLink {
 
   @@map("source_link")
 }
+
+// One row per write to an audited entity: who wrote it, from where, and the
+// entity's state afterwards (null after a delete). Changes are computed by
+// comparing consecutive snapshots. No foreign keys: events outlive deleted
+// entities. clock_timestamp() orders events by insert time.
+model AuditEvent {
+  id         String   @id @default(cuid()) @map("id")
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  /// Display name from the entity's state at the write; searchable in the audit log.
+  entityName String?  @map("entity_name")
+  action     String   @map("action")
+  actorType  String   @map("actor_type")
+  actorId    String   @map("actor_id")
+  actorName  String?  @map("actor_name")
+  source     String   @map("source")
+  snapshot   Json?    @map("snapshot")
+  metadata   Json?    @map("metadata")
+  createdAt  DateTime @default(dbgenerated("clock_timestamp()")) @map("created_at") @db.Timestamptz(3)
+
+  @@index([entityType, entityId, createdAt])
+  @@map("audit_event")
+}

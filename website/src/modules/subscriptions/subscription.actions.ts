@@ -1,6 +1,7 @@
 'use server';
 
 import { SubscriptionPaymentMethod } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import {
@@ -8,8 +9,33 @@ import {
 	createManageSubscriptionsSession,
 	updateContributorSubscriptionAmount,
 } from '@/modules/stripe-payments/stripe-payment.service';
-import { cancelSubscriptionSchema, subscriptionIdSchema, updateSubscriptionAmountSchema } from './subscription.schemas';
-import { cancelBankTransfer, getOwnedSubscriptionPaymentMethod, updateBankTransferAmount } from './subscription.service';
+import {
+	cancelSubscriptionSchema,
+	subscriptionIdSchema,
+	subscriptionTableQuerySchema,
+	updateSubscriptionAmountSchema,
+} from './subscription.schemas';
+import {
+	cancelBankTransfer,
+	getOwnedSubscriptionPaymentMethod,
+	getPaginatedTableView,
+	updateBankTransferAmount,
+} from './subscription.service';
+import type { SubscriptionPaginatedTableView } from './subscription.types';
+
+export const getSubscriptionTableViewAction = async (query: unknown): Promise<Result<SubscriptionPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const queryResult = subscriptionTableQuerySchema.safeParse(query);
+	if (!queryResult.success) {
+		return resultFail('Invalid table query.');
+	}
+
+	return getPaginatedTableView(sessionResult.data.id, queryResult.data);
+};
 
 export const updateSubscriptionAmountAction = async (
 	input: unknown,
@@ -24,16 +50,16 @@ export const updateSubscriptionAmountAction = async (
 		return resultFail('Invalid subscription amount update');
 	}
 
-	const { contributorId, paymentMethod } = ownership.data;
+	const { audit, contributorId, paymentMethod } = ownership.data;
 	if (paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
-		return updateBankTransferAmount({
+		return updateBankTransferAmount(audit, {
 			contributorId,
 			subscriptionId: parsed.data.subscriptionId,
 			amount: parsed.data.amount,
 		});
 	}
 
-	return updateContributorSubscriptionAmount({
+	return updateContributorSubscriptionAmount(audit, {
 		contributorId,
 		subscriptionId: parsed.data.subscriptionId,
 		amount: parsed.data.amount,
@@ -71,16 +97,16 @@ export const cancelSubscriptionAction = async (input: unknown): Promise<Result<v
 		return ownership;
 	}
 
-	const { contributorId, paymentMethod } = ownership.data;
+	const { audit, contributorId, paymentMethod } = ownership.data;
 	if (paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
-		return cancelBankTransfer({
+		return cancelBankTransfer(audit, {
 			contributorId,
 			subscriptionId: parsed.data.subscriptionId,
 			reason: parsed.data.reason,
 		});
 	}
 
-	return cancelContributorSubscription({
+	return cancelContributorSubscription(audit, {
 		contributorId,
 		subscriptionId: parsed.data.subscriptionId,
 		reason: parsed.data.reason,
@@ -111,6 +137,7 @@ const resolveOwnedSubscriptionPaymentMethod = async (input: unknown) => {
 	return {
 		success: true as const,
 		data: {
+			audit: getSessionAuditContext(sessionResult.data),
 			contributorId: sessionResult.data.id,
 			stripeCustomerId: sessionResult.data.stripeCustomerId,
 			language: sessionResult.data.language,

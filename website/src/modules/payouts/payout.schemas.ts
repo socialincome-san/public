@@ -1,4 +1,5 @@
 import { Currency, PayoutStatus } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 
 const requiredIdSchema = z.string().trim().min(1, 'This field is required.');
@@ -37,6 +38,13 @@ export const payoutUpdateSchema = payoutCreateSchema.extend({
 });
 
 export const payoutIdSchema = z.string().trim().min(1, 'Payout id is required.');
+
+export const payoutTableQuerySchema = tableQuerySchema.extend({
+	programId: tableQueryFilterSchema,
+	payoutStatus: tableQueryFilterSchema,
+	mobileMoneyProviderId: tableQueryFilterSchema,
+	recipientId: tableQueryFilterSchema,
+});
 
 export const payoutProgramIdSchema = z.string().trim().min(1, 'Invalid program id');
 

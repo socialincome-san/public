@@ -3,7 +3,12 @@
 import { PayoutStatus } from '@/generated/prisma/enums';
 import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
-import type { CountryPayoutTotals, PayoutForecastTableView, PayoutPayload } from '@/modules/payouts/payout.types';
+import type {
+	CountryPayoutTotals,
+	PayoutForecastTableView,
+	PayoutPaginatedTableView,
+	PayoutPayload,
+} from '@/modules/payouts/payout.types';
 import { getEditableRecipientOptions } from '@/modules/recipients/recipient.service';
 import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import { revalidatePath } from 'next/cache';
@@ -15,11 +20,13 @@ import {
 	payoutLocalPartnerSlugSchema,
 	payoutNoInputSchema,
 	payoutProgramIdSchema,
+	payoutTableQuerySchema,
 	payoutUpdateSchema,
 } from './payout.schemas';
 import {
 	createPayout,
 	deletePayout,
+	getPaginatedPayoutTableView,
 	getPayout,
 	getPublicPayoutForecastTableView,
 	updatePayout,
@@ -38,7 +45,7 @@ export const createPayoutAction = async (input: unknown): Promise<Result<PayoutP
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createPayout(sessionResult.data.id, inputResult.data);
+	const result = await createPayout(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/delivery/payouts');
 
 	return result;
@@ -55,7 +62,7 @@ export const updatePayoutAction = async (input: unknown): Promise<Result<PayoutP
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updatePayout(sessionResult.data.id, inputResult.data);
+	const result = await updatePayout(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/delivery/payouts');
 
 	return result;
@@ -72,7 +79,7 @@ export const deletePayoutAction = async (payoutId: unknown): Promise<Result<{ id
 		return resultFail('Payout id is required.');
 	}
 
-	const result = await deletePayout(sessionResult.data.id, payoutIdResult.data);
+	const result = await deletePayout(sessionResult.data, payoutIdResult.data);
 	revalidatePath('/portal/delivery/payouts');
 	revalidatePath('/portal/management/ongoing-payouts');
 	revalidatePath('/portal/management/recipients');
@@ -93,6 +100,20 @@ export const getPayoutAction = async (payoutId: unknown): Promise<Result<PayoutP
 	}
 
 	return getPayout(sessionResult.data.id, payoutIdResult.data);
+};
+
+export const getPayoutTableViewAction = async (query: unknown): Promise<Result<PayoutPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const queryResult = payoutTableQuerySchema.safeParse(query);
+	if (!queryResult.success) {
+		return resultFail('Invalid table query.');
+	}
+
+	return getPaginatedPayoutTableView(sessionResult.data.id, queryResult.data);
 };
 
 export const getPayoutRecipientOptionsAction = async (input: unknown = undefined): Promise<Result<RecipientOption[]>> => {
@@ -120,7 +141,7 @@ export const confirmPayoutAction = async (payoutId: unknown): Promise<Result<str
 		return resultFail('Payout id is required.');
 	}
 
-	const result = await updatePayoutStatus(sessionResult.data.id, payoutIdResult.data, PayoutStatus.confirmed);
+	const result = await updatePayoutStatus(sessionResult.data, payoutIdResult.data, PayoutStatus.confirmed);
 	revalidatePath('/portal/monitoring/payout-confirmation');
 
 	return result;
@@ -137,7 +158,7 @@ export const contestPayoutAction = async (payoutId: unknown): Promise<Result<str
 		return resultFail('Payout id is required.');
 	}
 
-	const result = await updatePayoutStatus(sessionResult.data.id, payoutIdResult.data, PayoutStatus.contested);
+	const result = await updatePayoutStatus(sessionResult.data, payoutIdResult.data, PayoutStatus.contested);
 	revalidatePath('/portal/monitoring/payout-confirmation');
 
 	return result;

@@ -7,6 +7,7 @@ import type {
 	Country,
 	Focus,
 	LocalPartner,
+	Page,
 	Person,
 	Program,
 	Tag,
@@ -80,8 +81,8 @@ const STORIES_PATH_PARAMS = {
 } as const;
 const PRIMARY_ROLES_DATASOURCE = 'primaryroles';
 const CIRCLES_DATASOURCE = 'circles';
-const WORK_STYLES_DATASOURCE = 'work-style';
 const TIME_COMMITMENTS_DATASOURCE = 'time-commitment';
+const CONTRIBUTION_AREAS_DATASOURCE = 'contribution-areas';
 
 const JOURNAL_TEASER_LIMIT = 3;
 
@@ -92,6 +93,8 @@ type StoryblokDatasourceEntry = {
 };
 
 type StoryblokFilterQuery = Record<string, unknown>;
+
+type CommunityPageContent = Page | Country | Program | Focus | LocalPartner | Campaign;
 
 const fetchDatasourceEntriesCached = cache(
 	async (datasourceSlug: string, language: string): Promise<Result<StoryblokDatasourceEntry[]>> =>
@@ -198,17 +201,30 @@ export const getPrimaryRoleLabels = async (language: string): Promise<Result<Rec
 export const getCircleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(CIRCLES_DATASOURCE, language);
 
-export const getWorkStyleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
-	getDatasourceEntries(WORK_STYLES_DATASOURCE, language);
-
 export const getTimeCommitmentLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(TIME_COMMITMENTS_DATASOURCE, language);
+
+export const getContributionAreaLabels = async (language: string): Promise<Result<Record<string, string>>> =>
+	getDatasourceEntries(CONTRIBUTION_AREAS_DATASOURCE, language);
 
 export const getAllPersons = async (language: string): Promise<Result<ISbStoryData<Person>[]>> =>
 	fetchStoryblokStories<ISbStoryData<Person>>({
 		...(await getStoryParams(language)),
 		content_type: CONTENT_TYPE.person,
 	});
+
+export const getCommunityPages = async (language: string): Promise<Result<ISbStoryData<CommunityPageContent>[]>> => {
+	const result = await fetchStoryblokStories<ISbStoryData<CommunityPageContent>>({
+		...(await getStoryParams(language)),
+		starts_with: `${STORYBLOK_PAGES_FOLDER}/`,
+		filter_query: { communityEnabled: { is: true } },
+		excluding_fields: CONTENT_FIELD,
+	});
+
+	return result.success
+		? resultOk(result.data.filter((story) => !isCampaignStory(story) || isListedCampaignStory(story)))
+		: result;
+};
 
 export const getOverviewArticleTypes = async (language: string): Promise<Result<ISbStoryData<ArticleType>[]>> => {
 	const result = await fetchStoryblokStories<ISbStoryData<ArticleType>>({

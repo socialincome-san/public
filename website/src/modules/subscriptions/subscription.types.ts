@@ -1,5 +1,6 @@
 import {
 	type Currency,
+	type DonationInterval,
 	type SubscriptionCancellationReason,
 	type SubscriptionPaymentMethod,
 	type SubscriptionStatus,
@@ -113,11 +114,15 @@ export type SubscriptionTableQuery = {
 	sortDirection?: 'asc' | 'desc';
 	subscriptionStatus?: string;
 	subscriptionPaymentMethod?: string;
+	contributorId?: string;
+	campaignId?: string;
 };
 
 export type SubscriptionPaginatedTableView = {
 	tableRows: SubscriptionTableViewRow[];
 	totalCount: number;
+	contributorFilterOptions: { id: string; name: string }[];
+	campaignFilterOptions: { id: string; name: string }[];
 };
 
 export type SubscriptionUpsertResult = {
@@ -126,6 +131,18 @@ export type SubscriptionUpsertResult = {
 	bankStandingOrderReference: string | null;
 	campaignId: string;
 	status: SubscriptionStatus;
+};
+
+export type StripeSubscriptionInput = {
+	stripeSubscriptionId: string;
+	contributorId: string;
+	campaignId: string;
+	amount: number;
+	currency: Currency;
+	interval: DonationInterval;
+	status: SubscriptionStatus;
+	canceledAt: Date | null;
+	coverTransactionCosts: boolean;
 };
 
 export type UpsertBankStandingOrderInput = {

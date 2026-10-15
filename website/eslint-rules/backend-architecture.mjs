@@ -151,7 +151,7 @@ const isAllowedModuleFilename = (filename) => {
 		/\.actions\.tsx?$/.test(normalized) ||
 		/\.service\.tsx?$/.test(normalized) ||
 		/\.cache\.tsx?$/.test(normalized) ||
-		/\.repository\.tsx?$/.test(normalized) ||
+		/\.repository(\.(read|write))?\.tsx?$/.test(normalized) ||
 		/\.schemas\.tsx?$/.test(normalized) ||
 		/\.permissions\.tsx?$/.test(normalized) ||
 		/\.types\.tsx?$/.test(normalized) ||
@@ -464,7 +464,7 @@ const filenameContract = {
 		schema: [],
 		messages: {
 			invalidModuleFilename:
-				'Module files must use an approved suffix: .actions, .service, .cache, .repository, .schemas, .permissions, .types, or .test.',
+				'Module files must use an approved suffix: .actions, .service, .cache, .repository (.read, .write), .schemas, .permissions, .types, or .test.',
 			invalidIntegrationFilename: 'Integration files must use an approved suffix: .integration or .test.',
 		},
 	},
@@ -578,7 +578,7 @@ const repositoryExportNaming = {
 	},
 	create(context) {
 		const filename = normalizePath(context.filename);
-		if (!filename.endsWith('.repository.ts') && !filename.endsWith('.repository.tsx')) {
+		if (!/\.repository(\.(read|write))?\.tsx?$/.test(filename)) {
 			return {};
 		}
 

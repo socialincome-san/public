@@ -1,4 +1,5 @@
-import { Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
+import { Currency, PayoutInterval, Profile, ProgramPermission } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
 import z from 'zod';
 
@@ -14,6 +15,7 @@ export const programCreateSchema = z.object({
 	payoutInterval: z.nativeEnum(PayoutInterval),
 	targetFocuses: z.array(z.string().trim().min(1)).default([]),
 	targetProfiles: z.array(z.nativeEnum(Profile)).default([]),
+	targetLocalPartnerIds: z.array(z.string().trim().min(1)).default([]),
 });
 
 export const publicOnboardingUserDetailsSchema = z.object({
@@ -41,6 +43,17 @@ export const programIdSchema = z.string().trim().min(1, 'Program id is required.
 export const programSlugSchema = z.string().trim().min(1, 'Program slug is required.');
 export const programSlugsSchema = z.array(programSlugSchema);
 
+export const programTableQuerySchema = tableQuerySchema
+	.extend({
+		organizationId: tableQueryFilterSchema,
+		programPermission: z.nativeEnum(ProgramPermission).optional(),
+		countryId: tableQueryFilterSchema,
+		focusId: tableQueryFilterSchema,
+	})
+	.refine((query) => !query.programPermission || query.organizationId, {
+		message: 'Organization is required for a permission filter.',
+	});
+
 export const programBudgetCalculationSchema = z.object({
 	amountOfRecipients: nonNegativeIntegerSchema,
 	programDuration: positiveIntegerSchema,
@@ -63,8 +76,26 @@ export const programFinancesStatsSchema = z.object({
 
 export const programDisplayCurrencySchema = z.enum(['CHF', 'EUR', 'USD']);
 
+const programRecipientPoolFilterSchema = z.object({
+	programId: z.string().trim().min(1, 'Program id is required.'),
+	focusIds: z.array(z.string().trim().min(1)).default([]),
+	profiles: z.array(z.nativeEnum(Profile)).default([]),
+	localPartnerIds: z.array(z.string().trim().min(1)).default([]),
+});
+
+export const programRecipientPoolPreviewSchema = programRecipientPoolFilterSchema.extend({
+	recipientCount: z.number().int().min(0).optional(),
+	displayCurrency: z.nativeEnum(Currency).optional(),
+});
+
+export const programRecipientPoolAssignSchema = programRecipientPoolFilterSchema.extend({
+	recipientCount: positiveIntegerSchema,
+});
+
 export type ProgramCreateInput = z.infer<typeof programCreateSchema>;
 export type PublicOnboardingUserDetailsInput = z.infer<typeof publicOnboardingUserDetailsSchema>;
 export type ProgramSettingsUpdateInput = z.infer<typeof programSettingsUpdateSchema>;
 export type ProgramBudgetCalculationInput = z.infer<typeof programBudgetCalculationSchema>;
 export type ProgramFinancesStatsInput = z.infer<typeof programFinancesStatsSchema>;
+export type ProgramRecipientPoolPreviewInput = z.infer<typeof programRecipientPoolPreviewSchema>;
+export type ProgramRecipientPoolAssignInput = z.infer<typeof programRecipientPoolAssignSchema>;

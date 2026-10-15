@@ -1,3 +1,4 @@
+import { CookieSettingsButton } from '@/components/analytics/cookie-settings-button';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { type WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
@@ -66,6 +67,7 @@ export const Footer = async ({ lang, currency }: Props) => {
 			}))}
 			copyright={layoutContent?.copyrightNotice?.replace('%YEAR%', currentYear.toString())}
 			supportedBy={supportedBy}
+			legal={<CookieSettingsButton />}
 		/>
 	);
 };

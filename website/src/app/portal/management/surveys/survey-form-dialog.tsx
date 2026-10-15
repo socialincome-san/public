@@ -1,8 +1,9 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
+import { RecordDialog } from '@/components/data-table/clients/record-dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useState } from 'react';
 import { SurveyForm } from './survey-form';
 
@@ -29,26 +30,26 @@ export const SurveyFormDialog = ({ open, onOpenChange, surveyId }: SurveyFormDia
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent size="md">
-				<DialogHeader>
-					<DialogTitle>{surveyId ? 'Edit Survey' : 'Add Survey'}</DialogTitle>
-				</DialogHeader>
-				{errorMessage && (
-					<Alert variant="destructive">
-						<AlertTitle>Error</AlertTitle>
-						<AlertDescription>{errorMessage}</AlertDescription>
-					</Alert>
-				)}
-				<SurveyForm
-					surveyId={surveyId}
-					onSuccess={() => {
-						onOpenChange(false);
-					}}
-					onError={onError}
-					onCancel={() => onOpenChange(false)}
-				/>
-			</DialogContent>
-		</Dialog>
+		<RecordDialog
+			open={open}
+			onOpenChange={handleOpenChange}
+			title={surveyId ? 'Edit Survey' : 'Add Survey'}
+			tabs={surveyId ? [auditLogTab('survey', surveyId)] : []}
+		>
+			{errorMessage && (
+				<Alert variant="destructive">
+					<AlertTitle>Error</AlertTitle>
+					<AlertDescription>{errorMessage}</AlertDescription>
+				</Alert>
+			)}
+			<SurveyForm
+				surveyId={surveyId}
+				onSuccess={() => {
+					onOpenChange(false);
+				}}
+				onError={onError}
+				onCancel={() => onOpenChange(false)}
+			/>
+		</RecordDialog>
 	);
 };

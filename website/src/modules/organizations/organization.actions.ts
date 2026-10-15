@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import {
 	organizationCreateSchema,
 	organizationIdSchema,
+	organizationMemberTableQuerySchema,
 	organizationRenameSchema,
 	organizationUpdateSchema,
 } from './organization.schemas';
@@ -15,12 +16,27 @@ import {
 	getOrganization,
 	getOrganizationProgramOptions,
 	getOrganizationUserOptions,
+	getPaginatedOrganizationAdminMembersTableView,
 	renameActiveOrganization,
 	updateOrganization,
 } from './organization.service';
-import type { OrganizationPayload } from './organization.types';
+import type { OrganizationMemberPaginatedTableView, OrganizationPayload } from './organization.types';
 
 const REVALIDATE_PATH = '/portal/admin/organizations';
+
+export const getOrganizationMemberTableViewAction = async (
+	query: unknown,
+): Promise<Result<OrganizationMemberPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedQuery = organizationMemberTableQuerySchema.safeParse(query);
+
+	return parsedQuery.success
+		? getPaginatedOrganizationAdminMembersTableView(sessionResult.data.id, parsedQuery.data)
+		: resultFail('Invalid organization member query.');
+};
 
 export const createOrganizationAction = async (input: unknown): Promise<Result<OrganizationPayload>> => {
 	const sessionResult = await getSessionByType('user');
@@ -33,7 +49,7 @@ export const createOrganizationAction = async (input: unknown): Promise<Result<O
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createOrganization(sessionResult.data.id, parsedInput.data);
+	const result = await createOrganization(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -50,7 +66,7 @@ export const updateOrganizationAction = async (input: unknown): Promise<Result<O
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateOrganization(sessionResult.data.id, parsedInput.data);
+	const result = await updateOrganization(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -67,7 +83,7 @@ export const renameActiveOrganizationAction = async (input: unknown): Promise<Re
 		return resultFail('Invalid input.');
 	}
 
-	const result = await renameActiveOrganization(sessionResult.data.id, parsedInput.data);
+	const result = await renameActiveOrganization(sessionResult.data, parsedInput.data);
 	revalidatePath('/portal');
 	revalidatePath('/portal/profile/account');
 	revalidatePath('/portal/profile/organization');
@@ -86,7 +102,7 @@ export const deleteOrganizationAction = async (organizationId: unknown): Promise
 		return resultFail('Invalid organization id.');
 	}
 
-	const result = await deleteOrganization(sessionResult.data.id, parsedOrganizationId.data);
+	const result = await deleteOrganization(sessionResult.data, parsedOrganizationId.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;

@@ -1,12 +1,18 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getProgramReferenceOptions, validateProgramIds } from '@/modules/programs/program-reference.service';
-import { getUserRole, isAdmin } from '@/modules/users/user.service';
+import { updateOrganizationProgramAccesses } from '@/modules/programs/program.service';
+import { getUserRole, isAdmin, updateOrganizationMembers } from '@/modules/users/user.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { canRenameOrganization } from './organization.permissions';
-import * as organizationRepository from './organization.repository';
+import * as organizationRepository from './organization.repository.read';
+import * as organizationWriteRepository from './organization.repository.write';
 import type { CreateOrganizationInput, RenameOrganizationInput, UpdateOrganizationInput } from './organization.schemas';
 import type {
 	ActiveOrganizationSummary,
+	OrganizationAdminMemberTableQuery,
 	OrganizationMemberPaginatedTableView,
 	OrganizationMemberTableQuery,
 	OrganizationMemberTableViewRow,
@@ -16,6 +22,17 @@ import type {
 	OrganizationTableQuery,
 	OrganizationTableViewRow,
 } from './organization.types';
+
+const toOrganizationMemberTableRows = (
+	members: Awaited<ReturnType<typeof organizationRepository.findPaginatedOrganizationMembers>>['members'],
+): OrganizationMemberTableViewRow[] =>
+	members.map((member) => ({
+		id: member.user.id,
+		firstName: member.user.contact?.firstName ?? '',
+		lastName: member.user.contact?.lastName ?? '',
+		email: member.user.contact?.email ?? '',
+		role: member.user.role ?? null,
+	}));
 
 export const getActiveOrganizationSummary = async (userId: string): Promise<Result<ActiveOrganizationSummary>> => {
 	try {
@@ -51,17 +68,35 @@ export const getPaginatedOrganizationMembersTableView = async (
 			organizationIdResult.data,
 			query,
 		);
-		const tableRows: OrganizationMemberTableViewRow[] = members.map((member) => ({
-			id: member.user.id,
-			firstName: member.user.contact?.firstName ?? '',
-			lastName: member.user.contact?.lastName ?? '',
-			email: member.user.contact?.email ?? '',
-			role: member.user.role ?? null,
-		}));
+		const tableRows = toOrganizationMemberTableRows(members);
 
 		return resultOk({ tableRows, totalCount });
 	} catch (error) {
 		console.error('Could not fetch organization members', { userId, error });
+
+		return resultFail('Could not fetch organization members');
+	}
+};
+
+export const getPaginatedOrganizationAdminMembersTableView = async (
+	userId: string,
+	query: OrganizationAdminMemberTableQuery,
+): Promise<Result<OrganizationMemberPaginatedTableView>> => {
+	try {
+		const isAdminResult = await isAdmin(userId);
+		if (!isAdminResult.success) {
+			return resultFail(isAdminResult.error);
+		}
+
+		const { organizationId, ...tableQuery } = query;
+		const { members, totalCount } = await organizationRepository.findPaginatedOrganizationMembers(
+			organizationId,
+			tableQuery,
+		);
+
+		return resultOk({ tableRows: toOrganizationMemberTableRows(members), totalCount });
+	} catch (error) {
+		console.error('Could not fetch organization members for admin', { userId, organizationId: query.organizationId, error });
 
 		return resultFail('Could not fetch organization members');
 	}
@@ -222,7 +257,10 @@ export const getOrganizationProgramOptions = async (userId: string): Promise<Res
 
 export const createOrganizationFromEmail = async (email: string): Promise<Result<OrganizationPayload>> => {
 	try {
-		const organization = await organizationRepository.createOrganizationFromEmail(email);
+		const organization = await organizationWriteRepository.createOrganization(
+			{ actor: { type: 'system', id: 'public-onboarding' }, source: 'system' },
+			`${email.toLowerCase().trim()} organization`,
+		);
 
 		return resultOk({
 			id: organization.id,
@@ -239,11 +277,11 @@ export const createOrganizationFromEmail = async (email: string): Promise<Result
 };
 
 export const createOrganization = async (
-	userId: string,
+	session: UserSession,
 	input: CreateOrganizationInput,
 ): Promise<Result<OrganizationPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -253,22 +291,28 @@ export const createOrganization = async (
 			return validationResult;
 		}
 
-		const organization = await organizationRepository.createOrganization(input);
+		const audit = getSessionAuditContext(session);
+		const organization = await organizationWriteRepository.createOrganization(audit, input.name);
+		const relationsResult = await updateOrganizationRelations(audit, organization.id, input);
+		if (!relationsResult.success) {
+			// Creating again would fail on the taken name, so point to editing.
+			return resultFail('The organization was created, but its programs or members could not be saved. Edit it to retry.');
+		}
 
 		return resultOk(toOrganizationPayload(organization, input));
 	} catch (error) {
-		console.error('Could not create organization', { userId, error });
+		console.error('Could not create organization', { userId: session.id, error });
 
 		return resultFail('Could not create organization. Please try again later.');
 	}
 };
 
 export const updateOrganization = async (
-	userId: string,
+	session: UserSession,
 	input: UpdateOrganizationInput,
 ): Promise<Result<OrganizationPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -283,20 +327,46 @@ export const updateOrganization = async (
 			return validationResult;
 		}
 
-		const organization = await organizationRepository.updateOrganization(input);
+		const audit = getSessionAuditContext(session);
+		const organization = await organizationWriteRepository.updateOrganizationName(audit, input.id, input.name);
+		const relationsResult = await updateOrganizationRelations(audit, input.id, input);
+		if (!relationsResult.success) {
+			return relationsResult;
+		}
 
 		return resultOk(toOrganizationPayload(organization, input));
 	} catch (error) {
-		console.error('Could not update organization', { userId, organizationId: input.id, error });
+		console.error('Could not update organization', { userId: session.id, organizationId: input.id, error });
 
 		return resultFail('Could not update organization. Please try again later.');
 	}
 };
 
+// Program accesses belong to programs and memberships to users, so the
+// organization form writes them through those modules after the
+// organization itself. Each step sets a full list, so a retry is safe.
+const updateOrganizationRelations = async (
+	audit: AuditContext,
+	organizationId: string,
+	input: CreateOrganizationInput,
+): Promise<Result<void>> => {
+	const accessesResult = await updateOrganizationProgramAccesses(audit, {
+		organizationId,
+		ownedProgramIds: input.ownedProgramIds,
+		operatedProgramIds: input.operatedProgramIds,
+	});
+	if (!accessesResult.success) {
+		return accessesResult;
+	}
+
+	return updateOrganizationMembers(audit, { organizationId, memberIds: input.userIds });
+};
+
 export const renameActiveOrganization = async (
-	userId: string,
+	session: UserSession,
 	input: RenameOrganizationInput,
 ): Promise<Result<{ id: string; name: string }>> => {
+	const userId = session.id;
 	try {
 		const organizationIdResult = await getActiveOrganizationId(userId);
 		if (!organizationIdResult.success) {
@@ -318,7 +388,13 @@ export const renameActiveOrganization = async (
 			return uniquenessResult;
 		}
 
-		return resultOk(await organizationRepository.updateOrganizationName(organizationIdResult.data, input.name));
+		return resultOk(
+			await organizationWriteRepository.updateOrganizationName(
+				getSessionAuditContext(session),
+				organizationIdResult.data,
+				input.name,
+			),
+		);
 	} catch (error) {
 		console.error('Could not rename organization', { userId, error });
 
@@ -326,9 +402,9 @@ export const renameActiveOrganization = async (
 	}
 };
 
-export const deleteOrganization = async (userId: string, organizationId: string): Promise<Result<void>> => {
+export const deleteOrganization = async (session: UserSession, organizationId: string): Promise<Result<void>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -343,11 +419,18 @@ export const deleteOrganization = async (userId: string, organizationId: string)
 			return resultFail('Organization cannot be deleted because it is still in use.');
 		}
 
-		await organizationRepository.deleteOrganization(organizationId);
+		// Memberships belong to users, so they are removed in a separate step.
+		// Removing them again on a retry changes nothing.
+		const audit = getSessionAuditContext(session);
+		const membersResult = await updateOrganizationMembers(audit, { organizationId, memberIds: [] });
+		if (!membersResult.success) {
+			return membersResult;
+		}
+		await organizationWriteRepository.deleteOrganization(audit, organizationId);
 
 		return resultOk(undefined);
 	} catch (error) {
-		console.error('Could not delete organization', { userId, organizationId, error });
+		console.error('Could not delete organization', { userId: session.id, organizationId, error });
 
 		return resultFail('Could not delete organization. Please try again later.');
 	}

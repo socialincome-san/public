@@ -18,3 +18,11 @@ export const localPartnersTableConfig: DataTableConfig<LocalPartnerTableViewRow>
 	makeColumns: makeLocalPartnerColumns,
 	showColumnVisibilitySelector: true,
 };
+
+export const focusLocalPartnersTableConfig: DataTableConfig<LocalPartnerTableViewRow> = {
+	...localPartnersTableConfig,
+	id: 'focus-local-partners',
+	title: 'Local partners',
+	searchKeys: localPartnersTableConfig.searchKeys.filter((key) => key !== 'focuses'),
+	makeColumns: () => makeLocalPartnerColumns(true),
+};

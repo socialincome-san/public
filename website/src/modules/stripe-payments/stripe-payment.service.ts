@@ -35,6 +35,7 @@ import {
 	type StripeApiEvent,
 	type StripeApiSubscription,
 } from '@/integrations/stripe/stripe.integration';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { isValidCurrency } from '@/lib/types/currency';
@@ -55,6 +56,7 @@ import type { ContributorWithContact, StripeContributorData } from '@/modules/co
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { subscriptionAmount } from '@/modules/subscriptions/subscription-amount.service';
 import { subscriptionCancellation } from '@/modules/subscriptions/subscription-cancellation.service';
+import { syncStripeSubscription, updateSubscriptionLifecycle } from '@/modules/subscriptions/subscription.service';
 import { getUserContactIdByAccountId, getUserStripeCheckoutContext } from '@/modules/users/user.service';
 import { canCreatePortalProgramDonation } from './stripe-payment.permissions';
 import * as stripePaymentRepository from './stripe-payment.repository';
@@ -65,6 +67,7 @@ import {
 	type CheckoutMetadata,
 	type CreateManageSubscriptionsSessionInput,
 	type DonationWizardAmountContext,
+	type PaidCheckoutDonation,
 	type PortalProgramDonationCheckoutInput,
 	type StripeBillingPortalSessionUrl,
 	type StripeCheckoutCustomerPrefill,
@@ -96,6 +99,10 @@ const STRIPE_CHECKOUT_SESSION_ID_PARAM = 'donation_checkout_session_id';
 const CHECKOUT_SESSION_ID_PLACEHOLDER = '{CHECKOUT_SESSION_ID}';
 const DONATION_MONTHLY_INCOME_MIN = 50;
 const DONATION_MONTHLY_INCOME_MAX = 1_000_000;
+// Checkout pages and webhooks write without a session.
+const stripeCheckoutAudit: AuditContext = { actor: { type: 'system', id: 'stripe-checkout' }, source: 'system' };
+const stripeWebhookAudit: AuditContext = { actor: { type: 'system', id: 'stripe-webhook' }, source: 'system' };
+
 const DONATION_CUSTOM_AMOUNT_MIN = 1;
 const DONATION_CUSTOM_AMOUNT_MAX = 1_000_000;
 
@@ -137,6 +144,7 @@ export const createPortalProgramDonationCheckout = async (
 
 			stripeCustomerId = createCustomerResult.data;
 			const createdContributorResult = await getOrCreateContributorForAccount(
+				{ actor: { type: 'user', id: userId, name }, source: 'portal' },
 				user.accountId,
 				stripeCustomerId,
 				user.contactId,
@@ -232,6 +240,36 @@ export const createEmbeddedCheckoutSession = async (
 	}
 };
 
+export const getPaidCheckoutDonation = async (sessionId: string): Promise<Result<PaidCheckoutDonation>> => {
+	try {
+		const sessionResult = await retrieveStripeCheckoutSession(sessionId);
+		if (!sessionResult.success) {
+			return sessionResult;
+		}
+
+		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		if (!paidCheck.success) {
+			return paidCheck;
+		}
+
+		const { id, amount_total: amountTotal, currency, mode } = sessionResult.data;
+		if (amountTotal === null || currency === null) {
+			return resultFail('Checkout session has no amount');
+		}
+
+		return resultOk({
+			checkoutSessionId: id,
+			amount: amountTotal / 100,
+			currency: currency.toUpperCase(),
+			recurring: mode === 'subscription',
+		});
+	} catch (error) {
+		console.error(error);
+
+		return resultFail('Could not load paid checkout donation');
+	}
+};
+
 export const getCheckoutOnboardingPrefill = async (sessionId: string): Promise<Result<StripeCheckoutOnboardingPrefill>> => {
 	try {
 		const sessionResult = await retrieveStripeCheckoutSession(sessionId);
@@ -311,7 +349,7 @@ export const updateContributorAfterCheckout = async (
 
 		let contributor = existingResult.data;
 		if (!contributor) {
-			const createResult = await getOrCreateContributorWithFirebaseAuth({
+			const createResult = await getOrCreateContributorWithFirebaseAuth(stripeCheckoutAudit, {
 				stripeCustomerId: stripeCustomerResult.data.id,
 				email: contributorEmail,
 				firstName: user.personal.name,
@@ -325,7 +363,7 @@ export const updateContributorAfterCheckout = async (
 			contributor = createResult.data.contributor;
 		}
 
-		return updateContributorSelf(contributor.id, {
+		return updateContributorSelf(stripeCheckoutAudit, contributor.id, {
 			...(user.personal.referral !== undefined ? { referral: user.personal.referral } : {}),
 			needsOnboarding: false,
 			contact: {
@@ -381,7 +419,7 @@ export const updateContributorReferralAfterCheckout = async (
 			return resultFail('Contributor email is required');
 		}
 
-		return updateContributorSelf(contributor.id, {
+		return updateContributorSelf(stripeCheckoutAudit, contributor.id, {
 			referral: input.referral,
 			contact: {
 				email: contributorEmail,
@@ -448,6 +486,7 @@ export const applyCustomerDefaultPaymentMethodToOwnedSubscription = async (
 };
 
 export const updateContributorSubscriptionAmount = async (
+	audit: AuditContext,
 	input: UpdateContributorSubscriptionAmountInput,
 ): Promise<Result<{ amount: number; currency: string }>> => {
 	try {
@@ -481,7 +520,7 @@ export const updateContributorSubscriptionAmount = async (
 			return updateResult;
 		}
 
-		const upsertResult = await syncStripeSubscriptionAmount({
+		const upsertResult = await syncStripeSubscriptionAmount(audit, {
 			stripeSubscription: updateResult.data,
 			contributorId,
 			campaignId: subscription.campaignId,
@@ -500,7 +539,10 @@ export const updateContributorSubscriptionAmount = async (
 	}
 };
 
-export const cancelContributorSubscription = async (input: CancelContributorSubscriptionInput): Promise<Result<void>> => {
+export const cancelContributorSubscription = async (
+	audit: AuditContext,
+	input: CancelContributorSubscriptionInput,
+): Promise<Result<void>> => {
 	try {
 		const subscription = await stripePaymentRepository.findOwnedStripeSubscription(
 			input.contributorId,
@@ -536,18 +578,17 @@ export const cancelContributorSubscription = async (input: CancelContributorSubs
 
 		const lifecycle = mapStripeSubscriptionLifecycle(stripeSubscription);
 
-		try {
-			await stripePaymentRepository.updateOwnedStripeSubscriptionCancellation({
-				id: subscription.id,
-				status: lifecycle?.status ?? SubscriptionStatus.ended,
-				canceledAt: lifecycle?.canceledAt ?? resolveStripeSubscriptionCanceledAt(stripeSubscription),
-				cancellationReason: input.reason,
-			});
-		} catch (error) {
+		const updateResult = await updateSubscriptionLifecycle(audit, {
+			subscriptionId: subscription.id,
+			status: lifecycle?.status ?? SubscriptionStatus.ended,
+			canceledAt: lifecycle?.canceledAt ?? resolveStripeSubscriptionCanceledAt(stripeSubscription),
+			cancellationReason: input.reason,
+		});
+		if (!updateResult.success) {
 			sendSlackAlert('Stripe canceled the subscription but database update failed', {
 				subscriptionId: subscription.id,
 				stripeSubscriptionId: subscription.stripeSubscriptionId,
-				error,
+				error: updateResult.error,
 			});
 
 			return resultFail('Could not cancel subscription');
@@ -742,7 +783,7 @@ const processChargeEvent = async (charge: StripeApiCharge): Promise<Result<Strip
 				campaignId = metadataCampaignId;
 			}
 
-			const subscriptionResult = await syncMappedStripeSubscription({
+			const subscriptionResult = await syncMappedStripeSubscription(stripeWebhookAudit, {
 				stripeSubscription,
 				contributorId: contributor.id,
 				campaignId,
@@ -793,7 +834,7 @@ const processChargeEvent = async (charge: StripeApiCharge): Promise<Result<Strip
 				balanceTransactionId: balanceTransaction?.id,
 			},
 		};
-		const contributionResult = await upsertFromStripeEvent(contributionData, paymentEventData);
+		const contributionResult = await upsertFromStripeEvent(stripeWebhookAudit, contributionData, paymentEventData);
 		if (!contributionResult.success) {
 			console.error(contributionResult.error);
 
@@ -889,7 +930,12 @@ const resolveContributorForCharge = async (
 			return resultFail(contactIdResult.error);
 		}
 		if (contactIdResult.data) {
-			const portalResult = await getOrCreateContributorForAccount(accountId, stripeCustomer.id, contactIdResult.data);
+			const portalResult = await getOrCreateContributorForAccount(
+				stripeWebhookAudit,
+				accountId,
+				stripeCustomer.id,
+				contactIdResult.data,
+			);
 			if (!portalResult.success) {
 				console.error(portalResult.error);
 
@@ -912,7 +958,7 @@ const resolveContributorForCharge = async (
 			lastName,
 			referral: ContributorReferralSource.other,
 		};
-		const contributorResult = await getOrCreateContributorWithFirebaseAuth(contributorData);
+		const contributorResult = await getOrCreateContributorWithFirebaseAuth(stripeWebhookAudit, contributorData);
 		if (!contributorResult.success) {
 			console.error(contributorResult.error);
 
@@ -956,14 +1002,17 @@ const resolveExistingCampaignId = async (campaignId: string | undefined): Promis
 	return campaignResult.data.id;
 };
 
-const syncStripeSubscriptionAmount = async (input: {
-	stripeSubscription: StripeApiSubscription;
-	contributorId: string;
-	campaignId: string;
-	subscriptionId: string;
-	stripeSubscriptionId: string;
-}): Promise<Result<void>> => {
-	const upsertResult = await syncMappedStripeSubscription(input);
+const syncStripeSubscriptionAmount = async (
+	audit: AuditContext,
+	input: {
+		stripeSubscription: StripeApiSubscription;
+		contributorId: string;
+		campaignId: string;
+		subscriptionId: string;
+		stripeSubscriptionId: string;
+	},
+): Promise<Result<void>> => {
+	const upsertResult = await syncMappedStripeSubscription(audit, input);
 	if (!upsertResult.success || !upsertResult.data) {
 		sendSlackAlert('Stripe subscription amount updated but database sync failed', {
 			subscriptionId: input.subscriptionId,
@@ -977,35 +1026,30 @@ const syncStripeSubscriptionAmount = async (input: {
 	return resultOk(undefined);
 };
 
-const syncMappedStripeSubscription = async (input: {
-	stripeSubscription: StripeApiSubscription;
-	contributorId: string;
-	campaignId: string;
-}): Promise<Result<{ id: string } | null>> => {
+const syncMappedStripeSubscription = async (
+	audit: AuditContext,
+	input: {
+		stripeSubscription: StripeApiSubscription;
+		contributorId: string;
+		campaignId: string;
+	},
+): Promise<Result<{ id: string } | null>> => {
 	const mapped = mapStripeSubscriptionFields(input.stripeSubscription);
 	if (!mapped) {
 		return resultOk(null);
 	}
 
-	try {
-		const subscription = await stripePaymentRepository.updateStripeSubscriptionFromStripe({
-			stripeSubscriptionId: input.stripeSubscription.id,
-			contributorId: input.contributorId,
-			campaignId: input.campaignId,
-			amount: mapped.amount,
-			currency: mapped.currency,
-			interval: mapped.interval,
-			status: mapped.status,
-			canceledAt: mapped.canceledAt,
-			coverTransactionCosts: mapCoverTransactionCostsMetadata(input.stripeSubscription.metadata),
-		});
-
-		return resultOk({ id: subscription.id });
-	} catch (error) {
-		console.error(error);
-
-		return resultFail('Could not upsert Stripe subscription');
-	}
+	return syncStripeSubscription(audit, {
+		stripeSubscriptionId: input.stripeSubscription.id,
+		contributorId: input.contributorId,
+		campaignId: input.campaignId,
+		amount: mapped.amount,
+		currency: mapped.currency,
+		interval: mapped.interval,
+		status: mapped.status,
+		canceledAt: mapped.canceledAt,
+		coverTransactionCosts: mapCoverTransactionCostsMetadata(input.stripeSubscription.metadata),
+	});
 };
 
 const syncFromStripeSubscriptionEvent = async (input: {
@@ -1020,7 +1064,7 @@ const syncFromStripeSubscriptionEvent = async (input: {
 
 	const priceFields = mapStripeSubscriptionPriceFields(input.stripeSubscription);
 	if (priceFields) {
-		return syncMappedStripeSubscription(input);
+		return syncMappedStripeSubscription(stripeWebhookAudit, input);
 	}
 
 	try {
@@ -1034,13 +1078,11 @@ const syncFromStripeSubscriptionEvent = async (input: {
 			return resultOk(null);
 		}
 
-		const subscription = await stripePaymentRepository.updateStripeSubscriptionLifecycle({
-			id: existing.id,
+		return updateSubscriptionLifecycle(stripeWebhookAudit, {
+			subscriptionId: existing.id,
 			status: lifecycle.status,
 			canceledAt: lifecycle.canceledAt,
 		});
-
-		return resultOk({ id: subscription.id });
 	} catch (error) {
 		console.error(error);
 

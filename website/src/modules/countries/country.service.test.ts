@@ -1,4 +1,6 @@
+import { UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
+import type { UserSession } from '@/modules/users/user.types';
 
 const mockIsAdmin = jest.fn();
 const mockFindCountryById = jest.fn();
@@ -24,19 +26,22 @@ jest.mock('@/integrations/world-bank/world-bank.integration', () => ({
 	fetchWorldBankIndicator: jest.fn(),
 }));
 
-jest.mock('./country.repository', () => ({
+jest.mock('./country.repository.read', () => ({
 	findCountryById: mockFindCountryById,
 	findPaginatedCountries: mockFindPaginatedCountries,
 	findCountriesForFeasibility: mockFindCountriesForFeasibility,
 	findPublicCountryStats: mockFindPublicCountryStats,
 	findCountryByIsoCode: mockFindCountryByIsoCode,
+	findCountryForDeletion: mockFindCountryForDeletion,
+}));
+
+jest.mock('./country.repository.write', () => ({
 	createCountry: mockCreateCountry,
 	updateCountry: mockUpdateCountry,
-	findCountryForDeletion: mockFindCountryForDeletion,
 	deleteCountry: mockDeleteCountry,
 }));
 
-import { getPaginatedCountryTableView, getProgramCountryFeasibility } from './country.service';
+import { deleteCountry, getPaginatedCountryTableView, getProgramCountryFeasibility } from './country.service';
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -94,6 +99,15 @@ describe('country service', () => {
 		expect(mockFindPaginatedCountries).not.toHaveBeenCalled();
 	});
 
+	test('passes the provider filter to the country repository', async () => {
+		const query = { page: 1, pageSize: 10, search: '', mobileMoneyProviderId: 'provider-1' };
+		mockFindPaginatedCountries.mockResolvedValue({ countries: [], totalCount: 0 });
+
+		await getPaginatedCountryTableView('admin-1', query);
+
+		expect(mockFindPaginatedCountries).toHaveBeenCalledWith(query);
+	});
+
 	test('aggregates candidate counts by resolved country', async () => {
 		mockFindCountriesForFeasibility.mockResolvedValue([
 			createCountry('country-sl', 'SL'),
@@ -115,5 +129,40 @@ describe('country service', () => {
 		expect(data.rows.find((row) => row.id === 'country-sl')?.stats.candidateCount).toBe(1);
 		expect(data.rows.find((row) => row.id === 'country-ke')?.stats.candidateCount).toBe(2);
 		expect(data.rows.find((row) => row.id === 'country-ug')?.stats.candidateCount).toBe(0);
+	});
+});
+
+describe('country write attribution', () => {
+	const admin: UserSession = {
+		type: 'user',
+		id: 'admin-1',
+		gender: null,
+		email: null,
+		firstName: 'Max',
+		lastName: 'Admin',
+		language: null,
+		street: null,
+		number: null,
+		city: null,
+		zip: null,
+		country: null,
+		role: UserRole.admin,
+		activeOrganization: null,
+		organizations: [],
+		programs: [],
+		hasAnyOperatorProgramAccess: false,
+	};
+
+	test('attributes deletes to the admin', async () => {
+		mockIsAdmin.mockResolvedValue({ success: true, data: true });
+		mockFindCountryForDeletion.mockResolvedValue({ id: 'entity-1', _count: { programs: 0 } });
+		mockDeleteCountry.mockResolvedValue({ id: 'entity-1' });
+
+		await deleteCountry(admin, 'entity-1');
+
+		expect(mockDeleteCountry).toHaveBeenCalledWith(
+			{ actor: { type: 'user', id: 'admin-1', name: 'Max Admin' }, source: 'portal' },
+			'entity-1',
+		);
 	});
 });

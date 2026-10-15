@@ -5,14 +5,13 @@ import {
 	contributorsTableConfig,
 	getContributorsTableFilters,
 } from '@/components/data-table/configs/contributors-table.config';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { ContributorTableViewRow } from '@/modules/contributors/contributor.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
-import ContributorsForm from './contributors-form';
+import { ContributorDialog } from './contributor-dialog';
 
 export default function ContributorsTableClient({
 	rows,
@@ -25,20 +24,17 @@ export default function ContributorsTableClient({
 	query?: TableQueryState & { totalRows: number };
 	countryFilterOptions?: { value: string; label: string }[];
 }) {
-	const [open, setOpen] = useState(false);
-	const [contributorId, setContributorId] = useState<string | undefined>();
+	const { recordId: contributorId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('contributorId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const openEmptyForm = () => {
-		setContributorId(undefined);
 		setErrorMessage(null);
-		setOpen(true);
+		openCreate();
 	};
 
 	const openEditForm = (row: ContributorTableViewRow) => {
-		setContributorId(row.id);
 		setErrorMessage(null);
-		setOpen(true);
+		openRecord(row.id);
 	};
 
 	const onError = (error: unknown) => {
@@ -46,8 +42,6 @@ export default function ContributorsTableClient({
 		setErrorMessage(`Error saving contributor: ${message}`);
 		console.error('Contributor Form Error', { error });
 	};
-
-	const dialogTitle = contributorId ? 'Edit Contributor' : 'New Contributor';
 
 	return (
 		<>
@@ -68,27 +62,13 @@ export default function ContributorsTableClient({
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{dialogTitle}</DialogTitle>
-					</DialogHeader>
-
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-
-					<ContributorsForm
-						contributorId={contributorId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
-				</DialogContent>
-			</Dialog>
+			<ContributorDialog
+				open={open}
+				onOpenChange={onOpenChange}
+				contributorId={contributorId}
+				errorMessage={errorMessage}
+				onError={onError}
+			/>
 		</>
 	);
 }

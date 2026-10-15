@@ -2,10 +2,12 @@ import { makeRecipientColumns } from '@/components/data-table/columns/recipients
 import { TableQueryState } from '@/components/data-table/query-state';
 import { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
 import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
+import { linkedRecordFilter } from './linked-record-filter';
 
 type RecipientsFilterArgs = {
 	query?: TableQueryState & { totalRows: number };
 	programFilterOptions: RecipientProgramFilterOption[];
+	localPartnerFilterOptions: { id: string; name: string }[];
 	showProgramFilter: boolean;
 };
 
@@ -36,9 +38,18 @@ export const recipientsTableConfig: DataTableConfig<RecipientTableViewRow> = {
 	showColumnVisibilitySelector: true,
 };
 
+export const localPartnerRecipientsTableConfig: DataTableConfig<RecipientTableViewRow> = {
+	...recipientsTableConfig,
+	id: 'local-partner-recipients',
+	searchKeys: ['id', 'firstName', 'lastName', 'paymentCode', 'programName'],
+	sortOptions: recipientsTableConfig.sortOptions?.filter(({ id }) => id !== 'localPartnerName'),
+	makeColumns: () => makeRecipientColumns(false, true),
+};
+
 export const getRecipientsTableFilters = ({
 	query,
 	programFilterOptions,
+	localPartnerFilterOptions,
 	showProgramFilter,
 }: RecipientsFilterArgs): TableFilterConfig[] => {
 	if (!query) {
@@ -67,5 +78,15 @@ export const getRecipientsTableFilters = ({
 		});
 	}
 
-	return filters;
+	return [
+		...filters,
+		...linkedRecordFilter({
+			id: 'localPartner',
+			queryKey: 'localPartnerId',
+			label: 'Local partner',
+			placeholder: 'All local partners',
+			value: query.localPartnerId,
+			options: localPartnerFilterOptions.map((localPartner) => ({ value: localPartner.id, label: localPartner.name })),
+		}),
+	];
 };

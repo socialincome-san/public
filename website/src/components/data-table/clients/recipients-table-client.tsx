@@ -1,15 +1,20 @@
 'use client';
 
+import { AddRecipientsFromPoolDialog } from '@/components/add-recipients-from-pool/add-recipients-from-pool-dialog';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import type { Session } from '@/modules/auth/auth.types';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/modules/recipients/recipient.actions';
 import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
-import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
+import { DownloadIcon, PlusIcon, UploadIcon, UsersIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
@@ -23,6 +28,7 @@ type Props = {
 	sessionType?: Session['type'];
 	query?: TableQueryState & { totalRows: number };
 	programFilterOptions?: RecipientProgramFilterOption[];
+	localPartnerFilterOptions?: { id: string; name: string }[];
 	showProgramFilter?: boolean;
 	hideProgramName?: boolean;
 };
@@ -35,11 +41,15 @@ export const RecipientsTableClient = ({
 	sessionType = 'user',
 	query,
 	programFilterOptions = [],
+	localPartnerFilterOptions = [],
 	showProgramFilter = true,
 	hideProgramName = false,
 }: Props) => {
+	const tPool = useTranslations('add-recipients-from-pool');
+	const router = useRouter();
 	const canManageRecipients = sessionType === 'user';
 	const isReadOnly = readOnly ?? false;
+	const canAddFromPool = Boolean(programId) && canManageRecipients && !isReadOnly;
 	const canDownloadCsv = sessionType === 'local-partner' || !isReadOnly;
 	const tableConfig = {
 		...recipientsTableConfig,
@@ -47,16 +57,16 @@ export const RecipientsTableClient = ({
 			return makeRecipientColumns(hideProgramName, hideLocalPartner, undefined, isReadOnly);
 		},
 	};
-	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
-	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
+	const recipientDialog = useRecordDialog('recipientId');
 	const [recipientError, setRecipientError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
+	const [isPoolDialogOpen, setIsPoolDialogOpen] = useState(false);
+	const [poolDialogKey, setPoolDialogKey] = useState(0);
 
 	const openCreateRecipientDialog = () => {
 		setRecipientError(null);
-		setSelectedRecipientId(undefined);
-		setIsRecipientDialogOpen(true);
+		recipientDialog.openCreate();
 	};
 
 	const openEditRecipientDialog = (row: RecipientTableViewRow) => {
@@ -65,12 +75,11 @@ export const RecipientsTableClient = ({
 		}
 
 		setRecipientError(null);
-		setSelectedRecipientId(row.id);
-		setIsRecipientDialogOpen(true);
+		recipientDialog.openRecord(row.id);
 	};
 
 	const closeRecipientDialog = () => {
-		setIsRecipientDialogOpen(false);
+		recipientDialog.close();
 		setRecipientError(null);
 	};
 
@@ -104,11 +113,23 @@ export const RecipientsTableClient = ({
 		...(canManageRecipients
 			? [
 					{
-						label: 'Add new recipient',
+						label: 'Add new recipient manually',
 						icon: <PlusIcon />,
 						disabled: isReadOnly,
 						onSelect: openCreateRecipientDialog,
 					},
+					...(canAddFromPool && programId
+						? [
+								{
+									label: 'Add recipients from pool',
+									icon: <UsersIcon />,
+									onSelect: () => {
+										setPoolDialogKey((key) => key + 1);
+										setIsPoolDialogOpen(true);
+									},
+								},
+							]
+						: []),
 					{
 						label: 'Upload CSV',
 						icon: <UploadIcon />,
@@ -128,7 +149,12 @@ export const RecipientsTableClient = ({
 				error={error}
 				actionMenuItems={actionMenuItems}
 				query={query}
-				toolbarFilters={getRecipientsTableFilters({ query, programFilterOptions, showProgramFilter })}
+				toolbarFilters={getRecipientsTableFilters({
+					query,
+					programFilterOptions,
+					localPartnerFilterOptions,
+					showProgramFilter,
+				})}
 				hideProgramName={hideProgramName}
 				hideLocalPartner={sessionType === 'local-partner'}
 				showEntityIdColumn={sessionType !== 'local-partner'}
@@ -137,13 +163,27 @@ export const RecipientsTableClient = ({
 
 			{!isReadOnly && (
 				<RecipientDialog
-					open={isRecipientDialogOpen}
+					open={recipientDialog.open}
 					onOpenChange={closeRecipientDialog}
-					recipientId={selectedRecipientId}
+					recipientId={recipientDialog.recordId}
 					programId={programId}
 					sessionType={sessionType}
 					errorMessage={recipientError}
 					onError={setRecipientError}
+				/>
+			)}
+
+			{canAddFromPool && programId && (
+				<AddRecipientsFromPoolDialog
+					key={poolDialogKey}
+					open={isPoolDialogOpen}
+					programId={programId}
+					onOpenChange={setIsPoolDialogOpen}
+					onAssigned={(assignedCount) => {
+						setIsPoolDialogOpen(false);
+						toast.success(tPool('success', { count: assignedCount }));
+						router.refresh();
+					}}
 				/>
 			)}
 

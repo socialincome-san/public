@@ -6,6 +6,9 @@ import type {
 	ProgramBudgetCalculation,
 	ProgramDashboardStats,
 	ProgramFinancesDisplayAmounts,
+	ProgramPaginatedTableView,
+	ProgramRecipientPoolPreview,
+	ProgramRecipientPoolSetup,
 	ProgramSettingsPayload,
 	ProgramWallets,
 	PublicPreviewProgram,
@@ -16,6 +19,11 @@ import type {
 	PublicProgramTargetFocus,
 } from '@/modules/programs/program.types';
 import { revalidatePath } from 'next/cache';
+import {
+	assignProgramRecipientsFromPool,
+	getProgramRecipientPoolSetup,
+	previewProgramRecipientPool,
+} from './program-recipient-pool.service';
 import { calculateProgramBudget } from './program-stats.service';
 import {
 	getProgramDashboardStats,
@@ -35,19 +43,35 @@ import {
 	programDisplayCurrencySchema,
 	programFinancesStatsSchema,
 	programIdSchema,
+	programRecipientPoolAssignSchema,
+	programRecipientPoolPreviewSchema,
 	programSettingsUpdateSchema,
 	programSlugSchema,
 	programSlugsSchema,
+	programTableQuerySchema,
 	publicOnboardingUserDetailsSchema,
 } from './program.schemas';
 import {
 	createProgram,
 	deleteProgram,
+	getPaginatedProgramTableView,
 	getProgramOrganizationOptions,
 	getProgramSettings,
 	getProgramWallets,
 	updateProgramSettings,
 } from './program.service';
+
+export const getProgramTableViewAction = async (query: unknown): Promise<Result<ProgramPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedQuery = programTableQuerySchema.safeParse(query);
+
+	return parsedQuery.success
+		? getPaginatedProgramTableView(sessionResult.data.id, parsedQuery.data)
+		: resultFail('Invalid program query.');
+};
 
 export const createProgramAction = async (input: unknown, userDetails?: unknown): Promise<Result<{ programId: string }>> => {
 	const parsedInput = programCreateSchema.safeParse(input);
@@ -57,7 +81,7 @@ export const createProgramAction = async (input: unknown, userDetails?: unknown)
 
 	const sessionResult = await getSessionByType('user');
 	if (sessionResult.success) {
-		return createProgram(parsedInput.data, { userId: sessionResult.data.id });
+		return createProgram(parsedInput.data, sessionResult.data);
 	}
 	const parsedUserDetails = publicOnboardingUserDetailsSchema.safeParse(userDetails);
 	if (!parsedUserDetails.success) {
@@ -109,7 +133,7 @@ export const updateProgramSettingsAction = async (input: unknown): Promise<Resul
 		return resultFail('Invalid program input.');
 	}
 
-	const result = await updateProgramSettings(sessionResult.data.id, parsedInput.data);
+	const result = await updateProgramSettings(sessionResult.data, parsedInput.data);
 	if (result.success) {
 		revalidatePath('/portal/programs/[programId]', 'layout');
 	}
@@ -127,9 +151,51 @@ export const deleteProgramAction = async (programId: unknown): Promise<Result<vo
 		return resultFail('Invalid program id.');
 	}
 
-	const result = await deleteProgram(sessionResult.data.id, parsedProgramId.data);
+	const result = await deleteProgram(sessionResult.data, parsedProgramId.data);
 	if (result.success) {
 		revalidatePath('/portal');
+		revalidatePath('/portal/programs/[programId]', 'layout');
+	}
+
+	return result;
+};
+
+export const getProgramRecipientPoolSetupAction = async (programId: unknown): Promise<Result<ProgramRecipientPoolSetup>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedProgramId = programIdSchema.safeParse(programId);
+
+	return parsedProgramId.success
+		? getProgramRecipientPoolSetup(sessionResult.data.id, parsedProgramId.data)
+		: resultFail('Invalid program id.');
+};
+
+export const previewProgramRecipientPoolAction = async (input: unknown): Promise<Result<ProgramRecipientPoolPreview>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedInput = programRecipientPoolPreviewSchema.safeParse(input);
+
+	return parsedInput.success
+		? previewProgramRecipientPool(sessionResult.data.id, parsedInput.data)
+		: resultFail('Invalid input.');
+};
+
+export const assignProgramRecipientsFromPoolAction = async (input: unknown): Promise<Result<{ assigned: number }>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedInput = programRecipientPoolAssignSchema.safeParse(input);
+	if (!parsedInput.success) {
+		return resultFail('Invalid input.');
+	}
+
+	const result = await assignProgramRecipientsFromPool(sessionResult.data, parsedInput.data);
+	if (result.success) {
 		revalidatePath('/portal/programs/[programId]', 'layout');
 	}
 

@@ -7,7 +7,6 @@
 		"continue": "Continue",
 		"retry": "Retry",
 		"search": "Search",
-		"coming_soon": "Coming soon",
 		"recommended": "Recommended",
 		"months": "months",
 		"per_month": "/ month",
@@ -68,17 +67,6 @@
 		}
 	},
 	"step2": {
-		"program_management": {
-			"title": "Program management",
-			"social_income": {
-				"label": "Program run by Social Income",
-				"description": "Social Income manages recipients, payouts, and operations."
-			},
-			"self_run": {
-				"label": "Run the program yourself",
-				"description": "You manage recipients and operations independently."
-			}
-		},
 		"recipient_selection": {
 			"title": "Recipient selection",
 			"universal": {
@@ -89,16 +77,14 @@
 			},
 			"targeted": {
 				"label": "Targeted approach",
-				"description": "Support is provided to recipients who match selected focuses and profiles.",
+				"description": "Support is provided to recipients who match the selected focuses, profiles, or local partners.",
 				"matching": "recipients match the selected country and filters",
 				"empty_error": "Please adjust the filters so at least one recipient matches."
 			},
 			"focuses": "Focuses",
 			"profiles": "Profiles",
-			"custom": {
-				"label": "Choose your own recipients",
-				"description": "Manually select and manage individual recipients."
-			}
+			"local_partners": "Local partners",
+			"loading": "Updating candidate counts"
 		},
 		"profiles": {
 			"male": "Male",
@@ -109,8 +95,8 @@
 	"step3": {
 		"recipients": {
 			"title": "Recipients for program start",
-			"no_candidates": "No candidates are currently available in the candidate pool. Please go back to Step 2 and adjust the selected focuses or ensure candidates are available.",
-			"max_hint": "The maximum is determined by the number of candidates currently available for your selected focuses."
+			"no_candidates": "No candidates are currently available in the candidate pool. Please go back to Step 2 and adjust the selected filters or ensure candidates are available.",
+			"max_hint": "The maximum is determined by the number of candidates currently available for your selected filters."
 		},
 		"indirect_notice": {
 			"prefix": "{recipients} recipients benefit",

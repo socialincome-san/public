@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 /**
  * Storyblok webhook target: revalidate cached Storyblok content after content changes. A story can appear on
  * many pages (teasers, related articles, navigation), so all Storyblok reads share one cache tag.
+ * `expire: 0` instead of `'max'`: with stale-while-revalidate, the page re-render reads the still-stale
+ * `'use cache'` entries and caches the page with the old content until the next publish.
  * Storyblok signs the raw body; we verify the `webhook-signature` header (HMAC-SHA1 hex) against
  * `STORYBLOK_WEBHOOK_SECRET`, which must match the webhook's "Secret key".
  * @see https://www.storyblok.com/tp/webhook-secret-with-different-technologies
@@ -19,7 +21,7 @@ export const POST = async (request: NextRequest) => {
 		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	revalidateTag(STORYBLOK_CACHE_TAG, 'max');
+	revalidateTag(STORYBLOK_CACHE_TAG, { expire: 0 });
 
 	return NextResponse.json({ revalidated: true });
 };

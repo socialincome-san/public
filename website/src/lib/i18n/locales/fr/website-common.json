@@ -443,5 +443,11 @@
 		"title": "Nous n'avons pas trouvé cette page",
 		"description": "La page a peut-être été déplacée, ou le lien n'est plus valide.",
 		"home-link": "Aller à la page d'accueil"
+	},
+	"cookie-consent": {
+		"message": "Nous utilisons des <link>cookies</link> pour améliorer votre expérience.",
+		"accept": "Accepter",
+		"decline": "Refuser",
+		"settings": "Paramètres des cookies"
 	}
 }

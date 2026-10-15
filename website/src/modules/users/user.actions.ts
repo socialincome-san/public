@@ -18,7 +18,7 @@ export const createUserAction = async (input: unknown): Promise<Result<UserPaylo
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createUser(sessionResult.data.id, parsedInput.data);
+	const result = await createUser(sessionResult.data, parsedInput.data);
 	if (result.success) {
 		revalidatePath('/portal/admin/users');
 	}
@@ -37,7 +37,7 @@ export const updateUserAction = async (input: unknown): Promise<Result<UserPaylo
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateUser(sessionResult.data.id, parsedInput.data);
+	const result = await updateUser(sessionResult.data, parsedInput.data);
 	if (result.success) {
 		revalidatePath('/portal/admin/users');
 	}
@@ -56,7 +56,7 @@ export const deleteUserAction = async (userId: unknown): Promise<Result<void>> =
 		return resultFail('Invalid user id.');
 	}
 
-	const result = await deleteUser(sessionResult.data.id, parsedUserId.data);
+	const result = await deleteUser(sessionResult.data, parsedUserId.data);
 	if (result.success) {
 		revalidatePath('/portal/admin/users');
 	}
@@ -75,7 +75,7 @@ export const updateUserSelfAction = async (input: unknown): Promise<Result<UserP
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateUserSelf(sessionResult.data.id, parsedInput.data);
+	const result = await updateUserSelf(sessionResult.data, parsedInput.data);
 	if (result.success) {
 		revalidatePath('/portal/profile/account');
 		revalidatePath('/portal/profile/organization');

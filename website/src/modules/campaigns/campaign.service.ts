@@ -1,6 +1,7 @@
 import { Currency, ProgramPermission } from '@/generated/prisma/enums';
 import { fetchStoryblokListedCampaigns } from '@/integrations/storyblok/storyblok-campaign.integration';
 import { listCampaignDefaultImages } from '@/integrations/storyblok/storyblok-management.integration';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
@@ -9,7 +10,8 @@ import { nowMs } from '@/lib/utils/now';
 import { getLatestRateForCurrency } from '@/modules/exchange-rates/exchange-rate.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { canListCampaigns } from './campaign.permissions';
-import * as campaignRepository from './campaign.repository';
+import * as campaignRepository from './campaign.repository.read';
+import * as campaignWriteRepository from './campaign.repository.write';
 import {
 	type CampaignCmsJoin,
 	type CampaignCmsJoinWithStats,
@@ -199,33 +201,23 @@ export const getPublicCampaignsWithStats = async (
 	});
 };
 
-export const getEditableCampaignOptions = async (userId: string): Promise<Result<CampaignOption[]>> => {
+// Label for a campaign filter set by a link; null when the campaign is outside the given programs
+export const getCampaignFilterOption = async (
+	campaignId: string,
+	programIds: string[],
+): Promise<Result<CampaignOption | null>> => {
 	try {
-		const accessibleProgramsResult = await getAccessiblePrograms(userId);
-		if (!accessibleProgramsResult.success) {
-			return resultFail(accessibleProgramsResult.error);
+		const campaign = await campaignRepository.findCampaignFilterOption(campaignId, programIds);
+		if (!campaign) {
+			return resultOk(null);
 		}
-		if (!canListCampaigns(accessibleProgramsResult.data)) {
-			return resultOk([]);
-		}
+		const slug = campaign.slug?.trim();
 
-		const programIds = uniqueIds(
-			accessibleProgramsResult.data
-				.filter((access) => access.permission === ProgramPermission.operator)
-				.map((access) => access.programId),
-		);
-		if (programIds.length === 0) {
-			return resultOk([]);
-		}
-
-		const campaigns = await campaignRepository.findEditableCampaignOptions(programIds);
-		const options = campaigns.flatMap((campaign) => (campaign.slug ? [{ id: campaign.id, name: campaign.slug }] : []));
-
-		return resultOk(options);
+		return resultOk({ id: campaign.id, name: slug?.length ? slug : `Campaign ${campaign.id}` });
 	} catch (error) {
-		console.error(error);
+		console.error('Could not fetch campaign filter option', { campaignId, error });
 
-		return resultFail('Could not fetch editable campaign options');
+		return resultFail('Could not fetch campaign filter option');
 	}
 };
 
@@ -253,9 +245,6 @@ export const getCampaignTableEntries = async (userId: string): Promise<Result<Ca
 		const entries: CampaignTableEntry[] = [];
 		for (const campaign of campaigns) {
 			const slug = campaign.slug?.trim();
-			if (!slug) {
-				continue;
-			}
 			const { amountCollected } = await computeCollectedAmount(
 				campaign.contributions,
 				campaign.additionalAmountChf,
@@ -266,7 +255,7 @@ export const getCampaignTableEntries = async (userId: string): Promise<Result<Ca
 
 			entries.push({
 				id: campaign.id,
-				slug,
+				slug: slug?.length ? slug : null,
 				currency: campaign.currency,
 				endDate: campaign.endDate,
 				isActive: isCampaignActive({
@@ -320,6 +309,38 @@ export const getDefaultCampaignForProgram = async (programId: string): Promise<R
 
 const DEFAULT_IMAGE_THUMB_WIDTH = 160;
 const DEFAULT_IMAGE_THUMB_HEIGHT = 160;
+
+/** The default campaign every new program gets. The caller authorizes. */
+export const createDefaultCampaign = async (
+	audit: AuditContext,
+	programId: string,
+	endDate: Date,
+): Promise<Result<{ id: string }>> => {
+	try {
+		return resultOk(await campaignWriteRepository.createDefaultCampaign(audit, programId, endDate));
+	} catch (error) {
+		console.error('Could not create default campaign', { programId, error });
+
+		return resultFail('Could not create default campaign');
+	}
+};
+
+/** Deletes every campaign of a program, e.g. before the program is deleted. The caller authorizes. */
+export const deleteProgramCampaigns = async (audit: AuditContext, programId: string): Promise<Result<void>> => {
+	try {
+		const campaigns = await campaignRepository.findCampaignIdsByProgram(programId);
+		await campaignWriteRepository.deleteCampaigns(
+			audit,
+			campaigns.map(({ id }) => id),
+		);
+
+		return resultOk(undefined);
+	} catch (error) {
+		console.error('Could not delete program campaigns', { programId, error });
+
+		return resultFail('Could not delete program campaigns');
+	}
+};
 
 export const getCampaignDefaultImages = async (): Promise<Result<CampaignDefaultImageOption[]>> => {
 	const assetsResult = await listCampaignDefaultImages(campaignSubmissionConfig.maxCampaignDefaultImages);

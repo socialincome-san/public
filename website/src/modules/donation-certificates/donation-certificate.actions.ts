@@ -1,15 +1,38 @@
 'use server';
 
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import type { ContributorDonationCertificate } from '@/modules/contributors/contributor.types';
 import { revalidatePath } from 'next/cache';
-import { donationCertificateBatchCreateSchema, donationCertificateCreateSchema } from './donation-certificate.schemas';
+import {
+	donationCertificateBatchCreateSchema,
+	donationCertificateCreateSchema,
+	donationCertificateTableQuerySchema,
+} from './donation-certificate.schemas';
 import {
 	createDonationCertificateForContributor,
 	createDonationCertificatesForUser,
 	getDonationCertificateContributorOptions,
+	getPaginatedDonationCertificates,
 } from './donation-certificate.service';
+import type { DonationCertificatePaginatedTableView } from './donation-certificate.types';
+
+export const getDonationCertificateTableViewAction = async (
+	query: unknown,
+): Promise<Result<DonationCertificatePaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const queryResult = donationCertificateTableQuerySchema.safeParse(query);
+	if (!queryResult.success) {
+		return resultFail('Invalid table query.');
+	}
+
+	return getPaginatedDonationCertificates(sessionResult.data.id, queryResult.data);
+};
 
 export const getDonationCertificateContributorOptionsAction = async (): Promise<
 	Result<ContributorDonationCertificate[]>
@@ -34,7 +57,7 @@ export const createDonationCertificatesAction = async (input: unknown): Promise<
 	}
 
 	const result = await createDonationCertificatesForUser(
-		sessionResult.data.id,
+		sessionResult.data,
 		parsedInput.data.year,
 		parsedInput.data.contributorIds,
 		parsedInput.data.language,
@@ -56,6 +79,7 @@ export const createCurrentContributorDonationCertificateAction = async (input: u
 	}
 
 	const result = await createDonationCertificateForContributor(
+		getSessionAuditContext(sessionResult.data),
 		parsedInput.data.year,
 		sessionResult.data.id,
 		parsedInput.data.language,

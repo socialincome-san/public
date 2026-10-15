@@ -1,3 +1,4 @@
+import { activeCandidateFilters } from '@/components/candidate-selection/candidate-filters';
 import { Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
 import { getIsAuthenticatedUserAction } from '@/modules/auth/auth.actions';
@@ -5,13 +6,14 @@ import { getCandidateCountAction } from '@/modules/candidates/candidate.actions'
 import { getProgramCountryFeasibilityAction } from '@/modules/countries/country.actions';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
+import { getLocalPartnerOptionsAction } from '@/modules/local-partners/local-partner.actions';
 import { calculateProgramBudgetAction, createProgramAction } from '@/modules/programs/program.actions';
 import type {
 	ProgramCreateInput as CreateProgramInput,
 	PublicOnboardingUserDetailsInput as PublicOnboardingUserDetails,
 } from '@/modules/programs/program.schemas';
 import { assign, fromPromise, setup } from 'xstate';
-import type { ProgramManagementType, RecipientApproachType } from './types';
+import type { RecipientApproachType } from './types';
 
 export const createProgramWizardMachine = setup({
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- XState uses this empty object to carry machine types.
@@ -23,12 +25,14 @@ export const createProgramWizardMachine = setup({
 			openCountryRowIds: string[];
 
 			// step 2
-			programManagement: ProgramManagementType | null;
 			recipientApproach: RecipientApproachType | null;
 			targetFocuses: string[];
 			focusOptions: { id: string; name: string }[];
 			focusOptionsError?: string;
 			targetProfiles: Profile[];
+			targetLocalPartnerIds: string[];
+			localPartnerOptions: { id: string; name: string }[];
+			localPartnerOptionsError?: string;
 
 			// step 3
 			amountOfRecipients: number;
@@ -68,10 +72,10 @@ export const createProgramWizardMachine = setup({
 			| { type: 'TOGGLE_COUNTRY_ROW'; id: string }
 
 			// step 2
-			| { type: 'SELECT_PROGRAM_MANAGEMENT'; value: ProgramManagementType }
 			| { type: 'SELECT_RECIPIENT_APPROACH'; value: RecipientApproachType }
 			| { type: 'TOGGLE_TARGET_FOCUS'; focus: string }
 			| { type: 'TOGGLE_TARGET_PROFILE'; profile: Profile }
+			| { type: 'TOGGLE_TARGET_LOCAL_PARTNER'; localPartnerId: string }
 
 			// step 3
 			| { type: 'SET_AMOUNT_OF_RECIPIENTS'; value: number }
@@ -100,9 +104,10 @@ export const createProgramWizardMachine = setup({
 
 	actors: {
 		loadCountries: fromPromise(async ({ input }: { input: { isAuthenticated: boolean } }) => {
-			const [countryResult, focusOptionsResult, isAuthenticated] = await Promise.all([
+			const [countryResult, focusOptionsResult, localPartnerOptionsResult, isAuthenticated] = await Promise.all([
 				getProgramCountryFeasibilityAction(),
 				getFocusOptionsAction(),
+				getLocalPartnerOptionsAction(),
 				input.isAuthenticated
 					? Promise.resolve(true)
 					: getIsAuthenticatedUserAction().then((result) => result.success && result.data),
@@ -115,6 +120,8 @@ export const createProgramWizardMachine = setup({
 				countries: countryResult.data.rows,
 				focusOptions: focusOptionsResult.success ? focusOptionsResult.data : [],
 				focusOptionsError: focusOptionsResult.success ? undefined : focusOptionsResult.error,
+				localPartnerOptions: localPartnerOptionsResult.success ? localPartnerOptionsResult.data : [],
+				localPartnerOptionsError: localPartnerOptionsResult.success ? undefined : localPartnerOptionsResult.error,
 				isAuthenticated,
 			};
 		}),
@@ -136,13 +143,14 @@ export const createProgramWizardMachine = setup({
 			}: {
 				input: {
 					countryId: string | null;
-					focuses?: string[];
-					profiles?: Profile[];
+					focusIds: string[];
+					profiles: Profile[];
+					localPartnerIds: string[];
 				};
 			}) => {
 				const [total, filtered] = await Promise.all([
-					getCandidateCountAction([], [], input.countryId),
-					getCandidateCountAction(input.focuses ?? [], input.profiles ?? [], input.countryId),
+					getCandidateCountAction([], [], input.countryId, []),
+					getCandidateCountAction(input.focusIds, input.profiles, input.countryId, input.localPartnerIds),
 				]);
 
 				if (!total.success) {
@@ -188,17 +196,14 @@ export const createProgramWizardMachine = setup({
 		countrySelected: ({ context }) => Boolean(context.selectedCountryId),
 
 		// step 2
-		programSetupValid: ({ context }) =>
-			Boolean(context.programManagement) &&
-			Boolean(context.recipientApproach) &&
-			(context.recipientApproach === 'universal' || context.targetFocuses.length > 0 || context.targetProfiles.length > 0),
-
 		// step 2 → step 3
 		programSetupValidWithRecipients: ({ context }) =>
-			Boolean(context.programManagement) &&
 			Boolean(context.recipientApproach) &&
 			context.filteredRecipients > 0 &&
-			(context.recipientApproach === 'universal' || context.targetFocuses.length > 0 || context.targetProfiles.length > 0),
+			(context.recipientApproach === 'universal' ||
+				context.targetFocuses.length > 0 ||
+				context.targetProfiles.length > 0 ||
+				context.targetLocalPartnerIds.length > 0),
 
 		// step 3
 		budgetConfigValid: ({ context }) =>
@@ -230,11 +235,12 @@ export const createProgramWizardMachine = setup({
 		openCountryRowIds: [],
 
 		// step 2
-		programManagement: 'social_income',
 		recipientApproach: null,
 		targetFocuses: [],
 		focusOptions: [],
 		targetProfiles: [],
+		targetLocalPartnerIds: [],
+		localPartnerOptions: [],
 
 		// step 3
 		amountOfRecipients: 20,
@@ -310,8 +316,11 @@ export const createProgramWizardMachine = setup({
 				src: 'loadCandidateCounts',
 				input: ({ context }) => ({
 					countryId: context.selectedCountryId,
-					focuses: context.recipientApproach === 'targeted' ? context.targetFocuses : [],
-					profiles: context.recipientApproach === 'targeted' ? context.targetProfiles : [],
+					...activeCandidateFilters(context.recipientApproach, {
+						focusIds: context.targetFocuses,
+						profiles: context.targetProfiles,
+						localPartnerIds: context.targetLocalPartnerIds,
+					}),
 				}),
 				onDone: {
 					actions: assign(({ context, event }) => {
@@ -334,16 +343,12 @@ export const createProgramWizardMachine = setup({
 			},
 			entry: assign({ isCountingRecipients: () => true }),
 			on: {
-				SELECT_PROGRAM_MANAGEMENT: {
-					actions: assign({
-						programManagement: ({ event }) => event.value,
-					}),
-				},
 				SELECT_RECIPIENT_APPROACH: {
 					actions: assign({
 						recipientApproach: ({ event }) => event.value,
 						targetFocuses: () => [],
 						targetProfiles: () => [],
+						targetLocalPartnerIds: () => [],
 					}),
 					target: 'programSetup',
 					reenter: true,
@@ -364,6 +369,16 @@ export const createProgramWizardMachine = setup({
 							context.targetProfiles.includes(event.profile)
 								? context.targetProfiles.filter((p) => p !== event.profile)
 								: [...context.targetProfiles, event.profile],
+					}),
+					target: 'programSetup',
+					reenter: true,
+				},
+				TOGGLE_TARGET_LOCAL_PARTNER: {
+					actions: assign({
+						targetLocalPartnerIds: ({ context, event }) =>
+							context.targetLocalPartnerIds.includes(event.localPartnerId)
+								? context.targetLocalPartnerIds.filter((id) => id !== event.localPartnerId)
+								: [...context.targetLocalPartnerIds, event.localPartnerId],
 					}),
 					target: 'programSetup',
 					reenter: true,
@@ -481,6 +496,8 @@ export const createProgramWizardMachine = setup({
 						countries: ({ event }) => event.output.countries,
 						focusOptions: ({ event }) => event.output.focusOptions,
 						focusOptionsError: ({ event }) => event.output.focusOptionsError,
+						localPartnerOptions: ({ event }) => event.output.localPartnerOptions,
+						localPartnerOptionsError: ({ event }) => event.output.localPartnerOptionsError,
 						isAuthenticated: ({ event }) => event.output.isAuthenticated,
 						error: () => undefined,
 					}),
@@ -506,6 +523,7 @@ export const createProgramWizardMachine = setup({
 						payoutInterval: context.payoutInterval,
 						targetFocuses: context.targetFocuses,
 						targetProfiles: context.targetProfiles,
+						targetLocalPartnerIds: context.targetLocalPartnerIds,
 					},
 					userDetails: context.isAuthenticated
 						? undefined

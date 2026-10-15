@@ -1,5 +1,5 @@
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import * as programRepository from './program.repository';
+import * as programRepository from './program.repository.read';
 import type { ProgramOption, ProgramPayoutForecastSource } from './program.types';
 
 export const getProgramNameById = async (programId: string): Promise<Result<string>> => {

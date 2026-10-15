@@ -8,6 +8,7 @@ import type {
 	SurveyGenerationPreviewResult,
 	SurveyGenerationResult,
 	SurveyImpactFilterOptions,
+	SurveyPaginatedTableView,
 	SurveyPayload,
 	SurveyWithRecipient,
 } from '@/modules/surveys/survey.types';
@@ -18,17 +19,33 @@ import {
 	surveyIdSchema,
 	surveyPublicLookupSchema,
 	surveySaveActionSchema,
+	surveyTableQuerySchema,
 	surveyUpdateSchema,
 } from './survey.schemas';
 import {
 	createSurvey,
 	generateSurveys,
+	getPaginatedSurveyTableView,
 	getSurvey,
 	getSurveyByIdAndRecipient,
 	previewSurveyGeneration,
 	saveSurveyChanges,
 	updateSurvey,
 } from './survey.service';
+
+export const getSurveyTableViewAction = async (query: unknown): Promise<Result<SurveyPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const queryResult = surveyTableQuerySchema.safeParse(query);
+	if (!queryResult.success) {
+		return resultFail('Invalid table query.');
+	}
+
+	return getPaginatedSurveyTableView(sessionResult.data.id, queryResult.data);
+};
 
 export const createSurveyAction = async (input: unknown): Promise<Result<SurveyPayload>> => {
 	const sessionResult = await getSessionByType('user');
@@ -40,7 +57,7 @@ export const createSurveyAction = async (input: unknown): Promise<Result<SurveyP
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createSurvey(sessionResult.data.id, inputResult.data);
+	const result = await createSurvey(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/surveys');
 
 	return result;
@@ -69,7 +86,7 @@ export const updateSurveyAction = async (input: unknown): Promise<Result<SurveyP
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateSurvey(sessionResult.data.id, inputResult.data);
+	const result = await updateSurvey(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/surveys');
 
 	return result;
@@ -99,7 +116,7 @@ export const generateSurveysAction = async (): Promise<Result<SurveyGenerationRe
 		return sessionResult;
 	}
 
-	const result = await generateSurveys(sessionResult.data.id);
+	const result = await generateSurveys(sessionResult.data);
 	revalidatePath('/portal/management/surveys');
 
 	return result;

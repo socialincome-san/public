@@ -2,6 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { focusesTableConfig } from '@/components/data-table/configs/focuses-table.config';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { FocusTableViewRow } from '@/modules/focuses/focus.types';
 import { PlusIcon } from 'lucide-react';
@@ -17,20 +18,17 @@ export default function FocusesTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [open, setOpen] = useState(false);
+	const { recordId: focusId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('focusId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [focusId, setFocusId] = useState<string | undefined>(undefined);
 
 	const openEmptyForm = () => {
-		setFocusId(undefined);
 		setErrorMessage(null);
-		setOpen(true);
+		openCreate();
 	};
 
 	const openEditForm = (row: FocusTableViewRow) => {
-		setFocusId(row.id);
 		setErrorMessage(null);
-		setOpen(true);
+		openRecord(row.id);
 	};
 
 	return (
@@ -53,7 +51,7 @@ export default function FocusesTable({
 
 			<FocusDialog
 				open={open}
-				onOpenChange={setOpen}
+				onOpenChange={onOpenChange}
 				focusId={focusId}
 				errorMessage={errorMessage}
 				onError={setErrorMessage}

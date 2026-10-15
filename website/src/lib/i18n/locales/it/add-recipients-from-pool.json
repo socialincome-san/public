@@ -1,0 +1,55 @@
+{
+	"title": "Aggiungi beneficiari dal pool",
+	"description": "Assegna a questo programma candidati esistenti del pool. Il paese e le condizioni di pagamento del programma restano invariati.",
+	"close": "Chiudi",
+	"loading": "Caricamento dei candidati",
+	"country": {
+		"label": "Paese"
+	},
+	"selection": {
+		"title": "Selezione dei beneficiari",
+		"recommended": "Consigliato",
+		"loading": "Aggiornamento del numero di candidati",
+		"clear_filters": "Usa tutti i candidati disponibili",
+		"focuses": "Focus",
+		"profiles": "Profili",
+		"local_partners": "Partner locali",
+		"all": {
+			"label": "Tutti i candidati disponibili",
+			"description": "Aggiungi i candidati non assegnati del paese del programma, senza altri filtri.",
+			"available": "candidati non assegnati disponibili in questo paese",
+			"empty": "Non ci sono candidati non assegnati in questo paese."
+		},
+		"targeted": {
+			"label": "Selezione mirata",
+			"description": "Limita il pool per focus, profilo o partner locale.",
+			"matching": "{matching} di {total} candidati corrispondono ai filtri attuali",
+			"empty": "Nessun candidato corrisponde a questi filtri."
+		}
+	},
+	"profiles": {
+		"male": "Maschile",
+		"female": "Femminile",
+		"youth": "Giovani"
+	},
+	"quantity": {
+		"title": "Quanti beneficiari"
+	},
+	"cost": {
+		"title": "Costo aggiuntivo"
+	},
+	"actions": {
+		"continue": "Continua",
+		"back": "Indietro",
+		"retry": "Riprova",
+		"add": "{count, plural, one {Aggiungi # beneficiario} other {Aggiungi # beneficiari}}",
+		"adding": "Aggiunta dei beneficiari"
+	},
+	"success": "{count, plural, one {# beneficiario è stato aggiunto a questo programma.} other {# beneficiari sono stati aggiunti a questo programma.}}",
+	"error": {
+		"title": "Errore",
+		"generic": "Non è stato possibile aggiungere i beneficiari. Riprova.",
+		"not_enough": "Non ci sono abbastanza candidati. Modifica la selezione e riprova.",
+		"load": "Non è stato possibile caricare il pool di candidati."
+	}
+}

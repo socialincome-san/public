@@ -1,15 +1,12 @@
 import { makeContributionsColumns } from '@/components/data-table/columns/contributions';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { ContributionTableViewRow } from '@/modules/contributions/contribution.types';
+import type { ContributionFilterOptions, ContributionTableViewRow } from '@/modules/contributions/contribution.types';
+import { linkedRecordFilter } from './linked-record-filter';
 
 type ContributionFiltersArgs = {
 	query?: TableQueryState & { totalRows: number };
-	filterOptions: {
-		programs: { value: string; label: string }[];
-		campaigns: { value: string; label: string }[];
-		paymentEventTypes: { value: string; label: string }[];
-	};
+	filterOptions: ContributionFilterOptions;
 };
 
 export const contributionsTableConfig: DataTableConfig<ContributionTableViewRow> = {
@@ -25,8 +22,24 @@ export const contributionsTableConfig: DataTableConfig<ContributionTableViewRow>
 		{ id: 'programName', label: 'Program' },
 		{ id: 'createdAt', label: 'Created' },
 	],
-	makeColumns: makeContributionsColumns,
+	makeColumns: () => makeContributionsColumns(),
 	showColumnVisibilitySelector: true,
+};
+
+export const contributorContributionsTableConfig: DataTableConfig<ContributionTableViewRow> = {
+	...contributionsTableConfig,
+	id: 'contributor-contributions',
+	searchKeys: ['id', 'campaignTitle', 'programName'],
+	sortOptions: contributionsTableConfig.sortOptions?.filter(({ id }) => id !== 'contributor' && id !== 'email'),
+	makeColumns: () => makeContributionsColumns({ hideContributor: true }),
+};
+
+export const campaignContributionsTableConfig: DataTableConfig<ContributionTableViewRow> = {
+	...contributionsTableConfig,
+	id: 'campaign-contributions',
+	searchKeys: ['id', 'firstName', 'lastName', 'email'],
+	sortOptions: contributionsTableConfig.sortOptions?.filter(({ id }) => id !== 'campaignTitle' && id !== 'programName'),
+	makeColumns: () => makeContributionsColumns({ hideCampaign: true }),
 };
 
 export const getContributionsTableFilters = ({ query, filterOptions }: ContributionFiltersArgs): TableFilterConfig[] => {
@@ -59,5 +72,13 @@ export const getContributionsTableFilters = ({ query, filterOptions }: Contribut
 			value: query.paymentEventType,
 			options: filterOptions.paymentEventTypes,
 		},
+		...linkedRecordFilter({
+			id: 'contributor',
+			queryKey: 'contributorId',
+			label: 'Contributor',
+			placeholder: 'All contributors',
+			value: query.contributorId,
+			options: filterOptions.contributors,
+		}),
 	];
 };
