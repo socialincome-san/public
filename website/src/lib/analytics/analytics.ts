@@ -71,8 +71,8 @@ export const setAnalyticsConsent = (consent: 'granted' | 'denied') => {
 	} catch {
 		// The choice still applies until the page is reloaded.
 	}
-	// Once loaded, Tag Manager can't be unloaded, so its Google tags must be told about the new choice. `gtag` is
-	// defined by the consent mode script that runs before Tag Manager loads.
+	// Tag Manager loads before the choice, so its Google tags must be told about it. `gtag` is defined by the consent
+	// mode script that runs before Tag Manager loads.
 	const gtag: unknown = Reflect.get(window, 'gtag');
 	if (isGtag(gtag)) {
 		gtag('consent', 'update', getConsentModeSignals(consent));
@@ -97,8 +97,8 @@ export const useConsentSettingsOpen = () =>
 	);
 
 /**
- * Sends a custom event to Vercel Analytics and, if the visitor consented, to the Google Tag Manager data layer,
- * where its triggers forward it to Google Analytics and Google Ads. Client only.
+ * Sends a custom event to Vercel Analytics and the Google Tag Manager data layer, where its triggers forward it to
+ * Google Analytics and Google Ads. Without consent, Google's consent mode sends them as cookieless pings. Client only.
  * Vercel Analytics is cookieless and needs no consent.
  */
 export const trackEvent = (name: string, properties?: EventProperties) => {
@@ -110,7 +110,7 @@ export const trackEvent = (name: string, properties?: EventProperties) => {
 				Object.entries(properties).filter((entry): entry is [string, EventValue] => !Array.isArray(entry[1])),
 			),
 	);
-	if (googleTagManagerId && readConsent() === 'granted') {
+	if (googleTagManagerId) {
 		sendGTMEvent({ event: name, ...properties });
 	}
 };

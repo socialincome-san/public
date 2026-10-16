@@ -16,15 +16,7 @@ describe('trackEvent', () => {
 		jest.clearAllMocks();
 	});
 
-	it('sends only to Vercel while consent is undecided', () => {
-		trackEvent('donation_amount_confirmed', { value: 50 });
-
-		expect(track).toHaveBeenCalledWith('donation_amount_confirmed', { value: 50 });
-		expect(sendGTMEvent).not.toHaveBeenCalled();
-	});
-
-	it('also pushes to the Tag Manager data layer after consent', () => {
-		setAnalyticsConsent('granted');
+	it('pushes to Vercel and the Tag Manager data layer before consent, for consent mode to handle', () => {
 		trackEvent('donation_amount_confirmed', { value: 50, currency: 'CHF' });
 
 		expect(track).toHaveBeenCalledWith('donation_amount_confirmed', { value: 50, currency: 'CHF' });
@@ -40,15 +32,12 @@ describe('trackEvent', () => {
 		expect(sendGTMEvent).toHaveBeenCalledWith({ event: 'donation_completed', value: 50, items });
 	});
 
-	it('stops pushing and updates Google consent mode when consent is revoked', () => {
+	it('updates Google consent mode when consent is revoked', () => {
 		const gtag = jest.fn();
 		Reflect.set(window, 'gtag', gtag);
 		setAnalyticsConsent('granted');
 		setAnalyticsConsent('denied');
-		trackEvent('donate_nav_click');
 
-		expect(track).toHaveBeenCalledWith('donate_nav_click', undefined);
-		expect(sendGTMEvent).not.toHaveBeenCalled();
 		expect(gtag).toHaveBeenLastCalledWith('consent', 'update', {
 			ad_storage: 'denied',
 			ad_user_data: 'denied',

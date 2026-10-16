@@ -25,19 +25,21 @@ export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string
 	}
 
 	// During render, not in an effect: next/script requests Tag Manager from its own effect, which runs before ours.
-	if (consent === 'granted') {
+	if (consent !== null) {
 		registerFirstPartyGoogleTag();
 	}
 
 	return (
 		<>
-			{consent === 'granted' && (
+			{/* Waits for the stored choice, which is unknown on the server, so the default matches it. */}
+			{consent !== null && (
 				<>
-					{/* Must run before Tag Manager. gtag.js only reads commands pushed as an `arguments` object. */}
+					{/* Must run before Tag Manager. gtag.js only reads commands pushed as an `arguments` object. Later
+					choices are sent as consent updates by `setAnalyticsConsent`. */}
 					<Script id="google-consent-mode">
 						{`window.dataLayer = window.dataLayer || [];
 window.gtag = function () { window.dataLayer.push(arguments); };
-window.gtag('consent', 'default', ${JSON.stringify(getConsentModeSignals('granted'))});`}
+window.gtag('consent', 'default', ${JSON.stringify(getConsentModeSignals(consent === 'granted' ? 'granted' : 'denied'))});`}
 					</Script>
 					<GoogleTagManager gtmId={googleTagManagerId} gtmScriptUrl={googleTagGatewayUrl} />
 				</>
