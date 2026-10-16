@@ -57,3 +57,32 @@ describe('trackEvent', () => {
 		});
 	});
 });
+
+describe('registerFirstPartyGoogleTag', () => {
+	const load = (vercelEnv: string) => {
+		process.env.NEXT_PUBLIC_VERCEL_ENV = vercelEnv;
+		jest.resetModules();
+
+		return jest.requireActual<typeof import('./analytics')>('./analytics');
+	};
+	const firstPartyTags = (): unknown => Reflect.get(window, 'google_tags_first_party');
+
+	afterEach(() => {
+		Reflect.deleteProperty(window, 'google_tags_first_party');
+		delete process.env.NEXT_PUBLIC_VERCEL_ENV;
+	});
+
+	it('does nothing outside production, where there is no gateway', () => {
+		load('preview').registerFirstPartyGoogleTag();
+
+		expect(firstPartyTags()).toBeUndefined();
+	});
+
+	it('registers the container once', () => {
+		const { registerFirstPartyGoogleTag } = load('production');
+		registerFirstPartyGoogleTag();
+		registerFirstPartyGoogleTag();
+
+		expect(firstPartyTags()).toEqual(['GTM-TEST']);
+	});
+});

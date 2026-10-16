@@ -4,6 +4,7 @@ import {
 	getConsentModeSignals,
 	googleTagGatewayUrl,
 	googleTagManagerId,
+	registerFirstPartyGoogleTag,
 	setAnalyticsConsent,
 	useAnalyticsConsent,
 	useConsentSettingsOpen,
@@ -21,6 +22,11 @@ export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string
 
 	if (!googleTagManagerId) {
 		return null;
+	}
+
+	// During render, not in an effect: next/script requests Tag Manager from its own effect, which runs before ours.
+	if (consent === 'granted') {
+		registerFirstPartyGoogleTag();
 	}
 
 	return (

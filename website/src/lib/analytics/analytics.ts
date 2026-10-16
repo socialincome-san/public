@@ -14,6 +14,18 @@ export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
 export const googleTagGatewayUrl =
 	process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? 'https://www.socialincome.org/metrics/' : undefined;
 
+// Google tag gateway: makes the Google tag send hits through /metrics/. Replaces Cloudflare's injected snippet.
+export const registerFirstPartyGoogleTag = () => {
+	if (!googleTagGatewayUrl || !googleTagManagerId || typeof window === 'undefined') {
+		return;
+	}
+	const w = window as { google_tags_first_party?: string[] };
+	w.google_tags_first_party ??= [];
+	if (!w.google_tags_first_party.includes(googleTagManagerId)) {
+		w.google_tags_first_party.push(googleTagManagerId);
+	}
+};
+
 /** Google Consent Mode v2 signals. One choice covers both statistics (Analytics) and marketing (Ads). */
 export const getConsentModeSignals = (state: 'granted' | 'denied') => ({
 	ad_storage: state,
