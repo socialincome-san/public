@@ -47,6 +47,22 @@ describe('trackEvent', () => {
 	});
 });
 
+describe('consent changes in another tab', () => {
+	it('updates Google consent mode in this tab', () => {
+		const gtag = jest.fn();
+		Reflect.set(window, 'gtag', gtag);
+		localStorage.setItem('analytics-consent', 'denied');
+		window.dispatchEvent(new StorageEvent('storage', { key: 'analytics-consent' }));
+
+		expect(gtag).toHaveBeenLastCalledWith('consent', 'update', {
+			ad_storage: 'denied',
+			ad_user_data: 'denied',
+			ad_personalization: 'denied',
+			analytics_storage: 'denied',
+		});
+	});
+});
+
 describe('registerFirstPartyGoogleTag', () => {
 	const load = (vercelEnv: string) => {
 		process.env.NEXT_PUBLIC_VERCEL_ENV = vercelEnv;
