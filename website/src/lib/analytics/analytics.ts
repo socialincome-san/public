@@ -14,12 +14,18 @@ export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
 export const googleTagGatewayUrl =
 	process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? 'https://www.socialincome.org/metrics/' : undefined;
 
+declare global {
+	interface Window {
+		google_tags_first_party?: string[];
+	}
+}
+
 // Google tag gateway: makes the Google tag send hits through /metrics/. Replaces Cloudflare's injected snippet.
 export const registerFirstPartyGoogleTag = () => {
 	if (!googleTagGatewayUrl || !googleTagManagerId || typeof window === 'undefined') {
 		return;
 	}
-	const w = window as { google_tags_first_party?: string[] };
+	const w = window;
 	w.google_tags_first_party ??= [];
 	if (!w.google_tags_first_party.includes(googleTagManagerId)) {
 		w.google_tags_first_party.push(googleTagManagerId);
