@@ -75,18 +75,32 @@ const readConsent = (): AnalyticsConsent => {
 	}
 };
 
+// Tag Manager loads before the choice, so its Google tags must be told about it. `gtag` is defined by the consent
+// mode script that runs before Tag Manager loads.
+const updateGoogleConsent = (consent: 'granted' | 'denied') => {
+	const gtag: unknown = Reflect.get(window, 'gtag');
+	if (isGtag(gtag)) {
+		gtag('consent', 'update', getConsentModeSignals(consent));
+	}
+};
+
+// A choice made in another tab must also reach the Google tags already running in this one.
+if (typeof window !== 'undefined') {
+	window.addEventListener('storage', (event) => {
+		const consent = readConsent();
+		if (event.key === CONSENT_STORAGE_KEY && consent !== 'undecided') {
+			updateGoogleConsent(consent);
+		}
+	});
+}
+
 export const setAnalyticsConsent = (consent: 'granted' | 'denied') => {
 	try {
 		localStorage.setItem(CONSENT_STORAGE_KEY, consent);
 	} catch {
 		// The choice still applies until the page is reloaded.
 	}
-	// Tag Manager loads before the choice, so its Google tags must be told about it. `gtag` is defined by the consent
-	// mode script that runs before Tag Manager loads.
-	const gtag: unknown = Reflect.get(window, 'gtag');
-	if (isGtag(gtag)) {
-		gtag('consent', 'update', getConsentModeSignals(consent));
-	}
+	updateGoogleConsent(consent);
 	consentSettingsOpen = false;
 	notify();
 };
