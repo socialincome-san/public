@@ -8,7 +8,8 @@ jest.mock('@next/third-parties/google', () => ({ sendGTMEvent: jest.fn() }));
 process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID = 'GTM-TEST';
 
 // Required after setting the env variable, which the module reads on load.
-const { setAnalyticsConsent, trackEvent } = jest.requireActual<typeof import('./analytics')>('./analytics');
+const { ensureConsentDefault, setAnalyticsConsent, trackEvent } =
+	jest.requireActual<typeof import('./analytics')>('./analytics');
 
 describe('trackEvent', () => {
 	beforeEach(() => {
@@ -47,12 +48,66 @@ describe('trackEvent', () => {
 	});
 });
 
+describe('ensureConsentDefault', () => {
+	const denied = {
+		ad_storage: 'denied',
+		ad_user_data: 'denied',
+		ad_personalization: 'denied',
+		analytics_storage: 'denied',
+	};
+	const queued = () => (window.dataLayer ?? []).map((entry): unknown[] => Array.from(entry as IArguments));
+
+	beforeEach(() => {
+		localStorage.clear();
+		Reflect.deleteProperty(window, 'consentDefaultQueued');
+		Reflect.deleteProperty(window, 'dataLayer');
+		Reflect.deleteProperty(window, 'gtag');
+	});
+
+	it('queues the denied default once, as gtag.js arguments, when an event comes first', () => {
+		trackEvent('donate_nav_click');
+		trackEvent('donate_nav_click');
+		ensureConsentDefault();
+
+		expect(Object.prototype.toString.call(window.dataLayer?.[0])).toBe('[object Arguments]');
+		expect(queued()).toEqual([['consent', 'default', { ...denied, wait_for_update: 500 }]]);
+	});
+
+	it('applies a choice stored on an earlier visit right after the default', () => {
+		localStorage.setItem('analytics-consent', 'granted');
+		ensureConsentDefault();
+
+		expect(queued()).toEqual([
+			['consent', 'default', { ...denied, wait_for_update: 500 }],
+			[
+				'consent',
+				'update',
+				{ ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted' },
+			],
+		]);
+	});
+});
+
 describe('consent changes in another tab', () => {
 	it('updates Google consent mode in this tab', () => {
 		const gtag = jest.fn();
 		Reflect.set(window, 'gtag', gtag);
 		localStorage.setItem('analytics-consent', 'denied');
 		window.dispatchEvent(new StorageEvent('storage', { key: 'analytics-consent' }));
+
+		expect(gtag).toHaveBeenLastCalledWith('consent', 'update', {
+			ad_storage: 'denied',
+			ad_user_data: 'denied',
+			ad_personalization: 'denied',
+			analytics_storage: 'denied',
+		});
+	});
+
+	it('falls back to denied when another tab clears storage', () => {
+		const gtag = jest.fn();
+		Reflect.set(window, 'gtag', gtag);
+		localStorage.clear();
+		window.dispatchEvent(new StorageEvent('storage', { key: null }));
 
 		expect(gtag).toHaveBeenLastCalledWith('consent', 'update', {
 			ad_storage: 'denied',

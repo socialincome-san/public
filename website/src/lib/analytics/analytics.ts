@@ -21,6 +21,7 @@ export const isGoogleTagGatewayHost = () =>
 declare global {
 	interface Window {
 		google_tags_first_party?: string[];
+		consentDefaultQueued?: boolean;
 	}
 }
 
@@ -37,7 +38,7 @@ export const registerFirstPartyGoogleTag = () => {
 };
 
 /** Google Consent Mode v2 signals. One choice covers both statistics (Analytics) and marketing (Ads). */
-export const getConsentModeSignals = (state: 'granted' | 'denied') => ({
+const getConsentModeSignals = (state: 'granted' | 'denied') => ({
 	ad_storage: state,
 	ad_user_data: state,
 	ad_personalization: state,
@@ -75,8 +76,8 @@ const readConsent = (): AnalyticsConsent => {
 	}
 };
 
-// Tag Manager loads before the choice, so its Google tags must be told about it. `gtag` is defined by the consent
-// mode script that runs before Tag Manager loads.
+// Tag Manager loads before the choice, so its Google tags must be told about it. `gtag` is defined by
+// `ensureConsentDefault`, which runs before Tag Manager loads.
 const updateGoogleConsent = (consent: 'granted' | 'denied') => {
 	const gtag: unknown = Reflect.get(window, 'gtag');
 	if (isGtag(gtag)) {
@@ -84,12 +85,34 @@ const updateGoogleConsent = (consent: 'granted' | 'denied') => {
 	}
 };
 
+const gtag: (...args: unknown[]) => void = function () {
+	// eslint-disable-next-line prefer-rest-params -- gtag.js requires the arguments object
+	(window.dataLayer ??= []).push(arguments);
+};
+
+/**
+ * Queues the denied Consent Mode default, plus the choice stored on an earlier visit, ahead of any other data layer
+ * entry. Runs once per page load, from whichever comes first: an event or the Tag Manager setup. Client only.
+ */
+export const ensureConsentDefault = () => {
+	if (window.consentDefaultQueued) {
+		return;
+	}
+	window.consentDefaultQueued = true;
+	window.gtag ??= gtag;
+	gtag('consent', 'default', { ...getConsentModeSignals('denied'), wait_for_update: 500 });
+	if (readConsent() === 'granted') {
+		updateGoogleConsent('granted');
+	}
+};
+
 // A choice made in another tab must also reach the Google tags already running in this one.
 if (typeof window !== 'undefined') {
 	window.addEventListener('storage', (event) => {
-		const consent = readConsent();
-		if (event.key === CONSENT_STORAGE_KEY && consent !== 'undecided') {
-			updateGoogleConsent(consent);
+		// `key` is null when another tab clears all storage. A removed choice must not leave consent granted here.
+		if (event.key === CONSENT_STORAGE_KEY || event.key === null) {
+			const consent = readConsent();
+			updateGoogleConsent(consent === 'undecided' ? 'denied' : consent);
 		}
 	});
 }
@@ -135,6 +158,7 @@ export const trackEvent = (name: string, properties?: EventProperties) => {
 			),
 	);
 	if (googleTagManagerId) {
+		ensureConsentDefault();
 		sendGTMEvent({ event: name, ...properties });
 	}
 };
