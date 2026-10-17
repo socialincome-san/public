@@ -75,3 +75,18 @@ describe('registerFirstPartyGoogleTag', () => {
 		expect(firstPartyTags()).toEqual(['GTM-TEST']);
 	});
 });
+
+describe('isGoogleTagGatewayHost', () => {
+	afterEach(() => {
+		delete process.env.NEXT_PUBLIC_VERCEL_ENV;
+	});
+
+	it('is false on other hosts, such as Vercel URLs of the production deployment', () => {
+		process.env.NEXT_PUBLIC_VERCEL_ENV = 'production';
+		jest.resetModules();
+		const { isGoogleTagGatewayHost } = jest.requireActual<typeof import('./analytics')>('./analytics');
+
+		expect(window.location.hostname).toBe('localhost');
+		expect(isGoogleTagGatewayHost()).toBe(false);
+	});
+});

@@ -4,6 +4,7 @@ import {
 	getConsentModeSignals,
 	googleTagGatewayUrl,
 	googleTagManagerId,
+	isGoogleTagGatewayHost,
 	registerFirstPartyGoogleTag,
 	setAnalyticsConsent,
 	useAnalyticsConsent,
@@ -24,15 +25,17 @@ export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string
 		return null;
 	}
 
+	// Waits for the stored choice, which is unknown on the server, so the consent default matches it.
+	const loadsTagManager = consent !== null && isGoogleTagGatewayHost();
+
 	// During render, not in an effect: next/script requests Tag Manager from its own effect, which runs before ours.
-	if (consent !== null) {
+	if (loadsTagManager) {
 		registerFirstPartyGoogleTag();
 	}
 
 	return (
 		<>
-			{/* Waits for the stored choice, which is unknown on the server, so the default matches it. */}
-			{consent !== null && (
+			{loadsTagManager && (
 				<>
 					{/* Must run before Tag Manager. gtag.js only reads commands pushed as an `arguments` object. Later
 					choices are sent as consent updates by `setAnalyticsConsent`. */}

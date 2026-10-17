@@ -14,6 +14,10 @@ export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
 export const googleTagGatewayUrl =
 	process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? 'https://www.socialincome.org/metrics/' : undefined;
 
+// Production is also reachable on Vercel URLs, which must not load Tag Manager. Client only.
+export const isGoogleTagGatewayHost = () =>
+	googleTagGatewayUrl !== undefined && window.location.hostname === new URL(googleTagGatewayUrl).hostname;
+
 declare global {
 	interface Window {
 		google_tags_first_party?: string[];
