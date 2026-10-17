@@ -86,6 +86,26 @@ describe('ensureConsentDefault', () => {
 			],
 		]);
 	});
+
+	it('keeps the choice for the page load when storage is blocked', () => {
+		const blocked = () => {
+			throw new Error('blocked');
+		};
+		jest.spyOn(Storage.prototype, 'getItem').mockImplementation(blocked);
+		jest.spyOn(Storage.prototype, 'setItem').mockImplementation(blocked);
+		setAnalyticsConsent('granted');
+		Reflect.deleteProperty(window, 'dataLayer');
+		ensureConsentDefault();
+		jest.restoreAllMocks();
+		// Forgets the choice again, as a storage change in another tab does.
+		window.dispatchEvent(new StorageEvent('storage', { key: null }));
+
+		expect(queued()).toContainEqual([
+			'consent',
+			'update',
+			{ ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted' },
+		]);
+	});
 });
 
 describe('consent changes in another tab', () => {

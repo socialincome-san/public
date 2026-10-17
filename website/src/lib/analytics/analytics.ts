@@ -51,6 +51,8 @@ const CONSENT_STORAGE_KEY = 'analytics-consent';
 
 const listeners = new Set<() => void>();
 let consentSettingsOpen = false;
+// The choice for this page load, for when storage is blocked or does not keep it.
+let sessionConsent: 'granted' | 'denied' | undefined;
 
 const notify = () => listeners.forEach((listener) => listener());
 
@@ -68,12 +70,14 @@ const subscribe = (listener: () => void) => {
 const readConsent = (): AnalyticsConsent => {
 	try {
 		const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
-
-		return stored === 'granted' || stored === 'denied' ? stored : 'undecided';
+		if (stored === 'granted' || stored === 'denied') {
+			return stored;
+		}
 	} catch {
 		// Storage is blocked, e.g. in some private modes: ask again on every page load.
-		return 'undecided';
 	}
+
+	return sessionConsent ?? 'undecided';
 };
 
 // Tag Manager loads before the choice, so its Google tags must be told about it. `gtag` is defined by
@@ -111,6 +115,8 @@ if (typeof window !== 'undefined') {
 	window.addEventListener('storage', (event) => {
 		// `key` is null when another tab clears all storage. A removed choice must not leave consent granted here.
 		if (event.key === CONSENT_STORAGE_KEY || event.key === null) {
+			// Registered before the React listeners, so they read the choice from the other tab, not this one.
+			sessionConsent = undefined;
 			const consent = readConsent();
 			updateGoogleConsent(consent === 'undecided' ? 'denied' : consent);
 		}
@@ -121,8 +127,9 @@ export const setAnalyticsConsent = (consent: 'granted' | 'denied') => {
 	try {
 		localStorage.setItem(CONSENT_STORAGE_KEY, consent);
 	} catch {
-		// The choice still applies until the page is reloaded.
+		// Kept in `sessionConsent` until the page is reloaded.
 	}
+	sessionConsent = consent;
 	updateGoogleConsent(consent);
 	consentSettingsOpen = false;
 	notify();
