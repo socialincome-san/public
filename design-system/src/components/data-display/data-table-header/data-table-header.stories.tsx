@@ -33,3 +33,9 @@ export const TitleOnly: Story = {
 		toolbar: undefined,
 	},
 };
+
+export const WithoutTitle: Story = {
+	args: {
+		title: '',
+	},
+};

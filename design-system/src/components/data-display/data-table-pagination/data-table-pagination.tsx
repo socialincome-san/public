@@ -30,7 +30,10 @@ export const DataTablePagination = ({
 	onPageSizeChange,
 	showRowsPerPageSelector = true,
 }: DataTablePaginationProps) => (
-	<div className="mt-auto flex items-center justify-between gap-4 py-4" data-testid="data-table-pagination">
+	<div
+		className="mt-auto flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+		data-testid="data-table-pagination"
+	>
 		<div className="flex items-center gap-2">
 			{showRowsPerPageSelector ? (
 				<>
@@ -53,7 +56,7 @@ export const DataTablePagination = ({
 			) : null}
 		</div>
 
-		<div className="flex items-center gap-4">
+		<div className="flex items-center justify-between gap-3 sm:gap-4">
 			<Button
 				variant="outline"
 				size="sm"
