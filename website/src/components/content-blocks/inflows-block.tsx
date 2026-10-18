@@ -1,6 +1,6 @@
 import { getDonationExplainerVideo } from '@/components/donation-wizard/utils/donation-explainer-video';
 import { InflowsSection, type InflowsSectionSegment } from '@/components/inflows/inflows-section';
-import { buildInflowSegments, parseChfAmount, resolveInflowSegmentAmountsChf } from '@/components/inflows/inflows-segments';
+import { buildInflowSegments, mapContributionSourcesToInflowSegments } from '@/components/inflows/inflows-segments';
 import type { Inflows as InflowsBlok } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
@@ -23,12 +23,8 @@ export const InflowsBlock = async ({ blok, lang, currency: displayCurrency }: Pr
 		return null;
 	}
 
-	const totalInflowsChf = dataResult.data.financialSummary.inflowsChf;
-	const amountsChf = resolveInflowSegmentAmountsChf(
-		totalInflowsChf,
-		parseChfAmount(blok.foundationInflows),
-		parseChfAmount(blok.corporatePartnerInflows),
-	);
+	const { inflowsChf: totalInflowsChf, inflowsBySourceChf } = dataResult.data.financialSummary;
+	const amountsChf = mapContributionSourcesToInflowSegments(inflowsBySourceChf);
 
 	const displayResult = await resolveChfAmountsAction({
 		amounts: [totalInflowsChf, amountsChf.individuals, amountsChf.foundations, amountsChf.corporate],

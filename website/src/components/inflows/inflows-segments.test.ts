@@ -1,43 +1,15 @@
-import { allocatePercents, buildInflowSegments, parseChfAmount, resolveInflowSegmentAmountsChf } from './inflows-segments';
+import { ContributionSourceType } from '@/generated/prisma/enums';
+import { allocatePercents, buildInflowSegments, mapContributionSourcesToInflowSegments } from './inflows-segments';
 
-describe('parseChfAmount', () => {
-	test('returns 0 for missing or blank values', () => {
-		expect(parseChfAmount(undefined)).toBe(0);
-		expect(parseChfAmount('')).toBe(0);
-		expect(parseChfAmount('   ')).toBe(0);
-	});
-
-	test('parses finite non-negative numbers', () => {
-		expect(parseChfAmount('125000')).toBe(125000);
-		expect(parseChfAmount('12.5')).toBe(12.5);
-		expect(parseChfAmount('0')).toBe(0);
-	});
-
-	test('rejects invalid and negative values', () => {
-		expect(parseChfAmount('abc')).toBe(0);
-		expect(parseChfAmount('-10')).toBe(0);
-		expect(parseChfAmount('Infinity')).toBe(0);
-	});
-});
-
-describe('resolveInflowSegmentAmountsChf', () => {
-	test('subtracts foundations and corporate from the donation total', () => {
-		expect(resolveInflowSegmentAmountsChf(1000, 240, 130)).toEqual({
-			individuals: 630,
-			foundations: 240,
-			corporate: 130,
-		});
-	});
-
-	test('caps configured amounts so segments never exceed the total', () => {
-		expect(resolveInflowSegmentAmountsChf(100, 80, 50)).toEqual({ individuals: 0, foundations: 80, corporate: 20 });
-		expect(resolveInflowSegmentAmountsChf(100, 140, 50)).toEqual({ individuals: 0, foundations: 100, corporate: 0 });
-		expect(resolveInflowSegmentAmountsChf(0, 10, 10)).toEqual({ individuals: 0, foundations: 0, corporate: 0 });
-	});
-
-	test('segments always sum to the donation total', () => {
-		const amounts = resolveInflowSegmentAmountsChf(500, 400, 400);
-		expect(amounts.individuals + amounts.foundations + amounts.corporate).toBe(500);
+describe('mapContributionSourcesToInflowSegments', () => {
+	test('maps contribution source totals to transparency segments', () => {
+		expect(
+			mapContributionSourcesToInflowSegments({
+				[ContributionSourceType.individual]: 630,
+				[ContributionSourceType.foundation_grant]: 240,
+				[ContributionSourceType.corporate_partner]: 130,
+			}),
+		).toEqual({ individuals: 630, foundations: 240, corporate: 130 });
 	});
 });
 
