@@ -1,3 +1,4 @@
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { getContributorCommunityStatsAction } from '@/modules/contributors/contributor.actions';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
@@ -12,6 +13,8 @@ import {
 	type PresetAmount,
 	isAmountValid,
 } from '../utils/donation-amount';
+import type { DonationExampleCountryCode } from '../utils/donation-example-income';
+import { updateDonationCountry, updateDonationIncomeCurrency } from '../utils/donation-income-state';
 import {
 	monthlyPlanStepDefaults,
 	oneTimePlanStepDefaults,
@@ -31,10 +34,22 @@ export const donationWizardMachine = setup({
 	types: {} as {
 		context: DonationWizardContext;
 		events:
-			| { type: 'OPEN' }
+			| { type: 'OPEN'; currency: WebsiteCurrency; countryCode: DonationExampleCountryCode | null }
 			| { type: 'OPEN_FROM_FORM'; context: DonationAmountContext }
-			| { type: 'OPEN_FROM_STRIPE_RETURN'; context: DonationAmountContext | null; sessionId: string }
+			| {
+					type: 'OPEN_FROM_STRIPE_RETURN';
+					context: DonationAmountContext | null;
+					sessionId: string;
+					currency: WebsiteCurrency;
+					countryCode: DonationExampleCountryCode | null;
+			  }
 			| { type: 'CLOSE' }
+			| { type: 'SET_CURRENCY'; value: WebsiteCurrency }
+			| {
+					type: 'SET_COUNTRY';
+					countryCode: DonationExampleCountryCode;
+					source: 'manual' | 'detected';
+			  }
 			| { type: 'SET_MONTHLY_INCOME'; value: number | null }
 			| { type: 'SELECT_ONE_PERCENT' }
 			| { type: 'SET_PRESET_AMOUNT'; value: PresetAmount | 'other' }
@@ -91,7 +106,7 @@ export const donationWizardMachine = setup({
 		pendingStepIsOneTimePlan: ({ context }) => context.pendingStep === 'stepPlanOneTime',
 	},
 	actions: {
-		resetContext: assign(() => getInitialWizardContext()),
+		resetContext: assign(({ context }) => getInitialWizardContext(context.monthlyIncomeCurrency)),
 		assignFailedCommunityStats: assign({
 			communityStats: () => null,
 			pendingStep: () => null,
@@ -101,13 +116,18 @@ export const donationWizardMachine = setup({
 	id: 'donationWizard',
 	initial: 'closed',
 	context: getInitialWizardContext(),
+	on: {
+		SET_CURRENCY: {
+			actions: assign(({ context, event }) => updateDonationIncomeCurrency(context, event.value)),
+		},
+	},
 	states: {
 		closed: {
 			on: {
 				OPEN: {
 					target: 'loadingCommunityStats',
-					actions: assign(() => ({
-						...getInitialWizardContext(),
+					actions: assign(({ event }) => ({
+						...getInitialWizardContext(event.currency, event.countryCode),
 						pendingStep: 'stepAmount' as const,
 					})),
 				},
@@ -134,7 +154,7 @@ export const donationWizardMachine = setup({
 				OPEN_FROM_STRIPE_RETURN: {
 					target: 'stepOnboardingPersonal',
 					actions: assign(({ event }) => ({
-						...getInitialWizardContext(),
+						...getInitialWizardContext(event.currency, event.countryCode),
 						...(event.context ?? {}),
 						paymentMethod: 'online' as const,
 						stripeCheckoutSessionId: event.sessionId,
@@ -198,29 +218,39 @@ export const donationWizardMachine = setup({
 		},
 		stepAmount: {
 			on: {
+				SET_COUNTRY: {
+					actions: assign(({ context, event }) =>
+						updateDonationCountry(context, event.countryCode, event.source === 'manual'),
+					),
+				},
 				SET_MONTHLY_INCOME: {
 					actions: assign({
 						monthlyIncome: ({ event }) => event.value,
+						monthlyIncomeSource: () => 'manual',
 						selectedAmount: () => null,
 						customAmount: () => null,
+						donationAmountIsManual: () => false,
 					}),
 				},
 				SELECT_ONE_PERCENT: {
 					actions: assign({
 						selectedAmount: () => null,
 						customAmount: () => null,
+						donationAmountIsManual: () => false,
 					}),
 				},
 				SET_PRESET_AMOUNT: {
 					actions: assign({
 						selectedAmount: ({ event }) => event.value,
 						customAmount: () => null,
+						donationAmountIsManual: () => true,
 					}),
 				},
 				SET_CUSTOM_AMOUNT: {
 					actions: assign({
 						customAmount: ({ event }) => event.value,
 						selectedAmount: () => 'other' as const,
+						donationAmountIsManual: () => true,
 					}),
 				},
 				SET_CADENCE: {

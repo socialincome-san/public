@@ -19,6 +19,7 @@ import {
 	type PaymentMethod,
 	type PresetAmount,
 } from '../utils/donation-amount';
+import { isDonationExampleCountryCode } from '../utils/donation-example-income';
 import { getDonationWizardLayout } from '../utils/donation-wizard-layout';
 import type { DonationWizardContext } from './donation-wizard-context';
 import { getActiveWizardStep } from './get-active-wizard-step';
@@ -72,6 +73,8 @@ export const resolvePlanBenefit = (
 
 export const selectStep1FormView = (context: DonationAmountContext) => ({
 	monthlyIncome: context.monthlyIncome,
+	monthlyIncomeSource: context.monthlyIncomeSource,
+	exampleCountryCode: context.exampleCountryCode,
 	selectedAmount: context.selectedAmount,
 	customAmount: context.customAmount,
 	cadence: context.cadence,
@@ -84,6 +87,11 @@ export const selectStep1FormView = (context: DonationAmountContext) => ({
 export const createStep1Actions = (send: DonationWizardSend) => ({
 	selectOnePercent: () => send({ type: 'SELECT_ONE_PERCENT' }),
 	setMonthlyIncome: (value: number | null) => send({ type: 'SET_MONTHLY_INCOME', value }),
+	setCountry: (countryCode: string) => {
+		if (isDonationExampleCountryCode(countryCode)) {
+			send({ type: 'SET_COUNTRY', countryCode, source: 'manual' });
+		}
+	},
 	setPresetAmount: (value: PresetAmount | 'other') => send({ type: 'SET_PRESET_AMOUNT', value }),
 	setCustomAmount: (value: number | null) => send({ type: 'SET_CUSTOM_AMOUNT', value }),
 	setCadence: (value: Cadence) => send({ type: 'SET_CADENCE', value }),

@@ -1,7 +1,7 @@
 'use client';
 
 import { trackEvent } from '@/lib/analytics/analytics';
-import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
+import { useVisitorCountryCode, useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { getPaidStripeCheckoutDonationAction } from '@/modules/stripe-payments/stripe-payment.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
@@ -23,6 +23,7 @@ import {
 	STRIPE_CHECKOUT_SESSION_ID_PARAM,
 } from '../steps/step-stripe-checkout/stripe-checkout-return';
 import type { DonationAmountContext } from '../utils/donation-amount';
+import { isDonationExampleCountryCode } from '../utils/donation-example-income';
 import { getDonationCompletedEvent, getDonationFunnelEvent } from '../wizard/donation-analytics';
 import { donationWizardMachine } from '../wizard/donation-machine';
 import { DonationSteps } from '../wizard/donation-steps';
@@ -36,6 +37,8 @@ type Props = {
 export const DonationModalProvider = ({ children }: Props) => {
 	const [state, , actorRef] = useMachine(donationWizardMachine);
 	const currency = useWebsiteCurrency();
+	const visitorCountryCode = useVisitorCountryCode();
+	const countryCode = visitorCountryCode && isDonationExampleCountryCode(visitorCountryCode) ? visitorCountryCode : null;
 
 	// Every step sends through here, so the funnel is tracked in one place with the context after the transition.
 	const send = useCallback<DonationWizardSend>(
@@ -81,22 +84,28 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
 
 	useEffect(() => {
+		if (state.context.monthlyIncomeCurrency !== currency) {
+			send({ type: 'SET_CURRENCY', value: currency });
+		}
+	}, [currency, send, state.context.monthlyIncomeCurrency]);
+
+	useEffect(() => {
 		const url = new URL(window.location.href);
 		const sessionId = url.searchParams.get(STRIPE_CHECKOUT_SESSION_ID_PARAM);
 		if (!sessionId) {
 			return;
 		}
 
-		const context = readStoredStripeCheckoutContext(sessionId);
+		const context = readStoredStripeCheckoutContext(sessionId, currency);
 
-		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId });
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency, countryCode });
 		clearStoredStripeCheckoutContext(sessionId);
 		url.searchParams.delete(STRIPE_CHECKOUT_SESSION_ID_PARAM);
 		window.history.replaceState(null, '', url);
-	}, [send]);
+	}, [countryCode, currency, send]);
 
 	const openWizardAtAmountStep = () => {
-		send({ type: 'OPEN' });
+		send({ type: 'OPEN', currency, countryCode });
 	};
 
 	const openWizardWithFormAmount = (context: DonationAmountContext) => {

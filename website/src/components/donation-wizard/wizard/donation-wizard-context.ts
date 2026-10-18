@@ -1,7 +1,10 @@
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
 import type { CompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
 import { type DonationAmountContext, getInitialDonationContext } from '../utils/donation-amount';
+import type { DonationExampleCountryCode } from '../utils/donation-example-income';
+import { updateDonationCountry } from '../utils/donation-income-state';
 
 export type DonationWizardEntry = 'stepAmount' | 'stepPlanMonthly' | 'stepPlanOneTime';
 
@@ -55,8 +58,11 @@ export const resetQrBillContext = {
 	qrBillError: null,
 };
 
-export const getInitialWizardContext = (): DonationWizardContext => ({
-	...getInitialDonationContext(),
+export const getInitialWizardContext = (
+	currency?: WebsiteCurrency,
+	countryCode: DonationExampleCountryCode | null = null,
+): DonationWizardContext => ({
+	...updateDonationCountry(getInitialDonationContext(currency), countryCode, false),
 	communityStats: null,
 	pendingStep: null,
 	...resetStripeCheckoutContext,
