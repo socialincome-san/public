@@ -2,6 +2,13 @@ import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
 import type { UserSession } from '@/modules/users/user.types';
 
+type DonationCertificateCreateInput = {
+	year: number;
+	language: string;
+	storagePath: string;
+	contributorId: string;
+};
+
 const mockIsFirebaseStorageConfigured = jest.fn();
 const mockUploadFileToFirebaseStorage = jest.fn();
 const mockGetSucceededForContributorAndYear = jest.fn();
@@ -10,8 +17,7 @@ const mockGetContributorFilterOption = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 const mockFindPaginatedDonationCertificates = jest.fn();
 const mockFindPaginatedContributorDonationCertificates = jest.fn();
-const mockFindDonationCertificateByYearAndLanguage = jest.fn();
-const mockCreateDonationCertificate = jest.fn();
+const mockCreateDonationCertificate = jest.fn<Promise<void>, [unknown, DonationCertificateCreateInput]>();
 
 jest.mock('@/integrations/firebase/firebase-storage.integration', () => ({
 	isFirebaseStorageConfigured: mockIsFirebaseStorageConfigured,
@@ -34,7 +40,6 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 jest.mock('./donation-certificate.repository.read', () => ({
 	findPaginatedDonationCertificates: mockFindPaginatedDonationCertificates,
 	findPaginatedContributorDonationCertificates: mockFindPaginatedContributorDonationCertificates,
-	findDonationCertificateByYearAndLanguage: mockFindDonationCertificateByYearAndLanguage,
 }));
 
 jest.mock('./donation-certificate.repository.write', () => ({
@@ -85,6 +90,7 @@ describe('donation certificate service', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockIsFirebaseStorageConfigured.mockReturnValue(true);
+		mockCreateDonationCertificate.mockResolvedValue(undefined);
 	});
 
 	test('limits the management table to programs with operator access', async () => {
@@ -180,7 +186,6 @@ describe('donation certificate service', () => {
 		const result = await createDonationCertificatesForUser(operator, 2025, ['contributor-1', 'contributor-2'], 'en');
 
 		expectFailure(result, 'Permission denied');
-		expect(mockFindDonationCertificateByYearAndLanguage).not.toHaveBeenCalled();
 	});
 
 	test('uses the contributor language and preserves the no-contributions failure', async () => {
@@ -198,18 +203,16 @@ describe('donation certificate service', () => {
 				},
 			],
 		});
-		mockFindDonationCertificateByYearAndLanguage.mockResolvedValue(null);
 		mockGetSucceededForContributorAndYear.mockResolvedValue({ success: true, data: [] });
 
 		const result = await createDonationCertificateForContributor(website, 2025, 'contributor-1');
 
-		expect(mockFindDonationCertificateByYearAndLanguage).toHaveBeenCalledWith(2025, 'contributor-1', 'de');
 		expectFailure(result, 'noContributions');
 		expect(mockUploadFileToFirebaseStorage).not.toHaveBeenCalled();
 		expect(mockCreateDonationCertificate).not.toHaveBeenCalled();
 	});
 
-	test('does not regenerate an existing year and language certificate', async () => {
+	test('creates multiple certificates for the same year without replacing the existing file', async () => {
 		mockGetContributorsByIds.mockResolvedValue({
 			success: true,
 			data: [
@@ -224,12 +227,24 @@ describe('donation certificate service', () => {
 				},
 			],
 		});
-		mockFindDonationCertificateByYearAndLanguage.mockResolvedValue({ id: 'certificate-1' });
+		mockGetSucceededForContributorAndYear.mockResolvedValue({
+			success: true,
+			data: [{ createdAt: new Date('2025-03-01T00:00:00.000Z'), amount: 50, currency: 'CHF' }],
+		});
+		mockUploadFileToFirebaseStorage.mockResolvedValue({ success: true, data: undefined });
 
-		const result = await createDonationCertificateForContributor(website, 2025, 'contributor-1', 'en');
+		const firstResult = await createDonationCertificateForContributor(website, 2025, 'contributor-1', 'en');
+		const secondResult = await createDonationCertificateForContributor(website, 2025, 'contributor-1', 'en');
 
-		expectFailure(result, 'alreadyExists');
-		expect(mockGetSucceededForContributorAndYear).not.toHaveBeenCalled();
+		expect(firstResult.success).toBe(true);
+		expect(secondResult.success).toBe(true);
+		expect(mockCreateDonationCertificate).toHaveBeenCalledTimes(2);
+		const storagePaths = mockCreateDonationCertificate.mock.calls.map(([, input]) => input.storagePath);
+		for (const storagePath of storagePaths) {
+			expect(storagePath).toMatch(/^users\/auth-1\/donation-certificates\/2025_en_[\w-]+\.pdf$/);
+		}
+		expect(new Set(storagePaths).size).toBe(2);
+		expect(mockGetSucceededForContributorAndYear).toHaveBeenCalledTimes(2);
 	});
 
 	test('attributes a generated certificate to the caller', async () => {
@@ -247,7 +262,6 @@ describe('donation certificate service', () => {
 				},
 			],
 		});
-		mockFindDonationCertificateByYearAndLanguage.mockResolvedValue(null);
 		mockGetSucceededForContributorAndYear.mockResolvedValue({
 			success: true,
 			data: [{ createdAt: new Date('2025-03-01T00:00:00.000Z'), amount: 50, currency: 'CHF' }],
@@ -256,14 +270,12 @@ describe('donation certificate service', () => {
 
 		await createDonationCertificatesForUser(operator, 2025, ['contributor-1']);
 
-		expect(mockCreateDonationCertificate).toHaveBeenCalledWith(
-			{ actor: { type: 'user', id: 'user-1', name: 'Max Operator' }, source: 'portal' },
-			{
-				year: 2025,
-				language: 'en',
-				storagePath: 'users/auth-1/donation-certificates/2025_en.pdf',
-				contributorId: 'contributor-1',
-			},
-		);
+		expect(mockCreateDonationCertificate).toHaveBeenCalledTimes(1);
+		const [audit, input] = mockCreateDonationCertificate.mock.calls[0];
+		expect(audit).toEqual({ actor: { type: 'user', id: 'user-1', name: 'Max Operator' }, source: 'portal' });
+		expect(input.year).toBe(2025);
+		expect(input.language).toBe('en');
+		expect(input.storagePath).toMatch(/^users\/auth-1\/donation-certificates\/2025_en_[\w-]+\.pdf$/);
+		expect(input.contributorId).toBe('contributor-1');
 	});
 });

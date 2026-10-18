@@ -1,5 +1,4 @@
 const mockFindMany = jest.fn();
-const mockFindFirst = jest.fn();
 const mockCount = jest.fn();
 const mockCreateMany = jest.fn();
 
@@ -7,7 +6,6 @@ jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
 		donationCertificate: {
 			findMany: mockFindMany,
-			findFirst: mockFindFirst,
 			count: mockCount,
 			createMany: mockCreateMany,
 		},
@@ -15,7 +13,6 @@ jest.mock('@/lib/database/prisma', () => ({
 }));
 
 import {
-	findDonationCertificateByYearAndLanguage,
 	findPaginatedContributorDonationCertificates,
 	findPaginatedDonationCertificates,
 } from './donation-certificate.repository.read';
@@ -24,7 +21,6 @@ describe('donation certificate repository', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockFindMany.mockResolvedValue([]);
-		mockFindFirst.mockResolvedValue(null);
 		mockCount.mockResolvedValue(0);
 	});
 
@@ -99,25 +95,5 @@ describe('donation certificate repository', () => {
 			}),
 		);
 		expect(mockCount).toHaveBeenCalledWith({ where });
-	});
-
-	test('selects only certificate fields when checking for an existing certificate', async () => {
-		await findDonationCertificateByYearAndLanguage(2025, 'contributor-1', 'fr');
-
-		expect(mockFindFirst).toHaveBeenCalledWith({
-			where: {
-				year: 2025,
-				contributorId: 'contributor-1',
-				language: 'fr',
-			},
-			select: {
-				id: true,
-				year: true,
-				language: true,
-				storagePath: true,
-				contributorId: true,
-				createdAt: true,
-			},
-		});
 	});
 });

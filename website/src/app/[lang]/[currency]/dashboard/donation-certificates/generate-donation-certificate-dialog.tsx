@@ -55,9 +55,6 @@ export default function GenerateDonationCertificateDialog({
 		if (errorCode === 'noContributions') {
 			return t('donation-certificates.no-contributions');
 		}
-		if (errorCode === 'alreadyExists') {
-			return t('donation-certificates.already-exists');
-		}
 
 		return t('donation-certificates.technical-error');
 	};

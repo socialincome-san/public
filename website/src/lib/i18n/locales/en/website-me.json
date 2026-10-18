@@ -71,7 +71,7 @@
 			"wire-transfer": "Wire Transfer"
 		},
 		"status": {
-			"succeeded": "Succeeded",
+			"succeeded": "Successful",
 			"pending": "Pending",
 			"failed": "Failed",
 			"unknown": "Unknown"
@@ -157,14 +157,14 @@
 			"monthly-contribution": "Monthly contribution",
 			"total-contributions": "Total contributions",
 			"no-active-subscriptions": "No active subscriptions",
-			"active-subscriptions-count": "{count} active subscriptions",
-			"contributions-since": "{count} contributions since {date}",
+			"active-subscriptions-count": "{count, plural, one {# active subscription} other {# active subscriptions}}",
+			"contributions-since": "{count, plural, one {# contribution since {date}} other {# contributions since {date}}}",
 			"no-contributions-yet": "No contributions yet"
 		},
 		"active-subscriptions": "Active subscriptions",
 		"upcoming-payments": "Upcoming payments",
 		"scheduled": "Scheduled",
-		"per-month": "per month",
+		"per-month": "/ month",
 		"since": "since",
 		"card-fallback": "Card",
 		"cover-transaction-costs": {
@@ -182,10 +182,9 @@
 		"created": "Created",
 		"language": "Language",
 		"year": "Year",
-		"generate-certificate": "Generate Donation Certificate",
+		"generate-certificate": "Generate",
 		"no-certificates-yet": "You have no donation certificates yet. Create some by clicking \"Generate Donation Certificate\". <br></br> If you have any questions, feel free to <contact>contact us</contact>.",
 		"no-contributions": "No contributions found, so no certificate can be issued. If this seems wrong, contact contributors@socialincome.org.",
-		"already-exists": "Certificate for selected year and language already exists. If this seems wrong, please contact contributors@socialincome.org.",
 		"technical-error": "A technical error has occurred, please try again. If this continues to happen, please contact contributors@socialincome.org.",
 		"generate-dialog": {
 			"dialog_title": "Generate Donation Certificate",

@@ -1,6 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
-import type { LanguageCode } from '@/lib/types/language';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { DonationCertificateTableQuery, YourDonationCertificateTableQuery } from './donation-certificate.types';
 
@@ -65,27 +64,6 @@ export const findPaginatedContributorDonationCertificates = async (
 
 	return { certificates, totalCount };
 };
-
-export const findDonationCertificateByYearAndLanguage = async (
-	year: number,
-	contributorId: string,
-	language: LanguageCode,
-) =>
-	prisma.donationCertificate.findFirst({
-		where: {
-			year,
-			contributorId,
-			language,
-		},
-		select: {
-			id: true,
-			year: true,
-			language: true,
-			storagePath: true,
-			contributorId: true,
-			createdAt: true,
-		},
-	});
 
 const buildDonationCertificateWhere = (
 	programIds: string[],
