@@ -1,4 +1,15 @@
-import { parseCampaignsQueryParam } from './parse-campaigns-query-param';
+import { getEmailFromLoginUrl, parseCampaignsQueryParam } from './parse-campaigns-query-param';
+
+test('recovers the email and pending campaign from a Firebase link opened in another browser', () => {
+	const continueUrl = 'https://socialincome.org/de/chf/auth/confirm-login?email=ada%40example.com&campaigns=Ab12Cd34';
+	const firebaseLink = new URL('https://example.firebaseapp.com/__/auth/action');
+	firebaseLink.searchParams.set('mode', 'signIn');
+	firebaseLink.searchParams.set('oobCode', 'one-time-token');
+	firebaseLink.searchParams.set('continueUrl', continueUrl);
+
+	expect(getEmailFromLoginUrl(firebaseLink.toString())).toBe('ada@example.com');
+	expect(parseCampaignsQueryParam(firebaseLink.toString())).toEqual(['Ab12Cd34']);
+});
 
 describe('parseCampaignsQueryParam', () => {
 	test('parses a comma-separated campaigns param', () => {

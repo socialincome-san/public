@@ -24,6 +24,17 @@
 		"retry": "Use a different email",
 		"hint": "Nothing arrived? Check your spam folder."
 	},
+	"magic-link-email": {
+		"subject": "Your Social Income sign-in link",
+		"preview-text": "Use this one-time link to sign in to Social Income.",
+		"heading": "Sign in to Social Income",
+		"body": "Click below to securely sign in to your Social Income account.",
+		"button": "Sign in",
+		"security-notice": "For your security, this link can only be used once.",
+		"ignore-notice": "If you didn't request this email, you can safely ignore it.",
+		"footer": "Social Income · Unconditional basic income",
+		"archive": "A sign-in email was sent. The one-time link is [REDACTED] in this archive."
+	},
 	"confirm-login": {
 		"title": "Complete sign in",
 		"body": "Click the button below to complete sign in.",

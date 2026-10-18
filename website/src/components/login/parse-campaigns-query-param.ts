@@ -19,6 +19,22 @@ const readCampaignsParam = (searchParams: URLSearchParams): string[] => {
 	return claimIds;
 };
 
+export const getEmailFromLoginUrl = (url: string): string | null => {
+	try {
+		const searchParams = new URL(url).searchParams;
+		const email = searchParams.get('email');
+		if (email) {
+			return email;
+		}
+
+		const continueUrl = searchParams.get('continueUrl');
+
+		return continueUrl ? new URL(continueUrl).searchParams.get('email') : null;
+	} catch {
+		return null;
+	}
+};
+
 export const parseCampaignsQueryParam = (url: string): string[] => {
 	try {
 		const searchParams = new URL(url).searchParams;

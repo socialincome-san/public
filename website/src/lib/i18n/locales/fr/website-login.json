@@ -24,6 +24,17 @@
 		"retry": "Utiliser une autre adresse e-mail",
 		"hint": "Rien reçu ? Vérifie ton dossier spam."
 	},
+	"magic-link-email": {
+		"subject": "Votre lien de connexion à Social Income",
+		"preview-text": "Utilisez ce lien à usage unique pour vous connecter à Social Income.",
+		"heading": "Se connecter à Social Income",
+		"body": "Cliquez ci-dessous pour vous connecter en toute sécurité à votre compte Social Income.",
+		"button": "Se connecter",
+		"security-notice": "Pour votre sécurité, ce lien ne peut être utilisé qu'une seule fois.",
+		"ignore-notice": "Si vous n'avez pas demandé cet e-mail, vous pouvez l'ignorer.",
+		"footer": "Social Income · Revenu de base inconditionnel",
+		"archive": "Un e-mail de connexion a été envoyé. Le lien à usage unique est [REDACTED] dans cette archive."
+	},
 	"confirm-login": {
 		"title": "Terminer la connexion",
 		"body": "Clique sur le bouton ci-dessous pour terminer la connexion.",

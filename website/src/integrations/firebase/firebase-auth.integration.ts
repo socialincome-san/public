@@ -2,6 +2,21 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 import type { DecodedIdToken, UserRecord } from 'firebase-admin/auth';
 import { getFirebaseAdminAppCheck, getFirebaseAdminAuth } from './firebase-admin.integration';
 
+export const generateFirebaseSignInLink = async (email: string, continueUrl: string): Promise<Result<string>> => {
+	try {
+		return resultOk(
+			await getFirebaseAdminAuth().generateSignInWithEmailLink(email, {
+				url: continueUrl,
+				handleCodeInApp: true,
+			}),
+		);
+	} catch {
+		console.error('Could not generate Firebase sign-in link');
+
+		return resultFail('Could not generate sign-in link');
+	}
+};
+
 export const createFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<Result<FirebaseAuthUserRecord>> => {
 	try {
 		const existingUserResult = await findFirebaseUserByPhoneNumber(phoneNumber);

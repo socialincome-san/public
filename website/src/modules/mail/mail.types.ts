@@ -6,9 +6,10 @@ type SendMailTemplate = {
 export type SendMailInput = {
 	to: string | string[];
 	subject: string;
-	// Stored as the sent email body; SendGrid renders the template instead when one is given.
+	// Stored in sent-mail history; template data is rendered by SendGrid when a template is given.
 	text: string;
 	template?: SendMailTemplate;
+	sensitive?: boolean;
 };
 
 export type SentEmailTableViewRow = {
