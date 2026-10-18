@@ -71,7 +71,7 @@
 			"wire-transfer": "Virement bancaire"
 		},
 		"status": {
-			"succeeded": "Réussi",
+			"succeeded": "Payé",
 			"pending": "En attente",
 			"failed": "Échoué",
 			"unknown": "Inconnu"
@@ -157,14 +157,14 @@
 			"monthly-contribution": "Contribution mensuelle",
 			"total-contributions": "Contributions totales",
 			"no-active-subscriptions": "Aucune souscription active",
-			"active-subscriptions-count": "{count, plural, one {# souscription active} other {# souscriptions actives}}",
-			"contributions-since": "{count, plural, one {# contribution depuis le {date}} other {# contributions depuis le {date}}}",
+			"active-subscriptions-count": "{count} souscriptions actives",
+			"contributions-since": "{count} contributions depuis le {date}",
 			"no-contributions-yet": "Aucune contribution pour l'instant"
 		},
 		"active-subscriptions": "Souscriptions actives",
 		"upcoming-payments": "Paiements à venir",
 		"scheduled": "Planifié",
-		"per-month": "/ mois",
+		"per-month": "par mois",
 		"since": "depuis le",
 		"card-fallback": "Carte",
 		"cover-transaction-costs": {
@@ -182,7 +182,7 @@
 		"created": "Créé",
 		"language": "Langue",
 		"year": "Année",
-		"generate-certificate": "Générer",
+		"generate-certificate": "Générer une attestation de don",
 		"no-certificates-yet": "Tu n’as pas reçu d’attestation de don? Crée-en une en cliquant sur \"Générer une attestation de don\". <br></br> Pour toute question, prends <contact> contact avec nous</contact>.",
 		"no-contributions": "Aucune contribution trouvée, donc pas de certificat. Si tu penses que c’est une erreur, écris à contributors@socialincome.org.",
 		"technical-error": "Une erreur technique est survenue, veuillez réessayer. Si cela persiste, veuillez contacter contributors@socialincome.org.",
