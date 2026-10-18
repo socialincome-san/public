@@ -4,6 +4,7 @@ import { requireSession } from '@/server/session';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
+import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -16,24 +17,25 @@ export default async function MonitoringLayout({ children }: MonitoringLayoutPro
 	if (!user.hasAnyOperatorProgramAccess) {
 		redirect('/portal/programs');
 	}
+	const t = await getPortalOperationsTranslations();
 
 	const breadcrumbLinks = [
-		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
-		{ href: '/portal/monitoring', label: 'Monitoring' },
+		{ href: '/', label: t('navigation.website') },
+		{ href: '/portal', label: t('navigation.portal') },
+		{ href: '/portal/monitoring', label: t('monitoring.title') },
 	];
 
 	const sections = [
-		{ href: `/portal/monitoring/payout-confirmation`, label: 'Payout Confirmation' },
-		{ href: `/portal/monitoring/upcoming-surveys`, label: 'Upcoming Surveys' },
-		{ href: `/portal/monitoring/upcoming-onboarding`, label: 'Upcoming Onboarding' },
+		{ href: `/portal/monitoring/payout-confirmation`, label: t('monitoring.payout_confirmation') },
+		{ href: `/portal/monitoring/upcoming-surveys`, label: t('monitoring.upcoming_surveys') },
+		{ href: `/portal/monitoring/upcoming-onboarding`, label: t('monitoring.upcoming_onboarding') },
 	];
 
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
 			<BlockWrapper marginTop="none" marginBottom="none">
-				<h1 className="py-8 text-5xl">Monitoring</h1>
+				<h1 className="py-8 text-5xl">{t('monitoring.title')}</h1>
 
 				<TabNavigation sections={sections} />
 

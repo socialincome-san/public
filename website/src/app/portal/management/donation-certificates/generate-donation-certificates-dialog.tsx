@@ -22,6 +22,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
+import { useTranslations } from 'next-intl';
 import { useRef, useState, useTransition } from 'react';
 
 import { now } from '@/lib/utils/now';
@@ -35,6 +36,7 @@ export default function GenerateDonationCertificatesDialog({
 	open: boolean;
 	setOpen: (open: boolean) => void;
 }) {
+	const t = useTranslations('portal-management');
 	const [options, setOptions] = useState<MultiSelectOption[]>([]);
 	const [selectedContributors, setSelectedContributors] = useState<string[]>([]);
 	const [year, setYear] = useState<number>(CURRENT_YEAR - 1);
@@ -85,18 +87,16 @@ export default function GenerateDonationCertificatesDialog({
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogContent size="md">
 				<DialogHeader>
-					<DialogTitle>Generate Donation Certificates</DialogTitle>
+					<DialogTitle>{t('certificateGeneration.title')}</DialogTitle>
 				</DialogHeader>
 
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-2">
-						<p className="font-medium">Year</p>
-						<p className="text-muted-foreground mb-1 text-xs">
-							Specify for which year the certificate(s) should be generated:
-						</p>
+						<p className="font-medium">{t('certificateGeneration.year')}</p>
+						<p className="text-muted-foreground mb-1 text-xs">{t('certificateGeneration.yearDescription')}</p>
 						<Select value={year.toString()} onValueChange={(e: string) => setYear(parseInt(e))}>
 							<SelectTrigger>
-								<SelectValue placeholder={'Select Year'} />
+								<SelectValue placeholder={t('certificateGeneration.selectYear')} />
 							</SelectTrigger>
 							<SelectContent>
 								{CERTIFICATE_YEARS.map((year) => (
@@ -108,10 +108,8 @@ export default function GenerateDonationCertificatesDialog({
 						</Select>
 					</div>
 					<div className="flex flex-col gap-2">
-						<p className="font-medium">Language</p>
-						<p className="text-muted-foreground mb-1 text-xs">
-							Specify for which language the certificate(s) should be generated in:
-						</p>
+						<p className="font-medium">{t('certificateGeneration.language')}</p>
+						<p className="text-muted-foreground mb-1 text-xs">{t('certificateGeneration.languageDescription')}</p>
 						<Select
 							value={language}
 							disabled={!language}
@@ -120,7 +118,7 @@ export default function GenerateDonationCertificatesDialog({
 							}
 						>
 							<SelectTrigger>
-								<SelectValue placeholder={'Select language'} />
+								<SelectValue placeholder={t('certificateGeneration.selectLanguage')} />
 							</SelectTrigger>
 							<SelectContent>
 								{LANGUAGES.map((language) => (
@@ -133,24 +131,24 @@ export default function GenerateDonationCertificatesDialog({
 						<div className="flex flex-row gap-4">
 							<Switch onCheckedChange={(checked: boolean) => setLanguage(checked ? undefined : DEFAULT_LANGUAGE)} />
 							<p className="text-muted-foreground mb-1 text-sm">
-								Create certificate in contributor language if available (&quot;{DEFAULT_LANGUAGE}&quot; as fallback)
+								{t('certificateGeneration.contributorLanguage', { language: DEFAULT_LANGUAGE })}
 							</p>
 						</div>
 					</div>
 					<div className="flex flex-col gap-2">
-						<p className="font-medium">Contributors</p>
-						<p className="text-muted-foreground mb-1 text-xs">Select Contributors certificates should be generated for</p>
+						<p className="font-medium">{t('certificateGeneration.contributors')}</p>
+						<p className="text-muted-foreground mb-1 text-xs">{t('certificateGeneration.contributorsDescription')}</p>
 						<MultiSelect
 							modalPopover
 							hideSelectAll
 							variant={'default'}
 							options={options}
 							onValueChange={setSelectedContributors}
-							placeholder="Select contributors"
+							placeholder={t('certificateGeneration.selectContributors')}
 						/>
 					</div>
 					<Button disabled={isLoading || !selectedContributors.length} fullWidth onClick={() => generateCertificates()}>
-						{isLoading ? 'Generating...' : 'Generate Certificates'}
+						{isLoading ? t('certificateGeneration.generating') : t('certificateGeneration.generate')}
 					</Button>
 					{Boolean(success ?? error) && (
 						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
@@ -162,7 +160,7 @@ export default function GenerateDonationCertificatesDialog({
 
 				<DialogFooter>
 					<Button variant="outline" onClick={() => setOpen(false)}>
-						Close
+						{t('certificateGeneration.close')}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

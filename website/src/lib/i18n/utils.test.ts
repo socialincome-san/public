@@ -1,5 +1,12 @@
 import { NextRequest } from 'next/server';
-import { findBestLocale, getWebsiteBasePath, parseCurrencySegment, toCurrencySegment, toWebsiteCurrency } from './utils';
+import {
+	findBestLocale,
+	getPortalLanguage,
+	getWebsiteBasePath,
+	parseCurrencySegment,
+	toCurrencySegment,
+	toWebsiteCurrency,
+} from './utils';
 
 const request = (headers: Record<string, string>) => new NextRequest('https://socialincome.org/', { headers });
 
@@ -36,5 +43,16 @@ describe('findBestLocale', () => {
 			currency: 'USD',
 		});
 		expect(findBestLocale(request({}))).toEqual({ language: 'en', currency: 'USD' });
+	});
+});
+
+describe('getPortalLanguage', () => {
+	test('accepts the four portal languages and falls back for unsupported preferences', () => {
+		expect(getPortalLanguage('de')).toBe('de');
+		expect(getPortalLanguage('fr')).toBe('fr');
+		expect(getPortalLanguage('it')).toBe('it');
+		expect(getPortalLanguage('en')).toBe('en');
+		expect(getPortalLanguage('kri')).toBe('en');
+		expect(getPortalLanguage(null)).toBe('en');
 	});
 });

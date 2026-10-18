@@ -1,5 +1,6 @@
 'use client';
 
+import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { cn } from '@socialincome/design-system/cn';
 import { UploadIcon } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export const CsvDropzone = ({ onFileSelected }: Props) => {
+	const { t } = usePortalSharedTranslations();
 	const onDrop = (files: File[]) => {
 		const file = files[0];
 
@@ -37,9 +39,9 @@ export const CsvDropzone = ({ onFileSelected }: Props) => {
 
 			<UploadIcon className="text-muted-foreground mb-3 h-7 w-7" />
 
-			<p className="text-sm font-medium">Drag & drop a CSV here</p>
+			<p className="text-sm font-medium">{t('csv.dragAndDrop', 'Drag & drop a CSV here')}</p>
 
-			<p className="text-muted-foreground mt-1 text-xs">or click to select a file</p>
+			<p className="text-muted-foreground mt-1 text-xs">{t('csv.orClickToSelect', 'or click to select a file')}</p>
 		</div>
 	);
 };

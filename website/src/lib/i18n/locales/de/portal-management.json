@@ -1,0 +1,208 @@
+{
+	"navigation": {
+		"website": "Website",
+		"portal": "Portal",
+		"management": "Verwaltung",
+		"recipients": "Empfänger:innen",
+		"ongoingPayouts": "Laufende Auszahlungen",
+		"surveys": "Umfragen",
+		"contributors": "Unterstützer:innen",
+		"contributions": "Beiträge",
+		"subscriptions": "Abonnements",
+		"donationCertificates": "Spendenbescheinigungen",
+		"campaigns": "Kampagnen"
+	},
+	"tables": {
+		"campaigns": {
+			"title": "Kampagnen",
+			"empty": "Keine Kampagnen gefunden",
+			"tooltip": "Zeigt Kampagnen deiner aktiven Organisation."
+		},
+		"contributions": {
+			"title": "Beiträge",
+			"empty": "Keine Beiträge gefunden",
+			"tooltip": "Zeigt Beiträge im Bereich deiner aktiven Organisation."
+		},
+		"contributors": {
+			"title": "Unterstützer:innen",
+			"empty": "Keine Unterstützer:innen gefunden",
+			"tooltip": "Zeigt Unterstützer:innen im Bereich deiner aktiven Organisation."
+		},
+		"donationCertificates": {
+			"title": "Spendenbescheinigungen",
+			"empty": "Keine Spendenbescheinigungen gefunden",
+			"tooltip": "Zeigt Spendenbescheinigungen für Unterstützer:innen deiner aktiven Organisation."
+		},
+		"ongoingPayouts": {
+			"title": "Laufende Auszahlungen",
+			"empty": "Keine laufenden Auszahlungen gefunden",
+			"tooltip": "Zeigt den Fortschritt laufender Auszahlungen an Empfänger:innen in Programmen, auf die du zugreifen kannst."
+		},
+		"subscriptions": {
+			"title": "Abonnements",
+			"empty": "Keine Abonnements gefunden",
+			"tooltip": "Zeigt Abonnements im Bereich deiner aktiven Organisation."
+		},
+		"surveys": {
+			"title": "Umfragen",
+			"empty": "Keine Umfragen gefunden",
+			"tooltip": "Zeigt Umfragen für Programme, auf die du zugreifen kannst."
+		}
+	},
+	"columns": {
+		"amount": "Betrag",
+		"bankStandingOrderReference": "Referenz des Bank-Dauerauftrags",
+		"campaignTitle": "Kampagne",
+		"cancellationReason": "Kündigungsgrund",
+		"completedAt": "Abgeschlossen",
+		"contributor": "Unterstützer:in",
+		"country": "Land",
+		"createdAt": "Erstellt",
+		"currency": "Währung",
+		"dueAt": "Fällig am",
+		"email": "E-Mail",
+		"endDate": "Enddatum",
+		"firebaseAuthUserId": "Firebase-Auth-Benutzer-ID",
+		"isActive": "Status",
+		"language": "Sprache",
+		"link": "Link",
+		"name": "Name",
+		"paymentMethod": "Zahlungsmethode",
+		"programName": "Programm",
+		"questionnaire": "Fragebogen",
+		"payoutsProgressPercent": "Fortschritt",
+		"recipient": "Empfänger:in",
+		"recipientName": "Empfänger:in",
+		"status": "Status",
+		"storagePath": "Speicherpfad",
+		"stripeSubscriptionId": "Stripe-ID",
+		"surveyUrl": "URL kopieren",
+		"title": "Titel",
+		"totalContributedChf": "Beigetragen (CHF)",
+		"year": "Jahr"
+	},
+	"filters": {
+		"campaign": { "label": "Kampagne", "all": "Alle Kampagnen" },
+		"contributor": { "label": "Unterstützer:in", "all": "Alle Unterstützer:innen" },
+		"country": { "label": "Land", "all": "Alle Länder" },
+		"paymentType": { "label": "Zahlungsart", "all": "Alle Zahlungsarten" },
+		"program": { "label": "Programm", "all": "Alle Programme" },
+		"recipient": { "label": "Empfänger:in", "all": "Alle Empfänger:innen" }
+	},
+	"actions": {
+		"addContribution": "Beitrag hinzufügen",
+		"addContributor": "Unterstützer:in hinzufügen",
+		"addSurvey": "Umfrage hinzufügen",
+		"generateDonationCertificates": "Spendenbescheinigungen erstellen",
+		"generateSurveys": "Umfragen erstellen"
+	},
+	"dialogs": {
+		"error": "Fehler",
+		"details": "Details",
+		"auditLog": "Änderungsprotokoll",
+		"editContributor": "Unterstützer:in bearbeiten",
+		"newContributor": "Neue:r Unterstützer:in",
+		"editContribution": "Beitrag bearbeiten",
+		"addContribution": "Beitrag hinzufügen",
+		"editSurvey": "Umfrage bearbeiten",
+		"addSurvey": "Umfrage hinzufügen",
+		"surveyGenerationTitle": "Umfrageerstellung",
+		"close": "Schließen",
+		"saveContributionError": "Fehler beim Speichern des Beitrags: {message}",
+		"saveContributorError": "Fehler beim Speichern der unterstützenden Person: {message}",
+		"saveSurveyError": "Fehler beim Speichern der Umfrage: {message}"
+	},
+	"forms": {
+		"contact": {
+			"section": "Kontakt",
+			"firstName": "Vorname",
+			"lastName": "Nachname",
+			"callingName": "Rufname",
+			"email": "E-Mail",
+			"language": "Sprache",
+			"dateOfBirth": "Geburtsdatum",
+			"profession": "Beruf",
+			"gender": "Geschlecht",
+			"phone": "Telefonnummer",
+			"hasWhatsApp": "WhatsApp vorhanden",
+			"street": "Strasse",
+			"number": "Hausnummer",
+			"city": "Ort",
+			"zip": "Postleitzahl",
+			"country": "Land",
+			"chooseGender": "Geschlecht auswählen"
+		},
+		"contribution": {
+			"section": "Beitrag",
+			"amount": "Betrag",
+			"amountPlaceholder": "Beitragsbetrag",
+			"currency": "Währungscode",
+			"selectCurrency": "Währung auswählen",
+			"amountChf": "Betrag CHF",
+			"amountChfPlaceholder": "Beitragsbetrag in CHF",
+			"feesChf": "Gebühren CHF",
+			"feesChfPlaceholder": "Beitragsgebühren in CHF",
+			"contributor": "Unterstützer:in",
+			"selectContributor": "Unterstützer:in auswählen",
+			"status": "Status",
+			"statusPlaceholder": "Beitragsstatus",
+			"campaign": "Kampagne",
+			"selectCampaign": "Kampagne auswählen"
+		},
+		"contributor": {
+			"section": "Unterstützer:in",
+			"referral": "Empfehlung",
+			"paymentReferenceId": "Zahlungsreferenz-ID",
+			"stripeCustomerId": "Stripe-Kund:innen-ID"
+		},
+		"survey": {
+			"section": "Umfrage",
+			"name": "Name",
+			"namePlaceholder": "Name der Umfrage",
+			"recipient": "Empfänger:in",
+			"questionnaire": "Fragebogen",
+			"language": "Sprache",
+			"dueDate": "Fälligkeitsdatum",
+			"status": "Status",
+			"accessEmail": "Zugangs-E-Mail",
+			"accessPassword": "Zugangspasswort"
+		}
+	},
+	"validation": {
+		"nameRequired": "Name ist erforderlich",
+		"amountPositive": "Der Betrag muss positiv sein",
+		"feesPositive": "Die Gebühren müssen positiv sein",
+		"emailInvalid": "Gib eine gültige E-Mail-Adresse ein",
+		"dateOutOfRange": "Gib ein Datum zwischen 2020 und 2050 ein",
+		"surveyLoading": "Die Umfrage wird noch geladen. Bitte versuche es erneut.",
+		"contributorLoading": "Die unterstützende Person wird noch geladen. Bitte versuche es erneut.",
+		"contributionLoading": "Der Beitrag wird noch geladen. Bitte versuche es erneut."
+	},
+	"certificateGeneration": {
+		"title": "Spendenbescheinigungen erstellen",
+		"year": "Jahr",
+		"yearDescription": "Lege fest, für welches Jahr die Bescheinigung(en) erstellt werden sollen:",
+		"selectYear": "Jahr auswählen",
+		"language": "Sprache",
+		"languageDescription": "Lege fest, in welcher Sprache die Bescheinigung(en) erstellt werden sollen:",
+		"selectLanguage": "Sprache auswählen",
+		"contributorLanguage": "Bescheinigung nach Möglichkeit in der Sprache der unterstützenden Person erstellen (\"{language}\" als Ersatz)",
+		"contributors": "Unterstützer:innen",
+		"contributorsDescription": "Wähle die Unterstützer:innen aus, für die Bescheinigungen erstellt werden sollen",
+		"selectContributors": "Unterstützer:innen auswählen",
+		"generating": "Wird erstellt …",
+		"generate": "Bescheinigungen erstellen",
+		"close": "Schließen"
+	},
+	"surveyGeneration": {
+		"previewTitle": "Umfrageerstellung anzeigen",
+		"previewLabel": "Umfrageerstellung anzeigen (keine Änderungen)",
+		"previewDescription": "Zeigt, welche Umfragen für Empfänger:innen erstellt würden; es werden noch keine Daten gespeichert.",
+		"generateTitle": "Umfragen erstellen",
+		"generateLabel": "Umfragen erstellen (Änderungen übernehmen)",
+		"generateDescription": "Erstellt Umfragen für alle berechtigten Empfänger:innen in der Datenbank.",
+		"step": "Schritt {number}: {title}",
+		"unknownError": "Unbekannter Fehler",
+		"close": "Schließen"
+	}
+}

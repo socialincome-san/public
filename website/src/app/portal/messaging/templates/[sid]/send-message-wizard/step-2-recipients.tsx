@@ -1,6 +1,7 @@
 'use client';
 
 import type { MessagingRecipientFilters, SelectionState } from '@/modules/messaging/messaging.types';
+import { useTranslations } from 'next-intl';
 import { RecipientsTable, type RecipientsTableQuery } from './recipients-table';
 import { emptySelection } from './selection';
 import type { ResetReason } from './types';
@@ -24,6 +25,7 @@ export const Step2Recipients = ({
 	onLastResetReasonChange,
 	onTotalCountChange,
 }: Step2RecipientsProps) => {
+	const t = useTranslations('portal-messaging');
 	const handleSearchChange = (search: string) => {
 		onQueryChange({ ...query, page: 1, search });
 		if (selection.mode === 'all-matching') {
@@ -47,9 +49,9 @@ export const Step2Recipients = ({
 
 	const notice =
 		lastResetReason === 'search-change'
-			? 'Selection cleared because the search changed.'
+			? t('wizard.recipients.searchChanged')
 			: lastResetReason === 'filter-change'
-				? 'Selection cleared because the filters changed.'
+				? t('wizard.recipients.filtersChanged')
 				: undefined;
 
 	return (

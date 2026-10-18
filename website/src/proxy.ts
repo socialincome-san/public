@@ -2,6 +2,7 @@ import {
 	findBestLocale,
 	isWebsiteLanguage,
 	parseCurrencySegment,
+	PORTAL_ROUTE_HEADER,
 	toCurrencySegment,
 	type WebsiteCurrency,
 } from '@/lib/i18n/utils';
@@ -11,6 +12,7 @@ export const config = {
 	matcher: [
 		// Skip internal paths (_next)
 		'/((?!api|_next/static|_next/image|assets|fonts|favicon.ico|sw.js|portal|partner-space|v1/api-docs|openapi.json|sitemap.xml|robots.txt|llms.txt).*)',
+		'/portal/:path*',
 	],
 };
 
@@ -33,6 +35,13 @@ const redirectToPath = (request: NextRequest, pathname: string, status: 307 | 30
  */
 export const proxy = (request: NextRequest) => {
 	const { pathname } = request.nextUrl;
+	if (pathname === '/portal' || pathname.startsWith('/portal/')) {
+		const requestHeaders = new Headers(request.headers);
+		requestHeaders.set(PORTAL_ROUTE_HEADER, 'true');
+
+		return NextResponse.next({ request: { headers: requestHeaders } });
+	}
+
 	const [, language = '', segment = ''] = pathname.split('/');
 
 	if (!isWebsiteLanguage(language)) {

@@ -1,5 +1,6 @@
 'use client';
 
+import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationMembersTableConfig } from '@/components/data-table/configs/organization-members-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
@@ -25,16 +26,15 @@ type MembersTableProps = {
 	query?: TableQueryState & { totalRows: number };
 };
 
-const renameOrganizationSchema = z.object({
-	name: z.string().trim().min(1, 'Organization name is required.'),
-});
-
-type RenameOrganizationFormValues = z.infer<typeof renameOrganizationSchema>;
-
 export default function MembersTable({ rows, error, organizationName, query }: MembersTableProps) {
+	const t = usePortalOperationsTranslations();
 	const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [isPending, startTransition] = useTransition();
+	const renameOrganizationSchema = z.object({
+		name: z.string().trim().min(1, t('profile.organization_name_required')),
+	});
+	type RenameOrganizationFormValues = z.infer<typeof renameOrganizationSchema>;
 	const form = useForm<RenameOrganizationFormValues>({
 		resolver: zodResolver(renameOrganizationSchema),
 		defaultValues: {
@@ -44,7 +44,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 
 	const actionMenuItems = [
 		{
-			label: 'Rename organization',
+			label: t('profile.rename_organization'),
 			icon: <PencilIcon className="size-4" />,
 			onSelect: () => {
 				setErrorMessage(null);
@@ -63,7 +63,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 					setErrorMessage(null);
 				},
 				onError: (renameError) => {
-					setErrorMessage(`Error renaming organization: ${retrieveErrorMessage(renameError)}`);
+					setErrorMessage(t('profile.error_renaming_organization', { message: retrieveErrorMessage(renameError) }));
 					console.error('Rename Organization Error', { error: renameError });
 				},
 			});
@@ -73,8 +73,11 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={{ ...organizationMembersTableConfig, title: `Members of ${organizationName}` }}
-				titleInfoTooltip="Shows members of your active organization."
+				config={{
+					...organizationMembersTableConfig,
+					title: t('profile.members_of_organization', { name: organizationName }),
+				}}
+				titleInfoTooltip={t('profile.members_info')}
 				rows={rows}
 				error={error}
 				query={query}
@@ -84,12 +87,12 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 			<Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>Rename organization</DialogTitle>
+						<DialogTitle>{t('profile.rename_organization')}</DialogTitle>
 					</DialogHeader>
 
 					{errorMessage && (
 						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
+							<AlertTitle>{t('common.error')}</AlertTitle>
 							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
@@ -101,7 +104,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 								name="name"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Organization name</FormLabel>
+										<FormLabel>{t('profile.organization_name')}</FormLabel>
 										<FormControl>
 											<Input {...field} disabled={isPending} />
 										</FormControl>
@@ -112,10 +115,10 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 
 							<div className="flex justify-end gap-2">
 								<Button type="button" variant="outline" onClick={() => setIsRenameDialogOpen(false)} disabled={isPending}>
-									Cancel
+									{t('common.cancel')}
 								</Button>
 								<Button type="submit" disabled={isPending}>
-									Save
+									{t('common.save')}
 								</Button>
 							</div>
 						</form>

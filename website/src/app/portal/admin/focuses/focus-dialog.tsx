@@ -10,6 +10,7 @@ import { getProgramTableViewAction } from '@/modules/programs/program.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
+import { useTranslations } from 'next-intl';
 import FocusesForm from './focuses-form';
 
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export const FocusDialog = ({ open, onOpenChange, focusId, errorMessage, onError }: Props) => {
+	const t = useTranslations('portal-admin');
 	const handleError = (error: unknown) => {
 		const action = focusId ? 'updating/deleting' : 'creating';
 		const message = retrieveErrorMessage(error);
@@ -32,7 +34,7 @@ export const FocusDialog = ({ open, onOpenChange, focusId, errorMessage, onError
 		<>
 			{errorMessage && (
 				<Alert variant="destructive">
-					<AlertTitle>Error</AlertTitle>
+					<AlertTitle>{t('common.error')}</AlertTitle>
 					<AlertDescription>{errorMessage}</AlertDescription>
 				</Alert>
 			)}
@@ -50,12 +52,12 @@ export const FocusDialog = ({ open, onOpenChange, focusId, errorMessage, onError
 			<TabbedDialog
 				open={open}
 				onOpenChange={onOpenChange}
-				title="Edit focus"
+				title={t('dialog.editFocus')}
 				tabs={[
-					{ value: 'details', label: 'Details', content: form },
+					{ value: 'details', label: t('common.details'), content: form },
 					{
 						value: 'programs',
-						label: 'Programs',
+						label: t('common.programs'),
 						content: (
 							<RecordTableTab
 								config={focusProgramsTableConfig}
@@ -66,7 +68,7 @@ export const FocusDialog = ({ open, onOpenChange, focusId, errorMessage, onError
 					},
 					{
 						value: 'local-partners',
-						label: 'Local partners',
+						label: t('common.localPartners'),
 						content: (
 							<RecordTableTab
 								config={focusLocalPartnersTableConfig}
@@ -87,7 +89,7 @@ export const FocusDialog = ({ open, onOpenChange, focusId, errorMessage, onError
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent size="lg">
 				<DialogHeader>
-					<DialogTitle>Add focus</DialogTitle>
+					<DialogTitle>{t('dialog.addFocus')}</DialogTitle>
 				</DialogHeader>
 				{form}
 			</DialogContent>

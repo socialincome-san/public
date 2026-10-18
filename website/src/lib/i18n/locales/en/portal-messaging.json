@@ -1,0 +1,229 @@
+{
+	"common": {
+		"loading": "Loading…",
+		"errorDetails": "Error: {error}",
+		"noBody": "No message body",
+		"viewInTwilio": "View in Twilio",
+		"openInTwilio": "Open in Twilio console",
+		"via": "via",
+		"search": "Search…",
+		"pageOf": "Page {page} of {totalPages}",
+		"previous": "Previous",
+		"next": "Next",
+		"previousPage": "Previous page",
+		"nextPage": "Next page",
+		"channels": {
+			"sms": "SMS",
+			"whatsapp": "WhatsApp"
+		}
+	},
+	"layout": {
+		"title": "Messaging",
+		"website": "Website",
+		"portal": "Portal",
+		"templates": "Templates",
+		"deliveryLog": "Delivery log"
+	},
+	"templates": {
+		"empty": "No content templates found.",
+		"back": "Back to templates",
+		"columns": {
+			"name": "Name",
+			"sid": "SID",
+			"language": "Language",
+			"type": "Type",
+			"whatsapp": "WhatsApp"
+		},
+		"summary": {
+			"contentType": "Content type",
+			"variables": "Variables",
+			"supportedChannels": "Supported channels",
+			"messageBody": "Message body"
+		}
+	},
+	"wizard": {
+		"title": "Send",
+		"actions": {
+			"sendMessage": "Send message",
+			"done": "Done",
+			"back": "Back",
+			"next": "Next",
+			"clear": "Clear"
+		},
+		"steps": {
+			"recipientType": {
+				"label": "Type",
+				"title": "Message recipients & channel",
+				"description": "Choose who receives this message and how it is delivered."
+			},
+			"recipients": {
+				"label": "Message recipients",
+				"title": "Select message recipients",
+				"description": "Search and pick who to include."
+			},
+			"personalize": {
+				"label": "Personalize",
+				"title": "Personalize",
+				"description": "Fill each template variable from a recipient field or a fixed value."
+			},
+			"review": {
+				"label": "Review",
+				"title": "Review & send",
+				"description": "Confirm the audience and message before it goes out."
+			}
+		},
+		"progress": {
+			"label": "Progress",
+			"sending": "Sending…",
+			"sendingMessage": "Sending your message…",
+			"keepOpen": "This can take a moment. Please keep this open.",
+			"sendFailed": "Send failed",
+			"sent": "Sent",
+			"viaFallback": "{count, plural, one {# via fallback} other {# via fallback}}",
+			"failed": "Failed",
+			"skipped": "Skipped",
+			"noPhone": "no phone number",
+			"deliveredSoFar": "Delivered so far",
+			"deliveryUpdatesDelayed": "updates from Twilio after a short delay",
+			"sendComplete": "Send complete",
+			"dispatchedVia": "Your message was dispatched via {channel}.",
+			"resultsUnavailable": "The send went out, but its result summary couldn’t be loaded. Check the delivery log for the outcome — don’t re-send.",
+			"unexpectedError": "The send could not be completed."
+		},
+		"recipientType": "Recipient type",
+		"recipientTypes": {
+			"contributor": "Contributor",
+			"recipient": "Recipient",
+			"localPartner": "Local partner"
+		},
+		"channel": "Channel",
+		"channelNotAvailable": "Not available for this template",
+		"phone": {
+			"title": "Phone number",
+			"contact": "Contact phone",
+			"contactShort": "contact phone",
+			"contactHint": "Number used for communication",
+			"payment": "Payment phone",
+			"paymentShort": "payment phone",
+			"paymentHint": "Mobile money number used for payouts",
+			"fallbackAllowed": "Use the other phone when the chosen one is missing"
+		},
+		"recipients": {
+			"searchChanged": "Selection cleared because the search changed.",
+			"filtersChanged": "Selection cleared because the filters changed.",
+			"filters": "Filters",
+			"filterResults": "Filter results",
+			"program": "Program",
+			"allPrograms": "All programs",
+			"status": "Status",
+			"allStatuses": "All statuses",
+			"country": "Country",
+			"allCountries": "All countries",
+			"noOptions": "No options available",
+			"noEntries": "No entries.",
+			"selectPage": "Select all rows on this page",
+			"name": "Name",
+			"details": "Details",
+			"selectRow": "Select {name}",
+			"allSelected": "All {count} selected",
+			"selected": "{count} selected",
+			"selectAll": "Select all {count}",
+			"count": "{count, plural, one {# recipient} other {# recipients}}"
+		},
+		"assignments": {
+			"field": "Field",
+			"constant": "Constant",
+			"selectField": "Select field…",
+			"constantPlaceholder": "Constant value",
+			"noVariables": "This template has no variables to personalize."
+		},
+		"fields": {
+			"firstName": "First name",
+			"lastName": "Last name",
+			"callingName": "Calling name",
+			"email": "Email",
+			"gender": "Gender",
+			"language": "Language",
+			"dateOfBirth": "Date of birth",
+			"profession": "Profession"
+		},
+		"review": {
+			"sendingTo": "{count, plural, one {Sending to # recipient} other {Sending to # recipients}}",
+			"onPhone": "on their {phone}",
+			"skippedNoPhone": "Skipped — no phone number",
+			"skippedNoPhoneFor": "Skipped — no {phone} number",
+			"breakdownError": "Couldn’t calculate the delivery breakdown: {error}",
+			"deliveredVia": "Delivered via {channel}",
+			"fallingBackTo": "Falling back to {channel}",
+			"messagePreview": "Message preview"
+		}
+	},
+	"deliveryLog": {
+		"noJobs": "No messaging jobs yet.",
+		"noJobsOnPage": "No jobs on this page.",
+		"back": "Back to delivery log",
+		"messageRecipients": "Message recipients",
+		"columns": {
+			"template": "Template",
+			"channel": "Channel",
+			"sent": "Sent",
+			"status": "Status",
+			"started": "Started",
+			"by": "By",
+			"contact": "Contact",
+			"error": "Error"
+		},
+		"jobCount": "{count, plural, one {# job} other {# jobs}}",
+		"noMessages": "No messages for this job.",
+		"noMessagesOnPage": "No messages on this page.",
+		"messageStatus": {
+			"skipped": "Skipped ({reason})",
+			"noPhone": "no phone number",
+			"noChannelAvailable": "no channel available"
+		},
+		"messageCount": "{count, plural, one {# message} other {# messages}}",
+		"fallback": "fallback",
+		"summary": {
+			"recipientType": "Recipient type",
+			"totalSelected": "Total selected",
+			"delivered": "Delivered",
+			"started": "Started",
+			"finished": "Finished"
+		},
+		"templateBodyError": "Couldn’t load template body: {error}",
+		"sync": {
+			"updated": "Updated {updated} of {checked}",
+			"actionError": "Could not update status: {error}",
+			"error": "Could not refresh status. Please try again.",
+			"button": "Refresh status from Twilio"
+		}
+	},
+	"status": {
+		"jobs": {
+			"completed": "Completed",
+			"running": "Running",
+			"failed": "Failed",
+			"interrupted": "Interrupted"
+		},
+		"messages": {
+			"delivered": "Delivered",
+			"sent": "Sent",
+			"queued": "Queued",
+			"accepted": "Accepted",
+			"scheduled": "Scheduled",
+			"sending": "Sending",
+			"receiving": "Receiving",
+			"received": "Received",
+			"read": "Read",
+			"canceled": "Canceled",
+			"failed": "Failed",
+			"undelivered": "Undelivered",
+			"skipped": "Skipped"
+		},
+		"templates": {
+			"approved": "Approved",
+			"rejected": "Rejected",
+			"pending": "Pending"
+		}
+	}
+}

@@ -1,0 +1,208 @@
+{
+	"navigation": {
+		"website": "Website",
+		"portal": "Portal",
+		"management": "Management",
+		"recipients": "Recipients",
+		"ongoingPayouts": "Ongoing Payouts",
+		"surveys": "Surveys",
+		"contributors": "Contributors",
+		"contributions": "Contributions",
+		"subscriptions": "Subscriptions",
+		"donationCertificates": "Donation Certificates",
+		"campaigns": "Campaigns"
+	},
+	"tables": {
+		"campaigns": {
+			"title": "Campaigns",
+			"empty": "No campaigns found",
+			"tooltip": "Shows campaigns belonging to your active organization."
+		},
+		"contributions": {
+			"title": "Contributions",
+			"empty": "No contributions found",
+			"tooltip": "Shows contributions in your active organization scope."
+		},
+		"contributors": {
+			"title": "Contributors",
+			"empty": "No contributors found",
+			"tooltip": "Shows contributors in your active organization scope."
+		},
+		"donationCertificates": {
+			"title": "Donation Certificates",
+			"empty": "No donation certificates found",
+			"tooltip": "Shows donation certificates available for contributors in your active organization."
+		},
+		"ongoingPayouts": {
+			"title": "Ongoing Payouts",
+			"empty": "No ongoing payouts found",
+			"tooltip": "Shows ongoing payout progress for recipients in programs you can access."
+		},
+		"subscriptions": {
+			"title": "Subscriptions",
+			"empty": "No subscriptions found",
+			"tooltip": "Shows subscriptions in your active organization scope."
+		},
+		"surveys": {
+			"title": "Surveys",
+			"empty": "No surveys found",
+			"tooltip": "Shows surveys for programs you can access."
+		}
+	},
+	"columns": {
+		"amount": "Amount",
+		"bankStandingOrderReference": "Bank standing-order reference",
+		"campaignTitle": "Campaign",
+		"cancellationReason": "Cancellation reason",
+		"completedAt": "Completed",
+		"contributor": "Contributor",
+		"country": "Country",
+		"createdAt": "Created",
+		"currency": "Currency",
+		"dueAt": "Due date",
+		"email": "Email",
+		"endDate": "End date",
+		"firebaseAuthUserId": "Firebase Auth User ID",
+		"isActive": "Status",
+		"language": "Language",
+		"link": "Link",
+		"name": "Name",
+		"paymentMethod": "Payment method",
+		"programName": "Program",
+		"questionnaire": "Questionnaire",
+		"payoutsProgressPercent": "Progress",
+		"recipient": "Recipient",
+		"recipientName": "Recipient",
+		"status": "Status",
+		"storagePath": "Storage path",
+		"stripeSubscriptionId": "Stripe ID",
+		"surveyUrl": "Copy URL",
+		"title": "Title",
+		"totalContributedChf": "Contributed (CHF)",
+		"year": "Year"
+	},
+	"filters": {
+		"campaign": { "label": "Campaign", "all": "All campaigns" },
+		"contributor": { "label": "Contributor", "all": "All contributors" },
+		"country": { "label": "Country", "all": "All countries" },
+		"paymentType": { "label": "Payment type", "all": "All payment types" },
+		"program": { "label": "Program", "all": "All programs" },
+		"recipient": { "label": "Recipient", "all": "All recipients" }
+	},
+	"actions": {
+		"addContribution": "Add contribution",
+		"addContributor": "Add new contributor",
+		"addSurvey": "Add survey",
+		"generateDonationCertificates": "Generate Donation Certificates",
+		"generateSurveys": "Generate surveys"
+	},
+	"dialogs": {
+		"error": "Error",
+		"details": "Details",
+		"auditLog": "Audit log",
+		"editContributor": "Edit Contributor",
+		"newContributor": "New Contributor",
+		"editContribution": "Edit Contribution",
+		"addContribution": "Add Contribution",
+		"editSurvey": "Edit Survey",
+		"addSurvey": "Add Survey",
+		"surveyGenerationTitle": "Survey generation process",
+		"close": "Close",
+		"saveContributionError": "Error saving contribution: {message}",
+		"saveContributorError": "Error saving contributor: {message}",
+		"saveSurveyError": "Error saving survey: {message}"
+	},
+	"forms": {
+		"contact": {
+			"section": "Contact",
+			"firstName": "First name",
+			"lastName": "Last name",
+			"callingName": "Calling name",
+			"email": "Email",
+			"language": "Language",
+			"dateOfBirth": "Date of birth",
+			"profession": "Profession",
+			"gender": "Gender",
+			"phone": "Phone number",
+			"hasWhatsApp": "Has WhatsApp",
+			"street": "Street address",
+			"number": "Street number",
+			"city": "City",
+			"zip": "Postal code",
+			"country": "Country",
+			"chooseGender": "Choose gender"
+		},
+		"contribution": {
+			"section": "Contribution",
+			"amount": "Amount",
+			"amountPlaceholder": "Contribution amount",
+			"currency": "Currency code",
+			"selectCurrency": "Select currency",
+			"amountChf": "Amount CHF",
+			"amountChfPlaceholder": "Contribution amount in CHF",
+			"feesChf": "Fees CHF",
+			"feesChfPlaceholder": "Contribution fees in CHF",
+			"contributor": "Contributor",
+			"selectContributor": "Select contributor",
+			"status": "Status",
+			"statusPlaceholder": "Contribution status",
+			"campaign": "Campaign",
+			"selectCampaign": "Select campaign"
+		},
+		"contributor": {
+			"section": "Contributor",
+			"referral": "Referral",
+			"paymentReferenceId": "Payment Reference ID",
+			"stripeCustomerId": "Stripe Customer ID"
+		},
+		"survey": {
+			"section": "Survey",
+			"name": "Name",
+			"namePlaceholder": "Survey name",
+			"recipient": "Recipient",
+			"questionnaire": "Questionnaire",
+			"language": "Language",
+			"dueDate": "Due date",
+			"status": "Status",
+			"accessEmail": "Access email",
+			"accessPassword": "Access password"
+		}
+	},
+	"validation": {
+		"nameRequired": "Name is required",
+		"amountPositive": "Amount must be positive",
+		"feesPositive": "Fees must be positive",
+		"emailInvalid": "Enter a valid email address",
+		"dateOutOfRange": "Enter a date between 2020 and 2050",
+		"surveyLoading": "Survey is still loading. Please try again.",
+		"contributorLoading": "Contributor is still loading. Please try again.",
+		"contributionLoading": "Contribution is still loading. Please try again."
+	},
+	"certificateGeneration": {
+		"title": "Generate Donation Certificates",
+		"year": "Year",
+		"yearDescription": "Specify the year for which the certificate(s) should be generated:",
+		"selectYear": "Select year",
+		"language": "Language",
+		"languageDescription": "Specify the language in which the certificate(s) should be generated:",
+		"selectLanguage": "Select language",
+		"contributorLanguage": "Create the certificate in the contributor's language if available (\"{language}\" as fallback)",
+		"contributors": "Contributors",
+		"contributorsDescription": "Select the contributors for whom certificates should be generated",
+		"selectContributors": "Select contributors",
+		"generating": "Generating...",
+		"generate": "Generate certificates",
+		"close": "Close"
+	},
+	"surveyGeneration": {
+		"previewTitle": "Preview survey generation",
+		"previewLabel": "Preview survey generation (no changes)",
+		"previewDescription": "Shows which surveys would be created for recipients; nothing will be written yet.",
+		"generateTitle": "Generate surveys",
+		"generateLabel": "Generate surveys (apply changes)",
+		"generateDescription": "Creates surveys in the database for all eligible recipients.",
+		"step": "Step {number}: {title}",
+		"unknownError": "Unknown error",
+		"close": "Close"
+	}
+}

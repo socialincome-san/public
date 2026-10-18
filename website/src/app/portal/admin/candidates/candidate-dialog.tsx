@@ -5,6 +5,7 @@ import { RecordDialog } from '@/components/data-table/clients/record-dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { Session } from '@/modules/auth/auth.types';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { useTranslations } from 'next-intl';
 import { CandidateForm } from './candidates-form';
 
 type Props = {
@@ -17,9 +18,10 @@ type Props = {
 };
 
 export const CandidateDialog = ({ open, onOpenChange, candidateId, sessionType, errorMessage, onError }: Props) => {
+	const t = useTranslations('portal-admin');
 	const handleError = (error: unknown) => {
 		const errorMessage = retrieveErrorMessage(error);
-		onError(`Error saving candidate: ${errorMessage}`);
+		onError(t('status.errorSavingCandidate', { error: errorMessage }));
 		console.error('Candidate Form Error', { error });
 	};
 
@@ -27,12 +29,12 @@ export const CandidateDialog = ({ open, onOpenChange, candidateId, sessionType, 
 		<RecordDialog
 			open={open}
 			onOpenChange={onOpenChange}
-			title={candidateId ? 'Edit Candidate' : 'New Candidate'}
+			title={candidateId ? t('dialog.editCandidate') : t('dialog.newCandidate')}
 			tabs={candidateId && sessionType === 'user' ? [auditLogTab('recipient', candidateId)] : []}
 		>
 			{errorMessage && (
 				<Alert variant="destructive">
-					<AlertTitle>Error</AlertTitle>
+					<AlertTitle>{t('common.error')}</AlertTitle>
 					<AlertDescription>{errorMessage}</AlertDescription>
 				</Alert>
 			)}

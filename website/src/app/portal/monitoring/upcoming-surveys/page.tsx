@@ -1,4 +1,5 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
+import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import {
 	getUpcomingSurveysTableFilters,
@@ -22,6 +23,7 @@ const UpcomingSurveysDataLoader = async ({ searchParams }: SearchParamsPageProps
 	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
+	const t = await getPortalOperationsTranslations();
 
 	const result = await getPaginatedUpcomingSurveyTableView(user.id, tableQuery);
 
@@ -33,7 +35,7 @@ const UpcomingSurveysDataLoader = async ({ searchParams }: SearchParamsPageProps
 	return (
 		<ConfiguredDataTableClient
 			config={upcomingSurveysTableConfig}
-			titleInfoTooltip="Shows upcoming surveys for accessible programs that are due around the current period."
+			titleInfoTooltip={t('monitoring.upcoming_surveys_info')}
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

@@ -11,6 +11,8 @@ import { getSubscriptionTableViewAction } from '@/modules/subscriptions/subscrip
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
+import { useTranslations } from 'next-intl';
+import { translateManagementTableConfig } from '../management-table-config';
 import ContributorsForm from './contributors-form';
 
 type Props = {
@@ -22,11 +24,44 @@ type Props = {
 };
 
 export const ContributorDialog = ({ open, onOpenChange, contributorId, errorMessage, onError }: Props) => {
+	const t = useTranslations('portal-management');
+	const contributionConfig = translateManagementTableConfig(contributorContributionsTableConfig, {
+		title: t('tables.contributions.title'),
+		emptyMessage: t('tables.contributions.empty'),
+		columns: {
+			amount: t('columns.amount'),
+			campaignTitle: t('columns.campaignTitle'),
+			programName: t('columns.programName'),
+			createdAt: t('columns.createdAt'),
+		},
+	});
+	const subscriptionConfig = translateManagementTableConfig(contributorSubscriptionsTableConfig, {
+		title: t('tables.subscriptions.title'),
+		emptyMessage: t('tables.subscriptions.empty'),
+		columns: {
+			amount: t('columns.amount'),
+			status: t('columns.status'),
+			cancellationReason: t('columns.cancellationReason'),
+			paymentMethod: t('columns.paymentMethod'),
+			stripeSubscriptionId: t('columns.stripeSubscriptionId'),
+			bankStandingOrderReference: t('columns.bankStandingOrderReference'),
+			createdAt: t('columns.createdAt'),
+		},
+	});
+	const donationCertificateConfig = translateManagementTableConfig(contributorDonationCertificatesTableConfig, {
+		title: t('tables.donationCertificates.title'),
+		emptyMessage: t('tables.donationCertificates.empty'),
+		columns: {
+			year: t('columns.year'),
+			storagePath: t('columns.storagePath'),
+			createdAt: t('columns.createdAt'),
+		},
+	});
 	const form = (
 		<>
 			{errorMessage && (
 				<Alert variant="destructive">
-					<AlertTitle>Error</AlertTitle>
+					<AlertTitle>{t('dialogs.error')}</AlertTitle>
 					<AlertDescription>{errorMessage}</AlertDescription>
 				</Alert>
 			)}
@@ -47,15 +82,15 @@ export const ContributorDialog = ({ open, onOpenChange, contributorId, errorMess
 			<TabbedDialog
 				open={open}
 				onOpenChange={onOpenChange}
-				title="Edit Contributor"
+				title={t('dialogs.editContributor')}
 				tabs={[
-					{ value: 'details', label: 'Details', content: form },
+					{ value: 'details', label: t('dialogs.details'), content: form },
 					{
 						value: 'contributions',
-						label: 'Contributions',
+						label: t('navigation.contributions'),
 						content: (
 							<RecordTableTab
-								config={contributorContributionsTableConfig}
+								config={contributionConfig}
 								load={(query) => getContributionTableViewAction({ ...query, contributorId })}
 								getRowHref={(row) => `/portal/management/contributions?${linkParams('contributionId', row.id)}`}
 							/>
@@ -63,25 +98,25 @@ export const ContributorDialog = ({ open, onOpenChange, contributorId, errorMess
 					},
 					{
 						value: 'subscriptions',
-						label: 'Subscriptions',
+						label: t('navigation.subscriptions'),
 						content: (
 							<RecordTableTab
-								config={contributorSubscriptionsTableConfig}
+								config={subscriptionConfig}
 								load={(query) => getSubscriptionTableViewAction({ ...query, contributorId })}
 							/>
 						),
 					},
 					{
 						value: 'donation-certificates',
-						label: 'Donation Certificates',
+						label: t('navigation.donationCertificates'),
 						content: (
 							<RecordTableTab
-								config={contributorDonationCertificatesTableConfig}
+								config={donationCertificateConfig}
 								load={(query) => getDonationCertificateTableViewAction({ ...query, contributorId })}
 							/>
 						),
 					},
-					auditLogTab('contributor', contributorId),
+					{ ...auditLogTab('contributor', contributorId), label: t('dialogs.auditLog') },
 				]}
 			/>
 		);
@@ -91,7 +126,7 @@ export const ContributorDialog = ({ open, onOpenChange, contributorId, errorMess
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent size="lg">
 				<DialogHeader>
-					<DialogTitle>New Contributor</DialogTitle>
+					<DialogTitle>{t('dialogs.newContributor')}</DialogTitle>
 				</DialogHeader>
 
 				{form}

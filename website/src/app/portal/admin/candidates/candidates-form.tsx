@@ -8,6 +8,7 @@ import {
 	getOptionalDropdownFieldConfig,
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
+import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { handleResult } from '@/lib/result-client';
 import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import type { Session } from '@/modules/auth/auth.types';
@@ -21,7 +22,8 @@ import {
 import type { CandidatePayload } from '@/modules/candidates/candidate.types';
 import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';
 import { getSupportedMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
-import { useEffect, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCandidateInput, buildUpdateCandidateInput } from './candidate-form-helpers';
 
@@ -53,56 +55,57 @@ export type CandidateFormSchema = {
 	};
 };
 
-const getInitialFormSchema = (sessionType: Session['type'] = 'user'): CandidateFormSchema => {
+const getInitialFormSchema = (
+	t: ReturnType<typeof useTranslations<'portal-admin'>>,
+	sharedTranslate: ReturnType<typeof usePortalSharedTranslations>['t'],
+	sessionType: Session['type'] = 'user',
+): CandidateFormSchema => {
 	const base: CandidateFormSchema = {
-		label: 'Candidates',
+		label: t('form.candidates'),
 		fields: {
 			suspendedAt: {
-				label: 'Suspended At',
+				label: t('form.suspendedAt'),
 				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).nullable().optional(),
 			},
 			suspensionReason: {
-				label: 'Suspension Reason',
+				label: t('form.suspensionReason'),
 				zodSchema: z.string().nullable().optional(),
 			},
 			successorName: {
-				placeholder: 'Successor',
-				label: 'Successor',
+				placeholder: t('form.successor'),
+				label: t('form.successor'),
 				zodSchema: z.string().nullable(),
 			},
 			termsAccepted: {
-				label: 'Terms Accepted',
+				label: t('form.termsAccepted'),
 				zodSchema: z.boolean().optional(),
 			},
 			localPartner: {
-				placeholder: 'Local Partner',
-				label: 'Local Partner',
+				placeholder: t('form.localPartner'),
+				label: t('form.localPartner'),
 			},
 			paymentInformation: {
-				label: 'Payment Information',
+				label: t('form.paymentInformation'),
 				fields: {
 					provider: {
-						placeholder: 'Provider',
-						label: 'Provider',
+						placeholder: t('form.provider'),
+						label: t('form.provider'),
 						zodSchema: z.string().optional(),
 					},
 					code: {
-						placeholder: 'Code',
-						label: 'Code',
+						placeholder: t('form.code'),
+						label: t('form.code'),
 						zodSchema: z.string().nullable(),
 					},
 					phone: {
-						placeholder: 'Phone Number',
-						label: 'Phone Number',
-						zodSchema: z
-							.string()
-							.regex(E164_OPTIONAL_PHONE_REGEX, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
-							.optional(),
+						placeholder: t('form.phoneNumber'),
+						label: t('form.phoneNumber'),
+						zodSchema: z.string().regex(E164_OPTIONAL_PHONE_REGEX, t('validation.phoneNumber')).optional(),
 					},
 				},
 			},
 			contact: {
-				...getContactFormSchema(),
+				...getContactFormSchema({ translate: sharedTranslate }),
 			},
 		},
 	};
@@ -115,7 +118,13 @@ const getInitialFormSchema = (sessionType: Session['type'] = 'user'): CandidateF
 };
 
 export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessionType = 'user' }: CandidateFormProps) => {
-	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(sessionType));
+	const t = useTranslations('portal-admin');
+	const { t: sharedTranslate } = usePortalSharedTranslations();
+	const initialFormSchema = useMemo(
+		() => getInitialFormSchema(t, sharedTranslate, sessionType),
+		[sessionType, sharedTranslate, t],
+	);
+	const [formSchema, setFormSchema] = useState(() => initialFormSchema);
 	const [candidate, setCandidate] = useState<CandidatePayload>();
 	const [isLoading, startTransition] = useTransition();
 

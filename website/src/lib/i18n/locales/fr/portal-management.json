@@ -1,0 +1,208 @@
+{
+	"navigation": {
+		"website": "Site web",
+		"portal": "Portail",
+		"management": "Gestion",
+		"recipients": "Bénéficiaires",
+		"ongoingPayouts": "Versements en cours",
+		"surveys": "Enquêtes",
+		"contributors": "Contributeurs",
+		"contributions": "Contributions",
+		"subscriptions": "Abonnements",
+		"donationCertificates": "Attestations de don",
+		"campaigns": "Campagnes"
+	},
+	"tables": {
+		"campaigns": {
+			"title": "Campagnes",
+			"empty": "Aucune campagne trouvée",
+			"tooltip": "Affiche les campagnes de votre organisation active."
+		},
+		"contributions": {
+			"title": "Contributions",
+			"empty": "Aucune contribution trouvée",
+			"tooltip": "Affiche les contributions de votre organisation active."
+		},
+		"contributors": {
+			"title": "Contributeurs",
+			"empty": "Aucun contributeur trouvé",
+			"tooltip": "Affiche les contributeurs de votre organisation active."
+		},
+		"donationCertificates": {
+			"title": "Attestations de don",
+			"empty": "Aucune attestation de don trouvée",
+			"tooltip": "Affiche les attestations de don disponibles pour les contributeurs de votre organisation active."
+		},
+		"ongoingPayouts": {
+			"title": "Versements en cours",
+			"empty": "Aucun versement en cours trouvé",
+			"tooltip": "Affiche l’avancement des versements en cours aux bénéficiaires des programmes auxquels vous avez accès."
+		},
+		"subscriptions": {
+			"title": "Abonnements",
+			"empty": "Aucun abonnement trouvé",
+			"tooltip": "Affiche les abonnements de votre organisation active."
+		},
+		"surveys": {
+			"title": "Enquêtes",
+			"empty": "Aucune enquête trouvée",
+			"tooltip": "Affiche les enquêtes des programmes auxquels vous avez accès."
+		}
+	},
+	"columns": {
+		"amount": "Montant",
+		"bankStandingOrderReference": "Référence de l’ordre permanent bancaire",
+		"campaignTitle": "Campagne",
+		"cancellationReason": "Motif d’annulation",
+		"completedAt": "Terminé",
+		"contributor": "Contributeur",
+		"country": "Pays",
+		"createdAt": "Créé le",
+		"currency": "Devise",
+		"dueAt": "Date d’échéance",
+		"email": "E-mail",
+		"endDate": "Date de fin",
+		"firebaseAuthUserId": "ID utilisateur Firebase Auth",
+		"isActive": "Statut",
+		"language": "Langue",
+		"link": "Lien",
+		"name": "Nom",
+		"paymentMethod": "Mode de paiement",
+		"programName": "Programme",
+		"questionnaire": "Questionnaire",
+		"payoutsProgressPercent": "Progression",
+		"recipient": "Bénéficiaire",
+		"recipientName": "Bénéficiaire",
+		"status": "Statut",
+		"storagePath": "Chemin de stockage",
+		"stripeSubscriptionId": "ID Stripe",
+		"surveyUrl": "Copier l’URL",
+		"title": "Titre",
+		"totalContributedChf": "Total contribué (CHF)",
+		"year": "Année"
+	},
+	"filters": {
+		"campaign": { "label": "Campagne", "all": "Toutes les campagnes" },
+		"contributor": { "label": "Contributeur", "all": "Tous les contributeurs" },
+		"country": { "label": "Pays", "all": "Tous les pays" },
+		"paymentType": { "label": "Type de paiement", "all": "Tous les types de paiement" },
+		"program": { "label": "Programme", "all": "Tous les programmes" },
+		"recipient": { "label": "Bénéficiaire", "all": "Tous les bénéficiaires" }
+	},
+	"actions": {
+		"addContribution": "Ajouter une contribution",
+		"addContributor": "Ajouter un contributeur",
+		"addSurvey": "Ajouter une enquête",
+		"generateDonationCertificates": "Générer des attestations de don",
+		"generateSurveys": "Générer des enquêtes"
+	},
+	"dialogs": {
+		"error": "Erreur",
+		"details": "Détails",
+		"auditLog": "Journal d’audit",
+		"editContributor": "Modifier le contributeur",
+		"newContributor": "Nouveau contributeur",
+		"editContribution": "Modifier la contribution",
+		"addContribution": "Ajouter une contribution",
+		"editSurvey": "Modifier l’enquête",
+		"addSurvey": "Ajouter une enquête",
+		"surveyGenerationTitle": "Génération des enquêtes",
+		"close": "Fermer",
+		"saveContributionError": "Erreur lors de l’enregistrement de la contribution : {message}",
+		"saveContributorError": "Erreur lors de l’enregistrement du contributeur : {message}",
+		"saveSurveyError": "Erreur lors de l’enregistrement de l’enquête : {message}"
+	},
+	"forms": {
+		"contact": {
+			"section": "Contact",
+			"firstName": "Prénom",
+			"lastName": "Nom",
+			"callingName": "Nom usuel",
+			"email": "E-mail",
+			"language": "Langue",
+			"dateOfBirth": "Date de naissance",
+			"profession": "Profession",
+			"gender": "Genre",
+			"phone": "Numéro de téléphone",
+			"hasWhatsApp": "Utilise WhatsApp",
+			"street": "Rue",
+			"number": "Numéro",
+			"city": "Ville",
+			"zip": "Code postal",
+			"country": "Pays",
+			"chooseGender": "Choisir un genre"
+		},
+		"contribution": {
+			"section": "Contribution",
+			"amount": "Montant",
+			"amountPlaceholder": "Montant de la contribution",
+			"currency": "Code de devise",
+			"selectCurrency": "Sélectionner une devise",
+			"amountChf": "Montant en CHF",
+			"amountChfPlaceholder": "Montant de la contribution en CHF",
+			"feesChf": "Frais en CHF",
+			"feesChfPlaceholder": "Frais de contribution en CHF",
+			"contributor": "Contributeur",
+			"selectContributor": "Sélectionner un contributeur",
+			"status": "Statut",
+			"statusPlaceholder": "Statut de la contribution",
+			"campaign": "Campagne",
+			"selectCampaign": "Sélectionner une campagne"
+		},
+		"contributor": {
+			"section": "Contributeur",
+			"referral": "Recommandation",
+			"paymentReferenceId": "ID de référence de paiement",
+			"stripeCustomerId": "ID client Stripe"
+		},
+		"survey": {
+			"section": "Enquête",
+			"name": "Nom",
+			"namePlaceholder": "Nom de l’enquête",
+			"recipient": "Bénéficiaire",
+			"questionnaire": "Questionnaire",
+			"language": "Langue",
+			"dueDate": "Date d’échéance",
+			"status": "Statut",
+			"accessEmail": "E-mail d’accès",
+			"accessPassword": "Mot de passe d’accès"
+		}
+	},
+	"validation": {
+		"nameRequired": "Le nom est obligatoire",
+		"amountPositive": "Le montant doit être positif",
+		"feesPositive": "Les frais doivent être positifs",
+		"emailInvalid": "Saisissez une adresse e-mail valide",
+		"dateOutOfRange": "Saisissez une date entre 2020 et 2050",
+		"surveyLoading": "L’enquête est en cours de chargement. Veuillez réessayer.",
+		"contributorLoading": "Le contributeur est en cours de chargement. Veuillez réessayer.",
+		"contributionLoading": "La contribution est en cours de chargement. Veuillez réessayer."
+	},
+	"certificateGeneration": {
+		"title": "Générer des attestations de don",
+		"year": "Année",
+		"yearDescription": "Indiquez l’année pour laquelle générer la ou les attestations :",
+		"selectYear": "Sélectionner une année",
+		"language": "Langue",
+		"languageDescription": "Indiquez la langue dans laquelle générer la ou les attestations :",
+		"selectLanguage": "Sélectionner une langue",
+		"contributorLanguage": "Créer l’attestation dans la langue du contributeur si disponible (« {language} » par défaut)",
+		"contributors": "Contributeurs",
+		"contributorsDescription": "Sélectionnez les contributeurs pour lesquels générer des attestations",
+		"selectContributors": "Sélectionner des contributeurs",
+		"generating": "Génération en cours…",
+		"generate": "Générer les attestations",
+		"close": "Fermer"
+	},
+	"surveyGeneration": {
+		"previewTitle": "Prévisualiser la génération des enquêtes",
+		"previewLabel": "Prévisualiser la génération (aucune modification)",
+		"previewDescription": "Affiche les enquêtes qui seraient créées pour les bénéficiaires ; aucune donnée ne sera enregistrée.",
+		"generateTitle": "Générer des enquêtes",
+		"generateLabel": "Générer des enquêtes (appliquer les modifications)",
+		"generateDescription": "Crée des enquêtes dans la base de données pour tous les bénéficiaires admissibles.",
+		"step": "Étape {number} : {title}",
+		"unknownError": "Erreur inconnue",
+		"close": "Fermer"
+	}
+}

@@ -1,3 +1,4 @@
+import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	Dialog,
@@ -34,6 +35,7 @@ type ConfirmState = {
 };
 
 export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extraAction }: FormActionsProps) => {
+	const { t } = usePortalSharedTranslations();
 	const [confirm, setConfirm] = useState<ConfirmState | null>(null);
 	const showSave = mode !== 'readonly';
 	const showSecondaryActions = mode === 'edit' && (onDelete !== undefined || extraAction !== undefined);
@@ -52,15 +54,15 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 								disabled={isLoading}
 								onClick={() =>
 									setConfirm({
-										title: 'Delete item?',
-										description: 'This action cannot be undone.',
-										confirmLabel: 'Delete permanently',
+										title: t('form.deleteConfirmTitle', 'Delete item?'),
+										description: t('form.deleteConfirmDescription', 'This action cannot be undone.'),
+										confirmLabel: t('form.deletePermanently', 'Delete permanently'),
 										variant: 'destructive',
 										onConfirm: onDelete,
 									})
 								}
 							>
-								Delete
+								{t('form.delete', 'Delete')}
 							</Button>
 						)}
 
@@ -89,13 +91,13 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 					<div className="flex items-center gap-3">
 						{onCancel && (
 							<Button type="button" variant="outline" disabled={isLoading} onClick={onCancel}>
-								Cancel
+								{t('form.cancel', 'Cancel')}
 							</Button>
 						)}
 
 						{showSave && (
 							<Button type="submit" disabled={isLoading}>
-								Save
+								{t('form.save', 'Save')}
 							</Button>
 						)}
 					</div>
@@ -117,7 +119,7 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 					</DialogHeader>
 					<DialogFooter>
 						<Button variant="outline" onClick={closeConfirm}>
-							Cancel
+							{t('form.cancel', 'Cancel')}
 						</Button>
 						<Button
 							variant={confirm?.variant}

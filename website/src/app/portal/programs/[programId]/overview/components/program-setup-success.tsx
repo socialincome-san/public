@@ -1,3 +1,4 @@
+import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { SuccessBanner } from '@socialincome/design-system/feedback/success-banner/success-banner';
@@ -9,43 +10,45 @@ type ProgramSetupSuccessProps = {
 	publicUrl: string;
 };
 
-export const ProgramSetupSuccess = ({ programId, publicUrl }: ProgramSetupSuccessProps) => {
+export const ProgramSetupSuccess = async ({ programId, publicUrl }: ProgramSetupSuccessProps) => {
+	const t = await getPortalOperationsTranslations();
+
 	return (
 		<Card>
 			<div className="space-y-6">
-				<h1 className="text-2xl font-bold">Great! You initiated a new program</h1>
+				<h1 className="text-2xl font-bold">{t('program.setup.greeting')}</h1>
 
 				<SuccessBanner
-					title="Recipient selection complete"
-					description="Recipients were successfully assigned."
+					title={t('program.setup.recipients_complete')}
+					description={t('program.setup.recipients_assigned')}
 					action={
 						<Link href={`/portal/programs/${programId}/recipients`}>
 							<Button variant="outline">
-								View Recipients <ChevronRightIcon className="ml-2 h-4 w-4" />
+								{t('program.setup.view_recipients')} <ChevronRightIcon className="ml-2 h-4 w-4" />
 							</Button>
 						</Link>
 					}
 				/>
 
 				<SuccessBanner
-					title="Impact surveys configured"
-					description="Survey tracking is active."
+					title={t('program.setup.surveys_configured')}
+					description={t('program.setup.survey_tracking_active')}
 					action={
 						<Link href={`/portal/programs/${programId}/surveys`}>
 							<Button variant="outline">
-								View Surveys <ChevronRightIcon className="ml-2 h-4 w-4" />
+								{t('program.setup.view_surveys')} <ChevronRightIcon className="ml-2 h-4 w-4" />
 							</Button>
 						</Link>
 					}
 				/>
 
 				<SuccessBanner
-					title="Public page ready"
-					description="This is your public program page."
+					title={t('program.setup.public_page_ready')}
+					description={t('program.setup.public_page_description')}
 					action={
 						<Link href={publicUrl} target="_blank">
 							<Button variant="outline">
-								View Public Page <ExternalLinkIcon className="ml-2 h-4 w-4" />
+								{t('program.setup.view_public_page')} <ExternalLinkIcon className="ml-2 h-4 w-4" />
 							</Button>
 						</Link>
 					}

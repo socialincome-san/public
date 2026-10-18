@@ -11,11 +11,13 @@ import {
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
 import { EyeIcon, PlayIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 type StepResult = string | object | string[] | null;
 
 export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
+	const t = useTranslations('portal-management');
 	const [results, setResults] = useState<Record<number, StepResult>>({});
 
 	const iconClass = 'h-4 w-4';
@@ -27,9 +29,9 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 	const steps = [
 		{
 			id: 1,
-			title: 'Preview generate surveys',
-			label: 'Preview generate surveys (no changes)',
-			description: 'Shows which surveys WOULD be created for recipients — nothing written yet.',
+			title: t('surveyGeneration.previewTitle'),
+			label: t('surveyGeneration.previewLabel'),
+			description: t('surveyGeneration.previewDescription'),
 			icon: <EyeIcon className={iconClass} />,
 			variant: 'outline' as const,
 			action: async () => {
@@ -44,9 +46,9 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 		},
 		{
 			id: 2,
-			title: 'Generate surveys',
-			label: 'Generate surveys (apply changes)',
-			description: 'Actually creates surveys in the database for all eligible recipients.',
+			title: t('surveyGeneration.generateTitle'),
+			label: t('surveyGeneration.generateLabel'),
+			description: t('surveyGeneration.generateDescription'),
 			icon: <PlayIcon className={iconClass} />,
 			action: async () => {
 				const result = await generateSurveysAction();
@@ -65,7 +67,7 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 			const result = await step.action();
 			setResult(step.id, result);
 		} catch (e) {
-			setResult(step.id, e instanceof Error ? e.message : 'Unknown error');
+			setResult(step.id, e instanceof Error ? e.message : t('surveyGeneration.unknownError'));
 		}
 	};
 
@@ -73,15 +75,13 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent size="md">
 				<DialogHeader>
-					<DialogTitle>Survey generation process</DialogTitle>
+					<DialogTitle>{t('dialogs.surveyGenerationTitle')}</DialogTitle>
 				</DialogHeader>
 
 				<div className="flex flex-col gap-5">
 					{steps.map((step) => (
 						<div key={step.id} className="bg-muted flex flex-col gap-2 rounded-2xl p-4">
-							<p className="font-medium">
-								Step {step.id}: {step.title}
-							</p>
+							<p className="font-medium">{t('surveyGeneration.step', { number: step.id, title: step.title })}</p>
 							<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
 
 							<Button
@@ -105,7 +105,7 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 
 				<DialogFooter>
 					<Button variant="outline" onClick={() => setOpen(false)}>
-						Close
+						{t('surveyGeneration.close')}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

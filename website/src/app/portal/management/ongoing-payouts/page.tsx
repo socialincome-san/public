@@ -6,7 +6,9 @@ import type { TableFilterConfig } from '@/components/data-table/table-config.typ
 import { getPaginatedOngoingPayoutTableView } from '@/modules/payouts/payout.service';
 import { requireSession } from '@/server/session';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
+import { translateManagementTableConfig } from '../management-table-config';
 
 export default function OngoingPayoutsPage({ searchParams }: SearchParamsPageProps) {
 	return (
@@ -17,6 +19,7 @@ export default function OngoingPayoutsPage({ searchParams }: SearchParamsPagePro
 }
 
 const OngoingPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
+	const t = await getTranslations('portal-management');
 	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
@@ -31,17 +34,26 @@ const OngoingPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps)
 		{
 			id: 'program',
 			queryKey: 'programId',
-			label: 'Program',
-			placeholder: 'All programs',
+			label: t('filters.program.label'),
+			placeholder: t('filters.program.all'),
 			value: tableQuery.programId,
 			options: programFilterOptions.map((program) => ({ value: program.id, label: program.name })),
 		},
 	];
+	const config = translateManagementTableConfig(ongoingPayoutsTableConfig, {
+		title: t('tables.ongoingPayouts.title'),
+		emptyMessage: t('tables.ongoingPayouts.empty'),
+		columns: {
+			recipient: t('columns.recipient'),
+			programName: t('columns.programName'),
+			payoutsProgressPercent: t('columns.payoutsProgressPercent'),
+		},
+	});
 
 	return (
 		<ConfiguredDataTableClient
-			config={ongoingPayoutsTableConfig}
-			titleInfoTooltip="Shows ongoing payout progress for recipients in programs you can access."
+			config={config}
+			titleInfoTooltip={t('tables.ongoingPayouts.tooltip')}
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

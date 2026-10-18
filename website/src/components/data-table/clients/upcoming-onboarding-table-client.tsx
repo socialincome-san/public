@@ -6,6 +6,7 @@ import {
 	upcomingOnboardingTableConfig,
 } from '@/components/data-table/configs/upcoming-onboarding-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
+import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/modules/recipients/recipient.actions';
 import type { RecipientProgramFilterOption, UpcomingOnboardingTableViewRow } from '@/modules/recipients/recipient.types';
@@ -24,6 +25,7 @@ type Props = {
 };
 
 export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilterOptions = [] }: Props) => {
+	const { t } = usePortalSharedTranslations();
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
 	const [recipientError, setRecipientError] = useState<string | null>(null);
@@ -63,7 +65,7 @@ export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilte
 
 	const actionMenuItems: ActionMenuItem[] = [
 		{
-			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
+			label: isCsvDownloading ? t('csv.downloading', 'Downloading…') : t('csv.download', 'Download CSV'),
 			icon: <DownloadIcon />,
 			disabled: isCsvDownloading,
 			onSelect: () => {
@@ -76,7 +78,7 @@ export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilte
 			onSelect: openCreateRecipientDialog,
 		},
 		{
-			label: 'Upload CSV',
+			label: t('csv.upload', 'Upload CSV'),
 			icon: <UploadIcon />,
 			onSelect: () => setIsCsvUploadDialogOpen(true),
 		},
@@ -107,7 +109,7 @@ export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilte
 			<CsvUploadDialog
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
-				title="Upload recipients CSV"
+				title={t('csv.uploadRecipients', 'Upload recipients CSV')}
 				template={recipientsCsvTemplate}
 				onImport={(file) => importRecipientsCsvAction(file, 'user')}
 			/>

@@ -12,6 +12,7 @@ import { getPayoutTableViewAction } from '@/modules/payouts/payout.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import MobileMoneyProvidersForm from './mobile-money-providers-form';
 
@@ -22,6 +23,7 @@ type Props = {
 };
 
 export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Props) => {
+	const t = useTranslations('portal-admin');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const handleError = (error: unknown) => {
@@ -34,7 +36,7 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Pr
 		<>
 			{errorMessage && (
 				<Alert variant="destructive">
-					<AlertTitle>Error</AlertTitle>
+					<AlertTitle>{t('common.error')}</AlertTitle>
 					<AlertDescription>{errorMessage}</AlertDescription>
 				</Alert>
 			)}
@@ -52,12 +54,12 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Pr
 			<TabbedDialog
 				open={open}
 				onOpenChange={onOpenChange}
-				title="Edit mobile money provider"
+				title={t('dialog.editProvider')}
 				tabs={[
-					{ value: 'details', label: 'Details', content: form },
+					{ value: 'details', label: t('common.details'), content: form },
 					{
 						value: 'payouts',
-						label: 'Payouts',
+						label: t('common.payouts'),
 						content: (
 							<RecordTableTab
 								config={mobileMoneyProviderPayoutsTableConfig}
@@ -70,7 +72,7 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Pr
 					},
 					{
 						value: 'countries',
-						label: 'Countries',
+						label: t('common.countries'),
 						content: (
 							<RecordTableTab
 								config={mobileMoneyProviderCountriesTableConfig}
@@ -83,7 +85,7 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Pr
 					},
 					{
 						value: 'child-providers',
-						label: 'Child providers',
+						label: t('common.childProviders'),
 						content: (
 							<RecordTableTab
 								config={mobileMoneyProviderChildrenTableConfig}
@@ -104,7 +106,7 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Pr
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent size="lg">
 				<DialogHeader>
-					<DialogTitle>Add mobile money provider</DialogTitle>
+					<DialogTitle>{t('dialog.addProvider')}</DialogTitle>
 				</DialogHeader>
 				{form}
 			</DialogContent>

@@ -5,6 +5,11 @@ import countries from './locales/en/countries.json';
 import createProgramWizard from './locales/en/create-program-wizard.json';
 import donationCertificate from './locales/en/donation-certificate.json';
 import donationWizard from './locales/en/donation-wizard.json';
+import portalAdmin from './locales/en/portal-admin.json';
+import portalManagement from './locales/en/portal-management.json';
+import portalMessaging from './locales/en/portal-messaging.json';
+import portalOperations from './locales/en/portal-operations.json';
+import portalShared from './locales/en/portal-shared.json';
 import websiteCampaign from './locales/en/website-campaign.json';
 import websiteCommon from './locales/en/website-common.json';
 import websiteCommunity from './locales/en/website-community.json';
@@ -25,6 +30,11 @@ const englishMessages = {
 	'create-program-wizard': createProgramWizard,
 	'donation-certificate': donationCertificate,
 	'donation-wizard': donationWizard,
+	'portal-admin': portalAdmin,
+	'portal-management': portalManagement,
+	'portal-messaging': portalMessaging,
+	'portal-operations': portalOperations,
+	'portal-shared': portalShared,
 	'website-campaign': websiteCampaign,
 	'website-common': websiteCommon,
 	'website-community': websiteCommunity,
@@ -48,6 +58,7 @@ export const pickClientMessages = (messages: Messages) => ({
 	countries: messages.countries,
 	'create-program-wizard': messages['create-program-wizard'],
 	'donation-wizard': messages['donation-wizard'],
+	'portal-messaging': messages['portal-messaging'],
 	'website-common': messages['website-common'],
 	'website-donate': messages['website-donate'],
 	'website-journal': messages['website-journal'],
@@ -56,6 +67,19 @@ export const pickClientMessages = (messages: Messages) => ({
 	'website-newsletter': messages['website-newsletter'],
 	'website-open-source': messages['website-open-source'],
 	'website-survey': messages['website-survey'],
+});
+
+export const pickPortalClientMessages = (messages: Messages) => ({
+	'add-recipients-from-pool': messages['add-recipients-from-pool'],
+	common: messages.common,
+	countries: messages.countries,
+	'create-program-wizard': messages['create-program-wizard'],
+	'portal-admin': messages['portal-admin'],
+	'portal-management': messages['portal-management'],
+	'portal-messaging': messages['portal-messaging'],
+	'portal-operations': messages['portal-operations'],
+	'portal-shared': messages['portal-shared'],
+	'website-me': messages['website-me'],
 });
 
 const isMessageTree = (value: unknown): value is Record<string, unknown> =>
