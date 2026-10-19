@@ -104,6 +104,8 @@ const GOOGLE_COUNTRY_DOMAINS = [
 	'https://www.google.at',
 	'https://www.google.fr',
 	'https://www.google.it',
+	'https://www.google.co.uk',
+	'https://www.google.nl',
 ] as const;
 
 const GOOGLE_TAG_SRC = {
@@ -128,6 +130,7 @@ const GOOGLE_TAG_SRC = {
 	font: ['https://fonts.gstatic.com'],
 	connect: [
 		'https://*.google-analytics.com',
+		'https://analytics.google.com',
 		'https://*.analytics.google.com',
 		'https://*.googletagmanager.com',
 		'https://*.doubleclick.net',

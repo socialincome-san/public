@@ -96,6 +96,15 @@ House style in the HTML that the doc doesn't show:
 - **Links** keep the template's exact attributes:
   `clicktracking="off" target="_blank" rel="noopener noreferrer"` plus the
   inline style. Copy an existing `<a>` and change only the href and text.
+- **Tracking on our own links.** Every link to socialincome.org uses
+  `https://www.socialincome.org` (with www) and gets UTM parameters:
+  `?utm_source=newsletter&utm_medium=email&utm_campaign=YYYY-MM-newsletter&utm_content=<link-id>`.
+  `utm_campaign` is the file name without `.html` (2026-11-newsletter.html →
+  `2026-11-newsletter`). `utm_content` names the link in kebab-case: `cta-donate`
+  for the main donate button, otherwise a short label like `journal-mango-season`
+  or `footer-website`. Keep any existing path (`/journal/...`) and put the
+  parameters after it. This includes the donate button and footer links.
+  External links (news sources) get no UTM.
 - **Titles in Title Case**, always: the `<h1>`, every `<h2>` section title
   and journal article titles ("Mango Season", "Before You Go", "Money Without
   Banks"), even when the doc writes them in sentence case. Small words stay

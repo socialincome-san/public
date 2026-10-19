@@ -1,8 +1,10 @@
 import { PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { isValidCountryCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
+import { convertAmount } from '@/modules/currency-display/currency-display.service';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import { getLocalPartnerIdBySlug } from '@/modules/local-partners/local-partner.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
@@ -257,7 +259,8 @@ export const getPaginatedOngoingPayoutTableView = async (
 export const getPublicPayoutForecastTableView = async (
 	programId: string,
 	monthsAhead: number,
-): Promise<Result<PayoutForecastTableView>> => buildPayoutForecastTableView(programId, monthsAhead);
+	displayCurrency?: WebsiteCurrency,
+): Promise<Result<PayoutForecastTableView>> => buildPayoutForecastTableView(programId, monthsAhead, displayCurrency);
 
 export const getPayoutForecastTableView = async (
 	userId: string,
@@ -654,6 +657,7 @@ export const updatePayoutStatusByRecipient = async (
 const buildPayoutForecastTableView = async (
 	programId: string,
 	monthsAhead: number,
+	displayCurrency?: WebsiteCurrency,
 ): Promise<Result<PayoutForecastTableView>> => {
 	try {
 		const programResult = await getProgramPayoutForecastSource(programId);
@@ -702,6 +706,12 @@ const buildPayoutForecastTableView = async (
 		}
 
 		const payoutPerIntervalUsd = (program.payoutPerInterval / baseRate) * usdRate;
+		const payoutPerIntervalDisplayCurrency = displayCurrency
+			? convertAmount(program.payoutPerInterval, program.country.currency, displayCurrency, exchangeRateResult.data)
+			: undefined;
+		if (payoutPerIntervalDisplayCurrency && !payoutPerIntervalDisplayCurrency.success) {
+			return resultFail(payoutPerIntervalDisplayCurrency.error);
+		}
 		const tableRows: PayoutForecastTableViewRow[] = forecastMonths.map((period) => {
 			const numberOfRecipients = recipientCountByMonth.get(period) ?? 0;
 
@@ -710,6 +720,9 @@ const buildPayoutForecastTableView = async (
 				numberOfRecipients,
 				amountInProgramCurrency: program.payoutPerInterval * numberOfRecipients,
 				amountUsd: payoutPerIntervalUsd * numberOfRecipients,
+				...(payoutPerIntervalDisplayCurrency?.success && {
+					amountInDisplayCurrency: payoutPerIntervalDisplayCurrency.data * numberOfRecipients,
+				}),
 				programCurrency: program.country.currency,
 			};
 		});
