@@ -485,7 +485,8 @@ export interface MenuItem {
     | "contact"
     | "youtube"
     | "googleplay"
-    | "appstore";
+    | "appstore"
+    | "stripe";
   newTab?: boolean;
   component: "menuItem";
   _uid: string;
