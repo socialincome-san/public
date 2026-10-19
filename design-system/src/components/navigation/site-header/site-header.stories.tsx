@@ -148,10 +148,3 @@ export const LoggedIn: Story = {
 		),
 	},
 };
-
-export const Compact: Story = {
-	args: {
-		...LoggedOut.args,
-		width: 'compact',
-	},
-};
