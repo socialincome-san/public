@@ -1,23 +1,26 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from 'next/server';
 
 export const proxy = (request: NextRequest) => {
-  const header = request.headers.get("authorization");
-  if (header?.startsWith("Basic ")) {
-    // Der Header enthält "benutzername:passwort" in Base64. Wir prüfen nur das Passwort.
-    const decoded = atob(header.slice(6));
-    const password = decoded.slice(decoded.indexOf(":") + 1);
-    if (password === process.env.APP_PASSWORD) {
-      return NextResponse.next();
-    }
-  }
-  return new NextResponse("Authentication required", {
-    status: 401,
-    headers: {
-      "WWW-Authenticate": 'Basic realm="Image Generator", charset="UTF-8"',
-    },
-  });
+	const header = request.headers.get('authorization');
+	if (header?.startsWith('Basic ')) {
+		try {
+			const decoded = atob(header.slice(6));
+			const separator = decoded.indexOf(':');
+			if (separator >= 0 && process.env.APP_PASSWORD && decoded.slice(separator + 1) === process.env.APP_PASSWORD) {
+				return NextResponse.next();
+			}
+		} catch {
+			// Malformed credentials receive the same challenge as a wrong password.
+		}
+	}
+	return new NextResponse('Authentication required', {
+		status: 401,
+		headers: {
+			'WWW-Authenticate': 'Basic realm="Image Generator", charset="UTF-8"',
+		},
+	});
 };
 
 export const config = {
-  matcher: ["/((?!_next/static|favicon.ico|images/showcase/).*)"],
+	matcher: ['/((?!_next/static|favicon.ico|images/showcase/).*)'],
 };
