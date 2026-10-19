@@ -1,25 +1,15 @@
 'use client';
 
+import { type GalleryImage } from '@/lib/images';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from '@socialincome/design-system/overlays/tool-tip/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { Download, Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { STYLE_TEMPLATE } from '../style-template';
-
-export type GalleryImage = {
-	prompt: string | null;
-	id: string | number;
-	media_type: string;
-	created_at: string | null;
-};
 
 const dateFormatter = new Intl.DateTimeFormat('de-CH', {
 	dateStyle: 'medium',
@@ -29,7 +19,9 @@ const dateFormatter = new Intl.DateTimeFormat('de-CH', {
 
 const getUserPrompt = (prompt: string | null) => {
 	if (!prompt) return 'Kein Prompt hinterlegt.';
-	return (prompt.startsWith(STYLE_TEMPLATE) ? prompt.slice(STYLE_TEMPLATE.length).trim() : prompt) || 'Kein Benutzer-Prompt.';
+	return (
+		(prompt.startsWith(STYLE_TEMPLATE) ? prompt.slice(STYLE_TEMPLATE.length).trim() : prompt) || 'Kein Benutzer-Prompt.'
+	);
 };
 
 const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string }) => {
@@ -53,7 +45,10 @@ const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string
 				</div>
 			)}
 			{status === 'error' && (
-				<div className="bg-card text-muted-foreground absolute inset-0 flex items-center justify-center p-4 text-sm" role="status">
+				<div
+					className="bg-card text-muted-foreground absolute inset-0 flex items-center justify-center p-4 text-sm"
+					role="status"
+				>
 					Bild konnte nicht geladen werden.
 				</div>
 			)}
@@ -71,7 +66,9 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 					Erstelle dein erstes KI-generiertes Bild im Social-Income-Stil.
 				</p>
 				<div className="mt-6">
-					<Button asChild><Link href="/">Zum Image Generator →</Link></Button>
+					<Button asChild>
+						<Link href="/">Zum Image Generator →</Link>
+					</Button>
 				</div>
 			</div>
 		);
@@ -88,7 +85,9 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 							<div className="text-muted-foreground text-xs">
 								{image.created_at ? (
 									<time dateTime={image.created_at}>{dateFormatter.format(new Date(image.created_at))}</time>
-								) : 'Zeitpunkt nicht gespeichert'}
+								) : (
+									'Zeitpunkt nicht gespeichert'
+								)}
 							</div>
 							<div className="flex items-center gap-1">
 								<Tooltip>
@@ -98,17 +97,17 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 										</Button>
 									</TooltipTrigger>
 									<TooltipContent size="lg" sideOffset={8}>
-										<div className="max-h-64 overflow-y-auto whitespace-pre-wrap break-words">
+										<div className="max-h-64 overflow-y-auto break-words whitespace-pre-wrap">
 											<p className="mb-2 font-bold">Bild-Prompt</p>
 											{prompt}
 										</div>
 									</TooltipContent>
 								</Tooltip>
-									<Button asChild variant="outline" size="sm">
-										<a href={`/api/gallery-images/${image.id}?download=1`} download>
-											<Download aria-hidden="true" /> Download
-										</a>
-									</Button>
+								<Button asChild variant="outline" size="sm">
+									<a href={`/api/gallery-images/${image.id}?download=1`} download>
+										<Download aria-hidden="true" /> Download
+									</a>
+								</Button>
 							</div>
 						</div>
 					</article>

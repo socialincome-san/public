@@ -1,7 +1,5 @@
-'use client';
-
-import { SiteHeader, type SiteMenuEntry } from '@socialincome/design-system/navigation/site-header/site-header';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { SiteHeader, type SiteMenuEntry } from '@socialincome/design-system/navigation/site-header/site-header';
 import { SiteMenuDesktop } from '@socialincome/design-system/navigation/site-header/site-menu-desktop';
 import { SiteMenuMobile } from '@socialincome/design-system/navigation/site-header/site-menu-mobile';
 import Link from 'next/link';
@@ -22,7 +20,9 @@ export const ImageGeneratorHeader = () => {
 			}
 			donateAction={
 				<Button asChild size="md">
-					<Link href="https://socialincome.org" target="_blank" rel="noopener noreferrer">Webseite</Link>
+					<Link href="https://socialincome.org" target="_blank" rel="noopener noreferrer">
+						Webseite
+					</Link>
 				</Button>
 			}
 			homeHref="/"
