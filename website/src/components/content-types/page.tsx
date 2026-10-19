@@ -33,7 +33,7 @@ import { TransparencySummaryBlock } from '@/components/content-blocks/transparen
 import { TwoColumnBlock } from '@/components/content-blocks/two-column';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
-import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
+import { NewsletterSignup } from '@/components/newsletter/newsletter-signup';
 import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { Fragment, type ReactNode } from 'react';

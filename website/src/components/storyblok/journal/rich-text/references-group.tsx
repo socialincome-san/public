@@ -24,7 +24,7 @@ export const ReferencesGroupBlock = ({ references, context, lang }: Props) => {
 
 	return (
 		<div className="bg-card border-border not-prose my-8 w-full rounded-2xl border p-6">
-			{context ? <p className="text-foreground mb-4 text-lg">{t(`reference-article.context.${context}`)}</p> : null}
+			{context ? <p className="text-foreground mb-4 text-base">{t(`reference-article.context.${context}`)}</p> : null}
 			<ShowMoreToggle showMoreLabel={t('reference-article.show-more')} showLessLabel={t('reference-article.show-less')}>
 				{items.map((reference, index) => (
 					<div key={reference._uid}>
