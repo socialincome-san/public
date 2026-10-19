@@ -1,11 +1,11 @@
 'use client';
 
 import { LottieBlock } from '@/components/content-blocks/lottie';
+import { NewsletterSignup } from '@/components/newsletter/newsletter-signup';
 import { ActionButtonBlock } from '@/components/storyblok/journal/rich-text/action-button';
 import { BannerSectionBlock } from '@/components/storyblok/journal/rich-text/banner-section';
 import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/embedded-video';
 import { ImageWithCaption } from '@/components/storyblok/journal/rich-text/image-with-caption';
-import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
 import { QuotedText } from '@/components/storyblok/journal/rich-text/quoted-text';
 import { ReferencesGroupBlock } from '@/components/storyblok/journal/rich-text/references-group';
 import {
