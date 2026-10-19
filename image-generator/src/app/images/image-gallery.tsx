@@ -16,7 +16,7 @@ import { STYLE_TEMPLATE } from '../style-template';
 
 export type GalleryImage = {
 	prompt: string | null;
-	image_base64: string;
+	id: string | number;
 	media_type: string;
 	created_at: string | null;
 };
@@ -32,27 +32,13 @@ const getUserPrompt = (prompt: string | null) => {
 	return (prompt.startsWith(STYLE_TEMPLATE) ? prompt.slice(STYLE_TEMPLATE.length).trim() : prompt) || 'Kein Benutzer-Prompt.';
 };
 
-const handleDownload = async (image: GalleryImage) => {
-	const response = await fetch(`data:${image.media_type};base64,${image.image_base64}`);
-	const url = URL.createObjectURL(await response.blob());
-	const link = document.createElement('a');
-	link.href = url;
-	const extension = image.media_type === 'image/jpeg' ? 'jpg' : image.media_type === 'image/webp' ? 'webp' : 'png';
-	const filename = image.created_at ? `social-income-${image.created_at.replaceAll(':', '-')}` : 'social-income-image';
-	link.download = `${filename}.${extension}`;
-	document.body.append(link);
-	link.click();
-	link.remove();
-	URL.revokeObjectURL(url);
-};
-
 const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string }) => {
 	const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
 
 	return (
 		<div className="bg-muted/40 relative aspect-video w-full overflow-hidden" aria-busy={status === 'loading'}>
 			<Image
-				src={`data:${image.media_type};base64,${image.image_base64}`}
+				src={`/api/gallery-images/${image.id}`}
 				width={640}
 				height={360}
 				alt={prompt}
@@ -93,11 +79,11 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 
 	return (
 		<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{images.map((image, index) => {
+			{images.map((image) => {
 				const prompt = getUserPrompt(image.prompt);
 				return (
-					<article key={index} className="border-border bg-card flex flex-col overflow-hidden rounded-2xl border">
-						<GalleryPreview key={image.image_base64} image={image} prompt={prompt} />
+					<article key={image.id} className="border-border bg-card flex flex-col overflow-hidden rounded-2xl border">
+						<GalleryPreview image={image} prompt={prompt} />
 						<div className="mt-auto flex flex-wrap items-center justify-between gap-3 p-4">
 							<div className="text-muted-foreground text-xs">
 								{image.created_at ? (
@@ -118,9 +104,11 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 										</div>
 									</TooltipContent>
 								</Tooltip>
-								<Button type="button" variant="outline" size="sm" onClick={() => void handleDownload(image)}>
-									<Download aria-hidden="true" /> Download
-								</Button>
+									<Button asChild variant="outline" size="sm">
+										<a href={`/api/gallery-images/${image.id}?download=1`} download>
+											<Download aria-hidden="true" /> Download
+										</a>
+									</Button>
 							</div>
 						</div>
 					</article>

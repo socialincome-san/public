@@ -1,12 +1,8 @@
 import { SectionHeading } from "@socialincome/design-system/layout/section-heading/section-heading";
-import { Pool } from "pg";
 import { Suspense } from "react";
 import { ImageGallery, type GalleryImage } from "./image-gallery";
 import { GalleryPagination } from "./gallery-pagination";
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+import { galleryPool } from "./gallery-database";
 
 type GalleryImageRow = Omit<GalleryImage, "created_at"> & {
   created_at: Date | null;
@@ -20,8 +16,8 @@ const GalleryContent = async ({ searchParams }: { searchParams: SearchParams }) 
   const pageSize = [12, 24, 36].includes(requestedSize) ? requestedSize : 12;
   const requestedPage = Number(params.page);
   const page = Number.isSafeInteger(requestedPage) && requestedPage > 0 && requestedPage <= 1000000 ? requestedPage : 1;
-  const result = await pool.query<GalleryImageRow>(
-    "SELECT prompt, image_base64, media_type, created_at FROM generated_images ORDER BY created_at DESC NULLS LAST LIMIT $1 OFFSET $2",
+  const result = await galleryPool.query<GalleryImageRow>(
+    "SELECT id, prompt, media_type, created_at FROM generated_images ORDER BY created_at DESC NULLS LAST, id DESC LIMIT $1 OFFSET $2",
     [pageSize + 1, (page - 1) * pageSize],
   );
 

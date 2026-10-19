@@ -2,6 +2,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Install dependencies from the repository root with `npm ci`.
+
+The existing `generated_images` table must include `id` and `created_at`.
+No database migration is needed for previews.
+The gallery loads metadata first, then fetches each 800px WebP preview separately.
+Previews are generated on request and cached privately in the browser for a day.
+They are not stored in the database; uncached requests generate them again.
+Original images are transferred only when downloading. All gallery image URLs
+remain protected by the app's Basic Auth.
+
 First, run the development server:
 
 ```bash
