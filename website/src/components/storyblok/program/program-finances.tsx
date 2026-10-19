@@ -40,6 +40,8 @@ export const ProgramFinances = async ({ stats, programId, lang, currency }: Prop
 				payoutForecastInfoTooltip={t('program-detail-page.payout-forecast-info')}
 				financesCard={financesCard}
 				programId={programId}
+				lang={lang}
+				currency={currency}
 			/>
 		</DetailPanel>
 	);
