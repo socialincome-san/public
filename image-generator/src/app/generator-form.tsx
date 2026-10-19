@@ -134,6 +134,7 @@ export function GeneratorForm() {
                     alt={image.alt}
                     fill
                     sizes="(min-width: 640px) 26vw, 43vw"
+                    loading="eager"
                     className="rounded-2xl object-cover"
                   />
                 </div>
@@ -175,10 +176,10 @@ export function GeneratorForm() {
       </div>
 
       {/* Unten mittig fixierte AI-Eingabeleiste */}
-      <div className="sticky bottom-6 z-30 mx-auto w-full max-w-5xl px-4 pt-4">
+      <div className="sticky bottom-6 z-30 mx-auto -translate-y-4 w-full max-w-5xl px-4 pt-4">
         <form
           onSubmit={handleSubmit}
-          className="border-input bg-card/95 shadow-raised flex w-full items-end gap-2 rounded-3xl border p-2 pl-4 backdrop-blur-md"
+          className="border-input bg-card/95 shadow-raised flex w-full items-end gap-2 rounded-3xl border px-2 py-3 pl-4 backdrop-blur-md"
         >
           <div className="flex-1 py-1">
             <Textarea
@@ -188,7 +189,7 @@ export function GeneratorForm() {
               onChange={(e) => setPrompt(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Beschreibe dein Bild ..."
-              rows={2}
+              rows={3}
             />
           </div>
 

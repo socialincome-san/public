@@ -1,40 +1,46 @@
 'use client';
 
-import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
-import { SegmentedToggle } from '@socialincome/design-system/actions/segmented-toggle/segmented-toggle';
-import { SocialIncomeLogo } from '@socialincome/design-system/brand/logo/logo';
+import { SiteHeader, type SiteMenuEntry } from '@socialincome/design-system/navigation/site-header/site-header';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { SiteMenuDesktop } from '@socialincome/design-system/navigation/site-header/site-menu-desktop';
+import { SiteMenuMobile } from '@socialincome/design-system/navigation/site-header/site-menu-mobile';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
 
 export const ImageGeneratorHeader = () => {
-	const pathname = usePathname();
-	const router = useRouter();
-	const isGallery = pathname === '/images';
+	const menuEntries: SiteMenuEntry[] = [
+		{ type: 'link', id: 'generator', label: 'Generator', href: '/' },
+		{ type: 'link', id: 'gallery', label: 'Gallery', href: '/images' },
+	];
 
 	return (
-		<header className="w-full">
-			<div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6 sm:py-8">
-				<Link
-					href="/"
-					className="text-primary flex items-center transition-opacity hover:opacity-85"
-					aria-label="Social Income"
-				>
-					<SocialIncomeLogo decorative />
-				</Link>
-
-				<SegmentedToggle
-					value={isGallery ? 'gallery' : 'generator'}
-					onValueChange={(val) => router.push(val === 'gallery' ? '/images' : '/')}
-					options={[
-						{ value: 'generator', label: 'Generator' },
-						{ value: 'gallery', label: 'Gallery' },
-					]}
-				/>
-
-				<div className="hidden sm:flex items-center">
-					<LinkPill label="socialincome.org" href="https://socialincome.org" external />
+		<SiteHeader
+			account={null}
+			desktopMenu={
+				<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+					<SiteMenuDesktop entries={menuEntries} />
 				</div>
-			</div>
-		</header>
+			}
+			donateAction={
+				<Button asChild size="md">
+					<Link href="https://socialincome.org" target="_blank" rel="noopener noreferrer">Webseite</Link>
+				</Button>
+			}
+			homeHref="/"
+			homeLinkLabel="Image Generator"
+			mobileMenu={
+				<SiteMenuMobile
+					entries={menuEntries}
+					footerControls={null}
+					homeHref="/"
+					labels={{
+						back: 'Back',
+						closeMenu: 'Close menu',
+						homeLink: 'Image Generator',
+						openMenu: 'Open menu',
+						title: 'Menu',
+					}}
+				/>
+			}
+		/>
 	);
 };

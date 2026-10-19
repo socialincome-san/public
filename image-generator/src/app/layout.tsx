@@ -11,8 +11,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className="h-full antialiased font-sans">
       <body className="bg-website-gradient text-primary flex min-h-screen flex-col antialiased">
-        <ImageGeneratorHeader />
-        <div className="flex flex-1 flex-col">{children}</div>
+        <div className="flex min-h-screen min-h-dvh flex-col">
+          <ImageGeneratorHeader />
+          <div className="flex flex-1 flex-col pb-24 lg:pt-22">
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );

@@ -8,9 +8,13 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+type GalleryImageRow = Omit<GalleryImage, "created_at"> & {
+  created_at: Date | null;
+};
+
 export default async function ImagesPage() {
-  const result = await pool.query<GalleryImage>(
-    "SELECT prompt, image_base64, media_type FROM generated_images",
+  const result = await pool.query<GalleryImageRow>(
+    "SELECT prompt, image_base64, media_type, created_at FROM generated_images ORDER BY created_at DESC NULLS LAST",
   );
 
   return (
@@ -19,11 +23,11 @@ export default async function ImagesPage() {
         <SectionHeading as="h1" size={3} align="left" bold>
           Generated Images
         </SectionHeading>
-        <p className="text-muted-foreground text-sm sm:text-base">
-          Klicke auf ein Bild, um den User Prompt und den Base Prompt anzusehen.
-        </p>
       </div>
-      <ImageGallery images={result.rows} />
+      <ImageGallery images={result.rows.map((image) => ({
+        ...image,
+        created_at: image.created_at?.toISOString() ?? null,
+      }))} />
     </main>
   );
 }
