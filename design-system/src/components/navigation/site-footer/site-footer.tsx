@@ -11,6 +11,7 @@ import {
 	GooglePlayIcon,
 	InstagramIcon,
 	LinkedinIcon,
+	StripeIcon,
 	YoutubeIcon,
 } from '../../icons/social-icons/social-icons';
 
@@ -24,6 +25,7 @@ const footerIcons = {
 	googleplay: GooglePlayIcon,
 	appstore: AppStoreIcon,
 	youtube: YoutubeIcon,
+	stripe: StripeIcon,
 } satisfies Record<string, ComponentType>;
 
 export type SiteFooterIcon = keyof typeof footerIcons;
