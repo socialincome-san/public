@@ -6,11 +6,11 @@ import { CampaignCreationTeaser } from '@/components/campaign/campaign-creation-
 import { CampaignFaqSection } from '@/components/campaign/campaign-faq-section';
 import { CampaignHero } from '@/components/campaign/campaign-hero';
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
-import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import { CampaignProgramTeaser } from '@/components/campaign/campaign-program-teaser';
 import { CampaignVideoSlider } from '@/components/campaign/campaign-video-slider';
 import { Community } from '@/components/community/community';
+import { NewsletterSignup } from '@/components/newsletter/newsletter-signup';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -62,7 +62,7 @@ export const CampaignDetail = async ({
 	currency,
 	community,
 }: Props) => {
-	const [pageContentResult, breadcrumbLinks, t, tCommon, tNewsletter, tFaq] = await Promise.all([
+	const [pageContentResult, breadcrumbLinks, t, tCommon, tFaq] = await Promise.all([
 		getCampaignPageContentAction(lang, faq),
 		buildBreadcrumbLinks({
 			fullSlug: getCampaignStoryPath(campaignSlug),
@@ -72,7 +72,6 @@ export const CampaignDetail = async ({
 		}),
 		getTranslations('website-campaign'),
 		getTranslations('website-common'),
-		getTranslations('website-newsletter'),
 		getTranslations('website-faq'),
 	]);
 	if (!pageContentResult.success) {
@@ -81,15 +80,6 @@ export const CampaignDetail = async ({
 	const { faqs, videoPlaybackIds, newsletter } = pageContentResult.data;
 	const trimmedDescription = description.trim();
 	const submissionLabels = buildCampaignSubmissionLabels(tCommon);
-	const newsletterTranslations = {
-		firstNameLabel: tNewsletter('popup.first-name'),
-		emailLabel: tNewsletter('popup.email'),
-		emailPlaceholder: tNewsletter('popup.email-placeholder'),
-		buttonAddSubscriber: tNewsletter('popup.button-subscribe'),
-		sentBy: tNewsletter('popup.sent-by'),
-		toastSuccess: tNewsletter('popup.toast-success'),
-		toastFailure: tNewsletter('popup.toast-failure'),
-	};
 	const videoSliderTranslations = {
 		title: t('campaign.video-slider.title'),
 		description: t('campaign.video-slider.description'),
@@ -138,13 +128,12 @@ export const CampaignDetail = async ({
 				lang={lang}
 				currency={currency}
 			/>
-			<CampaignNewsletter
+			<NewsletterSignup
 				lang={lang}
 				title={newsletter.title}
 				senderName={newsletter.senderName}
 				imageSrc={newsletter.imageSrc}
 				imageAlt={newsletter.imageAlt}
-				translations={newsletterTranslations}
 			/>
 			<CampaignVideoSlider translations={videoSliderTranslations} videoPlaybackIds={videoPlaybackIds} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} currency={currency} />
