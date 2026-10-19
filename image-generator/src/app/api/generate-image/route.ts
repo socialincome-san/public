@@ -78,8 +78,8 @@ const generateImageFile = async (prompt: string): Promise<GeneratedImage> => {
 
 const saveImageToDB = async (prompt: string, image: GeneratedImage) => {
   await pool.query(
-    `INSERT INTO generated_images (prompt, image_base64, media_type, created_at)
-     VALUES ($1, $2, $3, CURRENT_TIMESTAMP)`,
+    `INSERT INTO generated_images (prompt, image_base64, media_type)
+     VALUES ($1, $2, $3)`,
     [prompt, image.base64, image.mediaType],
   );
 };
