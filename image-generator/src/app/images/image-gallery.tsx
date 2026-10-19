@@ -2,6 +2,7 @@
 
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import {
 	Tooltip,
 	TooltipContent,
@@ -10,6 +11,7 @@ import {
 import { Download, Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import { STYLE_TEMPLATE } from '../style-template';
 
 export type GalleryImage = {
@@ -44,6 +46,35 @@ const handleDownload = async (image: GalleryImage) => {
 	URL.revokeObjectURL(url);
 };
 
+const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string }) => {
+	const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
+
+	return (
+		<div className="bg-muted/40 relative aspect-video w-full overflow-hidden" aria-busy={status === 'loading'}>
+			<Image
+				src={`data:${image.media_type};base64,${image.image_base64}`}
+				width={640}
+				height={360}
+				alt={prompt}
+				className="h-full w-full object-contain"
+				onLoad={() => setStatus('loaded')}
+				onError={() => setStatus('error')}
+				unoptimized
+			/>
+			{status === 'loading' && (
+				<div className="absolute inset-3 overflow-hidden [&>div]:h-full [&>div]:min-h-0 [&>div]:rounded-none md:[&>div]:min-h-0">
+					<AppLoadingSkeleton message="Bild wird geladen …" />
+				</div>
+			)}
+			{status === 'error' && (
+				<div className="bg-card text-muted-foreground absolute inset-0 flex items-center justify-center p-4 text-sm" role="status">
+					Bild konnte nicht geladen werden.
+				</div>
+			)}
+		</div>
+	);
+};
+
 export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 	if (images.length === 0) {
 		return (
@@ -66,16 +97,7 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 				const prompt = getUserPrompt(image.prompt);
 				return (
 					<article key={index} className="border-border bg-card flex flex-col overflow-hidden rounded-2xl border">
-						<div className="bg-muted/40 aspect-video w-full overflow-hidden">
-							<Image
-								src={`data:${image.media_type};base64,${image.image_base64}`}
-								width={640}
-								height={360}
-								alt={prompt}
-								className="h-full w-full object-contain"
-								unoptimized
-							/>
-						</div>
+						<GalleryPreview key={image.image_base64} image={image} prompt={prompt} />
 						<div className="mt-auto flex flex-wrap items-center justify-between gap-3 p-4">
 							<div className="text-muted-foreground text-xs">
 								{image.created_at ? (

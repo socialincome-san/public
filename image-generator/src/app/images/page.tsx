@@ -1,8 +1,8 @@
 import { SectionHeading } from "@socialincome/design-system/layout/section-heading/section-heading";
 import { Pool } from "pg";
+import { Suspense } from "react";
 import { ImageGallery, type GalleryImage } from "./image-gallery";
-
-export const instant = false;
+import { GalleryPagination } from "./gallery-pagination";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -12,11 +12,31 @@ type GalleryImageRow = Omit<GalleryImage, "created_at"> & {
   created_at: Date | null;
 };
 
-export default async function ImagesPage() {
+type SearchParams = Promise<{ page?: string | string[]; size?: string | string[] }>;
+
+const GalleryContent = async ({ searchParams }: { searchParams: SearchParams }) => {
+  const params = await searchParams;
+  const requestedSize = Number(params.size);
+  const pageSize = [12, 24, 36].includes(requestedSize) ? requestedSize : 12;
+  const requestedPage = Number(params.page);
+  const page = Number.isSafeInteger(requestedPage) && requestedPage > 0 && requestedPage <= 1000000 ? requestedPage : 1;
   const result = await pool.query<GalleryImageRow>(
-    "SELECT prompt, image_base64, media_type, created_at FROM generated_images ORDER BY created_at DESC NULLS LAST",
+    "SELECT prompt, image_base64, media_type, created_at FROM generated_images ORDER BY created_at DESC NULLS LAST LIMIT $1 OFFSET $2",
+    [pageSize + 1, (page - 1) * pageSize],
   );
 
+  return (
+    <>
+    <ImageGallery key={`${page}-${pageSize}`} images={result.rows.slice(0, pageSize).map((image) => ({
+      ...image,
+      created_at: image.created_at?.toISOString() ?? null,
+    }))} />
+    <GalleryPagination page={page} pageSize={pageSize} hasNextPage={result.rows.length > pageSize} />
+    </>
+  );
+};
+
+export default function ImagesPage({ searchParams }: { searchParams: SearchParams }) {
   return (
     <main className="max-w-content mx-auto w-full px-6 py-6 pb-24 sm:px-8">
       <div className="mb-8 flex flex-col items-start gap-2">
@@ -24,10 +44,9 @@ export default async function ImagesPage() {
           Generated Images
         </SectionHeading>
       </div>
-      <ImageGallery images={result.rows.map((image) => ({
-        ...image,
-        created_at: image.created_at?.toISOString() ?? null,
-      }))} />
+      <Suspense fallback={null}>
+        <GalleryContent searchParams={searchParams} />
+      </Suspense>
     </main>
   );
 }
