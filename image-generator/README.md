@@ -35,6 +35,14 @@ Auth accepts any username and checks the configured password.
   download link.
 - Enter submits the prompt; Shift+Enter inserts a newline. Navigation
   preserves page state through Next.js Cache Components.
+- The format selector defaults to square and supports 1:1, 16:9, 9:16,
+  4:3, 3:4, and 3:2. GPT Image 2.5 Flare supports all six natively via
+  custom pixel sizes, passed through the AI SDK's `size` option.
+  Dimensions are multiples of 16 and within the provider's pixel limits
+  ([provider documentation](https://developers.openai.com/api/docs/guides/image-generation#size-and-quality-options)).
+  The API rejects unsupported ratios and mismatched output instead of
+  silently cropping or stretching. Actual image dimensions are returned
+  for the generated preview; the gallery and download keep the original.
 
 ## Checks
 

@@ -4,7 +4,7 @@ export const GET = async (request: Request) => {
 	const value = new URL(request.url).searchParams.get('offset') ?? '0';
 	const offset = Number(value);
 	if (!/^\d+$/.test(value) || !Number.isSafeInteger(offset) || offset > 1000000) {
-		return Response.json({ error: 'Ungültige Anfrage.' }, { status: 400 });
+		return Response.json({ error: 'Invalid request.' }, { status: 400 });
 	}
 
 	try {
@@ -13,6 +13,6 @@ export const GET = async (request: Request) => {
 		});
 	} catch (error) {
 		console.error('Loading more gallery images failed', error);
-		return Response.json({ error: 'Bilder konnten nicht geladen werden. Bitte erneut versuchen.' }, { status: 500 });
+		return Response.json({ error: 'Images could not be loaded. Please try again.' }, { status: 500 });
 	}
 };

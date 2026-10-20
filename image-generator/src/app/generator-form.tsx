@@ -1,14 +1,16 @@
 'use client';
 
+import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
 import { isGenerateResponse } from '@/lib/images';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { AnimatedSILogoIcon } from '@socialincome/design-system/brand/logo/logo';
+import { AspectRatioSelect } from '@socialincome/design-system/forms/aspect-ratio-select/aspect-ratio-select';
 import { Textarea } from '@socialincome/design-system/forms/textarea/textarea';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type KeyboardEvent, type ReactNode, useActionState, useState } from 'react';
 
-type GenerationState = { imageSrc: string | null; error: string | null };
+type GenerationState = { imageSrc: string | null; error: string | null; width: number; height: number };
 
 const generate = async (previous: GenerationState, formData: FormData): Promise<GenerationState> => {
 	const prompt = formData.get('prompt');
@@ -18,24 +20,33 @@ const generate = async (previous: GenerationState, formData: FormData): Promise<
 		const response = await fetch('/api/generate-image', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ prompt }),
+			body: JSON.stringify({ prompt, aspectRatio: formData.get('aspectRatio') }),
 		});
 		const json: unknown = await response.json();
 		if (!isGenerateResponse(json) || (!response.ok && !json.error)) {
-			return { ...previous, error: 'Fehler bei der Bildgenerierung' };
+			return { ...previous, error: 'Image generation failed. Please try again.' };
 		}
 		return {
+			...previous,
 			imageSrc: json.imageBase64 && json.mediaType ? `data:${json.mediaType};base64,${json.imageBase64}` : null,
 			error: json.error,
+			width: json.width ?? previous.width,
+			height: json.height ?? previous.height,
 		};
 	} catch {
-		return { ...previous, error: 'Fehler bei der Bildgenerierung' };
+		return { ...previous, error: 'Image generation failed. Please try again.' };
 	}
 };
 
 export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 	const [prompt, setPrompt] = useState('');
-	const [{ imageSrc, error }, formAction, isPending] = useActionState(generate, { imageSrc: null, error: null });
+	const [aspectRatio, setAspectRatio] = useState<string>(DEFAULT_IMAGE_FORMAT.value);
+	const [{ imageSrc, error, width, height }, formAction, isPending] = useActionState(generate, {
+		imageSrc: null,
+		error: null,
+		width: DEFAULT_IMAGE_FORMAT.width,
+		height: DEFAULT_IMAGE_FORMAT.height,
+	});
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
 		if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
@@ -55,7 +66,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 							<AnimatedSILogoIcon width={84} height={48} />
 						</div>
 						<p className="text-muted-foreground text-sm font-medium sm:text-base">
-							Generiere dein Bild im Aquarellstil, dies kann bis zu einer Minute dauern ...
+							Generating your watercolor image. This may take up to a minute ...
 						</p>
 					</div>
 				)}
@@ -64,8 +75,8 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 					<div className="flex flex-col items-center gap-6">
 						<Image
 							src={imageSrc}
-							width={1920}
-							height={1080}
+							width={width}
+							height={height}
 							alt="Generated"
 							className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
 						/>
@@ -76,7 +87,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 								</a>
 							</Button>
 							<Button asChild variant="outline" size="md">
-								<Link href="/images">In Galerie ansehen →</Link>
+								<Link href="/images">View in gallery →</Link>
 							</Button>
 						</div>
 					</div>
@@ -86,26 +97,44 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 			<div className="sticky bottom-6 z-30 mx-auto w-full max-w-5xl -translate-y-4 px-4 pt-4">
 				<form
 					action={formAction}
-					className="border-input bg-card/95 shadow-raised flex w-full items-end gap-2 rounded-3xl border px-2 py-3 pl-4 backdrop-blur-md"
+					onResetCapture={(event) => {
+						// React resets successful action forms; Radix would also reset the selected ratio.
+						event.preventDefault();
+						event.stopPropagation();
+					}}
+					className="border-input bg-card/95 shadow-raised flex w-full flex-col gap-2 rounded-3xl border px-4 py-3 backdrop-blur-md"
 				>
-					<div className="flex-1 py-1">
+					<div className="w-full py-1">
 						<Textarea
 							variant="bare"
+							resize="none"
 							name="prompt"
-							aria-label="Beschreibe dein Bild"
+							aria-label="Describe your image"
 							required
 							value={prompt}
 							onChange={(e) => setPrompt(e.target.value)}
 							onKeyDown={handleKeyDown}
-							placeholder="Beschreibe dein Bild ..."
-							rows={3}
+							placeholder="Describe your image ..."
+							rows={1}
 						/>
 					</div>
 
-					<Button type="submit" size="md" disabled={isPending || prompt.trim() === ''}>
-						<span>Generate</span>
-						<span aria-hidden="true">→</span>
-					</Button>
+					<div className="flex w-full flex-wrap items-center justify-between gap-2">
+						<div>
+							<AspectRatioSelect
+								items={IMAGE_FORMATS}
+								label="Image format"
+								name="aspectRatio"
+								value={aspectRatio}
+								onValueChange={setAspectRatio}
+								disabled={isPending}
+							/>
+						</div>
+						<Button type="submit" size="md" disabled={isPending || prompt.trim() === ''}>
+							<span>Generate</span>
+							<span aria-hidden="true">→</span>
+						</Button>
+					</div>
 				</form>
 
 				{error && !isPending && (
