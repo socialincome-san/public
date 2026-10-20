@@ -30,7 +30,7 @@ export const POST = async (request: Request) => {
 			providerOptions: { openai: { quality: 'high' } },
 		});
 		const { width, height } = await sharp(image.uint8Array).metadata();
-		if (!width || !height || width * format.height !== height * format.width) {
+		if (width !== format.width || height !== format.height) {
 			return errorResponse('The image provider did not return the selected format. Please try again.', 502);
 		}
 		await saveImage(prompt, image);
