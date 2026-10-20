@@ -52,7 +52,7 @@
 		"email": "E-mail",
 		"accountCreateHint": "S'il n'existe pas encore de compte avec cet e-mail, nous en créerons un pour toi.",
 		"noBackAfterGenerateHint": "Après la génération du code QR, tu ne pourras plus modifier le montant, le mode de paiement ni les coordonnées dans ce parcours.",
-		"generateCta": "Générer le code QR pour le paiement",
+		"generateCta": "Générer le code QR",
 		"generating": "Génération…",
 		"generateError": "Impossible de générer la facture QR. Réessaie."
 	},
