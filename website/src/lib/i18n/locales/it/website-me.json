@@ -71,7 +71,7 @@
 			"wire-transfer": "Wire Transfer"
 		},
 		"status": {
-			"succeeded": "Pagato",
+			"succeeded": "Riuscito",
 			"pending": "In attesa",
 			"failed": "Fallito",
 			"unknown": "Sconosciuto"
@@ -157,14 +157,14 @@
 			"monthly-contribution": "Contributo mensile",
 			"total-contributions": "Contributi totali",
 			"no-active-subscriptions": "Nessuna sottoscrizione attiva",
-			"active-subscriptions-count": "{count} sottoscrizioni attive",
-			"contributions-since": "{count} contributi dal {date}",
+			"active-subscriptions-count": "{count, plural, one {# sottoscrizione attiva} other {# sottoscrizioni attive}}",
+			"contributions-since": "{count, plural, one {# contributo dal {date}} other {# contributi dal {date}}}",
 			"no-contributions-yet": "Nessun contributo ancora"
 		},
 		"active-subscriptions": "Sottoscrizioni attive",
 		"upcoming-payments": "Pagamenti in arrivo",
 		"scheduled": "Programmato",
-		"per-month": "al mese",
+		"per-month": "/ mese",
 		"since": "dal",
 		"card-fallback": "Carta",
 		"cover-transaction-costs": {
@@ -182,7 +182,7 @@
 		"created": "Creato",
 		"language": "Lingua",
 		"year": "Anno",
-		"generate-certificate": "Genera certificato di donazione",
+		"generate-certificate": "Generare",
 		"no-certificates-yet": "Non hai ancora certificati di donazione. Creane uno cliccando su \"Genera certificato di donazione\". <br></br> Se avete domande, non esitate a <contact>contattarci</contact>.",
 		"no-contributions": "Nessuna contribuzione trovata, quindi niente certificato. Se pensi che sia un errore, contatta contributors@socialincome.org.",
 		"technical-error": "Si è verificato un errore tecnico, riprova. Se questo continua ad accadere, contatta contributors@socialincome.org.",
