@@ -105,9 +105,8 @@ export const ensureConsentDefault = () => {
 	window.consentDefaultQueued = true;
 	window.gtag ??= gtag;
 	gtag('consent', 'default', { ...getConsentModeSignals('denied'), wait_for_update: 500 });
-	const stored = readConsent();
-	if (stored !== 'undecided') {
-		updateGoogleConsent(stored);
+	if (readConsent() === 'granted') {
+		updateGoogleConsent('granted');
 	}
 };
 
