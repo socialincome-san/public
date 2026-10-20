@@ -56,11 +56,32 @@ to the existing GPT Image 2.5 Flare model. References are not stored in
 the gallery; only the generated result is saved. Remove the reference to
 return to text-only generation.
 
+## Area edits
+
+After generation, **Edit Area** opens the selection tools beside the
+download action. Choose **Mark to Remove** or **Mark to Change**, paint
+with the brush, and use the eraser, undo, or clear selection to refine
+the mask. Brush size is measured in displayed pixels. **Done** closes
+the tools and focuses the existing prompt. Removal instructions are
+optional; changes require a prompt. Clearing the selection returns to
+normal generation.
+
+Edits use the same generation endpoint and GPT Image 2.5 Flare model,
+with the original image and an alpha-inverted PNG mask passed through
+the AI SDK's `prompt.images` and `prompt.mask`. The server validates
+file sizes, formats, and matching dimensions before generation. Sharp
+composites only selected pixels onto the original, preserving the
+unselected area even if the provider modifies it. The edited PNG is
+saved in the gallery. Failed edits retain the original and selection for
+retrying. Reference uploads and format changes are disabled while
+editing.
+
 ## Checks
 
 ```sh
 npm run lint
 npm run typecheck
+npm run test:unit
 npm run format:check
 npm run check:unused
 npm run build

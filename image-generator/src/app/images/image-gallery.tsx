@@ -5,7 +5,7 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
-import { Download, Info } from 'lucide-react';
+import { Download, Info, Pencil } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -99,6 +99,18 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 											<p className="mb-2 font-bold">Image prompt</p>
 											{prompt}
 										</div>
+									</TooltipContent>
+								</Tooltip>
+								<Tooltip delayDuration={500}>
+									<TooltipTrigger asChild>
+										<Button asChild variant="ghost" size="icon-sm">
+											<Link href={`/images/${image.id}/edit`} aria-label="Edit image" prefetch={false}>
+												<Pencil aria-hidden="true" />
+											</Link>
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent side="top" sideOffset={8}>
+										Edit image
 									</TooltipContent>
 								</Tooltip>
 								<Button asChild variant="outline" size="sm">

@@ -7,19 +7,20 @@ import { AddMenu } from '@socialincome/design-system/actions/add-menu/add-menu';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { AnimatedSILogoIcon } from '@socialincome/design-system/brand/logo/logo';
 import { AspectRatioSelect } from '@socialincome/design-system/forms/aspect-ratio-select/aspect-ratio-select';
+import { ImageAreaEditor } from '@socialincome/design-system/forms/image-area-editor/image-area-editor';
 import { ImageUpload } from '@socialincome/design-system/forms/image-upload/image-upload';
 import { Textarea } from '@socialincome/design-system/forms/textarea/textarea';
 import { DropdownMenuItem } from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
-import { Upload } from 'lucide-react';
+import { Pencil, Upload } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type KeyboardEvent, type ReactNode, useActionState, useRef, useState } from 'react';
 
-type GenerationState = { imageSrc: string | null; error: string | null; width: number; height: number };
+type GenerationState = { imageSrc: string | null; error: string | null; width: number; height: number; revision: number };
 
 const generate = async (previous: GenerationState, formData: FormData): Promise<GenerationState> => {
 	const prompt = formData.get('prompt');
-	if (typeof prompt !== 'string' || !prompt.trim()) return previous;
+	if ((typeof prompt !== 'string' || !prompt.trim()) && formData.get('editMode') !== 'remove') return previous;
 
 	try {
 		const response = await fetch('/api/generate-image', {
@@ -30,33 +31,65 @@ const generate = async (previous: GenerationState, formData: FormData): Promise<
 		if (!isGenerateResponse(json) || (!response.ok && !json.error)) {
 			return { ...previous, error: 'Image generation failed. Please try again.' };
 		}
+		if (json.error) return { ...previous, error: json.error };
 		return {
 			...previous,
 			imageSrc: json.imageBase64 && json.mediaType ? `data:${json.mediaType};base64,${json.imageBase64}` : null,
 			error: json.error,
 			width: json.width ?? previous.width,
 			height: json.height ?? previous.height,
+			revision: previous.revision + 1,
 		};
 	} catch {
 		return { ...previous, error: 'Image generation failed. Please try again.' };
 	}
 };
 
-export const GeneratorForm = ({ children }: { children: ReactNode }) => {
+export const GeneratorForm = ({
+	children,
+	initialImage,
+}: {
+	children?: ReactNode;
+	initialImage?: { src: string; width: number; height: number };
+}) => {
 	const referenceInputRef = useRef<HTMLInputElement>(null);
+	const promptRef = useRef<HTMLTextAreaElement>(null);
 	const [prompt, setPrompt] = useState('');
+	const [edit, setEdit] = useState<{ active: boolean; mode: 'remove' | 'change'; mask: string | null } | null>(
+		initialImage ? { active: true, mode: 'change', mask: null } : null,
+	);
 	const [aspectRatio, setAspectRatio] = useState<string>(DEFAULT_IMAGE_FORMAT.value);
-	const [{ imageSrc, error, width, height }, formAction, isPending] = useActionState(generate, {
-		imageSrc: null,
-		error: null,
-		width: DEFAULT_IMAGE_FORMAT.width,
-		height: DEFAULT_IMAGE_FORMAT.height,
-	});
+	const [{ imageSrc, error, width, height, revision }, formAction, isPending] = useActionState(
+		async (previous: GenerationState, formData: FormData) => {
+			try {
+				if (edit?.mask && previous.imageSrc) {
+					formData.set('editImage', await (await fetch(previous.imageSrc)).blob(), 'image.png');
+					formData.set('selectionMask', await (await fetch(edit.mask)).blob(), 'selection.png');
+					formData.set('editMode', edit.mode);
+					formData.delete('referenceImage');
+				}
+				const result = await generate(previous, formData);
+				if (!result.error) setEdit(null);
+				return result;
+			} catch {
+				return { ...previous, error: 'Image editing failed. Please try again.' };
+			}
+		},
+		{
+			imageSrc: initialImage?.src ?? null,
+			error: null,
+			width: initialImage?.width ?? DEFAULT_IMAGE_FORMAT.width,
+			height: initialImage?.height ?? DEFAULT_IMAGE_FORMAT.height,
+			revision: 0,
+		},
+	);
+	const hasSelection = Boolean(edit?.mask);
+	const canSubmit = !isPending && !edit?.active && (prompt.trim() !== '' || (hasSelection && edit?.mode === 'remove'));
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
 		if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
 			event.preventDefault();
-			if (!isPending && prompt.trim()) event.currentTarget.form?.requestSubmit();
+			if (canSubmit) event.currentTarget.form?.requestSubmit();
 		}
 	};
 
@@ -76,25 +109,82 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 					</div>
 				)}
 
-				{imageSrc && !isPending && (
-					<div className="flex flex-col items-center gap-6">
-						<Image
-							src={imageSrc}
+				{imageSrc && (
+					<div hidden={isPending} className={isPending ? 'hidden' : 'flex max-w-full flex-col items-center gap-6'}>
+						<ImageAreaEditor
+							key={revision}
 							width={width}
 							height={height}
-							alt="Generated"
-							className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
-						/>
-						<div className="flex flex-wrap items-center justify-center gap-3">
-							<Button asChild size="md">
-								<a href={imageSrc} download="generated-image.png">
-									Download PNG
-								</a>
-							</Button>
-							<Button asChild variant="outline" size="md">
-								<Link href="/images">View in gallery →</Link>
-							</Button>
-						</div>
+							active={Boolean(edit?.active)}
+							mode={edit?.mode ?? 'change'}
+							onModeChange={(mode) => setEdit((previous) => ({ active: true, mask: previous?.mask ?? null, mode }))}
+							onSelectionChange={(mask) =>
+								setEdit((previous) => ({ active: previous?.active ?? true, mode: previous?.mode ?? 'change', mask }))
+							}
+							onDone={() => {
+								setEdit((previous) => previous && { ...previous, active: false });
+								promptRef.current?.focus();
+							}}
+							onCancel={() => setEdit(null)}
+							labels={{
+								selection: 'Image area selection',
+								remove: 'Mark to Remove',
+								removeHelp: 'Remove selected objects.',
+								change: 'Mark to Change',
+								changeHelp: 'Change the selection with a prompt.',
+								brush: 'Brush',
+								brushHelp: 'Paint a selection.',
+								eraser: 'Eraser',
+								eraserHelp: 'Erase selection marks.',
+								size: 'Size',
+								undo: 'Undo',
+								undoHelp: 'Undo last stroke.',
+								redo: 'Redo',
+								redoHelp: 'Restore undone stroke.',
+								clear: 'Clear selection',
+								clearHelp: 'Clear all selection marks.',
+								done: 'Done',
+								cancel: 'Cancel',
+								help: 'Select the whole detail with a little surrounding area. Choose Done, then describe what to redraw or repair below.',
+							}}
+						>
+							<Image
+								src={imageSrc}
+								width={width}
+								height={height}
+								alt="Generated"
+								className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
+							/>
+						</ImageAreaEditor>
+						{!edit?.active && (
+							<div className="flex flex-wrap items-center justify-center gap-3">
+								<Button
+									type="button"
+									variant="outline"
+									size="lg"
+									aria-pressed={Boolean(edit?.active)}
+									onClick={() => {
+										if (!edit) setPrompt('');
+										setEdit((previous) => ({
+											active: !previous?.active,
+											mode: previous?.mode ?? 'change',
+											mask: previous?.mask ?? null,
+										}));
+									}}
+								>
+									<Pencil aria-hidden="true" />
+									Edit Area
+								</Button>
+								<Button asChild size="md">
+									<a href={imageSrc} download="generated-image.png">
+										Download PNG
+									</a>
+								</Button>
+								<Button asChild variant="outline" size="md">
+									<Link href="/images">View in gallery →</Link>
+								</Button>
+							</div>
+						)}
 					</div>
 				)}
 			</div>
@@ -124,25 +214,32 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 							removeLabel="Remove reference image"
 							helperText="JPEG, PNG or WebP · up to 10 MB"
 							invalidFileMessage="Choose a JPEG, PNG or WebP image up to 10 MB."
-							disabled={isPending}
+							disabled={isPending || Boolean(edit?.active) || hasSelection}
 						/>
 						<div className="w-full py-1">
 							<Textarea
+								ref={promptRef}
 								variant="bare"
 								resize="none"
 								name="prompt"
 								aria-label="Describe your image"
-								required
+								required={!(hasSelection && edit?.mode === 'remove')}
 								value={prompt}
 								onChange={(e) => setPrompt(e.target.value)}
 								onKeyDown={handleKeyDown}
-								placeholder="Describe your image ..."
+								placeholder={
+									hasSelection
+										? edit?.mode === 'remove'
+											? 'Optional instructions for removing the selected area ...'
+											: 'Describe changes to the selected area ...'
+										: 'Describe your image ...'
+								}
 								rows={1}
 							/>
 						</div>
 						<div className="flex w-full flex-wrap items-center justify-between gap-2">
 							<div className="flex items-center gap-2">
-								<AddMenu label="Add attachment" disabled={isPending}>
+								<AddMenu label="Add attachment" disabled={isPending || Boolean(edit?.active) || hasSelection}>
 									<DropdownMenuItem onSelect={() => referenceInputRef.current?.click()}>
 										<Upload aria-hidden="true" />
 										Upload Reference Image
@@ -154,11 +251,13 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 									name="aspectRatio"
 									value={aspectRatio}
 									onValueChange={setAspectRatio}
-									disabled={isPending}
+									disabled={isPending || hasSelection}
 								/>
 							</div>
-							<Button type="submit" size="md" disabled={isPending || prompt.trim() === ''}>
-								<span>Generate</span>
+							<Button type="submit" size="md" disabled={!canSubmit}>
+								<span>
+									{hasSelection ? (edit?.mode === 'remove' ? 'Remove selected area' : 'Apply changes') : 'Generate'}
+								</span>
 								<span aria-hidden="true">→</span>
 							</Button>
 						</div>
