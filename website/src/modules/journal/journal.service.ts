@@ -173,7 +173,7 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 				homeLabel,
 				parentLabel,
 				journalPath,
-				getArticleTitle(story, true),
+				getArticleTitle(story),
 				createWebsiteJournalArticleLink(slug, lang, currency),
 				lang,
 				currency,

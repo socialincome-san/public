@@ -194,7 +194,7 @@ describe('getJournalArticlePageData', () => {
 				breadcrumbs: [
 					{ label: 'Home', href: '/de/chf' },
 					{ label: 'Journal', href: '/de/chf/journal' },
-					{ label: 'A story with context', href: '/de/chf/journal/a-story' },
+					{ label: 'A story', href: '/de/chf/journal/a-story' },
 				],
 			},
 			status: undefined,
