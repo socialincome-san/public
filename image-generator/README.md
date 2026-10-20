@@ -76,6 +76,21 @@ saved in the gallery. Failed edits retain the original and selection for
 retrying. Reference uploads and format changes are disabled while
 editing.
 
+## Session version history
+
+Each successful generation or edit adds a thumbnail to the left sidebar.
+Select a thumbnail to view, download, or edit that version. Edits of
+older versions append a new version without discarding newer ones. The
+current image shows its version number. History stays in memory only and
+clears on reload; existing gallery saving is unchanged.
+
+Hover or focus a thumbnail to see the actual USD cost reported in the AI
+Gateway's generation metadata. Missing costs (including gallery
+originals) show "Cost unavailable", never an estimate. Costs and version
+relationships are not stored in the database. Reference images remain
+removable and replaceable after generation and while editing; area edits
+use the selected generated version rather than the reference attachment.
+
 ## Checks
 
 ```sh

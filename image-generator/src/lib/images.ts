@@ -23,6 +23,7 @@ export const isGenerateResponse = (
 	mediaType: string | null;
 	width: number | null;
 	height: number | null;
+	cost: number | null;
 } =>
 	typeof value === 'object' &&
 	value !== null &&
@@ -35,7 +36,9 @@ export const isGenerateResponse = (
 	'width' in value &&
 	(value.width === null || (typeof value.width === 'number' && Number.isInteger(value.width) && value.width > 0)) &&
 	'height' in value &&
-	(value.height === null || (typeof value.height === 'number' && Number.isInteger(value.height) && value.height > 0));
+	(value.height === null || (typeof value.height === 'number' && Number.isInteger(value.height) && value.height > 0)) &&
+	'cost' in value &&
+	(value.cost === null || (typeof value.cost === 'number' && Number.isFinite(value.cost) && value.cost >= 0));
 
 export const isGalleryBatch = (value: unknown): value is GalleryBatch =>
 	typeof value === 'object' &&

@@ -2,7 +2,7 @@
 
 import { Upload, X } from 'lucide-react';
 import Image from 'next/image';
-import { type Ref, useEffect, useId, useRef, useState } from 'react';
+import { type Ref, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { cn } from '../../../cn';
 
 type ImageUploadProps = {
@@ -43,13 +43,22 @@ export const ImageUpload = ({
 	const inputId = useId();
 	const [preview, setPreview] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
+	useImperativeHandle(externalInputRef, () => {
+		if (!inputRef.current) {
+			throw new Error('Image upload input is not mounted.');
+		}
+
+		return inputRef.current;
+	}, []);
 
 	useEffect(() => {
-		if (preview) return () => URL.revokeObjectURL(preview);
+		if (preview) {
+			return () => URL.revokeObjectURL(preview);
+		}
 	}, [preview]);
 
 	return (
-		<div className={cn('flex min-w-0 flex-col', (variant === 'dropzone' || preview || error) && 'gap-2')}>
+		<div className={cn('flex min-w-0 flex-col', (variant === 'dropzone' || Boolean(preview) || Boolean(error)) && 'gap-2')}>
 			<label htmlFor={inputId} className={cn('text-primary text-sm font-semibold', variant === 'attachment' && 'sr-only')}>
 				{label} <span className="text-muted-foreground font-normal">{optionalLabel}</span>
 			</label>
@@ -62,11 +71,7 @@ export const ImageUpload = ({
 			>
 				<input
 					id={inputId}
-					ref={(node) => {
-						inputRef.current = node;
-						if (typeof externalInputRef === 'function') return externalInputRef(node);
-						if (externalInputRef) externalInputRef.current = node;
-					}}
+					ref={inputRef}
 					type="file"
 					name={name}
 					accept={acceptedTypes.join(',')}
@@ -77,7 +82,9 @@ export const ImageUpload = ({
 					onChange={(event) => {
 						const selected = event.currentTarget.files?.[0];
 
-						if (!selected) return;
+						if (!selected) {
+							return;
+						}
 						if (!acceptedTypes.includes(selected.type) || selected.size > maxSizeBytes || selected.size === 0) {
 							event.currentTarget.value = '';
 							setPreview(null);
@@ -90,18 +97,20 @@ export const ImageUpload = ({
 					}}
 				/>
 				{preview && (
-					<div className="absolute top-1/2 left-3 size-14 -translate-y-1/2">
+					<div className="pointer-events-none absolute top-1/2 left-3 z-20 size-14 -translate-y-1/2">
 						<div className="border-border bg-card relative size-full overflow-hidden rounded-lg border">
 							<Image src={preview} alt={previewLabel} fill sizes="56px" className="object-contain" unoptimized />
 						</div>
 						<div className="absolute -top-2 -right-2 z-20">
 							<button
 								type="button"
-								className="border-input bg-background text-primary hover:bg-accent focus-visible:ring-ring flex size-6 items-center justify-center rounded-full border shadow-xs focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+								className="border-input bg-background text-primary hover:bg-accent focus-visible:ring-ring pointer-events-auto flex size-6 items-center justify-center rounded-full border shadow-xs focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
 								aria-label={removeLabel}
 								disabled={disabled}
 								onClick={() => {
-									if (inputRef.current) inputRef.current.value = '';
+									if (inputRef.current) {
+										inputRef.current.value = '';
+									}
 									setPreview(null);
 									setError(null);
 								}}

@@ -1,5 +1,6 @@
 import { buildPrompt } from '@/app/style-template';
 import { saveImage } from '@/lib/database';
+import { getGenerationCost } from '@/lib/generation-cost';
 import { compositeImageEdit, MAX_EDIT_IMAGE_BYTES, prepareImageEdit } from '@/lib/image-edit';
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
 import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
@@ -85,7 +86,7 @@ export const POST = async (request: Request) => {
 
 	try {
 		const prompt = edit ? buildEditPrompt(text, editMode === 'remove' ? 'remove' : 'change') : buildPrompt(text);
-		const { image } = await generateImage({
+		const { image, calls } = await generateImage({
 			model: 'openai/gpt-image-2.5-flare',
 			prompt: edit
 				? { text: prompt, images: [edit.image], mask: edit.mask }
@@ -104,7 +105,14 @@ export const POST = async (request: Request) => {
 			? { base64: (await compositeImageEdit(edit, image.uint8Array)).toString('base64'), mediaType: 'image/png' }
 			: image;
 		await saveImage(prompt, result);
-		return Response.json({ error: null, imageBase64: result.base64, mediaType: result.mediaType, width, height });
+		return Response.json({
+			error: null,
+			imageBase64: result.base64,
+			mediaType: result.mediaType,
+			width,
+			height,
+			cost: getGenerationCost(calls),
+		});
 	} catch (error) {
 		console.error('Image generation failed', error);
 		return errorResponse('Image generation failed', 500);
@@ -112,4 +120,4 @@ export const POST = async (request: Request) => {
 };
 
 const errorResponse = (error: string, status: number) =>
-	Response.json({ error, imageBase64: null, mediaType: null, width: null, height: null }, { status });
+	Response.json({ error, imageBase64: null, mediaType: null, width: null, height: null, cost: null }, { status });
