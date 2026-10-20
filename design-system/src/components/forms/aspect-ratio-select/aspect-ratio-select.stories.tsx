@@ -1,5 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
+import { fn } from 'storybook/test';
 import { AspectRatioSelect } from './aspect-ratio-select';
 
 const meta = {
@@ -16,7 +17,7 @@ const meta = {
 	args: {
 		label: 'Aspect ratio',
 		value: '1:1',
-		onValueChange: () => {},
+		onValueChange: fn(),
 		items: [
 			{ value: '1:1', label: 'Square', width: 1, height: 1 },
 			{ value: '16:9', label: 'Widescreen', width: 16, height: 9 },
@@ -28,6 +29,7 @@ const meta = {
 	},
 	render: function Render(args) {
 		const [value, setValue] = useState(args.value);
+
 		return (
 			<div className="w-56">
 				<AspectRatioSelect {...args} value={value} onValueChange={setValue} />
