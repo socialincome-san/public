@@ -106,6 +106,8 @@ const GOOGLE_COUNTRY_DOMAINS = [
 	'https://www.google.it',
 	'https://www.google.co.uk',
 	'https://www.google.nl',
+	'https://www.google.ca',
+	'https://www.google.com.au',
 ] as const;
 
 const GOOGLE_TAG_SRC = {
