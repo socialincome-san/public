@@ -22,12 +22,14 @@ describe('getRobotsHeaders', () => {
 		},
 	);
 
-	it.each([{ VERCEL_TARGET_ENV: 'staging' }, { VERCEL_TARGET_ENV: 'preview' }, {}])(
-		'marks every response noindex, nofollow outside production (%o)',
-		(env) => {
-			setDeployment(env);
+	it.each([
+		{ VERCEL_TARGET_ENV: 'staging' },
+		{ VERCEL_TARGET_ENV: 'preview' },
+		{ VERCEL_TARGET_ENV: 'preview', NEXT_PUBLIC_APP_ENVIRONMENT: 'production' },
+		{},
+	])('marks every response noindex, nofollow outside production (%o)', (env) => {
+		setDeployment(env);
 
-			expect(getRobotsHeaders()).toEqual([{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]);
-		},
-	);
+		expect(getRobotsHeaders()).toEqual([{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]);
+	});
 });

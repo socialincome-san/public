@@ -25,12 +25,14 @@ describe('robots.txt', () => {
 		},
 	);
 
-	it.each([{ VERCEL_TARGET_ENV: 'staging' }, { VERCEL_TARGET_ENV: 'preview' }, {}])(
-		'allows crawling outside production, so crawlers see the noindex header (%o)',
-		async (env) => {
-			setDeployment(env);
+	it.each([
+		{ VERCEL_TARGET_ENV: 'staging' },
+		{ VERCEL_TARGET_ENV: 'preview' },
+		{ VERCEL_TARGET_ENV: 'preview', NEXT_PUBLIC_APP_ENVIRONMENT: 'production' },
+		{},
+	])('allows crawling outside production, so crawlers see the noindex header (%o)', async (env) => {
+		setDeployment(env);
 
-			expect(await GET().text()).toBe('User-Agent: *\nDisallow:');
-		},
-	);
+		expect(await GET().text()).toBe('User-Agent: *\nDisallow:');
+	});
 });
