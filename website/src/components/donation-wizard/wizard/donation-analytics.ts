@@ -62,6 +62,8 @@ export const getDonationCompletedEvent = (donation: PaidCheckoutDonation) => ({
 		currency: donation.currency,
 		donation_type: donation.recurring ? 'recurring' : 'one_time',
 		payment_method: 'credit_card',
+		// Pushed even when unknown: Tag Manager would otherwise keep the value of an earlier event.
+		donor_status: donation.donorStatus,
 		transaction_id: donation.checkoutSessionId,
 		items: [{ item_id: 'donation', item_name: 'Donation', price: donation.amount, quantity: 1 }],
 	},

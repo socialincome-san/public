@@ -57,6 +57,8 @@ export type PaidCheckoutDonation = {
 	amount: number;
 	currency: string;
 	recurring: boolean;
+	/** `undefined` when the account could not be looked up. */
+	donorStatus: 'new' | 'returning' | undefined;
 };
 
 export type UpdateContributorAfterCheckoutInput = {
