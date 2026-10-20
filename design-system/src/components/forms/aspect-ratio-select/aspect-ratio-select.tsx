@@ -13,7 +13,7 @@ type AspectRatioSelectProps = {
 
 export const AspectRatioSelect = ({ items, label, name, value, onValueChange, disabled }: AspectRatioSelectProps) => (
 	<Select name={name} value={value} onValueChange={onValueChange} disabled={disabled}>
-		<SelectTrigger aria-label={label}>
+		<SelectTrigger size="sm" aria-label={label}>
 			<SelectValue />
 		</SelectTrigger>
 		<SelectContent>

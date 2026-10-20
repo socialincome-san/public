@@ -2,7 +2,8 @@
 
 import { Upload, X } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useId, useRef, useState } from 'react';
+import { type Ref, useEffect, useId, useRef, useState } from 'react';
+import { cn } from '../../../cn';
 
 type ImageUploadProps = {
 	name: string;
@@ -17,6 +18,8 @@ type ImageUploadProps = {
 	helperText: string;
 	invalidFileMessage: string;
 	disabled?: boolean;
+	variant?: 'dropzone' | 'attachment';
+	inputRef?: Ref<HTMLInputElement>;
 };
 
 export const ImageUpload = ({
@@ -32,6 +35,8 @@ export const ImageUpload = ({
 	helperText,
 	invalidFileMessage,
 	disabled,
+	variant = 'dropzone',
+	inputRef: externalInputRef,
 }: ImageUploadProps) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const descriptionId = useId();
@@ -44,14 +49,24 @@ export const ImageUpload = ({
 	}, [preview]);
 
 	return (
-		<div className="flex min-w-0 flex-col gap-2">
-			<label htmlFor={inputId} className="text-primary text-sm font-semibold">
+		<div className={cn('flex min-w-0 flex-col', (variant === 'dropzone' || preview || error) && 'gap-2')}>
+			<label htmlFor={inputId} className={cn('text-primary text-sm font-semibold', variant === 'attachment' && 'sr-only')}>
 				{label} <span className="text-muted-foreground font-normal">{optionalLabel}</span>
 			</label>
-			<div className="border-border focus-within:border-ring focus-within:ring-ring/50 relative flex h-20 items-center justify-center rounded-2xl border border-dashed py-3 pr-3 pl-20 focus-within:ring-2">
+			<div
+				className={cn(
+					variant === 'dropzone' &&
+						'border-border focus-within:border-ring focus-within:ring-ring/50 relative flex h-20 items-center justify-center rounded-2xl border border-dashed py-3 pr-3 pl-20 focus-within:ring-2',
+					variant === 'attachment' && (preview ? 'relative h-20 w-20' : 'hidden'),
+				)}
+			>
 				<input
 					id={inputId}
-					ref={inputRef}
+					ref={(node) => {
+						inputRef.current = node;
+						if (typeof externalInputRef === 'function') return externalInputRef(node);
+						if (externalInputRef) externalInputRef.current = node;
+					}}
 					type="file"
 					name={name}
 					accept={acceptedTypes.join(',')}
@@ -96,7 +111,12 @@ export const ImageUpload = ({
 						</div>
 					</div>
 				)}
-				<div className="pointer-events-none flex min-w-0 flex-col items-center gap-1 text-center">
+				<div
+					className={cn(
+						'pointer-events-none flex min-w-0 flex-col items-center gap-1 text-center',
+						variant === 'attachment' && 'sr-only',
+					)}
+				>
 					{!preview && (
 						<Upload aria-hidden="true" className="text-muted-foreground absolute top-1/2 left-4 size-5 -translate-y-1/2" />
 					)}

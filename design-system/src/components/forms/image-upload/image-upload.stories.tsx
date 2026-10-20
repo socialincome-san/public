@@ -30,3 +30,5 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const Disabled: Story = { args: { disabled: true } };
+
+export const Attachment: Story = { args: { variant: 'attachment' } };
