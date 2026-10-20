@@ -20,16 +20,25 @@ export const findPaginatedCandidates = async ({
 	localPartnerId,
 	country,
 	gender,
+	allowedCountryCodes,
 }: {
 	query: CandidatesTableQuery;
 	localPartnerId?: string;
 	country?: CountryCode;
 	gender?: Gender;
+	allowedCountryCodes?: CountryCode[];
 }) => {
-	const where = buildCandidateTableWhere(query.search, localPartnerId ?? query.localPartnerId, country, gender);
+	const where = buildCandidateTableWhere(
+		query.search,
+		localPartnerId ?? query.localPartnerId,
+		country,
+		gender,
+		allowedCountryCodes,
+	);
 	const filterWhere: Prisma.RecipientWhereInput = {
 		programId: null,
 		...(localPartnerId ? { localPartnerId } : {}),
+		...(allowedCountryCodes !== undefined ? { AND: [buildCountryFilters(allowedCountryCodes)] } : {}),
 	};
 
 	const [candidates, totalCount, filterSource] = await Promise.all([
@@ -280,6 +289,7 @@ const buildCandidateTableWhere = (
 	localPartnerIdInput: string | undefined,
 	country: CountryCode | undefined,
 	gender: Gender | undefined,
+	allowedCountryCodes: CountryCode[] | undefined,
 ): Prisma.RecipientWhereInput => {
 	const search = searchInput.trim();
 	const trimmedLocalPartnerId = localPartnerIdInput?.trim();
@@ -289,16 +299,19 @@ const buildCandidateTableWhere = (
 		...(localPartnerId ? { localPartnerId } : {}),
 		...(gender ? { contact: { gender } } : {}),
 	};
-	const countryScope = country ? buildCountryFilter(country) : null;
+	const countryScopes = [
+		...(allowedCountryCodes !== undefined ? [buildCountryFilters(allowedCountryCodes)] : []),
+		...(country ? [buildCountryFilter(country)] : []),
+	];
 
 	if (!search) {
-		return countryScope ? { AND: [baseScope, countryScope] } : baseScope;
+		return countryScopes.length ? { AND: [baseScope, ...countryScopes] } : baseScope;
 	}
 
 	return {
 		AND: [
 			baseScope,
-			...(countryScope ? [countryScope] : []),
+			...countryScopes,
 			{
 				OR: [
 					{ id: { contains: search, mode: 'insensitive' } },
@@ -322,6 +335,10 @@ const buildCountryFilter = (countryCode: CountryCode): Prisma.RecipientWhereInpu
 			],
 		},
 	],
+});
+
+const buildCountryFilters = (countryCodes: CountryCode[]): Prisma.RecipientWhereInput => ({
+	OR: countryCodes.flatMap((countryCode) => buildCountryFilter(countryCode).OR ?? []),
 });
 
 const buildCandidateWhere = (filter: UnassignedCandidateFilter): Prisma.RecipientWhereInput => {

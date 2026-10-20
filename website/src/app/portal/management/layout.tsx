@@ -1,5 +1,6 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
+import { getOperatorProgramCountriesForUser } from '@/modules/program-access/program-access.service';
 import { requireSession } from '@/server/session';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -14,7 +15,13 @@ type ManagementLayoutProps = {
 export default async function ManagementLayout({ children }: ManagementLayoutProps) {
 	const user = await requireSession('user');
 	if (!user.hasAnyOperatorProgramAccess) {
-		redirect('/portal/programs');
+		const operatorCountriesResult = await getOperatorProgramCountriesForUser(user.id);
+		if (!operatorCountriesResult.success) {
+			throw new Error('Could not verify operator program access');
+		}
+		if (!operatorCountriesResult.data.length) {
+			redirect('/portal/programs');
+		}
 	}
 
 	const breadcrumbLinks = [
@@ -25,6 +32,7 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 
 	const sections = [
 		// Program access–based
+		{ href: `/portal/management/pool`, label: 'Pool' },
 		{ href: `/portal/management/recipients`, label: 'Recipients' },
 		{ href: `/portal/management/ongoing-payouts`, label: 'Ongoing Payouts' },
 		{ href: `/portal/management/surveys`, label: 'Surveys' },

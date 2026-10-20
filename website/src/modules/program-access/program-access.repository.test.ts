@@ -1,5 +1,6 @@
 const mockUserFindUnique = jest.fn();
 const mockOrganizationAccessFindUnique = jest.fn();
+const mockProgramAccessFindMany = jest.fn();
 
 jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
@@ -9,10 +10,13 @@ jest.mock('@/lib/database/prisma', () => ({
 		organizationAccess: {
 			findUnique: mockOrganizationAccessFindUnique,
 		},
+		programAccess: {
+			findMany: mockProgramAccessFindMany,
+		},
 	},
 }));
 
-import { findActiveOrganizationId } from './program-access.repository';
+import { findActiveOrganizationId, findOperatorProgramCountriesByUserId } from './program-access.repository';
 
 describe('findActiveOrganizationId', () => {
 	beforeEach(() => {
@@ -40,5 +44,23 @@ describe('findActiveOrganizationId', () => {
 		mockOrganizationAccessFindUnique.mockResolvedValue({ organizationId: 'org-a' });
 
 		await expect(findActiveOrganizationId('user-1')).resolves.toBe('org-a');
+	});
+
+	test('finds operator programs across all organizations the user belongs to', async () => {
+		await findOperatorProgramCountriesByUserId('user-1');
+
+		expect(mockProgramAccessFindMany).toHaveBeenCalledWith({
+			where: {
+				permission: 'operator',
+				organization: { organizationAccesses: { some: { userId: 'user-1' } } },
+			},
+			select: {
+				program: {
+					select: {
+						country: { select: { isoCode: true } },
+					},
+				},
+			},
+		});
 	});
 });
