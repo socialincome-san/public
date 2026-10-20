@@ -5,7 +5,7 @@ type DetailPanelProps = {
 	// A key figure shown large below the title
 	value?: string;
 	children?: ReactNode;
-	// Shown next to the content from medium screens, e.g. a map
+	// Shown between title and content on small screens, next to them from medium screens, e.g. a map
 	media?: ReactNode;
 };
 
@@ -14,12 +14,10 @@ export const DetailPanel = ({ title, value, children, media }: DetailPanelProps)
 
 	if (media) {
 		return (
-			<div className="bg-card flex flex-col items-stretch overflow-hidden rounded-xl p-4 shadow-lg md:flex-row">
-				<div className="flex flex-1 flex-col items-start gap-5 lg:p-2">
-					{heading}
-					{children}
-				</div>
-				<div className="mt-5 h-[341px] w-full shrink-0 md:mt-0 md:w-[274px]">{media}</div>
+			<div className="bg-card grid grid-cols-1 gap-5 overflow-hidden rounded-xl p-4 shadow-lg md:grid-cols-[1fr_274px] md:grid-rows-[auto_1fr] md:gap-x-0">
+				<div className="lg:px-2 lg:pt-2">{heading}</div>
+				<div className="h-[341px] w-full md:col-start-2 md:row-[1/3]">{media}</div>
+				<div className="flex flex-col items-start gap-5 lg:px-2 lg:pb-2">{children}</div>
 			</div>
 		);
 	}
