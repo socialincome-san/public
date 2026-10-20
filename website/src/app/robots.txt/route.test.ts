@@ -26,11 +26,11 @@ describe('robots.txt', () => {
 	);
 
 	it.each([{ VERCEL_TARGET_ENV: 'staging' }, { VERCEL_TARGET_ENV: 'preview' }, {}])(
-		'disallows all crawling outside production (%o)',
+		'allows crawling outside production, so crawlers see the noindex header (%o)',
 		async (env) => {
 			setDeployment(env);
 
-			expect(await GET().text()).toBe('User-Agent: *\nDisallow: /');
+			expect(await GET().text()).toBe('User-Agent: *\nDisallow:');
 		},
 	);
 });

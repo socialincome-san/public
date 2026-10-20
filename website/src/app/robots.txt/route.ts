@@ -24,7 +24,9 @@ const productionRobotsTxt = [
 	`Sitemap: ${WEBSITE_ORIGIN}/sitemap.xml`,
 ].join('\n');
 
-const nonProductionRobotsTxt = ['User-Agent: *', 'Disallow: /'].join('\n');
+// Crawlable on purpose: crawlers must fetch pages to see their `X-Robots-Tag: noindex` header, which keeps them out of
+// search results. `Disallow: /` would hide it, and linked URLs could still be listed.
+const nonProductionRobotsTxt = ['User-Agent: *', 'Disallow:'].join('\n');
 
 export const GET = () =>
 	new Response(isProductionDeployment() ? productionRobotsTxt : nonProductionRobotsTxt, {
