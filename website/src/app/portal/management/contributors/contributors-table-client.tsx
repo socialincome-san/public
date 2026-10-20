@@ -10,7 +10,9 @@ import { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { ContributorTableViewRow } from '@/modules/contributors/contributor.types';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { translateManagementFilters, translateManagementTableConfig } from '../management-table-config';
 import { ContributorDialog } from './contributor-dialog';
 
 export default function ContributorsTableClient({
@@ -24,7 +26,23 @@ export default function ContributorsTableClient({
 	query?: TableQueryState & { totalRows: number };
 	countryFilterOptions?: { value: string; label: string }[];
 }) {
+	const t = useTranslations('portal-management');
 	const { recordId: contributorId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('contributorId');
+	const config = translateManagementTableConfig(contributorsTableConfig, {
+		title: t('tables.contributors.title'),
+		emptyMessage: t('tables.contributors.empty'),
+		columns: {
+			firebaseAuthUserId: t('columns.firebaseAuthUserId'),
+			contributor: t('columns.contributor'),
+			email: t('columns.email'),
+			country: t('columns.country'),
+			totalContributedChf: t('columns.totalContributedChf'),
+			createdAt: t('columns.createdAt'),
+		},
+	});
+	const filters = translateManagementFilters(getContributorsTableFilters({ query, countryFilterOptions }), {
+		country: { label: t('filters.country.label'), placeholder: t('filters.country.all') },
+	});
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const openEmptyForm = () => {
@@ -39,22 +57,22 @@ export default function ContributorsTableClient({
 
 	const onError = (error: unknown) => {
 		const message = retrieveErrorMessage(error);
-		setErrorMessage(`Error saving contributor: ${message}`);
+		setErrorMessage(t('dialogs.saveContributorError', { message }));
 		console.error('Contributor Form Error', { error });
 	};
 
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={contributorsTableConfig}
-				titleInfoTooltip="Shows contributors in your active organization scope."
+				config={config}
+				titleInfoTooltip={t('tables.contributors.tooltip')}
 				rows={rows}
 				error={error}
 				query={query}
-				toolbarFilters={getContributorsTableFilters({ query, countryFilterOptions })}
+				toolbarFilters={filters}
 				actionMenuItems={[
 					{
-						label: 'Add new contributor',
+						label: t('actions.addContributor'),
 						icon: <PlusIcon />,
 						onSelect: openEmptyForm,
 					},

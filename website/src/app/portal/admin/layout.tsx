@@ -1,43 +1,44 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
+import { requireAdmin } from '@/server/session';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-
-import { requireAdmin } from '@/server/session';
+import { getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
 
-type MonitoringLayoutProps = {
+type AdminLayoutProps = {
 	children: ReactNode;
 };
 
-export default async function DeliveryLayout({ children }: MonitoringLayoutProps) {
+export default async function AdminLayout({ children }: AdminLayoutProps) {
 	await requireAdmin();
+	const t = await getTranslations('portal-admin');
 
 	const breadcrumbLinks = [
-		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
-		{ href: '/portal/admin', label: 'Admin' },
+		{ href: '/', label: t('navigation.website') },
+		{ href: '/portal', label: t('navigation.portal') },
+		{ href: '/portal/admin', label: t('navigation.admin') },
 	];
 
 	const sections = [
-		{ href: `/portal/admin/organizations`, label: 'Organizations' },
-		{ href: `/portal/admin/users`, label: 'Users' },
-		{ href: `/portal/admin/local-partners`, label: 'Local Partners' },
-		{ href: `/portal/admin/candidates`, label: 'Candidate Pool' },
-		{ href: `/portal/admin/expenses`, label: 'Expenses' },
-		{ href: `/portal/admin/exchange-rates`, label: 'Exchange Rates' },
-		{ href: `/portal/admin/countries`, label: 'Countries' },
-		{ href: `/portal/admin/focuses`, label: 'Focuses' },
-		{ href: `/portal/admin/mobile-money-providers`, label: 'Mobile Money Providers' },
-		{ href: `/portal/admin/sent-mails`, label: 'Sent emails' },
-		{ href: `/portal/admin/audit-log`, label: 'Audit log' },
+		{ href: '/portal/admin/organizations', label: t('navigation.organizations') },
+		{ href: '/portal/admin/users', label: t('navigation.users') },
+		{ href: '/portal/admin/local-partners', label: t('navigation.localPartners') },
+		{ href: '/portal/admin/candidates', label: t('navigation.candidatePool') },
+		{ href: '/portal/admin/expenses', label: t('navigation.expenses') },
+		{ href: '/portal/admin/exchange-rates', label: t('navigation.exchangeRates') },
+		{ href: '/portal/admin/countries', label: t('navigation.countries') },
+		{ href: '/portal/admin/focuses', label: t('navigation.focuses') },
+		{ href: '/portal/admin/mobile-money-providers', label: t('navigation.mobileMoneyProviders') },
+		{ href: '/portal/admin/sent-mails', label: t('navigation.sentEmails') },
+		{ href: '/portal/admin/audit-log', label: t('navigation.auditLog') },
 	];
 
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
 			<BlockWrapper marginTop="none" marginBottom="none">
-				<h1 className="py-8 text-5xl">Admin</h1>
+				<h1 className="py-8 text-5xl">{t('navigation.admin')}</h1>
 
 				<TabNavigation sections={sections} />
 

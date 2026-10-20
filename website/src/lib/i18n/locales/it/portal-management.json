@@ -1,0 +1,208 @@
+{
+	"navigation": {
+		"website": "Sito web",
+		"portal": "Portale",
+		"management": "Gestione",
+		"recipients": "Beneficiari",
+		"ongoingPayouts": "Pagamenti in corso",
+		"surveys": "Sondaggi",
+		"contributors": "Sostenitori",
+		"contributions": "Contributi",
+		"subscriptions": "Abbonamenti",
+		"donationCertificates": "Certificazioni di donazione",
+		"campaigns": "Campagne"
+	},
+	"tables": {
+		"campaigns": {
+			"title": "Campagne",
+			"empty": "Nessuna campagna trovata",
+			"tooltip": "Mostra le campagne della tua organizzazione attiva."
+		},
+		"contributions": {
+			"title": "Contributi",
+			"empty": "Nessun contributo trovato",
+			"tooltip": "Mostra i contributi nell’ambito della tua organizzazione attiva."
+		},
+		"contributors": {
+			"title": "Sostenitori",
+			"empty": "Nessun sostenitore trovato",
+			"tooltip": "Mostra i sostenitori nell’ambito della tua organizzazione attiva."
+		},
+		"donationCertificates": {
+			"title": "Certificazioni di donazione",
+			"empty": "Nessuna certificazione di donazione trovata",
+			"tooltip": "Mostra le certificazioni di donazione disponibili per i sostenitori della tua organizzazione attiva."
+		},
+		"ongoingPayouts": {
+			"title": "Pagamenti in corso",
+			"empty": "Nessun pagamento in corso trovato",
+			"tooltip": "Mostra l’avanzamento dei pagamenti in corso ai beneficiari dei programmi a cui puoi accedere."
+		},
+		"subscriptions": {
+			"title": "Abbonamenti",
+			"empty": "Nessun abbonamento trovato",
+			"tooltip": "Mostra gli abbonamenti nell’ambito della tua organizzazione attiva."
+		},
+		"surveys": {
+			"title": "Sondaggi",
+			"empty": "Nessun sondaggio trovato",
+			"tooltip": "Mostra i sondaggi dei programmi a cui puoi accedere."
+		}
+	},
+	"columns": {
+		"amount": "Importo",
+		"bankStandingOrderReference": "Riferimento ordine permanente bancario",
+		"campaignTitle": "Campagna",
+		"cancellationReason": "Motivo della cancellazione",
+		"completedAt": "Completato",
+		"contributor": "Sostenitore",
+		"country": "Paese",
+		"createdAt": "Creato",
+		"currency": "Valuta",
+		"dueAt": "Scadenza",
+		"email": "E-mail",
+		"endDate": "Data di fine",
+		"firebaseAuthUserId": "ID utente Firebase Auth",
+		"isActive": "Stato",
+		"language": "Lingua",
+		"link": "Link",
+		"name": "Nome",
+		"paymentMethod": "Metodo di pagamento",
+		"programName": "Programma",
+		"questionnaire": "Questionario",
+		"payoutsProgressPercent": "Avanzamento",
+		"recipient": "Beneficiario",
+		"recipientName": "Beneficiario",
+		"status": "Stato",
+		"storagePath": "Percorso di archiviazione",
+		"stripeSubscriptionId": "ID Stripe",
+		"surveyUrl": "Copia URL",
+		"title": "Titolo",
+		"totalContributedChf": "Contributo totale (CHF)",
+		"year": "Anno"
+	},
+	"filters": {
+		"campaign": { "label": "Campagna", "all": "Tutte le campagne" },
+		"contributor": { "label": "Sostenitore", "all": "Tutti i sostenitori" },
+		"country": { "label": "Paese", "all": "Tutti i paesi" },
+		"paymentType": { "label": "Tipo di pagamento", "all": "Tutti i tipi di pagamento" },
+		"program": { "label": "Programma", "all": "Tutti i programmi" },
+		"recipient": { "label": "Beneficiario", "all": "Tutti i beneficiari" }
+	},
+	"actions": {
+		"addContribution": "Aggiungi contributo",
+		"addContributor": "Aggiungi sostenitore",
+		"addSurvey": "Aggiungi sondaggio",
+		"generateDonationCertificates": "Genera certificazioni di donazione",
+		"generateSurveys": "Genera sondaggi"
+	},
+	"dialogs": {
+		"error": "Errore",
+		"details": "Dettagli",
+		"auditLog": "Registro delle modifiche",
+		"editContributor": "Modifica sostenitore",
+		"newContributor": "Nuovo sostenitore",
+		"editContribution": "Modifica contributo",
+		"addContribution": "Aggiungi contributo",
+		"editSurvey": "Modifica sondaggio",
+		"addSurvey": "Aggiungi sondaggio",
+		"surveyGenerationTitle": "Procedura di generazione dei sondaggi",
+		"close": "Chiudi",
+		"saveContributionError": "Errore durante il salvataggio del contributo: {message}",
+		"saveContributorError": "Errore durante il salvataggio del sostenitore: {message}",
+		"saveSurveyError": "Errore durante il salvataggio del sondaggio: {message}"
+	},
+	"forms": {
+		"contact": {
+			"section": "Contatto",
+			"firstName": "Nome",
+			"lastName": "Cognome",
+			"callingName": "Nome preferito",
+			"email": "E-mail",
+			"language": "Lingua",
+			"dateOfBirth": "Data di nascita",
+			"profession": "Professione",
+			"gender": "Genere",
+			"phone": "Numero di telefono",
+			"hasWhatsApp": "Ha WhatsApp",
+			"street": "Via",
+			"number": "Numero civico",
+			"city": "Città",
+			"zip": "CAP",
+			"country": "Paese",
+			"chooseGender": "Scegli il genere"
+		},
+		"contribution": {
+			"section": "Contributo",
+			"amount": "Importo",
+			"amountPlaceholder": "Importo del contributo",
+			"currency": "Codice valuta",
+			"selectCurrency": "Seleziona valuta",
+			"amountChf": "Importo CHF",
+			"amountChfPlaceholder": "Importo del contributo in CHF",
+			"feesChf": "Commissioni CHF",
+			"feesChfPlaceholder": "Commissioni del contributo in CHF",
+			"contributor": "Sostenitore",
+			"selectContributor": "Seleziona sostenitore",
+			"status": "Stato",
+			"statusPlaceholder": "Stato del contributo",
+			"campaign": "Campagna",
+			"selectCampaign": "Seleziona campagna"
+		},
+		"contributor": {
+			"section": "Sostenitore",
+			"referral": "Segnalazione",
+			"paymentReferenceId": "ID riferimento pagamento",
+			"stripeCustomerId": "ID cliente Stripe"
+		},
+		"survey": {
+			"section": "Sondaggio",
+			"name": "Nome",
+			"namePlaceholder": "Nome del sondaggio",
+			"recipient": "Beneficiario",
+			"questionnaire": "Questionario",
+			"language": "Lingua",
+			"dueDate": "Data di scadenza",
+			"status": "Stato",
+			"accessEmail": "E-mail di accesso",
+			"accessPassword": "Password di accesso"
+		}
+	},
+	"validation": {
+		"nameRequired": "Il nome è obbligatorio",
+		"amountPositive": "L’importo deve essere positivo",
+		"feesPositive": "Le commissioni devono essere positive",
+		"emailInvalid": "Inserisci un indirizzo e-mail valido",
+		"dateOutOfRange": "Inserisci una data compresa tra il 2020 e il 2050",
+		"surveyLoading": "Il sondaggio è ancora in caricamento. Riprova.",
+		"contributorLoading": "Il sostenitore è ancora in caricamento. Riprova.",
+		"contributionLoading": "Il contributo è ancora in caricamento. Riprova."
+	},
+	"certificateGeneration": {
+		"title": "Genera certificazioni di donazione",
+		"year": "Anno",
+		"yearDescription": "Indica per quale anno generare la certificazione o le certificazioni:",
+		"selectYear": "Seleziona anno",
+		"language": "Lingua",
+		"languageDescription": "Indica in quale lingua generare la certificazione o le certificazioni:",
+		"selectLanguage": "Seleziona lingua",
+		"contributorLanguage": "Crea la certificazione nella lingua del sostenitore, se disponibile (\"{language}\" come fallback)",
+		"contributors": "Sostenitori",
+		"contributorsDescription": "Seleziona i sostenitori per cui generare le certificazioni",
+		"selectContributors": "Seleziona sostenitori",
+		"generating": "Generazione in corso...",
+		"generate": "Genera certificazioni",
+		"close": "Chiudi"
+	},
+	"surveyGeneration": {
+		"previewTitle": "Anteprima generazione sondaggi",
+		"previewLabel": "Anteprima generazione sondaggi (nessuna modifica)",
+		"previewDescription": "Mostra quali sondaggi verrebbero creati per i beneficiari; non verrà ancora salvato nulla.",
+		"generateTitle": "Genera sondaggi",
+		"generateLabel": "Genera sondaggi (applica le modifiche)",
+		"generateDescription": "Crea nel database i sondaggi per tutti i beneficiari idonei.",
+		"step": "Passaggio {number}: {title}",
+		"unknownError": "Errore sconosciuto",
+		"close": "Chiudi"
+	}
+}

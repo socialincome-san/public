@@ -8,6 +8,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@socialincome/design-system/data-display/table/table';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 type MessagingTemplatesTableProps = {
@@ -28,24 +29,44 @@ const statusVariant = (status: string | null) => {
 	}
 };
 
-export const MessagingTemplatesTable = ({ templates, error }: MessagingTemplatesTableProps) => {
+const statusLabel = (status: string, labels: { approved: string; rejected: string; pending: string }) => {
+	switch (status) {
+		case 'approved':
+			return labels.approved;
+		case 'rejected':
+			return labels.rejected;
+		case 'pending':
+			return labels.pending;
+		default:
+			return status;
+	}
+};
+
+export const MessagingTemplatesTable = async ({ templates, error }: MessagingTemplatesTableProps) => {
+	const t = await getTranslations('portal-messaging');
+	const templateStatusLabels = {
+		approved: t('status.templates.approved'),
+		rejected: t('status.templates.rejected'),
+		pending: t('status.templates.pending'),
+	};
+
 	if (error) {
-		return <p className="text-destructive text-sm">{error}</p>;
+		return <p className="text-destructive text-sm">{t('common.errorDetails', { error })}</p>;
 	}
 
 	if (templates.length === 0) {
-		return <p className="text-muted-foreground text-sm">No content templates found.</p>;
+		return <p className="text-muted-foreground text-sm">{t('templates.empty')}</p>;
 	}
 
 	return (
 		<Table>
 			<TableHeader>
 				<TableRow>
-					<TableHead>Name</TableHead>
-					<TableHead>SID</TableHead>
-					<TableHead>Language</TableHead>
-					<TableHead>Type</TableHead>
-					<TableHead>WhatsApp</TableHead>
+					<TableHead>{t('templates.columns.name')}</TableHead>
+					<TableHead>{t('templates.columns.sid')}</TableHead>
+					<TableHead>{t('templates.columns.language')}</TableHead>
+					<TableHead>{t('templates.columns.type')}</TableHead>
+					<TableHead>{t('templates.columns.whatsapp')}</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
@@ -64,7 +85,7 @@ export const MessagingTemplatesTable = ({ templates, error }: MessagingTemplates
 						<TableCell>
 							{template.whatsappStatus ? (
 								<Badge variant={statusVariant(template.whatsappStatus)}>
-									{template.whatsappStatus}
+									{statusLabel(template.whatsappStatus, templateStatusLabels)}
 									{template.whatsappCategory ? ` · ${template.whatsappCategory}` : ''}
 								</Badge>
 							) : (

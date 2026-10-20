@@ -19,6 +19,12 @@ describe('proxy', () => {
 		expect(response.headers.get('set-cookie')).toBeNull();
 	});
 
+	test('marks portal requests for user-language resolution', () => {
+		const response = proxy(request('/portal/admin'));
+
+		expect(response.headers.get('x-middleware-request-x-socialincome-portal')).toBe('true');
+	});
+
 	test('permanently redirects old region URLs and keeps path and query', () => {
 		expect(redirectOf('/de/ch/programs/foo?country=SL')).toEqual({
 			status: 308,

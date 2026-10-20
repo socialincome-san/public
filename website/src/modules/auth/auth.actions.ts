@@ -1,6 +1,6 @@
 'use server';
 
-import { getWebsiteBasePath } from '@/lib/i18n/utils';
+import { getPortalLanguage, getWebsiteBasePath, PORTAL_LANGUAGE_COOKIE_NAME } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { SESSION_COOKIE_NAME } from '@/modules/auth/auth.types';
 import { getCurrentSessions, getCurrentUser, getSessionByType } from '@/modules/auth/session.service';
@@ -30,6 +30,18 @@ export const createSessionAction = async (input: unknown): Promise<Result<boolea
 			path: '/',
 			maxAge: sessionCookieResult.data.maxAge,
 		});
+		const userResult = await getCurrentUser();
+		if (!userResult.success) {
+			console.error('Could not resolve portal language preference', { error: userResult.error });
+		}
+		(await cookies()).set({
+			name: PORTAL_LANGUAGE_COOKIE_NAME,
+			value: getPortalLanguage(userResult.success ? userResult.data?.language : undefined),
+			httpOnly: true,
+			secure: IS_PRODUCTION,
+			sameSite: 'lax',
+			path: '/',
+		});
 
 		return resultOk(true);
 	} catch (error) {
@@ -43,6 +55,15 @@ export const logoutAction = async (): Promise<Result<boolean>> => {
 	try {
 		(await cookies()).set({
 			name: SESSION_COOKIE_NAME,
+			value: '',
+			httpOnly: true,
+			secure: IS_PRODUCTION,
+			sameSite: 'lax',
+			path: '/',
+			maxAge: 0,
+		});
+		(await cookies()).set({
+			name: PORTAL_LANGUAGE_COOKIE_NAME,
 			value: '',
 			httpOnly: true,
 			secure: IS_PRODUCTION,

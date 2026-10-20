@@ -1,5 +1,6 @@
 'use client';
 
+import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import {
 	generateTelecelCurrentMonthPayoutsAction,
 	generateTelecelPayoutCsvAction,
@@ -29,6 +30,7 @@ export const TelecelCsvPayoutProcessDialog = ({
 	open,
 	onClose,
 }: TelecelCsvPayoutProcessDialogProps) => {
+	const t = usePortalOperationsTranslations();
 	const [results, setResults] = useState<Record<number, StepResult>>({});
 	const monthKey = format(selectedDate, 'yyyy-MM');
 
@@ -43,15 +45,15 @@ export const TelecelCsvPayoutProcessDialog = ({
 
 			return;
 		}
-		setResult(step, result.data ?? 'Done');
+		setResult(step, result.data ?? t('delivery.process.done'));
 	};
 
 	const steps = [
 		{
 			id: 1,
-			title: 'Generate payout CSV',
-			label: 'Generate payout CSV',
-			description: `Shows the payout CSV (MSISDN, Amount, Telco) for ${selectedMonthLabel} — no changes yet.`,
+			title: t('delivery.process.generate_payout_csv'),
+			label: t('delivery.process.generate_payout_csv'),
+			description: t('delivery.process.telecel_payout_csv_description', { month: selectedMonthLabel }),
 			icon: <TableIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
 			run: () => run(() => generateTelecelPayoutCsvAction({ selectedDate }), 1),
@@ -59,9 +61,9 @@ export const TelecelCsvPayoutProcessDialog = ({
 		},
 		{
 			id: 2,
-			title: 'Preview payouts',
-			label: 'Preview payouts (no changes)',
-			description: `Previews payouts for ${selectedMonthLabel} (excluding any already paid this month) — nothing written yet.`,
+			title: t('delivery.process.preview_payouts'),
+			label: t('delivery.process.preview_payouts_no_changes'),
+			description: t('delivery.process.preview_payouts_description', { month: selectedMonthLabel }),
 			icon: <EyeIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
 			run: () => run(() => previewTelecelCurrentMonthPayoutsAction({ selectedDate }), 2),
@@ -69,9 +71,9 @@ export const TelecelCsvPayoutProcessDialog = ({
 		},
 		{
 			id: 3,
-			title: 'Generate payouts',
-			label: 'Generate payouts (apply changes)',
-			description: `Creates payouts in the database for ${selectedMonthLabel}.`,
+			title: t('delivery.process.generate_payouts'),
+			label: t('delivery.process.generate_payouts_apply_changes'),
+			description: t('delivery.process.generate_payouts_description', { month: selectedMonthLabel }),
 			icon: <PlayIcon className="h-4 w-4" />,
 			run: () => run(() => generateTelecelCurrentMonthPayoutsAction({ selectedDate }), 3),
 			filename: `generated-payouts-telecel-${monthKey}.json`,
@@ -82,9 +84,9 @@ export const TelecelCsvPayoutProcessDialog = ({
 		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
 			<DialogContent size="md">
 				<DialogHeader>
-					<DialogTitle>Telecel CSV upload</DialogTitle>
+					<DialogTitle>{t('delivery.process.telecel_title')}</DialogTitle>
 					<DialogDescription>
-						Payout month: <span className="text-foreground font-medium">{selectedMonthLabel}</span>
+						{t('delivery.process.payout_month')}: <span className="text-foreground font-medium">{selectedMonthLabel}</span>
 					</DialogDescription>
 				</DialogHeader>
 
@@ -92,7 +94,7 @@ export const TelecelCsvPayoutProcessDialog = ({
 					{steps.map((step) => (
 						<div key={step.id} className="bg-muted flex flex-col gap-2 rounded-2xl p-4">
 							<p className="font-medium">
-								Step {step.id}: {step.title}
+								{t('delivery.process.step', { number: step.id })}: {step.title}
 							</p>
 							<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
 
@@ -113,7 +115,7 @@ export const TelecelCsvPayoutProcessDialog = ({
 
 				<DialogFooter>
 					<Button variant="outline" onClick={onClose}>
-						Close
+						{t('common.close')}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

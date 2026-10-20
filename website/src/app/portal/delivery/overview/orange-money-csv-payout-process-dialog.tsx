@@ -1,5 +1,6 @@
 'use client';
 
+import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { slugify } from '@/lib/utils/string-utils';
 import {
 	generateOrangeCurrentMonthPayoutsAction,
@@ -33,6 +34,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 	open,
 	onClose,
 }: OrangeMoneyCsvPayoutProcessDialogProps) => {
+	const t = usePortalOperationsTranslations();
 	const [results, setResults] = useState<Record<number, StepResult>>({});
 	const monthKey = format(selectedDate, 'yyyy-MM');
 	const providerSlug = slugify(providerName);
@@ -48,15 +50,15 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 
 			return;
 		}
-		setResult(step, result.data ?? 'Done');
+		setResult(step, result.data ?? t('delivery.process.done'));
 	};
 
 	const steps = [
 		{
 			id: 1,
-			title: 'Generate registration CSV',
-			label: 'Generate registration CSV',
-			description: 'Shows the CSV for recipients in programs ready for payouts (others are excluded) — no changes yet.',
+			title: t('delivery.process.generate_registration_csv'),
+			label: t('delivery.process.generate_registration_csv'),
+			description: t('delivery.process.registration_csv_description'),
 			icon: <TableIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
 			run: () => run(() => generateOrangeRegistrationCsvAction({ mobileMoneyProviderId }), 1),
@@ -64,9 +66,9 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 		},
 		{
 			id: 2,
-			title: 'Generate payout CSV',
-			label: 'Generate payout CSV',
-			description: `Shows the payout CSV for ${selectedMonthLabel} — no changes yet.`,
+			title: t('delivery.process.generate_payout_csv'),
+			label: t('delivery.process.generate_payout_csv'),
+			description: t('delivery.process.payout_csv_description', { month: selectedMonthLabel }),
 			icon: <TableIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
 			run: () => run(() => generateOrangePayoutCsvAction({ mobileMoneyProviderId, selectedDate }), 2),
@@ -74,9 +76,9 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 		},
 		{
 			id: 3,
-			title: 'Preview payouts',
-			label: 'Preview payouts (no changes)',
-			description: `Previews payouts for ${selectedMonthLabel} (excluding any already paid this month) — nothing written yet.`,
+			title: t('delivery.process.preview_payouts'),
+			label: t('delivery.process.preview_payouts_no_changes'),
+			description: t('delivery.process.preview_payouts_description', { month: selectedMonthLabel }),
 			icon: <EyeIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
 			run: () => run(() => previewOrangeCurrentMonthPayoutsAction({ mobileMoneyProviderId, selectedDate }), 3),
@@ -84,9 +86,9 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 		},
 		{
 			id: 4,
-			title: 'Generate payouts',
-			label: 'Generate payouts (apply changes)',
-			description: `Creates payouts in the database for ${selectedMonthLabel}.`,
+			title: t('delivery.process.generate_payouts'),
+			label: t('delivery.process.generate_payouts_apply_changes'),
+			description: t('delivery.process.generate_payouts_description', { month: selectedMonthLabel }),
 			icon: <PlayIcon className="h-4 w-4" />,
 			run: () => run(() => generateOrangeCurrentMonthPayoutsAction({ mobileMoneyProviderId, selectedDate }), 4),
 			filename: `generated-payouts-${providerSlug}-${monthKey}.json`,
@@ -97,9 +99,9 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
 			<DialogContent size="md">
 				<DialogHeader>
-					<DialogTitle>Orange Money CSV upload — {providerName}</DialogTitle>
+					<DialogTitle>{t('delivery.process.orange_money_title', { provider: providerName })}</DialogTitle>
 					<DialogDescription>
-						Payout month: <span className="text-foreground font-medium">{selectedMonthLabel}</span>
+						{t('delivery.process.payout_month')}: <span className="text-foreground font-medium">{selectedMonthLabel}</span>
 					</DialogDescription>
 				</DialogHeader>
 
@@ -107,7 +109,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 					{steps.map((step) => (
 						<div key={step.id} className="bg-muted flex flex-col gap-2 rounded-2xl p-4">
 							<p className="font-medium">
-								Step {step.id}: {step.title}
+								{t('delivery.process.step', { number: step.id })}: {step.title}
 							</p>
 							<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
 
@@ -128,7 +130,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 
 				<DialogFooter>
 					<Button variant="outline" onClick={onClose}>
-						Close
+						{t('common.close')}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

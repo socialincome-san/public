@@ -3,6 +3,7 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
+import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import type { Result } from '@/lib/result';
 import { handleResult } from '@/lib/result-client';
 import { SLUG_REGEX } from '@/lib/utils/regex';
@@ -14,7 +15,8 @@ import {
 	updateLocalPartnerAction,
 } from '@/modules/local-partners/local-partner.actions';
 import type { LocalPartnerPayload } from '@/modules/local-partners/local-partner.types';
-import { useEffect, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateLocalPartnerInput, buildUpdateLocalPartnerInput } from './local-partners-form-helper';
 
@@ -28,30 +30,33 @@ export type LocalPartnerFormSchema = {
 	};
 };
 
-const initialFormSchema: LocalPartnerFormSchema = {
-	label: 'Local Partner',
+const getInitialFormSchema = (
+	t: ReturnType<typeof useTranslations<'portal-admin'>>,
+	sharedTranslate: ReturnType<typeof usePortalSharedTranslations>['t'],
+): LocalPartnerFormSchema => ({
+	label: t('form.localPartner'),
 	fields: {
 		name: {
-			placeholder: 'Name',
-			label: 'Name',
-			zodSchema: z.string().trim().min(1, 'Name is required.'),
+			placeholder: t('form.name'),
+			label: t('form.name'),
+			zodSchema: z.string().trim().min(1, t('validation.requiredName')),
 		},
 		slug: {
 			placeholder: 'unique-readable-id',
-			label: 'Slug (URL Identifier)',
-			zodSchema: z.string().trim().min(1, 'Slug is required.').regex(SLUG_REGEX, 'Invalid slug format.'),
+			label: t('form.slug'),
+			zodSchema: z.string().trim().min(1, t('validation.requiredSlug')).regex(SLUG_REGEX, t('validation.invalidSlug')),
 		},
 		focuses: {
-			placeholder: 'Focuses',
-			label: 'Focuses',
+			placeholder: t('form.focuses'),
+			label: t('form.focuses'),
 			zodSchema: z.array(z.string().trim().min(1)).optional(),
 			options: [],
 		},
 		contact: {
-			...getContactFormSchema({ isEmailRequired: true }),
+			...getContactFormSchema({ isEmailRequired: true, translate: sharedTranslate }),
 		},
 	},
-};
+});
 
 export default function LocalPartnersForm({
 	onSuccess,
@@ -64,6 +69,9 @@ export default function LocalPartnersForm({
 	onCancel?: () => void;
 	localPartnerId?: string;
 }) {
+	const t = useTranslations('portal-admin');
+	const { t: sharedTranslate } = usePortalSharedTranslations();
+	const initialFormSchema = useMemo(() => getInitialFormSchema(t, sharedTranslate), [sharedTranslate, t]);
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [localPartner, setLocalPartner] = useState<LocalPartnerPayload>();
 	const [isLoading, startTransition] = useTransition();

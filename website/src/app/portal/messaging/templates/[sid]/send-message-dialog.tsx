@@ -4,6 +4,7 @@ import type { TwilioTemplateDetail } from '@/modules/messaging/messaging.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Dialog, DialogContent } from '@socialincome/design-system/overlays/dialog/dialog';
 import { Send } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { SendMessageWizard } from './send-message-wizard';
 
@@ -12,6 +13,7 @@ type SendMessageDialogProps = {
 };
 
 export const SendMessageDialog = ({ template }: SendMessageDialogProps) => {
+	const t = useTranslations('portal-messaging');
 	const [open, setOpen] = useState(false);
 	const [locked, setLocked] = useState(false);
 
@@ -25,7 +27,7 @@ export const SendMessageDialog = ({ template }: SendMessageDialogProps) => {
 		<>
 			<Button onClick={() => setOpen(true)}>
 				<Send />
-				Send message
+				{t('wizard.actions.sendMessage')}
 			</Button>
 
 			<Dialog open={open} onOpenChange={(next) => (next ? setOpen(true) : requestClose())}>

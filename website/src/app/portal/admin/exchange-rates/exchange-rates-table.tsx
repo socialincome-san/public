@@ -9,6 +9,7 @@ import type { TableQueryState } from '@/components/data-table/query-state';
 import { importExchangeRatesAction } from '@/modules/exchange-rates/exchange-rate.actions';
 import type { ExchangeRatesTableViewRow } from '@/modules/exchange-rates/exchange-rate.types';
 import { RefreshCwIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 
 export default function ExchangeRatesTable({
@@ -22,6 +23,7 @@ export default function ExchangeRatesTable({
 	query?: TableQueryState & { totalRows: number };
 	currencyFilterOptions: { value: string; label: string }[];
 }) {
+	const t = useTranslations('portal-admin');
 	const [isLoading, startTransition] = useTransition();
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -37,15 +39,19 @@ export default function ExchangeRatesTable({
 
 	return (
 		<ConfiguredDataTableClient
-			config={exchangeRatesTableConfig}
-			titleInfoTooltip="Shows imported monthly exchange-rate snapshots."
+			config={{
+				...exchangeRatesTableConfig,
+				title: t('table.exchangeRates'),
+				emptyMessage: t('table.noExchangeRates'),
+			}}
+			titleInfoTooltip={t('table.exchangeRatesTooltip')}
 			rows={rows}
 			error={error ?? errorMessage}
 			query={query}
 			toolbarFilters={getExchangeRatesTableFilters({ query, currencyFilterOptions })}
 			actionMenuItems={[
 				{
-					label: isLoading ? 'Importing...' : 'Import last month',
+					label: isLoading ? t('actions.importing') : t('actions.importLastMonth'),
 					icon: <RefreshCwIcon />,
 					disabled: isLoading,
 					onSelect: triggerImport,

@@ -6,6 +6,7 @@ import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { MobileMoneyProviderTableViewRow } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { MobileMoneyProviderDialog } from './mobile-money-provider-dialog';
 
 export default function MobileMoneyProvidersTable({
@@ -17,19 +18,24 @@ export default function MobileMoneyProvidersTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
+	const t = useTranslations('portal-admin');
 	const { recordId: providerId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('providerId');
 
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={mobileMoneyProvidersTableConfig}
-				titleInfoTooltip="Shows all configured mobile money providers."
+				config={{
+					...mobileMoneyProvidersTableConfig,
+					title: t('table.providers'),
+					emptyMessage: t('table.noProviders'),
+				}}
+				titleInfoTooltip={t('table.providersTooltip')}
 				rows={rows}
 				error={error}
 				query={query}
 				actionMenuItems={[
 					{
-						label: 'Add provider',
+						label: t('actions.addProvider'),
 						icon: <PlusIcon />,
 						onSelect: openCreate,
 					},

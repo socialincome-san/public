@@ -1,26 +1,29 @@
 import type { MessagingPhoneSource, MessagingRecipientType } from '@/modules/messaging/messaging.types';
 
-const PHONE_WORDS: Record<MessagingPhoneSource, string> = { contact: 'contact phone', payment: 'payment phone' };
-
 export type PhoneChoiceLabels = {
-	// Appended to "Sending to N recipients via SMS", e.g. "on their payment phone".
 	target: string | null;
 	skipped: string;
 };
 
-// Wording for the review step. Only recipients have two phones; every other type keeps the generic copy.
 export const phoneChoiceLabels = (
 	type: MessagingRecipientType | null,
 	phoneSource: MessagingPhoneSource,
 	phoneFallbackAllowed: boolean,
+	words: {
+		contact: string;
+		payment: string;
+		skipped: string;
+		skippedFor: (phone: string) => string;
+		onPhone: (phone: string) => string;
+	},
 ): PhoneChoiceLabels => {
 	if (type !== 'recipient') {
-		return { target: null, skipped: 'Skipped — no phone number' };
+		return { target: null, skipped: words.skipped };
 	}
-	const chosen = PHONE_WORDS[phoneSource];
+	const chosen = words[phoneSource];
 
 	return {
-		target: `on their ${chosen}`,
-		skipped: phoneFallbackAllowed ? 'Skipped — no phone number' : `Skipped — no ${chosen} number`,
+		target: words.onPhone(chosen),
+		skipped: phoneFallbackAllowed ? words.skipped : words.skippedFor(chosen),
 	};
 };

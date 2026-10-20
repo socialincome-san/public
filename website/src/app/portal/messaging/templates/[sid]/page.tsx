@@ -2,6 +2,7 @@ import { MessagingTemplateSummaryCard } from '@/app/portal/messaging/templates/[
 import { getTwilioTemplate } from '@/modules/messaging/messaging.service';
 import { requireAdmin } from '@/server/session';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -19,12 +20,13 @@ export default function MessagingTemplatePage({ params }: MessagingTemplatePageP
 
 const MessagingTemplateDataLoader = async ({ params }: MessagingTemplatePageProps) => {
 	const user = await requireAdmin();
+	const t = await getTranslations('portal-messaging');
 
 	const { sid } = await params;
 	const result = await getTwilioTemplate(sid, user.id);
 
 	if (!result.success) {
-		return <p className="text-destructive text-sm">{result.error}</p>;
+		return <p className="text-destructive text-sm">{t('common.errorDetails', { error: result.error })}</p>;
 	}
 
 	const template = result.data;
@@ -33,7 +35,7 @@ const MessagingTemplateDataLoader = async ({ params }: MessagingTemplatePageProp
 	return (
 		<div className="space-y-6">
 			<Link href="/portal/messaging/templates" className="text-muted-foreground hover:text-foreground text-sm">
-				← Back to templates
+				← {t('templates.back')}
 			</Link>
 
 			<MessagingTemplateSummaryCard template={template} twilioAccountSid={twilioAccountSid} />

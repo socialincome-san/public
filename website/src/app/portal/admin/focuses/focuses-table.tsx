@@ -6,6 +6,7 @@ import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { FocusTableViewRow } from '@/modules/focuses/focus.types';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { FocusDialog } from './focus-dialog';
 
@@ -18,6 +19,7 @@ export default function FocusesTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
+	const t = useTranslations('portal-admin');
 	const { recordId: focusId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('focusId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -34,14 +36,18 @@ export default function FocusesTable({
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={focusesTableConfig}
-				titleInfoTooltip="Shows all configured focuses."
+				config={{
+					...focusesTableConfig,
+					title: t('table.focuses'),
+					emptyMessage: t('table.noFocuses'),
+				}}
+				titleInfoTooltip={t('table.focusesTooltip')}
 				rows={rows}
 				error={error}
 				query={query}
 				actionMenuItems={[
 					{
-						label: 'Add focus',
+						label: t('actions.addFocus'),
 						icon: <PlusIcon />,
 						onSelect: openEmptyForm,
 					},

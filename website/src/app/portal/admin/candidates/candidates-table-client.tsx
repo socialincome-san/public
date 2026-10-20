@@ -13,6 +13,7 @@ import type { Session } from '@/modules/auth/auth.types';
 import { downloadCandidatesCsvAction, importCandidatesCsvAction } from '@/modules/candidates/candidate.actions';
 import type { CandidatesTableViewRow } from '@/modules/candidates/candidate.types';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { CandidateDialog } from './candidate-dialog';
 import { candidatesCsvTemplate } from './candidates-csv-template';
@@ -40,6 +41,7 @@ export const CandidatesTableClient = ({
 	localPartnerFilterOptions = [],
 	showGenderFilter = false,
 }: Props) => {
+	const t = useTranslations('portal-admin');
 	const canManageCandidates = sessionType === 'user';
 	const isReadOnly = readOnly ?? false;
 	const tableConfig = {
@@ -83,7 +85,7 @@ export const CandidatesTableClient = ({
 
 	const actionMenuItems: ActionMenuItem[] = [
 		{
-			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
+			label: isCsvDownloading ? t('actions.downloading') : t('actions.downloadCsv'),
 			icon: <DownloadIcon />,
 			disabled: isCsvDownloading,
 			onSelect: () => {
@@ -93,13 +95,13 @@ export const CandidatesTableClient = ({
 		...(canManageCandidates
 			? [
 					{
-						label: 'Add new candidate',
+						label: t('actions.addCandidate'),
 						icon: <PlusIcon />,
 						disabled: isReadOnly,
 						onSelect: openCreateDialog,
 					},
 					{
-						label: 'Upload CSV',
+						label: t('actions.uploadCsv'),
 						icon: <UploadIcon />,
 						disabled: isReadOnly,
 						onSelect: () => setIsCsvUploadDialogOpen(true),
@@ -111,8 +113,12 @@ export const CandidatesTableClient = ({
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={tableConfig}
-				titleInfoTooltip="Shows candidate records awaiting program assignment."
+				config={{
+					...tableConfig,
+					title: t('table.candidatePool'),
+					emptyMessage: t('table.noCandidates'),
+				}}
+				titleInfoTooltip={t('table.candidatesTooltip')}
 				rows={rows}
 				error={error}
 				query={query}
@@ -146,7 +152,7 @@ export const CandidatesTableClient = ({
 			<CsvUploadDialog
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
-				title="Upload candidates CSV"
+				title={t('csv.title')}
 				template={candidatesCsvTemplate}
 				onImport={(file) => importCandidatesCsvAction(file, sessionType)}
 			/>

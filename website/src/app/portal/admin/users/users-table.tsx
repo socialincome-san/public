@@ -10,6 +10,7 @@ import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { UserTableViewRow } from '@/modules/users/user.types';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import UsersForm from './users-form';
 
@@ -22,6 +23,7 @@ export default function UsersTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
+	const t = useTranslations('portal-admin');
 	const { recordId: userId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('userId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -37,21 +39,25 @@ export default function UsersTable({
 
 	const onError = (error: unknown) => {
 		const errorMessage = retrieveErrorMessage(error);
-		setErrorMessage(`Error updating user: ${errorMessage}`);
+		setErrorMessage(t('status.errorUpdatingUser', { error: errorMessage }));
 		console.error('User Form Error', { error });
 	};
 
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={usersTableConfig}
-				titleInfoTooltip="Shows all user accounts in admin scope."
+				config={{
+					...usersTableConfig,
+					title: t('table.users'),
+					emptyMessage: t('table.noUsers'),
+				}}
+				titleInfoTooltip={t('table.usersTooltip')}
 				rows={rows}
 				error={error}
 				query={query}
 				actionMenuItems={[
 					{
-						label: 'Add user',
+						label: t('actions.addUser'),
 						icon: <PlusIcon />,
 						onSelect: openEmptyForm,
 					},
@@ -62,12 +68,12 @@ export default function UsersTable({
 			<RecordDialog
 				open={open}
 				onOpenChange={onOpenChange}
-				title={userId ? 'Edit user' : 'Add user'}
+				title={userId ? t('dialog.editUser') : t('dialog.addUser')}
 				tabs={userId ? [auditLogTab('user', userId)] : []}
 			>
 				{errorMessage && (
 					<Alert variant="destructive">
-						<AlertTitle>Error</AlertTitle>
+						<AlertTitle>{t('common.error')}</AlertTitle>
 						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}

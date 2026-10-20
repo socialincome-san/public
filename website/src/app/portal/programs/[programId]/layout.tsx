@@ -1,3 +1,4 @@
+import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { CountryBadge } from '@/components/badges/country-badge';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
@@ -16,25 +17,26 @@ type ProgramLayoutProps = {
 export default async function ProgramLayout({ children, params }: ProgramLayoutProps) {
 	const { programId } = await params;
 	const user = await requireSession('user');
+	const t = await getPortalOperationsTranslations();
 
 	const result = await getProgramWallet(user.id, programId);
 
 	if (!result.success) {
-		return <div className="p-4">Error loading the program</div>;
+		return <div className="p-4">{t('program.error_loading_program')}</div>;
 	}
 
 	const { programName, country } = result.data;
 
 	const sections = [
-		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
-		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
-		{ href: `/portal/programs/${programId}/payout-forecast`, label: 'Payout Forecast' },
-		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
+		{ href: `/portal/programs/${programId}/overview`, label: t('navigation.overview') },
+		{ href: `/portal/programs/${programId}/recipients`, label: t('navigation.recipients') },
+		{ href: `/portal/programs/${programId}/payout-forecast`, label: t('program.payout_forecast') },
+		{ href: `/portal/programs/${programId}/surveys`, label: t('navigation.surveys') },
 	];
 
 	const breadcrumbLinks = [
-		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
+		{ href: '/', label: t('navigation.website') },
+		{ href: '/portal', label: t('navigation.portal') },
 		{ href: `/portal/programs/${programId}/recipients`, label: programName },
 	];
 

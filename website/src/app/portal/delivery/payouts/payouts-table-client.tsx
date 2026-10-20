@@ -1,5 +1,6 @@
 'use client';
 
+import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getPayoutsTableFilters, payoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
 import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
@@ -25,6 +26,7 @@ export const PayoutsTableClient = ({
 	mobileMoneyProviderFilterOptions: { id: string; name: string }[];
 	recipientFilterOptions: { id: string; name: string }[];
 }) => {
+	const t = usePortalOperationsTranslations();
 	const { recordId: payoutId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('payoutId');
 	const toolbarFilters = getPayoutsTableFilters({
 		query,
@@ -43,14 +45,14 @@ export const PayoutsTableClient = ({
 		<>
 			<ConfiguredDataTableClient
 				config={payoutsTableConfig}
-				titleInfoTooltip="Shows all payouts across all payout statuses."
+				titleInfoTooltip={t('delivery.payouts.info')}
 				rows={rows}
 				error={error}
 				query={query}
 				toolbarFilters={toolbarFilters}
 				actionMenuItems={[
 					{
-						label: 'Add manually',
+						label: t('delivery.payouts.add_manually'),
 						icon: <PlusIcon />,
 						onSelect: openCreate,
 					},

@@ -29,6 +29,7 @@ import {
 } from '@socialincome/design-system/forms/select/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/overlays/popover/popover';
 import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { type ReactNode, useEffect, useRef, useState, useTransition } from 'react';
 import {
 	clearSelection,
@@ -50,6 +51,7 @@ type DebouncedSearchInputProps = {
 };
 
 const DebouncedSearchInput = ({ value, onDebouncedChange, placeholder }: DebouncedSearchInputProps) => {
+	const t = useTranslations('portal-messaging');
 	const [local, setLocal] = useState(value);
 	const [prevValue, setPrevValue] = useState(value);
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -88,10 +90,10 @@ const DebouncedSearchInput = ({ value, onDebouncedChange, placeholder }: Debounc
 
 	return (
 		<SearchInput
-			aria-label={placeholder ?? 'Search'}
+			aria-label={placeholder ?? t('common.search')}
 			value={local}
 			onChange={(e) => handleChange(e.target.value)}
-			placeholder={placeholder ?? 'Search…'}
+			placeholder={placeholder ?? t('common.search')}
 		/>
 	);
 };
@@ -109,21 +111,29 @@ const buildFilterDefs = (
 	type: MessagingRecipientType,
 	filters: MessagingRecipientFilters,
 	options: MessagingRecipientFilterOptions,
+	labels: {
+		program: string;
+		allPrograms: string;
+		status: string;
+		allStatuses: string;
+		country: string;
+		allCountries: string;
+	},
 ): FilterDef[] => {
 	if (type === 'recipient') {
 		return [
 			{
 				id: 'program',
-				label: 'Program',
-				placeholder: 'All programs',
+				label: labels.program,
+				placeholder: labels.allPrograms,
 				key: 'programId',
 				value: filters.programId,
 				options: options.program ?? [],
 			},
 			{
 				id: 'status',
-				label: 'Status',
-				placeholder: 'All statuses',
+				label: labels.status,
+				placeholder: labels.allStatuses,
 				key: 'recipientStatus',
 				value: filters.recipientStatus,
 				options: options.status ?? [],
@@ -134,8 +144,8 @@ const buildFilterDefs = (
 		return [
 			{
 				id: 'country',
-				label: 'Country',
-				placeholder: 'All countries',
+				label: labels.country,
+				placeholder: labels.allCountries,
 				key: 'country',
 				value: filters.country,
 				options: options.country ?? [],
@@ -153,12 +163,13 @@ type FiltersToolbarProps = {
 };
 
 const FiltersToolbar = ({ filterDefs, onFilterChange, onClearFilters }: FiltersToolbarProps) => {
+	const t = useTranslations('portal-messaging');
 	const activeFilterCount = filterDefs.filter((filter) => Boolean(filter.value)).length;
 
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button type="button" variant="outline" size="icon-lg" aria-label="Filters">
+				<Button type="button" variant="outline" size="icon-lg" aria-label={t('wizard.recipients.filters')}>
 					<FilterIcon className="size-4" />
 					{activeFilterCount > 0 ? (
 						<span className="bg-primary text-primary-foreground text-2xs absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 leading-none">
@@ -170,9 +181,9 @@ const FiltersToolbar = ({ filterDefs, onFilterChange, onClearFilters }: FiltersT
 			<PopoverContent align="end">
 				<div className="space-y-3">
 					<div className="flex items-center justify-between">
-						<p className="text-sm font-medium">Filter results</p>
+						<p className="text-sm font-medium">{t('wizard.recipients.filterResults')}</p>
 						<Button type="button" variant="ghost" size="sm" onClick={onClearFilters} disabled={activeFilterCount === 0}>
-							Clear
+							{t('wizard.actions.clear')}
 						</Button>
 					</div>
 					<div className="space-y-2">
@@ -189,7 +200,7 @@ const FiltersToolbar = ({ filterDefs, onFilterChange, onClearFilters }: FiltersT
 										disabled={!hasOptions}
 									>
 										<SelectTrigger>
-											<SelectValue placeholder={hasOptions ? filter.placeholder : 'No options available'} />
+											<SelectValue placeholder={hasOptions ? filter.placeholder : t('wizard.recipients.noOptions')} />
 										</SelectTrigger>
 										<SelectContent align="end">
 											{hasOptions ? (
@@ -200,7 +211,7 @@ const FiltersToolbar = ({ filterDefs, onFilterChange, onClearFilters }: FiltersT
 												))
 											) : (
 												<SelectItem value="no-options-available" disabled>
-													No options available
+													{t('wizard.recipients.noOptions')}
 												</SelectItem>
 											)}
 										</SelectContent>
@@ -245,6 +256,7 @@ export const RecipientsTable = ({
 	onSelectionChange,
 	notice,
 }: RecipientsTableProps) => {
+	const t = useTranslations('portal-messaging');
 	const [data, setData] = useState<MessagingRecipientsPage | null>(null);
 	const [filterOptions, setFilterOptions] = useState<MessagingRecipientFilterOptions>({});
 	const [error, setError] = useState<string | null>(null);
@@ -280,7 +292,14 @@ export const RecipientsTable = ({
 		};
 	}, [query, onTotalCountChange]);
 
-	const filterDefs = buildFilterDefs(query.type, query.filters, filterOptions);
+	const filterDefs = buildFilterDefs(query.type, query.filters, filterOptions, {
+		program: t('wizard.recipients.program'),
+		allPrograms: t('wizard.recipients.allPrograms'),
+		status: t('wizard.recipients.status'),
+		allStatuses: t('wizard.recipients.allStatuses'),
+		country: t('wizard.recipients.country'),
+		allCountries: t('wizard.recipients.allCountries'),
+	});
 	const filtersToolbar =
 		filterDefs.length > 0 ? (
 			<FiltersToolbar
@@ -295,15 +314,15 @@ export const RecipientsTable = ({
 
 	const renderTableRegion = () => {
 		if (error) {
-			return messageBox(<p className="text-destructive text-sm">{error}</p>);
+			return messageBox(<p className="text-destructive text-sm">{t('common.errorDetails', { error })}</p>);
 		}
 
 		if (!data && isPending) {
-			return messageBox(<p className="text-muted-foreground text-sm">Loading…</p>);
+			return messageBox(<p className="text-muted-foreground text-sm">{t('common.loading')}</p>);
 		}
 
 		if (!data || data.rows.length === 0) {
-			return messageBox(<p className="text-muted-foreground text-sm">No entries.</p>);
+			return messageBox(<p className="text-muted-foreground text-sm">{t('wizard.recipients.noEntries')}</p>);
 		}
 
 		const isSelectable = selection !== undefined && onSelectionChange !== undefined;
@@ -318,14 +337,14 @@ export const RecipientsTable = ({
 							{isSelectable && (
 								<TableHead width="fit">
 									<Checkbox
-										aria-label="Select all rows on this page"
+										aria-label={t('wizard.recipients.selectPage')}
 										checked={pageCheckboxState === 'all' ? true : pageCheckboxState === 'some' ? 'indeterminate' : false}
 										onCheckedChange={() => onSelectionChange(togglePage(selection, pageIds))}
 									/>
 								</TableHead>
 							)}
-							<TableHead>Name</TableHead>
-							<TableHead>Details</TableHead>
+							<TableHead>{t('wizard.recipients.name')}</TableHead>
+							<TableHead>{t('wizard.recipients.details')}</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -334,7 +353,7 @@ export const RecipientsTable = ({
 								{isSelectable && (
 									<TableCell width="fit">
 										<Checkbox
-											aria-label={`Select ${row.name}`}
+											aria-label={t('wizard.recipients.selectRow', { name: row.name })}
 											checked={isRowSelected(selection, row.id)}
 											onCheckedChange={() => onSelectionChange(toggleRow(selection, row.id))}
 										/>
@@ -371,46 +390,44 @@ export const RecipientsTable = ({
 		} else if (isSelectable && selection.mode === 'all-matching') {
 			status = (
 				<>
-					<span className="text-foreground">All {selectedCount} selected</span>
+					<span className="text-foreground">{t('wizard.recipients.allSelected', { count: selectedCount })}</span>
 					<Button variant="link" size="sm" onClick={() => onSelectionChange(clearSelection())}>
-						Clear
+						{t('wizard.actions.clear')}
 					</Button>
 				</>
 			);
 		} else if (isSelectable && selectedCount > 0) {
 			status = (
 				<>
-					<span className="text-foreground">{selectedCount} selected</span>
+					<span className="text-foreground">{t('wizard.recipients.selected', { count: selectedCount })}</span>
 					{canOfferSelectAll && (
 						<Button
 							variant="link"
 							size="sm"
 							onClick={() => onSelectionChange(selectAllMatching(selection, query.search, query.filters))}
 						>
-							Select all {data.totalCount}
+							{t('wizard.recipients.selectAll', { count: data.totalCount })}
 						</Button>
 					)}
 					<Button variant="link" size="sm" onClick={() => onSelectionChange(clearSelection())}>
-						Clear
+						{t('wizard.actions.clear')}
 					</Button>
 				</>
 			);
 		} else {
-			status = <span>{data.totalCount} recipients</span>;
+			status = <span>{t('wizard.recipients.count', { count: data.totalCount })}</span>;
 		}
 
 		return (
 			<div className="flex shrink-0 items-center justify-between gap-4 text-sm">
 				<div className="text-muted-foreground flex min-w-0 items-center gap-2">{status}</div>
 				<div className="flex shrink-0 items-center gap-2">
-					<span className="text-muted-foreground">
-						Page {data.page} of {totalPages}
-					</span>
+					<span className="text-muted-foreground">{t('common.pageOf', { page: data.page, totalPages })}</span>
 					<div className="flex gap-1">
 						<Button
 							variant="outline"
 							size="icon-sm"
-							aria-label="Previous page"
+							aria-label={t('common.previousPage')}
 							disabled={data.page <= 1 || isPending}
 							onClick={() => onPageChange(Math.max(1, query.page - 1))}
 						>
@@ -419,7 +436,7 @@ export const RecipientsTable = ({
 						<Button
 							variant="outline"
 							size="icon-sm"
-							aria-label="Next page"
+							aria-label={t('common.nextPage')}
 							disabled={data.page >= totalPages || isPending}
 							onClick={() => onPageChange(query.page + 1)}
 						>
@@ -435,7 +452,7 @@ export const RecipientsTable = ({
 		<div className="flex min-h-0 flex-1 flex-col gap-2">
 			<div className="flex shrink-0 items-center gap-2">
 				<div className="flex-1">
-					<DebouncedSearchInput value={search} onDebouncedChange={onSearchChange} />
+					<DebouncedSearchInput value={search} onDebouncedChange={onSearchChange} placeholder={t('common.search')} />
 				</div>
 				{filtersToolbar}
 			</div>

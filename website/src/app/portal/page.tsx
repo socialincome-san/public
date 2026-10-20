@@ -3,6 +3,7 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { requireSession } from '@/server/session';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Suspense } from 'react';
+import { getPortalOperationsTranslations } from './portal-operations-server-translations';
 
 export default function PortalPage() {
 	return (
@@ -14,10 +15,11 @@ export default function PortalPage() {
 
 const PortalDataLoader = async () => {
 	const user = await requireSession('user');
+	const t = await getPortalOperationsTranslations();
 
 	const breadcrumbLinks = [
-		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
+		{ href: '/', label: t('navigation.website') },
+		{ href: '/portal', label: t('navigation.portal') },
 	];
 
 	return (
@@ -26,7 +28,7 @@ const PortalDataLoader = async () => {
 			<BlockWrapper marginTop="none" marginBottom="none">
 				<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
 					<h1 data-testid="welcome-message-portal" className="py-8 text-5xl">
-						Welcome back {user.firstName} 👋
+						{t('portal.welcome', { firstName: user.firstName ?? '' })}
 					</h1>
 				</div>
 

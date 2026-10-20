@@ -10,6 +10,7 @@ import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { ExpenseTableViewRow } from '@/modules/expenses/expense.types';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import ExpensesForm from './expenses-form';
 
@@ -22,6 +23,7 @@ export default function ExpensesTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
+	const t = useTranslations('portal-admin');
 	const { recordId: expenseId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('expenseId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -37,21 +39,25 @@ export default function ExpensesTable({
 
 	const onError = (error: unknown) => {
 		const errorMessage = retrieveErrorMessage(error);
-		setErrorMessage(`Error saving expense: ${errorMessage}`);
+		setErrorMessage(t('status.errorSavingExpense', { error: errorMessage }));
 		console.error('Expense Form Error', { error });
 	};
 
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={expensesTableConfig}
-				titleInfoTooltip="Shows expense records across organizations in admin scope."
+				config={{
+					...expensesTableConfig,
+					title: t('table.expenses'),
+					emptyMessage: t('table.noExpenses'),
+				}}
+				titleInfoTooltip={t('table.expensesTooltip')}
 				rows={rows}
 				error={error}
 				query={query}
 				actionMenuItems={[
 					{
-						label: 'Add expense',
+						label: t('actions.addExpense'),
 						icon: <PlusIcon />,
 						onSelect: openEmptyForm,
 					},
@@ -62,12 +68,12 @@ export default function ExpensesTable({
 			<RecordDialog
 				open={open}
 				onOpenChange={onOpenChange}
-				title={expenseId ? 'Edit expense' : 'Add expense'}
+				title={expenseId ? t('dialog.editExpense') : t('dialog.addExpense')}
 				tabs={expenseId ? [auditLogTab('expense', expenseId)] : []}
 			>
 				{errorMessage && (
 					<Alert variant="destructive">
-						<AlertTitle>Error</AlertTitle>
+						<AlertTitle>{t('common.error')}</AlertTitle>
 						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}

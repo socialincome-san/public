@@ -1,12 +1,23 @@
 export type FieldEntry = { path: string; label: string };
 
-export const getFieldCatalog = (): readonly FieldEntry[] => [
-	{ path: 'contact.firstName', label: 'First name' },
-	{ path: 'contact.lastName', label: 'Last name' },
-	{ path: 'contact.callingName', label: 'Calling name' },
-	{ path: 'contact.email', label: 'Email' },
-	{ path: 'contact.gender', label: 'Gender' },
-	{ path: 'contact.language', label: 'Language' },
-	{ path: 'contact.dateOfBirth', label: 'Date of birth' },
-	{ path: 'contact.profession', label: 'Profession' },
+export type FieldCatalogLabels = {
+	firstName: string;
+	lastName: string;
+	callingName: string;
+	email: string;
+	gender: string;
+	language: string;
+	dateOfBirth: string;
+	profession: string;
+};
+
+export const getFieldCatalog = (labels: FieldCatalogLabels): readonly FieldEntry[] => [
+	{ path: 'contact.firstName', label: labels.firstName },
+	{ path: 'contact.lastName', label: labels.lastName },
+	{ path: 'contact.callingName', label: labels.callingName },
+	{ path: 'contact.email', label: labels.email },
+	{ path: 'contact.gender', label: labels.gender },
+	{ path: 'contact.language', label: labels.language },
+	{ path: 'contact.dateOfBirth', label: labels.dateOfBirth },
+	{ path: 'contact.profession', label: labels.profession },
 ];

@@ -1,4 +1,5 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
+import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import {
 	getActiveOrganizationSummary,
@@ -20,6 +21,7 @@ export default function ProfileOrganizationPage({ searchParams }: SearchParamsPa
 
 const ProfileOrganizationDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await requireSession('user');
+	const t = await getPortalOperationsTranslations();
 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
@@ -31,7 +33,7 @@ const ProfileOrganizationDataLoader = async ({ searchParams }: SearchParamsPageP
 	const totalRows = result.success ? result.data.totalCount : 0;
 	const organizationName = activeOrganizationSummaryResult.success
 		? activeOrganizationSummaryResult.data.name
-		: (user.activeOrganization?.name ?? 'Organization');
+		: (user.activeOrganization?.name ?? t('profile.organization'));
 
 	return <MembersTable rows={rows} error={error} organizationName={organizationName} query={{ ...tableQuery, totalRows }} />;
 };

@@ -1,5 +1,6 @@
 'use client';
 
+import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { Button } from '@socialincome/design-system/actions/button/button';
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export const CsvTemplateDownload = ({ template }: Props) => {
+	const { t } = usePortalSharedTranslations();
 	const handleDownload = () => {
 		const csvContent = [template.headers.join(','), template.exampleRow.join(',')].join('\n');
 
@@ -27,9 +29,9 @@ export const CsvTemplateDownload = ({ template }: Props) => {
 
 	return (
 		<div className="bg-muted/30 flex items-center justify-between rounded-md border px-3 py-2">
-			<p className="text-muted-foreground text-sm">Need help formatting your CSV?</p>
+			<p className="text-muted-foreground text-sm">{t('csv.templateHelp', 'Need help formatting your CSV?')}</p>
 			<Button variant="ghost" size="sm" onClick={handleDownload}>
-				Download CSV template
+				{t('csv.downloadTemplate', 'Download CSV template')}
 			</Button>
 		</div>
 	);

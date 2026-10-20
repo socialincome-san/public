@@ -12,7 +12,8 @@ import {
 	updateExpenseAction,
 } from '@/modules/expenses/expense.actions';
 import type { ExpensePayload } from '@/modules/expenses/expense.types';
-import { useEffect, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateExpenseInput, buildUpdateExpenseInput } from './expenses-form-helper';
 
@@ -33,37 +34,44 @@ export type ExpenseFormSchema = {
 	};
 };
 
-const initialFormSchema: ExpenseFormSchema = {
-	label: 'Expense',
+const getInitialFormSchema = (t: ReturnType<typeof useTranslations<'portal-admin'>>): ExpenseFormSchema => ({
+	label: t('form.expense'),
 	fields: {
 		type: {
-			placeholder: 'Type',
-			label: 'Type',
+			placeholder: t('form.type'),
+			label: t('form.type'),
 			zodSchema: z.nativeEnum(ExpenseType),
 			value: ExpenseType.staff,
+			options: [
+				{ id: ExpenseType.account_fees, label: t('expenseTypes.accountFees') },
+				{ id: ExpenseType.administrative, label: t('expenseTypes.administrative') },
+				{ id: ExpenseType.delivery_fees, label: t('expenseTypes.deliveryFees') },
+				{ id: ExpenseType.donation_fees, label: t('expenseTypes.donationFees') },
+				{ id: ExpenseType.exchange_rate_loss, label: t('expenseTypes.exchangeRateLoss') },
+				{ id: ExpenseType.fundraising_advertising, label: t('expenseTypes.fundraisingAdvertising') },
+				{ id: ExpenseType.staff, label: t('expenseTypes.staff') },
+			],
 		},
 		year: {
-			placeholder: 'Year',
-			label: 'Year',
-			zodSchema: z.coerce
-				.number()
-				.int()
-				.min(2000, 'Year must be between 2000 and 2100.')
-				.max(2100, 'Year must be between 2000 and 2100.'),
+			placeholder: t('form.year'),
+			label: t('form.year'),
+			zodSchema: z.coerce.number().int().min(2000, t('validation.yearRange')).max(2100, t('validation.yearRange')),
 		},
 		amountChf: {
-			placeholder: 'Amount CHF',
-			label: 'Amount CHF',
-			zodSchema: z.coerce.number().min(0, 'Amount CHF must be zero or greater.'),
+			placeholder: t('form.amountChf'),
+			label: t('form.amountChf'),
+			zodSchema: z.coerce.number().min(0, t('validation.positiveAmount')),
 		},
 		organization: {
-			placeholder: 'Organization',
-			label: 'Organization',
+			placeholder: t('form.organization'),
+			label: t('form.organization'),
 		},
 	},
-};
+});
 
 export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }: ExpenseFormProps) {
+	const t = useTranslations('portal-admin');
+	const initialFormSchema = useMemo(() => getInitialFormSchema(t), [t]);
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [expense, setExpense] = useState<ExpensePayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -116,7 +124,7 @@ export default function ExpensesForm({ onSuccess, onError, onCancel, expenseId }
 	const onSubmit = (schema: ExpenseFormSchema) => {
 		startTransition(async () => {
 			if (expenseId && expense?.id !== expenseId) {
-				return onError?.('Expense is still loading. Please try again.');
+				return onError?.(t('status.expenseLoading'));
 			}
 			const result =
 				expenseId && expense

@@ -4,21 +4,29 @@ import type { MessagingChannel } from '@/generated/prisma/client';
 import type { MessagingPhoneSource, MessagingRecipientType } from '@/modules/messaging/messaging.types';
 import { Checkbox } from '@socialincome/design-system/forms/checkbox/checkbox';
 import { SelectableCard } from '@socialincome/design-system/forms/selectable-card/selectable-card';
+import { useTranslations } from 'next-intl';
 
-const TYPE_OPTIONS: { value: MessagingRecipientType; label: string }[] = [
-	{ value: 'contributor', label: 'Contributor' },
-	{ value: 'recipient', label: 'Recipient' },
-	{ value: 'local-partner', label: 'Local partner' },
+const TYPE_OPTIONS: {
+	value: MessagingRecipientType;
+	labelKey: 'wizard.recipientTypes.contributor' | 'wizard.recipientTypes.recipient' | 'wizard.recipientTypes.localPartner';
+}[] = [
+	{ value: 'contributor', labelKey: 'wizard.recipientTypes.contributor' },
+	{ value: 'recipient', labelKey: 'wizard.recipientTypes.recipient' },
+	{ value: 'local-partner', labelKey: 'wizard.recipientTypes.localPartner' },
 ];
 
-const CHANNEL_OPTIONS: { value: MessagingChannel; label: string }[] = [
-	{ value: 'sms', label: 'SMS' },
-	{ value: 'whatsapp', label: 'WhatsApp' },
+const CHANNEL_OPTIONS: { value: MessagingChannel; labelKey: 'common.channels.sms' | 'common.channels.whatsapp' }[] = [
+	{ value: 'sms', labelKey: 'common.channels.sms' },
+	{ value: 'whatsapp', labelKey: 'common.channels.whatsapp' },
 ];
 
-const PHONE_OPTIONS: { value: MessagingPhoneSource; label: string; hint: string }[] = [
-	{ value: 'contact', label: 'Contact phone', hint: 'Number used for communication' },
-	{ value: 'payment', label: 'Payment phone', hint: 'Mobile money number used for payouts' },
+const PHONE_OPTIONS: {
+	value: MessagingPhoneSource;
+	labelKey: 'wizard.phone.contact' | 'wizard.phone.payment';
+	hintKey: 'wizard.phone.contactHint' | 'wizard.phone.paymentHint';
+}[] = [
+	{ value: 'contact', labelKey: 'wizard.phone.contact', hintKey: 'wizard.phone.contactHint' },
+	{ value: 'payment', labelKey: 'wizard.phone.payment', hintKey: 'wizard.phone.paymentHint' },
 ];
 
 type Props = {
@@ -44,10 +52,12 @@ export const Step1RecipientType = ({
 	onPhoneSourceChange,
 	onPhoneFallbackAllowedChange,
 }: Props) => {
+	const t = useTranslations('portal-messaging');
+
 	return (
 		<div className="space-y-6">
 			<section className="space-y-2">
-				<h3 className="text-sm font-medium">Recipient type</h3>
+				<h3 className="text-sm font-medium">{t('wizard.recipientType')}</h3>
 				<div className="grid grid-cols-3 gap-3">
 					{TYPE_OPTIONS.map((option) => (
 						<SelectableCard
@@ -56,7 +66,7 @@ export const Step1RecipientType = ({
 							onSelect={() => onTypeChange(option.value)}
 							size="sm"
 						>
-							{option.label}
+							{t(option.labelKey)}
 						</SelectableCard>
 					))}
 				</div>
@@ -64,7 +74,7 @@ export const Step1RecipientType = ({
 
 			{type === 'recipient' && (
 				<section className="space-y-2">
-					<h3 className="text-sm font-medium">Phone number</h3>
+					<h3 className="text-sm font-medium">{t('wizard.phone.title')}</h3>
 					<div className="grid grid-cols-2 gap-3">
 						{PHONE_OPTIONS.map((option) => (
 							<div key={option.value} className="space-y-1">
@@ -73,9 +83,9 @@ export const Step1RecipientType = ({
 									onSelect={() => onPhoneSourceChange(option.value)}
 									size="sm"
 								>
-									{option.label}
+									{t(option.labelKey)}
 								</SelectableCard>
-								<p className="text-muted-foreground text-center text-xs">{option.hint}</p>
+								<p className="text-muted-foreground text-center text-xs">{t(option.hintKey)}</p>
 							</div>
 						))}
 					</div>
@@ -84,13 +94,13 @@ export const Step1RecipientType = ({
 							checked={phoneFallbackAllowed}
 							onCheckedChange={(checked) => onPhoneFallbackAllowedChange(checked === true)}
 						/>
-						<span>Use the other phone when the chosen one is missing</span>
+						<span>{t('wizard.phone.fallbackAllowed')}</span>
 					</label>
 				</section>
 			)}
 
 			<section className="space-y-2">
-				<h3 className="text-sm font-medium">Channel</h3>
+				<h3 className="text-sm font-medium">{t('wizard.channel')}</h3>
 				<div className="grid grid-cols-2 gap-3">
 					{CHANNEL_OPTIONS.map((option) => {
 						const supported = supportedChannels.includes(option.value);
@@ -103,9 +113,11 @@ export const Step1RecipientType = ({
 									onSelect={() => onChannelChange(option.value)}
 									size="sm"
 								>
-									{option.label}
+									{t(option.labelKey)}
 								</SelectableCard>
-								{!supported && <p className="text-muted-foreground text-center text-xs">Not available for this template</p>}
+								{!supported && (
+									<p className="text-muted-foreground text-center text-xs">{t('wizard.channelNotAvailable')}</p>
+								)}
 							</div>
 						);
 					})}
