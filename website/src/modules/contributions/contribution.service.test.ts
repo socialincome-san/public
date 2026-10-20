@@ -1,7 +1,12 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
 import type * as ContributionRepository from './contribution.repository.read';
-import type { ContributionPaginatedTableView, ContributionTableQuery, GlobeContribution } from './contribution.types';
+import type {
+	ContributionPaginatedTableView,
+	ContributionSourceTotals,
+	ContributionTableQuery,
+	GlobeContribution,
+} from './contribution.types';
 
 type ContributionRow = {
 	id: string;
@@ -42,6 +47,7 @@ const mockGetAccessiblePrograms = jest.fn();
 const mockGetContributorFilterOption = jest.fn();
 const mockFindCampaignsByProgramIds = jest.fn();
 const mockFindContributionTableSource = jest.fn();
+const mockGroupSucceededContributionTotalsBySource = jest.fn();
 
 jest.mock('@/modules/program-access/program-access.service', () => ({
 	getAccessiblePrograms: mockGetAccessiblePrograms,
@@ -63,6 +69,7 @@ jest.mock('./contribution.repository.read', () => ({
 	...jest.requireActual<typeof ContributionRepository>('./contribution.repository.read'),
 	findCampaignsByProgramIds: mockFindCampaignsByProgramIds,
 	findContributionTableSource: mockFindContributionTableSource,
+	groupSucceededContributionTotalsBySource: mockGroupSucceededContributionTotalsBySource,
 }));
 
 const makeRow = (overrides: Partial<ContributionRow> = {}): ContributionRow => ({
@@ -97,13 +104,34 @@ const expectSuccess = <T>(result: Result<T>) => {
 };
 
 let getRecentSuccessfulContributions: (days: number) => Promise<Result<GlobeContribution[]>>;
+let getSucceededContributionSourceTotals: (dateRange?: { gte: Date; lt: Date }) => Promise<Result<ContributionSourceTotals>>;
 let getPaginatedTableView: (
 	userId: string,
 	query: ContributionTableQuery,
 ) => Promise<Result<ContributionPaginatedTableView>>;
 
 beforeAll(async () => {
-	({ getRecentSuccessfulContributions, getPaginatedTableView } = await import('./contribution.service'));
+	({ getRecentSuccessfulContributions, getSucceededContributionSourceTotals, getPaginatedTableView } =
+		await import('./contribution.service'));
+});
+
+describe('getSucceededContributionSourceTotals', () => {
+	beforeEach(() => {
+		mockGroupSucceededContributionTotalsBySource.mockReset();
+	});
+
+	it('returns CHF totals for each source and fills missing sources with zero', async () => {
+		mockGroupSucceededContributionTotalsBySource.mockResolvedValue([
+			{ sourceType: 'individual', _sum: { amountChf: '125.5' } },
+			{ sourceType: 'foundation_grant', _sum: { amountChf: null } },
+		]);
+
+		expect(await getSucceededContributionSourceTotals()).toEqual({
+			success: true,
+			data: { individual: 125.5, foundation_grant: 0, corporate_partner: 0 },
+		});
+		expect(mockGroupSucceededContributionTotalsBySource).toHaveBeenCalledWith(undefined);
+	});
 });
 
 describe('getRecentSuccessfulContributions', () => {

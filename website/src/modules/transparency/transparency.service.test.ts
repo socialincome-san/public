@@ -1,10 +1,16 @@
+import { ContributionSourceType } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
-import type { ContributionCountryRow, ContributionDateRange } from '@/modules/contributions/contribution.types';
+import type {
+	ContributionCountryRow,
+	ContributionDateRange,
+	ContributionSourceTotals,
+} from '@/modules/contributions/contribution.types';
 import type { PayoutDateRange } from '@/modules/payouts/payout.types';
 import type { LatestReserves } from '@/modules/reserves/reserve.types';
 import { format, startOfMonth, subMonths } from 'date-fns';
 
 const mockGetSucceededContributionTotal = jest.fn<Promise<Result<number>>, [dateRange?: ContributionDateRange]>();
+const mockGetSucceededContributionSourceTotals = jest.fn<Promise<Result<ContributionSourceTotals>>, []>();
 const mockGetSucceededContributionsByContributorCountry = jest.fn<
 	Promise<Result<ContributionCountryRow[]>>,
 	[dateRange?: ContributionDateRange]
@@ -14,6 +20,7 @@ const mockGetLatestReserves = jest.fn<Promise<Result<LatestReserves>>, []>();
 
 jest.mock('@/modules/contributions/contribution.service', () => ({
 	getSucceededContributionTotal: mockGetSucceededContributionTotal,
+	getSucceededContributionSourceTotals: mockGetSucceededContributionSourceTotals,
 	getSucceededContributionsByContributorCountry: mockGetSucceededContributionsByContributorCountry,
 }));
 
@@ -50,6 +57,14 @@ const countryRow = (
 beforeEach(() => {
 	jest.clearAllMocks();
 	mockGetSucceededContributionTotal.mockResolvedValue({ success: true, data: 0 });
+	mockGetSucceededContributionSourceTotals.mockResolvedValue({
+		success: true,
+		data: {
+			[ContributionSourceType.individual]: 0,
+			[ContributionSourceType.foundation_grant]: 0,
+			[ContributionSourceType.corporate_partner]: 0,
+		},
+	});
 	mockGetSucceededContributionsByContributorCountry.mockResolvedValue({ success: true, data: [] });
 	mockGetPaidOrConfirmedPayoutTotal.mockResolvedValue({ success: true, data: 0 });
 	mockGetLatestReserves.mockResolvedValue({ success: true, data: { accounts: [], total: 0 } });
@@ -96,13 +111,30 @@ describe('getTransparencySummary', () => {
 			},
 		];
 		mockGetSucceededContributionTotal.mockResolvedValue({ success: true, data: 125 });
+		mockGetSucceededContributionSourceTotals.mockResolvedValue({
+			success: true,
+			data: {
+				[ContributionSourceType.individual]: 60,
+				[ContributionSourceType.foundation_grant]: 40,
+				[ContributionSourceType.corporate_partner]: 25,
+			},
+		});
 		mockGetPaidOrConfirmedPayoutTotal.mockResolvedValue({ success: true, data: 80 });
 		mockGetLatestReserves.mockResolvedValue({ success: true, data: { accounts, total: 45 } });
 
 		expect(await getTransparencySummary()).toEqual({
 			success: true,
 			data: {
-				financialSummary: { inflowsChf: 125, outflowsChf: 80, reservesChf: 45 },
+				financialSummary: {
+					inflowsChf: 125,
+					inflowsBySourceChf: {
+						[ContributionSourceType.individual]: 60,
+						[ContributionSourceType.foundation_grant]: 40,
+						[ContributionSourceType.corporate_partner]: 25,
+					},
+					outflowsChf: 80,
+					reservesChf: 45,
+				},
 				reserveAccounts: accounts,
 			},
 		});

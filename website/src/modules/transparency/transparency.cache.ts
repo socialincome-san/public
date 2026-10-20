@@ -3,11 +3,12 @@ import { cacheResult } from '@/lib/result-cache';
 import { cacheTag } from 'next/cache';
 import * as service from './transparency.service';
 import {
-	TRANSPARENCY_CACHE_TAG,
 	type TransparencyCountriesData,
 	type TransparencyFinancialPeriod,
 	type TransparencySummaryData,
 } from './transparency.types';
+
+export const TRANSPARENCY_CACHE_TAG = 'transparency';
 
 export const getTotalContributionsChf = async (financialPeriod?: TransparencyFinancialPeriod): Promise<Result<number>> => {
 	'use cache';

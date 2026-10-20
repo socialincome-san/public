@@ -1,6 +1,6 @@
-import { Contribution, ContributionStatus, Prisma } from '@/generated/prisma/client';
+import { ContributionStatus, Prisma } from '@/generated/prisma/client';
 
-export const contributionsData: Contribution[] = [
+export const contributionsData: Prisma.ContributionCreateManyInput[] = [
 	{
 		id: 'contribution-core-high-1',
 		legacyFirestoreId: null,

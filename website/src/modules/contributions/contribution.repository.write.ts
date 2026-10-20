@@ -1,5 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
-import type { ContributionStatus, Currency } from '@/generated/prisma/enums';
+import type { ContributionSourceType, ContributionStatus, Currency } from '@/generated/prisma/enums';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import { DateTime } from 'luxon';
@@ -20,6 +20,7 @@ type ContributionInput = {
 	amountChf: number;
 	feesChf: number;
 	status: ContributionStatus;
+	sourceType?: ContributionSourceType;
 	contributorId: string;
 	campaignId: string;
 };
@@ -126,6 +127,7 @@ const contributionAuditSnapshotSelect = {
 	amountChf: true,
 	feesChf: true,
 	status: true,
+	sourceType: true,
 	contributorId: true,
 	campaignId: true,
 } satisfies Prisma.ContributionSelect;
@@ -143,6 +145,7 @@ const toContributionData = (input: ContributionInput) => ({
 	amountChf: input.amountChf,
 	feesChf: input.feesChf,
 	status: input.status,
+	...(input.sourceType ? { sourceType: input.sourceType } : {}),
 	contributorId: input.contributorId,
 	campaignId: input.campaignId,
 });

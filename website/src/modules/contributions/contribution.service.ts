@@ -1,4 +1,5 @@
 import {
+	ContributionSourceType,
 	ContributionStatus,
 	Currency,
 	PaymentEventType,
@@ -42,6 +43,7 @@ import type {
 	ContributionPaginatedTableView,
 	ContributionPayload,
 	ContributionRecord,
+	ContributionSourceTotals,
 	ContributionSummary,
 	ContributionTableQuery,
 	ContributionTableViewRow,
@@ -84,6 +86,28 @@ export const getSucceededContributionTotal = async (dateRange?: ContributionDate
 		console.error('Could not fetch succeeded contribution total', { error });
 
 		return resultFail('Could not fetch contribution total');
+	}
+};
+
+export const getSucceededContributionSourceTotals = async (
+	dateRange?: ContributionDateRange,
+): Promise<Result<ContributionSourceTotals>> => {
+	try {
+		const rows = await contributionRepository.groupSucceededContributionTotalsBySource(dateRange);
+		const totals: ContributionSourceTotals = {
+			[ContributionSourceType.individual]: 0,
+			[ContributionSourceType.foundation_grant]: 0,
+			[ContributionSourceType.corporate_partner]: 0,
+		};
+		for (const row of rows) {
+			totals[row.sourceType] = Number(row._sum.amountChf ?? 0);
+		}
+
+		return resultOk(totals);
+	} catch (error) {
+		console.error('Could not fetch contribution totals by source', { error });
+
+		return resultFail('Could not fetch contribution totals by source');
 	}
 };
 
@@ -658,6 +682,7 @@ const toContributionPayload = (contribution: {
 	amountChf: unknown;
 	feesChf: unknown;
 	status: ContributionStatus;
+	sourceType: ContributionSourceType;
 	contributor: { id: string };
 	campaign: { id: string };
 }): ContributionPayload => ({
@@ -667,6 +692,7 @@ const toContributionPayload = (contribution: {
 	amountChf: Number(contribution.amountChf),
 	feesChf: Number(contribution.feesChf),
 	status: contribution.status,
+	sourceType: contribution.sourceType,
 	contributor: contribution.contributor,
 	campaign: { id: contribution.campaign.id },
 });
@@ -678,6 +704,7 @@ const toContributionRecord = (contribution: {
 	amountChf: unknown;
 	feesChf: unknown;
 	status: ContributionStatus;
+	sourceType: ContributionSourceType;
 	contributorId: string;
 	campaignId: string;
 	createdAt: Date;
@@ -689,6 +716,7 @@ const toContributionRecord = (contribution: {
 	amountChf: Number(contribution.amountChf),
 	feesChf: Number(contribution.feesChf),
 	status: contribution.status,
+	sourceType: contribution.sourceType,
 	contributorId: contribution.contributorId,
 	campaignId: contribution.campaignId,
 	createdAt: contribution.createdAt,

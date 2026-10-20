@@ -19,6 +19,13 @@ export const findSucceededContributionSummary = async (createdAt: ContributionDa
 		_count: { _all: true },
 	});
 
+export const groupSucceededContributionTotalsBySource = async (createdAt: ContributionDateRange | undefined) =>
+	prisma.contribution.groupBy({
+		by: ['sourceType'],
+		where: { status: ContributionStatus.succeeded, createdAt },
+		_sum: { amountChf: true },
+	});
+
 export const findSucceededContributionsByContributorCountry = async (createdAt: ContributionDateRange | undefined) =>
 	prisma.contribution.findMany({
 		where: {
@@ -53,6 +60,7 @@ export const findContribution = async (contributionId: string) =>
 			amountChf: true,
 			feesChf: true,
 			status: true,
+			sourceType: true,
 			contributor: {
 				select: {
 					id: true,
@@ -366,6 +374,7 @@ export const contributionPayloadSelect = {
 	amountChf: true,
 	feesChf: true,
 	status: true,
+	sourceType: true,
 	contributor: { select: { id: true } },
 	campaign: { select: { id: true } },
 } satisfies Prisma.ContributionSelect;
@@ -377,6 +386,7 @@ export const contributionRecordSelect = {
 	amountChf: true,
 	feesChf: true,
 	status: true,
+	sourceType: true,
 	contributorId: true,
 	campaignId: true,
 	createdAt: true,
