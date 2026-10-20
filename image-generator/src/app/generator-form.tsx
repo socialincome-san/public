@@ -2,9 +2,11 @@
 
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
 import { isGenerateResponse } from '@/lib/images';
+import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { AnimatedSILogoIcon } from '@socialincome/design-system/brand/logo/logo';
 import { AspectRatioSelect } from '@socialincome/design-system/forms/aspect-ratio-select/aspect-ratio-select';
+import { ImageUpload } from '@socialincome/design-system/forms/image-upload/image-upload';
 import { Textarea } from '@socialincome/design-system/forms/textarea/textarea';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,8 +21,7 @@ const generate = async (previous: GenerationState, formData: FormData): Promise<
 	try {
 		const response = await fetch('/api/generate-image', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ prompt, aspectRatio: formData.get('aspectRatio') }),
+			body: formData,
 		});
 		const json: unknown = await response.json();
 		if (!isGenerateResponse(json) || (!response.ok && !json.error)) {
@@ -94,7 +95,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 				)}
 			</div>
 
-			<div className="sticky bottom-6 z-30 mx-auto w-full max-w-5xl -translate-y-4 px-4 pt-4">
+			<div className="mx-auto w-full max-w-5xl px-4 pt-4 pb-8">
 				<form
 					action={formAction}
 					onResetCapture={(event) => {
@@ -102,38 +103,55 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 						event.preventDefault();
 						event.stopPropagation();
 					}}
-					className="border-input bg-card/95 shadow-raised flex w-full flex-col gap-2 rounded-3xl border px-4 py-3 backdrop-blur-md"
+					className="flex w-full flex-col gap-6"
 				>
-					<div className="w-full py-1">
-						<Textarea
-							variant="bare"
-							resize="none"
-							name="prompt"
-							aria-label="Describe your image"
-							required
-							value={prompt}
-							onChange={(e) => setPrompt(e.target.value)}
-							onKeyDown={handleKeyDown}
-							placeholder="Describe your image ..."
-							rows={1}
-						/>
-					</div>
-
-					<div className="flex w-full flex-wrap items-center justify-between gap-2">
-						<div>
-							<AspectRatioSelect
-								items={IMAGE_FORMATS}
-								label="Image format"
-								name="aspectRatio"
-								value={aspectRatio}
-								onValueChange={setAspectRatio}
-								disabled={isPending}
+					<div className="border-input bg-card/95 shadow-raised flex flex-col gap-2 rounded-3xl border px-4 py-3 backdrop-blur-md">
+						<div className="w-full py-1">
+							<Textarea
+								variant="bare"
+								resize="none"
+								name="prompt"
+								aria-label="Describe your image"
+								required
+								value={prompt}
+								onChange={(e) => setPrompt(e.target.value)}
+								onKeyDown={handleKeyDown}
+								placeholder="Describe your image ..."
+								rows={1}
 							/>
 						</div>
-						<Button type="submit" size="md" disabled={isPending || prompt.trim() === ''}>
-							<span>Generate</span>
-							<span aria-hidden="true">→</span>
-						</Button>
+						<div className="flex w-full flex-wrap items-center justify-between gap-2">
+							<div>
+								<AspectRatioSelect
+									items={IMAGE_FORMATS}
+									label="Image format"
+									name="aspectRatio"
+									value={aspectRatio}
+									onValueChange={setAspectRatio}
+									disabled={isPending}
+								/>
+							</div>
+							<Button type="submit" size="md" disabled={isPending || prompt.trim() === ''}>
+								<span>Generate</span>
+								<span aria-hidden="true">→</span>
+							</Button>
+						</div>
+					</div>
+					<div className="bg-card/95 rounded-3xl px-4 py-3 backdrop-blur-md">
+						<ImageUpload
+							name="referenceImage"
+							acceptedTypes={REFERENCE_IMAGE_TYPES}
+							maxSizeBytes={MAX_REFERENCE_IMAGE_BYTES}
+							label="Reference image"
+							optionalLabel="(optional)"
+							dropLabel="Drag and drop an image here or"
+							browseLabel="browse"
+							previewLabel="Selected reference image"
+							removeLabel="Remove reference image"
+							helperText="JPEG, PNG or WebP · up to 10 MB"
+							invalidFileMessage="Choose a JPEG, PNG or WebP image up to 10 MB."
+							disabled={isPending}
+						/>
 					</div>
 				</form>
 
