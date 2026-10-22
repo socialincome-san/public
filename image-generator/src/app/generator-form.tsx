@@ -150,33 +150,38 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 							/>
 						</div>
 						<div className="flex w-full flex-wrap items-center justify-between gap-2">
-							<div className="flex items-center gap-2">
+							<div className="flex flex-wrap items-center gap-2">
 								<AddMenu label="Add attachment" disabled={isPending}>
 									<DropdownMenuItem onSelect={() => referenceInputRef.current?.click()}>
 										<Upload aria-hidden="true" />
 										Upload Reference Image
 									</DropdownMenuItem>
 								</AddMenu>
-								<AspectRatioSelect
-									items={IMAGE_FORMATS}
-									label="Image format"
-									name="aspectRatio"
-									value={aspectRatio}
-									onValueChange={setAspectRatio}
-									disabled={isPending}
-								/>
-								<Select name="country" value={country} onValueChange={setCountry} disabled={isPending}>
-									<SelectTrigger size="sm" aria-label="Country">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										{COUNTRIES.map((item) => (
-											<SelectItem key={item.value} value={item.value}>
-												{item.label}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
+								{/* Wrappers size the full-width triggers to their content so the row can wrap on phones. */}
+								<div>
+									<AspectRatioSelect
+										items={IMAGE_FORMATS}
+										label="Image format"
+										name="aspectRatio"
+										value={aspectRatio}
+										onValueChange={setAspectRatio}
+										disabled={isPending}
+									/>
+								</div>
+								<div>
+									<Select name="country" value={country} onValueChange={setCountry} disabled={isPending}>
+										<SelectTrigger size="sm" aria-label="Country">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											{COUNTRIES.map((item) => (
+												<SelectItem key={item.value} value={item.value}>
+													{item.label}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
 							</div>
 							<Button type="submit" size="md" disabled={isPending || prompt.trim() === ''}>
 								<span>Generate</span>
