@@ -119,7 +119,11 @@ export const storeStripeCheckoutContext = (sessionId: string, context: DonationA
 		return;
 	}
 
-	window.sessionStorage.setItem(getStorageKey(sessionId), JSON.stringify(context));
+	try {
+		window.sessionStorage.setItem(getStorageKey(sessionId), JSON.stringify(context));
+	} catch {
+		// Storage is blocked: the payment still goes through, onboarding then starts from the website's defaults.
+	}
 };
 
 export const readStoredStripeCheckoutContext = (
@@ -130,7 +134,11 @@ export const readStoredStripeCheckoutContext = (
 		return null;
 	}
 
-	return parseStoredDonation(window.sessionStorage.getItem(getStorageKey(sessionId)), fallbackCurrency);
+	try {
+		return parseStoredDonation(window.sessionStorage.getItem(getStorageKey(sessionId)), fallbackCurrency);
+	} catch {
+		return null;
+	}
 };
 
 export const clearStoredStripeCheckoutContext = (sessionId: string): void => {
@@ -138,5 +146,9 @@ export const clearStoredStripeCheckoutContext = (sessionId: string): void => {
 		return;
 	}
 
-	window.sessionStorage.removeItem(getStorageKey(sessionId));
+	try {
+		window.sessionStorage.removeItem(getStorageKey(sessionId));
+	} catch {
+		// Storage is blocked, so nothing was stored.
+	}
 };
