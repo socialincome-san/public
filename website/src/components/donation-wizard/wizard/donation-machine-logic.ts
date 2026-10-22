@@ -1,5 +1,5 @@
 import { type DonationAmountContext, type OneTimePlanChoice } from '../utils/donation-amount';
-import { type DonationWizardContext, getInitialWizardContext } from './donation-wizard-context';
+import { type DonationWizardContext, getInitialWizardContext, type ResumableWizardStep } from './donation-wizard-context';
 
 export const wizardContextFromFormAmount = (context: DonationAmountContext): DonationWizardContext => ({
 	...getInitialWizardContext(context.currency),
@@ -47,22 +47,17 @@ export const paymentContextForOneTimePlanChoice = (choice: OneTimePlanChoice) =>
 	};
 };
 
-/** Reopens a stored donation on the plan step it came from, with the same tier and plan choice. */
-export const wizardContextFromResumedDonation = (context: DonationAmountContext): DonationWizardContext => {
-	// A monthly gift of half a one-time amount is chosen on the one-time plan step, which starts from the one-time amount.
-	if (context.returnsToOneTimePlanStep) {
-		return {
-			...getInitialWizardContext(context.currency),
-			...context,
-			cadence: 'one-time',
-			chargeMonthlyHalfOfOneTimeAmount: false,
-			pendingStep: 'stepPlanOneTime',
-		};
-	}
-
-	return {
-		...getInitialWizardContext(context.currency),
-		...context,
-		pendingStep: context.cadence === 'monthly' ? 'stepPlanMonthly' : 'stepPlanOneTime',
-	};
-};
+/** Reopens a donation from the donation bar on the step it was left, with the same choices. */
+export const wizardContextFromResumedDonation = (
+	context: DonationAmountContext,
+	step: ResumableWizardStep,
+): DonationWizardContext => ({
+	...getInitialWizardContext(context.currency),
+	...context,
+	pendingStep: step,
+	// These steps are normally entered through a payment choice, which also records how the donor pays.
+	...(step === 'stepStripeCheckout'
+		? { wizardPaymentSource: 'stripe' as const, stripeCheckoutStatus: 'loading' as const }
+		: {}),
+	...(step === 'stepQrContact' ? { wizardPaymentSource: 'qr' as const } : {}),
+});

@@ -1,47 +1,39 @@
-import { getDonationDisplayAmount, getInitialDonationContext, type DonationAmountContext } from '../utils/donation-amount';
+import { getInitialDonationContext, type DonationAmountContext } from '../utils/donation-amount';
 import { wizardContextFromResumedDonation } from './donation-machine-logic';
 
-const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountContext => ({
+const context: DonationAmountContext = {
 	...getInitialDonationContext('CHF'),
-	selectedAmount: 50,
-	paymentMethod: 'online',
+	selectedAmount: 100,
+	cadence: 'one-time',
+	paymentMethod: 'qr',
 	coverTransactionCosts: false,
-	...overrides,
-});
+	oneTimePlanChoice: 'monthly-half',
+	returnsToOneTimePlanStep: true,
+};
 
 describe('wizardContextFromResumedDonation', () => {
-	test('reopens a monthly donation on the monthly plan step with its tier', () => {
-		const context = wizardContextFromResumedDonation(withContext({ cadence: 'monthly', selectedTier: '2x' }));
-
-		expect(context.pendingStep).toBe('stepPlanMonthly');
-		expect(getDonationDisplayAmount(context)).toBe(100);
-	});
-
-	test('reopens a one-time donation on the one-time plan step', () => {
-		const context = wizardContextFromResumedDonation(
-			withContext({ cadence: 'one-time', returnsToOneTimePlanStep: true, oneTimePlanChoice: 'one-time' }),
-		);
-
-		expect(context.pendingStep).toBe('stepPlanOneTime');
-		expect(getDonationDisplayAmount(context)).toBe(50);
-	});
-
-	test('reopens half of a one-time amount monthly on the one-time plan step with that choice selected', () => {
-		const context = wizardContextFromResumedDonation(
-			withContext({
-				selectedAmount: 100,
-				cadence: 'monthly',
-				chargeMonthlyHalfOfOneTimeAmount: true,
-				returnsToOneTimePlanStep: true,
-				oneTimePlanChoice: 'monthly-half',
-			}),
-		);
-
-		expect(context).toMatchObject({
+	test('reopens the step it was left on with the same choices', () => {
+		expect(wizardContextFromResumedDonation(context, 'stepPlanOneTime')).toMatchObject({
+			...context,
 			pendingStep: 'stepPlanOneTime',
-			cadence: 'one-time',
-			chargeMonthlyHalfOfOneTimeAmount: false,
-			oneTimePlanChoice: 'monthly-half',
+			wizardPaymentSource: null,
+		});
+	});
+
+	test('reopens the card checkout ready to request its Stripe session', () => {
+		expect(wizardContextFromResumedDonation({ ...context, paymentMethod: 'online' }, 'stepStripeCheckout')).toMatchObject({
+			pendingStep: 'stepStripeCheckout',
+			paymentMethod: 'online',
+			wizardPaymentSource: 'stripe',
+			stripeCheckoutStatus: 'loading',
+		});
+	});
+
+	test('reopens the QR contact step as a QR payment', () => {
+		expect(wizardContextFromResumedDonation(context, 'stepQrContact')).toMatchObject({
+			pendingStep: 'stepQrContact',
+			wizardPaymentSource: 'qr',
+			qrDonor: null,
 		});
 	});
 });

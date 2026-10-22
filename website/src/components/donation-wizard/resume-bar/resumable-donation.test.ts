@@ -1,5 +1,5 @@
 import { getDonationDisplayAmount, getInitialDonationContext, type DonationAmountContext } from '../utils/donation-amount';
-import { toResumableDonation } from './resumable-donation';
+import { toWalletDonation } from './resumable-donation';
 
 const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountContext => ({
 	...getInitialDonationContext('CHF'),
@@ -8,61 +8,53 @@ const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountC
 	...overrides,
 });
 
-describe('toResumableDonation', () => {
+describe('toWalletDonation', () => {
 	test('offers the chosen amount without the fee before the payment step', () => {
-		const donation = toResumableDonation(withContext({ paymentMethod: 'qr', coverTransactionCosts: true }), false);
+		const donation = toWalletDonation({
+			step: 'stepPlanMonthly',
+			context: withContext({ paymentMethod: 'qr', coverTransactionCosts: true }),
+		});
 
 		expect(donation).toMatchObject({ paymentMethod: 'online', coverTransactionCosts: false });
-		expect(donation && getDonationDisplayAmount(donation)).toBe(50);
+		expect(getDonationDisplayAmount(donation)).toBe(50);
 	});
 
 	test('keeps the fee when it was chosen with online payment on the payment step', () => {
-		const donation = toResumableDonation(withContext({ paymentMethod: 'online', coverTransactionCosts: true }), true);
+		const donation = toWalletDonation({
+			step: 'stepPayment',
+			context: withContext({ paymentMethod: 'online', coverTransactionCosts: true }),
+		});
 
-		expect(donation?.coverTransactionCosts).toBe(true);
-		expect(donation && getDonationDisplayAmount(donation)).toBe(51.5);
+		expect(getDonationDisplayAmount(donation)).toBe(51.5);
 	});
 
 	test('drops the fee when the payment step was left on QR', () => {
-		const donation = toResumableDonation(withContext({ paymentMethod: 'qr', coverTransactionCosts: true }), true);
-
-		expect(donation?.coverTransactionCosts).toBe(false);
-	});
-
-	test('keeps only the amount fields', () => {
-		const wizardContext = {
-			...withContext({ campaignId: 'campaign-1' }),
-			qrDonor: { email: 'donor@example.org' },
-			stripeClientSecret: 'secret',
-		};
-
-		expect(toResumableDonation(wizardContext, false)).toEqual({
-			...withContext({ campaignId: 'campaign-1' }),
-			paymentMethod: 'online',
-			coverTransactionCosts: false,
+		const donation = toWalletDonation({
+			step: 'stepPayment',
+			context: withContext({ paymentMethod: 'qr', coverTransactionCosts: true }),
 		});
-	});
-});
 
-describe('toResumableDonation plan choices', () => {
+		expect(donation.coverTransactionCosts).toBe(false);
+	});
+
 	test('offers half the one-time amount monthly when that plan was picked', () => {
-		const donation = toResumableDonation(
-			withContext({
+		const donation = toWalletDonation({
+			step: 'stepPlanOneTime',
+			context: withContext({
 				selectedAmount: 100,
 				cadence: 'one-time',
 				oneTimePlanChoice: 'monthly-half',
 				returnsToOneTimePlanStep: true,
 			}),
-			false,
-		);
+		});
 
 		expect(donation).toMatchObject({ cadence: 'monthly', chargeMonthlyHalfOfOneTimeAmount: true });
-		expect(donation && getDonationDisplayAmount(donation)).toBe(50);
+		expect(getDonationDisplayAmount(donation)).toBe(50);
 	});
 
 	test('keeps the monthly tier', () => {
-		const donation = toResumableDonation(withContext({ selectedTier: '2x' }), false);
+		const donation = toWalletDonation({ step: 'stepPlanMonthly', context: withContext({ selectedTier: '2x' }) });
 
-		expect(donation && getDonationDisplayAmount(donation)).toBe(100);
+		expect(getDonationDisplayAmount(donation)).toBe(100);
 	});
 });

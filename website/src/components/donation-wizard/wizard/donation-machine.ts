@@ -23,6 +23,7 @@ import {
 import {
 	type DonationWizardContext,
 	type QrDonorContext,
+	type ResumableWizardStep,
 	getInitialWizardContext,
 	resetQrBillContext,
 	resetStripeCheckoutContext,
@@ -36,7 +37,7 @@ export const donationWizardMachine = setup({
 		events:
 			| { type: 'OPEN'; currency: WebsiteCurrency }
 			| { type: 'OPEN_FROM_FORM'; context: DonationAmountContext }
-			| { type: 'RESUME'; context: DonationAmountContext }
+			| { type: 'RESUME'; context: DonationAmountContext; step: ResumableWizardStep }
 			| {
 					type: 'OPEN_FROM_STRIPE_RETURN';
 					context: DonationAmountContext | null;
@@ -99,6 +100,9 @@ export const donationWizardMachine = setup({
 		returnsToOneTimePlanStep: ({ context }) => context.returnsToOneTimePlanStep,
 		pendingStepIsMonthlyPlan: ({ context }) => context.pendingStep === 'stepPlanMonthly',
 		pendingStepIsOneTimePlan: ({ context }) => context.pendingStep === 'stepPlanOneTime',
+		pendingStepIsPayment: ({ context }) => context.pendingStep === 'stepPayment',
+		pendingStepIsStripeCheckout: ({ context }) => context.pendingStep === 'stepStripeCheckout',
+		pendingStepIsQrContact: ({ context }) => context.pendingStep === 'stepQrContact',
 	},
 	actions: {
 		resetContext: assign(({ context }) => getInitialWizardContext(context.currency)),
@@ -106,6 +110,27 @@ export const donationWizardMachine = setup({
 			communityStats: () => null,
 			pendingStep: () => null,
 		}),
+		assignStripeCheckoutReady: assign(({ event }) =>
+			event.type === 'STRIPE_CHECKOUT_READY'
+				? {
+						stripeClientSecret: event.clientSecret,
+						stripeCheckoutSessionId: event.sessionId,
+						stripePublishableKey: event.publishableKey,
+						stripeCheckoutStatus: 'ready' as const,
+						stripeCheckoutError: null,
+					}
+				: {},
+		),
+		assignStripeCheckoutError: assign(({ event }) =>
+			event.type === 'STRIPE_CHECKOUT_ERROR'
+				? {
+						stripeCheckoutStatus: 'error' as const,
+						stripeCheckoutError: event.message,
+						stripeClientSecret: null,
+						stripePublishableKey: null,
+					}
+				: {},
+		),
 	},
 }).createMachine({
 	id: 'donationWizard',
@@ -143,7 +168,7 @@ export const donationWizardMachine = setup({
 				],
 				RESUME: {
 					target: 'loadingCommunityStats',
-					actions: assign(({ event }) => wizardContextFromResumedDonation(event.context)),
+					actions: assign(({ event }) => wizardContextFromResumedDonation(event.context, event.step)),
 				},
 				OPEN_FROM_STRIPE_RETURN: {
 					target: 'stepOnboardingPersonal',
@@ -179,6 +204,30 @@ export const donationWizardMachine = setup({
 						}),
 					},
 					{
+						guard: 'pendingStepIsPayment',
+						target: 'stepPayment',
+						actions: assign({
+							communityStats: ({ event }) => event.output,
+							pendingStep: () => null,
+						}),
+					},
+					{
+						guard: 'pendingStepIsStripeCheckout',
+						target: 'stepStripeCheckout',
+						actions: assign({
+							communityStats: ({ event }) => event.output,
+							pendingStep: () => null,
+						}),
+					},
+					{
+						guard: 'pendingStepIsQrContact',
+						target: 'stepQrContact',
+						actions: assign({
+							communityStats: ({ event }) => event.output,
+							pendingStep: () => null,
+						}),
+					},
+					{
 						target: 'stepAmount',
 						actions: assign({
 							communityStats: ({ event }) => event.output,
@@ -198,12 +247,30 @@ export const donationWizardMachine = setup({
 						actions: 'assignFailedCommunityStats',
 					},
 					{
+						guard: 'pendingStepIsPayment',
+						target: 'stepPayment',
+						actions: 'assignFailedCommunityStats',
+					},
+					{
+						guard: 'pendingStepIsStripeCheckout',
+						target: 'stepStripeCheckout',
+						actions: 'assignFailedCommunityStats',
+					},
+					{
+						guard: 'pendingStepIsQrContact',
+						target: 'stepQrContact',
+						actions: 'assignFailedCommunityStats',
+					},
+					{
 						target: 'stepAmount',
 						actions: 'assignFailedCommunityStats',
 					},
 				],
 			},
 			on: {
+				// A donation resumed on the card checkout step requests its Stripe session while the stats still load.
+				STRIPE_CHECKOUT_READY: { actions: 'assignStripeCheckoutReady' },
+				STRIPE_CHECKOUT_ERROR: { actions: 'assignStripeCheckoutError' },
 				CLOSE: {
 					target: 'closed',
 					actions: 'resetContext',
@@ -466,23 +533,8 @@ export const donationWizardMachine = setup({
 		},
 		stepStripeCheckout: {
 			on: {
-				STRIPE_CHECKOUT_READY: {
-					actions: assign({
-						stripeClientSecret: ({ event }) => event.clientSecret,
-						stripeCheckoutSessionId: ({ event }) => event.sessionId,
-						stripePublishableKey: ({ event }) => event.publishableKey,
-						stripeCheckoutStatus: () => 'ready' as const,
-						stripeCheckoutError: () => null,
-					}),
-				},
-				STRIPE_CHECKOUT_ERROR: {
-					actions: assign({
-						stripeCheckoutStatus: () => 'error' as const,
-						stripeCheckoutError: ({ event }) => event.message,
-						stripeClientSecret: () => null,
-						stripePublishableKey: () => null,
-					}),
-				},
+				STRIPE_CHECKOUT_READY: { actions: 'assignStripeCheckoutReady' },
+				STRIPE_CHECKOUT_ERROR: { actions: 'assignStripeCheckoutError' },
 				STRIPE_CHECKOUT_RETRY: {
 					actions: assign({
 						stripeCheckoutStatus: () => 'loading' as const,

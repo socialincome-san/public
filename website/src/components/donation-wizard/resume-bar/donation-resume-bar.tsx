@@ -12,7 +12,7 @@ import { useDonationModal } from '../hooks/use-donation-modal';
 import { getDonationDisplayAmount } from '../utils/donation-amount';
 import { getDonationBarEventProperties } from '../wizard/donation-analytics';
 import { useDonationFormInView } from './donation-form-visibility';
-import { useResumableDonation } from './resumable-donation';
+import { toWalletDonation, useResumableDonation } from './resumable-donation';
 import { WalletButton } from './wallet-button';
 
 // Counts one impression per donation, not one per scroll past a form or reopened wizard.
@@ -32,11 +32,13 @@ export const DonationResumeBar = () => {
 	const [walletDonationKey, setWalletDonationKey] = useState<string | null>(null);
 
 	const visible = donation !== null && !isOpen && !isFormInView;
+	// What the bar shows and the wallet charges; resuming reopens `donation` as it was left.
+	const walletDonation = donation ? toWalletDonation(donation) : null;
 	// The donor may have switched currency inside the wizard, so the donation's own currency counts.
-	const currency = donation?.currency ?? websiteCurrency;
-	const donationKey = donation ? JSON.stringify(donation) : null;
-	const amount = donation ? getDonationDisplayAmount(donation) : 0;
-	const cadence = donation?.cadence ?? 'monthly';
+	const currency = walletDonation?.currency ?? websiteCurrency;
+	const donationKey = walletDonation ? JSON.stringify(walletDonation) : null;
+	const amount = walletDonation ? getDonationDisplayAmount(walletDonation) : 0;
+	const cadence = walletDonation?.cadence ?? 'monthly';
 	// The wizard always shows two decimals; the bar keeps whole amounts short.
 	const amountLabel = `${currency} ${Number.isInteger(amount) ? amount : amount.toFixed(2)}`;
 
@@ -48,7 +50,7 @@ export const DonationResumeBar = () => {
 	}, [visible, donationKey, amount, currency, cadence]);
 
 	// The donation is stored while the wizard is still open, so the bar mounts hidden and still slides in.
-	if (!donation || !donationKey) {
+	if (!donation || !walletDonation || !donationKey) {
 		return null;
 	}
 
@@ -79,7 +81,7 @@ export const DonationResumeBar = () => {
 				<WalletButton
 					// A different donation needs a new checkout session.
 					key={donationKey}
-					donation={donation}
+					donation={walletDonation}
 					currency={currency}
 					active={visible}
 					hasWallet={hasWallet}
@@ -101,7 +103,7 @@ export const DonationResumeBar = () => {
 					}
 					onPaid={(sessionId) => {
 						trackEvent('sticky_bar_donation_complete', trackingProperties);
-						openWizardAfterPayment(donation, sessionId);
+						openWizardAfterPayment(walletDonation, sessionId);
 					}}
 				/>
 			}

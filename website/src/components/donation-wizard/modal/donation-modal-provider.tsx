@@ -10,8 +10,14 @@ import { useCallback, useEffect, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
 import { DonationResumeBar } from '../resume-bar/donation-resume-bar';
-import { clearResumableDonation, storeResumableDonation, toResumableDonation } from '../resume-bar/resumable-donation';
+import {
+	clearResumableDonation,
+	resumableSteps,
+	storeResumableDonation,
+	type ResumableDonation,
+} from '../resume-bar/resumable-donation';
 import { DonationCurrencySelect } from '../shared/donation-currency-select';
+import { requestStripeEmbeddedCheckout } from '../steps/step-stripe-checkout/request-stripe-embedded-checkout';
 import {
 	clearStoredStripeCheckoutContext,
 	readStoredStripeCheckoutContext,
@@ -27,9 +33,6 @@ import type { DonationWizardSend } from '../wizard/types';
 type Props = {
 	children: ReactNode;
 };
-
-// Steps after the amount is chosen and before anything is paid or a QR bill exists.
-const resumableSteps = ['stepPlanMonthly', 'stepPlanOneTime', 'stepPayment', 'stepStripeCheckout', 'stepQrContact'] as const;
 
 // A Stripe return URL can be opened without a payment, so that case clears only once Stripe confirms it was paid.
 const completionEvents = new Set<Parameters<DonationWizardSend>[0]['type']>([
@@ -47,11 +50,9 @@ export const DonationModalProvider = ({ children }: Props) => {
 			const previous = actorRef.getSnapshot();
 			// Every way of closing (button, backdrop, swipe) lands here, so the bar can offer what was left unfinished.
 			if (event.type === 'CLOSE') {
-				const donation = resumableSteps.some((step) => previous.matches(step))
-					? toResumableDonation(previous.context, previous.matches('stepPayment') || previous.matches('stepStripeCheckout'))
-					: null;
-				if (donation) {
-					storeResumableDonation(donation);
+				const step = resumableSteps.find((resumableStep) => previous.matches(resumableStep));
+				if (step) {
+					storeResumableDonation(step, previous.context);
 				} else if (previous.matches('stepQrBill')) {
 					// The donor may pay the QR bill from their bank, so the bar must not offer the same donation again.
 					clearResumableDonation();
@@ -125,8 +126,12 @@ export const DonationModalProvider = ({ children }: Props) => {
 		send({ type: 'OPEN_FROM_FORM', context });
 	};
 
-	const resumeDonation = (context: DonationAmountContext) => {
-		send({ type: 'RESUME', context });
+	const resumeDonation = ({ step, context }: ResumableDonation) => {
+		send({ type: 'RESUME', context, step });
+		// The card form is normally requested by the payment step's button, which a resumed donation skips.
+		if (step === 'stepStripeCheckout') {
+			void requestStripeEmbeddedCheckout(actorRef.getSnapshot().context, send);
+		}
 	};
 
 	const openWizardAfterPayment = (context: DonationAmountContext, sessionId: string) => {

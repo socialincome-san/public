@@ -89,10 +89,7 @@ export const parseStoredContext = (value: unknown, fallbackCurrency?: WebsiteCur
 };
 
 /** A donation saved as JSON, or `null` when it is missing or no longer valid. */
-export const parseStoredDonation = (
-	value: string | null,
-	fallbackCurrency?: WebsiteCurrency,
-): DonationAmountContext | null => {
+const parseStoredDonation = (value: string | null, fallbackCurrency?: WebsiteCurrency): DonationAmountContext | null => {
 	if (!value) {
 		return null;
 	}
