@@ -31,7 +31,7 @@ type LocaleCurrencySwitcherProps = {
 	language: OptionGroup<LocaleCurrencyOption>;
 	currency: OptionGroup<LocaleCurrencyOption>;
 	country?: SearchableOptionGroup<LocaleCurrencyOption>;
-	variant?: 'ghost' | 'outline';
+	variant?: 'ghost' | 'outline' | 'nav';
 	icon?: ReactNode;
 };
 
@@ -85,7 +85,7 @@ export const LocaleCurrencySwitcher = ({
 }: LocaleCurrencySwitcherProps) => (
 	<Popover open={open} onOpenChange={onOpenChange}>
 		<PopoverTrigger asChild>
-			<Button type="button" variant={variant} size="md" aria-label={ariaLabel}>
+			<Button type="button" variant={variant} size={variant === 'nav' ? 'nav' : 'md'} aria-label={ariaLabel}>
 				{icon}
 				<span>
 					{language.value.toUpperCase()} · {currency.value}

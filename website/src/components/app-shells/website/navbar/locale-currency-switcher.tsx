@@ -33,7 +33,7 @@ const createLocalePath = (language: WebsiteLanguage, currency: WebsiteCurrency) 
 type Props = {
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
-	variant?: 'ghost' | 'outline';
+	variant?: 'ghost' | 'outline' | 'nav';
 	icon?: ReactNode;
 	chosenCountry: CountryCode | null;
 };
