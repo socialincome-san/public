@@ -109,7 +109,8 @@
 		"candidate-plural": "Kandidat:innen",
 		"candidates-ready-to-enroll": "{count, plural, one {{count} Kandidat:in bereit für die Einschreibung} other {{count} Kandidat:innen bereit für die Einschreibung}}",
 		"no-candidates": "Derzeit gibt es keine Kandidat:innen",
-		"about": "Über"
+		"about": "Über",
+		"close": "Schliessen"
 	},
 	"programs-page": {
 		"empty": "Keine Programme gefunden.",
