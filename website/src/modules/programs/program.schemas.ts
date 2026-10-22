@@ -30,7 +30,7 @@ export const programSettingsUpdateSchema = z.object({
 	slug: z.string().trim().min(1, 'Slug is required.'),
 	countryId: z.string().trim().min(1, 'Country is required.'),
 	coveredByReserves: z.boolean().default(false),
-	isConcluded: z.boolean().default(false),
+	isConcluded: z.boolean().optional(),
 	programDurationInMonths: positiveIntegerSchema,
 	payoutPerInterval: positiveNumberSchema,
 	payoutInterval: z.nativeEnum(PayoutInterval),
