@@ -113,6 +113,7 @@ export const HeroVideoBlock = ({ blok, lang, translations, donationForm, disable
 					ref={videoRef}
 					className={cn('z-10 size-full', isExpanded ? 'object-contain' : 'object-cover')}
 					playbackId={muxPlaybackId}
+					disableCookies
 					poster={posterUrl}
 					capRenditionToPlayerSize
 					_hlsConfig={HLS_CONFIG}
