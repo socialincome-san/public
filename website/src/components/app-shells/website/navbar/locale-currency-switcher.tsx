@@ -12,7 +12,7 @@ import {
 	type WebsiteLanguage,
 } from '@/lib/i18n/utils';
 import { handleResult } from '@/lib/result-client';
-import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { COUNTRY_CODES } from '@/lib/types/country';
 import { setChosenCountryAction } from '@/modules/visitor-country/visitor-country.actions';
 import { LocaleCurrencySwitcher as DesignSystemLocaleCurrencySwitcher } from '@socialincome/design-system/navigation/locale-currency-switcher/locale-currency-switcher';
 import { useTranslations } from 'next-intl';
@@ -49,6 +49,7 @@ const Switcher = ({
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
 	const t = useTranslations('website-common');
+	const tCountries = useTranslations('countries');
 
 	const languageOptions = isSurveyPage ? surveyLanguages : mainWebsiteLanguages;
 	const currentSwitcherLanguage = languageOptions.includes(lang) ? lang : (languageOptions[0] ?? 'en');
@@ -103,7 +104,9 @@ const Switcher = ({
 				value: chosenCountry ?? AUTOMATIC_COUNTRY,
 				options: [
 					{ value: AUTOMATIC_COUNTRY, label: t('locale-currency-switcher.country-automatic') },
-					...COUNTRY_OPTIONS.map(({ code, name }) => ({ value: code, label: name })),
+					...COUNTRY_CODES.map((code) => ({ value: code, label: tCountries(code) })).sort((a, b) =>
+						a.label.localeCompare(b.label, lang),
+					),
 				],
 				onChange: handleCountryChange,
 				searchPlaceholder: t('locale-currency-switcher.country-search'),
