@@ -215,8 +215,10 @@
 			"headline": "{count, plural, one {Donations totaling {amount} arrived from {countriesCount} country} other {Donations totaling {amount} arrived from {countriesCount} countries}}",
 			"headline-country": "Donations totaling {amount} arrived from {country}",
 			"headline-other": "Donations totaling {amount} arrived from other countries",
-			"other-countries": "other countries",
+			"other-countries": "{count, plural, one {Show # other country} other {Show # other countries}}",
 			"other-countries-title": "Other countries",
+			"search-countries": "Search countries",
+			"no-countries-found": "No country found.",
 			"empty": "No donations from any country in this period.",
 			"chart-aria-label": "Donation amounts by country of origin",
 			"legend-row-aria": "{country}, {amount}, {percentage}"

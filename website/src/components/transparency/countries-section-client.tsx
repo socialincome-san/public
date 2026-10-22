@@ -4,6 +4,7 @@ import { CountryFlag } from '@/components/country-flag';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { splitTranslationTemplate } from '@/lib/i18n/translation-template';
 import { cn } from '@socialincome/design-system/cn';
+import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
 import {
 	Dialog,
 	DialogContent,
@@ -39,6 +40,8 @@ export type CountriesSectionClientProps = {
 	emptyLabel: string;
 	chartAriaLabel: string;
 	dialogTitle: string;
+	searchLabel: string;
+	noSearchResultsLabel: string;
 	formattedTotalAmount: string;
 	formattedCountriesCount: string;
 	segments: CountriesSectionSegment[];
@@ -69,6 +72,13 @@ const interpolateHeadline = (template: string, values: Record<string, ReactNode>
 	});
 };
 
+// Ignores case and accents, so "cote" finds "Côte d'Ivoire".
+const normalizeSearchText = (text: string): string =>
+	text
+		.normalize('NFD')
+		.replace(/\p{Diacritic}/gu, '')
+		.toLocaleLowerCase();
+
 const EmphasizedValue = ({ children }: { children: ReactNode }) => {
 	return <strong className="font-medium">{children}</strong>;
 };
@@ -82,6 +92,8 @@ export const CountriesSectionClient = ({
 	emptyLabel,
 	chartAriaLabel,
 	dialogTitle,
+	searchLabel,
+	noSearchResultsLabel,
 	formattedTotalAmount,
 	formattedCountriesCount,
 	segments,
@@ -89,6 +101,7 @@ export const CountriesSectionClient = ({
 }: CountriesSectionClientProps) => {
 	const [activeSegmentId, setActiveSegmentId] = useState<string | null>(null);
 	const [isOtherDialogOpen, setIsOtherDialogOpen] = useState(false);
+	const [countrySearch, setCountrySearch] = useState('');
 	const interactionRef = useRef<HTMLDivElement>(null);
 	const resolvedActiveSegmentId =
 		isOtherDialogOpen && segments.some(({ countryCode }) => countryCode === null)
@@ -98,6 +111,10 @@ export const CountriesSectionClient = ({
 				: null;
 	const activeSegment = segments.find((segment) => segment.id === resolvedActiveSegmentId);
 	const hasOtherCountries = otherCountries.length > 0;
+	const normalizedCountrySearch = normalizeSearchText(countrySearch.trim());
+	const filteredOtherCountries = otherCountries.filter(({ countryName }) =>
+		normalizeSearchText(countryName).includes(normalizedCountrySearch),
+	);
 	const unitBars = segments.flatMap((segment) =>
 		Array.from({ length: segment.unitCount }, (_, index) => ({
 			key: `${segment.id}-${index}`,
@@ -197,11 +214,7 @@ export const CountriesSectionClient = ({
 
 							const rowContent = (
 								<>
-									{segment.countryCode ? (
-										<CountryFlag country={segment.countryCode} size="sm" decorative />
-									) : (
-										<span className="bg-muted size-4 shrink-0 rounded-full" aria-hidden="true" />
-									)}
+									{segment.countryCode ? <CountryFlag country={segment.countryCode} size="sm" decorative /> : null}
 									<span className="min-w-0 flex-1 truncate">{segment.countryName || otherCountriesLabel}</span>
 									<span className="text-muted-foreground shrink-0 tabular-nums">{segment.formattedAmount}</span>
 									<span className="w-12 shrink-0 text-right font-semibold tabular-nums">{segment.formattedPercentage}</span>
@@ -230,14 +243,31 @@ export const CountriesSectionClient = ({
 				</div>
 			)}
 			{hasOtherCountries ? (
-				<Dialog open={isOtherDialogOpen} onOpenChange={setIsOtherDialogOpen}>
+				<Dialog
+					open={isOtherDialogOpen}
+					onOpenChange={(open) => {
+						setIsOtherDialogOpen(open);
+						if (!open) {
+							setCountrySearch('');
+						}
+					}}
+				>
 					<DialogContent>
 						<DialogHeader>
 							<DialogTitle>{dialogTitle}</DialogTitle>
 							<DialogDescription visuallyHidden>{chartAriaLabel}</DialogDescription>
 						</DialogHeader>
+						<SearchInput
+							value={countrySearch}
+							onChange={(event) => setCountrySearch(event.target.value)}
+							placeholder={searchLabel}
+							aria-label={searchLabel}
+						/>
+						{filteredOtherCountries.length === 0 ? (
+							<p className="text-muted-foreground py-2">{noSearchResultsLabel}</p>
+						) : null}
 						<ul>
-							{otherCountries.map((country) => (
+							{filteredOtherCountries.map((country) => (
 								<li key={country.countryCode} className="flex items-center gap-3 py-2">
 									<CountryFlag country={country.countryCode} size="sm" decorative />
 									<span className="min-w-0 flex-1 truncate">{country.countryName}</span>

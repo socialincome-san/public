@@ -30,10 +30,12 @@ const baseProps: CountriesSectionClientProps = {
 	headlineTemplate: '{amount} donations arrived from {countriesCount} countries',
 	headlineCountryTemplate: '{amount} donations arrived from {country}',
 	headlineOtherTemplate: '{amount} donations arrived from other countries',
-	otherCountriesLabel: 'Other countries',
+	otherCountriesLabel: 'Show 2 other countries',
 	emptyLabel: 'No donations from any country in this period.',
 	chartAriaLabel: 'Donation amounts by country of origin',
 	dialogTitle: 'Other countries',
+	searchLabel: 'Search countries',
+	noSearchResultsLabel: 'No country found.',
 	formattedTotalAmount: 'CHF 100',
 	formattedCountriesCount: '3',
 	segments: [
@@ -60,15 +62,18 @@ const baseProps: CountriesSectionClientProps = {
 		{
 			id: 'OTHER',
 			countryCode: null,
-			countryName: 'Other countries',
+			countryName: 'Show 2 other countries',
 			formattedAmount: 'CHF 5',
 			formattedPercentage: '5%',
 			unitCount: 5,
 			color: 'gray',
-			rowAriaLabel: 'Other countries, CHF 5, 5%',
+			rowAriaLabel: 'Show 2 other countries, CHF 5, 5%',
 		},
 	],
-	otherCountries: [{ countryCode: 'US', countryName: 'United States', formattedAmount: 'CHF 5' }],
+	otherCountries: [
+		{ countryCode: 'US', countryName: 'United States', formattedAmount: 'CHF 3' },
+		{ countryCode: 'CI', countryName: "Côte d'Ivoire", formattedAmount: 'CHF 2' },
+	],
 };
 
 describe('CountriesSectionClient', () => {
@@ -87,7 +92,7 @@ describe('CountriesSectionClient', () => {
 		expect((markup.match(/w-0\.5 rounded-full/g) ?? []).length).toBe(100);
 		expect(markup).toContain('--legend-rows:2');
 		expect(markup).toContain('Switzerland');
-		expect(markup).toContain('Other countries');
+		expect(markup).toContain('Show 2 other countries');
 		expect(markup).not.toContain('No donations from any country');
 	});
 
@@ -136,7 +141,7 @@ describe('CountriesSectionClient', () => {
 		expect(container.querySelector('h2')?.textContent).toContain('Germany');
 		expect(container.querySelector('h2')?.textContent).not.toContain('3\u00a0countries');
 
-		const otherButton = container.querySelector<HTMLButtonElement>('button[aria-label="Other countries, CHF 5, 5%"]');
+		const otherButton = container.querySelector<HTMLButtonElement>('button[aria-label="Show 2 other countries, CHF 5, 5%"]');
 		expect(otherButton).not.toBeNull();
 		expect(otherButton?.getAttribute('aria-haspopup')).toBe('dialog');
 		expect(otherButton?.getAttribute('aria-expanded')).toBe('false');
@@ -148,6 +153,24 @@ describe('CountriesSectionClient', () => {
 		expect(otherButton?.getAttribute('aria-expanded')).toBe('true');
 		expect(container.querySelector('h2')?.textContent).toContain('CHF 5');
 		expect(document.body.textContent).toContain('United States');
+
+		const searchInput = document.querySelector<HTMLInputElement>('input[aria-label="Search countries"]');
+		expect(searchInput).not.toBeNull();
+
+		const typeSearch = (value: string) => {
+			act(() => {
+				// Goes through the prototype setter so React's value tracker sees a change.
+				Reflect.set(HTMLInputElement.prototype, 'value', value, searchInput);
+				searchInput?.dispatchEvent(new Event('input', { bubbles: true }));
+			});
+		};
+
+		typeSearch('cote');
+		expect(document.body.textContent).toContain("Côte d'Ivoire");
+		expect(document.body.textContent).not.toContain('United States');
+
+		typeSearch('xyz');
+		expect(document.body.textContent).toContain('No country found.');
 
 		act(() => {
 			root.unmount();

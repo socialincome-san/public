@@ -45,7 +45,9 @@ export const TransparencyCountriesBlock = async ({ blok, lang, currency: display
 		formatCurrencyLocale(amount, currency, locale, { maximumFractionDigits: 0 }),
 	);
 
-	const otherCountriesLabel = t('transparency-page.countries.other-countries');
+	const otherCountriesLabel = t('transparency-page.countries.other-countries', {
+		count: data.otherCountries.length,
+	});
 	const formattedTotalAmount = formattedAmounts[0] ?? formatCurrencyLocale(0, 'CHF', locale);
 	const formattedCountriesCount = formatNumberLocale(data.countriesCount, locale, { maximumFractionDigits: 0 });
 	const segments: CountriesSectionSegment[] = data.segments.map((segment, index) => {
@@ -96,6 +98,8 @@ export const TransparencyCountriesBlock = async ({ blok, lang, currency: display
 						emptyLabel={t('transparency-page.countries.empty')}
 						chartAriaLabel={t('transparency-page.countries.chart-aria-label')}
 						dialogTitle={t('transparency-page.countries.other-countries-title')}
+						searchLabel={t('transparency-page.countries.search-countries')}
+						noSearchResultsLabel={t('transparency-page.countries.no-countries-found')}
 						formattedTotalAmount={formattedTotalAmount}
 						formattedCountriesCount={formattedCountriesCount}
 						segments={segments}
