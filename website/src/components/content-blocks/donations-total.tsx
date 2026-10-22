@@ -43,12 +43,14 @@ type DriftingImageProps = {
 	image: MobileImage;
 	progress: MotionValue<number>;
 	drift: Drift;
+	disableAnimation: boolean;
 };
 
-const DriftingImage = ({ image, progress, drift }: DriftingImageProps) => {
+const DriftingImage = ({ image, progress, drift, disableAnimation }: DriftingImageProps) => {
 	const dimensions = getScaledAssetDimensions(image, MOBILE_IMAGE_MAX_WIDTH);
+	const prefersReducedMotion = useReducedMotion();
 	// A drift of zero instead of no style: motion would keep the last offset.
-	const amount = useReducedMotion() ? 0 : 1;
+	const amount = disableAnimation || prefersReducedMotion ? 0 : 1;
 	const x = useTransform(progress, [0, 1], [-drift.x * amount, drift.x * amount]);
 	const y = useTransform(progress, [0, 1], [drift.offsetY - drift.y * amount, drift.offsetY + drift.y * amount]);
 	const scale = useTransform(progress, [0, 1], [1, 1 + (drift.grow * amount) / dimensions.width]);
@@ -71,15 +73,12 @@ const DriftingImage = ({ image, progress, drift }: DriftingImageProps) => {
 type MobileImageRowProps = {
 	images: MobileImage[];
 	position: 'top' | 'bottom';
+	disableAnimation: boolean;
 };
 
-const MobileImageRow = ({ images, position }: MobileImageRowProps) => {
+const MobileImageRow = ({ images, position, disableAnimation }: MobileImageRowProps) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-
-	if (images.length === 0) {
-		return null;
-	}
 
 	return (
 		<div ref={ref} className="flex items-center justify-center gap-4 md:hidden">
@@ -89,6 +88,7 @@ const MobileImageRow = ({ images, position }: MobileImageRowProps) => {
 					image={image}
 					progress={scrollYProgress}
 					drift={MOBILE_IMAGE_DRIFTS[position][index] ?? { x: 0, y: 0, grow: 0, offsetY: 0 }}
+					disableAnimation={disableAnimation}
 				/>
 			))}
 		</div>
@@ -121,6 +121,9 @@ export const DonationsTotalBlock = ({
 	});
 
 	const images = blok.images?.filter(hasFilename).slice(0, 4) ?? [];
+	// Empty rows are not rendered, so every row's scroll tracking has an element to follow.
+	const topRowImages = images.slice(0, 2);
+	const bottomRowImages = images.slice(2, 4);
 	const button = blok.button?.[0];
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, currency) : null;
 
@@ -131,7 +134,9 @@ export const DonationsTotalBlock = ({
 			))}
 
 			<div className="relative z-10 flex flex-col items-center justify-center gap-6 py-8 text-center md:min-h-152 md:py-24 lg:py-32">
-				<MobileImageRow images={images.slice(0, 2)} position="top" />
+				{topRowImages.length > 0 && (
+					<MobileImageRow images={topRowImages} position="top" disableAnimation={disableAnimation} />
+				)}
 
 				{blok.heading && (
 					<div className="max-w-sm">
@@ -156,7 +161,9 @@ export const DonationsTotalBlock = ({
 					</Button>
 				)}
 
-				<MobileImageRow images={images.slice(2, 4)} position="bottom" />
+				{bottomRowImages.length > 0 && (
+					<MobileImageRow images={bottomRowImages} position="bottom" disableAnimation={disableAnimation} />
+				)}
 			</div>
 		</BlockWrapper>
 	);
