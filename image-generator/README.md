@@ -35,6 +35,26 @@ Auth accepts any username and checks the configured password.
   download link.
 - Enter submits the prompt; Shift+Enter inserts a newline. Navigation
   preserves page state through Next.js Cache Components.
+- The format selector defaults to square and supports 1:1, 16:9, 9:16,
+  4:3, 3:4, and 3:2. GPT Image 2.5 Flare supports all six natively via
+  custom pixel sizes, passed through the AI SDK's `size` option.
+  Dimensions are multiples of 16 and within the provider's pixel limits
+  ([provider documentation](https://developers.openai.com/api/docs/guides/image-generation#size-and-quality-options)).
+  The API rejects unsupported ratios and mismatched output instead of
+  silently cropping or stretching. Actual image dimensions are returned
+  for the generated preview; the gallery and download keep the original.
+
+## Reference images
+
+Reference images are optional. Upload a JPEG, PNG, or WebP up to 10 MB
+and 40 megapixels, then use the prompt to request a watercolor
+transformation or describe how to use the image as inspiration. The
+generator sends the prompt, ratio, and file as multipart `FormData`. The
+server validates and decodes the image, removes metadata, normalizes
+orientation, and passes its bytes through the AI SDK's `prompt.images`
+to the existing GPT Image 2.5 Flare model. References are not stored in
+the gallery; only the generated result is saved. Remove the reference to
+return to text-only generation.
 
 ## Checks
 

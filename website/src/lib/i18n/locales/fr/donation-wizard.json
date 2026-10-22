@@ -1,13 +1,7 @@
 {
 	"modal": {
 		"title": "Faire un don",
-		"campaign-for": "Pour {title}",
-		"closeConfirm": {
-			"title": "Fermer le don ?",
-			"description": "Si tu fermes maintenant, ta progression dans ce don sera perdue.",
-			"cancel": "Continuer le don",
-			"confirm": "Fermer"
-		}
+		"campaign-for": "Pour {title}"
 	},
 	"stepAmount": {
 		"title": "Faire un don",

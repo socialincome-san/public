@@ -11,17 +11,15 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { STYLE_TEMPLATE } from '../style-template';
 
-const dateFormatter = new Intl.DateTimeFormat('de-CH', {
+const dateFormatter = new Intl.DateTimeFormat('en-GB', {
 	dateStyle: 'medium',
 	timeStyle: 'short',
 	timeZone: 'Europe/Zurich',
 });
 
 const getUserPrompt = (prompt: string | null) => {
-	if (!prompt) return 'Kein Prompt hinterlegt.';
-	return (
-		(prompt.startsWith(STYLE_TEMPLATE) ? prompt.slice(STYLE_TEMPLATE.length).trim() : prompt) || 'Kein Benutzer-Prompt.'
-	);
+	if (!prompt) return 'No prompt saved.';
+	return (prompt.startsWith(STYLE_TEMPLATE) ? prompt.slice(STYLE_TEMPLATE.length).trim() : prompt) || 'No user prompt.';
 };
 
 const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string }) => {
@@ -41,7 +39,7 @@ const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string
 			/>
 			{status === 'loading' && (
 				<div className="absolute inset-3 overflow-hidden [&>div]:h-full [&>div]:min-h-0 [&>div]:rounded-none md:[&>div]:min-h-0">
-					<AppLoadingSkeleton message="Bild wird geladen …" />
+					<AppLoadingSkeleton message="Loading image …" />
 				</div>
 			)}
 			{status === 'error' && (
@@ -49,7 +47,7 @@ const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string
 					className="bg-card text-muted-foreground absolute inset-0 flex items-center justify-center p-4 text-sm"
 					role="status"
 				>
-					Bild konnte nicht geladen werden.
+					Image could not be loaded.
 				</div>
 			)}
 		</div>
@@ -60,14 +58,14 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 	if (images.length === 0) {
 		return (
 			<div className="border-border bg-card flex flex-col items-center justify-center rounded-3xl border p-12 text-center sm:p-16">
-				<Badge variant="outline">Galerie leer</Badge>
-				<h2 className="text-primary mt-4 text-xl font-semibold sm:text-2xl">Noch keine Bilder generiert</h2>
+				<Badge variant="outline">Gallery empty</Badge>
+				<h2 className="text-primary mt-4 text-xl font-semibold sm:text-2xl">No images generated yet</h2>
 				<p className="text-muted-foreground mt-2 max-w-md text-sm sm:text-base">
-					Erstelle dein erstes KI-generiertes Bild im Social-Income-Stil.
+					Create your first AI-generated image in the Social Income style.
 				</p>
 				<div className="mt-6">
 					<Button asChild>
-						<Link href="/">Zum Image Generator →</Link>
+						<Link href="/">Go to Image Generator →</Link>
 					</Button>
 				</div>
 			</div>
@@ -86,19 +84,19 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 								{image.created_at ? (
 									<time dateTime={image.created_at}>{dateFormatter.format(new Date(image.created_at))}</time>
 								) : (
-									'Zeitpunkt nicht gespeichert'
+									'Date not saved'
 								)}
 							</div>
 							<div className="flex items-center gap-1">
 								<Tooltip>
 									<TooltipTrigger asChild>
-										<Button type="button" variant="ghost" size="icon-sm" aria-label="Bild-Prompt anzeigen">
+										<Button type="button" variant="ghost" size="icon-sm" aria-label="Show image prompt">
 											<Info aria-hidden="true" />
 										</Button>
 									</TooltipTrigger>
 									<TooltipContent size="lg" sideOffset={8}>
 										<div className="max-h-64 overflow-y-auto break-words whitespace-pre-wrap">
-											<p className="mb-2 font-bold">Bild-Prompt</p>
+											<p className="mb-2 font-bold">Image prompt</p>
 											{prompt}
 										</div>
 									</TooltipContent>

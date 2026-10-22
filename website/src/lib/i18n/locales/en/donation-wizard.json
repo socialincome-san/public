@@ -1,13 +1,7 @@
 {
 	"modal": {
 		"title": "Make a donation",
-		"campaign-for": "For {title}",
-		"closeConfirm": {
-			"title": "Close donation?",
-			"description": "If you close now, your progress in this donation will be lost.",
-			"cancel": "Continue donating",
-			"confirm": "Close"
-		}
+		"campaign-for": "For {title}"
 	},
 	"stepAmount": {
 		"title": "Make a donation",
