@@ -1,5 +1,6 @@
 'use client';
 
+import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
 import { isGenerateResponse } from '@/lib/images';
 import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
@@ -8,6 +9,13 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { AnimatedSILogoIcon } from '@socialincome/design-system/brand/logo/logo';
 import { AspectRatioSelect } from '@socialincome/design-system/forms/aspect-ratio-select/aspect-ratio-select';
 import { ImageUpload } from '@socialincome/design-system/forms/image-upload/image-upload';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
 import { Textarea } from '@socialincome/design-system/forms/textarea/textarea';
 import { DropdownMenuItem } from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { Upload } from 'lucide-react';
@@ -46,6 +54,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 	const referenceInputRef = useRef<HTMLInputElement>(null);
 	const [prompt, setPrompt] = useState('');
 	const [aspectRatio, setAspectRatio] = useState<string>(DEFAULT_IMAGE_FORMAT.value);
+	const [country, setCountry] = useState<string>(DEFAULT_COUNTRY.value);
 	const [{ imageSrc, error, width, height }, formAction, isPending] = useActionState(generate, {
 		imageSrc: null,
 		error: null,
@@ -156,6 +165,18 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 									onValueChange={setAspectRatio}
 									disabled={isPending}
 								/>
+								<Select name="country" value={country} onValueChange={setCountry} disabled={isPending}>
+									<SelectTrigger size="sm" aria-label="Country">
+										<SelectValue />
+									</SelectTrigger>
+									<SelectContent>
+										{COUNTRIES.map((item) => (
+											<SelectItem key={item.value} value={item.value}>
+												{item.label}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
 							</div>
 							<Button type="submit" size="md" disabled={isPending || prompt.trim() === ''}>
 								<span>Generate</span>
