@@ -30,7 +30,8 @@ Auth accepts any username and checks the configured password.
 - The country select adds typical local details from
   `src/lib/countries.ts` so scenes look specific to Sierra Leone,
   Liberia or Ghana. "Global" keeps the setting generic for contributors
-  anywhere in the world.
+  anywhere in the world and picks its references from
+  `src/style-references/light-skin/` instead.
 - `src/lib/database.ts` owns the PostgreSQL pool and image queries.
 - `/images` server-renders the first metadata batch. The load-more
   button fetches `/api/gallery-images?offset=24` and subsequent batches
