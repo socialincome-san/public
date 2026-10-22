@@ -53,7 +53,7 @@ export const POST = async (request: Request) => {
 
 	try {
 		const prompt = buildPrompt(text, country.setting, referenceBytes !== undefined);
-		const styleReferences = await getSceneReferences();
+		const styleReferences = await getSceneReferences(country.value);
 		const { image } = await generateImage({
 			// Sunburst follows the style references and accent colors more closely than Flare.
 			model: 'openai/gpt-image-2.5-sunburst',
