@@ -46,3 +46,23 @@ export const paymentContextForOneTimePlanChoice = (choice: OneTimePlanChoice) =>
 		returnsToOneTimePlanStep: true,
 	};
 };
+
+/** Reopens a stored donation on the plan step it came from, with the same tier and plan choice. */
+export const wizardContextFromResumedDonation = (context: DonationAmountContext): DonationWizardContext => {
+	// A monthly gift of half a one-time amount is chosen on the one-time plan step, which starts from the one-time amount.
+	if (context.returnsToOneTimePlanStep) {
+		return {
+			...getInitialWizardContext(),
+			...context,
+			cadence: 'one-time',
+			chargeMonthlyHalfOfOneTimeAmount: false,
+			pendingStep: 'stepPlanOneTime',
+		};
+	}
+
+	return {
+		...getInitialWizardContext(),
+		...context,
+		pendingStep: context.cadence === 'monthly' ? 'stepPlanMonthly' : 'stepPlanOneTime',
+	};
+};

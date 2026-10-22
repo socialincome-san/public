@@ -17,6 +17,8 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
+import { DonationResumeBar } from '../resume-bar/donation-resume-bar';
+import { clearResumableDonation, storeResumableDonation, toResumableDonation } from '../resume-bar/resumable-donation';
 import {
 	clearStoredStripeCheckoutContext,
 	readStoredStripeCheckoutContext,
@@ -33,6 +35,15 @@ type Props = {
 	children: ReactNode;
 };
 
+// Steps after the amount is chosen and before anything is paid or a QR bill exists.
+const resumableSteps = ['stepPlanMonthly', 'stepPlanOneTime', 'stepPayment', 'stepStripeCheckout', 'stepQrContact'] as const;
+
+const completionEvents = new Set<Parameters<DonationWizardSend>[0]['type']>([
+	'STRIPE_CHECKOUT_COMPLETE',
+	'OPEN_FROM_STRIPE_RETURN',
+	'QR_PAYMENT_CONFIRMED',
+]);
+
 export const DonationModalProvider = ({ children }: Props) => {
 	const [state, , actorRef] = useMachine(donationWizardMachine);
 	const currency = useWebsiteCurrency();
@@ -44,6 +55,10 @@ export const DonationModalProvider = ({ children }: Props) => {
 			actorRef.send(event);
 			const next = actorRef.getSnapshot();
 			const changedStep = next.value !== previousStep;
+
+			if (changedStep && completionEvents.has(event.type)) {
+				clearResumableDonation();
+			}
 
 			const funnelEvent = getDonationFunnelEvent(event.type, changedStep, next.context, currency);
 			if (funnelEvent) {
@@ -103,9 +118,32 @@ export const DonationModalProvider = ({ children }: Props) => {
 		send({ type: 'OPEN_FROM_FORM', context });
 	};
 
+	const resumeDonation = (context: DonationAmountContext) => {
+		send({ type: 'RESUME', context });
+	};
+
 	const closeWizard = () => {
+		const snapshot = actorRef.getSnapshot();
+		const donation = resumableSteps.some((step) => snapshot.matches(step))
+			? toResumableDonation(snapshot.context, snapshot.matches('stepPayment') || snapshot.matches('stepStripeCheckout'))
+			: null;
+		if (donation) {
+			storeResumableDonation(donation);
+		} else if (snapshot.matches('stepQrBill')) {
+			// The donor may pay the QR bill from their bank, so the bar must not offer the same donation again.
+			clearResumableDonation();
+		}
 		setCloseConfirmOpen(false);
 		send({ type: 'CLOSE' });
+	};
+
+	const openWizardAfterPayment = (context: DonationAmountContext, sessionId: string) => {
+		clearResumableDonation();
+		// The wallet sheet may finish while the donor has opened the wizard; onboarding only starts from closed.
+		if (!actorRef.getSnapshot().matches('closed')) {
+			send({ type: 'CLOSE' });
+		}
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId });
 	};
 
 	const requestClose = () => {
@@ -123,8 +161,11 @@ export const DonationModalProvider = ({ children }: Props) => {
 	};
 
 	return (
-		<DonationModalContext.Provider value={{ openWizardAtAmountStep, openWizardWithFormAmount }}>
+		<DonationModalContext.Provider
+			value={{ isOpen, openWizardAtAmountStep, openWizardWithFormAmount, resumeDonation, openWizardAfterPayment }}
+		>
 			{children}
+			<DonationResumeBar />
 
 			<Dialog
 				open={isOpen}

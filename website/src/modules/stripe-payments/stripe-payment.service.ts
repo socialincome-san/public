@@ -217,9 +217,9 @@ export const createEmbeddedCheckoutSession = async (
 			returnUrl: returnUrlResult.data,
 			stripeCustomerId: input.stripeCustomerId,
 			campaignId,
-			source: 'donation-wizard',
+			source: input.uiMode === 'elements' ? 'donation-bar' : 'donation-wizard',
 			coverTransactionCosts,
-			uiMode: 'embedded_page',
+			uiMode: input.uiMode ?? 'embedded_page',
 		});
 		if (!checkoutResult.success) {
 			return checkoutResult;
@@ -247,7 +247,7 @@ export const getPaidCheckoutDonation = async (sessionId: string): Promise<Result
 			return sessionResult;
 		}
 
-		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		const paidCheck = assertWizardCheckoutSessionPaid(sessionResult.data);
 		if (!paidCheck.success) {
 			return paidCheck;
 		}
@@ -278,7 +278,7 @@ export const getCheckoutOnboardingPrefill = async (sessionId: string): Promise<R
 			return sessionResult;
 		}
 
-		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		const paidCheck = assertWizardCheckoutSessionPaid(sessionResult.data);
 		if (!paidCheck.success) {
 			return paidCheck;
 		}
@@ -318,7 +318,7 @@ export const updateContributorAfterCheckout = async (
 			return sessionResult;
 		}
 
-		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		const paidCheck = assertWizardCheckoutSessionPaid(sessionResult.data);
 		if (!paidCheck.success) {
 			return paidCheck;
 		}
@@ -394,7 +394,7 @@ export const updateContributorReferralAfterCheckout = async (
 			return sessionResult;
 		}
 
-		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		const paidCheck = assertWizardCheckoutSessionPaid(sessionResult.data);
 		if (!paidCheck.success) {
 			return paidCheck;
 		}
@@ -1260,7 +1260,7 @@ const createCheckoutSession = async (input: {
 	accountId?: string;
 	source?: string;
 	coverTransactionCosts?: boolean;
-	uiMode?: 'embedded_page';
+	uiMode?: 'embedded_page' | 'elements';
 }): Promise<Result<{ sessionId: string; clientSecret: string | null; url: string | null }>> => {
 	const productId = input.recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME;
 	if (!productId) {
@@ -1373,8 +1373,9 @@ const splitContributorName = (fullName?: string | null): StripeContributorNamePa
 	};
 };
 
-const assertEmbeddedCheckoutSessionPaid = (session: StripeApiCheckoutSession): Result<void> => {
-	if (session.ui_mode !== 'embedded_page') {
+const assertWizardCheckoutSessionPaid = (session: StripeApiCheckoutSession): Result<void> => {
+	// Only the donation wizard (embedded form) and the donation bar (Express Checkout Element) create these modes.
+	if (session.ui_mode !== 'embedded_page' && session.ui_mode !== 'elements') {
 		return resultFail('Invalid checkout session type');
 	}
 	if (session.status !== 'complete') {

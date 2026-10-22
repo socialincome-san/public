@@ -32,7 +32,7 @@ const isOneTimePlanChoice = (value: unknown): value is OneTimePlanChoice => valu
 
 const getStorageKey = (sessionId: string): string => `${STORAGE_KEY_PREFIX}${sessionId}`;
 
-const parseStoredContext = (value: unknown): DonationAmountContext | null => {
+export const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 	if (!isRecord(value)) {
 		return null;
 	}
@@ -82,6 +82,21 @@ const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 	};
 };
 
+/** A donation saved as JSON, or `null` when it is missing or no longer valid. */
+export const parseStoredDonation = (value: string | null): DonationAmountContext | null => {
+	if (!value) {
+		return null;
+	}
+
+	try {
+		const parsed: unknown = JSON.parse(value);
+
+		return parseStoredContext(parsed);
+	} catch {
+		return null;
+	}
+};
+
 export const buildStripeCheckoutReturnPath = (): string | undefined => {
 	if (typeof window === 'undefined') {
 		return undefined;
@@ -103,18 +118,7 @@ export const readStoredStripeCheckoutContext = (sessionId: string): DonationAmou
 		return null;
 	}
 
-	const value = window.sessionStorage.getItem(getStorageKey(sessionId));
-	if (!value) {
-		return null;
-	}
-
-	try {
-		const parsed: unknown = JSON.parse(value);
-
-		return parseStoredContext(parsed);
-	} catch {
-		return null;
-	}
+	return parseStoredDonation(window.sessionStorage.getItem(getStorageKey(sessionId)));
 };
 
 export const clearStoredStripeCheckoutContext = (sessionId: string): void => {

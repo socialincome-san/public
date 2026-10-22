@@ -8,7 +8,7 @@ import {
 	registerFirstPartyGoogleTag,
 	setAnalyticsConsent,
 	useAnalyticsConsent,
-	useConsentSettingsOpen,
+	useCookieBannerOpen,
 } from '@/lib/analytics/analytics';
 import { GoogleTagManager } from '@next/third-parties/google';
 import { CookieBanner } from '@socialincome/design-system/feedback/cookie-banner/cookie-banner';
@@ -18,7 +18,7 @@ import NextLink from 'next/link';
 export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string }) => {
 	const t = useTranslations('website-common.cookie-consent');
 	const consent = useAnalyticsConsent();
-	const settingsOpen = useConsentSettingsOpen();
+	const isBannerOpen = useCookieBannerOpen();
 
 	if (!googleTagManagerId) {
 		return null;
@@ -36,7 +36,7 @@ export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string
 	return (
 		<>
 			{loadsTagManager && <GoogleTagManager gtmId={googleTagManagerId} gtmScriptUrl={googleTagGatewayUrl} />}
-			{(consent === 'undecided' || settingsOpen) && (
+			{isBannerOpen && (
 				<CookieBanner
 					message={t.rich('message', {
 						link: (chunks) => <NextLink href={privacyPolicyHref}>{chunks}</NextLink>,

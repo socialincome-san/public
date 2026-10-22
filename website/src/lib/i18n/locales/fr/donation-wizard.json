@@ -144,5 +144,10 @@
 		"zewo": "Certifié ZEWO",
 		"why-one-percent": "Pourquoi donner 1% ?",
 		"pay-with": "Payer avec"
+	},
+	"resumeBar": {
+		"label": "Don rapide",
+		"summary": "{cadence, select, monthly {Donner {amount} par mois, modifier le montant} other {Donner {amount} une fois, modifier le montant}}",
+		"continue": "Continuer"
 	}
 }

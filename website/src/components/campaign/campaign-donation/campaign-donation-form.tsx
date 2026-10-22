@@ -2,6 +2,7 @@
 
 import { useDonationFormState } from '@/components/donation-wizard/hooks/use-donation-form-state';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
+import { observeDonationForm } from '@/components/donation-wizard/resume-bar/donation-form-visibility';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -39,7 +40,7 @@ export const CampaignDonationForm = ({ campaignId, quote, profilePictureSrc, pro
 	const trimmedQuote = quote.trim();
 
 	return (
-		<div data-testid="donation-wizard-hero-form" className="w-full">
+		<div data-testid="donation-wizard-hero-form" ref={observeDonationForm} className="w-full">
 			<div
 				className={cn(
 					getDonationWizardCardClass('stepAmount'),
