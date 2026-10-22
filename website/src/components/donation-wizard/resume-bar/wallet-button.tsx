@@ -17,7 +17,7 @@ const expressCheckoutOptions: StripeCheckoutExpressCheckoutElementOptions = {
 	buttonHeight: 40,
 	buttonTheme: { applePay: 'black', googlePay: 'black' },
 	buttonType: { applePay: 'plain', googlePay: 'plain' },
-	layout: { maxColumns: 1, maxRows: 1, overflow: 'never' },
+	layout: { maxColumns: 1, maxRows: 1, overflow: 'auto' },
 	paymentMethodOrder: ['apple_pay', 'google_pay'],
 	paymentMethods: {
 		// TEMPORARY for testing: render the wallet buttons even without a card set up. Revert to 'auto' before merging.
