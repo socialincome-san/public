@@ -5,6 +5,7 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { useTranslations } from 'next-intl';
+import NextImage from 'next/image';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -29,6 +30,8 @@ const amountFieldDivider = 'divide-input/60';
 const monthlyAmountTextClass = 'text-lg leading-none font-medium';
 
 const monthlyIncomeInputId = 'donation-monthly-income';
+
+export const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
 
 type DonationAmountFieldsValues = {
 	monthlyIncome: number | null;
@@ -78,9 +81,23 @@ export const DonationAmountFields = ({
 			data-testid="donation-wizard-step-amount"
 		>
 			{showTitle && (
-				<h2 className="text-foreground mb-5 text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
-					{t('stepAmount.title')}
-				</h2>
+				<div className="mb-5 flex items-center justify-between gap-3">
+					<h2 className="text-foreground text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
+						{t('stepAmount.title')}
+					</h2>
+					{/* Negative margin keeps the card height that donationHeroCardSizeClass snapshots. */}
+					{placement === 'hero' && (
+						<a
+							href={ZEWO_NPO_DETAIL_URL}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="-my-2 shrink-0"
+							aria-label={t('impact.zewo')}
+						>
+							<NextImage src="/assets/zewo.svg" alt="" width={38} height={37} className="size-[38px]" />
+						</a>
+					)}
+				</div>
 			)}
 
 			<div className={cn(amountFieldBorder, 'mb-3 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border')}>

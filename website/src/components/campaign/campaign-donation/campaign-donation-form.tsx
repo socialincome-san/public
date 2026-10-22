@@ -2,6 +2,7 @@
 
 import { useDonationFormState } from '@/components/donation-wizard/hooks/use-donation-form-state';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
+import { ZEWO_NPO_DETAIL_URL } from '@/components/donation-wizard/steps/step-amount/donation-amount-fields';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -16,7 +17,6 @@ import { Input } from '@socialincome/design-system/forms/input/input';
 import { useTranslations } from 'next-intl';
 import NextImage from 'next/image';
 
-const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
 const PROFILE_PICTURE_SIZE = 87;
 
 const amountOptions: (PresetAmount | 'other')[] = [25, 50, 100, 'other'];
