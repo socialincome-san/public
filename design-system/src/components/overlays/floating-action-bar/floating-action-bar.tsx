@@ -49,7 +49,8 @@ export const FloatingActionBar = ({
 		>
 			{summaryAction ? (
 				<Button variant="ghost" size="md" aria-label={summaryAction.label} onClick={summaryAction.onClick}>
-					{summary}
+					{/* Balances the icon's extra left space, so the hover pill looks even. */}
+					<span className="flex items-center gap-2 pr-1">{summary}</span>
 				</Button>
 			) : (
 				<div className="flex items-center gap-2 px-4">{summary}</div>
