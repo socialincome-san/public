@@ -43,7 +43,7 @@ export const FloatingActionBar = ({
 			inert={!visible}
 			style={{ marginBottom: bottomOffset }}
 			className={cn(
-				'bg-background fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex w-fit items-center gap-2 rounded-full p-2 shadow-lg transition-all duration-200 ease-out motion-reduce:transition-none',
+				'bg-background fixed inset-x-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex items-center gap-2 rounded-full p-2 shadow-lg transition-all duration-200 ease-out motion-reduce:transition-none sm:w-fit',
 				visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0',
 			)}
 		>
@@ -55,7 +55,8 @@ export const FloatingActionBar = ({
 			) : (
 				<div className="flex items-center gap-2 px-4">{summary}</div>
 			)}
-			{action}
+			{/* Phones get the full width, with the action taking the space next to the summary. */}
+			<div className="min-w-0 flex-1 sm:flex-none">{action}</div>
 		</section>
 	);
 };

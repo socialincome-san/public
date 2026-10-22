@@ -56,6 +56,19 @@ export const WithoutSubtitle: Story = {
 	},
 };
 
+export const Mobile: Story = {
+	parameters: {
+		viewport: { defaultViewport: 'mobile1' },
+	},
+	args: {
+		action: (
+			<Button size="md" fullWidth>
+				Pay
+			</Button>
+		),
+	},
+};
+
 export const StackedAboveAnotherOverlay: Story = {
 	args: {
 		bottomOffset: 96,

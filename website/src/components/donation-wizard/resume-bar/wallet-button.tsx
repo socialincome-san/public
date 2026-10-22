@@ -86,7 +86,7 @@ export const WalletButton = ({ donation, currency, hasWallet, onWalletChange, fa
 	}, [session, donation, currency, onWalletChange]);
 
 	return (
-		<div className="relative h-10 w-44">
+		<div className="relative h-10 w-full sm:w-44">
 			{session ? (
 				<CheckoutElementsProvider
 					stripe={session.stripe}
