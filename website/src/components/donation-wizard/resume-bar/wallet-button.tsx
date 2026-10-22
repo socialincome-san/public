@@ -20,8 +20,9 @@ const expressCheckoutOptions: StripeCheckoutExpressCheckoutElementOptions = {
 	layout: { maxColumns: 1, maxRows: 1, overflow: 'never' },
 	paymentMethodOrder: ['apple_pay', 'google_pay'],
 	paymentMethods: {
-		applePay: 'auto',
-		googlePay: 'auto',
+		// TEMPORARY for testing: render the wallet buttons even without a card set up. Revert to 'auto' before merging.
+		applePay: 'always',
+		googlePay: 'always',
 		link: 'never',
 		paypal: 'never',
 		amazonPay: 'never',
@@ -134,6 +135,8 @@ const ExpressCheckout = ({ sessionId, donation, onAvailable, onConfirm, onPaid, 
 		<ExpressCheckoutElement
 			options={expressCheckoutOptions}
 			onReady={(event) => {
+				// TEMPORARY for testing: shows which wallets Stripe found for this browser. Remove before merging.
+				console.info('[ECE] wallets available:', event.availablePaymentMethods);
 				if (event.availablePaymentMethods?.applePay || event.availablePaymentMethods?.googlePay) {
 					onAvailable();
 				}
