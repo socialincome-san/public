@@ -1,30 +1,56 @@
 import { buildPrompt } from '@/app/style-template';
 import { saveImage } from '@/lib/database';
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
+import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
 import { generateImage } from 'ai';
 import sharp from 'sharp';
 
 export const POST = async (request: Request) => {
-	let body: unknown;
+	let body: FormData;
 	try {
-		body = await request.json();
+		body = await request.formData();
 	} catch {
 		return errorResponse('Please enter a prompt.', 400);
 	}
-	if (typeof body !== 'object' || body === null || !('prompt' in body) || typeof body.prompt !== 'string') {
+	const textPrompt = body.get('prompt');
+	if (typeof textPrompt !== 'string') {
 		return errorResponse('Please enter a prompt.', 400);
 	}
-	const text = body.prompt.trim();
+	const text = textPrompt.trim();
 	if (!text) return errorResponse('Please enter a prompt.', 400);
-	const aspectRatio = 'aspectRatio' in body ? body.aspectRatio : DEFAULT_IMAGE_FORMAT.value;
+	const aspectRatio = body.get('aspectRatio') ?? DEFAULT_IMAGE_FORMAT.value;
 	const format = IMAGE_FORMATS.find((item) => item.value === aspectRatio);
 	if (!format) return errorResponse('Unsupported aspect ratio', 400);
+	const reference = body.get('referenceImage');
+	let referenceBytes: Uint8Array | undefined;
+	if (reference !== null && !(reference instanceof File)) {
+		return errorResponse('Invalid reference image.', 400);
+	}
+	if (reference instanceof File && reference.size > 0) {
+		if (reference.size > MAX_REFERENCE_IMAGE_BYTES) {
+			return errorResponse('Reference image must be 10 MB or smaller.', 413);
+		}
+		if (!REFERENCE_IMAGE_TYPES.includes(reference.type)) {
+			return errorResponse('Choose a JPEG, PNG or WebP reference image.', 400);
+		}
+		try {
+			const input = sharp(await reference.arrayBuffer(), { limitInputPixels: 40_000_000 });
+			const metadata = await input.metadata();
+			if (!['jpeg', 'png', 'webp'].includes(metadata.format ?? '') || (metadata.pages ?? 1) !== 1) {
+				return errorResponse('Choose a non-animated JPEG, PNG or WebP reference image.', 400);
+			}
+			// Normalize orientation and strip photo metadata before sending to the provider.
+			referenceBytes = await input.rotate().png().toBuffer();
+		} catch {
+			return errorResponse('Reference image could not be read. Choose a valid image up to 40 megapixels.', 400);
+		}
+	}
 
 	try {
 		const prompt = buildPrompt(text);
 		const { image } = await generateImage({
 			model: 'openai/gpt-image-2.5-flare',
-			prompt,
+			prompt: referenceBytes ? { text: prompt, images: [referenceBytes] } : prompt,
 			// OpenAI accepts custom pixel sizes rather than the SDK's aspectRatio option.
 			size: `${format.width}x${format.height}`,
 			providerOptions: { openai: { quality: 'high' } },
