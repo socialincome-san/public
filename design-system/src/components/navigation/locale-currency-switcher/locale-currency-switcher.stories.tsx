@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
+import { CountryFlag } from '../../data-display/country-flag/country-flag';
 import { LocaleCurrencySwitcher } from './locale-currency-switcher';
 
 const meta = {
@@ -12,7 +13,7 @@ export default meta;
 
 type Story = StoryObj<typeof LocaleCurrencySwitcher>;
 
-const InteractiveSwitcher = ({ variant }: { variant?: 'ghost' | 'outline' }) => {
+const InteractiveSwitcher = ({ variant, icon }: { variant?: 'ghost' | 'outline'; icon?: ReactNode }) => {
 	const [open, setOpen] = useState(false);
 	const [language, setLanguage] = useState('en');
 	const [currency, setCurrency] = useState('USD');
@@ -21,6 +22,7 @@ const InteractiveSwitcher = ({ variant }: { variant?: 'ghost' | 'outline' }) => 
 		<LocaleCurrencySwitcher
 			ariaLabel="Change language and currency"
 			variant={variant}
+			icon={icon}
 			open={open}
 			onOpenChange={setOpen}
 			language={{
@@ -45,4 +47,8 @@ export const Ghost: Story = {
 
 export const Outline: Story = {
 	render: () => <InteractiveSwitcher variant="outline" />,
+};
+
+export const WithCountryFlag: Story = {
+	render: () => <InteractiveSwitcher icon={<CountryFlag country="CH" size="sm" decorative />} />,
 };

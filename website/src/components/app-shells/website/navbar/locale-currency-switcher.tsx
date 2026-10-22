@@ -13,7 +13,7 @@ import {
 import { LocaleCurrencySwitcher as DesignSystemLocaleCurrencySwitcher } from '@socialincome/design-system/navigation/locale-currency-switcher/locale-currency-switcher';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { type ReactNode, Suspense, useState } from 'react';
 
 const surveyLanguages: WebsiteLanguage[] = ['en', 'kri'];
 
@@ -29,9 +29,10 @@ type Props = {
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 	variant?: 'ghost' | 'outline';
+	icon?: ReactNode;
 };
 
-const Switcher = ({ lang, currency, variant = 'ghost', isSurveyPage }: Props & { isSurveyPage: boolean }) => {
+const Switcher = ({ lang, currency, variant = 'ghost', icon, isSurveyPage }: Props & { isSurveyPage: boolean }) => {
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
 	const t = useTranslations('website-common');
@@ -60,6 +61,7 @@ const Switcher = ({ lang, currency, variant = 'ghost', isSurveyPage }: Props & {
 		<DesignSystemLocaleCurrencySwitcher
 			ariaLabel={t('locale-currency-switcher.aria-label')}
 			variant={variant}
+			icon={icon}
 			open={open}
 			onOpenChange={setOpen}
 			language={{

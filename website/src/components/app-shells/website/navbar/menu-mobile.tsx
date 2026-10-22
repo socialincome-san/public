@@ -18,11 +18,12 @@ type Props = {
 	menuEntries: SiteMenuEntry[];
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
+	localeIcon: ReactNode;
 };
 
 const KeyedByPathname = ({ children }: { children: ReactNode }) => <Fragment key={usePathname()}>{children}</Fragment>;
 
-export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency }: Props) => {
+export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency, localeIcon }: Props) => {
 	const t = useTranslations('website-common');
 	const tDonate = useTranslations('website-donate');
 	const menu = (
@@ -48,7 +49,9 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency }: Pro
 			)}
 			footerControls={
 				<>
-					{scope === 'website' && <LocaleCurrencySwitcher lang={lang} currency={currency} variant="outline" />}
+					{scope === 'website' && (
+						<LocaleCurrencySwitcher lang={lang} currency={currency} variant="outline" icon={localeIcon} />
+					)}
 					<AccountSlot sessions={sessions} scope={scope} />
 				</>
 			}

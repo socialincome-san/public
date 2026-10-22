@@ -1,6 +1,7 @@
 import { type CountryCode } from '@/generated/prisma/enums';
-import { getSafeNumberFormatLocale, VISITOR_COUNTRY_HEADER, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
+import { getVisitorCountry } from '@/lib/geo/visitor-geo';
+import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getCountryNameByCode, toCountryCode } from '@/lib/types/country';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getCountryStatisticsComparisonAction } from '@/modules/countries/country.actions';
 import type { CountryStatisticFormat } from '@/modules/countries/country.types';
@@ -28,20 +29,10 @@ const formatStatisticValue = (value: number, format: CountryStatisticFormat, loc
 	}
 };
 
-const normalizeCountryCode = (value: string | undefined): CountryCode | null => {
-	const normalizedValue = value?.trim().toUpperCase();
-
-	if (!normalizedValue || !isValidCountryCode(normalizedValue)) {
-		return null;
-	}
-
-	return normalizedValue;
-};
-
 const FALLBACK_VISITOR_COUNTRY_CODE: CountryCode = 'CH';
 
 const resolveVisitorCountryCode = async (): Promise<CountryCode> =>
-	normalizeCountryCode((await headers()).get(VISITOR_COUNTRY_HEADER) ?? undefined) ?? FALLBACK_VISITOR_COUNTRY_CODE;
+	getVisitorCountry(await headers()) ?? FALLBACK_VISITOR_COUNTRY_CODE;
 
 type CountryHeaderProps = {
 	countryCode: CountryCode;
@@ -85,7 +76,7 @@ const MobileStatisticRow = ({ label, value, showLabel = true }: { label: string;
 };
 
 export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: Props) => {
-	const normalizedCountryIsoCode = normalizeCountryCode(countryIsoCode);
+	const normalizedCountryIsoCode = toCountryCode(countryIsoCode);
 	if (!normalizedCountryIsoCode) {
 		return null;
 	}

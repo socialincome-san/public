@@ -30,6 +30,13 @@ describe('findBestLocale', () => {
 		expect(findBestLocale(request({ 'accept-language': 'de-CH' }))).toEqual({ language: 'de', currency: 'CHF' });
 	});
 
+	test('falls back to the Accept-Language region when the geo header is not a country', () => {
+		expect(findBestLocale(request({ 'accept-language': 'de-CH', 'x-vercel-ip-country': 'XX' }))).toEqual({
+			language: 'de',
+			currency: 'CHF',
+		});
+	});
+
 	test('falls back to English and USD for countries without a website currency', () => {
 		expect(findBestLocale(request({ 'accept-language': 'kri', 'x-vercel-ip-country': 'SL' }))).toEqual({
 			language: 'en',
