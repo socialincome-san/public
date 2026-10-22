@@ -20,7 +20,7 @@ const UnsupportedPayoutProcessDialog = ({
 	onClose,
 }: PayoutProcessDialogBaseProps & { option: PayoutProcessOverviewOption }) => (
 	<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-		<DialogContent size="alert">
+		<DialogContent size="sm">
 			<DialogHeader>
 				<DialogTitle>Unsupported payout process</DialogTitle>
 				<DialogDescription>

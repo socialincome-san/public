@@ -1,3 +1,4 @@
+import { isWebsiteCurrency, type WebsiteCurrency } from '@/lib/i18n/utils';
 import type {
 	Cadence,
 	DonationAmountContext,
@@ -32,12 +33,14 @@ const isOneTimePlanChoice = (value: unknown): value is OneTimePlanChoice => valu
 
 const getStorageKey = (sessionId: string): string => `${STORAGE_KEY_PREFIX}${sessionId}`;
 
-export const parseStoredContext = (value: unknown): DonationAmountContext | null => {
+export const parseStoredContext = (value: unknown, fallbackCurrency?: WebsiteCurrency): DonationAmountContext | null => {
 	if (!isRecord(value)) {
 		return null;
 	}
 
 	const {
+		// Contexts stored before the wizard tracked its own currency have none.
+		currency = fallbackCurrency,
 		monthlyIncome,
 		selectedAmount,
 		customAmount,
@@ -52,6 +55,8 @@ export const parseStoredContext = (value: unknown): DonationAmountContext | null
 	} = value;
 
 	if (
+		typeof currency !== 'string' ||
+		!isWebsiteCurrency(currency) ||
 		!isNullableNumber(monthlyIncome) ||
 		!isNullablePresetAmount(selectedAmount) ||
 		!isNullableNumber(customAmount) ||
@@ -68,6 +73,7 @@ export const parseStoredContext = (value: unknown): DonationAmountContext | null
 	}
 
 	return {
+		currency,
 		monthlyIncome,
 		selectedAmount,
 		customAmount,
@@ -83,7 +89,10 @@ export const parseStoredContext = (value: unknown): DonationAmountContext | null
 };
 
 /** A donation saved as JSON, or `null` when it is missing or no longer valid. */
-export const parseStoredDonation = (value: string | null): DonationAmountContext | null => {
+export const parseStoredDonation = (
+	value: string | null,
+	fallbackCurrency?: WebsiteCurrency,
+): DonationAmountContext | null => {
 	if (!value) {
 		return null;
 	}
@@ -91,7 +100,7 @@ export const parseStoredDonation = (value: string | null): DonationAmountContext
 	try {
 		const parsed: unknown = JSON.parse(value);
 
-		return parseStoredContext(parsed);
+		return parseStoredContext(parsed, fallbackCurrency);
 	} catch {
 		return null;
 	}
@@ -113,12 +122,15 @@ export const storeStripeCheckoutContext = (sessionId: string, context: DonationA
 	window.sessionStorage.setItem(getStorageKey(sessionId), JSON.stringify(context));
 };
 
-export const readStoredStripeCheckoutContext = (sessionId: string): DonationAmountContext | null => {
+export const readStoredStripeCheckoutContext = (
+	sessionId: string,
+	fallbackCurrency: WebsiteCurrency,
+): DonationAmountContext | null => {
 	if (typeof window === 'undefined') {
 		return null;
 	}
 
-	return parseStoredDonation(window.sessionStorage.getItem(getStorageKey(sessionId)));
+	return parseStoredDonation(window.sessionStorage.getItem(getStorageKey(sessionId)), fallbackCurrency);
 };
 
 export const clearStoredStripeCheckoutContext = (sessionId: string): void => {

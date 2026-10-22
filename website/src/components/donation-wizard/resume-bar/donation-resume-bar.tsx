@@ -1,12 +1,13 @@
 'use client';
 
-import { trackEvent, useCookieBannerOpen } from '@/lib/analytics/analytics';
+import { useCookieBannerHeight } from '@/components/analytics/cookie-banner-height';
+import { trackEvent } from '@/lib/analytics/analytics';
 import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { FloatingActionBar } from '@socialincome/design-system/overlays/floating-action-bar/floating-action-bar';
 import { Pencil } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDonationModal } from '../hooks/use-donation-modal';
 import { getDonationDisplayAmount } from '../utils/donation-amount';
 import { getDonationBarEventProperties } from '../wizard/donation-analytics';
@@ -20,16 +21,20 @@ let lastShownDonation: string | null = null;
 /** Offers to finish a donation whose wizard was closed before paying, on every page of the session. */
 export const DonationResumeBar = () => {
 	const t = useTranslations('donation-wizard');
-	const currency = useWebsiteCurrency();
+	const websiteCurrency = useWebsiteCurrency();
 	const { isOpen, resumeDonation, openWizardAfterPayment } = useDonationModal();
 	const donation = useResumableDonation();
 	// Two ways to pay must never compete on screen.
 	const isFormInView = useDonationFormInView();
-	// The cookie banner sits in the same corner and comes first.
-	const isCookieBannerOpen = useCookieBannerOpen();
+	// The cookie banner sits in the same corner, so the bar stacks above it while it is shown.
+	const cookieBannerHeight = useCookieBannerHeight();
+	// The donation Stripe reported Apple Pay or Google Pay for, so a new donation starts without a wallet.
+	const [walletDonationKey, setWalletDonationKey] = useState<string | null>(null);
 
-	const visible = donation !== null && !isOpen && !isFormInView && !isCookieBannerOpen;
-	const donationKey = donation ? `${currency}:${JSON.stringify(donation)}` : null;
+	const visible = donation !== null && !isOpen && !isFormInView;
+	// The donor may have switched currency inside the wizard, so the donation's own currency counts.
+	const currency = donation?.currency ?? websiteCurrency;
+	const donationKey = donation ? JSON.stringify(donation) : null;
 	const amount = donation ? getDonationDisplayAmount(donation) : 0;
 	const cadence = donation?.cadence ?? 'monthly';
 	// The wizard always shows two decimals; the bar keeps whole amounts short.
@@ -48,26 +53,37 @@ export const DonationResumeBar = () => {
 	}
 
 	const trackingProperties = getDonationBarEventProperties(amount, currency, cadence);
+	const hasWallet = walletDonationKey === donationKey;
 
 	return (
 		<FloatingActionBar
 			label={t('resumeBar.label')}
 			visible={visible}
+			bottomOffset={cookieBannerHeight > 0 ? cookieBannerHeight + 8 : 0}
 			title={amountLabel}
 			subtitle={t(cadence === 'monthly' ? 'stepAmount.monthly' : 'stepAmount.one-time')}
-			icon={<Pencil />}
-			summaryLabel={t('resumeBar.summary', { amount: amountLabel, cadence })}
-			onSummaryClick={() => {
-				trackEvent('sticky_bar_amount_click', trackingProperties);
-				resumeDonation(donation);
-			}}
+			// Without a wallet, Continue already opens the wizard, so the summary stays plain text.
+			icon={hasWallet ? <Pencil /> : undefined}
+			summaryAction={
+				hasWallet
+					? {
+							label: t('resumeBar.summary', { amount: amountLabel, cadence }),
+							onClick: () => {
+								trackEvent('sticky_bar_amount_click', trackingProperties);
+								resumeDonation(donation);
+							},
+						}
+					: undefined
+			}
 			action={
 				<WalletButton
-					// A different donation or currency needs a new checkout session.
+					// A different donation needs a new checkout session.
 					key={donationKey}
 					donation={donation}
 					currency={currency}
 					active={visible}
+					hasWallet={hasWallet}
+					onWalletChange={(available) => setWalletDonationKey(available ? donationKey : null)}
 					fallback={
 						<Button
 							size="md"

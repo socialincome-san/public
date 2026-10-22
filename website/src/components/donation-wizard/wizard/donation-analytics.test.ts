@@ -2,18 +2,22 @@ import { getDonationCompletedEvent, getDonationFunnelEvent } from './donation-an
 import { type DonationWizardContext, getInitialWizardContext } from './donation-wizard-context';
 
 const context = (overrides: Partial<DonationWizardContext>): DonationWizardContext => ({
-	...getInitialWizardContext(),
+	...getInitialWizardContext('CHF'),
 	...overrides,
 });
 
 describe('getDonationFunnelEvent', () => {
 	it('ignores events that did not change the step', () => {
-		expect(getDonationFunnelEvent('SUBMIT', false, context({}), 'CHF')).toBeNull();
-		expect(getDonationFunnelEvent('SET_CADENCE', true, context({}), 'CHF')).toBeNull();
+		expect(getDonationFunnelEvent('SUBMIT', false, context({}))).toBeNull();
+		expect(getDonationFunnelEvent('SET_CADENCE', true, context({}))).toBeNull();
 	});
 
 	it('leaves out the preselected payment method before the donor chose one', () => {
-		const event = getDonationFunnelEvent('SUBMIT', true, context({ selectedAmount: 50, cadence: 'one-time' }), 'USD');
+		const event = getDonationFunnelEvent(
+			'SUBMIT',
+			true,
+			context({ currency: 'USD', selectedAmount: 50, cadence: 'one-time' }),
+		);
 
 		expect(event).toEqual({
 			name: 'donation_amount_confirmed',
@@ -26,7 +30,6 @@ describe('getDonationFunnelEvent', () => {
 			'START_STRIPE_CHECKOUT',
 			true,
 			context({ selectedAmount: 50, cadence: 'monthly', paymentMethod: 'online', coverTransactionCosts: true }),
-			'CHF',
 		);
 
 		expect(event?.name).toBe('donation_online_payment_click');
@@ -38,8 +41,7 @@ describe('getDonationFunnelEvent', () => {
 		const event = getDonationFunnelEvent(
 			'DONATION_ONBOARDING_PERSONAL_COMPLETE',
 			true,
-			context({ paymentMethod: 'qr', completedDonationSummary: { amount: 120, cadence: 'one-time' } }),
-			'CHF',
+			context({ paymentMethod: 'qr', completedDonationSummary: { amount: 120, currency: 'CHF', cadence: 'one-time' } }),
 		);
 
 		expect(event).toEqual({

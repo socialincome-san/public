@@ -1,3 +1,4 @@
+import { type WebsiteCurrency, defaultCurrency } from '@/lib/i18n/utils';
 import { getContributorCommunityStatsAction } from '@/modules/contributors/contributor.actions';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
@@ -31,12 +32,19 @@ export const donationWizardMachine = setup({
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- XState uses this empty object to carry machine types.
 	types: {} as {
 		context: DonationWizardContext;
+		tags: 'currencyEditable';
 		events:
-			| { type: 'OPEN' }
+			| { type: 'OPEN'; currency: WebsiteCurrency }
 			| { type: 'OPEN_FROM_FORM'; context: DonationAmountContext }
 			| { type: 'RESUME'; context: DonationAmountContext }
-			| { type: 'OPEN_FROM_STRIPE_RETURN'; context: DonationAmountContext | null; sessionId: string }
+			| {
+					type: 'OPEN_FROM_STRIPE_RETURN';
+					context: DonationAmountContext | null;
+					sessionId: string;
+					currency: WebsiteCurrency;
+			  }
 			| { type: 'CLOSE' }
+			| { type: 'SET_CURRENCY'; value: WebsiteCurrency }
 			| { type: 'SET_MONTHLY_INCOME'; value: number | null }
 			| { type: 'SELECT_ONE_PERCENT' }
 			| { type: 'SET_PRESET_AMOUNT'; value: PresetAmount | 'other' }
@@ -93,7 +101,7 @@ export const donationWizardMachine = setup({
 		pendingStepIsOneTimePlan: ({ context }) => context.pendingStep === 'stepPlanOneTime',
 	},
 	actions: {
-		resetContext: assign(() => getInitialWizardContext()),
+		resetContext: assign(({ context }) => getInitialWizardContext(context.currency)),
 		assignFailedCommunityStats: assign({
 			communityStats: () => null,
 			pendingStep: () => null,
@@ -102,14 +110,14 @@ export const donationWizardMachine = setup({
 }).createMachine({
 	id: 'donationWizard',
 	initial: 'closed',
-	context: getInitialWizardContext(),
+	context: getInitialWizardContext(defaultCurrency),
 	states: {
 		closed: {
 			on: {
 				OPEN: {
 					target: 'loadingCommunityStats',
-					actions: assign(() => ({
-						...getInitialWizardContext(),
+					actions: assign(({ event }) => ({
+						...getInitialWizardContext(event.currency),
 						pendingStep: 'stepAmount' as const,
 					})),
 				},
@@ -140,7 +148,7 @@ export const donationWizardMachine = setup({
 				OPEN_FROM_STRIPE_RETURN: {
 					target: 'stepOnboardingPersonal',
 					actions: assign(({ event }) => ({
-						...getInitialWizardContext(),
+						...getInitialWizardContext(event.currency),
 						...(event.context ?? {}),
 						paymentMethod: 'online' as const,
 						stripeCheckoutSessionId: event.sessionId,
@@ -203,7 +211,13 @@ export const donationWizardMachine = setup({
 			},
 		},
 		stepAmount: {
+			tags: 'currencyEditable',
 			on: {
+				SET_CURRENCY: {
+					actions: assign({
+						currency: ({ event }) => event.value,
+					}),
+				},
 				SET_MONTHLY_INCOME: {
 					actions: assign({
 						monthlyIncome: ({ event }) => event.value,
@@ -256,7 +270,13 @@ export const donationWizardMachine = setup({
 			},
 		},
 		stepPlanMonthly: {
+			tags: 'currencyEditable',
 			on: {
+				SET_CURRENCY: {
+					actions: assign({
+						currency: ({ event }) => event.value,
+					}),
+				},
 				SET_TIER: {
 					actions: assign({
 						selectedTier: ({ event }) => event.value,
@@ -291,7 +311,13 @@ export const donationWizardMachine = setup({
 			},
 		},
 		stepPlanOneTime: {
+			tags: 'currencyEditable',
 			on: {
+				SET_CURRENCY: {
+					actions: assign({
+						currency: ({ event }) => event.value,
+					}),
+				},
 				SET_ONE_TIME_PLAN_CHOICE: {
 					actions: assign({
 						oneTimePlanChoice: ({ event }) => event.value,
@@ -327,7 +353,13 @@ export const donationWizardMachine = setup({
 			},
 		},
 		stepPayment: {
+			tags: 'currencyEditable',
 			on: {
+				SET_CURRENCY: {
+					actions: assign({
+						currency: ({ event }) => event.value,
+					}),
+				},
 				SET_PAYMENT_METHOD: {
 					actions: assign(({ event }) => ({
 						paymentMethod: event.value,

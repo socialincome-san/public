@@ -40,15 +40,26 @@ type Props = {
 	currency: string;
 	// The checkout session is created once this turns true, so visitors who never see the bar create none.
 	active: boolean;
+	// Whether Stripe reported Apple Pay or Google Pay for this donation
+	hasWallet: boolean;
+	onWalletChange: (hasWallet: boolean) => void;
 	// Shown until Stripe reports a wallet, and instead of the wallet button when there is none
 	fallback: ReactNode;
 	onConfirm: (paymentMethod: string) => void;
 	onPaid: (sessionId: string) => void;
 };
 
-export const WalletButton = ({ donation, currency, active, fallback, onConfirm, onPaid }: Props) => {
+export const WalletButton = ({
+	donation,
+	currency,
+	active,
+	hasWallet,
+	onWalletChange,
+	fallback,
+	onConfirm,
+	onPaid,
+}: Props) => {
 	const [session, setSession] = useState<Session | null>(null);
-	const [hasWallet, setHasWallet] = useState(false);
 
 	useEffect(() => {
 		if (!active || session) {
@@ -90,13 +101,13 @@ export const WalletButton = ({ donation, currency, active, fallback, onConfirm, 
 					<ExpressCheckout
 						sessionId={session.sessionId}
 						donation={donation}
-						onAvailable={() => setHasWallet(true)}
+						onAvailable={() => onWalletChange(true)}
 						onConfirm={onConfirm}
 						onPaid={onPaid}
 						onFailed={() => {
 							// A failed session, e.g. an expired one, cannot be retried; the next showing creates a new one.
 							setSession(null);
-							setHasWallet(false);
+							onWalletChange(false);
 						}}
 					/>
 				</CheckoutElementsProvider>

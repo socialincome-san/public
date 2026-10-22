@@ -117,12 +117,10 @@ export const EditSubscriptionDialog = ({ state, send, onDismissAndRefresh, canDo
 
 	return (
 		<Dialog
+			dismissible={!isInFlight}
 			open={isOpen}
 			onOpenChange={(nextOpen) => {
 				if (!nextOpen) {
-					if (isInFlight) {
-						return;
-					}
 					if (isSuccessStep) {
 						onDismissAndRefresh();
 
@@ -134,13 +132,7 @@ export const EditSubscriptionDialog = ({ state, send, onDismissAndRefresh, canDo
 				}
 			}}
 		>
-			<DialogContent
-				size="md"
-				closeOnClickOutside={!isInFlight}
-				closeOnEscape={!isInFlight}
-				hideCloseButton={isInFlight}
-				aria-busy={isInFlight}
-			>
+			<DialogContent size="md" aria-busy={isInFlight}>
 				<DialogHeader>
 					<div className="flex items-center gap-2">
 						{showBackButton && (

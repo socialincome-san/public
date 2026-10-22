@@ -144,20 +144,12 @@ export const openConsentSettings = () => {
 /** `null` while rendering on the server, where the stored choice is unknown. */
 export const useAnalyticsConsent = () => useSyncExternalStore<AnalyticsConsent | null>(subscribe, readConsent, () => null);
 
-const useConsentSettingsOpen = () =>
+export const useConsentSettingsOpen = () =>
 	useSyncExternalStore(
 		subscribe,
 		() => consentSettingsOpen,
 		() => false,
 	);
-
-/** Whether the cookie banner is on screen. It only exists where Tag Manager is configured. */
-export const useCookieBannerOpen = () => {
-	const consent = useAnalyticsConsent();
-	const settingsOpen = useConsentSettingsOpen();
-
-	return googleTagManagerId !== undefined && (consent === 'undecided' || settingsOpen);
-};
 
 /**
  * Sends a custom event to Vercel Analytics and the Google Tag Manager data layer, where its triggers forward it to

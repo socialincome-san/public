@@ -3,22 +3,15 @@
 import { trackEvent } from '@/lib/analytics/analytics';
 import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { getPaidStripeCheckoutDonationAction } from '@/modules/stripe-payments/stripe-payment.actions';
-import { Button } from '@socialincome/design-system/actions/button/button';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from '@socialincome/design-system/overlays/dialog/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
 import { DonationResumeBar } from '../resume-bar/donation-resume-bar';
 import { clearResumableDonation, storeResumableDonation, toResumableDonation } from '../resume-bar/resumable-donation';
+import { DonationCurrencySelect } from '../shared/donation-currency-select';
 import {
 	clearStoredStripeCheckoutContext,
 	readStoredStripeCheckoutContext,
@@ -46,12 +39,26 @@ const completionEvents = new Set<Parameters<DonationWizardSend>[0]['type']>([
 
 export const DonationModalProvider = ({ children }: Props) => {
 	const [state, , actorRef] = useMachine(donationWizardMachine);
-	const currency = useWebsiteCurrency();
+	const websiteCurrency = useWebsiteCurrency();
 
 	// Every step sends through here, so the funnel is tracked in one place with the context after the transition.
 	const send = useCallback<DonationWizardSend>(
 		(event) => {
-			const previousStep = actorRef.getSnapshot().value;
+			const previous = actorRef.getSnapshot();
+			// Every way of closing (button, backdrop, swipe) lands here, so the bar can offer what was left unfinished.
+			if (event.type === 'CLOSE') {
+				const donation = resumableSteps.some((step) => previous.matches(step))
+					? toResumableDonation(previous.context, previous.matches('stepPayment') || previous.matches('stepStripeCheckout'))
+					: null;
+				if (donation) {
+					storeResumableDonation(donation);
+				} else if (previous.matches('stepQrBill')) {
+					// The donor may pay the QR bill from their bank, so the bar must not offer the same donation again.
+					clearResumableDonation();
+				}
+			}
+
+			const previousStep = previous.value;
 			actorRef.send(event);
 			const next = actorRef.getSnapshot();
 			const changedStep = next.value !== previousStep;
@@ -60,7 +67,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 				clearResumableDonation();
 			}
 
-			const funnelEvent = getDonationFunnelEvent(event.type, changedStep, next.context, currency);
+			const funnelEvent = getDonationFunnelEvent(event.type, changedStep, next.context);
 			if (funnelEvent) {
 				trackEvent(funnelEvent.name, funnelEvent.properties);
 			}
@@ -80,9 +87,8 @@ export const DonationModalProvider = ({ children }: Props) => {
 				});
 			}
 		},
-		[actorRef, currency],
+		[actorRef],
 	);
-	const [closeConfirmOpen, setCloseConfirmOpen] = useState(false);
 	const t = useTranslations('donation-wizard');
 
 	const isOpen = !state.matches('closed');
@@ -90,8 +96,8 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const isOnboardingPersonal = state.matches('stepOnboardingPersonal');
 	const isOnboardingReferral = state.matches('stepOnboardingReferral');
 	const isPostCheckoutStep = isThankYou || isOnboardingPersonal || isOnboardingReferral;
-	const isNarrowModal = isThankYou;
 	const campaignId = state.context.campaignId;
+	const canChangeCurrency = state.hasTag('currencyEditable');
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
 
@@ -102,16 +108,16 @@ export const DonationModalProvider = ({ children }: Props) => {
 			return;
 		}
 
-		const context = readStoredStripeCheckoutContext(sessionId);
+		const context = readStoredStripeCheckoutContext(sessionId, websiteCurrency);
 
-		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId });
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: websiteCurrency });
 		clearStoredStripeCheckoutContext(sessionId);
 		url.searchParams.delete(STRIPE_CHECKOUT_SESSION_ID_PARAM);
 		window.history.replaceState(null, '', url);
-	}, [send]);
+	}, [send, websiteCurrency]);
 
 	const openWizardAtAmountStep = () => {
-		send({ type: 'OPEN' });
+		send({ type: 'OPEN', currency: websiteCurrency });
 	};
 
 	const openWizardWithFormAmount = (context: DonationAmountContext) => {
@@ -122,42 +128,13 @@ export const DonationModalProvider = ({ children }: Props) => {
 		send({ type: 'RESUME', context });
 	};
 
-	const closeWizard = () => {
-		const snapshot = actorRef.getSnapshot();
-		const donation = resumableSteps.some((step) => snapshot.matches(step))
-			? toResumableDonation(snapshot.context, snapshot.matches('stepPayment') || snapshot.matches('stepStripeCheckout'))
-			: null;
-		if (donation) {
-			storeResumableDonation(donation);
-		} else if (snapshot.matches('stepQrBill')) {
-			// The donor may pay the QR bill from their bank, so the bar must not offer the same donation again.
-			clearResumableDonation();
-		}
-		setCloseConfirmOpen(false);
-		send({ type: 'CLOSE' });
-	};
-
 	const openWizardAfterPayment = (context: DonationAmountContext, sessionId: string) => {
 		clearResumableDonation();
 		// The wallet sheet may finish while the donor has opened the wizard; onboarding only starts from closed.
 		if (!actorRef.getSnapshot().matches('closed')) {
 			send({ type: 'CLOSE' });
 		}
-		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId });
-	};
-
-	const requestClose = () => {
-		if (isThankYou) {
-			closeWizard();
-
-			return;
-		}
-
-		setCloseConfirmOpen(true);
-	};
-
-	const confirmClose = () => {
-		closeWizard();
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: context.currency });
 	};
 
 	return (
@@ -171,19 +148,11 @@ export const DonationModalProvider = ({ children }: Props) => {
 				open={isOpen}
 				onOpenChange={(open) => {
 					if (!open) {
-						requestClose();
+						send({ type: 'CLOSE' });
 					}
 				}}
 			>
-				<DialogContent
-					size={isNarrowModal ? 'sm' : 'lg'}
-					surface="gradient"
-					padding="none"
-					closeOnClickOutside={false}
-					closeOnEscape={false}
-					onCloseClick={requestClose}
-					data-testid="donation-wizard-modal"
-				>
+				<DialogContent size={isThankYou ? 'sm' : 'lg'} surface="gradient" padding="none" data-testid="donation-wizard-modal">
 					{isPostCheckoutStep ? (
 						<>
 							<DialogTitle visuallyHidden>{t('thankYou.message')}</DialogTitle>
@@ -193,9 +162,17 @@ export const DonationModalProvider = ({ children }: Props) => {
 						</>
 					) : (
 						<>
-							<div className="flex shrink-0 flex-col gap-1 px-4 pt-[max(1rem,env(safe-area-inset-top))] pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
-								<div className="flex min-h-9 items-center">
+							<div className="flex shrink-0 flex-col gap-1 px-4 pt-4 pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
+								<div className="flex min-h-9 items-center justify-between gap-2 sm:gap-3">
 									<DialogTitle size="lg">{t('modal.title')}</DialogTitle>
+									{canChangeCurrency ? (
+										<div className="w-24 shrink-0">
+											<DonationCurrencySelect
+												value={state.context.currency}
+												onChange={(currency) => send({ type: 'SET_CURRENCY', value: currency })}
+											/>
+										</div>
+									) : null}
 								</div>
 								{campaignId && campaignTitle ? (
 									<p className="text-muted-foreground line-clamp-2 text-sm leading-snug font-normal">
@@ -206,23 +183,6 @@ export const DonationModalProvider = ({ children }: Props) => {
 							<DonationWizard state={state} send={send} />
 						</>
 					)}
-				</DialogContent>
-			</Dialog>
-
-			<Dialog open={closeConfirmOpen} onOpenChange={setCloseConfirmOpen}>
-				<DialogContent size="alert" hideCloseButton>
-					<DialogHeader divided={false}>
-						<DialogTitle>{t('modal.closeConfirm.title')}</DialogTitle>
-						<DialogDescription>{t('modal.closeConfirm.description')}</DialogDescription>
-					</DialogHeader>
-					<DialogFooter divided={false}>
-						<Button type="button" variant="outline" onClick={() => setCloseConfirmOpen(false)}>
-							{t('modal.closeConfirm.cancel')}
-						</Button>
-						<Button type="button" variant="destructive" onClick={confirmClose}>
-							{t('modal.closeConfirm.confirm')}
-						</Button>
-					</DialogFooter>
 				</DialogContent>
 			</Dialog>
 		</DonationModalContext.Provider>

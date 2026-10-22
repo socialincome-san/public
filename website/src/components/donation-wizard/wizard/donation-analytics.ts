@@ -33,7 +33,6 @@ export const getDonationFunnelEvent = (
 	eventType: DonationWizardEventType,
 	changedStep: boolean,
 	context: DonationWizardContext,
-	currency: string,
 ) => {
 	const name = funnelEventNames[eventType];
 	if (!name || !changedStep) {
@@ -47,7 +46,7 @@ export const getDonationFunnelEvent = (
 		name,
 		properties: {
 			value: summary?.amount ?? getDonationDisplayAmount(context),
-			currency,
+			currency: context.currency,
 			donation_type: toDonationType(summary?.cadence ?? context.cadence),
 			// Pushed even when unknown: Tag Manager would otherwise keep the value of an earlier event.
 			payment_method: eventsWithPaymentMethod.has(eventType) ? toPaymentMethod(context.paymentMethod) : undefined,

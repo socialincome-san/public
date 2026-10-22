@@ -2,7 +2,7 @@ import { type DonationAmountContext, type OneTimePlanChoice } from '../utils/don
 import { type DonationWizardContext, getInitialWizardContext } from './donation-wizard-context';
 
 export const wizardContextFromFormAmount = (context: DonationAmountContext): DonationWizardContext => ({
-	...getInitialWizardContext(),
+	...getInitialWizardContext(context.currency),
 	...context,
 	selectedTier: '1x',
 	paymentMethod: 'qr',
@@ -52,7 +52,7 @@ export const wizardContextFromResumedDonation = (context: DonationAmountContext)
 	// A monthly gift of half a one-time amount is chosen on the one-time plan step, which starts from the one-time amount.
 	if (context.returnsToOneTimePlanStep) {
 		return {
-			...getInitialWizardContext(),
+			...getInitialWizardContext(context.currency),
 			...context,
 			cadence: 'one-time',
 			chargeMonthlyHalfOfOneTimeAmount: false,
@@ -61,7 +61,7 @@ export const wizardContextFromResumedDonation = (context: DonationAmountContext)
 	}
 
 	return {
-		...getInitialWizardContext(),
+		...getInitialWizardContext(context.currency),
 		...context,
 		pendingStep: context.cadence === 'monthly' ? 'stepPlanMonthly' : 'stepPlanOneTime',
 	};
