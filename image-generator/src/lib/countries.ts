@@ -20,10 +20,10 @@ export const COUNTRIES = [
 			'Unless the subject says otherwise, the scene takes place in Ghana and the people are Ghanaian. Where it fits the moment, use two or three typical local details: a tro-tro minibus, a taxi with yellow-painted fenders, a wax-print kaba and slit, a seller with kelewele or coconuts on a cart, a painted container shop.',
 	},
 	{
-		value: 'switzerland',
-		label: 'Switzerland',
+		value: 'global',
+		label: 'Global',
 		setting:
-			'Unless the subject says otherwise, the scene takes place in Switzerland and the people are Swiss. Where it fits the moment, use one or two typical local details: a tram or train in the distance, a simple tram stop or bench, a lakeside path, a wool coat and scarf, a canvas tote bag.',
+			'Unless the subject says otherwise, the scene takes place in an ordinary modern city or town anywhere in the world, and the people have diverse backgrounds and skin tones. Keep the setting generic, with no country-specific landmarks, flags or signs. Where it fits the moment, use one or two everyday details: a tram, bus or train in the distance, a park bench, a café table, a simple doorway, a wool coat and scarf, a canvas tote bag.',
 	},
 ] satisfies { value: string; label: string; setting: string }[];
 
