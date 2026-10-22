@@ -1,5 +1,6 @@
 'use client';
 
+import { useIsSwissVisitor } from '@/lib/geo/visitor-country';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
@@ -70,6 +71,7 @@ export const DonationAmountFields = ({
 	showTitle = true,
 }: Props) => {
 	const t = useTranslations('donation-wizard');
+	const isSwissVisitor = useIsSwissVisitor();
 
 	return (
 		<div
@@ -86,7 +88,7 @@ export const DonationAmountFields = ({
 						{t('stepAmount.title')}
 					</h2>
 					{/* Negative margin keeps the card height that donationHeroCardSizeClass snapshots. */}
-					{placement === 'hero' && (
+					{placement === 'hero' && isSwissVisitor && (
 						<a
 							href={ZEWO_NPO_DETAIL_URL}
 							target="_blank"
