@@ -2,7 +2,7 @@ import { getDonationDisplayAmount, getInitialDonationContext, type DonationAmoun
 import { toResumableDonation } from './resumable-donation';
 
 const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountContext => ({
-	...getInitialDonationContext(),
+	...getInitialDonationContext('CHF'),
 	selectedAmount: 50,
 	cadence: 'monthly',
 	...overrides,

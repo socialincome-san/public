@@ -2,7 +2,7 @@ import { getDonationDisplayAmount, getInitialDonationContext, type DonationAmoun
 import { wizardContextFromResumedDonation } from './donation-machine-logic';
 
 const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountContext => ({
-	...getInitialDonationContext(),
+	...getInitialDonationContext('CHF'),
 	selectedAmount: 50,
 	paymentMethod: 'online',
 	coverTransactionCosts: false,
