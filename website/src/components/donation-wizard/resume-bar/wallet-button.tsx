@@ -79,7 +79,8 @@ export const WalletButton = ({
 			setSession({
 				clientSecret: result.data.clientSecret,
 				sessionId: result.data.sessionId,
-				stripe: loadStripe(result.data.publishableKey),
+				// With test keys (previews), Stripe.js otherwise floats its developer assistant over the page.
+				stripe: loadStripe(result.data.publishableKey, { developerTools: { assistant: { enabled: false } } }),
 			});
 		});
 
