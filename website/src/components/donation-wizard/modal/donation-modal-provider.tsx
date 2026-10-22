@@ -79,13 +79,13 @@ export const DonationModalProvider = ({ children }: Props) => {
 			return;
 		}
 
-		const context = readStoredStripeCheckoutContext(sessionId);
+		const context = readStoredStripeCheckoutContext(sessionId, websiteCurrency);
 
-		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId });
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: websiteCurrency });
 		clearStoredStripeCheckoutContext(sessionId);
 		url.searchParams.delete(STRIPE_CHECKOUT_SESSION_ID_PARAM);
 		window.history.replaceState(null, '', url);
-	}, [send]);
+	}, [send, websiteCurrency]);
 
 	const openWizardAtAmountStep = () => {
 		send({ type: 'OPEN', currency: websiteCurrency });

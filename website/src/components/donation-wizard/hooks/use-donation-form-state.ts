@@ -10,7 +10,9 @@ import {
 } from '../utils/donation-amount';
 import { selectStep1FormView } from '../wizard/donation-machine-selectors';
 
-export const useDonationFormState = (initial?: Partial<DonationAmountContext>) => {
+export const useDonationFormState = (
+	initial?: Partial<Pick<DonationAmountContext, 'monthlyIncome' | 'selectedAmount' | 'customAmount' | 'cadence'>>,
+) => {
 	const currency = useWebsiteCurrency();
 	const defaults = getInitialDonationContext(currency);
 	const [monthlyIncome, setMonthlyIncome] = useState(initial?.monthlyIncome ?? defaults.monthlyIncome);

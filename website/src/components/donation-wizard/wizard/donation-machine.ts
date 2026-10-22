@@ -35,7 +35,12 @@ export const donationWizardMachine = setup({
 		events:
 			| { type: 'OPEN'; currency: WebsiteCurrency }
 			| { type: 'OPEN_FROM_FORM'; context: DonationAmountContext }
-			| { type: 'OPEN_FROM_STRIPE_RETURN'; context: DonationAmountContext | null; sessionId: string }
+			| {
+					type: 'OPEN_FROM_STRIPE_RETURN';
+					context: DonationAmountContext | null;
+					sessionId: string;
+					currency: WebsiteCurrency;
+			  }
 			| { type: 'CLOSE' }
 			| { type: 'SET_CURRENCY'; value: WebsiteCurrency }
 			| { type: 'SET_MONTHLY_INCOME'; value: number | null }
@@ -136,8 +141,8 @@ export const donationWizardMachine = setup({
 				],
 				OPEN_FROM_STRIPE_RETURN: {
 					target: 'stepOnboardingPersonal',
-					actions: assign(({ context, event }) => ({
-						...getInitialWizardContext(context.currency),
+					actions: assign(({ event }) => ({
+						...getInitialWizardContext(event.currency),
 						...(event.context ?? {}),
 						paymentMethod: 'online' as const,
 						stripeCheckoutSessionId: event.sessionId,

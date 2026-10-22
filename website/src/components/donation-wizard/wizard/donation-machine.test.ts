@@ -47,4 +47,11 @@ describe('donationWizardMachine currency', () => {
 		expect(snapshot.hasTag('currencyEditable')).toBe(false);
 		expect(snapshot.context.currency).toBe('EUR');
 	});
+
+	it('falls back to the page currency when returning from Stripe without a stored context', () => {
+		const actor = createActor(donationWizardMachine).start();
+		actor.send({ type: 'OPEN_FROM_STRIPE_RETURN', context: null, sessionId: 'cs_123', currency: 'CHF' });
+
+		expect(actor.getSnapshot().context.currency).toBe('CHF');
+	});
 });

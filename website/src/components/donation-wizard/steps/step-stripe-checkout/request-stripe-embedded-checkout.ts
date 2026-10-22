@@ -7,14 +7,10 @@ type StripeCheckoutSend = {
 	(event: { type: 'STRIPE_CHECKOUT_ERROR'; message: string }): void;
 };
 
-export const requestStripeEmbeddedCheckout = async (
-	context: DonationWizardContext,
-	currency: string,
-	send: StripeCheckoutSend,
-) => {
+export const requestStripeEmbeddedCheckout = async (context: DonationWizardContext, send: StripeCheckoutSend) => {
 	const result = await createStripeEmbeddedCheckoutAction({
 		wizardContext: context,
-		currency,
+		currency: context.currency,
 		returnPath: buildStripeCheckoutReturnPath(),
 	});
 

@@ -1,4 +1,4 @@
-import { isWebsiteCurrency } from '@/lib/i18n/utils';
+import { isWebsiteCurrency, type WebsiteCurrency } from '@/lib/i18n/utils';
 import type {
 	Cadence,
 	DonationAmountContext,
@@ -33,13 +33,14 @@ const isOneTimePlanChoice = (value: unknown): value is OneTimePlanChoice => valu
 
 const getStorageKey = (sessionId: string): string => `${STORAGE_KEY_PREFIX}${sessionId}`;
 
-const parseStoredContext = (value: unknown): DonationAmountContext | null => {
+const parseStoredContext = (value: unknown, fallbackCurrency: WebsiteCurrency): DonationAmountContext | null => {
 	if (!isRecord(value)) {
 		return null;
 	}
 
 	const {
-		currency,
+		// Contexts stored before the wizard tracked its own currency have none.
+		currency = fallbackCurrency,
 		monthlyIncome,
 		selectedAmount,
 		customAmount,
@@ -103,7 +104,10 @@ export const storeStripeCheckoutContext = (sessionId: string, context: DonationA
 	window.sessionStorage.setItem(getStorageKey(sessionId), JSON.stringify(context));
 };
 
-export const readStoredStripeCheckoutContext = (sessionId: string): DonationAmountContext | null => {
+export const readStoredStripeCheckoutContext = (
+	sessionId: string,
+	fallbackCurrency: WebsiteCurrency,
+): DonationAmountContext | null => {
 	if (typeof window === 'undefined') {
 		return null;
 	}
@@ -116,7 +120,7 @@ export const readStoredStripeCheckoutContext = (sessionId: string): DonationAmou
 	try {
 		const parsed: unknown = JSON.parse(value);
 
-		return parseStoredContext(parsed);
+		return parseStoredContext(parsed, fallbackCurrency);
 	} catch {
 		return null;
 	}

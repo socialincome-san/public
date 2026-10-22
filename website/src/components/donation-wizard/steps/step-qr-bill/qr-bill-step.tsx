@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
-import { selectPaymentView } from '../../wizard/donation-machine-selectors';
+import { isWizardQrCurrencySupported, selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { QrWizardStepFooter } from '../step-qr-contact/qr-wizard-step-footer';
 import { QrBillPaymentCard } from './qr-bill-payment-card';
@@ -69,7 +69,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 		return null;
 	}
 
-	if (currency !== 'CHF' && currency !== 'EUR') {
+	if (!isWizardQrCurrencySupported(currency)) {
 		return null;
 	}
 

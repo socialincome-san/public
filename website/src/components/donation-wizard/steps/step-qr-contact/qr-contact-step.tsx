@@ -17,7 +17,6 @@ import { requestQrBillGeneration } from './request-qr-bill-generation';
 export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
 	const language = useLocale();
-	const { currency } = state.context;
 	const { contributorSession } = useContributorSession();
 	const isLoading = state.context.qrBillStatus === 'loading';
 	const canGoBack = state.context.qrContributorReferenceId === null;
@@ -60,7 +59,6 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 				language,
 			},
 			send,
-			currency,
 		});
 	};
 

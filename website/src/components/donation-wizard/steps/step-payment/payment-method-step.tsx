@@ -16,7 +16,7 @@ import { PaymentMethodOption } from './payment-method-option';
 export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
 	const { currency } = state.context;
-	const view = selectPaymentView(state.context, currency);
+	const view = selectPaymentView(state.context);
 	const isQrAvailable = isWizardQrCurrencySupported(currency);
 
 	useEffect(() => {
@@ -92,7 +92,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 						}
 
 						send({ type: 'START_STRIPE_CHECKOUT' });
-						void requestStripeEmbeddedCheckout(checkoutContext, currency, send);
+						void requestStripeEmbeddedCheckout(checkoutContext, send);
 
 						return;
 					}

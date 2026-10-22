@@ -13,7 +13,6 @@ const stripeCheckoutFrameClass = 'min-h-[520px]';
 
 export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
-	const { currency } = state.context;
 	const { context } = state;
 	const { stripeClientSecret, stripePublishableKey, stripeCheckoutStatus } = context;
 
@@ -23,7 +22,7 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 
 	const retryCheckout = () => {
 		send({ type: 'STRIPE_CHECKOUT_RETRY' });
-		void requestStripeEmbeddedCheckout({ ...context, paymentMethod: 'online' }, currency, send);
+		void requestStripeEmbeddedCheckout({ ...context, paymentMethod: 'online' }, send);
 	};
 
 	return (
