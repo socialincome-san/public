@@ -52,7 +52,7 @@
 		"email": "E-Mail",
 		"accountCreateHint": "If no account exists for this email yet, we'll create one for you.",
 		"noBackAfterGenerateHint": "After you generate the QR code, you can't change the amount, payment method, or contact details in this flow.",
-		"generateCta": "Generate QR-Code for payment",
+		"generateCta": "Generate QR-Code",
 		"generating": "Generating…",
 		"generateError": "Could not generate QR bill. Please try again."
 	},

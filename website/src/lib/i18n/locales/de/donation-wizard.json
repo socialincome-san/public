@@ -52,7 +52,7 @@
 		"email": "E-Mail",
 		"accountCreateHint": "Wenn es noch kein Konto mit dieser E-Mail gibt, legen wir eines für dich an.",
 		"noBackAfterGenerateHint": "Nach dem Generieren des QR-Codes kannst du Betrag, Zahlungsart und Kontaktdaten in diesem Ablauf nicht mehr ändern.",
-		"generateCta": "QR-Code für Zahlung generieren",
+		"generateCta": "QR-Code generieren",
 		"generating": "Wird generiert…",
 		"generateError": "QR-Rechnung konnte nicht erstellt werden. Bitte erneut versuchen."
 	},
