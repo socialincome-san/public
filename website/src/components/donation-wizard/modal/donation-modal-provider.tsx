@@ -12,6 +12,7 @@ import { DonationModalContext } from '../hooks/use-donation-modal';
 import { DonationResumeBar } from '../resume-bar/donation-resume-bar';
 import {
 	clearResumableDonation,
+	getResumableDonationVersion,
 	resumableSteps,
 	storeResumableDonation,
 	type ResumableDonation,
@@ -80,9 +81,10 @@ export const DonationModalProvider = ({ children }: Props) => {
 				(event.type === 'STRIPE_CHECKOUT_COMPLETE' || event.type === 'OPEN_FROM_STRIPE_RETURN')
 			) {
 				// Only a checkout that Stripe reports as paid counts as a completed donation.
+				const resumableVersion = getResumableDonationVersion();
 				void getPaidStripeCheckoutDonationAction(stripeCheckoutSessionId).then((result) => {
 					if (result.success) {
-						clearResumableDonation();
+						clearResumableDonation(resumableVersion);
 						const completedEvent = getDonationCompletedEvent(result.data);
 						trackEvent(completedEvent.name, completedEvent.properties);
 					}

@@ -69,7 +69,11 @@ const readValue = () => {
 	}
 };
 
+// Counts writes, so a check that started before a newer donation was saved can leave that one alone.
+let version = 0;
+
 const writeValue = (value: string | null) => {
+	version += 1;
 	pageValue = value;
 	try {
 		if (value === null) {
@@ -122,4 +126,11 @@ export const storeResumableDonation = (step: ResumableWizardStep, context: Donat
 	}
 };
 
-export const clearResumableDonation = (): void => writeValue(null);
+export const getResumableDonationVersion = () => version;
+
+/** Clears the stored donation, or with `onlyAtVersion` only if nothing was stored or cleared since then. */
+export const clearResumableDonation = (onlyAtVersion?: number): void => {
+	if (onlyAtVersion === undefined || onlyAtVersion === version) {
+		writeValue(null);
+	}
+};
