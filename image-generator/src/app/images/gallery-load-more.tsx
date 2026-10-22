@@ -17,7 +17,7 @@ const loadMore = async (previous: State): Promise<State> => {
 		const response = await fetch(`/api/gallery-images?offset=${previous.offset}`);
 		const batch: unknown = await response.json();
 		if (!response.ok || !isGalleryBatch(batch)) {
-			return { ...previous, error: 'Bilder konnten nicht geladen werden. Bitte erneut versuchen.' };
+			return { ...previous, error: 'Images could not be loaded. Please try again.' };
 		}
 		const existingIds = new Set(previous.images.map((image) => String(image.id)));
 		return {
@@ -27,7 +27,7 @@ const loadMore = async (previous: State): Promise<State> => {
 			error: null,
 		};
 	} catch {
-		return { ...previous, error: 'Bilder konnten nicht geladen werden. Bitte erneut versuchen.' };
+		return { ...previous, error: 'Images could not be loaded. Please try again.' };
 	}
 };
 
@@ -45,7 +45,7 @@ export const GalleryLoadMore = ({ images, hasMore }: { images: GalleryImage[]; h
 			{state.hasMore && (
 				<form action={formAction} className="mt-8 flex justify-center">
 					<Button type="submit" disabled={isPending}>
-						{isPending ? 'Lädt …' : 'Mehr laden'}
+						{isPending ? 'Loading …' : 'Load more'}
 					</Button>
 				</form>
 			)}

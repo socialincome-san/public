@@ -12,7 +12,7 @@ export default function Page() {
 							Image Generator
 						</SectionHeading>
 						<p className="text-muted-foreground mt-3 text-base font-normal sm:text-xl">
-							Beschreibe eine <strong className="text-primary font-bold">Szene</strong> im Social-Income-Aquarellstil.
+							Describe a <strong className="text-primary font-bold">scene</strong> in the Social Income watercolor style.
 						</p>
 					</div>
 					<div className="mt-10 w-full sm:mt-14">

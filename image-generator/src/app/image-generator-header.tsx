@@ -21,7 +21,7 @@ export const ImageGeneratorHeader = () => {
 			donateAction={
 				<Button asChild size="md">
 					<Link href="https://socialincome.org" target="_blank" rel="noopener noreferrer">
-						Webseite
+						Website
 					</Link>
 				</Button>
 			}
