@@ -8,7 +8,7 @@ import type { CountryStatisticFormat } from '@/modules/countries/country.types';
 import { cn } from '@socialincome/design-system/cn';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import NextImage from 'next/image';
 
 type Props = {
@@ -32,7 +32,7 @@ const formatStatisticValue = (value: number, format: CountryStatisticFormat, loc
 const FALLBACK_VISITOR_COUNTRY_CODE: CountryCode = 'CH';
 
 const resolveVisitorCountryCode = async (): Promise<CountryCode> =>
-	getVisitorCountry(await headers()) ?? FALLBACK_VISITOR_COUNTRY_CODE;
+	getVisitorCountry({ headers: await headers(), cookies: await cookies() }) ?? FALLBACK_VISITOR_COUNTRY_CODE;
 
 type CountryHeaderProps = {
 	countryCode: CountryCode;

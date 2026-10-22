@@ -37,6 +37,10 @@ describe('findBestLocale', () => {
 		});
 	});
 
+	test('prefers the chosen country over the geo-IP country', () => {
+		expect(findBestLocale(request({ cookie: 'si_country=CH', 'x-vercel-ip-country': 'US' })).currency).toBe('CHF');
+	});
+
 	test('falls back to English and USD for countries without a website currency', () => {
 		expect(findBestLocale(request({ 'accept-language': 'kri', 'x-vercel-ip-country': 'SL' }))).toEqual({
 			language: 'en',

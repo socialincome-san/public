@@ -1,6 +1,5 @@
 'use client';
 
-import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/locale-currency-switcher';
 import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
 import { type Scope } from '@/components/app-shells/website/navbar/utils';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
@@ -18,12 +17,12 @@ type Props = {
 	menuEntries: SiteMenuEntry[];
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
-	localeIcon: ReactNode;
+	localeSwitcher: ReactNode;
 };
 
 const KeyedByPathname = ({ children }: { children: ReactNode }) => <Fragment key={usePathname()}>{children}</Fragment>;
 
-export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency, localeIcon }: Props) => {
+export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency, localeSwitcher }: Props) => {
 	const t = useTranslations('website-common');
 	const tDonate = useTranslations('website-donate');
 	const menu = (
@@ -49,9 +48,7 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency, local
 			)}
 			footerControls={
 				<>
-					{scope === 'website' && (
-						<LocaleCurrencySwitcher lang={lang} currency={currency} variant="outline" icon={localeIcon} />
-					)}
+					{localeSwitcher}
 					<AccountSlot sessions={sessions} scope={scope} />
 				</>
 			}

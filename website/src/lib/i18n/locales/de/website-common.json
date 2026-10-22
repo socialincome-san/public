@@ -23,9 +23,13 @@
 		"supported-by-link-aria": "Plattform Partner Webseite"
 	},
 	"locale-currency-switcher": {
-		"aria-label": "Sprache und Währung ändern",
+		"aria-label": "Sprache, Währung und Land ändern",
 		"language": "Sprache",
-		"currency": "Währung"
+		"currency": "Währung",
+		"country": "Land",
+		"country-automatic": "Automatisch",
+		"country-search": "Land suchen",
+		"country-empty": "Kein Land gefunden."
 	},
 	"countries-page": {
 		"empty": "Keine Länder gefunden.",

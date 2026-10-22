@@ -67,7 +67,7 @@ const getCurrencyForCountry = (country: string | undefined): WebsiteCurrency | u
 export const findBestLocale = (request: NextRequest): { language: WebsiteLanguage; currency: WebsiteCurrency } => {
 	const options = langParser.parse(request.headers.get('Accept-Language') ?? '');
 	const language = options.map((option) => option.code).find(isMainWebsiteLanguage) ?? defaultLanguage;
-	const country = getVisitorCountry(request.headers) ?? options.find((option) => option.region)?.region;
+	const country = getVisitorCountry(request) ?? options.find((option) => option.region)?.region;
 
 	return { language, currency: getCurrencyForCountry(country) ?? defaultCurrency };
 };

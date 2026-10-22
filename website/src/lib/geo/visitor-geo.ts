@@ -7,7 +7,16 @@ const REGION_HEADER = 'x-vercel-ip-country-region';
 const CITY_HEADER = 'x-vercel-ip-city';
 const IP_HEADER = 'x-real-ip';
 
-export const getVisitorCountry = (headers: Headers): CountryCode | null => toCountryCode(headers.get(COUNTRY_HEADER));
+// Only set when the visitor picks a country, so it needs no consent.
+export const VISITOR_COUNTRY_COOKIE = 'si_country';
+
+type CookieReader = { get: (name: string) => { value: string } | undefined };
+
+export const getChosenCountry = (cookies: CookieReader): CountryCode | null =>
+	toCountryCode(cookies.get(VISITOR_COUNTRY_COOKIE)?.value);
+
+export const getVisitorCountry = ({ headers, cookies }: { headers: Headers; cookies: CookieReader }): CountryCode | null =>
+	getChosenCountry(cookies) ?? toCountryCode(headers.get(COUNTRY_HEADER));
 
 export const getVisitorLocation = (headers: Headers) => {
 	const encodedCity = headers.get(CITY_HEADER);

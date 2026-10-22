@@ -3,6 +3,7 @@
 import { ChevronDown, Globe } from 'lucide-react';
 import { type ReactNode } from 'react';
 import { Button } from '../../actions/button/button';
+import { Combobox } from '../../forms/combo-box/combo-box';
 import { Popover, PopoverContent, PopoverTrigger } from '../../overlays/popover/popover';
 import { Tabs, TabsList, TabsTrigger } from '../tabs/tabs';
 
@@ -18,12 +19,18 @@ type OptionGroup<TOption> = {
 	onChange: (value: string) => void;
 };
 
+type SearchableOptionGroup<TOption> = OptionGroup<TOption> & {
+	searchPlaceholder: string;
+	emptyLabel: string;
+};
+
 type LocaleCurrencySwitcherProps = {
 	ariaLabel: string;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	language: OptionGroup<LocaleCurrencyOption>;
 	currency: OptionGroup<LocaleCurrencyOption>;
+	country?: SearchableOptionGroup<LocaleCurrencyOption>;
 	variant?: 'ghost' | 'outline';
 	icon?: ReactNode;
 };
@@ -45,12 +52,34 @@ const OptionTabs = ({ label, value, options, onChange }: OptionGroup<LocaleCurre
 	</div>
 );
 
+const OptionCombobox = ({
+	label,
+	value,
+	options,
+	onChange,
+	searchPlaceholder,
+	emptyLabel,
+}: SearchableOptionGroup<LocaleCurrencyOption>) => (
+	<div className="space-y-2">
+		<div className="text-sm font-bold">{label}</div>
+		<Combobox
+			ariaLabel={label}
+			value={value}
+			options={options.map((option) => ({ id: option.value, label: option.label }))}
+			onChange={onChange}
+			searchPlaceholder={searchPlaceholder}
+			emptyLabel={emptyLabel}
+		/>
+	</div>
+);
+
 export const LocaleCurrencySwitcher = ({
 	ariaLabel,
 	open,
 	onOpenChange,
 	language,
 	currency,
+	country,
 	variant = 'ghost',
 	icon = <LocaleCurrencySwitcherGlobe />,
 }: LocaleCurrencySwitcherProps) => (
@@ -68,6 +97,7 @@ export const LocaleCurrencySwitcher = ({
 			<div className="space-y-4">
 				<OptionTabs {...language} />
 				<OptionTabs {...currency} />
+				{country && <OptionCombobox {...country} />}
 			</div>
 		</PopoverContent>
 	</Popover>

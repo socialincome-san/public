@@ -1,8 +1,7 @@
-import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/locale-currency-switcher';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
 import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
 import { toSiteMenuEntries, type Scope } from '@/components/app-shells/website/navbar/utils';
-import { VisitorCountryFlag } from '@/components/app-shells/website/navbar/visitor-country-flag';
+import { VisitorLocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/visitor-locale-currency-switcher';
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -31,7 +30,6 @@ export const Navbar = async ({ sessions, lang, currency, scope }: Props) => {
 			language: lang,
 		}),
 	]);
-	const localeIcon = <VisitorCountryFlag />;
 	const menuEntries = toSiteMenuEntries(result?.success ? result.data.content.menu : [], lang, currency);
 
 	return (
@@ -39,7 +37,7 @@ export const Navbar = async ({ sessions, lang, currency, scope }: Props) => {
 			homeHref={getWebsiteBasePath(lang, currency)}
 			homeLinkLabel={t('logo.home-link-aria')}
 			desktopMenu={<SiteMenuDesktop entries={menuEntries} dropdownAside={<DonationForm />} />}
-			localeSwitcher={scope === 'website' && <LocaleCurrencySwitcher lang={lang} currency={currency} icon={localeIcon} />}
+			localeSwitcher={scope === 'website' && <VisitorLocaleCurrencySwitcher lang={lang} currency={currency} />}
 			account={<AccountSlot sessions={sessions} scope={scope} />}
 			donateAction={
 				<SignedOutSlot sessions={sessions} scope={scope}>
@@ -57,7 +55,9 @@ export const Navbar = async ({ sessions, lang, currency, scope }: Props) => {
 					lang={lang}
 					menuEntries={menuEntries}
 					currency={currency}
-					localeIcon={localeIcon}
+					localeSwitcher={
+						scope === 'website' && <VisitorLocaleCurrencySwitcher lang={lang} currency={currency} variant="outline" />
+					}
 				/>
 			}
 		/>
