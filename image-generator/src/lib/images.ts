@@ -17,7 +17,14 @@ export type GeneratedImage = {
 
 export const isGenerateResponse = (
 	value: unknown,
-): value is { error: string | null; imageBase64: string | null; mediaType: string | null } =>
+): value is {
+	error: string | null;
+	imageBase64: string | null;
+	mediaType: string | null;
+	width: number | null;
+	height: number | null;
+	cost: number | null;
+} =>
 	typeof value === 'object' &&
 	value !== null &&
 	'error' in value &&
@@ -25,7 +32,13 @@ export const isGenerateResponse = (
 	'imageBase64' in value &&
 	(value.imageBase64 === null || typeof value.imageBase64 === 'string') &&
 	'mediaType' in value &&
-	(value.mediaType === null || typeof value.mediaType === 'string');
+	(value.mediaType === null || typeof value.mediaType === 'string') &&
+	'width' in value &&
+	(value.width === null || (typeof value.width === 'number' && Number.isInteger(value.width) && value.width > 0)) &&
+	'height' in value &&
+	(value.height === null || (typeof value.height === 'number' && Number.isInteger(value.height) && value.height > 0)) &&
+	'cost' in value &&
+	(value.cost === null || (typeof value.cost === 'number' && Number.isFinite(value.cost) && value.cost >= 0));
 
 export const isGalleryBatch = (value: unknown): value is GalleryBatch =>
 	typeof value === 'object' &&

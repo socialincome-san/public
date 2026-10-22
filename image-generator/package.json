@@ -8,6 +8,7 @@
 		"start": "next start",
 		"lint": "eslint",
 		"typecheck": "next typegen && tsc --noEmit",
+		"test:unit": "node --experimental-strip-types --test src/lib/*.test.ts",
 		"format:check": "prettier --check . --config prettier.config.mjs",
 		"format:fix": "prettier --write . --config prettier.config.mjs",
 		"check:unused": "knip --config knip.config.ts"

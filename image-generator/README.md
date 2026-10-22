@@ -35,12 +35,68 @@ Auth accepts any username and checks the configured password.
   download link.
 - Enter submits the prompt; Shift+Enter inserts a newline. Navigation
   preserves page state through Next.js Cache Components.
+- The format selector defaults to square and supports 1:1, 16:9, 9:16,
+  4:3, 3:4, and 3:2. GPT Image 2.5 Flare supports all six natively via
+  custom pixel sizes, passed through the AI SDK's `size` option.
+  Dimensions are multiples of 16 and within the provider's pixel limits
+  ([provider documentation](https://developers.openai.com/api/docs/guides/image-generation#size-and-quality-options)).
+  The API rejects unsupported ratios and mismatched output instead of
+  silently cropping or stretching. Actual image dimensions are returned
+  for the generated preview; the gallery and download keep the original.
+
+## Reference images
+
+Reference images are optional. Upload a JPEG, PNG, or WebP up to 10 MB
+and 40 megapixels, then use the prompt to request a watercolor
+transformation or describe how to use the image as inspiration. The
+generator sends the prompt, ratio, and file as multipart `FormData`. The
+server validates and decodes the image, removes metadata, normalizes
+orientation, and passes its bytes through the AI SDK's `prompt.images`
+to the existing GPT Image 2.5 Flare model. References are not stored in
+the gallery; only the generated result is saved. Remove the reference to
+return to text-only generation.
+
+## Area edits
+
+After generation, **Edit Area** opens the selection tools beside the
+download action. Choose **Mark to Remove** or **Mark to Change**, paint
+with the brush, and use the eraser, undo, or clear selection to refine
+the mask. Brush size is measured in displayed pixels. **Done** closes
+the tools and focuses the existing prompt. Removal instructions are
+optional; changes require a prompt. Clearing the selection returns to
+normal generation.
+
+Edits use the same generation endpoint and GPT Image 2.5 Flare model,
+with the original image and an alpha-inverted PNG mask passed through
+the AI SDK's `prompt.images` and `prompt.mask`. The server validates
+file sizes, formats, and matching dimensions before generation. Sharp
+composites only selected pixels onto the original, preserving the
+unselected area even if the provider modifies it. The edited PNG is
+saved in the gallery. Failed edits retain the original and selection for
+retrying. Reference uploads and format changes are disabled while
+editing.
+
+## Session version history
+
+Each successful generation or edit adds a thumbnail to the left sidebar.
+Select a thumbnail to view, download, or edit that version. Edits of
+older versions append a new version without discarding newer ones. The
+current image shows its version number. History stays in memory only and
+clears on reload; existing gallery saving is unchanged.
+
+Hover or focus a thumbnail to see the actual USD cost reported in the AI
+Gateway's generation metadata. Missing costs (including gallery
+originals) show "Cost unavailable", never an estimate. Costs and version
+relationships are not stored in the database. Reference images remain
+removable and replaceable after generation and while editing; area edits
+use the selected generated version rather than the reference attachment.
 
 ## Checks
 
 ```sh
 npm run lint
 npm run typecheck
+npm run test:unit
 npm run format:check
 npm run check:unused
 npm run build
