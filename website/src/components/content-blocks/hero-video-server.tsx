@@ -17,7 +17,6 @@ export const HeroVideoBlockServer = async ({ blok, lang }: Props) => {
 		<HeroVideoBlock
 			blok={blok}
 			lang={lang}
-			subtitleUrl={t('video-subtitle')}
 			translations={{
 				playVideo: t('video-controls.play-video'),
 				pauseVideo: t('video-controls.pause-video'),
