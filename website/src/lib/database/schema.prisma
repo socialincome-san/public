@@ -883,6 +883,7 @@ model Program {
 
   amountOfRecipientsForStart Int?                 @map("amount_of_recipients_for_start")
   coveredByReserves          Boolean              @default(false) @map("covered_by_reserves")
+  isConcluded                Boolean              @default(false) @map("is_concluded")
   programDurationInMonths    Int                  @map("program_duration_in_months")
   payoutPerInterval          Decimal              @map("payout_per_interval") @db.Decimal(12, 4)
   payoutInterval             PayoutInterval       @default(monthly) @map("payout_interval")
