@@ -195,21 +195,8 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 	};
 
 	return (
-		<Dialog
-			open={open}
-			onOpenChange={(nextOpen) => {
-				if (!saving) {
-					onOpenChange(nextOpen);
-				}
-			}}
-		>
-			<DialogContent
-				size="full"
-				closeOnClickOutside={!saving}
-				closeOnEscape={!saving}
-				hideCloseButton={saving}
-				closeLabel={t('close')}
-			>
+		<Dialog dismissible={!saving} open={open} onOpenChange={onOpenChange}>
+			<DialogContent size="lg" closeLabel={t('close')}>
 				<DialogHeader>
 					<DialogTitle>{t('title')}</DialogTitle>
 					<DialogDescription>{t('description')}</DialogDescription>

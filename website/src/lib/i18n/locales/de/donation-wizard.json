@@ -1,13 +1,7 @@
 {
 	"modal": {
 		"title": "Spenden",
-		"campaign-for": "Für {title}",
-		"closeConfirm": {
-			"title": "Spende schliessen?",
-			"description": "Wenn du jetzt schliesst, geht dein Fortschritt in dieser Spende verloren.",
-			"cancel": "Weiter spenden",
-			"confirm": "Schliessen"
-		}
+		"campaign-for": "Für {title}"
 	},
 	"stepAmount": {
 		"title": "Spenden",

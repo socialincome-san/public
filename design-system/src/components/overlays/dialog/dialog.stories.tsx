@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { useState } from 'react';
+import { useState, type ComponentProps } from 'react';
 
 import { Button } from '../../actions/button/button';
 import { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './dialog';
@@ -8,20 +8,33 @@ const meta = {
 	title: 'Overlays/Dialog',
 	component: Dialog,
 	tags: ['autodocs'],
+	parameters: {
+		docs: {
+			description: {
+				component:
+					'A centered dialog on desktop and a bottom drawer on mobile (below the `sm` breakpoint) that closes with a swipe down. `size` only sets the desktop width: `sm` for confirmations and short messages, `md` for forms and content, `lg` for editors, wizards and media. Turn `dismissible` off while work is in flight, so nothing closes it halfway.',
+			},
+		},
+	},
+	args: {
+		open: false,
+		onOpenChange: () => undefined,
+		children: null,
+	},
 } satisfies Meta<typeof Dialog>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const DialogExample = () => {
+const DialogExample = ({ size }: Pick<ComponentProps<typeof DialogContent>, 'size'>) => {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<>
 			<Button onClick={() => setOpen(true)}>Open dialog</Button>
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
+				<DialogContent size={size}>
 					<DialogHeader>
 						<DialogTitle>Edit profile</DialogTitle>
 						<DialogDescription>Update the name shown on your public profile.</DialogDescription>
@@ -38,8 +51,16 @@ const DialogExample = () => {
 	);
 };
 
-export const Default: Story = {
-	render: () => <DialogExample />,
+export const Small: Story = {
+	render: () => <DialogExample size="sm" />,
+};
+
+export const Medium: Story = {
+	render: () => <DialogExample size="md" />,
+};
+
+export const Large: Story = {
+	render: () => <DialogExample size="lg" />,
 };
 
 const ScrollingDialogExample = () => {
@@ -74,7 +95,7 @@ export const ScrollingBody: Story = {
 	render: () => <ScrollingDialogExample />,
 };
 
-const AlertDialogExample = ({ divided = true }: { divided?: boolean }) => {
+const ConfirmationExample = () => {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -83,12 +104,12 @@ const AlertDialogExample = ({ divided = true }: { divided?: boolean }) => {
 				Delete
 			</Button>
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent size="alert" hideCloseButton>
-					<DialogHeader divided={divided}>
+				<DialogContent hideCloseButton>
+					<DialogHeader divided={false}>
 						<DialogTitle>Delete this entry?</DialogTitle>
 						<DialogDescription>This cannot be undone.</DialogDescription>
 					</DialogHeader>
-					<DialogFooter divided={divided}>
+					<DialogFooter divided={false}>
 						<Button variant="outline" onClick={() => setOpen(false)}>
 							Cancel
 						</Button>
@@ -102,10 +123,38 @@ const AlertDialogExample = ({ divided = true }: { divided?: boolean }) => {
 	);
 };
 
-export const Alert: Story = {
-	render: () => <AlertDialogExample />,
+export const Confirmation: Story = {
+	render: () => <ConfirmationExample />,
 };
 
-export const AlertWithoutDividers: Story = {
-	render: () => <AlertDialogExample divided={false} />,
+const NotDismissibleExample = () => {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Start upload</Button>
+			<Dialog open={open} onOpenChange={setOpen} dismissible={false}>
+				<DialogContent>
+					<DialogHeader divided={false}>
+						<DialogTitle>Uploading…</DialogTitle>
+						<DialogDescription>No close button, outside click, Escape or swipe until the work is done.</DialogDescription>
+					</DialogHeader>
+					<DialogFooter divided={false}>
+						<Button onClick={() => setOpen(false)}>Finish</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</>
+	);
+};
+
+export const NotDismissible: Story = {
+	render: () => <NotDismissibleExample />,
+};
+
+export const MobileDrawer: Story = {
+	parameters: {
+		viewport: { defaultViewport: 'mobile1' },
+	},
+	render: () => <ScrollingDialogExample />,
 };
