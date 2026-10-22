@@ -52,7 +52,13 @@ describe('getDonationFunnelEvent', () => {
 describe('getDonationCompletedEvent', () => {
 	it('builds the GA4 purchase parameters from the paid checkout', () => {
 		expect(
-			getDonationCompletedEvent({ checkoutSessionId: 'cs_123', amount: 51.5, currency: 'CHF', recurring: true }),
+			getDonationCompletedEvent({
+				checkoutSessionId: 'cs_123',
+				amount: 51.5,
+				currency: 'CHF',
+				recurring: true,
+				donorStatus: 'returning',
+			}),
 		).toEqual({
 			name: 'donation_completed',
 			properties: {
@@ -60,6 +66,7 @@ describe('getDonationCompletedEvent', () => {
 				currency: 'CHF',
 				donation_type: 'recurring',
 				payment_method: 'credit_card',
+				donor_status: 'returning',
 				transaction_id: 'cs_123',
 				items: [{ item_id: 'donation', item_name: 'Donation', price: 51.5, quantity: 1 }],
 			},

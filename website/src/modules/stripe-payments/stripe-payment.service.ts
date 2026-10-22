@@ -43,7 +43,7 @@ import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { titleCase } from '@/lib/utils/string-utils';
 import { getCampaignById, getDefaultCampaignForProgram, getFallbackCampaign } from '@/modules/campaigns/campaign.service';
-import { upsertFromStripeEvent } from '@/modules/contributions/contribution.service';
+import { hasSucceededContributionsBefore, upsertFromStripeEvent } from '@/modules/contributions/contribution.service';
 import type { PaymentEventCreateData, StripeContributionCreateData } from '@/modules/contributions/contribution.types';
 import {
 	findContributorByAccountId,
@@ -262,6 +262,7 @@ export const getPaidCheckoutDonation = async (sessionId: string): Promise<Result
 			amount: amountTotal / 100,
 			currency: currency.toUpperCase(),
 			recurring: mode === 'subscription',
+			donorStatus: await getDonorStatus(sessionResult.data),
 		});
 	} catch (error) {
 		console.error(error);
@@ -1384,6 +1385,37 @@ const assertEmbeddedCheckoutSessionPaid = (session: StripeApiCheckoutSession): R
 	}
 
 	return resultOk(undefined);
+};
+
+/**
+ * Whether the account behind a checkout had earlier successful contributions. `undefined` when the lookup fails, so
+ * the purchase event is still tracked.
+ */
+const getDonorStatus = async (session: StripeApiCheckoutSession): Promise<PaidCheckoutDonation['donorStatus']> => {
+	const stripeCustomerId = resolveStripeResourceId(session.customer);
+	if (!stripeCustomerId) {
+		return 'new';
+	}
+
+	const contributorResult = await findContributorByStripeCustomerOrEmail(
+		stripeCustomerId,
+		session.customer_details?.email ?? undefined,
+	);
+	if (!contributorResult.success) {
+		return undefined;
+	}
+	if (!contributorResult.data) {
+		return 'new';
+	}
+
+	// Only contributions created before the session count, so this checkout's own contribution never does, even when
+	// the Stripe webhook has already stored it.
+	const earlierResult = await hasSucceededContributionsBefore(contributorResult.data.id, new Date(session.created * 1000));
+	if (!earlierResult.success) {
+		return undefined;
+	}
+
+	return earlierResult.data ? 'returning' : 'new';
 };
 
 const normalizeCheckoutEmail = (email: string): string => email.trim().toLowerCase();
