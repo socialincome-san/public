@@ -3,18 +3,10 @@
 import { trackEvent } from '@/lib/analytics/analytics';
 import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { getPaidStripeCheckoutDonationAction } from '@/modules/stripe-payments/stripe-payment.actions';
-import { Button } from '@socialincome/design-system/actions/button/button';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from '@socialincome/design-system/overlays/dialog/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
 import {
@@ -67,7 +59,6 @@ export const DonationModalProvider = ({ children }: Props) => {
 		},
 		[actorRef, currency],
 	);
-	const [closeConfirmOpen, setCloseConfirmOpen] = useState(false);
 	const t = useTranslations('donation-wizard');
 
 	const isOpen = !state.matches('closed');
@@ -75,7 +66,6 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const isOnboardingPersonal = state.matches('stepOnboardingPersonal');
 	const isOnboardingReferral = state.matches('stepOnboardingReferral');
 	const isPostCheckoutStep = isThankYou || isOnboardingPersonal || isOnboardingReferral;
-	const isNarrowModal = isThankYou;
 	const campaignId = state.context.campaignId;
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
@@ -103,25 +93,6 @@ export const DonationModalProvider = ({ children }: Props) => {
 		send({ type: 'OPEN_FROM_FORM', context });
 	};
 
-	const closeWizard = () => {
-		setCloseConfirmOpen(false);
-		send({ type: 'CLOSE' });
-	};
-
-	const requestClose = () => {
-		if (isThankYou) {
-			closeWizard();
-
-			return;
-		}
-
-		setCloseConfirmOpen(true);
-	};
-
-	const confirmClose = () => {
-		closeWizard();
-	};
-
 	return (
 		<DonationModalContext.Provider value={{ openWizardAtAmountStep, openWizardWithFormAmount }}>
 			{children}
@@ -130,19 +101,11 @@ export const DonationModalProvider = ({ children }: Props) => {
 				open={isOpen}
 				onOpenChange={(open) => {
 					if (!open) {
-						requestClose();
+						send({ type: 'CLOSE' });
 					}
 				}}
 			>
-				<DialogContent
-					size={isNarrowModal ? 'sm' : 'lg'}
-					surface="gradient"
-					padding="none"
-					closeOnClickOutside={false}
-					closeOnEscape={false}
-					onCloseClick={requestClose}
-					data-testid="donation-wizard-modal"
-				>
+				<DialogContent size={isThankYou ? 'sm' : 'lg'} surface="gradient" padding="none" data-testid="donation-wizard-modal">
 					{isPostCheckoutStep ? (
 						<>
 							<DialogTitle visuallyHidden>{t('thankYou.message')}</DialogTitle>
@@ -152,7 +115,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 						</>
 					) : (
 						<>
-							<div className="flex shrink-0 flex-col gap-1 px-4 pt-[max(1rem,env(safe-area-inset-top))] pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
+							<div className="flex shrink-0 flex-col gap-1 px-4 pt-4 pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
 								<div className="flex min-h-9 items-center">
 									<DialogTitle size="lg">{t('modal.title')}</DialogTitle>
 								</div>
@@ -165,23 +128,6 @@ export const DonationModalProvider = ({ children }: Props) => {
 							<DonationWizard state={state} send={send} />
 						</>
 					)}
-				</DialogContent>
-			</Dialog>
-
-			<Dialog open={closeConfirmOpen} onOpenChange={setCloseConfirmOpen}>
-				<DialogContent size="alert" hideCloseButton>
-					<DialogHeader divided={false}>
-						<DialogTitle>{t('modal.closeConfirm.title')}</DialogTitle>
-						<DialogDescription>{t('modal.closeConfirm.description')}</DialogDescription>
-					</DialogHeader>
-					<DialogFooter divided={false}>
-						<Button type="button" variant="outline" onClick={() => setCloseConfirmOpen(false)}>
-							{t('modal.closeConfirm.cancel')}
-						</Button>
-						<Button type="button" variant="destructive" onClick={confirmClose}>
-							{t('modal.closeConfirm.confirm')}
-						</Button>
-					</DialogFooter>
 				</DialogContent>
 			</Dialog>
 		</DonationModalContext.Provider>
