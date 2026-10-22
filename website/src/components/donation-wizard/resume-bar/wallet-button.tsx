@@ -39,10 +39,9 @@ type Session = {
 type Props = {
 	donation: DonationAmountContext;
 	currency: string;
-	// The checkout session is created once this turns true, so visitors who never see the bar create none.
-	active: boolean;
 	// Whether Stripe reported Apple Pay or Google Pay for this donation
 	hasWallet: boolean;
+	// Called once Stripe has checked for a wallet, and again if a payment fails
 	onWalletChange: (hasWallet: boolean) => void;
 	// Shown until Stripe reports a wallet, and instead of the wallet button when there is none
 	fallback: ReactNode;
@@ -50,20 +49,12 @@ type Props = {
 	onPaid: (sessionId: string) => void;
 };
 
-export const WalletButton = ({
-	donation,
-	currency,
-	active,
-	hasWallet,
-	onWalletChange,
-	fallback,
-	onConfirm,
-	onPaid,
-}: Props) => {
+export const WalletButton = ({ donation, currency, hasWallet, onWalletChange, fallback, onConfirm, onPaid }: Props) => {
 	const [session, setSession] = useState<Session | null>(null);
 
+	// Starts as soon as a donation is stored, while the bar is still hidden, so it can appear with its final button.
 	useEffect(() => {
-		if (!active || session) {
+		if (session) {
 			return;
 		}
 
@@ -74,7 +65,12 @@ export const WalletButton = ({
 			returnPath: buildStripeCheckoutReturnPath(),
 			uiMode: 'elements',
 		}).then((result) => {
-			if (cancelled || !result.success) {
+			if (cancelled) {
+				return;
+			}
+			if (!result.success) {
+				onWalletChange(false);
+
 				return;
 			}
 			setSession({
@@ -88,10 +84,10 @@ export const WalletButton = ({
 		return () => {
 			cancelled = true;
 		};
-	}, [active, session, donation, currency]);
+	}, [session, donation, currency, onWalletChange]);
 
 	return (
-		<div className="relative h-10 w-40">
+		<div className="relative h-10 w-44">
 			{session ? (
 				<CheckoutElementsProvider
 					stripe={session.stripe}
@@ -103,11 +99,11 @@ export const WalletButton = ({
 					<ExpressCheckout
 						sessionId={session.sessionId}
 						donation={donation}
-						onAvailable={() => onWalletChange(true)}
+						onWalletChange={onWalletChange}
 						onConfirm={onConfirm}
 						onPaid={onPaid}
 						onFailed={() => {
-							// A failed session, e.g. an expired one, cannot be retried; the next showing creates a new one.
+							// A failed session, e.g. an expired one, cannot be retried, so a new one is created.
 							setSession(null);
 							onWalletChange(false);
 						}}
@@ -122,13 +118,13 @@ export const WalletButton = ({
 type ExpressCheckoutProps = {
 	sessionId: string;
 	donation: DonationAmountContext;
-	onAvailable: () => void;
+	onWalletChange: (hasWallet: boolean) => void;
 	onConfirm: (paymentMethod: string) => void;
 	onPaid: (sessionId: string) => void;
 	onFailed: () => void;
 };
 
-const ExpressCheckout = ({ sessionId, donation, onAvailable, onConfirm, onPaid, onFailed }: ExpressCheckoutProps) => {
+const ExpressCheckout = ({ sessionId, donation, onWalletChange, onConfirm, onPaid, onFailed }: ExpressCheckoutProps) => {
 	const checkoutResult = useCheckoutElements();
 
 	return (
@@ -137,9 +133,8 @@ const ExpressCheckout = ({ sessionId, donation, onAvailable, onConfirm, onPaid, 
 			onReady={(event) => {
 				// TEMPORARY for testing: shows which wallets Stripe found for this browser. Remove before merging.
 				console.info('[ECE] wallets available:', event.availablePaymentMethods);
-				if (event.availablePaymentMethods?.applePay || event.availablePaymentMethods?.googlePay) {
-					onAvailable();
-				}
+				const wallets = event.availablePaymentMethods;
+				onWalletChange(wallets !== undefined && (wallets.applePay || wallets.googlePay));
 			}}
 			onConfirm={(event) => {
 				if (checkoutResult.type !== 'success') {

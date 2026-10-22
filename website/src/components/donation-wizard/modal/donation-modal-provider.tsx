@@ -51,7 +51,12 @@ export const DonationModalProvider = ({ children }: Props) => {
 			const previous = actorRef.getSnapshot();
 			// Every way of closing (button, backdrop, swipe) lands here, so the bar can offer what was left unfinished.
 			if (event.type === 'CLOSE') {
-				const step = resumableSteps.find((resumableStep) => previous.matches(resumableStep));
+				// While the impact numbers load, the wizard already shows the step it is about to enter.
+				const step = resumableSteps.find(
+					(resumableStep) =>
+						previous.matches(resumableStep) ||
+						(previous.matches('loadingCommunityStats') && previous.context.pendingStep === resumableStep),
+				);
 				if (step) {
 					storeResumableDonation(step, previous.context);
 				} else if (previous.matches('stepQrBill')) {

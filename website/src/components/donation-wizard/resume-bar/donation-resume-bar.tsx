@@ -7,7 +7,7 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { FloatingActionBar } from '@socialincome/design-system/overlays/floating-action-bar/floating-action-bar';
 import { Pencil } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDonationModal } from '../hooks/use-donation-modal';
 import { getDonationDisplayAmount } from '../utils/donation-amount';
 import { getDonationBarEventProperties } from '../wizard/donation-analytics';
@@ -28,12 +28,12 @@ export const DonationResumeBar = () => {
 	const isFormInView = useDonationFormInView();
 	// The cookie banner sits in the same corner, so the bar stacks above it while it is shown.
 	const cookieBannerHeight = useCookieBannerHeight();
-	// The donation Stripe reported Apple Pay or Google Pay for, so a new donation starts without a wallet.
-	const [walletDonationKey, setWalletDonationKey] = useState<string | null>(null);
+	// Stripe's wallet check for a donation, so a new donation starts unchecked.
+	const [wallet, setWallet] = useState<{ donationKey: string; available: boolean } | null>(null);
 
-	const visible = donation !== null && !isOpen && !isFormInView;
 	// What the bar shows and the wallet charges; resuming reopens `donation` as it was left.
-	const walletDonation = donation ? toWalletDonation(donation) : null;
+	// Memoized because the wallet button requests a new checkout session whenever this object changes.
+	const walletDonation = useMemo(() => (donation ? toWalletDonation(donation) : null), [donation]);
 	// The donor may have switched currency inside the wizard, so the donation's own currency counts.
 	const currency = walletDonation?.currency ?? websiteCurrency;
 	const donationKey = walletDonation ? JSON.stringify(walletDonation) : null;
@@ -41,6 +41,30 @@ export const DonationResumeBar = () => {
 	const cadence = walletDonation?.cadence ?? 'monthly';
 	// The wizard always shows two decimals; the bar keeps whole amounts short.
 	const amountLabel = `${currency} ${Number.isInteger(amount) ? amount : amount.toFixed(2)}`;
+	const isWalletChecked = wallet !== null && wallet.donationKey === donationKey;
+	const hasWallet = isWalletChecked && wallet.available;
+	// Waits for the wallet check, so the bar appears with its final button instead of switching after a moment.
+	const visible = donation !== null && !isOpen && !isFormInView && isWalletChecked;
+
+	const handleWalletChange = useCallback(
+		(available: boolean) => {
+			if (donationKey) {
+				setWallet({ donationKey, available });
+			}
+		},
+		[donationKey],
+	);
+
+	useEffect(() => {
+		if (!donationKey || isWalletChecked) {
+			return;
+		}
+
+		// Stripe usually answers within a few seconds; without an answer the bar offers Continue.
+		const timeout = window.setTimeout(() => setWallet({ donationKey, available: false }), 5000);
+
+		return () => window.clearTimeout(timeout);
+	}, [donationKey, isWalletChecked]);
 
 	useEffect(() => {
 		if (visible && donationKey !== lastShownDonation) {
@@ -55,7 +79,6 @@ export const DonationResumeBar = () => {
 	}
 
 	const trackingProperties = getDonationBarEventProperties(amount, currency, cadence);
-	const hasWallet = walletDonationKey === donationKey;
 
 	return (
 		<FloatingActionBar
@@ -83,9 +106,8 @@ export const DonationResumeBar = () => {
 					key={donationKey}
 					donation={walletDonation}
 					currency={currency}
-					active={visible}
 					hasWallet={hasWallet}
-					onWalletChange={(available) => setWalletDonationKey(available ? donationKey : null)}
+					onWalletChange={handleWalletChange}
 					fallback={
 						<Button
 							size="md"
