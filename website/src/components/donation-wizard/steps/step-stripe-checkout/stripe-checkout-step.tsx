@@ -1,6 +1,5 @@
 'use client';
 
-import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
@@ -14,7 +13,7 @@ const stripeCheckoutFrameClass = 'min-h-[520px]';
 
 export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
-	const currency = useWebsiteCurrency();
+	const { currency } = state.context;
 	const { context } = state;
 	const { stripeClientSecret, stripePublishableKey, stripeCheckoutStatus } = context;
 

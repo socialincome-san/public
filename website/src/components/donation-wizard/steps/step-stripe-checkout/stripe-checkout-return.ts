@@ -1,3 +1,4 @@
+import { isWebsiteCurrency } from '@/lib/i18n/utils';
 import type {
 	Cadence,
 	DonationAmountContext,
@@ -38,6 +39,7 @@ const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 	}
 
 	const {
+		currency,
 		monthlyIncome,
 		selectedAmount,
 		customAmount,
@@ -52,6 +54,8 @@ const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 	} = value;
 
 	if (
+		typeof currency !== 'string' ||
+		!isWebsiteCurrency(currency) ||
 		!isNullableNumber(monthlyIncome) ||
 		!isNullablePresetAmount(selectedAmount) ||
 		!isNullableNumber(customAmount) ||
@@ -68,6 +72,7 @@ const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 	}
 
 	return {
+		currency,
 		monthlyIncome,
 		selectedAmount,
 		customAmount,

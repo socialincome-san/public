@@ -2,7 +2,7 @@ import { type DonationAmountContext, type OneTimePlanChoice } from '../utils/don
 import { type DonationWizardContext, getInitialWizardContext } from './donation-wizard-context';
 
 export const wizardContextFromFormAmount = (context: DonationAmountContext): DonationWizardContext => ({
-	...getInitialWizardContext(),
+	...getInitialWizardContext(context.currency),
 	...context,
 	selectedTier: '1x',
 	paymentMethod: 'qr',

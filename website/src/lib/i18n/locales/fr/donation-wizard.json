@@ -1,7 +1,8 @@
 {
 	"modal": {
 		"title": "Faire un don",
-		"campaign-for": "Pour {title}"
+		"campaign-for": "Pour {title}",
+		"currency": "Devise"
 	},
 	"stepAmount": {
 		"title": "Faire un don",

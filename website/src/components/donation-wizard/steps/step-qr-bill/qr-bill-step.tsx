@@ -1,6 +1,5 @@
 'use client';
 
-import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { createWizardPendingContributionAction } from '@/modules/qr-bills/qr-bill.actions';
 import { cn } from '@socialincome/design-system/cn';
 import { useTranslations } from 'next-intl';
@@ -15,7 +14,7 @@ import { QrBillPdfDownloadLink } from './qr-bill-pdf-download-link';
 
 export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
-	const currency = useWebsiteCurrency();
+	const { currency } = state.context;
 	const view = selectPaymentView(state.context);
 	const [confirming, setConfirming] = useState(false);
 

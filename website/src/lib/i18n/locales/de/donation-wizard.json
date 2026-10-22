@@ -1,7 +1,8 @@
 {
 	"modal": {
 		"title": "Spenden",
-		"campaign-for": "Für {title}"
+		"campaign-for": "Für {title}",
+		"currency": "Währung"
 	},
 	"stepAmount": {
 		"title": "Spenden",
