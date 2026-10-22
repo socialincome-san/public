@@ -2,6 +2,7 @@
 
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { ImpactPaymentLogos } from '@/components/payment-logos/impact-payment-logos';
+import { useIsSwissVisitor } from '@/lib/geo/visitor-country';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 import { cn } from '@socialincome/design-system/cn';
 import { CircleCheckBig } from 'lucide-react';
@@ -22,6 +23,7 @@ type Props = {
 export const DonationImpactPanel = ({ cadence, communityStats }: Props) => {
 	const t = useTranslations('donation-wizard');
 	const language = useLocale();
+	const isSwissVisitor = useIsSwissVisitor();
 	const explainerVideo = getDonationExplainerVideo(language);
 	const whyOnePercentLabel = t('impact.why-one-percent');
 
@@ -44,16 +46,18 @@ export const DonationImpactPanel = ({ cadence, communityStats }: Props) => {
 					))}
 				</ul>
 			) : null}
-			<div className="flex flex-col">
-				<a
-					href={ZEWO_HOMEPAGE_URL}
-					target="_blank"
-					rel="noopener noreferrer"
-					className={cn('border-border hover:bg-muted/50 h-14 border-y px-2 transition-colors', donationImpactRowClass)}
-				>
-					<Image src="/assets/zewo.svg" alt="" width={38} height={37} className="size-[38px] shrink-0" aria-hidden />
-					{t('impact.zewo')}
-				</a>
+			<div className="border-border flex flex-col border-t">
+				{isSwissVisitor && (
+					<a
+						href={ZEWO_HOMEPAGE_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+						className={cn('border-border hover:bg-muted/50 h-14 border-b px-2 transition-colors', donationImpactRowClass)}
+					>
+						<Image src="/assets/zewo.svg" alt="" width={38} height={37} className="size-[38px] shrink-0" aria-hidden />
+						{t('impact.zewo')}
+					</a>
+				)}
 				<ExplainerVideoTrigger
 					layout="row"
 					label={whyOnePercentLabel}

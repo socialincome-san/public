@@ -2,6 +2,7 @@
 
 import { useDonationFormState } from '@/components/donation-wizard/hooks/use-donation-form-state';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
+import { ZEWO_NPO_DETAIL_URL } from '@/components/donation-wizard/steps/step-amount/donation-amount-fields';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -9,6 +10,7 @@ import {
 } from '@/components/donation-wizard/utils/donation-amount';
 import { getDonationWizardCardClass } from '@/components/donation-wizard/utils/donation-wizard-layout';
 import { selectStep1FormView } from '@/components/donation-wizard/wizard/donation-machine-selectors';
+import { useIsSwissVisitor } from '@/lib/geo/visitor-country';
 import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
@@ -16,7 +18,6 @@ import { Input } from '@socialincome/design-system/forms/input/input';
 import { useTranslations } from 'next-intl';
 import NextImage from 'next/image';
 
-const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
 const PROFILE_PICTURE_SIZE = 87;
 
 const amountOptions: (PresetAmount | 'other')[] = [25, 50, 100, 'other'];
@@ -34,6 +35,7 @@ export const CampaignDonationForm = ({ campaignId, quote, profilePictureSrc, pro
 	const currency = useWebsiteCurrency();
 	const t = useTranslations('donation-wizard');
 	const { openWizardWithFormAmount } = useDonationModal();
+	const isSwissVisitor = useIsSwissVisitor();
 	const form = useDonationFormState({ selectedAmount: 25 });
 	const values = selectStep1FormView(form.context);
 	const trimmedQuote = quote.trim();
@@ -46,15 +48,17 @@ export const CampaignDonationForm = ({ campaignId, quote, profilePictureSrc, pro
 					'relative mx-0 flex max-w-none flex-col items-center gap-5 overflow-hidden px-9 pt-6 pb-9 lg:mx-auto lg:max-w-[400px]',
 				)}
 			>
-				<a
-					href={ZEWO_NPO_DETAIL_URL}
-					target="_blank"
-					rel="noopener noreferrer"
-					className="absolute top-5 right-4"
-					aria-label={t('impact.zewo')}
-				>
-					<NextImage src="/assets/zewo.svg" alt="" width={38} height={37} className="size-[38px]" />
-				</a>
+				{isSwissVisitor && (
+					<a
+						href={ZEWO_NPO_DETAIL_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="absolute top-5 right-4"
+						aria-label={t('impact.zewo')}
+					>
+						<NextImage src="/assets/zewo.svg" alt="" width={38} height={37} className="size-[38px]" />
+					</a>
+				)}
 
 				<div className="border-primary size-[87px] overflow-hidden rounded-full border-4 p-1">
 					{profilePictureSrc ? (
