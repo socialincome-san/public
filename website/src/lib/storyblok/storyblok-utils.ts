@@ -37,14 +37,7 @@ export const isResolvedArticle = (story: unknown): story is ISbStoryData<Resolve
 	return tags === undefined || tags === null || (Array.isArray(tags) && tags.every(isResolvedRelation));
 };
 
-export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>, includeSubtitle = false) => {
-	if (!includeSubtitle) {
-		return article.content.title;
-	}
-	const subtitle = article.content.subtitle?.trim();
-
-	return subtitle ? `${article.content.title} ${subtitle}` : article.content.title;
-};
+export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>) => article.content.title;
 
 export const getArticleTypeLabel = (articleType: ISbStoryData<ArticleType>) => {
 	const value = articleType.content?.value?.trim();
