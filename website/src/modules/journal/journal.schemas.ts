@@ -22,3 +22,8 @@ export const journalArticlesByUuidsRequestSchema = z.object({
 	language: journalLanguageSchema,
 	articleUuids: z.array(z.string().trim().min(1)),
 });
+
+export const journalArticlesByTagRequestSchema = z.object({
+	language: journalLanguageSchema,
+	tagUuid: z.string().trim().min(1),
+});

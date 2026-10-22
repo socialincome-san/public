@@ -288,6 +288,15 @@ export const getLatestJournalArticles = async (
 	return withStoryblokCache(service.getLatestJournalArticles(language, limit));
 };
 
+export const getLatestArticlesByTag = async (
+	tagId: string,
+	language: string,
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	'use cache';
+
+	return withStoryblokCache(service.getLatestArticlesByTag(tagId, language));
+};
+
 export const getArticlesByUuids = async (
 	language: string,
 	articleUuids: string[],

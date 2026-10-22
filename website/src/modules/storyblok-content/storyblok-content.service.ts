@@ -453,6 +453,23 @@ export const getLatestJournalArticles = async (
 	return resultOk(result.success ? result.data.slice(0, limit) : []);
 };
 
+export const getLatestArticlesByTag = async (
+	tagId: string,
+	language: string,
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	const result = await fetchStoryblokStoriesPage<unknown>({
+		...(await getStoryParams(language)),
+		per_page: JOURNAL_TEASER_LIMIT,
+		excluding_fields: CONTENT_FIELD,
+		resolve_relations: STANDARD_ARTICLE_RELATIONS,
+		sort_by: 'first_published_at:desc',
+		content_type: CONTENT_TYPE.article,
+		filter_query: articleByTagsFilter(tagId),
+	});
+
+	return result.success ? resultOk(result.data.stories.filter(isResolvedArticle)) : result;
+};
+
 export const getArticlesByUuids = async (
 	language: string,
 	articleUuids: string[],
