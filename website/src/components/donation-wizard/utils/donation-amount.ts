@@ -1,11 +1,14 @@
 import { getIndirectBeneficiaryCount } from '@/components/program/indirect-beneficiaries';
+import { defaultCurrency, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { ONLINE_TRANSACTION_FEE_RATE } from '@/modules/subscriptions/subscription.types';
+import type { DonationExampleCountryCode } from './donation-example-income';
 
 export type PresetAmount = 25 | 50 | 100;
 export type Cadence = 'monthly' | 'one-time';
 export type PlanTier = '1x' | '2x';
 export type PaymentMethod = 'qr' | 'online';
 export type OneTimePlanChoice = 'one-time' | 'monthly-half';
+export type MonthlyIncomeSource = 'example' | 'manual' | 'generic';
 
 export const DONATION_MONTHLY_INCOME_MIN = 50;
 export const DONATION_MONTHLY_INCOME_MAX = 1000_000;
@@ -22,6 +25,11 @@ const getAmountWithTransactionCostCoverage = (baseAmount: number): number =>
 
 export type DonationAmountContext = {
 	monthlyIncome: number | null;
+	monthlyIncomeCurrency: WebsiteCurrency;
+	monthlyIncomeSource: MonthlyIncomeSource;
+	exampleCountryCode: DonationExampleCountryCode | null;
+	countryIsManuallySelected: boolean;
+	donationAmountIsManual: boolean;
 	selectedAmount: PresetAmount | 'other' | null;
 	customAmount: number | null;
 	cadence: Cadence;
@@ -34,9 +42,14 @@ export type DonationAmountContext = {
 	campaignId?: string;
 };
 
-export const getInitialDonationContext = (): DonationAmountContext => ({
-	monthlyIncome: 5000,
-	selectedAmount: null,
+export const getInitialDonationContext = (currency: WebsiteCurrency = defaultCurrency): DonationAmountContext => ({
+	monthlyIncome: null,
+	monthlyIncomeCurrency: currency,
+	monthlyIncomeSource: 'generic',
+	exampleCountryCode: null,
+	countryIsManuallySelected: false,
+	donationAmountIsManual: false,
+	selectedAmount: 50,
 	customAmount: null,
 	cadence: 'monthly',
 	selectedTier: '1x',

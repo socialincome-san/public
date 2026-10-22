@@ -1,3 +1,4 @@
+import { defaultCurrency, isWebsiteCurrency, type WebsiteCurrency } from '@/lib/i18n/utils';
 import type {
 	Cadence,
 	DonationAmountContext,
@@ -6,6 +7,7 @@ import type {
 	PlanTier,
 	PresetAmount,
 } from '../../utils/donation-amount';
+import { isDonationExampleCountryCode, type DonationExampleCountryCode } from '../../utils/donation-example-income';
 
 export const STRIPE_CHECKOUT_SESSION_ID_PARAM = 'donation_checkout_session_id';
 
@@ -15,6 +17,12 @@ const isRecord = (value: unknown): value is Record<string, unknown> => typeof va
 
 const isNullableNumber = (value: unknown): value is number | null =>
 	value === null || (typeof value === 'number' && Number.isFinite(value));
+
+const isNullableDonationExampleCountryCode = (value: unknown): value is DonationExampleCountryCode | null =>
+	value === null || (typeof value === 'string' && isDonationExampleCountryCode(value));
+
+const isStoredWebsiteCurrency = (value: unknown): value is WebsiteCurrency =>
+	typeof value === 'string' && isWebsiteCurrency(value);
 
 const isPresetAmount = (value: unknown): value is PresetAmount | 'other' =>
 	value === 25 || value === 50 || value === 100 || value === 'other';
@@ -32,13 +40,18 @@ const isOneTimePlanChoice = (value: unknown): value is OneTimePlanChoice => valu
 
 const getStorageKey = (sessionId: string): string => `${STORAGE_KEY_PREFIX}${sessionId}`;
 
-const parseStoredContext = (value: unknown): DonationAmountContext | null => {
+const parseStoredContext = (value: unknown, fallbackCurrency: WebsiteCurrency): DonationAmountContext | null => {
 	if (!isRecord(value)) {
 		return null;
 	}
 
 	const {
 		monthlyIncome,
+		monthlyIncomeCurrency,
+		monthlyIncomeSource,
+		exampleCountryCode,
+		countryIsManuallySelected,
+		donationAmountIsManual,
 		selectedAmount,
 		customAmount,
 		cadence,
@@ -53,6 +66,16 @@ const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 
 	if (
 		!isNullableNumber(monthlyIncome) ||
+		(monthlyIncomeCurrency !== undefined &&
+			monthlyIncomeCurrency !== null &&
+			!isStoredWebsiteCurrency(monthlyIncomeCurrency)) ||
+		(monthlyIncomeSource !== undefined &&
+			monthlyIncomeSource !== 'example' &&
+			monthlyIncomeSource !== 'manual' &&
+			monthlyIncomeSource !== 'generic') ||
+		(exampleCountryCode !== undefined && !isNullableDonationExampleCountryCode(exampleCountryCode)) ||
+		(countryIsManuallySelected !== undefined && typeof countryIsManuallySelected !== 'boolean') ||
+		(donationAmountIsManual !== undefined && typeof donationAmountIsManual !== 'boolean') ||
 		!isNullablePresetAmount(selectedAmount) ||
 		!isNullableNumber(customAmount) ||
 		!isCadence(cadence) ||
@@ -69,6 +92,14 @@ const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 
 	return {
 		monthlyIncome,
+		monthlyIncomeCurrency: isStoredWebsiteCurrency(monthlyIncomeCurrency) ? monthlyIncomeCurrency : fallbackCurrency,
+		monthlyIncomeSource:
+			monthlyIncomeSource === 'example' || monthlyIncomeSource === 'manual' || monthlyIncomeSource === 'generic'
+				? monthlyIncomeSource
+				: 'manual',
+		exampleCountryCode: isNullableDonationExampleCountryCode(exampleCountryCode) ? exampleCountryCode : null,
+		countryIsManuallySelected: countryIsManuallySelected === true,
+		donationAmountIsManual: donationAmountIsManual ?? selectedAmount !== null,
 		selectedAmount,
 		customAmount,
 		cadence,
@@ -98,7 +129,10 @@ export const storeStripeCheckoutContext = (sessionId: string, context: DonationA
 	window.sessionStorage.setItem(getStorageKey(sessionId), JSON.stringify(context));
 };
 
-export const readStoredStripeCheckoutContext = (sessionId: string): DonationAmountContext | null => {
+export const readStoredStripeCheckoutContext = (
+	sessionId: string,
+	fallbackCurrency: WebsiteCurrency = defaultCurrency,
+): DonationAmountContext | null => {
 	if (typeof window === 'undefined') {
 		return null;
 	}
@@ -111,7 +145,7 @@ export const readStoredStripeCheckoutContext = (sessionId: string): DonationAmou
 	try {
 		const parsed: unknown = JSON.parse(value);
 
-		return parseStoredContext(parsed);
+		return parseStoredContext(parsed, fallbackCurrency);
 	} catch {
 		return null;
 	}
