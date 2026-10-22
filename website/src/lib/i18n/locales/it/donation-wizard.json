@@ -1,13 +1,7 @@
 {
 	"modal": {
 		"title": "Fai una donazione",
-		"campaign-for": "Per {title}",
-		"closeConfirm": {
-			"title": "Chiudere la donazione?",
-			"description": "Se chiudi ora, i progressi di questa donazione andranno persi.",
-			"cancel": "Continua a donare",
-			"confirm": "Chiudi"
-		}
+		"campaign-for": "Per {title}"
 	},
 	"stepAmount": {
 		"title": "Fai una donazione",
@@ -52,7 +46,7 @@
 		"email": "E-mail",
 		"accountCreateHint": "Se non esiste ancora un account con questa e-mail, ne creeremo uno per te.",
 		"noBackAfterGenerateHint": "Dopo aver generato il codice QR, non potrai più modificare importo, metodo di pagamento o dati di contatto in questo flusso.",
-		"generateCta": "Genera codice QR per il pagamento",
+		"generateCta": "Genera codice QR",
 		"generating": "Generazione…",
 		"generateError": "Impossibile generare la QR-fattura. Riprova."
 	},

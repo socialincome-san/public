@@ -9,14 +9,13 @@ import { cn } from '@socialincome/design-system/cn';
 import { MediaHero, MediaHeroIntro } from '@socialincome/design-system/layout/media-hero/media-hero';
 import { storyblokEditable } from '@storyblok/react';
 import { Maximize2, MessageSquareText, Minimize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';
-import { useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { preload } from 'react-dom';
 import Markdown from 'react-markdown';
 
 type Props = {
 	blok: HeroVideo;
 	lang: WebsiteLanguage;
-	subtitleUrl?: string;
 	translations: HeroVideoTranslations;
 	donationForm: ReactNode;
 	disableAutoplay?: boolean;
@@ -37,7 +36,7 @@ type HeroVideoTranslations = {
 	donateNow: string;
 };
 
-export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donationForm, disableAutoplay = false }: Props) => {
+export const HeroVideoBlock = ({ blok, lang, translations, donationForm, disableAutoplay = false }: Props) => {
 	const { heading, description, muxPlaybackId } = blok;
 	const { openWizardAtAmountStep } = useDonationModal();
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -48,6 +47,35 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 	const posterUrl = `https://image.mux.com/${muxPlaybackId}/thumbnail.webp?time=2&width=1600`;
 	// The poster is the LCP element and <video> has no fetchpriority attribute.
 	preload(posterUrl, { as: 'image', fetchPriority: 'high' });
+
+	// The stream carries a subtitle track per language and the player turns on English by default.
+	useEffect(() => {
+		const textTracks = videoRef.current?.textTracks;
+		if (!textTracks) {
+			return;
+		}
+
+		const showPageLanguage = () => {
+			for (const track of textTracks) {
+				if (track.kind !== 'subtitles' && track.kind !== 'captions') {
+					continue;
+				}
+				const mode = track.language === lang ? 'showing' : 'disabled';
+				if (track.mode !== mode) {
+					track.mode = mode;
+				}
+			}
+		};
+
+		showPageLanguage();
+		textTracks.addEventListener('addtrack', showPageLanguage);
+		textTracks.addEventListener('change', showPageLanguage);
+
+		return () => {
+			textTracks.removeEventListener('addtrack', showPageLanguage);
+			textTracks.removeEventListener('change', showPageLanguage);
+		};
+	}, [lang]);
 
 	const toggleExpanded = () => {
 		const nextExpanded = !isExpanded;
@@ -85,6 +113,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 					ref={videoRef}
 					className={cn('z-10 size-full', isExpanded ? 'object-contain' : 'object-cover')}
 					playbackId={muxPlaybackId}
+					disableCookies
 					poster={posterUrl}
 					capRenditionToPlayerSize
 					_hlsConfig={HLS_CONFIG}
@@ -97,7 +126,6 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 					onPlay={() => setIsPlaying(true)}
 					onPause={() => setIsPlaying(false)}
 				>
-					{subtitleUrl && <track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />}
 					<style>{`
             video::cue {
               background-color: hsl(var(--foreground) / 0.8);
@@ -125,15 +153,13 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 						>
 							{isMuted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
 						</VideoControlButton>
-						{subtitleUrl && (
-							<VideoControlButton
-								onClick={() => setShowCaptions((prev) => !prev)}
-								aria-label={showCaptions ? translations.hideCaptions : translations.showCaptions}
-								title={showCaptions ? translations.hideCaptions : translations.showCaptions}
-							>
-								<MessageSquareText className="size-5" />
-							</VideoControlButton>
-						)}
+						<VideoControlButton
+							onClick={() => setShowCaptions((prev) => !prev)}
+							aria-label={showCaptions ? translations.hideCaptions : translations.showCaptions}
+							title={showCaptions ? translations.hideCaptions : translations.showCaptions}
+						>
+							<MessageSquareText className="size-5" />
+						</VideoControlButton>
 					</>
 				) : null
 			}

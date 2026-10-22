@@ -1,13 +1,7 @@
 {
 	"modal": {
 		"title": "Make a donation",
-		"campaign-for": "For {title}",
-		"closeConfirm": {
-			"title": "Close donation?",
-			"description": "If you close now, your progress in this donation will be lost.",
-			"cancel": "Continue donating",
-			"confirm": "Close"
-		}
+		"campaign-for": "For {title}"
 	},
 	"stepAmount": {
 		"title": "Make a donation",
@@ -52,7 +46,7 @@
 		"email": "E-Mail",
 		"accountCreateHint": "If no account exists for this email yet, we'll create one for you.",
 		"noBackAfterGenerateHint": "After you generate the QR code, you can't change the amount, payment method, or contact details in this flow.",
-		"generateCta": "Generate QR-Code for payment",
+		"generateCta": "Generate QR-Code",
 		"generating": "Generating…",
 		"generateError": "Could not generate QR bill. Please try again."
 	},
