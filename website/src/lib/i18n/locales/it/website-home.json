@@ -5,15 +5,12 @@
 		"og-image": "/assets/metadata/og/default.jpg",
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
-	"donate-now": "Dona ora",
 	"video-controls": {
 		"play-video": "Riproduci video",
 		"pause-video": "Metti in pausa il video",
-		"mute-video": "Disattiva audio del video",
-		"unmute-video": "Attiva audio del video",
 		"show-captions": "Mostra sottotitoli",
 		"hide-captions": "Nascondi sottotitoli",
-		"expand-video-view": "Espandi visualizzazione video",
-		"exit-expanded-video-view": "Esci dalla visualizzazione video espansa"
+		"play-with-sound": "Riproduci con audio",
+		"mute": "Disattiva audio"
 	}
 }
