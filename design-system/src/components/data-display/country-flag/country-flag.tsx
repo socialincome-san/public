@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { cn } from '../../../cn';
 
 const slugifyCountry = (name: string): string => {
@@ -12,6 +12,8 @@ type CountryFlagProps = {
 	country: string;
 	size?: 'sm' | 'lg' | 'inline';
 	decorative?: boolean;
+	// Shown instead of the country code when there is no flag for the country.
+	fallback?: ReactNode;
 };
 
 const containerSizeClasses = {
@@ -20,12 +22,21 @@ const containerSizeClasses = {
 	inline: 'size-[1em] text-[length:inherit]',
 };
 
-const CountryFlagImage = ({ country, size, decorative }: Required<CountryFlagProps>) => {
+const CountryFlagImage = ({
+	country,
+	size,
+	decorative,
+	fallback,
+}: Required<Omit<CountryFlagProps, 'fallback'>> & Pick<CountryFlagProps, 'fallback'>) => {
 	const [hasError, setHasError] = useState(false);
 
 	const containerSize = containerSizeClasses[size];
 
 	const slug = slugifyCountry(country);
+
+	if (hasError && fallback) {
+		return fallback;
+	}
 
 	if (hasError) {
 		return (
@@ -58,6 +69,6 @@ const CountryFlagImage = ({ country, size, decorative }: Required<CountryFlagPro
 	);
 };
 
-export const CountryFlag = ({ country, size = 'lg', decorative = false }: CountryFlagProps) => {
-	return <CountryFlagImage key={country} country={country} size={size} decorative={decorative} />;
+export const CountryFlag = ({ country, size = 'lg', decorative = false, fallback }: CountryFlagProps) => {
+	return <CountryFlagImage key={country} country={country} size={size} decorative={decorative} fallback={fallback} />;
 };
