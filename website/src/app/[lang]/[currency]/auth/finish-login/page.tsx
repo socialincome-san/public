@@ -2,7 +2,7 @@
 
 import { claimPendingCampaignsFromLogin } from '@/components/login/claim-pending-campaigns-from-login';
 import { LoginPanel } from '@/components/login/login-panel';
-import { parseCampaignsQueryParam } from '@/components/login/parse-campaigns-query-param';
+import { getEmailFromLoginUrl, parseCampaignsQueryParam } from '@/components/login/parse-campaigns-query-param';
 import { finishSignInWithEmailLink, isSignInLink, signOut } from '@/lib/firebase/client-auth';
 import { useAuth } from '@/lib/firebase/hooks/use-auth';
 import { getWebsiteBasePath } from '@/lib/i18n/utils';
@@ -14,21 +14,6 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-
-const getEmailFromLoginUrl = (url: string): string | null => {
-	const searchParams = new URL(url).searchParams;
-	const email = searchParams.get('email');
-	if (email) {
-		return email;
-	}
-
-	const continueUrl = searchParams.get('continueUrl');
-	if (!continueUrl) {
-		return null;
-	}
-
-	return new URL(continueUrl).searchParams.get('email');
-};
 
 export default function FinishLoginPage() {
 	const { auth } = useAuth();

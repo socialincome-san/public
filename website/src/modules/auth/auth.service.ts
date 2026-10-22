@@ -9,6 +9,7 @@ import {
 	deleteFirebaseUserByUidIfExists as deleteFirebaseUserByUidIfExistsIntegration,
 	findFirebaseUserByEmail as findFirebaseUserByEmailIntegration,
 	findFirebaseUserByPhoneNumber as findFirebaseUserByPhoneNumberIntegration,
+	generateFirebaseSignInLink,
 	synchronizeFirebaseSurveyUser as synchronizeFirebaseSurveyUserIntegration,
 	updateFirebaseUserByPhoneNumber as updateFirebaseUserByPhoneNumberIntegration,
 	updateFirebaseUserByUid as updateFirebaseUserByUidIntegration,
@@ -20,9 +21,22 @@ import {
 	validateTwilioOtpConfiguration,
 	verifyTwilioOtp,
 } from '@/integrations/twilio/twilio-otp.integration';
+import { loadMessages } from '@/lib/i18n/messages';
+import { getWebsiteBasePath, parseCurrencySegment, TIME_ZONE, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import { archiveSentEmail, sendMail } from '@/modules/mail/mail.service';
+import { createTranslator } from 'next-intl';
+import { createHmac } from 'node:crypto';
+import { isIP } from 'node:net';
 import type { VerifyOtpInput } from './auth.schemas';
+import { websiteLocaleSchema } from './auth.schemas';
 import type { AuthToken, AuthUser, AuthUserUpdate, SessionCookie, VerifyOtpResult } from './auth.types';
+import { deleteExpiredMagicLinkRateLimits, updateMagicLinkRateLimitCount } from './magic-link-rate-limit.repository';
+
+const magicLinkWindowMs = 15 * 60 * 1000;
+const magicLinkEmailLimit = 3;
+const magicLinkIpLimit = 20;
+const magicLinkRateLimitRetentionMs = 24 * 60 * 60 * 1000;
 
 export const requestOtp = async (phoneNumber: string): Promise<Result<boolean>> => {
 	const configurationResult = await validateTwilioOtpConfiguration();
@@ -43,6 +57,202 @@ export const requestOtp = async (phoneNumber: string): Promise<Result<boolean>> 
 
 	return requestTwilioOtp(phoneResult.data);
 };
+
+export const sendMagicLoginLink = async (input: {
+	email: string;
+	continueUrl: string;
+	requestOrigin: string;
+	requesterIp?: string;
+}): Promise<Result<void>> => {
+	const continueUrlResult = validateMagicLoginContinueUrl(input.email, input.continueUrl, input.requestOrigin);
+	if (!continueUrlResult.success) {
+		return resultFail(continueUrlResult.error);
+	}
+
+	const templateId = process.env.SENDGRID_MAGIC_LOGIN_TEMPLATE_ID?.trim();
+	const rateLimitSecret = process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.trim();
+	if (!templateId || !rateLimitSecret) {
+		console.error('Magic-link email configuration is incomplete');
+
+		return resultFail('Could not send sign-in link');
+	}
+
+	try {
+		const now = new Date();
+		await deleteExpiredMagicLinkRateLimits(new Date(now.getTime() - magicLinkRateLimitRetentionMs));
+
+		const emailKey = hashMagicLinkRateLimitKey(rateLimitSecret, `email:${input.email.toLowerCase()}`);
+		const ipKey =
+			input.requesterIp && isIP(input.requesterIp)
+				? hashMagicLinkRateLimitKey(rateLimitSecret, `ip:${input.requesterIp}`)
+				: undefined;
+		const [emailRequestCount, ipRequestCount] = await Promise.all([
+			updateMagicLinkRateLimitCount(emailKey, now, magicLinkWindowMs),
+			ipKey ? updateMagicLinkRateLimitCount(ipKey, now, magicLinkWindowMs) : Promise.resolve(0),
+		]);
+		if (emailRequestCount > magicLinkEmailLimit || ipRequestCount > magicLinkIpLimit) {
+			return resultOk(undefined);
+		}
+
+		const signInLinkResult = await generateFirebaseSignInLink(input.email, input.continueUrl);
+		if (!signInLinkResult.success) {
+			console.error('Could not complete Firebase magic-link generation');
+
+			return resultFail('Could not send sign-in link');
+		}
+
+		const messages = await loadMessages(continueUrlResult.data.language);
+		const t = createTranslator({
+			locale: continueUrlResult.data.language,
+			messages,
+			namespace: 'website-login',
+			timeZone: TIME_ZONE,
+		});
+		const emailResult = await sendMail({
+			to: input.email,
+			subject: t('magic-link-email.subject'),
+			text: t('magic-link-email.archive'),
+			template: {
+				id: templateId,
+				data: {
+					logoUrl: new URL('/assets/logos_si/logo_color@2x.png', continueUrlResult.data.origin).toString(),
+					subject: t('magic-link-email.subject'),
+					previewText: t('magic-link-email.preview-text'),
+					heading: t('magic-link-email.heading'),
+					body: t('magic-link-email.body'),
+					buttonText: t('magic-link-email.button'),
+					magicLink: signInLinkResult.data,
+					securityNotice: t('magic-link-email.security-notice'),
+					ignoreNotice: t('magic-link-email.ignore-notice'),
+					footer: t('magic-link-email.footer'),
+				},
+			},
+			sensitive: true,
+		});
+		if (!emailResult.success) {
+			console.error('Could not deliver Firebase magic-link email');
+
+			return resultFail('Could not send sign-in link');
+		}
+
+		return resultOk(undefined);
+	} catch {
+		console.error('Could not process Firebase magic-link request');
+
+		return resultFail('Could not send sign-in link');
+	}
+};
+
+export const archiveEmulatorMagicLoginEmail = async (input: {
+	email: string;
+	continueUrl: string;
+	requestOrigin: string;
+}): Promise<Result<void>> => {
+	if (!process.env.FIREBASE_AUTH_EMULATOR_HOST || !process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL) {
+		return resultFail('Firebase Auth emulator is not enabled');
+	}
+
+	const continueUrlResult = validateMagicLoginContinueUrl(input.email, input.continueUrl, input.requestOrigin);
+	if (!continueUrlResult.success) {
+		return resultFail(continueUrlResult.error);
+	}
+
+	try {
+		const messages = await loadMessages(continueUrlResult.data.language);
+		const t = createTranslator({
+			locale: continueUrlResult.data.language,
+			messages,
+			namespace: 'website-login',
+			timeZone: TIME_ZONE,
+		});
+		const archiveResult = await archiveSentEmail({
+			to: input.email,
+			subject: t('magic-link-email.subject'),
+			text: t('magic-link-email.archive'),
+		});
+		if (!archiveResult.success) {
+			console.error('Could not archive Firebase emulator sign-in email');
+
+			return resultFail('Could not archive sign-in email');
+		}
+
+		return resultOk(undefined);
+	} catch {
+		console.error('Could not prepare Firebase emulator sign-in archive');
+
+		return resultFail('Could not archive sign-in email');
+	}
+};
+
+export const validateMagicLoginContinueUrl = (
+	email: string,
+	continueUrl: string,
+	requestOrigin: string,
+): Result<{ language: WebsiteLanguage; origin: string }> => {
+	try {
+		if (continueUrl.length > 2048) {
+			return resultFail('Invalid sign-in continue URL');
+		}
+
+		const url = new URL(continueUrl);
+		const origin = new URL(requestOrigin);
+		const isLocalAuthEmulatorOrigin =
+			Boolean(process.env.FIREBASE_AUTH_EMULATOR_HOST?.trim()) &&
+			Boolean(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL?.trim()) &&
+			(origin.hostname === 'localhost' ||
+				origin.hostname === '[::1]' ||
+				(isIP(origin.hostname) === 4 && origin.hostname.split('.')[0] === '127'));
+		if (
+			(url.protocol !== 'https:' && url.protocol !== 'http:') ||
+			url.origin !== origin.origin ||
+			url.username ||
+			url.password ||
+			url.hash ||
+			(process.env.NODE_ENV === 'production' && url.protocol !== 'https:' && !isLocalAuthEmulatorOrigin)
+		) {
+			return resultFail('Invalid sign-in continue URL');
+		}
+
+		const pathMatch = /^\/([^/]+)\/([^/]+)\/auth\/confirm-login$/.exec(url.pathname);
+		if (!pathMatch) {
+			return resultFail('Invalid sign-in continue URL');
+		}
+
+		const currency = parseCurrencySegment(pathMatch[2]);
+		const localeResult = websiteLocaleSchema.safeParse({ lang: pathMatch[1], currency });
+		if (
+			!localeResult.success ||
+			url.pathname !== `${getWebsiteBasePath(localeResult.data.lang, localeResult.data.currency)}/auth/confirm-login`
+		) {
+			return resultFail('Invalid sign-in continue URL');
+		}
+
+		const emailParameters = url.searchParams.getAll('email');
+		const campaignParameters = url.searchParams.getAll('campaigns');
+		if (
+			emailParameters.length !== 1 ||
+			emailParameters[0] !== email ||
+			campaignParameters.length > 1 ||
+			Array.from(url.searchParams.keys()).some((key) => key !== 'email' && key !== 'campaigns')
+		) {
+			return resultFail('Invalid sign-in continue URL');
+		}
+
+		if (campaignParameters.length === 1) {
+			const claimIds = campaignParameters[0].split(',');
+			if (claimIds.some((claimId) => !/^[A-Za-z0-9]{8}$/.test(claimId)) || new Set(claimIds).size !== claimIds.length) {
+				return resultFail('Invalid sign-in continue URL');
+			}
+		}
+
+		return resultOk({ language: localeResult.data.lang, origin: origin.origin });
+	} catch {
+		return resultFail('Invalid sign-in continue URL');
+	}
+};
+
+const hashMagicLinkRateLimitKey = (secret: string, value: string): string =>
+	createHmac('sha256', secret).update(value).digest('hex');
 
 export const verifyOtp = async (input: VerifyOtpInput): Promise<Result<VerifyOtpResult>> => {
 	const configurationResult = await validateTwilioOtpConfiguration();

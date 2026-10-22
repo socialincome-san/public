@@ -18,7 +18,7 @@ jest.mock('./mail.repository', () => ({
 	createSentEmail: mockCreateSentEmail,
 }));
 
-import { getPaginatedSentEmailTableView, sendMail } from './mail.service';
+import { archiveSentEmail, getPaginatedSentEmailTableView, sendMail } from './mail.service';
 import type { SentEmailTableQuery } from './mail.types';
 
 const tableQuery: SentEmailTableQuery = {
@@ -84,6 +84,41 @@ describe('mail service', () => {
 		expect(mockCreateSentEmail).toHaveBeenCalledTimes(2);
 	});
 
+	test('archives a locally delivered emulator email without sending it through SendGrid', async () => {
+		await expect(
+			archiveSentEmail({
+				to: 'recipient@example.com',
+				subject: 'Sign in',
+				text: 'The one-time link is [REDACTED] in this archive.',
+			}),
+		).resolves.toEqual({ success: true, data: undefined });
+
+		expect(mockSendSendgridEmail).not.toHaveBeenCalled();
+		expect(mockCreateSentEmail).toHaveBeenCalledWith({
+			toEmail: 'recipient@example.com',
+			fromEmail: 'sender@example.com',
+			subject: 'Sign in',
+			body: 'The one-time link is [REDACTED] in this archive.',
+			contactId: null,
+		});
+	});
+
+	test('uses the emulator sender address when the configured sender is empty', async () => {
+		process.env.SENDGRID_FROM_EMAIL = '';
+
+		await expect(
+			archiveSentEmail({
+				to: 'recipient@example.com',
+				subject: 'Sign in',
+				text: 'The one-time link is [REDACTED] in this archive.',
+			}),
+		).resolves.toEqual({ success: true, data: undefined });
+
+		expect(mockCreateSentEmail).toHaveBeenCalledWith(
+			expect.objectContaining({ fromEmail: 'firebase-auth-emulator@localhost' }),
+		);
+	});
+
 	test('passes the template to SendGrid and stores the text as the body', async () => {
 		const template = { id: 'd-template-id', data: { month: 'August 2026' } };
 
@@ -103,6 +138,33 @@ describe('mail service', () => {
 			template,
 		});
 		expect(mockCreateSentEmail).toHaveBeenCalledWith(expect.objectContaining({ subject: 'Subject', body: 'Body' }));
+	});
+
+	test('stores only the explicitly safe archive body for sensitive template data', async () => {
+		const signInLink = 'https://example.org/?oobCode=one-time-token&continueUrl=https%3A%2F%2Fexample.org%2Flogin';
+		const archiveBody = 'A sign-in email was sent. The one-time link is [REDACTED] in this archive.';
+		const template = { id: 'd-template-id', data: { magicLink: signInLink } };
+
+		await expect(
+			sendMail({
+				to: 'recipient@example.com',
+				subject: 'Sign in',
+				text: archiveBody,
+				template,
+				sensitive: true,
+			}),
+		).resolves.toEqual({ success: true, data: undefined });
+
+		expect(mockSendSendgridEmail).toHaveBeenCalledWith({
+			to: 'recipient@example.com',
+			from: 'sender@example.com',
+			subject: 'Sign in',
+			text: archiveBody,
+			template,
+			sensitive: true,
+		});
+		expect(mockCreateSentEmail).toHaveBeenCalledWith(expect.objectContaining({ subject: 'Sign in', body: archiveBody }));
+		expect(mockCreateSentEmail.mock.calls.flat().join(' ')).not.toContain(signInLink);
 	});
 
 	test('does not store emails when SendGrid fails', async () => {

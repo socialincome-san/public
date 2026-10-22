@@ -2,6 +2,7 @@ const mockGetUserByEmail = jest.fn();
 const mockUpdateUser = jest.fn();
 const mockCreateUser = jest.fn();
 const mockDeleteUser = jest.fn();
+const mockGenerateSignInWithEmailLink = jest.fn();
 
 jest.mock('./firebase-admin.integration', () => ({
 	getFirebaseAdminAuth: () => ({
@@ -9,11 +10,12 @@ jest.mock('./firebase-admin.integration', () => ({
 		updateUser: mockUpdateUser,
 		createUser: mockCreateUser,
 		deleteUser: mockDeleteUser,
+		generateSignInWithEmailLink: mockGenerateSignInWithEmailLink,
 	}),
 	getFirebaseAdminAppCheck: jest.fn(),
 }));
 
-import { synchronizeFirebaseSurveyUser } from './firebase-auth.integration';
+import { generateFirebaseSignInLink, synchronizeFirebaseSurveyUser } from './firebase-auth.integration';
 
 const userNotFoundError = (): Error & { code: string } => {
 	const error = new Error('not found') as Error & { code: string };
@@ -28,6 +30,35 @@ describe('synchronizeFirebaseSurveyUser', () => {
 		mockUpdateUser.mockResolvedValue({ uid: 'survey-uid' });
 		mockCreateUser.mockResolvedValue({ uid: 'new-survey-uid' });
 		mockDeleteUser.mockResolvedValue(undefined);
+		mockGenerateSignInWithEmailLink.mockResolvedValue('https://example.org/?oobCode=one-time-token');
+	});
+
+	test('generates a sign-in link with the unchanged cross-browser continue URL', async () => {
+		const continueUrl = 'https://socialincome.org/de/chf/auth/confirm-login?email=ada%40example.com&campaigns=Ab12Cd34';
+
+		await expect(generateFirebaseSignInLink('ada@example.com', continueUrl)).resolves.toEqual({
+			success: true,
+			data: 'https://example.org/?oobCode=one-time-token',
+		});
+		expect(mockGenerateSignInWithEmailLink).toHaveBeenCalledWith('ada@example.com', {
+			url: continueUrl,
+			handleCodeInApp: true,
+		});
+	});
+
+	test('does not log a failed generated sign-in link', async () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		mockGenerateSignInWithEmailLink.mockRejectedValue(new Error('provider response contains one-time-token'));
+
+		await expect(
+			generateFirebaseSignInLink(
+				'ada@example.com',
+				'https://socialincome.org/en/usd/auth/confirm-login?email=ada%40example.com',
+			),
+		).resolves.toEqual({ success: false, error: 'Could not generate sign-in link' });
+		expect(consoleError).toHaveBeenCalledWith('Could not generate Firebase sign-in link');
+		expect(consoleError.mock.calls.flat().join(' ')).not.toContain('one-time-token');
+		consoleError.mockRestore();
 	});
 
 	test('refuses to overwrite an existing Firebase user that is not the survey user', async () => {

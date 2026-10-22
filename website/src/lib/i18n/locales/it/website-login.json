@@ -24,6 +24,17 @@
 		"retry": "Usa un'altra email",
 		"hint": "Non è arrivato nulla? Controlla la cartella spam."
 	},
+	"magic-link-email": {
+		"subject": "Il tuo link di accesso a Social Income",
+		"preview-text": "Usa questo link monouso per accedere a Social Income.",
+		"heading": "Accedi a Social Income",
+		"body": "Clicca qui sotto per accedere in modo sicuro al tuo account Social Income.",
+		"button": "Accedi",
+		"security-notice": "Per la tua sicurezza, questo link può essere usato una sola volta.",
+		"ignore-notice": "Se non hai richiesto questa email, puoi ignorarla.",
+		"footer": "Social Income · Reddito di base incondizionato",
+		"archive": "È stata inviata un'email di accesso. Il link monouso è [REDACTED] in questo archivio."
+	},
 	"confirm-login": {
 		"title": "Completa l'accesso",
 		"body": "Clicca il pulsante qui sotto per completare l'accesso.",

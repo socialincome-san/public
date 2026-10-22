@@ -1,7 +1,12 @@
 const mockReadPendingClaimIds = jest.fn(() => [] as string[]);
+const mockSendMagicLoginLinkAction = jest.fn();
 
 jest.mock('@/components/campaign/campaign-submission/pending-claim-ids', () => ({
 	readPendingClaimIds: () => mockReadPendingClaimIds(),
+}));
+
+jest.mock('@/modules/auth/auth.actions', () => ({
+	sendMagicLoginLinkAction: (...args: unknown[]): unknown => mockSendMagicLoginLinkAction(...args),
 }));
 
 import { buildMagicLoginContinueUrl } from './send-magic-login-link';
