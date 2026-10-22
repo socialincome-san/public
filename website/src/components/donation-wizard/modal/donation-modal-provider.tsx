@@ -31,9 +31,9 @@ type Props = {
 // Steps after the amount is chosen and before anything is paid or a QR bill exists.
 const resumableSteps = ['stepPlanMonthly', 'stepPlanOneTime', 'stepPayment', 'stepStripeCheckout', 'stepQrContact'] as const;
 
+// A Stripe return URL can be opened without a payment, so that case clears only once Stripe confirms it was paid.
 const completionEvents = new Set<Parameters<DonationWizardSend>[0]['type']>([
 	'STRIPE_CHECKOUT_COMPLETE',
-	'OPEN_FROM_STRIPE_RETURN',
 	'QR_PAYMENT_CONFIRMED',
 ]);
 
@@ -81,6 +81,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 				// Only a checkout that Stripe reports as paid counts as a completed donation.
 				void getPaidStripeCheckoutDonationAction(stripeCheckoutSessionId).then((result) => {
 					if (result.success) {
+						clearResumableDonation();
 						const completedEvent = getDonationCompletedEvent(result.data);
 						trackEvent(completedEvent.name, completedEvent.properties);
 					}
@@ -129,7 +130,6 @@ export const DonationModalProvider = ({ children }: Props) => {
 	};
 
 	const openWizardAfterPayment = (context: DonationAmountContext, sessionId: string) => {
-		clearResumableDonation();
 		// The wallet sheet may finish while the donor has opened the wizard; onboarding only starts from closed.
 		if (!actorRef.getSnapshot().matches('closed')) {
 			send({ type: 'CLOSE' });

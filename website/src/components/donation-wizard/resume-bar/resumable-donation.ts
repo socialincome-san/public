@@ -19,7 +19,14 @@ const subscribe = (listener: () => void) => {
 	};
 };
 
+// After a failed write, storage may still hold an older donation, so this page load trusts `pageValue` instead.
+let writeFailed = false;
+
 const readValue = () => {
+	if (writeFailed) {
+		return pageValue;
+	}
+
 	try {
 		return window.sessionStorage.getItem(STORAGE_KEY);
 	} catch {
@@ -35,8 +42,10 @@ const writeValue = (value: string | null) => {
 		} else {
 			window.sessionStorage.setItem(STORAGE_KEY, value);
 		}
+		writeFailed = false;
 	} catch {
-		// Storage is blocked, e.g. in some private modes: the bar only lasts until the next page load.
+		// Storage is blocked or full, e.g. in some private modes: the bar only lasts until the next page load.
+		writeFailed = true;
 	}
 	listeners.forEach((listener) => listener());
 };
