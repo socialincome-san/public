@@ -7,10 +7,9 @@ type RequestQrBillGenerationInput = {
 	context: DonationAmountContext;
 	donor: QrDonorContext;
 	send: DonationWizardSend;
-	currency: string;
 };
 
-export const requestQrBillGeneration = async ({ context, donor, send, currency }: RequestQrBillGenerationInput) => {
+export const requestQrBillGeneration = async ({ context, donor, send }: RequestQrBillGenerationInput) => {
 	send({
 		type: 'QR_CONTACT_SUBMIT',
 		donor: {
@@ -29,7 +28,7 @@ export const requestQrBillGeneration = async ({ context, donor, send, currency }
 			lastName: donor.lastName,
 			language: donor.language,
 		},
-		currency,
+		currency: context.currency,
 	});
 
 	if (!result.success) {

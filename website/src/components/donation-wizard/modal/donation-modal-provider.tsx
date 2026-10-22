@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
+import { DonationCurrencySelect } from '../shared/donation-currency-select';
 import {
 	clearStoredStripeCheckoutContext,
 	readStoredStripeCheckoutContext,
@@ -27,7 +28,7 @@ type Props = {
 
 export const DonationModalProvider = ({ children }: Props) => {
 	const [state, , actorRef] = useMachine(donationWizardMachine);
-	const currency = useWebsiteCurrency();
+	const websiteCurrency = useWebsiteCurrency();
 
 	// Every step sends through here, so the funnel is tracked in one place with the context after the transition.
 	const send = useCallback<DonationWizardSend>(
@@ -37,7 +38,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 			const next = actorRef.getSnapshot();
 			const changedStep = next.value !== previousStep;
 
-			const funnelEvent = getDonationFunnelEvent(event.type, changedStep, next.context, currency);
+			const funnelEvent = getDonationFunnelEvent(event.type, changedStep, next.context);
 			if (funnelEvent) {
 				trackEvent(funnelEvent.name, funnelEvent.properties);
 			}
@@ -57,7 +58,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 				});
 			}
 		},
-		[actorRef, currency],
+		[actorRef],
 	);
 	const t = useTranslations('donation-wizard');
 
@@ -67,6 +68,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const isOnboardingReferral = state.matches('stepOnboardingReferral');
 	const isPostCheckoutStep = isThankYou || isOnboardingPersonal || isOnboardingReferral;
 	const campaignId = state.context.campaignId;
+	const canChangeCurrency = state.hasTag('currencyEditable');
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
 
@@ -77,16 +79,16 @@ export const DonationModalProvider = ({ children }: Props) => {
 			return;
 		}
 
-		const context = readStoredStripeCheckoutContext(sessionId);
+		const context = readStoredStripeCheckoutContext(sessionId, websiteCurrency);
 
-		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId });
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: websiteCurrency });
 		clearStoredStripeCheckoutContext(sessionId);
 		url.searchParams.delete(STRIPE_CHECKOUT_SESSION_ID_PARAM);
 		window.history.replaceState(null, '', url);
-	}, [send]);
+	}, [send, websiteCurrency]);
 
 	const openWizardAtAmountStep = () => {
-		send({ type: 'OPEN' });
+		send({ type: 'OPEN', currency: websiteCurrency });
 	};
 
 	const openWizardWithFormAmount = (context: DonationAmountContext) => {
@@ -116,8 +118,16 @@ export const DonationModalProvider = ({ children }: Props) => {
 					) : (
 						<>
 							<div className="flex shrink-0 flex-col gap-1 px-4 pt-4 pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
-								<div className="flex min-h-9 items-center">
+								<div className="flex min-h-9 items-center justify-between gap-2 sm:gap-3">
 									<DialogTitle size="lg">{t('modal.title')}</DialogTitle>
+									{canChangeCurrency ? (
+										<div className="w-24 shrink-0">
+											<DonationCurrencySelect
+												value={state.context.currency}
+												onChange={(currency) => send({ type: 'SET_CURRENCY', value: currency })}
+											/>
+										</div>
+									) : null}
 								</div>
 								{campaignId && campaignTitle ? (
 									<p className="text-muted-foreground line-clamp-2 text-sm leading-snug font-normal">

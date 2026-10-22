@@ -1,3 +1,4 @@
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
 import type { CompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
@@ -55,8 +56,8 @@ export const resetQrBillContext = {
 	qrBillError: null,
 };
 
-export const getInitialWizardContext = (): DonationWizardContext => ({
-	...getInitialDonationContext(),
+export const getInitialWizardContext = (currency: WebsiteCurrency): DonationWizardContext => ({
+	...getInitialDonationContext(currency),
 	communityStats: null,
 	pendingStep: null,
 	...resetStripeCheckoutContext,
