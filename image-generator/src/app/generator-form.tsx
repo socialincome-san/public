@@ -104,7 +104,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 							className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
 						/>
 						<div className="flex flex-wrap items-center justify-center gap-3">
-							{imageId !== null && <DownloadButton imageId={imageId} label="Download PNG" variant="default" size="md" />}
+							{imageId !== null && <DownloadButton imageId={imageId} variant="default" size="md" />}
 							<Button asChild variant="outline" size="md">
 								<Link href="/images">View in gallery →</Link>
 							</Button>

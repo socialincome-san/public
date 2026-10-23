@@ -102,7 +102,7 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 										</div>
 									</TooltipContent>
 								</Tooltip>
-								<DownloadButton imageId={image.id} label="Download" variant="outline" size="sm" />
+								<DownloadButton imageId={image.id} variant="outline" size="sm" />
 							</div>
 						</div>
 					</article>

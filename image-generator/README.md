@@ -42,7 +42,7 @@ Auth accepts any username and checks the configured password.
 - `?download=1` serves the stored original as an attachment.
   `?download=1&transparent=1` removes the white paper on the fly
   (`src/lib/paper-cutout.ts`) and serves a transparent PNG. The
-  generator and the gallery offer both through the same split button;
+  generator and the gallery offer both through the same download menu;
   the generate response returns the saved image id for this.
 - Enter submits the prompt; Shift+Enter inserts a newline. Navigation
   preserves page state through Next.js Cache Components.
