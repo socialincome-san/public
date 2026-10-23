@@ -19,6 +19,7 @@ export const isGenerateResponse = (
 	value: unknown,
 ): value is {
 	error: string | null;
+	imageId: GalleryImage['id'] | null;
 	imageBase64: string | null;
 	mediaType: string | null;
 	width: number | null;
@@ -28,6 +29,8 @@ export const isGenerateResponse = (
 	value !== null &&
 	'error' in value &&
 	(value.error === null || typeof value.error === 'string') &&
+	'imageId' in value &&
+	(value.imageId === null || typeof value.imageId === 'string' || typeof value.imageId === 'number') &&
 	'imageBase64' in value &&
 	(value.imageBase64 === null || typeof value.imageBase64 === 'string') &&
 	'mediaType' in value &&

@@ -1,4 +1,5 @@
 import { getStoredImage } from '@/lib/database';
+import { removePaperBackground } from '@/lib/paper-cutout';
 import sharp from 'sharp';
 
 const cacheHeaders = {
@@ -13,13 +14,26 @@ export const GET = async (request: Request, { params }: RouteContext<'/api/galle
 	}
 
 	try {
-		const download = new URL(request.url).searchParams.get('download') === '1';
+		const { searchParams } = new URL(request.url);
+		const download = searchParams.get('download') === '1';
+		const transparent = searchParams.get('transparent') === '1';
 		const image = await getStoredImage(id);
 		if (!image) return new Response('Image not found', { status: 404 });
 		if (!['image/png', 'image/jpeg', 'image/webp'].includes(image.media_type)) {
 			return new Response('Unsupported image format', { status: 415 });
 		}
 		const original = Buffer.from(image.image_base64, 'base64');
+
+		if (download && transparent) {
+			const cutout = await removePaperBackground(original);
+			return new Response(new Uint8Array(cutout), {
+				headers: {
+					...cacheHeaders,
+					'Content-Type': 'image/png',
+					'Content-Disposition': `attachment; filename="social-income-${id}-transparent.png"`,
+				},
+			});
+		}
 
 		if (download) {
 			const extension = image.media_type === 'image/jpeg' ? 'jpg' : image.media_type === 'image/webp' ? 'webp' : 'png';

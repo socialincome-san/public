@@ -28,10 +28,10 @@ export const getStoredImage = async (id: string): Promise<{ image_base64: string
 	return result.rows[0];
 };
 
-export const saveImage = async (prompt: string, image: GeneratedImage) => {
-	await pool.query('INSERT INTO generated_images (prompt, image_base64, media_type) VALUES ($1, $2, $3)', [
-		prompt,
-		image.base64,
-		image.mediaType,
-	]);
+export const saveImage = async (prompt: string, image: GeneratedImage): Promise<GalleryImage['id']> => {
+	const result = await pool.query<Pick<GalleryImage, 'id'>>(
+		'INSERT INTO generated_images (prompt, image_base64, media_type) VALUES ($1, $2, $3) RETURNING id',
+		[prompt, image.base64, image.mediaType],
+	);
+	return result.rows[0].id;
 };

@@ -2,7 +2,7 @@
 
 import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
-import { isGenerateResponse } from '@/lib/images';
+import { type GalleryImage, isGenerateResponse } from '@/lib/images';
 import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
 import { AddMenu } from '@socialincome/design-system/actions/add-menu/add-menu';
 import { Button } from '@socialincome/design-system/actions/button/button';
@@ -22,8 +22,15 @@ import { Upload } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type KeyboardEvent, type ReactNode, useActionState, useRef, useState } from 'react';
+import { DownloadButton } from './download-button';
 
-type GenerationState = { imageSrc: string | null; error: string | null; width: number; height: number };
+type GenerationState = {
+	imageId: GalleryImage['id'] | null;
+	imageSrc: string | null;
+	error: string | null;
+	width: number;
+	height: number;
+};
 
 const generate = async (previous: GenerationState, formData: FormData): Promise<GenerationState> => {
 	const prompt = formData.get('prompt');
@@ -40,6 +47,7 @@ const generate = async (previous: GenerationState, formData: FormData): Promise<
 		}
 		return {
 			...previous,
+			imageId: json.imageId,
 			imageSrc: json.imageBase64 && json.mediaType ? `data:${json.mediaType};base64,${json.imageBase64}` : null,
 			error: json.error,
 			width: json.width ?? previous.width,
@@ -55,7 +63,8 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 	const [prompt, setPrompt] = useState('');
 	const [aspectRatio, setAspectRatio] = useState<string>(DEFAULT_IMAGE_FORMAT.value);
 	const [country, setCountry] = useState<string>(DEFAULT_COUNTRY.value);
-	const [{ imageSrc, error, width, height }, formAction, isPending] = useActionState(generate, {
+	const [{ imageId, imageSrc, error, width, height }, formAction, isPending] = useActionState(generate, {
+		imageId: null,
 		imageSrc: null,
 		error: null,
 		width: DEFAULT_IMAGE_FORMAT.width,
@@ -95,11 +104,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 							className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
 						/>
 						<div className="flex flex-wrap items-center justify-center gap-3">
-							<Button asChild size="md">
-								<a href={imageSrc} download="generated-image.png">
-									Download PNG
-								</a>
-							</Button>
+							{imageId !== null && <DownloadButton imageId={imageId} label="Download PNG" variant="default" size="md" />}
 							<Button asChild variant="outline" size="md">
 								<Link href="/images">View in gallery →</Link>
 							</Button>

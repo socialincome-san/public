@@ -39,9 +39,11 @@ Auth accepts any username and checks the configured password.
 - `/api/gallery-images/[id]` generates an 800px WebP preview on demand.
   Previews are cached privately in the browser for one day, not stored
   in the database. Authenticated images bypass Next's image optimizer.
-- `?download=1` serves the stored original as an attachment. The
-  generator downloads its already-returned image through a native
-  download link.
+- `?download=1` serves the stored original as an attachment.
+  `?download=1&transparent=1` removes the white paper on the fly
+  (`src/lib/paper-cutout.ts`) and serves a transparent PNG. The
+  generator and the gallery offer both through the same split button;
+  the generate response returns the saved image id for this.
 - Enter submits the prompt; Shift+Enter inserts a newline. Navigation
   preserves page state through Next.js Cache Components.
 - The format selector defaults to square and supports 1:1, 16:9, 9:16,
