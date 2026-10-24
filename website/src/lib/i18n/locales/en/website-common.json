@@ -409,6 +409,16 @@
 			}
 		}
 	},
+	"circles": {
+		"title": "Circles",
+		"member-summary": "{active} active · {interested, plural, one {# interested member} other {# interested members}}",
+		"members-empty": "No members yet",
+		"empty": "No circles yet."
+	},
+	"task-cards": {
+		"show-all": "Show all {count} tasks",
+		"show-fewer": "Show fewer tasks"
+	},
 	"breadcrumb": {
 		"home": "Home"
 	},

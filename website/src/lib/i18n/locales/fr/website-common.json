@@ -409,6 +409,16 @@
 			}
 		}
 	},
+	"circles": {
+		"title": "Cercles",
+		"member-summary": "{active, plural, one {# actif} other {# actifs}} · {interested, plural, one {# membre intéressé} other {# membres intéressés}}",
+		"members-empty": "Pas encore de membres",
+		"empty": "Pas encore de cercles."
+	},
+	"task-cards": {
+		"show-all": "Afficher les {count} tâches",
+		"show-fewer": "Afficher moins de tâches"
+	},
 	"breadcrumb": {
 		"home": "Accueil"
 	},
