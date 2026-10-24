@@ -126,7 +126,9 @@ export const PersonProfile = ({
 				]
 			: workStyle
 				? [{ label: t('person.work-style-title'), value: workStyleLabel, info: deadlineInfo }]
-				: []),
+				: likesDeadline
+					? [{ label: t('person.deadline-preference'), value: deadlineInfo }]
+					: []),
 	];
 	const circles = getPersonCircles(person.content, circleLabels);
 	const toCircleTag = (circle: PersonCircle) => ({
