@@ -101,12 +101,14 @@ export const PersonProfile = ({
 	const timeCommitment = getOptionCode(person.content.timeCommitment);
 	const timeCommitmentLabel = timeCommitmentLabels[timeCommitment] ?? timeCommitment;
 	const workStyle = getOptionCode(person.content.workStyle);
+	const workStyleLabel = workStyleLabels[workStyle] ?? workStyle;
 	// An unchecked box can also mean nobody filled it in, so "no deadlines" only shows next to a work style
+	const deadlineInfo = likesDeadline ? t('person.likes-deadlines') : t('person.prefers-no-deadlines');
 	const workStyleInfo =
 		workStyle || likesDeadline ? (
 			<>
-				{workStyle && <p>{t('person.work-style', { style: workStyleLabels[workStyle] ?? workStyle })}</p>}
-				<p>{likesDeadline ? t('person.likes-deadlines') : t('person.prefers-no-deadlines')}</p>
+				{workStyle && <p>{t('person.work-style', { style: workStyleLabel })}</p>}
+				<p>{deadlineInfo}</p>
 			</>
 		) : undefined;
 	const facts = [
@@ -122,7 +124,9 @@ export const PersonProfile = ({
 						info: workStyleInfo,
 					},
 				]
-			: []),
+			: workStyle
+				? [{ label: t('person.work-style-title'), value: workStyleLabel, info: deadlineInfo }]
+				: []),
 	];
 	const circles = getPersonCircles(person.content, circleLabels);
 	const toCircleTag = (circle: PersonCircle) => ({

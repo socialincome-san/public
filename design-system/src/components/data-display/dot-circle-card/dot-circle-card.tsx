@@ -12,6 +12,8 @@ const MAX_DOT_RADIUS = 6;
 const DOT_SPEED = 4;
 // Longer frame gaps (a background tab) would make dots jump through the edge
 const MAX_FRAME_SECONDS = 0.05;
+// More dots get too small to see and too costly to simulate, so larger groups are scaled down to this
+const MAX_DOTS = 60;
 
 type Dot = { x: number; y: number; vx: number; vy: number };
 
@@ -83,14 +85,17 @@ type FloatingDotsProps = {
 	outlinedCount: number;
 };
 
-const FloatingDots = ({ solidCount, outlinedCount }: FloatingDotsProps) => {
-	const count = solidCount + outlinedCount;
+const FloatingDots = ({ solidCount: totalSolid, outlinedCount: totalOutlined }: FloatingDotsProps) => {
+	const total = totalSolid + totalOutlined;
+	const count = Math.min(total, MAX_DOTS);
+	const solidCount = total > MAX_DOTS ? Math.round((totalSolid / total) * MAX_DOTS) : totalSolid;
 	const dotRadius = getDotRadius(count);
 	const dotRefs = useRef<(SVGCircleElement | null)[]>([]);
 	const initialDots = getInitialDots(count, dotRadius);
 
 	useEffect(() => {
-		if (count === 0 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		if (count === 0 || reducedMotion.matches) {
 			return;
 		}
 
@@ -118,7 +123,17 @@ const FloatingDots = ({ solidCount, outlinedCount }: FloatingDotsProps) => {
 			frame = requestAnimationFrame(step);
 		});
 
-		return () => cancelAnimationFrame(frame);
+		const stopOnReducedMotion = (event: MediaQueryListEvent) => {
+			if (event.matches) {
+				cancelAnimationFrame(frame);
+			}
+		};
+		reducedMotion.addEventListener('change', stopOnReducedMotion);
+
+		return () => {
+			cancelAnimationFrame(frame);
+			reducedMotion.removeEventListener('change', stopOnReducedMotion);
+		};
 	}, [count, dotRadius]);
 
 	return (

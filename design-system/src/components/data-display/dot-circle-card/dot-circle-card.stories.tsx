@@ -16,7 +16,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'A linked card for a group, e.g. a circle of volunteers, with one dot per member arranged inside a circle. Solid dots come first, outlined dots (e.g. interested people) after them.',
+					'A linked card for a group, e.g. a circle of volunteers, with one dot per member arranged inside a circle, up to 60 dots; larger groups are scaled down proportionally. Solid dots come first, outlined dots (e.g. interested people) after them.',
 			},
 		},
 	},
@@ -38,4 +38,8 @@ export const ManyMembers: Story = {
 
 export const Empty: Story = {
 	args: { description: 'No members yet', solidCount: 0, outlinedCount: 0 },
+};
+
+export const ScaledDown: Story = {
+	args: { description: '150 active · 50 interested', solidCount: 150, outlinedCount: 50 },
 };
