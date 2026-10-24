@@ -40,6 +40,7 @@ type ProgramSettingsFormFields = {
 	slug: FormField;
 	country: FormField;
 	coveredByReserves: FormField;
+	isConcluded: FormField;
 	programDurationInMonths: FormField;
 	payoutPerInterval: FormField;
 	payoutInterval: FormField;
@@ -65,6 +66,7 @@ export const buildUpdateProgramSettingsInput = (
 		slug: typeof fields.slug.value === 'string' ? fields.slug.value : '',
 		countryId: typeof fields.country.value === 'string' ? fields.country.value : '',
 		coveredByReserves: fields.coveredByReserves.value === true,
+		isConcluded: fields.isConcluded.value === true,
 		programDurationInMonths: toNumber(fields.programDurationInMonths.value),
 		payoutPerInterval: toNumber(fields.payoutPerInterval.value),
 		payoutInterval: toPayoutInterval(fields.payoutInterval.value),

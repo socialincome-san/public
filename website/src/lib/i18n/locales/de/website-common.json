@@ -414,7 +414,8 @@
 	},
 	"wallet": {
 		"paid-out": "Ausbezahlt",
-		"recipients": "Empfänger:innen"
+		"recipients": "Empfänger:innen",
+		"concluded": "Abgeschlossen"
 	},
 	"person-grid": {
 		"search-placeholder": "Nach Namen suchen",
