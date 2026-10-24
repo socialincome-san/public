@@ -5,10 +5,11 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
-import { Download, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { DownloadButton } from '../download-button';
 import { STYLE_TEMPLATE } from '../style-template';
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {
@@ -101,11 +102,7 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 										</div>
 									</TooltipContent>
 								</Tooltip>
-								<Button asChild variant="outline" size="sm">
-									<a href={`/api/gallery-images/${image.id}?download=1`} download>
-										<Download aria-hidden="true" /> Download
-									</a>
-								</Button>
+								<DownloadButton imageId={image.id} variant="outline" size="sm" />
 							</div>
 						</div>
 					</article>

@@ -1,21 +1,36 @@
 'use client';
 
+import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
-import { isGenerateResponse } from '@/lib/images';
+import { type GalleryImage, isGenerateResponse } from '@/lib/images';
 import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
 import { AddMenu } from '@socialincome/design-system/actions/add-menu/add-menu';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { AnimatedSILogoIcon } from '@socialincome/design-system/brand/logo/logo';
 import { AspectRatioSelect } from '@socialincome/design-system/forms/aspect-ratio-select/aspect-ratio-select';
 import { ImageUpload } from '@socialincome/design-system/forms/image-upload/image-upload';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
 import { Textarea } from '@socialincome/design-system/forms/textarea/textarea';
 import { DropdownMenuItem } from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { Upload } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { type KeyboardEvent, type ReactNode, useActionState, useRef, useState } from 'react';
+import { DownloadButton } from './download-button';
 
-type GenerationState = { imageSrc: string | null; error: string | null; width: number; height: number };
+type GenerationState = {
+	imageId: GalleryImage['id'] | null;
+	imageSrc: string | null;
+	error: string | null;
+	width: number;
+	height: number;
+};
 
 const generate = async (previous: GenerationState, formData: FormData): Promise<GenerationState> => {
 	const prompt = formData.get('prompt');
@@ -32,6 +47,7 @@ const generate = async (previous: GenerationState, formData: FormData): Promise<
 		}
 		return {
 			...previous,
+			imageId: json.imageId,
 			imageSrc: json.imageBase64 && json.mediaType ? `data:${json.mediaType};base64,${json.imageBase64}` : null,
 			error: json.error,
 			width: json.width ?? previous.width,
@@ -46,7 +62,9 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 	const referenceInputRef = useRef<HTMLInputElement>(null);
 	const [prompt, setPrompt] = useState('');
 	const [aspectRatio, setAspectRatio] = useState<string>(DEFAULT_IMAGE_FORMAT.value);
-	const [{ imageSrc, error, width, height }, formAction, isPending] = useActionState(generate, {
+	const [country, setCountry] = useState<string>(DEFAULT_COUNTRY.value);
+	const [{ imageId, imageSrc, error, width, height }, formAction, isPending] = useActionState(generate, {
+		imageId: null,
 		imageSrc: null,
 		error: null,
 		width: DEFAULT_IMAGE_FORMAT.width,
@@ -86,11 +104,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 							className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
 						/>
 						<div className="flex flex-wrap items-center justify-center gap-3">
-							<Button asChild size="md">
-								<a href={imageSrc} download="generated-image.png">
-									Download PNG
-								</a>
-							</Button>
+							{imageId !== null && <DownloadButton imageId={imageId} variant="default" size="md" />}
 							<Button asChild variant="outline" size="md">
 								<Link href="/images">View in gallery →</Link>
 							</Button>
@@ -141,21 +155,38 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 							/>
 						</div>
 						<div className="flex w-full flex-wrap items-center justify-between gap-2">
-							<div className="flex items-center gap-2">
+							<div className="flex flex-wrap items-center gap-2">
 								<AddMenu label="Add attachment" disabled={isPending}>
 									<DropdownMenuItem onSelect={() => referenceInputRef.current?.click()}>
 										<Upload aria-hidden="true" />
 										Upload Reference Image
 									</DropdownMenuItem>
 								</AddMenu>
-								<AspectRatioSelect
-									items={IMAGE_FORMATS}
-									label="Image format"
-									name="aspectRatio"
-									value={aspectRatio}
-									onValueChange={setAspectRatio}
-									disabled={isPending}
-								/>
+								{/* Wrappers size the full-width triggers to their content so the row can wrap on phones. */}
+								<div>
+									<AspectRatioSelect
+										items={IMAGE_FORMATS}
+										label="Image format"
+										name="aspectRatio"
+										value={aspectRatio}
+										onValueChange={setAspectRatio}
+										disabled={isPending}
+									/>
+								</div>
+								<div>
+									<Select name="country" value={country} onValueChange={setCountry} disabled={isPending}>
+										<SelectTrigger size="sm" aria-label="Country">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											{COUNTRIES.map((item) => (
+												<SelectItem key={item.value} value={item.value}>
+													{item.label}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
 							</div>
 							<Button type="submit" size="md" disabled={isPending || prompt.trim() === ''}>
 								<span>Generate</span>

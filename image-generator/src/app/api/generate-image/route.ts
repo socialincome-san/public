@@ -1,7 +1,9 @@
 import { buildPrompt } from '@/app/style-template';
+import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
 import { saveImage } from '@/lib/database';
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
 import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
+import { getSceneReferences } from '@/lib/style-references';
 import { generateImage } from 'ai';
 import sharp from 'sharp';
 
@@ -21,6 +23,9 @@ export const POST = async (request: Request) => {
 	const aspectRatio = body.get('aspectRatio') ?? DEFAULT_IMAGE_FORMAT.value;
 	const format = IMAGE_FORMATS.find((item) => item.value === aspectRatio);
 	if (!format) return errorResponse('Unsupported aspect ratio', 400);
+	const countryValue = body.get('country') ?? DEFAULT_COUNTRY.value;
+	const country = COUNTRIES.find((item) => item.value === countryValue);
+	if (!country) return errorResponse('Unsupported country', 400);
 	const reference = body.get('referenceImage');
 	let referenceBytes: Uint8Array | undefined;
 	if (reference !== null && !(reference instanceof File)) {
@@ -47,10 +52,12 @@ export const POST = async (request: Request) => {
 	}
 
 	try {
-		const prompt = buildPrompt(text);
+		const prompt = buildPrompt(text, country.setting, referenceBytes !== undefined);
+		const styleReferences = await getSceneReferences(country.value);
 		const { image } = await generateImage({
-			model: 'openai/gpt-image-2.5-flare',
-			prompt: referenceBytes ? { text: prompt, images: [referenceBytes] } : prompt,
+			// Sunburst follows the style references and accent colors more closely than Flare.
+			model: 'openai/gpt-image-2.5-sunburst',
+			prompt: { text: prompt, images: referenceBytes ? [referenceBytes, ...styleReferences] : styleReferences },
 			// OpenAI accepts custom pixel sizes rather than the SDK's aspectRatio option.
 			size: `${format.width}x${format.height}`,
 			providerOptions: { openai: { quality: 'high' } },
@@ -59,8 +66,8 @@ export const POST = async (request: Request) => {
 		if (width !== format.width || height !== format.height) {
 			return errorResponse('The image provider did not return the selected format. Please try again.', 502);
 		}
-		await saveImage(prompt, image);
-		return Response.json({ error: null, imageBase64: image.base64, mediaType: image.mediaType, width, height });
+		const imageId = await saveImage(prompt, image);
+		return Response.json({ error: null, imageId, imageBase64: image.base64, mediaType: image.mediaType, width, height });
 	} catch (error) {
 		console.error('Image generation failed', error);
 		return errorResponse('Image generation failed', 500);
@@ -68,4 +75,4 @@ export const POST = async (request: Request) => {
 };
 
 const errorResponse = (error: string, status: number) =>
-	Response.json({ error, imageBase64: null, mediaType: null, width: null, height: null }, { status });
+	Response.json({ error, imageId: null, imageBase64: null, mediaType: null, width: null, height: null }, { status });

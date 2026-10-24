@@ -23,6 +23,15 @@ Auth accepts any username and checks the configured password.
 - `src/app/api/generate-image/route.ts` validates the prompt, generates
   an image with the fixed watercolor style, and saves it before
   returning.
+- Every request sends eight randomly picked illustrations from
+  `src/style-references/scenes/` as style references, plus the user's
+  optional reference image first. Add or remove approved illustrations
+  there to change the style (1024 px JPEGs).
+- The country select adds typical local details from
+  `src/lib/countries.ts` so scenes look specific to Sierra Leone,
+  Liberia or Ghana. "Global" keeps the setting generic for contributors
+  anywhere in the world and picks its references from
+  `src/style-references/light-skin/` instead.
 - `src/lib/database.ts` owns the PostgreSQL pool and image queries.
 - `/images` server-renders the first metadata batch. The load-more
   button fetches `/api/gallery-images?offset=24` and subsequent batches
@@ -30,9 +39,11 @@ Auth accepts any username and checks the configured password.
 - `/api/gallery-images/[id]` generates an 800px WebP preview on demand.
   Previews are cached privately in the browser for one day, not stored
   in the database. Authenticated images bypass Next's image optimizer.
-- `?download=1` serves the stored original as an attachment. The
-  generator downloads its already-returned image through a native
-  download link.
+- `?download=1` serves the stored original as an attachment.
+  `?download=1&transparent=1` removes the white paper on the fly
+  (`src/lib/paper-cutout.ts`) and serves a transparent PNG. The
+  generator and the gallery offer both through the same download menu;
+  the generate response returns the saved image id for this.
 - Enter submits the prompt; Shift+Enter inserts a newline. Navigation
   preserves page state through Next.js Cache Components.
 - The format selector defaults to square and supports 1:1, 16:9, 9:16,
