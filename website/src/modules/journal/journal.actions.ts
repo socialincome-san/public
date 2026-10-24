@@ -12,9 +12,11 @@ import {
 	getJournalPerson,
 	getJournalPersonPageData,
 	getLatestJournalArticles,
+	getLatestJournalArticlesByTag,
 } from './journal.cache';
 import {
 	journalArticleRequestSchema,
+	journalArticlesByTagRequestSchema,
 	journalArticlesByUuidsRequestSchema,
 	journalLanguageRequestSchema,
 	journalPageRequestSchema,
@@ -59,5 +61,15 @@ export const getJournalArticlesByUuidsAction = async (input: unknown): Promise<R
 
 	return parsed.success
 		? getJournalArticlesByUuids(parsed.data.language, parsed.data.articleUuids)
+		: resultFail('Invalid journal articles request');
+};
+
+export const getLatestJournalArticlesByTagAction = async (
+	input: unknown,
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	const parsed = journalArticlesByTagRequestSchema.safeParse(input);
+
+	return parsed.success
+		? getLatestJournalArticlesByTag(parsed.data.language, parsed.data.tagUuid)
 		: resultFail('Invalid journal articles request');
 };

@@ -8,6 +8,7 @@ const mockGetTimeCommitmentLabels = jest.fn();
 const mockGetTag = jest.fn();
 const mockGetArticleType = jest.fn();
 const mockGetArticlesByTag = jest.fn();
+const mockGetLatestArticlesByTag = jest.fn();
 const mockGetArticlesByArticleType = jest.fn();
 const mockGetArticlesByAuthor = jest.fn();
 const mockGetOverviewArticles = jest.fn();
@@ -32,6 +33,7 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getTag: mockGetTag,
 	getArticleType: mockGetArticleType,
 	getArticlesByTag: mockGetArticlesByTag,
+	getLatestArticlesByTag: mockGetLatestArticlesByTag,
 	getArticlesByArticleType: mockGetArticlesByArticleType,
 	getArticlesByAuthor: mockGetArticlesByAuthor,
 	getOverviewArticles: mockGetOverviewArticles,
@@ -51,7 +53,12 @@ jest.mock('@/modules/community/community.cache', () => ({
 	getPersonContributions: mockGetPersonContributions,
 }));
 
-import { getJournalArticlePageData, getJournalOverviewPageData, getJournalPersonPageData } from './journal.service';
+import {
+	getJournalArticlePageData,
+	getJournalOverviewPageData,
+	getJournalPersonPageData,
+	getLatestJournalArticlesByTag,
+} from './journal.service';
 
 const labels = {
 	homeLabel: 'Home',
@@ -269,5 +276,28 @@ describe('getJournalPersonPageData', () => {
 				{ label: 'Ada Lovelace', href: '/de/chf/person/ada' },
 			],
 		});
+	});
+});
+
+describe('getLatestJournalArticlesByTag', () => {
+	test('returns the latest articles of the tag', async () => {
+		mockGetLatestArticlesByTag.mockResolvedValue({ success: true, data: [article] });
+
+		const result = await getLatestJournalArticlesByTag('en', 'tag-1');
+
+		expect(mockGetLatestArticlesByTag).toHaveBeenCalledWith('tag-1', 'en');
+		expect(result).toEqual({ success: true, data: [article] });
+	});
+
+	test('fails when Storyblok cannot load the tag articles', async () => {
+		mockGetLatestArticlesByTag.mockResolvedValue({
+			success: false,
+			error: 'Could not fetch Storyblok stories',
+			status: 500,
+		});
+
+		const result = await getLatestJournalArticlesByTag('en', 'tag-1');
+
+		expect(result.success).toBe(false);
 	});
 });

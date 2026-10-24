@@ -3,7 +3,11 @@ import { JournalTeasersSection } from '@/components/journal/journal-teasers-sect
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getJournalArticlesByUuidsAction, getLatestJournalArticlesAction } from '@/modules/journal/journal.actions';
+import {
+	getJournalArticlesByUuidsAction,
+	getLatestJournalArticlesAction,
+	getLatestJournalArticlesByTagAction,
+} from '@/modules/journal/journal.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable } from '@storyblok/react';
 import { getTranslations } from 'next-intl/server';
@@ -28,6 +32,18 @@ const getSelectedArticleUuids = (selectedArticles: JournalTeasers['selectedArtic
 	return [...new Set(uuids)].slice(0, JOURNAL_TEASER_LIMIT);
 };
 
+// `tag` is a single-option field referencing a tag story: a uuid, or the story once resolved.
+const getTagUuid = (tag: unknown) => {
+	if (typeof tag === 'string') {
+		return tag;
+	}
+	if (typeof tag === 'object' && tag !== null && 'uuid' in tag && typeof tag.uuid === 'string') {
+		return tag.uuid;
+	}
+
+	return undefined;
+};
+
 const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 	if (blok.articlesDisplayMode === 'selected') {
 		const articleUuids = getSelectedArticleUuids(blok.selectedArticles);
@@ -40,7 +56,10 @@ const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 		return selectedResult.success ? selectedResult.data.slice(0, JOURNAL_TEASER_LIMIT) : [];
 	}
 
-	const latestResult = await getLatestJournalArticlesAction(lang);
+	const tagUuid = getTagUuid(blok.tag);
+	const latestResult = tagUuid
+		? await getLatestJournalArticlesByTagAction({ language: lang, tagUuid })
+		: await getLatestJournalArticlesAction(lang);
 
 	return latestResult.success ? latestResult.data : [];
 };
