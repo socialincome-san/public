@@ -19,53 +19,6 @@ type MessagesTableProps = {
 	twilioAccountSid: string | null;
 };
 
-const messageStatusBadge = (row: MessagingJobMessageRow, t: Awaited<ReturnType<typeof getTranslations>>) => {
-	if (row.skippedReason) {
-		const reason =
-			row.skippedReason === 'no_phone'
-				? t('deliveryLog.messageStatus.noPhone')
-				: row.skippedReason === 'no_channel_available'
-					? t('deliveryLog.messageStatus.noChannelAvailable')
-					: row.skippedReason;
-
-		return <span className="text-muted-foreground text-sm">{t('deliveryLog.messageStatus.skipped', { reason })}</span>;
-	}
-	const s = row.twilioStatus;
-	if (s === 'delivered') {
-		return <Badge variant="verified">{t('status.messages.delivered')}</Badge>;
-	}
-	if (s === 'sent') {
-		return <Badge variant="default">{t('status.messages.sent')}</Badge>;
-	}
-	if (s === 'queued') {
-		return <Badge variant="secondary">{t('status.messages.queued')}</Badge>;
-	}
-	if (s === 'accepted') {
-		return <Badge variant="secondary">{t('status.messages.accepted')}</Badge>;
-	}
-	if (s === 'scheduled') {
-		return <Badge variant="secondary">{t('status.messages.scheduled')}</Badge>;
-	}
-	if (s === 'sending' || s === 'receiving') {
-		return (
-			<Badge variant="secondary">{s === 'sending' ? t('status.messages.sending') : t('status.messages.receiving')}</Badge>
-		);
-	}
-	if (s === 'received' || s === 'read') {
-		return <Badge variant="verified">{s === 'received' ? t('status.messages.received') : t('status.messages.read')}</Badge>;
-	}
-	if (s === 'canceled') {
-		return <Badge variant="secondary">{t('status.messages.canceled')}</Badge>;
-	}
-	if (s === 'failed' || s === 'undelivered') {
-		return (
-			<Badge variant="destructive">{s === 'failed' ? t('status.messages.failed') : t('status.messages.undelivered')}</Badge>
-		);
-	}
-
-	return <span className="text-muted-foreground text-sm">{s ?? '—'}</span>;
-};
-
 const formatDate = (d: Date, locale: string) =>
 	d.toLocaleString(locale, { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
 
@@ -73,6 +26,58 @@ export const MessagesTable = async ({ jobId, messages, twilioAccountSid }: Messa
 	const t = await getTranslations('portal-messaging');
 	const locale = await getLocale();
 	const totalPages = Math.max(1, Math.ceil(messages.totalCount / messages.pageSize));
+	const messageStatusBadge = (row: MessagingJobMessageRow) => {
+		if (row.skippedReason) {
+			const reason =
+				row.skippedReason === 'no_phone'
+					? t('deliveryLog.messageStatus.noPhone')
+					: row.skippedReason === 'no_channel_available'
+						? t('deliveryLog.messageStatus.noChannelAvailable')
+						: row.skippedReason;
+
+			return <span className="text-muted-foreground text-sm">{t('deliveryLog.messageStatus.skipped', { reason })}</span>;
+		}
+		const status = row.twilioStatus;
+		if (status === 'delivered') {
+			return <Badge variant="verified">{t('status.messages.delivered')}</Badge>;
+		}
+		if (status === 'sent') {
+			return <Badge variant="default">{t('status.messages.sent')}</Badge>;
+		}
+		if (status === 'queued') {
+			return <Badge variant="secondary">{t('status.messages.queued')}</Badge>;
+		}
+		if (status === 'accepted') {
+			return <Badge variant="secondary">{t('status.messages.accepted')}</Badge>;
+		}
+		if (status === 'scheduled') {
+			return <Badge variant="secondary">{t('status.messages.scheduled')}</Badge>;
+		}
+		if (status === 'sending' || status === 'receiving') {
+			return (
+				<Badge variant="secondary">
+					{status === 'sending' ? t('status.messages.sending') : t('status.messages.receiving')}
+				</Badge>
+			);
+		}
+		if (status === 'received' || status === 'read') {
+			return (
+				<Badge variant="verified">{status === 'received' ? t('status.messages.received') : t('status.messages.read')}</Badge>
+			);
+		}
+		if (status === 'canceled') {
+			return <Badge variant="secondary">{t('status.messages.canceled')}</Badge>;
+		}
+		if (status === 'failed' || status === 'undelivered') {
+			return (
+				<Badge variant="destructive">
+					{status === 'failed' ? t('status.messages.failed') : t('status.messages.undelivered')}
+				</Badge>
+			);
+		}
+
+		return <span className="text-muted-foreground text-sm">{status ?? '—'}</span>;
+	};
 
 	if (messages.totalCount === 0) {
 		return <p className="text-muted-foreground text-sm">{t('deliveryLog.noMessages')}</p>;
@@ -113,7 +118,7 @@ export const MessagesTable = async ({ jobId, messages, twilioAccountSid }: Messa
 									</TableCell>
 									<TableCell>
 										<div className="flex items-center gap-2">
-											{messageStatusBadge(m, t)}
+											{messageStatusBadge(m)}
 											{canLinkToTwilio && (
 												<a
 													href={twilioMessageLogUrl(twilioAccountSid, m.twilioMessageSid!)}
