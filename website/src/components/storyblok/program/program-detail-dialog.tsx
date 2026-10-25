@@ -44,7 +44,7 @@ export const ProgramDetailDialog = ({
 						<div className="flex items-start justify-between gap-4">
 							<DialogTitle size="lg">{title}</DialogTitle>
 							{headerActions ? (
-								<div className="flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">{headerActions}</div>
+								<div className="flex flex-col-reverse items-end gap-2 pr-4 sm:flex-row sm:items-center">{headerActions}</div>
 							) : null}
 						</div>
 					</DialogHeader>
