@@ -146,7 +146,10 @@ export const getDonationExampleIncome = (
 	};
 };
 
-export const getDonationCountryOptions = () =>
-	[...COUNTRY_OPTIONS, { code: 'XK' as const, name: 'Kosovo' }].sort((first, second) =>
-		first.name.localeCompare(second.name),
-	);
+export const getDonationCountryOptions = (
+	getLabel: (code: DonationExampleCountryCode, fallback: string) => string,
+	locale: string,
+) =>
+	[...COUNTRY_OPTIONS, { code: 'XK' as const, name: 'Kosovo' }]
+		.map(({ code, name }) => ({ code, name: getLabel(code, name) }))
+		.sort((first, second) => first.name.localeCompare(second.name, locale));

@@ -1,5 +1,6 @@
 import {
 	convertDonationIncomeCurrency,
+	getDonationCountryOptions,
 	getDonationExampleCountryCodes,
 	getDonationExampleIncome,
 	isDonationExampleCountryCode,
@@ -49,6 +50,16 @@ describe('donation-example-income', () => {
 				expect(getDonationExampleIncome(countryCode, currency)).not.toBeNull();
 			}
 		}
+	});
+
+	test('sorts country options by the localized display label', () => {
+		const options = getDonationCountryOptions((code) => (code === 'DE' ? 'Deutschland' : code), 'de');
+		const germanyIndex = options.findIndex(({ code }) => code === 'DE');
+		const denmarkIndex = options.findIndex(({ code }) => code === 'DK');
+
+		expect(options[0]?.code).toBe('AD');
+		expect(germanyIndex).toBeLessThan(denmarkIndex);
+		expect(options.some(({ code }) => code === 'XK')).toBe(true);
 	});
 
 	test('converts manual income values between supported currencies', () => {

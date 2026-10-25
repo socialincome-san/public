@@ -48,6 +48,24 @@ describe('donation-income-state', () => {
 		});
 	});
 
+	test('updates an example income when a manual donation amount is retained', () => {
+		const context = {
+			...updateDonationCountry(getInitialDonationContext('CHF'), 'CH', false),
+			selectedAmount: 'other' as const,
+			customAmount: 75,
+			donationAmountIsManual: true,
+		};
+
+		expect(updateDonationCountry(context, 'DE', false)).toMatchObject({
+			monthlyIncome: 4000,
+			monthlyIncomeSource: 'example',
+			exampleCountryCode: 'DE',
+			selectedAmount: 'other',
+			customAmount: 75,
+			donationAmountIsManual: true,
+		});
+	});
+
 	test('manual country selection is not replaced by later visitor detection', () => {
 		const manualSelection = updateDonationCountry(getInitialDonationContext('CHF'), 'DE', true);
 

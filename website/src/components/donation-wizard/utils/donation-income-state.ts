@@ -25,7 +25,7 @@ export const updateDonationCountry = (
 		countryIsManuallySelected: isManualSelection || context.countryIsManuallySelected,
 	};
 
-	if (context.monthlyIncomeSource === 'manual' || context.donationAmountIsManual) {
+	if (context.monthlyIncomeSource === 'manual') {
 		return countryContext;
 	}
 
@@ -35,9 +35,7 @@ export const updateDonationCountry = (
 			...countryContext,
 			monthlyIncome: null,
 			monthlyIncomeSource: 'generic',
-			selectedAmount: 50,
-			customAmount: null,
-			donationAmountIsManual: false,
+			...(context.donationAmountIsManual ? {} : { selectedAmount: 50, customAmount: null, donationAmountIsManual: false }),
 		};
 	}
 
@@ -45,9 +43,7 @@ export const updateDonationCountry = (
 		...countryContext,
 		monthlyIncome: example.monthlyIncome,
 		monthlyIncomeSource: 'example',
-		selectedAmount: null,
-		customAmount: null,
-		donationAmountIsManual: false,
+		...(context.donationAmountIsManual ? {} : { selectedAmount: null, customAmount: null, donationAmountIsManual: false }),
 	};
 };
 

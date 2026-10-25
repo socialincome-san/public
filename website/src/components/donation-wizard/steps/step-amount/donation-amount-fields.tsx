@@ -89,6 +89,10 @@ export const DonationAmountFields = ({
 		values.monthlyIncomeSource === 'example' ? getDonationExampleIncome(values.exampleCountryCode, currency) : null;
 	const supportedLocale = Intl.DisplayNames.supportedLocalesOf([locale]).length > 0 ? locale : 'en';
 	const countryNames = new Intl.DisplayNames([supportedLocale], { type: 'region' });
+	const countryOptions = getDonationCountryOptions(
+		(code, fallback) => (code === 'XK' ? 'Kosovo' : (countryNames.of(code) ?? fallback)),
+		supportedLocale,
+	);
 	const exampleCountryName = example
 		? example.countryCode === 'XK'
 			? 'Kosovo'
@@ -124,9 +128,9 @@ export const DonationAmountFields = ({
 						<SelectValue placeholder={t('stepAmount.country-placeholder')} />
 					</SelectTrigger>
 					<SelectContent>
-						{getDonationCountryOptions().map(({ code, name }) => (
+						{countryOptions.map(({ code, name }) => (
 							<SelectItem key={code} value={code}>
-								{code === 'XK' ? 'Kosovo' : (countryNames.of(code) ?? name)}
+								{name}
 							</SelectItem>
 						))}
 					</SelectContent>
