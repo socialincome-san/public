@@ -14,6 +14,11 @@
 		"one-time": "Unique",
 		"donate-now": "Donner maintenant",
 		"donate-now-with-amount": "Donner {amount} maintenant",
+		"donate-monthly-with-amount": "Donner {amount} par mois",
+		"switch-to-one-time": "Donner une seule fois",
+		"switch-to-one-time-with-amount": "Donner {amount} une seule fois",
+		"switch-to-monthly": "Donner chaque mois",
+		"switch-to-monthly-with-amount": "Donner {amount} par mois",
 		"custom-amount-placeholder": "Montant",
 		"custom-amount-label": "Montant libre"
 	},

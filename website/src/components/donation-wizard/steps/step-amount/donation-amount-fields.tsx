@@ -18,8 +18,6 @@ import {
 } from '../../utils/donation-amount';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 
-const segmentActive = 'bg-card shadow-xs';
-
 const amountFieldBorder = 'border-input/60';
 const monthlyAmountTextClass = 'text-lg leading-none font-medium';
 
@@ -101,37 +99,6 @@ export const DonationAmountFields = ({
 					)}
 				</div>
 			)}
-
-			<div className="bg-accent mb-4 grid grid-cols-2 rounded-md p-1">
-				<button
-					type="button"
-					data-testid="donation-wizard-cadence-monthly"
-					aria-pressed={values.cadence === 'monthly'}
-					onClick={() => actions.setCadence('monthly')}
-					className={cn(
-						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
-						values.cadence === 'monthly'
-							? cn(segmentActive, 'text-foreground')
-							: 'text-muted-foreground hover:text-foreground',
-					)}
-				>
-					{t('stepAmount.monthly')}
-				</button>
-				<button
-					type="button"
-					data-testid="donation-wizard-cadence-one-time"
-					aria-pressed={values.cadence === 'one-time'}
-					onClick={() => actions.setCadence('one-time')}
-					className={cn(
-						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
-						values.cadence === 'one-time'
-							? cn(segmentActive, 'text-foreground')
-							: 'text-muted-foreground hover:text-foreground',
-					)}
-				>
-					{t('stepAmount.one-time')}
-				</button>
-			</div>
 
 			<div
 				className={cn(
@@ -257,10 +224,28 @@ export const DonationAmountFields = ({
 				disabled={!values.isValid}
 				onClick={onSubmit}
 			>
-				{values.resolvedAmount !== null
-					? t('stepAmount.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
-					: t('stepAmount.donate-now')}
+				{values.resolvedAmount === null
+					? t('stepAmount.donate-now')
+					: values.cadence === 'monthly'
+						? t('stepAmount.donate-monthly-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
+						: t('stepAmount.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })}
 			</Button>
+			{/* Monthly is the default; the other cadence is a quiet text switch below the button */}
+			<button
+				type="button"
+				data-testid={values.cadence === 'monthly' ? 'donation-wizard-cadence-one-time' : 'donation-wizard-cadence-monthly'}
+				onClick={() => actions.setCadence(values.cadence === 'monthly' ? 'one-time' : 'monthly')}
+				className="text-muted-foreground hover:text-foreground mt-5 -mb-3 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors"
+			>
+				{values.resolvedAmount === null
+					? t(values.cadence === 'monthly' ? 'stepAmount.switch-to-one-time' : 'stepAmount.switch-to-monthly')
+					: t(
+							values.cadence === 'monthly'
+								? 'stepAmount.switch-to-one-time-with-amount'
+								: 'stepAmount.switch-to-monthly-with-amount',
+							{ amount: `${currency} ${values.resolvedAmount}` },
+						)}
+			</button>
 		</div>
 	);
 };

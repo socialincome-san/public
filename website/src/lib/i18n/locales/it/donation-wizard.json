@@ -14,6 +14,11 @@
 		"one-time": "Una tantum",
 		"donate-now": "Dona ora",
 		"donate-now-with-amount": "Dona {amount} ora",
+		"donate-monthly-with-amount": "Dona {amount} al mese",
+		"switch-to-one-time": "Dona una sola volta",
+		"switch-to-one-time-with-amount": "Dona {amount} una sola volta",
+		"switch-to-monthly": "Dona ogni mese",
+		"switch-to-monthly-with-amount": "Dona {amount} al mese",
 		"custom-amount-placeholder": "Importo",
 		"custom-amount-label": "Importo personalizzato"
 	},

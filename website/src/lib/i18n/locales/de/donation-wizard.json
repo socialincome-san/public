@@ -14,6 +14,11 @@
 		"one-time": "Einmalig",
 		"donate-now": "Jetzt spenden",
 		"donate-now-with-amount": "Jetzt {amount} spenden",
+		"donate-monthly-with-amount": "Jetzt {amount} monatlich spenden",
+		"switch-to-one-time": "Einmalig spenden",
+		"switch-to-one-time-with-amount": "{amount} einmalig spenden",
+		"switch-to-monthly": "Monatlich spenden",
+		"switch-to-monthly-with-amount": "{amount} monatlich spenden",
 		"custom-amount-placeholder": "Betrag",
 		"custom-amount-label": "Eigener Betrag"
 	},

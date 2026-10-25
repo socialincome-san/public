@@ -28,6 +28,17 @@ export const openDonationWizardFromNav = async (page: Page) => {
 	await waitForWizardStep(wizard(page), 'donation-wizard-step-amount');
 };
 
+// The amount step defaults to monthly and only shows a link to the other cadence, whose test id names that cadence.
+const selectCadence = async (scope: Locator, cadence: 'monthly' | 'one-time') => {
+	const switchToCadence = scope.getByTestId(`donation-wizard-cadence-${cadence}`);
+	if ((await switchToCadence.count()) > 0) {
+		await switchToCadence.click();
+	}
+	await expect(
+		scope.getByTestId(cadence === 'monthly' ? 'donation-wizard-cadence-one-time' : 'donation-wizard-cadence-monthly'),
+	).toBeVisible();
+};
+
 const completeHeroAmountFields = async (scope: Locator, monthlyIncome: number, cadence: 'monthly' | 'one-time') => {
 	const incomeInput = scope.getByTestId('donation-wizard-monthly-income');
 	const expectedOnePercent = Math.round(monthlyIncome / 100);
@@ -37,9 +48,7 @@ const completeHeroAmountFields = async (scope: Locator, monthlyIncome: number, c
 	await incomeInput.blur();
 	await expect(scope.getByTestId('donation-wizard-one-percent')).toContainText(String(expectedOnePercent));
 	await scope.getByTestId('donation-wizard-one-percent').click();
-	await scope
-		.getByTestId(cadence === 'monthly' ? 'donation-wizard-cadence-monthly' : 'donation-wizard-cadence-one-time')
-		.click();
+	await selectCadence(scope, cadence);
 	await scope.getByTestId('donation-wizard-amount-continue').click();
 };
 
@@ -73,7 +82,7 @@ export const completeAmountStep = async (page: Page, monthlyIncome: number) => {
 	await incomeInput.blur();
 	await expect(modal.getByTestId('donation-wizard-one-percent')).toContainText(String(expectedOnePercent));
 	await modal.getByTestId('donation-wizard-one-percent').click();
-	await modal.getByTestId('donation-wizard-cadence-monthly').click();
+	await selectCadence(modal, 'monthly');
 	await modal.getByTestId('donation-wizard-amount-continue').click();
 	await waitForWizardStep(modal, 'donation-wizard-step-monthly-plan');
 };

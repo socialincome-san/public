@@ -14,6 +14,11 @@
 		"one-time": "One-time",
 		"donate-now": "Donate now",
 		"donate-now-with-amount": "Donate {amount} now",
+		"donate-monthly-with-amount": "Donate {amount} monthly",
+		"switch-to-one-time": "Donate once",
+		"switch-to-one-time-with-amount": "Donate {amount} once",
+		"switch-to-monthly": "Donate monthly",
+		"switch-to-monthly-with-amount": "Donate {amount} monthly",
 		"custom-amount-placeholder": "Amount",
 		"custom-amount-label": "Custom amount"
 	},
