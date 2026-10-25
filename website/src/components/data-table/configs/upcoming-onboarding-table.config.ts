@@ -23,7 +23,7 @@ export const upcomingOnboardingTableConfig: DataTableConfig<UpcomingOnboardingTa
 		{ id: 'createdAt', label: 'Created' },
 	],
 	initialSorting: [{ id: 'daysUntilStart', desc: false }],
-	makeColumns: makeUpcomingOnboardingColumns,
+	makeColumns: () => makeUpcomingOnboardingColumns(),
 	showColumnVisibilitySelector: true,
 };
 

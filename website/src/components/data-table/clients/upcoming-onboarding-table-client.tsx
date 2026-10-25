@@ -1,6 +1,7 @@
 'use client';
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
+import { makeUpcomingOnboardingColumns } from '@/components/data-table/columns/upcoming-onboarding';
 import {
 	getUpcomingOnboardingTableFilters,
 	upcomingOnboardingTableConfig,
@@ -81,11 +82,15 @@ export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilte
 			onSelect: () => setIsCsvUploadDialogOpen(true),
 		},
 	];
+	const tableConfig = {
+		...upcomingOnboardingTableConfig,
+		makeColumns: () => makeUpcomingOnboardingColumns(openEditRecipientDialog),
+	};
 
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={upcomingOnboardingTableConfig}
+				config={tableConfig}
 				titleInfoTooltip="Shows recipients who have a future start date, sorted by how soon they are onboarding."
 				rows={rows}
 				error={error}
