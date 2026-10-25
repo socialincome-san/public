@@ -11,13 +11,13 @@ import NextLink from 'next/link';
 
 type Props = {
 	programs: ProgramStory[];
-	allProgramsCount?: number;
+	allProgramsCount: number;
 	blok: ProgramGrid;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 };
 
-export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok, lang, currency }: Props) => {
+export const ProgramGridView = async ({ programs, allProgramsCount, blok, lang, currency }: Props) => {
 	const programPortalSlugs = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
 	const [statsResult, t] = await Promise.all([
 		getPublicProgramStatsByPortalSlugsAction(programPortalSlugs),

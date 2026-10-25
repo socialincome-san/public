@@ -20,5 +20,13 @@ export const LocalPartnerPrograms = async ({ localPartner, lang, currency }: Pro
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 
-	return <StoryblokProgramGrid blok={blok} programs={programs} lang={lang} currency={currency} />;
+	return (
+		<StoryblokProgramGrid
+			blok={blok}
+			programs={programs}
+			allProgramsCount={allPrograms.length}
+			lang={lang}
+			currency={currency}
+		/>
+	);
 };
