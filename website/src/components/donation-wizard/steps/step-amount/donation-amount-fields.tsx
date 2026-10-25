@@ -77,7 +77,7 @@ export const DonationAmountFields = ({
 		<div
 			className={cn(
 				getDonationWizardCardClass('stepAmount'),
-				placement === 'hero' && 'mx-0 max-w-none lg:mx-auto lg:w-[400px]',
+				placement === 'hero' && 'mx-0 max-w-none px-6 pt-6 lg:mx-auto lg:w-[400px]',
 				'text-foreground md:px-9 md:py-9',
 			)}
 			data-testid="donation-wizard-step-amount"
