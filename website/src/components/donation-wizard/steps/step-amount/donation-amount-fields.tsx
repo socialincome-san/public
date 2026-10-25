@@ -83,7 +83,7 @@ export const DonationAmountFields = ({
 			data-testid="donation-wizard-step-amount"
 		>
 			{showTitle && (
-				<div className="mb-5 flex items-center justify-between gap-3">
+				<div className="mb-4 flex items-center justify-between gap-3">
 					<h2 className="text-foreground text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
 						{t('stepAmount.title')}
 					</h2>
@@ -133,7 +133,7 @@ export const DonationAmountFields = ({
 				</button>
 			</div>
 
-			<div className={cn(amountFieldBorder, 'mb-3 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border')}>
+			<div className={cn(amountFieldBorder, 'mb-4 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border')}>
 				<div
 					className={cn(
 						amountFieldBorder,
@@ -189,7 +189,7 @@ export const DonationAmountFields = ({
 				</button>
 			</div>
 
-			<div className="mb-3 flex items-center gap-4">
+			<div className="mb-4 flex items-center gap-4">
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
 				<div className="text-2xs text-center font-medium">{t('stepAmount.choose-own-amount')}</div>
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
