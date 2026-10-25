@@ -103,6 +103,9 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                             useBottomSheetSafeArea: true,
                           ),
+                          searchBoxDecoration: const InputDecoration(
+                            hintText: "Search by country name or dial code",
+                          ),
                           selectorTextStyle: const TextStyle(
                             color: AppColors.primaryColor,
                             fontSize: 18,
