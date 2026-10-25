@@ -1,6 +1,7 @@
 'use client';
 
 import {
+	asksForConsent,
 	ensureConsentDefault,
 	googleTagGatewayUrl,
 	googleTagManagerId,
@@ -20,12 +21,12 @@ export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string
 	const consent = useAnalyticsConsent();
 	const settingsOpen = useConsentSettingsOpen();
 
-	if (!googleTagManagerId) {
+	if (!asksForConsent) {
 		return null;
 	}
 
 	// Waits for the stored choice, which is unknown on the server.
-	const loadsTagManager = consent !== null && isGoogleTagGatewayHost();
+	const loadsTagManager = !!googleTagManagerId && consent !== null && isGoogleTagGatewayHost();
 
 	// During render, not in an effect: next/script requests Tag Manager from its own effect, which runs before ours.
 	if (loadsTagManager) {
@@ -35,7 +36,9 @@ export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string
 
 	return (
 		<>
-			{loadsTagManager && <GoogleTagManager gtmId={googleTagManagerId} gtmScriptUrl={googleTagGatewayUrl} />}
+			{loadsTagManager && googleTagManagerId && (
+				<GoogleTagManager gtmId={googleTagManagerId} gtmScriptUrl={googleTagGatewayUrl} />
+			)}
 			{(consent === 'undecided' || settingsOpen) && (
 				<CookieBanner
 					message={t.rich('message', {

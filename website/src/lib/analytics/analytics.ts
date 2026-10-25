@@ -12,6 +12,9 @@ export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
 
 export const clarityProjectId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
 
+// Without a tool that needs consent, there is nothing to ask the visitor.
+export const asksForConsent = Boolean(googleTagManagerId) || Boolean(clarityProjectId);
+
 // Google tag gateway (Cloudflare) serves GTM from our own domain. Only exists in production.
 export const googleTagGatewayUrl =
 	process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? 'https://www.socialincome.org/metrics/' : undefined;

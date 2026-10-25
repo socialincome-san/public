@@ -113,6 +113,26 @@ describe('Clarity', () => {
 		consoleError.mockRestore();
 	});
 
+	it('turns links to excluded routes into full page loads before the route renders', () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		localStorage.setItem('analytics-consent', 'granted');
+		render();
+		const click = (href: string) => {
+			const link = document.body.appendChild(document.createElement('a'));
+			link.href = href;
+			const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 });
+			link.dispatchEvent(event);
+			link.remove();
+
+			return event.defaultPrevented;
+		};
+
+		expect(click('/en/chf/campaigns')).toBe(false);
+		expect(click('/en/chf/login')).toBe(true);
+		expect(click('https://example.org/en/chf/login')).toBe(false);
+		consoleError.mockRestore();
+	});
+
 	it('revokes consent and erases its cookies after a later decline, and stays off on the next page', () => {
 		localStorage.setItem('analytics-consent', 'granted');
 		render();
