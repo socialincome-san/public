@@ -125,6 +125,33 @@ describe('getPaginatedRecipientTableView local partner filter', () => {
 		expect(mockGetLocalPartnerFilterOption).not.toHaveBeenCalled();
 		expect(data.localPartnerFilterOptions).toEqual([]);
 	});
+
+	test('sorts payout progress before paginating', async () => {
+		const makeRecipient = (id: string, payouts: typeof recipient.payouts) => ({
+			...recipient,
+			id,
+			payouts,
+			contact: { ...recipient.contact, firstName: id, lastName: '' },
+			program: { ...recipient.program, id: 'program-1', name: 'Program 1' },
+		});
+		mockFindRecipientTableSource.mockResolvedValue({
+			recipients: [makeRecipient('one-payout', [{ status: PayoutStatus.paid }]), makeRecipient('no-payouts', [])],
+			totalCount: 2,
+		});
+
+		const data = expectSuccess(
+			await getPaginatedRecipientTableView('user-1', {
+				...query,
+				pageSize: 1,
+				sortBy: 'payoutsProgressPercent',
+				sortDirection: 'asc',
+			}),
+		);
+
+		expect(mockFindRecipientTableSource).toHaveBeenCalledWith(expect.objectContaining({ paginate: false }));
+		expect(data.tableRows.map(({ id }) => id)).toEqual(['no-payouts']);
+		expect(data.totalCount).toBe(2);
+	});
 });
 
 describe('recipient public table view', () => {
