@@ -25,6 +25,8 @@ const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmoun
 ];
 
 const segmentActive = 'bg-card shadow-xs';
+// Marks which of the two either-or choices (1 % of income or a fixed amount) is active
+const choiceActive = 'ring-primary ring-2';
 
 const amountFieldBorder = 'border-input/60';
 const amountFieldDivider = 'divide-input/60';
@@ -133,7 +135,13 @@ export const DonationAmountFields = ({
 				</button>
 			</div>
 
-			<div className={cn(amountFieldBorder, 'mb-3 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border')}>
+			<div
+				className={cn(
+					amountFieldBorder,
+					'mb-3 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border',
+					values.onePercentSelected && choiceActive,
+				)}
+			>
 				<div
 					className={cn(
 						amountFieldBorder,
@@ -213,7 +221,9 @@ export const DonationAmountFields = ({
 							onClick={() => actions.setPresetAmount(option.value)}
 							className={cn(
 								'flex flex-col items-center justify-center p-2.5 leading-none font-medium transition-colors sm:p-3',
-								isSelected ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+								isSelected
+									? cn('bg-muted text-foreground ring-inset', choiceActive)
+									: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
 							)}
 						>
 							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-2xs')}>
