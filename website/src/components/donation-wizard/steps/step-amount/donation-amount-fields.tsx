@@ -183,7 +183,7 @@ export const DonationAmountFields = ({
 					)}
 				>
 					<div className="text-2xs font-medium">{t('stepAmount.your-one-percent')}</div>
-					<div className={cn(monthlyAmountTextClass, 'whitespace-nowrap')}>
+					<div className={cn(monthlyAmountTextClass, 'py-0.5 whitespace-nowrap')}>
 						{currency} {values.onePercent}
 					</div>
 				</button>
