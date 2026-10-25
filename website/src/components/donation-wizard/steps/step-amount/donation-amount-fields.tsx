@@ -235,7 +235,7 @@ export const DonationAmountFields = ({
 				type="button"
 				data-testid={values.cadence === 'monthly' ? 'donation-wizard-cadence-one-time' : 'donation-wizard-cadence-monthly'}
 				onClick={() => actions.setCadence(values.cadence === 'monthly' ? 'one-time' : 'monthly')}
-				className="text-muted-foreground hover:text-foreground mt-5 -mb-3 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors"
+				className="text-muted-foreground hover:text-foreground mt-4 -mb-2 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors md:-mb-4"
 			>
 				{values.resolvedAmount === null
 					? t(values.cadence === 'monthly' ? 'stepAmount.switch-to-one-time' : 'stepAmount.switch-to-monthly')
