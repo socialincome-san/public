@@ -137,11 +137,11 @@ export const DonationAmountFields = ({
 				<div
 					className={cn(
 						amountFieldBorder,
-						'bg-card focus-within:border-ring focus-within:ring-ring/50 relative -m-px rounded-l-md border px-3 py-3 transition-[border-color,box-shadow,color] focus-within:z-10 focus-within:ring-[3px]',
+						'bg-card focus-within:border-ring focus-within:ring-ring/50 relative -m-px rounded-l-md border px-4 py-3 transition-[border-color,box-shadow,color] focus-within:z-10 focus-within:ring-[3px]',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
-					<label htmlFor={monthlyIncomeInputId} className="text-2xs font-medium">
+					<label htmlFor={monthlyIncomeInputId} className="text-2xs block font-medium">
 						{t('stepAmount.monthly-income-label')} ({currency})
 					</label>
 					<div className={monthlyAmountTextClass}>
@@ -176,7 +176,7 @@ export const DonationAmountFields = ({
 					aria-pressed={values.onePercentSelected}
 					onClick={actions.selectOnePercent}
 					className={cn(
-						'rounded-r-md px-3 py-3 text-left transition-colors',
+						'rounded-r-md px-4 py-3 text-left transition-colors',
 						values.onePercentSelected
 							? 'bg-muted text-foreground'
 							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
