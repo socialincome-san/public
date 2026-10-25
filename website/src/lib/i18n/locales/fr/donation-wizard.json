@@ -15,8 +15,7 @@
 		"donate-now": "Donner maintenant",
 		"donate-now-with-amount": "Donner {amount} maintenant",
 		"custom-amount-placeholder": "Montant",
-		"custom-amount-label": "Montant libre",
-		"show-preset-amounts": "Revenir aux montants proposés"
+		"custom-amount-label": "Montant libre"
 	},
 	"stepPlan": {
 		"monthly-title": "Don mensuel",

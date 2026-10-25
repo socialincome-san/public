@@ -15,8 +15,7 @@
 		"donate-now": "Jetzt spenden",
 		"donate-now-with-amount": "Jetzt {amount} spenden",
 		"custom-amount-placeholder": "Betrag",
-		"custom-amount-label": "Eigener Betrag",
-		"show-preset-amounts": "Zurück zu den Beträgen"
+		"custom-amount-label": "Eigener Betrag"
 	},
 	"stepPlan": {
 		"monthly-title": "Monatliche Spende",

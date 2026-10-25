@@ -15,8 +15,7 @@
 		"donate-now": "Dona ora",
 		"donate-now-with-amount": "Dona {amount} ora",
 		"custom-amount-placeholder": "Importo",
-		"custom-amount-label": "Importo personalizzato",
-		"show-preset-amounts": "Torna agli importi proposti"
+		"custom-amount-label": "Importo personalizzato"
 	},
 	"stepPlan": {
 		"monthly-title": "Donazione mensile",
