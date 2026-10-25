@@ -102,6 +102,37 @@ export const DonationAmountFields = ({
 				</div>
 			)}
 
+			<div className="bg-accent mb-4 grid grid-cols-2 rounded-md p-1">
+				<button
+					type="button"
+					data-testid="donation-wizard-cadence-monthly"
+					aria-pressed={values.cadence === 'monthly'}
+					onClick={() => actions.setCadence('monthly')}
+					className={cn(
+						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
+						values.cadence === 'monthly'
+							? cn(segmentActive, 'text-foreground')
+							: 'text-muted-foreground hover:text-foreground',
+					)}
+				>
+					{t('stepAmount.monthly')}
+				</button>
+				<button
+					type="button"
+					data-testid="donation-wizard-cadence-one-time"
+					aria-pressed={values.cadence === 'one-time'}
+					onClick={() => actions.setCadence('one-time')}
+					className={cn(
+						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
+						values.cadence === 'one-time'
+							? cn(segmentActive, 'text-foreground')
+							: 'text-muted-foreground hover:text-foreground',
+					)}
+				>
+					{t('stepAmount.one-time')}
+				</button>
+			</div>
+
 			<div className={cn(amountFieldBorder, 'mb-3 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border')}>
 				<div
 					className={cn(
@@ -218,37 +249,6 @@ export const DonationAmountFields = ({
 					/>
 				</div>
 			)}
-
-			<div className="bg-accent mb-4 grid grid-cols-2 rounded-md p-1">
-				<button
-					type="button"
-					data-testid="donation-wizard-cadence-monthly"
-					aria-pressed={values.cadence === 'monthly'}
-					onClick={() => actions.setCadence('monthly')}
-					className={cn(
-						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
-						values.cadence === 'monthly'
-							? cn(segmentActive, 'text-foreground')
-							: 'text-muted-foreground hover:text-foreground',
-					)}
-				>
-					{t('stepAmount.monthly')}
-				</button>
-				<button
-					type="button"
-					data-testid="donation-wizard-cadence-one-time"
-					aria-pressed={values.cadence === 'one-time'}
-					onClick={() => actions.setCadence('one-time')}
-					className={cn(
-						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
-						values.cadence === 'one-time'
-							? cn(segmentActive, 'text-foreground')
-							: 'text-muted-foreground hover:text-foreground',
-					)}
-				>
-					{t('stepAmount.one-time')}
-				</button>
-			</div>
 
 			<Button
 				type="button"
