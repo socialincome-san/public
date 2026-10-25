@@ -1,7 +1,9 @@
+import type { CountryCode } from '@/generated/prisma/enums';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import { getCountryNameByCode } from '@/lib/types/country';
 import { getProgramReferenceOptions, validateProgramIds } from '@/modules/programs/program-reference.service';
 import { updateOrganizationProgramAccesses } from '@/modules/programs/program.service';
 import { getUserRole, isAdmin, updateOrganizationMembers } from '@/modules/users/user.service';
@@ -158,13 +160,37 @@ export const getOrganizationReferenceOptions = async (): Promise<Result<Organiza
 	}
 };
 
-export const getOperatorFallbackOrganizationId = async (): Promise<Result<string>> => {
+export const getOrganizationCountryOptions = async (userId: string): Promise<Result<OrganizationOption[]>> => {
 	try {
-		const organization = await organizationRepository.findOperatorFallbackOrganization();
+		const isAdminResult = await isAdmin(userId);
+		if (!isAdminResult.success) {
+			return resultFail(isAdminResult.error);
+		}
 
-		return organization ? resultOk(organization.id) : resultFail('Operator fallback organization not found');
+		const countries = await organizationRepository.findOrganizationCountryOptions();
+
+		return resultOk(
+			countries.map(({ isoCode }) => ({
+				id: isoCode,
+				name: `${getCountryNameByCode(isoCode)} (${isoCode})`,
+			})),
+		);
 	} catch (error) {
-		console.error('Could not fetch operator fallback organization', { error });
+		console.error('Could not fetch organization country options', { userId, error });
+
+		return resultFail('Could not fetch organization country options');
+	}
+};
+
+export const getOperatorFallbackOrganizationId = async (countryCode: CountryCode): Promise<Result<string>> => {
+	try {
+		const organization = await organizationRepository.findOperatorFallbackOrganization(countryCode);
+
+		return organization
+			? resultOk(organization.id)
+			: resultFail('Operator fallback organization not found for this country');
+	} catch (error) {
+		console.error('Could not fetch operator fallback organization', { countryCode, error });
 
 		return resultFail('Could not fetch operator fallback organization');
 	}
@@ -198,6 +224,7 @@ export const getOrganization = async (userId: string, organizationId: string): P
 		return resultOk({
 			id: organization.id,
 			name: organization.name,
+			operatorFallbackCountryCode: organization.operatorFallbackCountryCode,
 			userIds: organization.organizationAccesses.map((access) => access.userId),
 			ownedProgramIds: organization.programAccesses
 				.filter((access) => access.permission === ProgramPermission.owner)
@@ -260,11 +287,13 @@ export const createOrganizationFromEmail = async (email: string): Promise<Result
 		const organization = await organizationWriteRepository.createOrganization(
 			{ actor: { type: 'system', id: 'public-onboarding' }, source: 'system' },
 			`${email.toLowerCase().trim()} organization`,
+			null,
 		);
 
 		return resultOk({
 			id: organization.id,
 			name: organization.name,
+			operatorFallbackCountryCode: null,
 			userIds: [],
 			ownedProgramIds: [],
 			operatedProgramIds: [],
@@ -292,7 +321,11 @@ export const createOrganization = async (
 		}
 
 		const audit = getSessionAuditContext(session);
-		const organization = await organizationWriteRepository.createOrganization(audit, input.name);
+		const organization = await organizationWriteRepository.createOrganization(
+			audit,
+			input.name,
+			toOperatorFallbackCountryCode(input.operatorFallbackCountryCode),
+		);
 		const relationsResult = await updateOrganizationRelations(audit, organization.id, input);
 		if (!relationsResult.success) {
 			// Creating again would fail on the taken name, so point to editing.
@@ -328,7 +361,12 @@ export const updateOrganization = async (
 		}
 
 		const audit = getSessionAuditContext(session);
-		const organization = await organizationWriteRepository.updateOrganizationName(audit, input.id, input.name);
+		const organization = await organizationWriteRepository.updateOrganization(
+			audit,
+			input.id,
+			input.name,
+			toOperatorFallbackCountryCode(input.operatorFallbackCountryCode),
+		);
 		const relationsResult = await updateOrganizationRelations(audit, input.id, input);
 		if (!relationsResult.success) {
 			return relationsResult;
@@ -451,6 +489,17 @@ const validateOrganizationInput = async (
 		return uniquenessResult;
 	}
 
+	const operatorFallbackCountryCode = toOperatorFallbackCountryCode(input.operatorFallbackCountryCode);
+	if (operatorFallbackCountryCode) {
+		const existingFallbackOrganization = await organizationRepository.findOrganizationByOperatorFallbackCountry(
+			operatorFallbackCountryCode,
+			currentOrganizationId,
+		);
+		if (existingFallbackOrganization) {
+			return resultFail('An operator fallback organization is already configured for this country.');
+		}
+	}
+
 	const uniqueUserIds = Array.from(new Set(input.userIds));
 	if (uniqueUserIds.length > 0) {
 		const users = await organizationRepository.findUsersByIds(uniqueUserIds);
@@ -488,7 +537,11 @@ const toOrganizationPayload = (
 ): OrganizationPayload => ({
 	id: organization.id,
 	name: organization.name,
+	operatorFallbackCountryCode: toOperatorFallbackCountryCode(input.operatorFallbackCountryCode),
 	userIds: input.userIds,
 	ownedProgramIds: input.ownedProgramIds,
 	operatedProgramIds: input.operatedProgramIds,
 });
+
+const toOperatorFallbackCountryCode = (value: CreateOrganizationInput['operatorFallbackCountryCode']): CountryCode | null =>
+	value === 'none' ? null : value;

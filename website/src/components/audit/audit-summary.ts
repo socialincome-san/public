@@ -245,7 +245,7 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 		label: 'Organization',
 		fieldLabels: {
 			name: 'Name',
-			isOperatorFallback: 'Operator fallback',
+			operatorFallbackCountryCode: 'Operator fallback country',
 		},
 	},
 	user: {
