@@ -73,23 +73,20 @@ describe('candidate pool filtering', () => {
 	test('limits candidate rows and filter options to the operator countries', async () => {
 		await findPaginatedCandidates({
 			query: { page: 1, pageSize: 10, search: '' },
+			country: CountryCode.GH,
 			allowedCountryCodes: [CountryCode.GH, CountryCode.SL],
 		});
 
-		const allowedCountries = {
+		const allowedLocalPartnerCountries = {
+			localPartner: { contact: { address: { country: { in: [CountryCode.GH, CountryCode.SL] } } } },
+		};
+		const selectedCountry = {
 			OR: [
 				{ contact: { address: { country: CountryCode.GH } } },
 				{
 					AND: [
 						{ OR: [{ contact: { address: null } }, { contact: { address: { country: null } } }] },
 						{ localPartner: { contact: { address: { country: CountryCode.GH } } } },
-					],
-				},
-				{ contact: { address: { country: CountryCode.SL } } },
-				{
-					AND: [
-						{ OR: [{ contact: { address: null } }, { contact: { address: { country: null } } }] },
-						{ localPartner: { contact: { address: { country: CountryCode.SL } } } },
 					],
 				},
 			],
@@ -99,14 +96,14 @@ describe('candidate pool filtering', () => {
 			1,
 			expect.objectContaining({
 				where: {
-					AND: [{ programId: null }, allowedCountries],
+					AND: [{ programId: null }, allowedLocalPartnerCountries, selectedCountry],
 				},
 			}),
 		);
 		expect(mockRecipientFindMany).toHaveBeenNthCalledWith(
 			2,
 			expect.objectContaining({
-				where: { programId: null, AND: [allowedCountries] },
+				where: { programId: null, AND: [allowedLocalPartnerCountries] },
 			}),
 		);
 	});

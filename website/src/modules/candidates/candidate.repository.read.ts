@@ -38,7 +38,7 @@ export const findPaginatedCandidates = async ({
 	const filterWhere: Prisma.RecipientWhereInput = {
 		programId: null,
 		...(localPartnerId ? { localPartnerId } : {}),
-		...(allowedCountryCodes !== undefined ? { AND: [buildCountryFilters(allowedCountryCodes)] } : {}),
+		...(allowedCountryCodes !== undefined ? { AND: [buildLocalPartnerCountryFilter(allowedCountryCodes)] } : {}),
 	};
 
 	const [candidates, totalCount, filterSource] = await Promise.all([
@@ -300,7 +300,7 @@ const buildCandidateTableWhere = (
 		...(gender ? { contact: { gender } } : {}),
 	};
 	const countryScopes = [
-		...(allowedCountryCodes !== undefined ? [buildCountryFilters(allowedCountryCodes)] : []),
+		...(allowedCountryCodes !== undefined ? [buildLocalPartnerCountryFilter(allowedCountryCodes)] : []),
 		...(country ? [buildCountryFilter(country)] : []),
 	];
 
@@ -337,8 +337,8 @@ const buildCountryFilter = (countryCode: CountryCode): Prisma.RecipientWhereInpu
 	],
 });
 
-const buildCountryFilters = (countryCodes: CountryCode[]): Prisma.RecipientWhereInput => ({
-	OR: countryCodes.flatMap((countryCode) => buildCountryFilter(countryCode).OR ?? []),
+const buildLocalPartnerCountryFilter = (countryCodes: CountryCode[]): Prisma.RecipientWhereInput => ({
+	localPartner: { contact: { address: { country: { in: countryCodes } } } },
 });
 
 const buildCandidateWhere = (filter: UnassignedCandidateFilter): Prisma.RecipientWhereInput => {
