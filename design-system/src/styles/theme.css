@@ -55,7 +55,7 @@
 	--radius-control: 0.25rem;
 
 	--spacing-content: 1400px;
-	--spacing-site-width: 94vw;
+	--spacing-site-width: var(--site-width);
 
 	--breakpoint-lg: 64rem;
 	--breakpoint-2xl: 87.5rem;

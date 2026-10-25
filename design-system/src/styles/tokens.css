@@ -1,5 +1,7 @@
 @layer base {
 	:root {
+		/* Page width: 16px gutters on small screens, matching the site header */
+		--site-width: calc(100% - 2rem);
 		--background: 0 0% 100%;
 		--foreground: 197 79% 15%;
 		--card: 0 0% 100%;
@@ -38,5 +40,11 @@
 		--warning-foreground: 48 96% 89%;
 		--gradient-card-from: 203 40% 53%;
 		--gradient-card-to: 96 10% 81%;
+	}
+
+	@media (width >= 64rem) {
+		:root {
+			--site-width: 94vw;
+		}
 	}
 }
