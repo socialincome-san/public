@@ -13,6 +13,13 @@
 		"button-subscribe": "Anmelden",
 		"first-name": "Vorname",
 		"email": "E-Mail",
-		"sent-by": "Newsletter gesendet von"
+		"sent-by": "Newsletter gesendet von",
+		"archive-link": "Newsletter-Archiv ansehen"
+	},
+	"archive": {
+		"title": "Newsletter-Archiv",
+		"description": "Entdecke alle bisherigen Social-Income-Newsletter.",
+		"back": "Zurück zum Newsletter-Archiv",
+		"item-description": "Lies den Social-Income-Newsletter, der im {date} veröffentlicht wurde."
 	}
 }

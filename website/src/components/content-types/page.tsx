@@ -84,7 +84,7 @@ const renderPageBlock = (
 		case 'modalCards':
 			return <ModalCardsBlock blok={block} />;
 		case 'newsletterForm':
-			return <NewsletterSignup lang={lang} />;
+			return <NewsletterSignup lang={lang} currency={currency} />;
 		case 'openSource':
 			return null;
 		case 'openSourceStats':
