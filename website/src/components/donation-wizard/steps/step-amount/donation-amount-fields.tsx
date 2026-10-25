@@ -70,8 +70,8 @@ export const DonationAmountFields = ({
 	const [isCustomAmountFocused, setIsCustomAmountFocused] = useState(false);
 	const isCustomAmountActive = isCustomAmountFocused || values.selectedAmount === 'other';
 	const isCustomAmountLabelFloating = isCustomAmountFocused || values.customAmount !== null;
-	// Once a custom amount is typed, the 1 % row looks inactive like the custom field does before
-	const isOnePercentDimmed = values.customAmount !== null;
+	// While the custom amount field is in use, the 1 % row looks inactive like the custom field does otherwise
+	const isOnePercentDimmed = isCustomAmountActive;
 
 	return (
 		<div
