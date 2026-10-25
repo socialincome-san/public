@@ -10,6 +10,8 @@ type EventProperties = Record<string, EventValue | Record<string, EventValue>[]>
 
 export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
 
+export const clarityProjectId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
+
 // Google tag gateway (Cloudflare) serves GTM from our own domain. Only exists in production.
 export const googleTagGatewayUrl =
 	process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? 'https://www.socialincome.org/metrics/' : undefined;
@@ -18,10 +20,20 @@ export const googleTagGatewayUrl =
 export const isGoogleTagGatewayHost = () =>
 	googleTagGatewayUrl !== undefined && window.location.hostname === new URL(googleTagGatewayUrl).hostname;
 
+type ClarityConsentState = 'granted' | 'denied';
+
+type Clarity = {
+	(command: 'consentv2', consent: { ad_Storage: ClarityConsentState; analytics_Storage: ClarityConsentState }): void;
+	(command: 'consent', granted: boolean): void;
+	// Calls made before the Clarity tag has loaded, which it replays.
+	q?: unknown[][];
+};
+
 declare global {
 	interface Window {
 		google_tags_first_party?: string[];
 		consentDefaultQueued?: boolean;
+		clarity?: Clarity;
 	}
 }
 
@@ -89,6 +101,14 @@ const updateGoogleConsent = (consent: 'granted' | 'denied') => {
 	}
 };
 
+/** Does nothing until Clarity is loaded, which only happens after consent. Revoking makes Clarity erase its cookies. */
+export const updateClarityConsent = (consent: ClarityConsentState) => {
+	window.clarity?.('consentv2', { ad_Storage: consent, analytics_Storage: consent });
+	if (consent === 'denied') {
+		window.clarity?.('consent', false);
+	}
+};
+
 const gtag: (...args: unknown[]) => void = function () {
 	// eslint-disable-next-line prefer-rest-params -- gtag.js requires the arguments object
 	(window.dataLayer ??= []).push(arguments);
@@ -118,8 +138,10 @@ if (typeof window !== 'undefined') {
 		if (event.key === CONSENT_STORAGE_KEY || event.key === null) {
 			// Registered before the React listeners, so they read the choice from the other tab, not this one.
 			sessionConsent = undefined;
-			const consent = readConsent();
-			updateGoogleConsent(consent === 'undecided' ? 'denied' : consent);
+			const stored = readConsent();
+			const consent = stored === 'undecided' ? 'denied' : stored;
+			updateGoogleConsent(consent);
+			updateClarityConsent(consent);
 		}
 	});
 }
@@ -132,6 +154,7 @@ export const setAnalyticsConsent = (consent: 'granted' | 'denied') => {
 	}
 	sessionConsent = consent;
 	updateGoogleConsent(consent);
+	updateClarityConsent(consent);
 	consentSettingsOpen = false;
 	notify();
 };

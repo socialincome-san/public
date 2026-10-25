@@ -70,6 +70,7 @@ export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt =
 				<div className="flex min-w-0 flex-col gap-8">
 					<Form {...form}>
 						<form
+							data-clarity-mask="true"
 							onSubmit={form.handleSubmit(onSubmit)}
 							className="flex min-w-0 flex-col items-stretch gap-4 sm:flex-row sm:items-end"
 						>

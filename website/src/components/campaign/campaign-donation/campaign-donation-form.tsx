@@ -41,7 +41,7 @@ export const CampaignDonationForm = ({ campaignId, quote, profilePictureSrc, pro
 	const trimmedQuote = quote.trim();
 
 	return (
-		<div data-testid="donation-wizard-hero-form" className="w-full">
+		<div data-testid="donation-wizard-hero-form" data-clarity-mask="true" className="w-full">
 			<div
 				className={cn(
 					getDonationWizardCardClass('stepAmount'),

@@ -153,6 +153,14 @@ const GOOGLE_TAG_SRC = {
 	frame: ['https://www.googletagmanager.com', 'https://*.doubleclick.net'],
 } as const;
 
+// Microsoft Clarity, loaded only after consent. Hosts from
+// https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-csp
+const CLARITY_SRC = {
+	script: ['https://www.clarity.ms', 'https://*.clarity.ms'],
+	img: ['https://*.clarity.ms', 'https://c.bing.com'],
+	connect: ['https://www.clarity.ms', 'https://*.clarity.ms'],
+} as const;
+
 const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== 'production' }: CspOptions = {}) => {
 	const isUsingFirebaseEmulators = Boolean(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL);
 	const isVercelPreview = process.env.VERCEL_ENV === 'preview';
@@ -167,11 +175,11 @@ const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== '
 
 	const directives = [
 		`default-src 'self'`,
-		`script-src ${joinSources([...scriptSrc, ...GOOGLE_TAG_SRC.script, ...toolbarSrc('script')])}`,
+		`script-src ${joinSources([...scriptSrc, ...GOOGLE_TAG_SRC.script, ...CLARITY_SRC.script, ...toolbarSrc('script')])}`,
 		`style-src ${joinSources([...STYLE_SRC, ...GOOGLE_TAG_SRC.style, ...toolbarSrc('style')])}`,
-		`img-src ${joinSources([...IMG_SRC, ...GOOGLE_TAG_SRC.img, ...toolbarSrc('img')])}`,
+		`img-src ${joinSources([...IMG_SRC, ...GOOGLE_TAG_SRC.img, ...CLARITY_SRC.img, ...toolbarSrc('img')])}`,
 		`font-src ${joinSources([...FONT_SRC, ...GOOGLE_TAG_SRC.font, ...toolbarSrc('font')])}`,
-		`connect-src ${joinSources([...connectSrc, ...GOOGLE_TAG_SRC.connect, ...toolbarSrc('connect')])}`,
+		`connect-src ${joinSources([...connectSrc, ...GOOGLE_TAG_SRC.connect, ...CLARITY_SRC.connect, ...toolbarSrc('connect')])}`,
 		`frame-src ${joinSources([...FRAME_SRC, ...GOOGLE_TAG_SRC.frame, ...toolbarSrc('frame')])}`,
 		`media-src ${joinSources(MEDIA_SRC)}`,
 		`worker-src ${joinSources(WORKER_SRC)}`,
