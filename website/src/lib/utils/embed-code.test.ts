@@ -45,6 +45,20 @@ describe('parseEmbedCode', () => {
 		});
 	});
 
+	it.each(['&#38;', '&#x26;', '&#X26;'])('decodes %s between query parameters', (ampersand) => {
+		expect(
+			parseEmbedCode(
+				`<iframe src="https://calendar.google.com/calendar/embed?height=600${ampersand}ctz=Europe%2FZurich"></iframe>`,
+			)?.src,
+		).toBe('https://calendar.google.com/calendar/embed?height=600&ctz=Europe%2FZurich');
+	});
+
+	it('decodes `&amp;` only once', () => {
+		expect(parseEmbedCode('<iframe src="https://example.org/?q=a&amp;gt;b"></iframe>')?.src).toBe(
+			'https://example.org/?q=a&gt;b',
+		);
+	});
+
 	it('reads the title from the code', () => {
 		expect(parseEmbedCode('<iframe title=" Event calendar " src="https://example.org"></iframe>')?.title).toBe(
 			'Event calendar',
