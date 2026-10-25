@@ -125,6 +125,33 @@ describe('getPaginatedRecipientTableView local partner filter', () => {
 		expect(mockGetLocalPartnerFilterOption).not.toHaveBeenCalled();
 		expect(data.localPartnerFilterOptions).toEqual([]);
 	});
+
+	test('sorts payment codes naturally before paginating', async () => {
+		const makeRecipient = (id: string, paymentCode: string) => ({
+			...recipient,
+			id,
+			paymentInformation: { code: paymentCode },
+			contact: { ...recipient.contact, firstName: id, lastName: '' },
+			program: { ...recipient.program, id: 'program-1', name: 'Program 1' },
+		});
+		mockFindRecipientTableSource.mockResolvedValue({
+			recipients: [makeRecipient('ten', '10'), makeRecipient('two', '2'), makeRecipient('one', '1')],
+			totalCount: 3,
+		});
+
+		const data = expectSuccess(
+			await getPaginatedRecipientTableView('user-1', {
+				...query,
+				pageSize: 2,
+				sortBy: 'paymentCode',
+				sortDirection: 'asc',
+			}),
+		);
+
+		expect(mockFindRecipientTableSource).toHaveBeenCalledWith(expect.objectContaining({ paginate: false }));
+		expect(data.tableRows.map(({ paymentCode }) => paymentCode)).toEqual(['1', '2']);
+		expect(data.totalCount).toBe(3);
+	});
 });
 
 describe('recipient public table view', () => {
