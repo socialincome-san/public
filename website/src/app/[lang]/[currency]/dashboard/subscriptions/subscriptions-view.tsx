@@ -57,6 +57,7 @@ export const SubscriptionsView = async ({ lang, currency }: Props) => {
 
 	return (
 		<div className="flex flex-col gap-6" data-testid="subscriptions-dashboard">
+			<h2 className="sr-only">{t('sections.contributions.subscriptions')}</h2>
 			<div className="flex justify-end">
 				<Button asChild>
 					<Link href={getWebsiteBasePath(lang, currency)}>{labels.donateNow}</Link>

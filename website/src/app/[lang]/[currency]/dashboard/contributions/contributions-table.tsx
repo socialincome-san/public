@@ -33,18 +33,21 @@ export const ContributionsTable = async ({
 	const totalRows = result.success ? result.data.totalCount : 0;
 
 	return (
-		<ConfiguredDataTableClient
-			config={config}
-			titleInfoTooltip="Shows your contribution history."
-			rows={rows}
-			error={error}
-			query={{ ...tableQuery, totalRows }}
-			actionMenuItems={[
-				{
-					label: t('donate-now'),
-					href: getWebsiteBasePath(lang, currency),
-				},
-			]}
-		/>
+		<>
+			<h2 className="sr-only">{t('sections.contributions.payments')}</h2>
+			<ConfiguredDataTableClient
+				config={config}
+				titleInfoTooltip="Shows your contribution history."
+				rows={rows}
+				error={error}
+				query={{ ...tableQuery, totalRows }}
+				actionMenuItems={[
+					{
+						label: t('donate-now'),
+						href: getWebsiteBasePath(lang, currency),
+					},
+				]}
+			/>
+		</>
 	);
 };

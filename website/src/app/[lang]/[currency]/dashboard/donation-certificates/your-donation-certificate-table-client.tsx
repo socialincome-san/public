@@ -34,6 +34,7 @@ export const YourDonationCertificateTable = ({
 
 	return (
 		<>
+			<h2 className="sr-only">{t('sections.contributions.donation-certificates-long')}</h2>
 			<GenerateDonationCertificateDialog open={open} setOpen={setOpen} />
 			<ConfiguredDataTableClient
 				config={config}

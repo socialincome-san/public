@@ -12,7 +12,7 @@ type DataTableHeaderProps = {
 };
 
 export const DataTableHeader = ({ title, count, infoTooltip, toolbar }: DataTableHeaderProps) => (
-	<div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+	<div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
 		<div className="flex items-center gap-2">
 			{title ? (
 				<h2 className="text-3xl">
