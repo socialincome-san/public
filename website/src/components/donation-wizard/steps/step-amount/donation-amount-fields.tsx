@@ -70,6 +70,8 @@ export const DonationAmountFields = ({
 	const [isCustomAmountFocused, setIsCustomAmountFocused] = useState(false);
 	const isCustomAmountActive = isCustomAmountFocused || values.selectedAmount === 'other';
 	const isCustomAmountLabelFloating = isCustomAmountFocused || values.customAmount !== null;
+	// Once a custom amount is typed, the 1 % row looks inactive like the custom field does before
+	const isOnePercentDimmed = values.customAmount !== null;
 
 	return (
 		<div
@@ -131,11 +133,18 @@ export const DonationAmountFields = ({
 				</button>
 			</div>
 
-			<div className={cn(amountFieldBorder, 'mb-4 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border')}>
+			<div
+				className={cn(
+					amountFieldBorder,
+					'mb-4 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border transition-opacity',
+					isOnePercentDimmed && 'opacity-60',
+				)}
+			>
 				<div
 					className={cn(
 						amountFieldBorder,
-						'bg-card focus-within:border-ring focus-within:ring-ring/50 relative -m-px rounded-l-md border px-4 py-3 transition-[border-color,box-shadow,color] focus-within:z-10 focus-within:ring-[3px]',
+						'focus-within:border-ring focus-within:ring-ring/50 relative -m-px rounded-l-md border px-4 py-3 transition-[border-color,box-shadow,background-color,color] focus-within:z-10 focus-within:ring-[3px]',
+						isOnePercentDimmed ? 'bg-muted/60' : 'bg-card',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
@@ -177,7 +186,10 @@ export const DonationAmountFields = ({
 						'rounded-r-md px-4 py-3 text-left transition-colors',
 						values.onePercentSelected
 							? 'bg-muted text-foreground'
-							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
+							: cn(
+									'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+									isOnePercentDimmed ? 'bg-muted/60' : 'bg-card',
+								),
 					)}
 				>
 					<div className="text-2xs font-medium">
