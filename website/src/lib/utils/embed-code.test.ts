@@ -34,6 +34,17 @@ describe('parseEmbedCode', () => {
 		});
 	});
 
+	it.each(['filter=age>18', 'filter=age&gt;18'])('keeps %s in the URL', (query) => {
+		expect(
+			parseEmbedCode(`<iframe src="https://calendar.google.com/calendar/embed?${query}" height="600"></iframe>`),
+		).toEqual({
+			src: 'https://calendar.google.com/calendar/embed?filter=age%3E18',
+			title: '',
+			hostname: 'calendar.google.com',
+			height: 600,
+		});
+	});
+
 	it('reads the title from the code', () => {
 		expect(parseEmbedCode('<iframe title=" Event calendar " src="https://example.org"></iframe>')?.title).toBe(
 			'Event calendar',

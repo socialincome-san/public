@@ -2,7 +2,8 @@
 const ATTRIBUTE_PATTERN = /([\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/g;
 
 const readIframeAttributes = (code: string) => {
-	const tag = code.match(/<iframe\b[^>]*>/i)?.[0] ?? '';
+	// Skips `>` inside quoted values, which URLs may contain.
+	const tag = code.match(/<iframe\b(?:[^>"']|"[^"]*"|'[^']*')*>/i)?.[0] ?? '';
 
 	return new Map(
 		[...tag.matchAll(ATTRIBUTE_PATTERN)].map(([, name, ...values]) => [
@@ -19,7 +20,14 @@ const readIframeAttributes = (code: string) => {
 export const parseEmbedCode = (code: string | undefined) => {
 	const trimmed = code?.trim() ?? '';
 	const attributes = trimmed.startsWith('<') ? readIframeAttributes(trimmed) : new Map([['src', trimmed]]);
-	const src = attributes.get('src')?.replaceAll('&amp;', '&');
+	// `&amp;` last, so `&amp;gt;` stays the literal text `&gt;`.
+	const src = attributes
+		.get('src')
+		?.replaceAll('&lt;', '<')
+		.replaceAll('&gt;', '>')
+		.replaceAll('&quot;', '"')
+		.replaceAll('&#39;', "'")
+		.replaceAll('&amp;', '&');
 
 	if (!src || !URL.canParse(src) || new URL(src).protocol !== 'https:') {
 		return null;
