@@ -43,4 +43,50 @@ describe('findAuditEventPage', () => {
 		expect(mockFindMany).toHaveBeenCalledTimes(1);
 		expect(mockCount).toHaveBeenCalledWith({ where: { entityType: undefined, action: { not: 'baseline' }, OR: undefined } });
 	});
+
+	test('filters recipients by snapshot contact and payment details', async () => {
+		await findAuditEventPage({
+			search: '',
+			paymentPhone: '+2322',
+			contactPhone: '+2321',
+			firstName: 'Ada',
+			lastName: 'King',
+			skip: 0,
+			take: 10,
+		});
+
+		expect(mockCount).toHaveBeenCalledWith({
+			where: {
+				entityType: undefined,
+				action: { not: 'baseline' },
+				OR: undefined,
+				AND: [
+					{
+						entityType: 'recipient',
+						snapshot: {
+							path: ['paymentInformation', 'phone', 'number'],
+							string_contains: '+2322',
+							mode: 'insensitive',
+						},
+					},
+					{
+						entityType: 'recipient',
+						snapshot: {
+							path: ['contact', 'phone', 'number'],
+							string_contains: '+2321',
+							mode: 'insensitive',
+						},
+					},
+					{
+						entityType: 'recipient',
+						snapshot: { path: ['contact', 'firstName'], string_contains: 'Ada', mode: 'insensitive' },
+					},
+					{
+						entityType: 'recipient',
+						snapshot: { path: ['contact', 'lastName'], string_contains: 'King', mode: 'insensitive' },
+					},
+				],
+			},
+		});
+	});
 });

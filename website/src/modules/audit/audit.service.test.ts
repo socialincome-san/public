@@ -67,9 +67,27 @@ describe('getAuditTableView', () => {
 	});
 
 	test('pages, filters and searches in the database', async () => {
-		await getAuditTableView('user-1', { ...query, page: 2, search: ' max ', entityType: 'recipient' });
+		await getAuditTableView('user-1', {
+			...query,
+			page: 2,
+			search: ' max ',
+			entityType: 'recipient',
+			paymentPhone: '+2322',
+			contactPhone: '+2321',
+			firstName: 'Ada',
+			lastName: 'King',
+		});
 
-		expect(mockFindAuditEventPage).toHaveBeenCalledWith({ entityType: 'recipient', search: 'max', skip: 10, take: 10 });
+		expect(mockFindAuditEventPage).toHaveBeenCalledWith({
+			entityType: 'recipient',
+			search: 'max',
+			paymentPhone: '+2322',
+			contactPhone: '+2321',
+			firstName: 'Ada',
+			lastName: 'King',
+			skip: 10,
+			take: 10,
+		});
 		expect(mockFindAuditEventHistory).toHaveBeenCalledWith([{ entityType: 'recipient', entityId: 'recipient-1' }]);
 	});
 

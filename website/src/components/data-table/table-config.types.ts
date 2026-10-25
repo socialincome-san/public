@@ -17,6 +17,7 @@ export type TableFilterConfig = {
 	label: string;
 	placeholder: string;
 	value?: string;
+	type?: 'select' | 'text';
 	options: TableFilterOption[];
 	hidden?: boolean;
 };
