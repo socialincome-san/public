@@ -1,11 +1,11 @@
 {
 	"modal": {
-		"title": "Spenden",
+		"title": "Deine Spende",
 		"campaign-for": "Für {title}",
 		"currency": "Währung"
 	},
 	"stepAmount": {
-		"title": "Spenden",
+		"title": "Deine Spende",
 		"monthly-income-label": "Dein Monatseinkommen",
 		"choose-own-amount": "Oder eigenen Betrag wählen",
 		"your-one-percent": "Dein 1 %",
