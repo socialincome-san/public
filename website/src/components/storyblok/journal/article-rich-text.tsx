@@ -15,7 +15,7 @@ import {
 	journalRichTextNodeResolvers as storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/journal-resolvers';
 import type { Lottie } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { ComponentProps, ReactNode } from 'react';
 import { render, type StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
@@ -24,11 +24,12 @@ type StoryblokBlockProps = Record<string, unknown>;
 type Props = {
 	document: StoryblokRichtext;
 	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
 	donationForm: ReactNode;
 	variant?: 'article' | 'footnotes';
 };
 
-export const ArticleRichText = ({ document, lang, donationForm, variant = 'article' }: Props) => {
+export const ArticleRichText = ({ document, lang, currency, donationForm, variant = 'article' }: Props) => {
 	const isFootnotes = variant === 'footnotes';
 
 	return render(document, {
@@ -52,7 +53,7 @@ export const ArticleRichText = ({ document, lang, donationForm, variant = 'artic
 				<ActionButtonBlock {...(props as ComponentProps<typeof ActionButtonBlock>)} />
 			),
 			lottie: (props: StoryblokBlockProps) => <LottieBlock blok={props as Lottie} />,
-			newsletterSignup: () => <NewsletterSignup lang={lang} />,
+			newsletterSignup: () => <NewsletterSignup lang={lang} currency={currency} />,
 			campaignDonate: () => <div className="my-10">{donationForm}</div>,
 		},
 	}) as ReactNode;

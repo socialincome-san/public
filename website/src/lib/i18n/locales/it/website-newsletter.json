@@ -13,6 +13,13 @@
 		"button-subscribe": "Iscriviti ora",
 		"first-name": "Nome",
 		"email": "E-Mail",
-		"sent-by": "Newsletter inviata da"
+		"sent-by": "Newsletter inviata da",
+		"archive-link": "Sfoglia l'archivio newsletter"
+	},
+	"archive": {
+		"title": "Archivio newsletter",
+		"description": "Sfoglia tutte le newsletter passate di Social Income.",
+		"back": "Torna all'archivio newsletter",
+		"item-description": "Leggi la newsletter di Social Income pubblicata a {date}."
 	}
 }

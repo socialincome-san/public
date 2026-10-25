@@ -40,6 +40,9 @@ const nextConfig: NextConfig = {
 		loaderFile: './src/lib/utils/storyblock-image-loader.ts',
 	},
 	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
+	outputFileTracingIncludes: {
+		'/\\[lang\\]/\\[currency\\]/newsletter/archive/*/content': ['./emails/newsletter/*.html'],
+	},
 	// Vercel's function request body limit.
 	experimental: {
 		// The website, portal, partner space and API docs have separate root layouts.

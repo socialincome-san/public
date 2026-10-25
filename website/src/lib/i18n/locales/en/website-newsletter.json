@@ -13,6 +13,13 @@
 		"button-subscribe": "Subscribe now",
 		"first-name": "First Name",
 		"email": "E-Mail",
-		"sent-by": "Newsletter sent by"
+		"sent-by": "Newsletter sent by",
+		"archive-link": "Browse our newsletter archive"
+	},
+	"archive": {
+		"title": "Newsletter archive",
+		"description": "Browse all past Social Income newsletters.",
+		"back": "Back to the newsletter archive",
+		"item-description": "Read the Social Income newsletter published in {date}."
 	}
 }
