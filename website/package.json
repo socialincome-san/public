@@ -103,7 +103,7 @@
 		"tmp-promise": "3.0.3",
 		"twilio": "6.2.0",
 		"xstate": "5.33.3",
-		"zod": "^3.23.8"
+		"zod": "^4.0.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "1.64.1",
