@@ -6,7 +6,7 @@
 	},
 	"stepAmount": {
 		"title": "Spenden",
-		"monthly-income-label": "Ihr monatliches Einkommen",
+		"monthly-income-label": "Dein Monatseinkommen",
 		"choose-own-amount": "Oder eigenen Betrag wählen",
 		"your-one-percent": "Ihr 1 %",
 		"other": "Andere",
