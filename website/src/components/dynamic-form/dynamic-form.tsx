@@ -166,10 +166,6 @@ type Props = {
 const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, extraAction, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
-	const form = useForm<z.infer<typeof zodSchema>>({
-		resolver: zodResolver(zodSchema),
-	});
-
 	const getFormValuesFromSchema = (schema: FormSchema): Record<string, unknown> => {
 		const values: Record<string, unknown> = {};
 
@@ -185,6 +181,10 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 		return values;
 	};
 
+	const form = useForm<z.infer<typeof zodSchema>>({
+		resolver: zodResolver(zodSchema),
+	});
+
 	const getValuesIdentity = (values: Record<string, unknown>): string => {
 		try {
 			return JSON.stringify(values);
@@ -197,7 +197,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 
 	// reset form values on schema/entity changes to avoid stale values
 	useEffect(() => {
-		const values = mode === 'add' ? {} : getFormValuesFromSchema(formSchema);
+		const values = getFormValuesFromSchema(formSchema);
 		const nextIdentity = `${mode}:${getValuesIdentity(values)}`;
 		if (lastResetIdentityRef.current === nextIdentity) {
 			return;
