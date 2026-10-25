@@ -50,6 +50,7 @@
 		"error-cta": "Request a new link"
 	},
 	"error": {
-		"invalid-email": "Invalid email address"
+		"invalid-email": "Invalid email address",
+		"rate-limited": "Too many requests. Please wait a few minutes and try again."
 	}
 }

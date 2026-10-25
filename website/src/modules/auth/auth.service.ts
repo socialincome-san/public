@@ -24,6 +24,7 @@ import {
 import { loadMessages } from '@/lib/i18n/messages';
 import { getWebsiteBasePath, parseCurrencySegment, TIME_ZONE, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { archiveSentEmail, sendMail } from '@/modules/mail/mail.service';
 import { createTranslator } from 'next-intl';
 import { createHmac } from 'node:crypto';
@@ -72,7 +73,10 @@ export const sendMagicLoginLink = async (input: {
 	const templateId = process.env.SENDGRID_MAGIC_LOGIN_TEMPLATE_ID?.trim();
 	const rateLimitSecret = process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.trim();
 	if (!templateId || !rateLimitSecret) {
-		console.error('Magic-link email configuration is incomplete');
+		sendSlackAlert('Magic-link email configuration is incomplete', {
+			missingTemplateId: !templateId,
+			missingRateLimitSecret: !rateLimitSecret,
+		});
 
 		return resultFail('Could not send sign-in link');
 	}
@@ -81,23 +85,25 @@ export const sendMagicLoginLink = async (input: {
 		const now = new Date();
 		await deleteExpiredMagicLinkRateLimits(new Date(now.getTime() - magicLinkRateLimitRetentionMs));
 
-		const emailKey = hashMagicLinkRateLimitKey(rateLimitSecret, `email:${input.email.toLowerCase()}`);
+		const requesterIp = input.requesterIp?.trim();
+		const ipVersion = requesterIp ? isIP(requesterIp) : 0;
 		const ipKey =
-			input.requesterIp && isIP(input.requesterIp)
-				? hashMagicLinkRateLimitKey(rateLimitSecret, `ip:${input.requesterIp}`)
-				: undefined;
+			requesterIp && ipVersion === 4
+				? hashMagicLinkRateLimitKey(rateLimitSecret, `ip:${requesterIp}`)
+				: requesterIp && ipVersion === 6
+					? hashMagicLinkRateLimitKey(rateLimitSecret, `ip:${getIpv6RateLimitPrefix(requesterIp)}`)
+					: undefined;
+		const emailKey = hashMagicLinkRateLimitKey(rateLimitSecret, `email:${input.email.toLowerCase()}:${ipKey ?? 'no-ip'}`);
 		const [emailRequestCount, ipRequestCount] = await Promise.all([
 			updateMagicLinkRateLimitCount(emailKey, now, magicLinkWindowMs),
 			ipKey ? updateMagicLinkRateLimitCount(ipKey, now, magicLinkWindowMs) : Promise.resolve(0),
 		]);
 		if (emailRequestCount > magicLinkEmailLimit || ipRequestCount > magicLinkIpLimit) {
-			return resultOk(undefined);
+			return resultFail('magic-link-rate-limited');
 		}
 
 		const signInLinkResult = await generateFirebaseSignInLink(input.email, input.continueUrl);
 		if (!signInLinkResult.success) {
-			console.error('Could not complete Firebase magic-link generation');
-
 			return resultFail('Could not send sign-in link');
 		}
 
@@ -253,6 +259,19 @@ export const validateMagicLoginContinueUrl = (
 
 const hashMagicLinkRateLimitKey = (secret: string, value: string): string =>
 	createHmac('sha256', secret).update(value).digest('hex');
+
+const getIpv6RateLimitPrefix = (ipAddress: string): string => {
+	const [leftSide = '', rightSide = ''] = ipAddress.split('::');
+	const leftGroups = leftSide.split(':').filter(Boolean);
+	const rightGroups = rightSide.split(':').filter(Boolean);
+	const missingGroupCount = 8 - leftGroups.length - rightGroups.length;
+	const groups = [...leftGroups, ...Array.from({ length: missingGroupCount }, () => '0'), ...rightGroups];
+
+	return groups
+		.slice(0, 4)
+		.map((group) => Number.parseInt(group, 16).toString(16).padStart(4, '0'))
+		.join(':');
+};
 
 export const verifyOtp = async (input: VerifyOtpInput): Promise<Result<VerifyOtpResult>> => {
 	const configurationResult = await validateTwilioOtpConfiguration();

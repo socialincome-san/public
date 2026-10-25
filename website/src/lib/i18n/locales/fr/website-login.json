@@ -50,6 +50,7 @@
 		"error-cta": "Demander un nouveau lien"
 	},
 	"error": {
-		"invalid-email": "Adresse e-mail invalide"
+		"invalid-email": "Adresse e-mail invalide",
+		"rate-limited": "Trop de demandes. Veuillez patienter quelques minutes avant de réessayer."
 	}
 }

@@ -1,4 +1,5 @@
 import { resultFail, resultOk } from '@/lib/result';
+import { createHmac } from 'node:crypto';
 import {
 	archiveEmulatorMagicLoginEmail,
 	createSessionCookie,
@@ -20,6 +21,7 @@ const mockVerifyFirebaseSessionCookie = jest.fn();
 const mockGenerateFirebaseSignInLink = jest.fn();
 const mockDeleteExpiredMagicLinkRateLimits = jest.fn();
 const mockIncrementMagicLinkRateLimit = jest.fn();
+const mockSendSlackAlert = jest.fn();
 const mockSendMail = jest.fn();
 const mockArchiveSentEmail = jest.fn();
 const originalMagicLinkTemplateId = process.env.SENDGRID_MAGIC_LOGIN_TEMPLATE_ID;
@@ -54,6 +56,10 @@ jest.mock('@/modules/mail/mail.service', () => ({
 jest.mock('./magic-link-rate-limit.repository', () => ({
 	deleteExpiredMagicLinkRateLimits: (...args: unknown[]): unknown => mockDeleteExpiredMagicLinkRateLimits(...args),
 	updateMagicLinkRateLimitCount: (...args: unknown[]): unknown => mockIncrementMagicLinkRateLimit(...args),
+}));
+
+jest.mock('@/lib/utils/slack-alert', () => ({
+	sendSlackAlert: (...args: unknown[]): unknown => mockSendSlackAlert(...args),
 }));
 
 beforeEach(() => {
@@ -196,7 +202,7 @@ test('does not generate or send links after the email or IP request limit is exc
 			requestOrigin: 'https://socialincome.org',
 			requesterIp: '203.0.113.12',
 		}),
-	).resolves.toEqual(resultOk(undefined));
+	).resolves.toEqual(resultFail('magic-link-rate-limited'));
 
 	expect(mockIncrementMagicLinkRateLimit).toHaveBeenCalledTimes(2);
 	expect(mockGenerateFirebaseSignInLink).not.toHaveBeenCalled();
@@ -213,11 +219,71 @@ test('applies the per-IP limit even when requests target different email address
 			requestOrigin: 'https://socialincome.org',
 			requesterIp: '203.0.113.12',
 		}),
-	).resolves.toEqual(resultOk(undefined));
+	).resolves.toEqual(resultFail('magic-link-rate-limited'));
 
 	expect(mockIncrementMagicLinkRateLimit).toHaveBeenCalledTimes(2);
 	expect(mockGenerateFirebaseSignInLink).not.toHaveBeenCalled();
 	expect(mockSendMail).not.toHaveBeenCalled();
+});
+
+test('shares the per-IP rate limit across addresses in the same IPv6 /64', async () => {
+	const continueUrl = 'https://socialincome.org/en/usd/auth/confirm-login?email=ada%40example.com';
+	const expectedIpKey = createHmac('sha256', 'test-service-account-secret').update('ip:2001:0db8:0001:0002').digest('hex');
+
+	await sendMagicLoginLink({
+		email: 'ada@example.com',
+		continueUrl,
+		requestOrigin: 'https://socialincome.org',
+		requesterIp: '2001:db8:1:2::1',
+	});
+	expect(mockIncrementMagicLinkRateLimit).toHaveBeenNthCalledWith(2, expectedIpKey, expect.any(Date), expect.any(Number));
+
+	await sendMagicLoginLink({
+		email: 'ada@example.com',
+		continueUrl,
+		requestOrigin: 'https://socialincome.org',
+		requesterIp: '2001:0db8:0001:0002:ffff:ffff:ffff:0007',
+	});
+	expect(mockIncrementMagicLinkRateLimit).toHaveBeenNthCalledWith(4, expectedIpKey, expect.any(Date), expect.any(Number));
+});
+
+test('scopes the per-email limit to the requester IP to avoid cross-IP lockouts', async () => {
+	const request = {
+		email: 'ada@example.com',
+		continueUrl: 'https://socialincome.org/en/usd/auth/confirm-login?email=ada%40example.com',
+		requestOrigin: 'https://socialincome.org',
+	};
+	const firstIpKey = createHmac('sha256', 'test-service-account-secret').update('ip:203.0.113.12').digest('hex');
+	const secondIpKey = createHmac('sha256', 'test-service-account-secret').update('ip:203.0.113.13').digest('hex');
+	const firstEmailKey = createHmac('sha256', 'test-service-account-secret')
+		.update(`email:ada@example.com:${firstIpKey}`)
+		.digest('hex');
+	const secondEmailKey = createHmac('sha256', 'test-service-account-secret')
+		.update(`email:ada@example.com:${secondIpKey}`)
+		.digest('hex');
+
+	await sendMagicLoginLink({ ...request, requesterIp: '203.0.113.12' });
+	await sendMagicLoginLink({ ...request, requesterIp: '203.0.113.13' });
+
+	expect(mockIncrementMagicLinkRateLimit).toHaveBeenNthCalledWith(1, firstEmailKey, expect.any(Date), expect.any(Number));
+	expect(mockIncrementMagicLinkRateLimit).toHaveBeenNthCalledWith(3, secondEmailKey, expect.any(Date), expect.any(Number));
+});
+
+test('alerts when required magic-link configuration is missing', async () => {
+	delete process.env.SENDGRID_MAGIC_LOGIN_TEMPLATE_ID;
+
+	await expect(
+		sendMagicLoginLink({
+			email: 'ada@example.com',
+			continueUrl: 'https://socialincome.org/en/usd/auth/confirm-login?email=ada%40example.com',
+			requestOrigin: 'https://socialincome.org',
+		}),
+	).resolves.toEqual(resultFail('Could not send sign-in link'));
+
+	expect(mockSendSlackAlert).toHaveBeenCalledWith('Magic-link email configuration is incomplete', {
+		missingTemplateId: true,
+		missingRateLimitSecret: false,
+	});
 });
 
 test('archives a safe localized body for Firebase emulator delivery', async () => {

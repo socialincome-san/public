@@ -46,9 +46,11 @@ describe('synchronizeFirebaseSurveyUser', () => {
 		});
 	});
 
-	test('does not log a failed generated sign-in link', async () => {
+	test('logs only the Firebase error code for a failed generated sign-in link', async () => {
 		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
-		mockGenerateSignInWithEmailLink.mockRejectedValue(new Error('provider response contains one-time-token'));
+		mockGenerateSignInWithEmailLink.mockRejectedValue(
+			Object.assign(new Error('provider response contains one-time-token'), { code: 'auth/invalid-continue-uri' }),
+		);
 
 		await expect(
 			generateFirebaseSignInLink(
@@ -56,8 +58,11 @@ describe('synchronizeFirebaseSurveyUser', () => {
 				'https://socialincome.org/en/usd/auth/confirm-login?email=ada%40example.com',
 			),
 		).resolves.toEqual({ success: false, error: 'Could not generate sign-in link' });
-		expect(consoleError).toHaveBeenCalledWith('Could not generate Firebase sign-in link');
+		expect(consoleError).toHaveBeenCalledWith('Could not generate Firebase sign-in link', {
+			code: 'auth/invalid-continue-uri',
+		});
 		expect(consoleError.mock.calls.flat().join(' ')).not.toContain('one-time-token');
+		expect(consoleError.mock.calls.flat().join(' ')).not.toContain('provider response');
 		consoleError.mockRestore();
 	});
 

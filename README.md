@@ -156,6 +156,13 @@ that uses the same localized content and sign-in link. Do not commit SendGrid
 credentials. When the Firebase Auth emulator is connected, development keeps
 using the emulator's local email inbox and does not send through SendGrid.
 
+Roll out branded magic-link delivery in this order: configure the Firebase
+service-account JSON and SendGrid API key/from address, create the dynamic
+SendGrid template and set its ID as `SENDGRID_MAGIC_LOGIN_TEMPLATE_ID`, apply
+the `magic_link_rate_limit` database migration, then deploy the application.
+The deployment should have `SLACK_ALERT_WEBHOOK_URL` configured so missing
+magic-link configuration triggers an operational alert.
+
 ### 3. Start The Local Environment
 
 ```bash

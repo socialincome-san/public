@@ -50,6 +50,7 @@
 		"error-cta": "Neuen Link anfordern"
 	},
 	"error": {
-		"invalid-email": "Ungültige E-Mail-Adresse"
+		"invalid-email": "Ungültige E-Mail-Adresse",
+		"rate-limited": "Zu viele Anfragen. Bitte warte ein paar Minuten und versuche es erneut."
 	}
 }

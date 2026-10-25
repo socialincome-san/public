@@ -44,12 +44,15 @@ export const sendMagicLoginLinkAction = async (input: unknown): Promise<Result<v
 	}
 
 	// Keep delivery outcomes identical to avoid exposing account status through the public action.
-	await sendMagicLoginLink({
+	const sendResult = await sendMagicLoginLink({
 		email: inputResult.data.email,
 		continueUrl: inputResult.data.continueUrl,
 		requestOrigin,
 		requesterIp: requestHeaders.get('x-real-ip')?.trim() ?? undefined,
 	});
+	if (!sendResult.success && sendResult.error === 'magic-link-rate-limited') {
+		return sendResult;
+	}
 
 	return resultOk(undefined);
 };

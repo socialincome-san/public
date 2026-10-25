@@ -50,6 +50,7 @@
 		"error-cta": "Richiedi un nuovo link"
 	},
 	"error": {
-		"invalid-email": "Indirizzo email non valido"
+		"invalid-email": "Indirizzo email non valido",
+		"rate-limited": "Troppe richieste. Attendi qualche minuto prima di riprovare."
 	}
 }

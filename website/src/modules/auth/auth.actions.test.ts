@@ -62,6 +62,17 @@ test('keeps delivery failures indistinguishable from successful magic-link reque
 	).resolves.toEqual(resultOk(undefined));
 });
 
+test('returns a neutral retry result when a magic-link request is rate-limited', async () => {
+	mockSendMagicLoginLink.mockResolvedValue(resultFail('magic-link-rate-limited'));
+
+	await expect(
+		sendMagicLoginLinkAction({
+			email: 'ada@example.com',
+			continueUrl: 'https://socialincome.org/en/usd/auth/confirm-login?email=ada%40example.com',
+		}),
+	).resolves.toEqual(resultFail('magic-link-rate-limited'));
+});
+
 test('archives the safe login email after Firebase emulator delivery', async () => {
 	const input = {
 		email: 'ada@example.com',

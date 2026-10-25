@@ -10,8 +10,16 @@ export const generateFirebaseSignInLink = async (email: string, continueUrl: str
 				handleCodeInApp: true,
 			}),
 		);
-	} catch {
-		console.error('Could not generate Firebase sign-in link');
+	} catch (error) {
+		const code =
+			typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string'
+				? error.code
+				: undefined;
+		if (code) {
+			console.error('Could not generate Firebase sign-in link', { code });
+		} else {
+			console.error('Could not generate Firebase sign-in link');
+		}
 
 		return resultFail('Could not generate sign-in link');
 	}
