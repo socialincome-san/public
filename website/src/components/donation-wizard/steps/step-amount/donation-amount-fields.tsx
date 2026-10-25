@@ -182,10 +182,10 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
 					)}
 				>
-					<div className="text-2xs font-medium">{t('stepAmount.your-one-percent')}</div>
-					<div className={cn(monthlyAmountTextClass, 'py-0.5 whitespace-nowrap')}>
-						{currency} {values.onePercent}
+					<div className="text-2xs font-medium">
+						{t('stepAmount.your-one-percent')} ({currency})
 					</div>
+					<div className={cn(monthlyAmountTextClass, 'py-0.5 whitespace-nowrap')}>{values.onePercent}</div>
 				</button>
 			</div>
 
