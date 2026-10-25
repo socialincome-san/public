@@ -77,7 +77,7 @@ export const DonationAmountFields = ({
 		<div
 			className={cn(
 				getDonationWizardCardClass('stepAmount'),
-				placement === 'hero' && 'mx-0 max-w-none px-6 pt-6 lg:mx-auto lg:w-[400px]',
+				placement === 'hero' && 'mx-0 max-w-none px-7 pt-6 pb-7 sm:px-7 sm:pt-6 sm:pb-7 lg:mx-auto lg:w-[400px]',
 				'text-foreground md:px-9 md:py-9',
 			)}
 			data-testid="donation-wizard-step-amount"
@@ -137,7 +137,7 @@ export const DonationAmountFields = ({
 				<div
 					className={cn(
 						amountFieldBorder,
-						'bg-card focus-within:border-ring focus-within:ring-ring/50 relative -m-px rounded-l-md border px-3 py-2 transition-[border-color,box-shadow,color] focus-within:z-10 focus-within:ring-[3px]',
+						'bg-card focus-within:border-ring focus-within:ring-ring/50 relative -m-px rounded-l-md border px-3 py-3 transition-[border-color,box-shadow,color] focus-within:z-10 focus-within:ring-[3px]',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
@@ -176,7 +176,7 @@ export const DonationAmountFields = ({
 					aria-pressed={values.onePercentSelected}
 					onClick={actions.selectOnePercent}
 					className={cn(
-						'rounded-r-md px-3 py-2 text-left transition-colors',
+						'rounded-r-md px-3 py-3 text-left transition-colors',
 						values.onePercentSelected
 							? 'bg-muted text-foreground'
 							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
