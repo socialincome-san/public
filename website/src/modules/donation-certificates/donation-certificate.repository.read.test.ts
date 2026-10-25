@@ -1,4 +1,5 @@
 const mockFindMany = jest.fn();
+const mockFindFirst = jest.fn();
 const mockCount = jest.fn();
 const mockCreateMany = jest.fn();
 
@@ -6,6 +7,7 @@ jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
 		donationCertificate: {
 			findMany: mockFindMany,
+			findFirst: mockFindFirst,
 			count: mockCount,
 			createMany: mockCreateMany,
 		},
@@ -13,6 +15,7 @@ jest.mock('@/lib/database/prisma', () => ({
 }));
 
 import {
+	findDonationCertificateForPrograms,
 	findPaginatedContributorDonationCertificates,
 	findPaginatedDonationCertificates,
 } from './donation-certificate.repository.read';
@@ -21,6 +24,7 @@ describe('donation certificate repository', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockFindMany.mockResolvedValue([]);
+		mockFindFirst.mockResolvedValue(null);
 		mockCount.mockResolvedValue(0);
 	});
 
@@ -51,7 +55,6 @@ describe('donation certificate repository', () => {
 			select: {
 				id: true,
 				year: true,
-				storagePath: true,
 				createdAt: true,
 				contributor: {
 					select: {
@@ -71,6 +74,26 @@ describe('donation certificate repository', () => {
 			take: 25,
 		});
 		expect(mockCount).toHaveBeenCalledWith({ where });
+	});
+
+	test('finds a certificate only when its contributor belongs to an operated program', async () => {
+		await findDonationCertificateForPrograms('certificate-1', ['program-1', 'program-2']);
+
+		expect(mockFindFirst).toHaveBeenCalledWith({
+			where: {
+				id: 'certificate-1',
+				contributor: {
+					contributions: {
+						some: {
+							campaign: {
+								programId: { in: ['program-1', 'program-2'] },
+							},
+						},
+					},
+				},
+			},
+			select: { year: true, storagePath: true },
+		});
 	});
 
 	test('searches the current contributor certificates by a numeric year', async () => {

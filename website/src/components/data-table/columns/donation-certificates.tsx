@@ -5,6 +5,8 @@ import { SortableHeader } from '@/components/data-table/elements/sortable-header
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { DonationCertificateTableViewRow } from '@/modules/donation-certificates/donation-certificate.types';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import Link from 'next/link';
 
 const contributorColumns: ColumnDef<DonationCertificateTableViewRow>[] = [
 	{
@@ -31,9 +33,19 @@ export const makeDonationCertificateColumns = ({
 		},
 		...(hideContributor ? [] : contributorColumns),
 		{
-			accessorKey: 'storagePath',
-			header: (ctx) => <SortableHeader ctx={ctx}>Storage Path</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			id: 'certificate',
+			header: 'Certificate',
+			cell: (ctx) => (
+				<Button asChild size="sm" variant="outline">
+					<Link
+						href={`/api/portal/donation-certificates/${encodeURIComponent(ctx.row.original.id)}`}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						View PDF
+					</Link>
+				</Button>
+			),
 		},
 		{
 			accessorKey: 'createdAt',
