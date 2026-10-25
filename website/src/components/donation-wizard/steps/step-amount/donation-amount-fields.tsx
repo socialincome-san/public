@@ -7,6 +7,7 @@ import { cn } from '@socialincome/design-system/cn';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { useTranslations } from 'next-intl';
 import NextImage from 'next/image';
+import { useId, useState } from 'react';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -21,9 +22,6 @@ const segmentActive = 'bg-card shadow-xs';
 
 const amountFieldBorder = 'border-input/60';
 const monthlyAmountTextClass = 'text-lg leading-none font-medium';
-
-const monthlyIncomeInputId = 'donation-monthly-income';
-const customAmountInputId = 'donation-custom-amount';
 
 export const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
 
@@ -65,6 +63,13 @@ export const DonationAmountFields = ({
 }: Props) => {
 	const t = useTranslations('donation-wizard');
 	const isSwissVisitor = useIsSwissVisitor();
+	// The hero renders the box twice (mobile and desktop), so labels need ids unique per instance
+	const idPrefix = useId();
+	const monthlyIncomeInputId = `${idPrefix}-monthly-income`;
+	const customAmountInputId = `${idPrefix}-custom-amount`;
+	const [isCustomAmountFocused, setIsCustomAmountFocused] = useState(false);
+	const isCustomAmountActive = isCustomAmountFocused || values.selectedAmount === 'other';
+	const isCustomAmountLabelFloating = isCustomAmountFocused || values.customAmount !== null;
 
 	return (
 		<div
@@ -190,13 +195,21 @@ export const DonationAmountFields = ({
 			<div
 				className={cn(
 					amountFieldBorder,
-					'bg-card focus-within:border-ring focus-within:ring-ring/50 mb-4 rounded-md border px-4 py-3 transition-[border-color,box-shadow,color] focus-within:ring-[3px]',
-					values.selectedAmount === 'other' ? 'text-foreground' : 'text-muted-foreground',
+					'focus-within:border-ring focus-within:ring-ring/50 relative mb-4 rounded-md border px-4 py-3 transition-[border-color,box-shadow,background-color,color] focus-within:ring-[3px]',
+					isCustomAmountActive ? 'bg-card text-foreground' : 'bg-muted/60 text-muted-foreground opacity-60',
 				)}
 			>
-				<label htmlFor={customAmountInputId} className="text-2xs block font-medium">
+				{/* Floating label: rests in the middle while the field is empty, moves up once it is focused or filled */}
+				<label
+					htmlFor={customAmountInputId}
+					className={cn(
+						'absolute left-4 cursor-text font-medium transition-all',
+						isCustomAmountLabelFloating ? 'text-2xs top-3' : 'top-1/2 -translate-y-1/2 text-sm',
+					)}
+				>
 					{t('stepAmount.custom-amount-label')} ({currency})
 				</label>
+				<div className="h-3.5" aria-hidden />
 				<div className={monthlyAmountTextClass}>
 					<Input
 						variant="bare"
@@ -207,10 +220,12 @@ export const DonationAmountFields = ({
 						max={DONATION_CUSTOM_AMOUNT_MAX}
 						value={values.customAmount ?? ''}
 						onFocus={() => {
+							setIsCustomAmountFocused(true);
 							if (values.selectedAmount !== 'other') {
 								actions.setPresetAmount('other');
 							}
 						}}
+						onBlur={() => setIsCustomAmountFocused(false)}
 						onChange={(e) => {
 							const raw = e.target.value;
 							if (raw === '') {
