@@ -34,6 +34,6 @@ export const WithIcon: Story = {
 	args: {
 		label: 'Switzerland',
 		href: '/countries/switzerland',
-		icon: <CountryFlag country="Switzerland" size="sm" decorative />,
+		icon: <CountryFlag country="CH" size="sm" decorative />,
 	},
 };
