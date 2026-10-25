@@ -776,4 +776,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appAttestationFailedError => 'Firebase AppCheck: App attestation failed.';
+
+  @override
+  String get countrySearchHint => 'Search by country name or dial code';
 }
