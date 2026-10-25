@@ -14,7 +14,9 @@
 		"one-time": "Una tantum",
 		"donate-now": "Dona ora",
 		"donate-now-with-amount": "Dona {amount} ora",
-		"custom-amount-placeholder": "Importo"
+		"custom-amount-placeholder": "Importo",
+		"custom-amount-label": "Importo personalizzato",
+		"show-preset-amounts": "Torna agli importi proposti"
 	},
 	"stepPlan": {
 		"monthly-title": "Donazione mensile",

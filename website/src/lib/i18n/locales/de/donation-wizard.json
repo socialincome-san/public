@@ -14,7 +14,9 @@
 		"one-time": "Einmalig",
 		"donate-now": "Jetzt spenden",
 		"donate-now-with-amount": "Jetzt {amount} spenden",
-		"custom-amount-placeholder": "Betrag"
+		"custom-amount-placeholder": "Betrag",
+		"custom-amount-label": "Eigener Betrag",
+		"show-preset-amounts": "Zurück zu den Beträgen"
 	},
 	"stepPlan": {
 		"monthly-title": "Monatliche Spende",

@@ -14,7 +14,9 @@
 		"one-time": "One-time",
 		"donate-now": "Donate now",
 		"donate-now-with-amount": "Donate {amount} now",
-		"custom-amount-placeholder": "Amount"
+		"custom-amount-placeholder": "Amount",
+		"custom-amount-label": "Custom amount",
+		"show-preset-amounts": "Back to the preset amounts"
 	},
 	"stepPlan": {
 		"monthly-title": "Monthly Donation",

@@ -5,6 +5,7 @@ import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { Input } from '@socialincome/design-system/forms/input/input';
+import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import NextImage from 'next/image';
 import {
@@ -31,6 +32,7 @@ const amountFieldDivider = 'divide-input/60';
 const monthlyAmountTextClass = 'text-lg leading-none font-medium';
 
 const monthlyIncomeInputId = 'donation-monthly-income';
+const customAmountInputId = 'donation-custom-amount';
 
 export const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
 
@@ -194,59 +196,83 @@ export const DonationAmountFields = ({
 				<div className="text-2xs text-center font-medium">{t('stepAmount.choose-own-amount')}</div>
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
 			</div>
-			<div
-				className={cn(
-					amountFieldBorder,
-					amountFieldDivider,
-					'mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border',
-				)}
-			>
-				{amountOptions.map((option) => {
-					const isSelected = option.value === values.selectedAmount;
+			{values.selectedAmount === 'other' ? (
+				<div
+					className={cn(
+						amountFieldBorder,
+						'bg-card focus-within:border-ring focus-within:ring-ring/50 mb-4 flex items-center gap-3 rounded-xl border px-4 py-2 transition-[border-color,box-shadow] focus-within:ring-[3px]',
+					)}
+				>
+					<div className="min-w-0 flex-1">
+						<label htmlFor={customAmountInputId} className="text-2xs block font-medium">
+							{t('stepAmount.custom-amount-label')} ({currency})
+						</label>
+						<div className={monthlyAmountTextClass}>
+							<Input
+								variant="bare"
+								id={customAmountInputId}
+								type="number"
+								data-testid="donation-wizard-custom-amount"
+								min={DONATION_CUSTOM_AMOUNT_MIN}
+								max={DONATION_CUSTOM_AMOUNT_MAX}
+								autoFocus
+								value={values.customAmount ?? ''}
+								onChange={(e) => {
+									const raw = e.target.value;
+									if (raw === '') {
+										actions.setCustomAmount(null);
 
-					return (
-						<button
-							key={option.value}
-							type="button"
-							data-testid={`donation-wizard-preset-${option.value}`}
-							aria-pressed={isSelected}
-							onClick={() => actions.setPresetAmount(option.value)}
-							className={cn(
-								'flex flex-col items-center justify-center p-2.5 leading-none font-medium transition-colors sm:p-3',
-								isSelected ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
-							)}
-						>
-							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-2xs')}>
-								{option.labelKey === 'other' ? t('stepAmount.other') : currency}
-							</span>
-							{option.value !== 'other' && <span>{option.value}</span>}
-						</button>
-					);
-				})}
-			</div>
+										return;
+									}
+									const parsed = parseFloat(raw);
+									if (!isNaN(parsed) && parsed <= DONATION_CUSTOM_AMOUNT_MAX) {
+										actions.setCustomAmount(parsed);
+									}
+								}}
+							/>
+						</div>
+					</div>
+					<button
+						type="button"
+						data-testid="donation-wizard-custom-amount-clear"
+						onClick={actions.selectOnePercent}
+						aria-label={t('stepAmount.show-preset-amounts')}
+						title={t('stepAmount.show-preset-amounts')}
+						className="text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring -mr-1 flex size-8 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-hidden"
+					>
+						<X className="size-4" aria-hidden />
+					</button>
+				</div>
+			) : (
+				<div
+					className={cn(
+						amountFieldBorder,
+						amountFieldDivider,
+						'mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border',
+					)}
+				>
+					{amountOptions.map((option) => {
+						const isSelected = option.value === values.selectedAmount;
 
-			{values.selectedAmount === 'other' && (
-				<div className="-mt-2 mb-4">
-					<Input
-						type="number"
-						data-testid="donation-wizard-custom-amount"
-						min={DONATION_CUSTOM_AMOUNT_MIN}
-						max={DONATION_CUSTOM_AMOUNT_MAX}
-						placeholder={t('stepAmount.custom-amount-placeholder')}
-						value={values.customAmount ?? ''}
-						onChange={(e) => {
-							const raw = e.target.value;
-							if (raw === '') {
-								actions.setCustomAmount(null);
-
-								return;
-							}
-							const parsed = parseFloat(raw);
-							if (!isNaN(parsed) && parsed <= DONATION_CUSTOM_AMOUNT_MAX) {
-								actions.setCustomAmount(parsed);
-							}
-						}}
-					/>
+						return (
+							<button
+								key={option.value}
+								type="button"
+								data-testid={`donation-wizard-preset-${option.value}`}
+								aria-pressed={isSelected}
+								onClick={() => actions.setPresetAmount(option.value)}
+								className={cn(
+									'flex flex-col items-center justify-center p-2.5 leading-none font-medium transition-colors sm:p-3',
+									isSelected ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+								)}
+							>
+								<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-2xs')}>
+									{option.labelKey === 'other' ? t('stepAmount.other') : currency}
+								</span>
+								{option.value !== 'other' && <span>{option.value}</span>}
+							</button>
+						);
+					})}
 				</div>
 			)}
 
