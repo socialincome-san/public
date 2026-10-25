@@ -136,14 +136,14 @@ export const DonationAmountFields = ({
 			<div
 				className={cn(
 					amountFieldBorder,
-					'focus-within:border-ring focus-within:ring-ring/50 mb-4 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border transition-[opacity,border-color,box-shadow] focus-within:ring-[3px]',
+					'focus-within:border-ring focus-within:ring-ring/50 mb-4 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border transition-[opacity,border-color,box-shadow] focus-within:ring-[3px]',
 					isOnePercentDimmed && 'opacity-60',
 				)}
 			>
 				<div
 					className={cn(
 						amountFieldBorder,
-						'bg-card relative -m-px rounded-l-md border px-4 py-3 transition-colors',
+						'bg-card border-r px-4 py-3 transition-colors',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
@@ -182,7 +182,7 @@ export const DonationAmountFields = ({
 					aria-pressed={values.onePercentSelected}
 					onClick={actions.selectOnePercent}
 					className={cn(
-						'rounded-r-md px-4 py-3 text-left transition-colors',
+						'px-4 py-3 text-left transition-colors',
 						values.onePercentSelected
 							? 'bg-muted text-foreground'
 							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
