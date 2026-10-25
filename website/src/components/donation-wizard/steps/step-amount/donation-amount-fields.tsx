@@ -136,15 +136,14 @@ export const DonationAmountFields = ({
 			<div
 				className={cn(
 					amountFieldBorder,
-					'mb-4 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border transition-opacity',
+					'focus-within:border-ring focus-within:ring-ring/50 mb-4 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border transition-[opacity,border-color,box-shadow] focus-within:ring-[3px]',
 					isOnePercentDimmed && 'opacity-60',
 				)}
 			>
 				<div
 					className={cn(
 						amountFieldBorder,
-						'focus-within:border-ring focus-within:ring-ring/50 relative -m-px rounded-l-md border px-4 py-3 transition-[border-color,box-shadow,background-color,color] focus-within:z-10 focus-within:ring-[3px]',
-						isOnePercentDimmed ? 'bg-muted/60' : 'bg-card',
+						'bg-card relative -m-px rounded-l-md border px-4 py-3 transition-colors',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
@@ -186,10 +185,7 @@ export const DonationAmountFields = ({
 						'rounded-r-md px-4 py-3 text-left transition-colors',
 						values.onePercentSelected
 							? 'bg-muted text-foreground'
-							: cn(
-									'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
-									isOnePercentDimmed ? 'bg-muted/60' : 'bg-card',
-								),
+							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
 					)}
 				>
 					<div className="text-2xs font-medium">
@@ -208,7 +204,7 @@ export const DonationAmountFields = ({
 				className={cn(
 					amountFieldBorder,
 					'focus-within:border-ring focus-within:ring-ring/50 relative mb-4 rounded-md border px-4 py-3 transition-[border-color,box-shadow,background-color,color] focus-within:ring-[3px]',
-					isCustomAmountActive ? 'bg-card text-foreground' : 'bg-muted/60 text-muted-foreground opacity-60',
+					isCustomAmountActive ? 'bg-card text-foreground' : 'bg-card text-muted-foreground opacity-60',
 				)}
 			>
 				{/* Floating label: rests in the middle while the field is empty, moves up once it is focused or filled */}
