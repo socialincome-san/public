@@ -414,7 +414,8 @@
 	},
 	"wallet": {
 		"paid-out": "Paid out",
-		"recipients": "Recipients"
+		"recipients": "Recipients",
+		"concluded": "Concluded"
 	},
 	"person-grid": {
 		"search-placeholder": "Search by name",

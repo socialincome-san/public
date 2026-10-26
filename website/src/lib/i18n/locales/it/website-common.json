@@ -414,7 +414,8 @@
 	},
 	"wallet": {
 		"paid-out": "Versato",
-		"recipients": "Beneficiari"
+		"recipients": "Beneficiari",
+		"concluded": "Concluso"
 	},
 	"person-grid": {
 		"search-placeholder": "Cerca per nome",
