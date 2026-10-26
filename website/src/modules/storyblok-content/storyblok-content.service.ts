@@ -631,7 +631,8 @@ const fetchLatestResolvedArticles = async (
 ): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
 	const result = await fetchStoryblokStoriesPage<unknown>({
 		...(await getStoryParams(language)),
-		per_page: JOURNAL_TEASER_LIMIT,
+		// A full page, so stories with unresolved relations can't leave the teaser short.
+		per_page: DEFAULT_PAGE_SIZE,
 		excluding_fields: CONTENT_FIELD,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS,
 		sort_by: 'first_published_at:desc',
@@ -639,7 +640,7 @@ const fetchLatestResolvedArticles = async (
 		filter_query: filterQuery,
 	});
 
-	return result.success ? resultOk(result.data.stories.filter(isResolvedArticle)) : result;
+	return result.success ? resultOk(result.data.stories.filter(isResolvedArticle).slice(0, JOURNAL_TEASER_LIMIT)) : result;
 };
 
 const isResolvedRelation = (value: unknown): value is ISbStoryData =>
