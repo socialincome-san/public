@@ -1,13 +1,12 @@
 'use client';
 
-import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { createWizardPendingContributionAction } from '@/modules/qr-bills/qr-bill.actions';
 import { cn } from '@socialincome/design-system/cn';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
-import { selectPaymentView } from '../../wizard/donation-machine-selectors';
+import { isWizardQrCurrencySupported, selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { QrWizardStepFooter } from '../step-qr-contact/qr-wizard-step-footer';
 import { QrBillPaymentCard } from './qr-bill-payment-card';
@@ -15,7 +14,7 @@ import { QrBillPdfDownloadLink } from './qr-bill-pdf-download-link';
 
 export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
-	const currency = useWebsiteCurrency();
+	const { currency } = state.context;
 	const view = selectPaymentView(state.context);
 	const [confirming, setConfirming] = useState(false);
 
@@ -70,7 +69,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 		return null;
 	}
 
-	if (currency !== 'CHF' && currency !== 'EUR') {
+	if (!isWizardQrCurrencySupported(currency)) {
 		return null;
 	}
 

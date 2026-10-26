@@ -33,7 +33,6 @@ export const getDonationFunnelEvent = (
 	eventType: DonationWizardEventType,
 	changedStep: boolean,
 	context: DonationWizardContext,
-	currency: string,
 ) => {
 	const name = funnelEventNames[eventType];
 	if (!name || !changedStep) {
@@ -47,7 +46,7 @@ export const getDonationFunnelEvent = (
 		name,
 		properties: {
 			value: summary?.amount ?? getDonationDisplayAmount(context),
-			currency,
+			currency: context.currency,
 			donation_type: toDonationType(summary?.cadence ?? context.cadence),
 			// Pushed even when unknown: Tag Manager would otherwise keep the value of an earlier event.
 			payment_method: eventsWithPaymentMethod.has(eventType) ? toPaymentMethod(context.paymentMethod) : undefined,
@@ -67,4 +66,18 @@ export const getDonationCompletedEvent = (donation: PaidCheckoutDonation) => ({
 		transaction_id: donation.checkoutSessionId,
 		items: [{ item_id: 'donation', item_name: 'Donation', price: donation.amount, quantity: 1 }],
 	},
+});
+
+/** Properties of the donation bar events, shaped like the funnel events so they can be compared. */
+export const getDonationBarEventProperties = (
+	value: number,
+	currency: string,
+	cadence: Cadence,
+	paymentMethod?: string,
+) => ({
+	value,
+	currency,
+	donation_type: toDonationType(cadence),
+	// Pushed even when unknown: Tag Manager would otherwise keep the value of an earlier event.
+	payment_method: paymentMethod,
 });

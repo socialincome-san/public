@@ -1,6 +1,6 @@
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
-import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
+import { getVisiblePrograms, ProgramGridView } from '@/components/content-blocks/program-grid-view';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -18,7 +18,13 @@ type Props = {
 export const ProgramGridBlock = async ({ blok, lang, currency }: Props) => {
 	const programsResult = await getProgramsAction(lang);
 	const allPrograms = programsResult.success ? programsResult.data : [];
-	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
+	const programs = await getVisiblePrograms(
+		blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms),
+		blok,
+	);
+	if (blok.hideConcludedPrograms && programs.length === 0) {
+		return null;
+	}
 
 	return (
 		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>

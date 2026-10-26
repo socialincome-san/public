@@ -19,6 +19,9 @@ const FRAME =
 	'transition-[translate,scale] duration-500 ease-glide group-data-[state=open]/backstage:duration-480 motion-reduce:transition-none';
 const FADE =
 	'opacity-0 transition-opacity duration-350 ease-in-out group-data-[state=open]/backstage:opacity-100 group-data-[state=open]/backstage:duration-520 group-data-[state=open]/backstage:ease-out motion-reduce:transition-none';
+// Keep the backdrop visible through the closing animation, but not during page overscroll.
+const VISIBILITY =
+	'invisible transition-[visibility] delay-650 group-data-[state=open]/backstage:visible group-data-[state=open]/backstage:delay-0 motion-reduce:delay-0';
 
 const BackstageOpenContext = createContext(false);
 
@@ -65,7 +68,10 @@ export const Backstage = ({ open, onOpenChange, panel, panelLabel, closeLabel, c
 					// Some tools, like Playwright's role queries, ignore inert, so the closed panel would still count as a dialog
 					aria-hidden={!open}
 					inert={!open}
-					className="bg-backstage text-primary fixed inset-y-0 right-0 z-0 w-(--backstage-width) overflow-y-auto overscroll-contain antialiased"
+					className={cn(
+						'bg-backstage text-primary fixed inset-y-0 right-0 z-0 w-(--backstage-width) overflow-y-auto overscroll-contain antialiased',
+						VISIBILITY,
+					)}
 				>
 					<div className="flex min-h-full flex-col gap-8 py-8 pr-6 pl-12">
 						<div className="sticky top-8 z-10 -mb-4 self-end">
@@ -87,47 +93,49 @@ export const Backstage = ({ open, onOpenChange, panel, panelLabel, closeLabel, c
 					{children}
 				</div>
 
-				<div
-					aria-hidden="true"
-					onClick={() => onOpenChange(false)}
-					className={cn(
-						'pointer-events-none fixed inset-y-0 -right-px left-0 z-20 cursor-pointer group-data-[state=open]/backstage:pointer-events-auto',
-						SLIDE,
-					)}
-				>
-					<div className={cn('bg-foreground/30 absolute inset-0', FADE)} />
-					<div className="absolute inset-0 flex flex-col justify-between">
-						<div
-							className={cn(
-								'flex -translate-y-full flex-col items-end group-data-[state=open]/backstage:translate-y-0',
-								FRAME,
-							)}
-						>
-							<div className="bg-backstage h-6 w-full" />
+				<div className={VISIBILITY}>
+					<div
+						aria-hidden="true"
+						onClick={() => onOpenChange(false)}
+						className={cn(
+							'pointer-events-none fixed inset-y-0 -right-px left-0 z-20 cursor-pointer group-data-[state=open]/backstage:pointer-events-auto',
+							SLIDE,
+						)}
+					>
+						<div className={cn('bg-foreground/30 absolute inset-0', FADE)} />
+						<div className="absolute inset-0 flex flex-col justify-between">
 							<div
 								className={cn(
-									'size-8 origin-top-right scale-0 bg-[radial-gradient(circle_farthest-side_at_0_100%,transparent_99%,var(--color-backstage))] group-data-[state=open]/backstage:scale-100',
+									'flex -translate-y-full flex-col items-end group-data-[state=open]/backstage:translate-y-0',
 									FRAME,
 								)}
-							/>
-						</div>
-						<div
-							className={cn(
-								'flex translate-y-full flex-col items-end group-data-[state=open]/backstage:translate-y-0',
-								FRAME,
-							)}
-						>
+							>
+								<div className="bg-backstage h-6 w-full" />
+								<div
+									className={cn(
+										'size-8 origin-top-right scale-0 bg-[radial-gradient(circle_farthest-side_at_0_100%,transparent_99%,var(--color-backstage))] group-data-[state=open]/backstage:scale-100',
+										FRAME,
+									)}
+								/>
+							</div>
 							<div
 								className={cn(
-									'size-8 origin-bottom-right scale-0 bg-[radial-gradient(circle_farthest-side_at_0_0,transparent_99%,var(--color-backstage))] group-data-[state=open]/backstage:scale-100',
+									'flex translate-y-full flex-col items-end group-data-[state=open]/backstage:translate-y-0',
 									FRAME,
 								)}
-							/>
-							<div className="bg-backstage h-6 w-full" />
+							>
+								<div
+									className={cn(
+										'size-8 origin-bottom-right scale-0 bg-[radial-gradient(circle_farthest-side_at_0_0,transparent_99%,var(--color-backstage))] group-data-[state=open]/backstage:scale-100',
+										FRAME,
+									)}
+								/>
+								<div className="bg-backstage h-6 w-full" />
+							</div>
 						</div>
+						{/* Paints only outside its box, so the shadow falls on the frame and the panel, not on the page */}
+						<div className={cn('shadow-backstage absolute inset-x-0 inset-y-6 rounded-4xl', FADE)} />
 					</div>
-					{/* Paints only outside its box, so the shadow falls on the frame and the panel, not on the page */}
-					<div className={cn('shadow-backstage absolute inset-x-0 inset-y-6 rounded-4xl', FADE)} />
 				</div>
 			</div>
 		</BackstageOpenContext>

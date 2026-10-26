@@ -8,14 +8,16 @@ import type { ISbStoryData } from '@storyblok/js';
 import {
 	getJournalArticle,
 	getJournalArticlePageData,
+	getJournalArticlesByArticleType,
+	getJournalArticlesByTag,
 	getJournalArticlesByUuids,
 	getJournalPerson,
 	getJournalPersonPageData,
 	getLatestJournalArticles,
-	getLatestJournalArticlesByTag,
 } from './journal.cache';
 import {
 	journalArticleRequestSchema,
+	journalArticlesByArticleTypeRequestSchema,
 	journalArticlesByTagRequestSchema,
 	journalArticlesByUuidsRequestSchema,
 	journalLanguageRequestSchema,
@@ -64,12 +66,20 @@ export const getJournalArticlesByUuidsAction = async (input: unknown): Promise<R
 		: resultFail('Invalid journal articles request');
 };
 
-export const getLatestJournalArticlesByTagAction = async (
-	input: unknown,
-): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+export const getJournalArticlesByTagAction = async (input: unknown): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
 	const parsed = journalArticlesByTagRequestSchema.safeParse(input);
 
 	return parsed.success
-		? getLatestJournalArticlesByTag(parsed.data.language, parsed.data.tagUuid)
+		? getJournalArticlesByTag(parsed.data.language, parsed.data.tagUuid)
+		: resultFail('Invalid journal articles request');
+};
+
+export const getJournalArticlesByArticleTypeAction = async (
+	input: unknown,
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	const parsed = journalArticlesByArticleTypeRequestSchema.safeParse(input);
+
+	return parsed.success
+		? getJournalArticlesByArticleType(parsed.data.language, parsed.data.articleTypeUuid)
 		: resultFail('Invalid journal articles request');
 };

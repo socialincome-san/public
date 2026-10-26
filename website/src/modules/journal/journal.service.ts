@@ -282,21 +282,6 @@ export const getLatestJournalArticles = async (language: string): Promise<Result
 	}
 };
 
-export const getLatestJournalArticlesByTag = async (
-	language: string,
-	tagUuid: string,
-): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
-	try {
-		const result = await storyblokContent.getLatestArticlesByTag(tagUuid, language);
-
-		return result.success ? result : resultFail('Could not load journal articles', result.status);
-	} catch (error) {
-		console.error('Could not load journal articles by tag', { error });
-
-		return resultFail('Could not load journal articles');
-	}
-};
-
 export const getPublishedJournalArticles = async (language: string): Promise<Result<JournalRssArticle[]>> => {
 	try {
 		const result = await storyblokContent.getPublishedJournalArticles(language);
@@ -319,6 +304,36 @@ export const getJournalArticlesByUuids = async (
 		return result.success ? result : resultFail('Could not load journal articles', result.status);
 	} catch (error) {
 		console.error('Could not load journal articles', { error });
+
+		return resultFail('Could not load journal articles');
+	}
+};
+
+export const getJournalArticlesByTag = async (
+	language: string,
+	tagUuid: string,
+): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
+	try {
+		const result = await storyblokContent.getLatestArticlesByTag(tagUuid, language);
+
+		return result.success ? result : resultFail('Could not load journal articles', result.status);
+	} catch (error) {
+		console.error('Could not load journal articles by tag', { error });
+
+		return resultFail('Could not load journal articles');
+	}
+};
+
+export const getJournalArticlesByArticleType = async (
+	language: string,
+	articleTypeUuid: string,
+): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
+	try {
+		const result = await storyblokContent.getLatestArticlesByArticleType(articleTypeUuid, language);
+
+		return result.success ? result : resultFail('Could not load journal articles', result.status);
+	} catch (error) {
+		console.error('Could not load journal articles by article type', { error });
 
 		return resultFail('Could not load journal articles');
 	}

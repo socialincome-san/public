@@ -8,8 +8,9 @@ const mockGetTimeCommitmentLabels = jest.fn();
 const mockGetTag = jest.fn();
 const mockGetArticleType = jest.fn();
 const mockGetArticlesByTag = jest.fn();
-const mockGetLatestArticlesByTag = jest.fn();
 const mockGetArticlesByArticleType = jest.fn();
+const mockGetLatestArticlesByTag = jest.fn();
+const mockGetLatestArticlesByArticleType = jest.fn();
 const mockGetArticlesByAuthor = jest.fn();
 const mockGetOverviewArticles = jest.fn();
 const mockGetArticleCountByTagForDefaultLang = jest.fn();
@@ -33,8 +34,9 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getTag: mockGetTag,
 	getArticleType: mockGetArticleType,
 	getArticlesByTag: mockGetArticlesByTag,
-	getLatestArticlesByTag: mockGetLatestArticlesByTag,
 	getArticlesByArticleType: mockGetArticlesByArticleType,
+	getLatestArticlesByTag: mockGetLatestArticlesByTag,
+	getLatestArticlesByArticleType: mockGetLatestArticlesByArticleType,
 	getArticlesByAuthor: mockGetArticlesByAuthor,
 	getOverviewArticles: mockGetOverviewArticles,
 	getArticleCountByTagForDefaultLang: mockGetArticleCountByTagForDefaultLang,
@@ -55,9 +57,10 @@ jest.mock('@/modules/community/community.cache', () => ({
 
 import {
 	getJournalArticlePageData,
+	getJournalArticlesByArticleType,
+	getJournalArticlesByTag,
 	getJournalOverviewPageData,
 	getJournalPersonPageData,
-	getLatestJournalArticlesByTag,
 } from './journal.service';
 
 const labels = {
@@ -109,6 +112,8 @@ beforeEach(() => {
 	mockGetTimeCommitmentLabels.mockResolvedValue({ success: true, data: { 'On a break': 'Pause' } });
 	mockGetArticlesByTag.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByArticleType.mockResolvedValue({ success: true, data: [article] });
+	mockGetLatestArticlesByTag.mockResolvedValue({ success: true, data: [article] });
+	mockGetLatestArticlesByArticleType.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByAuthor.mockResolvedValue({ success: true, data: [article] });
 	mockGetOverviewArticles.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticleCountByTagForDefaultLang.mockResolvedValue({ success: true, data: 2 });
@@ -279,25 +284,34 @@ describe('getJournalPersonPageData', () => {
 	});
 });
 
-describe('getLatestJournalArticlesByTag', () => {
-	test('returns the latest articles of the tag', async () => {
-		mockGetLatestArticlesByTag.mockResolvedValue({ success: true, data: [article] });
-
-		const result = await getLatestJournalArticlesByTag('en', 'tag-1');
-
-		expect(mockGetLatestArticlesByTag).toHaveBeenCalledWith('tag-1', 'en');
-		expect(result).toEqual({ success: true, data: [article] });
+describe('getJournalArticlesByTag', () => {
+	test('loads the articles with the tag', async () => {
+		expect(await getJournalArticlesByTag('de', 'tag-1')).toEqual({ success: true, data: [article] });
+		expect(mockGetLatestArticlesByTag).toHaveBeenCalledWith('tag-1', 'de');
 	});
 
-	test('fails when Storyblok cannot load the tag articles', async () => {
-		mockGetLatestArticlesByTag.mockResolvedValue({
+	test('fails when the articles cannot be loaded', async () => {
+		mockGetLatestArticlesByTag.mockResolvedValueOnce({ success: false, error: 'Storyblok error', status: 500 });
+
+		expect(await getJournalArticlesByTag('de', 'tag-1')).toMatchObject({
 			success: false,
-			error: 'Could not fetch Storyblok stories',
-			status: 500,
+			error: 'Could not load journal articles',
 		});
+	});
+});
 
-		const result = await getLatestJournalArticlesByTag('en', 'tag-1');
+describe('getJournalArticlesByArticleType', () => {
+	test('loads the articles of the type', async () => {
+		expect(await getJournalArticlesByArticleType('de', 'type-1')).toEqual({ success: true, data: [article] });
+		expect(mockGetLatestArticlesByArticleType).toHaveBeenCalledWith('type-1', 'de');
+	});
 
-		expect(result.success).toBe(false);
+	test('fails when the articles cannot be loaded', async () => {
+		mockGetLatestArticlesByArticleType.mockResolvedValueOnce({ success: false, error: 'Storyblok error', status: 500 });
+
+		expect(await getJournalArticlesByArticleType('de', 'type-1')).toMatchObject({
+			success: false,
+			error: 'Could not load journal articles',
+		});
 	});
 });

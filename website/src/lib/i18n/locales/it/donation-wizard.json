@@ -1,7 +1,8 @@
 {
 	"modal": {
 		"title": "Fai una donazione",
-		"campaign-for": "Per {title}"
+		"campaign-for": "Per {title}",
+		"currency": "Valuta"
 	},
 	"stepAmount": {
 		"title": "Fai una donazione",
@@ -138,5 +139,10 @@
 		"zewo": "Certificato ZEWO",
 		"why-one-percent": "Perché donare l'1%?",
 		"pay-with": "Paga con"
+	},
+	"resumeBar": {
+		"label": "Donazione rapida",
+		"summary": "{cadence, select, monthly {Dona {amount} al mese, modifica l'importo} other {Dona {amount} una volta, modifica l'importo}}",
+		"continue": "Continua"
 	}
 }

@@ -1,3 +1,4 @@
+import { isWebsiteCurrency, type WebsiteCurrency } from '@/lib/i18n/utils';
 import type {
 	Cadence,
 	DonationAmountContext,
@@ -32,12 +33,14 @@ const isOneTimePlanChoice = (value: unknown): value is OneTimePlanChoice => valu
 
 const getStorageKey = (sessionId: string): string => `${STORAGE_KEY_PREFIX}${sessionId}`;
 
-const parseStoredContext = (value: unknown): DonationAmountContext | null => {
+export const parseStoredContext = (value: unknown, fallbackCurrency?: WebsiteCurrency): DonationAmountContext | null => {
 	if (!isRecord(value)) {
 		return null;
 	}
 
 	const {
+		// Contexts stored before the wizard tracked its own currency have none.
+		currency = fallbackCurrency,
 		monthlyIncome,
 		selectedAmount,
 		customAmount,
@@ -52,6 +55,8 @@ const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 	} = value;
 
 	if (
+		typeof currency !== 'string' ||
+		!isWebsiteCurrency(currency) ||
 		!isNullableNumber(monthlyIncome) ||
 		!isNullablePresetAmount(selectedAmount) ||
 		!isNullableNumber(customAmount) ||
@@ -68,6 +73,7 @@ const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 	}
 
 	return {
+		currency,
 		monthlyIncome,
 		selectedAmount,
 		customAmount,
@@ -80,6 +86,21 @@ const parseStoredContext = (value: unknown): DonationAmountContext | null => {
 		returnsToOneTimePlanStep,
 		campaignId,
 	};
+};
+
+/** A donation saved as JSON, or `null` when it is missing or no longer valid. */
+const parseStoredDonation = (value: string | null, fallbackCurrency?: WebsiteCurrency): DonationAmountContext | null => {
+	if (!value) {
+		return null;
+	}
+
+	try {
+		const parsed: unknown = JSON.parse(value);
+
+		return parseStoredContext(parsed, fallbackCurrency);
+	} catch {
+		return null;
+	}
 };
 
 export const buildStripeCheckoutReturnPath = (): string | undefined => {
@@ -95,23 +116,23 @@ export const storeStripeCheckoutContext = (sessionId: string, context: DonationA
 		return;
 	}
 
-	window.sessionStorage.setItem(getStorageKey(sessionId), JSON.stringify(context));
+	try {
+		window.sessionStorage.setItem(getStorageKey(sessionId), JSON.stringify(context));
+	} catch {
+		// Storage is blocked: the payment still goes through, onboarding then starts from the website's defaults.
+	}
 };
 
-export const readStoredStripeCheckoutContext = (sessionId: string): DonationAmountContext | null => {
+export const readStoredStripeCheckoutContext = (
+	sessionId: string,
+	fallbackCurrency: WebsiteCurrency,
+): DonationAmountContext | null => {
 	if (typeof window === 'undefined') {
 		return null;
 	}
 
-	const value = window.sessionStorage.getItem(getStorageKey(sessionId));
-	if (!value) {
-		return null;
-	}
-
 	try {
-		const parsed: unknown = JSON.parse(value);
-
-		return parseStoredContext(parsed);
+		return parseStoredDonation(window.sessionStorage.getItem(getStorageKey(sessionId)), fallbackCurrency);
 	} catch {
 		return null;
 	}
@@ -122,5 +143,9 @@ export const clearStoredStripeCheckoutContext = (sessionId: string): void => {
 		return;
 	}
 
-	window.sessionStorage.removeItem(getStorageKey(sessionId));
+	try {
+		window.sessionStorage.removeItem(getStorageKey(sessionId));
+	} catch {
+		// Storage is blocked, so nothing was stored.
+	}
 };

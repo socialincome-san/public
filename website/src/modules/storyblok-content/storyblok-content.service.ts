@@ -456,19 +456,13 @@ export const getLatestJournalArticles = async (
 export const getLatestArticlesByTag = async (
 	tagId: string,
 	language: string,
-): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
-	const result = await fetchStoryblokStoriesPage<unknown>({
-		...(await getStoryParams(language)),
-		per_page: JOURNAL_TEASER_LIMIT,
-		excluding_fields: CONTENT_FIELD,
-		resolve_relations: STANDARD_ARTICLE_RELATIONS,
-		sort_by: 'first_published_at:desc',
-		content_type: CONTENT_TYPE.article,
-		filter_query: articleByTagsFilter(tagId),
-	});
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => fetchLatestResolvedArticles(language, articleByTagsFilter(tagId));
 
-	return result.success ? resultOk(result.data.stories.filter(isResolvedArticle)) : result;
-};
+export const getLatestArticlesByArticleType = async (
+	articleTypeId: string,
+	language: string,
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> =>
+	fetchLatestResolvedArticles(language, articlesByArticleTypeFilter(articleTypeId));
 
 export const getArticlesByUuids = async (
 	language: string,
@@ -629,6 +623,23 @@ const fetchResolvedArticles = async (
 	});
 
 	return result.success ? resultOk(result.data.filter(isResolvedArticle)) : resultOk([]);
+};
+
+const fetchLatestResolvedArticles = async (
+	language: string,
+	filterQuery: StoryblokFilterQuery,
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	const result = await fetchStoryblokStoriesPage<unknown>({
+		...(await getStoryParams(language)),
+		per_page: JOURNAL_TEASER_LIMIT,
+		excluding_fields: CONTENT_FIELD,
+		resolve_relations: STANDARD_ARTICLE_RELATIONS,
+		sort_by: 'first_published_at:desc',
+		content_type: CONTENT_TYPE.article,
+		filter_query: filterQuery,
+	});
+
+	return result.success ? resultOk(result.data.stories.filter(isResolvedArticle)) : result;
 };
 
 const isResolvedRelation = (value: unknown): value is ISbStoryData =>

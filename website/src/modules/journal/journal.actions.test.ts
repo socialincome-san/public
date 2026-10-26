@@ -4,7 +4,6 @@ const mockGetJournalArticlesByUuids = jest.fn();
 const mockGetJournalPerson = jest.fn();
 const mockGetJournalPersonPageData = jest.fn();
 const mockGetLatestJournalArticles = jest.fn();
-const mockGetLatestJournalArticlesByTag = jest.fn();
 
 jest.mock('./journal.cache', () => ({
 	getJournalArticle: mockGetJournalArticle,
@@ -13,14 +12,12 @@ jest.mock('./journal.cache', () => ({
 	getJournalPerson: mockGetJournalPerson,
 	getJournalPersonPageData: mockGetJournalPersonPageData,
 	getLatestJournalArticles: mockGetLatestJournalArticles,
-	getLatestJournalArticlesByTag: mockGetLatestJournalArticlesByTag,
 }));
 
 import {
 	getJournalArticlePageDataAction,
 	getJournalArticlesByUuidsAction,
 	getLatestJournalArticlesAction,
-	getLatestJournalArticlesByTagAction,
 } from './journal.actions';
 
 describe('journal actions', () => {
@@ -56,20 +53,5 @@ describe('journal actions', () => {
 		await getLatestJournalArticlesAction('en');
 
 		expect(mockGetLatestJournalArticles).toHaveBeenCalledWith('en');
-	});
-
-	test('forwards validated tag teaser requests', async () => {
-		mockGetLatestJournalArticlesByTag.mockResolvedValue({ success: true, data: [] });
-
-		await getLatestJournalArticlesByTagAction({ language: 'fr', tagUuid: 'tag-1' });
-
-		expect(mockGetLatestJournalArticlesByTag).toHaveBeenCalledWith('fr', 'tag-1');
-	});
-
-	test('rejects a tag teaser request without a tag', async () => {
-		const result = await getLatestJournalArticlesByTagAction({ language: 'fr', tagUuid: '' });
-
-		expect(result.success).toBe(false);
-		expect(mockGetLatestJournalArticlesByTag).not.toHaveBeenCalled();
 	});
 });
