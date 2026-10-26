@@ -411,8 +411,10 @@ export interface Inflows {
 
 export interface JournalTeasers {
   heading?: string;
-  articlesDisplayMode: "latest" | "selected";
+  articlesDisplayMode: "latest" | "selected" | "tag" | "articleType";
   selectedArticles?: (ISbStoryData<Article> | string)[];
+  selectedTag?: ISbStoryData<Tag> | string;
+  selectedArticleType?: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
