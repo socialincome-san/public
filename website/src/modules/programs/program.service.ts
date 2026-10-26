@@ -378,19 +378,20 @@ export const createProgram = async (
 			};
 		}
 
-		const [activeOrganizationResult, operatorOrganizationResult, countryResult] = await Promise.all([
+		const [activeOrganizationResult, countryResult] = await Promise.all([
 			getActiveOrganizationId(userId),
-			getOperatorFallbackOrganizationId(),
 			getCountryIsoCode(input.countryId),
 		]);
 		if (!activeOrganizationResult.success) {
 			return resultFail(activeOrganizationResult.error);
 		}
-		if (!operatorOrganizationResult.success) {
-			return resultFail(operatorOrganizationResult.error);
-		}
 		if (!countryResult.success) {
 			return resultFail(countryResult.error);
+		}
+
+		const operatorOrganizationResult = await getOperatorFallbackOrganizationId(countryResult.data);
+		if (!operatorOrganizationResult.success) {
+			return resultFail(operatorOrganizationResult.error);
 		}
 
 		const programName = `${getCountryNameByCode(countryResult.data)} Program ${Math.floor(10000 + Math.random() * 90000)}`;
