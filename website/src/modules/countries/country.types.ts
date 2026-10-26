@@ -104,7 +104,6 @@ export type ProgramCountryFeasibilityView = {
 export type PublicCountryStats = {
 	programsCount: number;
 	recipientsCount: number;
-	candidatesCount: number;
 };
 
 export type PublicCountryStatsMap = Record<string, PublicCountryStats>;

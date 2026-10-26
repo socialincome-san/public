@@ -1,4 +1,11 @@
-import { Currency, Gender, PayoutInterval, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
+import {
+	Currency,
+	Gender,
+	PayoutInterval,
+	PayoutStatus,
+	ProgramPermission,
+	type CountryCode,
+} from '@/generated/prisma/enums';
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
@@ -1143,6 +1150,16 @@ export const countCandidatesForLocalPartners = async (localPartnerIds: string[])
 		return resultOk(await recipientRepository.countCandidatesForLocalPartners(localPartnerIds));
 	} catch (error) {
 		console.error('Could not count candidates for local partners', { error });
+
+		return resultFail('Could not count candidates');
+	}
+};
+
+export const countCandidatesForLocalPartnerCountry = async (countryCode: CountryCode): Promise<Result<number>> => {
+	try {
+		return resultOk(await recipientRepository.countCandidatesForLocalPartnerCountry(countryCode));
+	} catch (error) {
+		console.error('Could not count candidates for local partner country', { countryCode, error });
 
 		return resultFail('Could not count candidates');
 	}
