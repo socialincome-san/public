@@ -291,6 +291,7 @@ export const getProgramSettings = async (userId: string, programId: string): Pro
 			country: program.country,
 			amountOfRecipientsForStart: program.amountOfRecipientsForStart,
 			coveredByReserves: program.coveredByReserves,
+			isConcluded: program.isConcluded,
 			programDurationInMonths: program.programDurationInMonths,
 			payoutPerInterval: Number(program.payoutPerInterval),
 			payoutInterval: program.payoutInterval,
@@ -578,6 +579,7 @@ const toPublicProgramStats = (program: PublicProgramStatsRecord): PublicProgramS
 	payoutCurrency: program.country.currency,
 	totalPayoutsSum: sumPayoutAmounts(program.recipients),
 	totalPayoutsSumChf: sumPayoutAmountsChf(program.recipients),
+	isConcluded: program.isConcluded,
 });
 
 const toPublicProgramDetails = (program: PublicProgramRecord): PublicProgramDetails => {

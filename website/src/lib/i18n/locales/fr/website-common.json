@@ -209,7 +209,7 @@
 		},
 		"runway": {
 			"description": "Même si tous les donateurs cessaient de donner aujourd’hui, nous pourrions continuer à verser les paiements aux bénéficiaires pendant {count} mois supplémentaires.",
-			"zewo-hint": "Conforme à ZEWO"
+			"zewo-hint": "Conforme à <zewo>ZEWO</zewo>"
 		},
 		"countries": {
 			"headline": "{count, plural, one {Des dons totalisant {amount} sont arrivés de {countriesCount} pays} other {Des dons totalisant {amount} sont arrivés de {countriesCount} pays}}",
@@ -414,7 +414,8 @@
 	},
 	"wallet": {
 		"paid-out": "Versé",
-		"recipients": "Bénéficiaires"
+		"recipients": "Bénéficiaires",
+		"concluded": "Terminé"
 	},
 	"person-grid": {
 		"search-placeholder": "Rechercher par nom",

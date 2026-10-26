@@ -231,6 +231,7 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			slug: 'Slug',
 			amountOfRecipientsForStart: 'Recipients at start',
 			coveredByReserves: 'Covered by reserves',
+			isConcluded: 'Concluded',
 			programDurationInMonths: 'Duration (months)',
 			payoutPerInterval: 'Payout per interval',
 			payoutInterval: 'Payout interval',
