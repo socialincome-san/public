@@ -9,7 +9,7 @@ import { LoginPageContent } from './login-page-content';
 export const generateMetadata = async ({ params }: DefaultPageProps) => {
 	const { lang } = await params;
 
-	return getMetadata(lang as WebsiteLanguage, 'website-login');
+	return getMetadata(lang as WebsiteLanguage, 'website-login', { robots: { index: false, follow: false } });
 };
 
 const LoginPage = async ({ params, searchParams }: DefaultPageProps) => {

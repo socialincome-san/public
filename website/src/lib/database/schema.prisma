@@ -861,9 +861,10 @@ model ProgramAccess {
 }
 
 model Organization {
-  id                 String  @id @default(cuid()) @map("id")
-  name               String  @unique @map("name")
-  isOperatorFallback Boolean @default(false) @map("is_operator_fallback")
+  id                          String       @id @default(cuid()) @map("id")
+  name                        String       @unique @map("name")
+  operatorFallbackCountryCode CountryCode? @unique @map("operator_fallback_country_code")
+  operatorFallbackCountry     Country?     @relation(fields: [operatorFallbackCountryCode], references: [isoCode], onDelete: Restrict, onUpdate: Cascade)
 
   expenses             Expense[]
   users                User[]
@@ -883,6 +884,7 @@ model Program {
 
   amountOfRecipientsForStart Int?                 @map("amount_of_recipients_for_start")
   coveredByReserves          Boolean              @default(false) @map("covered_by_reserves")
+  isConcluded                Boolean              @default(false) @map("is_concluded")
   programDurationInMonths    Int                  @map("program_duration_in_months")
   payoutPerInterval          Decimal              @map("payout_per_interval") @db.Decimal(12, 4)
   payoutInterval             PayoutInterval       @default(monthly) @map("payout_interval")
@@ -1193,9 +1195,10 @@ model Country {
 
   sanctions SanctionRegime[] @map("sanctions")
 
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
-  programs  Program[]
+  createdAt                    DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                    DateTime?     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  programs                     Program[]
+  operatorFallbackOrganization Organization?
 
   @@map("country")
 }

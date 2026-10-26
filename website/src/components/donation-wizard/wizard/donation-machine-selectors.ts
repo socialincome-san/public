@@ -132,8 +132,8 @@ export const selectOneTimePlanView = (context: DonationWizardContext) => {
 	};
 };
 
-export const selectPaymentView = (context: DonationWizardContext, currency?: string) => {
-	const paymentMethod = currency ? resolveWizardPaymentMethod(context.paymentMethod, currency) : context.paymentMethod;
+export const selectPaymentView = (context: DonationWizardContext) => {
+	const paymentMethod = resolveWizardPaymentMethod(context.paymentMethod, context.currency);
 	const effectiveContext: DonationWizardContext =
 		paymentMethod === context.paymentMethod
 			? context

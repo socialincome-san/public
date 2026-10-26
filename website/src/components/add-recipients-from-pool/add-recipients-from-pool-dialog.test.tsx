@@ -6,6 +6,16 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+window.matchMedia = (): MediaQueryList => ({
+	matches: false,
+	media: '',
+	onchange: null,
+	addListener: () => undefined,
+	removeListener: () => undefined,
+	addEventListener: () => undefined,
+	removeEventListener: () => undefined,
+	dispatchEvent: () => true,
+});
 
 const resizeObserverNoop = () => undefined;
 

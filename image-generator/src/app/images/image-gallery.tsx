@@ -41,6 +41,11 @@ const getUserPrompt = (prompt: string | null) => {
 			return 'No user prompt.';
 		}
 	}
+	if (prompt.startsWith('Hand-painted watercolor editorial illustration') && !prompt.startsWith(STYLE_TEMPLATE)) {
+		const marker = ' Subject:';
+		const start = prompt.indexOf(marker);
+		return start === -1 ? 'No user prompt.' : prompt.slice(start + marker.length).trim() || 'No user prompt.';
+	}
 	return (prompt.startsWith(STYLE_TEMPLATE) ? prompt.slice(STYLE_TEMPLATE.length).trim() : prompt) || 'No user prompt.';
 };
 

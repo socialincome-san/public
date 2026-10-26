@@ -7,19 +7,14 @@ import {
 	ImageCommentEditor,
 	type ImageComment,
 } from '@socialincome/design-system/forms/image-comment-editor/image-comment-editor';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogTitle,
-	DialogTrigger,
-} from '@socialincome/design-system/overlays/dialog/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { MessageSquare } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 
 export const ImageCommentModal = ({ src }: { src: string }) => {
 	const router = useRouter();
+	const triggerRef = useRef<HTMLButtonElement>(null);
 	const [open, setOpen] = useState(false);
 	const [result, setResult] = useState<{ src: string; version: number }>({ src, version: 1 });
 	const [error, setError] = useState<string | null>(null);
@@ -55,23 +50,32 @@ export const ImageCommentModal = ({ src }: { src: string }) => {
 	return (
 		<Dialog
 			open={open}
+			presentation="dialog"
+			dismissible={!pending}
 			onOpenChange={(value) => {
 				if (!pending) setOpen(value);
 			}}
 		>
-			<DialogTrigger asChild>
-				<Button type="button" variant="outline" size="sm">
-					<MessageSquare aria-hidden="true" />
-					Comment
-				</Button>
-			</DialogTrigger>
+			<Button
+				ref={triggerRef}
+				type="button"
+				variant="outline"
+				size="sm"
+				aria-haspopup="dialog"
+				aria-expanded={open}
+				onClick={() => setOpen(true)}
+			>
+				<MessageSquare aria-hidden="true" />
+				Comment
+			</Button>
 			<DialogContent
 				size="xl"
 				height="viewport"
 				padding="responsive"
-				closeOnClickOutside={!pending}
-				closeOnEscape={!pending}
-				hideCloseButton={pending}
+				onCloseAutoFocus={(event) => {
+					event.preventDefault();
+					triggerRef.current?.focus();
+				}}
 			>
 				<ImageCommentEditor
 					key={result.version}

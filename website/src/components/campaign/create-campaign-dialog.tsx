@@ -25,7 +25,7 @@ export const CreateCampaignDialog = ({ labels, lang, currency, trigger }: Props)
 		<>
 			{trigger({ openDialog })}
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent size="full" height="fixed" padding="vertical">
+				<DialogContent size="lg" height="fixed" padding="vertical">
 					<CampaignSubmissionForm labels={labels} lang={lang} currency={currency} />
 				</DialogContent>
 			</Dialog>

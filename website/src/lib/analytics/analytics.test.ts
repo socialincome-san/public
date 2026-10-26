@@ -59,6 +59,8 @@ describe('ensureConsentDefault', () => {
 
 	beforeEach(() => {
 		localStorage.clear();
+		// Forgets the choice earlier tests kept in memory, as a storage change in another tab does.
+		window.dispatchEvent(new StorageEvent('storage', { key: null }));
 		Reflect.deleteProperty(window, 'consentDefaultQueued');
 		Reflect.deleteProperty(window, 'dataLayer');
 		Reflect.deleteProperty(window, 'gtag');

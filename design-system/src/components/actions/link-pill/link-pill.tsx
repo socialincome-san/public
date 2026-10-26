@@ -1,6 +1,7 @@
 import { cva } from 'class-variance-authority';
 import { ChevronRight, ExternalLink } from 'lucide-react';
 import Link, { type LinkProps } from 'next/link';
+import type { ReactNode } from 'react';
 
 const pillVariants = cva(
 	'text-foreground bg-muted inline-flex w-fit items-center gap-1.5 rounded-full py-1.5 pr-2 pl-3 text-xs font-bold',
@@ -17,6 +18,7 @@ const pillVariants = cva(
 type LinkPillProps = {
 	label: string;
 	href?: LinkProps['href'];
+	icon?: ReactNode;
 	// Opens the link in a new tab
 	external?: boolean;
 	onClick?: () => void;
@@ -24,7 +26,7 @@ type LinkPillProps = {
 	isOpen?: boolean;
 };
 
-export const LinkPill = ({ label, href, external = false, onClick, isOpen = false }: LinkPillProps) => {
+export const LinkPill = ({ label, href, icon, external = false, onClick, isOpen = false }: LinkPillProps) => {
 	if (href) {
 		return (
 			<Link
@@ -33,6 +35,7 @@ export const LinkPill = ({ label, href, external = false, onClick, isOpen = fals
 				rel={external ? 'noopener noreferrer' : undefined}
 				className={pillVariants({ interactive: true })}
 			>
+				{icon}
 				{label}
 				<ExternalLink className="size-4 shrink-0" aria-hidden="true" />
 			</Link>
@@ -48,6 +51,7 @@ export const LinkPill = ({ label, href, external = false, onClick, isOpen = fals
 				aria-expanded={isOpen}
 				className={pillVariants({ interactive: true })}
 			>
+				{icon}
 				{label}
 				<ChevronRight className="size-4 shrink-0" aria-hidden="true" />
 			</button>
@@ -56,6 +60,7 @@ export const LinkPill = ({ label, href, external = false, onClick, isOpen = fals
 
 	return (
 		<span className={pillVariants({ interactive: false })}>
+			{icon}
 			{label}
 			<ChevronRight className="size-4 shrink-0" aria-hidden="true" />
 		</span>

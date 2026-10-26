@@ -2,12 +2,7 @@
 	"modal": {
 		"title": "Spenden",
 		"campaign-for": "Für {title}",
-		"closeConfirm": {
-			"title": "Spende schliessen?",
-			"description": "Wenn du jetzt schliesst, geht dein Fortschritt in dieser Spende verloren.",
-			"cancel": "Weiter spenden",
-			"confirm": "Schliessen"
-		}
+		"currency": "Währung"
 	},
 	"stepAmount": {
 		"title": "Spenden",
@@ -52,7 +47,7 @@
 		"email": "E-Mail",
 		"accountCreateHint": "Wenn es noch kein Konto mit dieser E-Mail gibt, legen wir eines für dich an.",
 		"noBackAfterGenerateHint": "Nach dem Generieren des QR-Codes kannst du Betrag, Zahlungsart und Kontaktdaten in diesem Ablauf nicht mehr ändern.",
-		"generateCta": "QR-Code für Zahlung generieren",
+		"generateCta": "QR-Code generieren",
 		"generating": "Wird generiert…",
 		"generateError": "QR-Rechnung konnte nicht erstellt werden. Bitte erneut versuchen."
 	},
@@ -144,5 +139,10 @@
 		"zewo": "ZEWO zertifiziert",
 		"why-one-percent": "Warum 1% spenden?",
 		"pay-with": "Bezahlen mit"
+	},
+	"resumeBar": {
+		"label": "Schnell spenden",
+		"summary": "{cadence, select, monthly {{amount} monatlich spenden, Betrag ändern} other {{amount} einmalig spenden, Betrag ändern}}",
+		"continue": "Weiter"
 	}
 }

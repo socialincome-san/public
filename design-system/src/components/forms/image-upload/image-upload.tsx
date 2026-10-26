@@ -2,7 +2,7 @@
 
 import { Upload, X } from 'lucide-react';
 import Image from 'next/image';
-import { type Ref, useEffect, useId, useRef, useState } from 'react';
+import { type Ref, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { cn } from '../../../cn';
 
 type ImageUploadProps = {
@@ -19,7 +19,7 @@ type ImageUploadProps = {
 	invalidFileMessage: string;
 	disabled?: boolean;
 	variant?: 'dropzone' | 'attachment';
-	inputRef?: Ref<HTMLInputElement>;
+	inputRef?: Ref<HTMLInputElement | null>;
 };
 
 export const ImageUpload = ({
@@ -44,14 +44,18 @@ export const ImageUpload = ({
 	const [preview, setPreview] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 
+	useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(externalInputRef, () => inputRef.current, []);
+
 	useEffect(() => {
-		if (preview) {
-			return () => URL.revokeObjectURL(preview);
+		if (!preview) {
+			return;
 		}
+
+		return () => URL.revokeObjectURL(preview);
 	}, [preview]);
 
 	return (
-		<div className={cn('flex min-w-0 flex-col', (variant === 'dropzone' || preview || error) && 'gap-2')}>
+		<div className={cn('flex min-w-0 flex-col', (variant === 'dropzone' || preview !== null || error !== null) && 'gap-2')}>
 			<label htmlFor={inputId} className={cn('text-primary text-sm font-semibold', variant === 'attachment' && 'sr-only')}>
 				{label} <span className="text-muted-foreground font-normal">{optionalLabel}</span>
 			</label>
@@ -64,15 +68,7 @@ export const ImageUpload = ({
 			>
 				<input
 					id={inputId}
-					ref={(node) => {
-						inputRef.current = node;
-						if (typeof externalInputRef === 'function') {
-							return externalInputRef(node);
-						}
-						if (externalInputRef) {
-							externalInputRef.current = node;
-						}
-					}}
+					ref={inputRef}
 					type="file"
 					name={name}
 					accept={acceptedTypes.join(',')}
