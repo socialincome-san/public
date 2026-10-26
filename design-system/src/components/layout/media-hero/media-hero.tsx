@@ -85,7 +85,7 @@ export const MediaHero = ({
 			) : null}
 
 			{controlsStart || controlsEnd ? (
-				<div className="pointer-events-none absolute inset-x-8 bottom-8 z-30 flex items-center justify-between">
+				<div className="pointer-events-none absolute inset-x-4 bottom-8 z-30 flex items-center justify-between lg:inset-x-8">
 					<div className="pointer-events-auto flex items-center gap-2">{controlsStart}</div>
 					<div className="pointer-events-auto flex items-center gap-2">{controlsEnd}</div>
 				</div>
@@ -128,6 +128,8 @@ type MediaHeroIntroProps = {
 	description?: string;
 	// Lifts the text off busy images
 	shadow?: boolean;
+	// A wide, soft dark backdrop behind the title and description
+	glow?: boolean;
 	children?: ReactNode;
 };
 
@@ -139,29 +141,40 @@ export const MediaHeroIntro = ({
 	titleIcon,
 	description,
 	shadow = false,
+	glow = false,
 	children,
-}: MediaHeroIntroProps) => (
-	<div className={cn('flex max-w-2xl flex-col', variant === 'light' ? 'gap-6' : 'gap-4', shadow && 'drop-shadow-on-media')}>
-		{eyebrow}
-		{kicker ? <p className="text-lg">{kicker}</p> : null}
-		{title ? (
-			<h1 className={titleVariants({ variant })}>
-				{title}
-				{titleIcon ? (
-					<NextImage
-						src={titleIcon.src}
-						alt={titleIcon.alt}
-						width={44}
-						height={32}
-						className="ml-3 inline-block h-8 w-11 rounded-sm align-baseline md:ml-4"
-					/>
-				) : null}
-			</h1>
-		) : null}
-		{description ? <p className="text-xl">{description}</p> : null}
-		{children}
-	</div>
-);
+}: MediaHeroIntroProps) => {
+	const gap = variant === 'light' ? 'gap-6' : 'gap-4';
+	const text = (
+		<div className={cn('flex flex-col', variant === 'light' ? 'gap-3' : 'gap-4', glow && 'relative isolate')}>
+			{glow ? <div aria-hidden className="absolute -inset-8 -z-10 rounded-full bg-black/30 blur-[100px]" /> : null}
+			{title ? (
+				<h1 className={titleVariants({ variant })}>
+					{title}
+					{titleIcon ? (
+						<NextImage
+							src={titleIcon.src}
+							alt={titleIcon.alt}
+							width={44}
+							height={32}
+							className="ml-3 inline-block h-8 w-11 rounded-sm align-baseline md:ml-4"
+						/>
+					) : null}
+				</h1>
+			) : null}
+			{description ? <p className="text-lg lg:text-xl">{description}</p> : null}
+		</div>
+	);
+
+	return (
+		<div className={cn('flex max-w-2xl flex-col', gap, shadow && 'drop-shadow-on-media')}>
+			{eyebrow}
+			{kicker ? <p className="text-lg">{kicker}</p> : null}
+			{title || description ? text : null}
+			{children}
+		</div>
+	);
+};
 
 export const MediaHeroChips = ({ children }: { children: ReactNode }) => (
 	<div className="flex flex-wrap gap-2">{children}</div>

@@ -26,7 +26,7 @@ const spacingSteps = [
 
 const pageWidths = [
 	{ name: 'max-w-content', value: '1400px' },
-	{ name: 'w-site-width', value: '94vw' },
+	{ name: 'w-site-width', value: '100% − 32px, from lg: 94vw' },
 ];
 
 // Tailwind defaults, except lg and 2xl (src/styles/theme.css)

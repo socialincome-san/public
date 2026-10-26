@@ -177,6 +177,7 @@ export const HeroVideoBlock = ({ blok, lang, translations, donationForm, disable
 		>
 			<MediaHeroIntro
 				variant="light"
+				glow
 				title={heading ? <Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown> : null}
 				description={description}
 			>
