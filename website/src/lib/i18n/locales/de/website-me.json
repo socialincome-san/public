@@ -45,7 +45,11 @@
 			"city": "Ort",
 			"zip": "PLZ",
 			"name": "Name",
-			"focuses": "Schwerpunkte"
+			"focuses": "Schwerpunkte",
+			"validation": {
+				"required": "Dieses Feld ist erforderlich.",
+				"invalid-email": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
+			}
 		}
 	},
 	"sections": {

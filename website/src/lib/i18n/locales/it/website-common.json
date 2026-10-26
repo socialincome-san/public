@@ -209,7 +209,7 @@
 		},
 		"runway": {
 			"description": "Anche se ogni donatore smettesse di donare oggi, potremmo continuare a pagare i beneficiari per altri {count} mesi.",
-			"zewo-hint": "In linea con ZEWO"
+			"zewo-hint": "In linea con <zewo>ZEWO</zewo>"
 		},
 		"countries": {
 			"headline": "{count, plural, one {Donazioni per un totale di {amount} sono arrivate da {countriesCount} paese} other {Donazioni per un totale di {amount} sono arrivate da {countriesCount} paesi}}",
@@ -414,7 +414,8 @@
 	},
 	"wallet": {
 		"paid-out": "Versato",
-		"recipients": "Beneficiari"
+		"recipients": "Beneficiari",
+		"concluded": "Concluso"
 	},
 	"person-grid": {
 		"search-placeholder": "Cerca per nome",

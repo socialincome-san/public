@@ -14,38 +14,83 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable } from '@storyblok/react';
+import { motion, type MotionValue, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
+import { useRef } from 'react';
 
 const MOBILE_IMAGE_MAX_WIDTH = 140;
 
-type MobileImageRowProps = {
-	images: (StoryblokAsset & { filename: string })[];
+// `x`, `y` and `grow` are how far an image moves and how much wider it gets while its row scrolls through the screen,
+// `offsetY` where it rests, all in px.
+type Drift = { x: number; y: number; grow: number; offsetY: number };
+
+// Left image first. The rows mirror each other, so they move like the floating images on large screens.
+const MOBILE_IMAGE_DRIFTS: Record<'top' | 'bottom', [Drift, Drift]> = {
+	top: [
+		{ x: 4, y: -2.5, grow: 4, offsetY: -6 },
+		{ x: 6, y: 2.5, grow: 0, offsetY: 6 },
+	],
+	bottom: [
+		{ x: -6, y: 2.5, grow: 0, offsetY: 6 },
+		{ x: -4, y: -2.5, grow: 4, offsetY: -6 },
+	],
 };
 
-const MobileImageRow = ({ images }: MobileImageRowProps) => {
-	if (images.length === 0) {
-		return null;
-	}
+type MobileImage = StoryblokAsset & { filename: string };
+
+type DriftingImageProps = {
+	image: MobileImage;
+	progress: MotionValue<number>;
+	drift: Drift;
+	disableAnimation: boolean;
+};
+
+const DriftingImage = ({ image, progress, drift, disableAnimation }: DriftingImageProps) => {
+	const dimensions = getScaledAssetDimensions(image, MOBILE_IMAGE_MAX_WIDTH);
+	const prefersReducedMotion = useReducedMotion();
+	// A drift of zero instead of no style: motion would keep the last offset.
+	const amount = disableAnimation || prefersReducedMotion ? 0 : 1;
+	const x = useTransform(progress, [0, 1], [-drift.x * amount, drift.x * amount]);
+	const y = useTransform(progress, [0, 1], [drift.offsetY - drift.y * amount, drift.offsetY + drift.y * amount]);
+	const scale = useTransform(progress, [0, 1], [1, 1 + (drift.grow * amount) / dimensions.width]);
+	const imageSrc = formatStoryblokResizeUrl(image.filename, dimensions.width, dimensions.height);
 
 	return (
-		<div className="flex items-center justify-center gap-4 md:hidden">
-			{images.map((image) => {
-				const dimensions = getScaledAssetDimensions(image, MOBILE_IMAGE_MAX_WIDTH);
-				const imageSrc = formatStoryblokResizeUrl(image.filename, dimensions.width, dimensions.height);
+		<motion.div style={{ x, y, scale }}>
+			<NextImage
+				src={imageSrc}
+				alt={image.alt ?? ''}
+				width={dimensions.width}
+				height={dimensions.height}
+				sizes={`${MOBILE_IMAGE_MAX_WIDTH}px`}
+				className="rounded-3xl"
+			/>
+		</motion.div>
+	);
+};
 
-				return (
-					<NextImage
-						key={image.id}
-						src={imageSrc}
-						alt={image.alt ?? ''}
-						width={dimensions.width}
-						height={dimensions.height}
-						sizes={`${MOBILE_IMAGE_MAX_WIDTH}px`}
-						className="rounded-3xl"
-					/>
-				);
-			})}
+type MobileImageRowProps = {
+	images: MobileImage[];
+	position: 'top' | 'bottom';
+	disableAnimation: boolean;
+};
+
+const MobileImageRow = ({ images, position, disableAnimation }: MobileImageRowProps) => {
+	const ref = useRef<HTMLDivElement>(null);
+	const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+
+	return (
+		<div ref={ref} className="flex items-center justify-center gap-4 md:hidden">
+			{images.map((image, index) => (
+				<DriftingImage
+					key={image.id}
+					image={image}
+					progress={scrollYProgress}
+					drift={MOBILE_IMAGE_DRIFTS[position][index] ?? { x: 0, y: 0, grow: 0, offsetY: 0 }}
+					disableAnimation={disableAnimation}
+				/>
+			))}
 		</div>
 	);
 };
@@ -76,6 +121,9 @@ export const DonationsTotalBlock = ({
 	});
 
 	const images = blok.images?.filter(hasFilename).slice(0, 4) ?? [];
+	// Empty rows are not rendered, so every row's scroll tracking has an element to follow.
+	const topRowImages = images.slice(0, 2);
+	const bottomRowImages = images.slice(2, 4);
 	const button = blok.button?.[0];
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, currency) : null;
 
@@ -85,8 +133,10 @@ export const DonationsTotalBlock = ({
 				<FloatingImage key={image.id} image={image} index={index} smoothMouseX={smoothMouseX} smoothMouseY={smoothMouseY} />
 			))}
 
-			<div className="relative z-10 flex flex-col items-center justify-center gap-6 py-8 text-center md:py-24 lg:py-32">
-				<MobileImageRow images={images.slice(0, 2)} />
+			<div className="relative z-10 flex flex-col items-center justify-center gap-6 py-8 text-center md:min-h-152 md:py-24 lg:py-32">
+				{topRowImages.length > 0 && (
+					<MobileImageRow images={topRowImages} position="top" disableAnimation={disableAnimation} />
+				)}
 
 				{blok.heading && (
 					<div className="max-w-sm">
@@ -97,9 +147,9 @@ export const DonationsTotalBlock = ({
 				)}
 
 				<div className="flex justify-center">
-					<div className="flex items-baseline">
+					<div className="flex items-baseline gap-2">
 						<span className="text-primary text-xl md:text-2xl">{totalCurrency}</span>
-						<span className="text-primary lg:text-display-lg text-6xl font-light tracking-tight md:text-8xl">
+						<span className="text-primary 2xl:text-display-lg text-6xl font-light tracking-tight md:text-7xl lg:text-8xl xl:text-9xl">
 							{formatNumberLocale(displayValue, locale)}
 						</span>
 					</div>
@@ -111,7 +161,9 @@ export const DonationsTotalBlock = ({
 					</Button>
 				)}
 
-				<MobileImageRow images={images.slice(2, 4)} />
+				{bottomRowImages.length > 0 && (
+					<MobileImageRow images={bottomRowImages} position="bottom" disableAnimation={disableAnimation} />
+				)}
 			</div>
 		</BlockWrapper>
 	);

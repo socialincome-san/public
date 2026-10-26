@@ -729,6 +729,7 @@ export interface ProgramGrid {
   heading?: string;
   description?: string;
   showAllPrograms?: boolean;
+  hideConcludedPrograms?: boolean;
   programs?: (ISbStoryData<Program> | string)[];
   button?: Button[];
   disableMarginTop?: boolean;
