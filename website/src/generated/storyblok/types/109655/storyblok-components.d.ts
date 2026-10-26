@@ -355,6 +355,17 @@ export interface HeroVideo {
   [k: string]: unknown;
 }
 
+export interface IframeEmbed {
+  code: string;
+  caption?: string;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "iframeEmbed";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface ImageText {
   content?: StoryblokRichTextDoc;
   image: StoryblokAsset;
@@ -612,6 +623,7 @@ export interface Page {
     | TwoColumn
     | Inflows
     | Outflows
+    | IframeEmbed
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
@@ -941,6 +953,7 @@ export interface TwoColumn {
     | TransparencySummary
     | TransparencyCountries
     | ReservesBlock
+    | IframeEmbed
   )[];
   rightColumn: (
     | DonationsTotal
@@ -974,6 +987,7 @@ export interface TwoColumn {
     | TransparencySummary
     | TransparencyCountries
     | ReservesBlock
+    | IframeEmbed
   )[];
   columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   disableMarginTop?: boolean;
