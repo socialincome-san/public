@@ -21,6 +21,7 @@ export const stripeEmbeddedCheckoutActionSchema = z.object({
 	wizardContext: donationWizardAmountContextSchema,
 	currency: z.string().optional(),
 	returnPath: z.string().optional(),
+	uiMode: z.enum(['embedded_page', 'elements']).optional(),
 });
 
 export const portalProgramDonationCheckoutSchema = z.object({

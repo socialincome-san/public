@@ -52,6 +52,7 @@ export const createStripeEmbeddedCheckoutAction = async (input: unknown): Promis
 		currency: parsed.data.currency,
 		returnPath: parsed.data.returnPath,
 		stripeCustomerId: contributor?.stripeCustomerId ?? null,
+		uiMode: parsed.data.uiMode,
 	});
 };
 

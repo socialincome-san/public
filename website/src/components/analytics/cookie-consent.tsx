@@ -14,6 +14,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import { CookieBanner } from '@socialincome/design-system/feedback/cookie-banner/cookie-banner';
 import { useTranslations } from 'next-intl';
 import NextLink from 'next/link';
+import { observeCookieBanner } from './cookie-banner-height';
 
 export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string }) => {
 	const t = useTranslations('website-common.cookie-consent');
@@ -38,6 +39,7 @@ export const CookieConsent = ({ privacyPolicyHref }: { privacyPolicyHref: string
 			{loadsTagManager && <GoogleTagManager gtmId={googleTagManagerId} gtmScriptUrl={googleTagGatewayUrl} />}
 			{(consent === 'undecided' || settingsOpen) && (
 				<CookieBanner
+					ref={observeCookieBanner}
 					message={t.rich('message', {
 						link: (chunks) => <NextLink href={privacyPolicyHref}>{chunks}</NextLink>,
 					})}
