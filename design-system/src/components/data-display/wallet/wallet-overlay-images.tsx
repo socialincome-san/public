@@ -9,6 +9,7 @@ type WalletOverlayImagesProps = {
 export const WalletOverlayImages = ({ images }: WalletOverlayImagesProps) => {
 	const primaryImage = images?.primaryImage;
 	const hoverEffectImage1 = images?.hoverEffectImage1;
+	const hoverEffectImage2 = images?.hoverEffectImage2;
 
 	if (!primaryImage?.src) {
 		return null;
@@ -18,6 +19,8 @@ export const WalletOverlayImages = ({ images }: WalletOverlayImagesProps) => {
 		<div
 			className={cn(
 				'pointer-events-none absolute z-20 h-[var(--stack-height)]',
+				// Rises with the interactive card it sits on, or the images split where the card's own copies show.
+				'transition-all group-hover:-translate-y-1',
 				'top-[calc(2*var(--shadow-size))]',
 				'right-[calc(2*var(--shadow-size))]',
 				'left-[calc(2*var(--shadow-size))]',
@@ -30,10 +33,13 @@ export const WalletOverlayImages = ({ images }: WalletOverlayImagesProps) => {
 					'[clip-path:inset(calc(-4*var(--shadow-size))_calc(-2*var(--shadow-size))_calc(2*var(--shadow-size))_calc(-2*var(--shadow-size))_round_2px)]',
 				)}
 			>
-				{hoverEffectImage1?.src ? (
-					<WalletLayerImage image={hoverEffectImage1} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="tilt-right" />
+				{hoverEffectImage2?.src ? (
+					<WalletLayerImage image={hoverEffectImage2} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="back" />
 				) : null}
-				<WalletLayerImage image={primaryImage} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="tilt-left" />
+				{hoverEffectImage1?.src ? (
+					<WalletLayerImage image={hoverEffectImage1} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="middle" />
+				) : null}
+				<WalletLayerImage image={primaryImage} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="front" />
 			</div>
 		</div>
 	);
