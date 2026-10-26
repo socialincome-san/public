@@ -57,17 +57,7 @@ export const StoryblokPreviewPersonPage = async ({
 				return notFound();
 			}
 
-			return (
-				<PersonProfile
-					{...pageResult.data}
-					articlesHeading={t('person.articles')}
-					lang={lang}
-					currency={currency}
-					moreArticlesLabel={t('overview.more-articles')}
-					videoLabel={t('badge.video')}
-					todayMs={todayMs}
-				/>
-			);
+			return <PersonProfile {...pageResult.data} lang={lang} currency={currency} todayMs={todayMs} />;
 		},
 	});
 };

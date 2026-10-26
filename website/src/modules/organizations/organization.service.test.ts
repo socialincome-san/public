@@ -1,4 +1,4 @@
-import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
+import { CountryCode, ProgramPermission, UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
 
 const mockIsAdmin = jest.fn();
@@ -13,14 +13,25 @@ const mockValidateProgramIds = jest.fn();
 const mockCreateOrganization = jest.fn();
 const mockFindOperatorProgramAccess = jest.fn();
 const mockUpdateOrganizationName = jest.fn();
+const mockUpdateOrganization = jest.fn();
 const mockFindOrganizationIdentity = jest.fn();
 const mockFindOrganizationUsageCounts = jest.fn();
 const mockDeleteOrganization = jest.fn();
 const mockFindPaginatedOrganizationMembers = jest.fn();
+const mockFindOrganizationByOperatorFallbackCountry = jest.fn();
+const mockFindOperatorFallbackOrganization = jest.fn();
+
+const mockUpdateOrganizationMembers = jest.fn();
+const mockUpdateOrganizationProgramAccesses = jest.fn();
 
 jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
 	getUserRole: mockGetUserRole,
+	updateOrganizationMembers: mockUpdateOrganizationMembers,
+}));
+
+jest.mock('@/modules/programs/program.service', () => ({
+	updateOrganizationProgramAccesses: mockUpdateOrganizationProgramAccesses,
 }));
 
 jest.mock('@/modules/programs/program-reference.service', () => ({
@@ -28,25 +39,33 @@ jest.mock('@/modules/programs/program-reference.service', () => ({
 	validateProgramIds: mockValidateProgramIds,
 }));
 
-jest.mock('./organization.repository', () => ({
+jest.mock('./organization.repository.write', () => ({
+	createOrganization: mockCreateOrganization,
+	updateOrganizationName: mockUpdateOrganizationName,
+	updateOrganization: mockUpdateOrganization,
+	deleteOrganization: mockDeleteOrganization,
+}));
+
+jest.mock('./organization.repository.read', () => ({
 	findActiveOrganizationId: mockFindActiveOrganizationId,
 	findOrganizationSummary: mockFindOrganizationSummary,
 	findPaginatedOrganizations: mockFindPaginatedOrganizations,
 	findOrganizationByName: mockFindOrganizationByName,
 	findUsersByIds: mockFindUsersByIds,
-	createOrganization: mockCreateOrganization,
 	findOperatorProgramAccess: mockFindOperatorProgramAccess,
-	updateOrganizationName: mockUpdateOrganizationName,
 	findOrganizationIdentity: mockFindOrganizationIdentity,
+	findOrganizationByOperatorFallbackCountry: mockFindOrganizationByOperatorFallbackCountry,
+	findOperatorFallbackOrganization: mockFindOperatorFallbackOrganization,
 	findOrganizationUsageCounts: mockFindOrganizationUsageCounts,
-	deleteOrganization: mockDeleteOrganization,
 	findPaginatedOrganizationMembers: mockFindPaginatedOrganizationMembers,
 }));
 
+import type { UserSession } from '@/modules/users/user.types';
 import {
 	createOrganization,
 	deleteOrganization,
 	getActiveOrganizationSummary,
+	getOperatorFallbackOrganizationId,
 	getPaginatedOrganizationAdminMembersTableView,
 	getPaginatedOrganizationAdminTableView,
 	renameActiveOrganization,
@@ -69,6 +88,28 @@ const expectFailure = (result: Result<unknown>, error: string): void => {
 
 	expect(result.error).toBe(error);
 };
+
+const sessionOf = (id: string, role: UserRole): UserSession => ({
+	type: 'user',
+	id,
+	gender: null,
+	email: null,
+	firstName: 'Max',
+	lastName: 'Admin',
+	language: null,
+	street: null,
+	number: null,
+	city: null,
+	zip: null,
+	country: null,
+	role,
+	activeOrganization: null,
+	organizations: [],
+	programs: [],
+	hasAnyOperatorProgramAccess: false,
+});
+const admin = sessionOf('admin-1', UserRole.admin);
+const portal = { actor: { type: 'user', id: 'admin-1', name: 'Max Admin' }, source: 'portal' };
 
 describe('organization service', () => {
 	beforeEach(() => {
@@ -155,21 +196,47 @@ describe('organization service', () => {
 		mockFindActiveOrganizationId.mockResolvedValue('organization-1');
 		mockFindOperatorProgramAccess.mockResolvedValue(null);
 
-		const result = await renameActiveOrganization('user-1', { name: 'Renamed' });
+		const result = await renameActiveOrganization(sessionOf('user-1', UserRole.user), { name: 'Renamed' });
 
 		expectFailure(result, 'You do not have permission to rename this organization.');
 		expect(mockUpdateOrganizationName).not.toHaveBeenCalled();
+	});
+
+	test('gets the fallback operator configured for the requested country', async () => {
+		mockFindOperatorFallbackOrganization.mockResolvedValue({ id: 'fallback-lr' });
+
+		const result = await getOperatorFallbackOrganizationId(CountryCode.LR);
+
+		expect(expectSuccess(result)).toBe('fallback-lr');
+		expect(mockFindOperatorFallbackOrganization).toHaveBeenCalledWith(CountryCode.LR);
+	});
+
+	test('does not allow two fallback operators for the same country', async () => {
+		mockFindOrganizationByName.mockResolvedValue(null);
+		mockFindOrganizationByOperatorFallbackCountry.mockResolvedValue({ id: 'existing-organization' });
+
+		const result = await createOrganization(admin, {
+			name: 'Another organization',
+			userIds: [],
+			ownedProgramIds: [],
+			operatedProgramIds: [],
+			operatorFallbackCountryCode: CountryCode.SL,
+		});
+
+		expectFailure(result, 'An operator fallback organization is already configured for this country.');
+		expect(mockCreateOrganization).not.toHaveBeenCalled();
 	});
 
 	test('validates selected users before creating an organization', async () => {
 		mockFindOrganizationByName.mockResolvedValue(null);
 		mockFindUsersByIds.mockResolvedValue([]);
 
-		const result = await createOrganization('admin-1', {
+		const result = await createOrganization(admin, {
 			name: 'Organization',
 			userIds: ['missing-user'],
 			ownedProgramIds: [],
 			operatedProgramIds: [],
+			operatorFallbackCountryCode: 'none',
 		});
 
 		expectFailure(result, 'One or more selected users do not exist.');
@@ -184,9 +251,73 @@ describe('organization service', () => {
 			programAccessesCount: 0,
 		});
 
-		const result = await deleteOrganization('admin-1', 'organization-1');
+		const result = await deleteOrganization(admin, 'organization-1');
 
 		expectFailure(result, 'Organization cannot be deleted because it is still in use.');
 		expect(mockDeleteOrganization).not.toHaveBeenCalled();
+	});
+
+	test('writes program accesses and members through their modules after the organization', async () => {
+		mockIsAdmin.mockResolvedValue({ success: true, data: true });
+		mockFindOrganizationByName.mockResolvedValue(null);
+		mockFindUsersByIds.mockResolvedValue([{ id: 'user-1' }]);
+		mockValidateProgramIds.mockResolvedValue({ success: true, data: true });
+		mockCreateOrganization.mockResolvedValue({ id: 'organization-1', name: 'Organization' });
+		mockUpdateOrganizationProgramAccesses.mockResolvedValue({ success: true, data: undefined });
+		mockUpdateOrganizationMembers.mockResolvedValue({ success: true, data: undefined });
+
+		await createOrganization(admin, {
+			name: 'Organization',
+			userIds: ['user-1'],
+			ownedProgramIds: ['program-1'],
+			operatedProgramIds: [],
+			operatorFallbackCountryCode: 'none',
+		});
+
+		expect(mockCreateOrganization).toHaveBeenCalledWith(portal, 'Organization', null);
+		expect(mockUpdateOrganizationProgramAccesses).toHaveBeenCalledWith(portal, {
+			organizationId: 'organization-1',
+			ownedProgramIds: ['program-1'],
+			operatedProgramIds: [],
+		});
+		expect(mockUpdateOrganizationMembers).toHaveBeenCalledWith(portal, {
+			organizationId: 'organization-1',
+			memberIds: ['user-1'],
+		});
+	});
+
+	test('points to editing when a created organization has no programs or members saved', async () => {
+		mockIsAdmin.mockResolvedValue({ success: true, data: true });
+		mockFindOrganizationByName.mockResolvedValue(null);
+		mockFindUsersByIds.mockResolvedValue([]);
+		mockValidateProgramIds.mockResolvedValue({ success: true, data: true });
+		mockCreateOrganization.mockResolvedValue({ id: 'organization-1', name: 'Organization' });
+		mockUpdateOrganizationProgramAccesses.mockResolvedValue({ success: false, error: 'Could not update' });
+
+		const result = await createOrganization(admin, {
+			name: 'Organization',
+			userIds: [],
+			ownedProgramIds: ['program-1'],
+			operatedProgramIds: [],
+			operatorFallbackCountryCode: 'none',
+		});
+
+		expectFailure(result, 'The organization was created, but its programs or members could not be saved. Edit it to retry.');
+		expect(mockUpdateOrganizationMembers).not.toHaveBeenCalled();
+	});
+
+	test('removes memberships before deleting an organization', async () => {
+		mockIsAdmin.mockResolvedValue({ success: true, data: true });
+		mockFindOrganizationIdentity.mockResolvedValue({ id: 'organization-1', name: 'Organization' });
+		mockFindOrganizationUsageCounts.mockResolvedValue({ activeUsersCount: 0, expensesCount: 0, programAccessesCount: 0 });
+		mockUpdateOrganizationMembers.mockResolvedValue({ success: true, data: undefined });
+
+		await deleteOrganization(admin, 'organization-1');
+
+		expect(mockUpdateOrganizationMembers).toHaveBeenCalledWith(portal, { organizationId: 'organization-1', memberIds: [] });
+		expect(mockDeleteOrganization).toHaveBeenCalledWith(portal, 'organization-1');
+		expect(mockUpdateOrganizationMembers.mock.invocationCallOrder[0]).toBeLessThan(
+			mockDeleteOrganization.mock.invocationCallOrder[0] ?? 0,
+		);
 	});
 });

@@ -225,7 +225,11 @@ describe('QR bill service', () => {
 		}
 		expect(result.data.contributorReferenceId).toBe('1735689600000');
 		expect(mockGetOrCreateReferenceIdByEmail).not.toHaveBeenCalled();
-		expect(mockGetOwnedPaymentReferenceId).toHaveBeenCalledWith('contributor-new', 'donor@example.com');
+		expect(mockGetOwnedPaymentReferenceId).toHaveBeenCalledWith(
+			{ actor: { type: 'system', id: 'qr-bill' }, source: 'system' },
+			'contributor-new',
+			'donor@example.com',
+		);
 	});
 
 	test('does not return an existing donor payment reference from the wizard', async () => {
@@ -329,6 +333,7 @@ describe('QR bill service', () => {
 		});
 		expect(pendingResult).toEqual({ success: true, data: 'Contribution created' });
 		expect(mockUpsertFromBankStandingOrder).toHaveBeenCalledWith(
+			{ actor: { type: 'system', id: 'qr-bill' }, source: 'system' },
 			expect.objectContaining({
 				bankStandingOrderReference: '1731700000',
 				contributorId: 'contributor-new',

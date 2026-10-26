@@ -1,5 +1,6 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { countryMobileMoneyProvidersTableConfig } from '@/components/data-table/configs/mobile-money-providers-table.config';
 import { countryProgramsTableConfig } from '@/components/data-table/configs/programs-table.config';
@@ -77,6 +78,7 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 							/>
 						),
 					},
+					auditLogTab('country', countryId),
 				]}
 			/>
 		);
@@ -84,7 +86,7 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add country</DialogTitle>
 				</DialogHeader>

@@ -14,6 +14,7 @@ import {
 	createOrganization,
 	deleteOrganization,
 	getOrganization,
+	getOrganizationCountryOptions,
 	getOrganizationProgramOptions,
 	getOrganizationUserOptions,
 	getPaginatedOrganizationAdminMembersTableView,
@@ -49,7 +50,7 @@ export const createOrganizationAction = async (input: unknown): Promise<Result<O
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createOrganization(sessionResult.data.id, parsedInput.data);
+	const result = await createOrganization(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -66,7 +67,7 @@ export const updateOrganizationAction = async (input: unknown): Promise<Result<O
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateOrganization(sessionResult.data.id, parsedInput.data);
+	const result = await updateOrganization(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -83,7 +84,7 @@ export const renameActiveOrganizationAction = async (input: unknown): Promise<Re
 		return resultFail('Invalid input.');
 	}
 
-	const result = await renameActiveOrganization(sessionResult.data.id, parsedInput.data);
+	const result = await renameActiveOrganization(sessionResult.data, parsedInput.data);
 	revalidatePath('/portal');
 	revalidatePath('/portal/profile/account');
 	revalidatePath('/portal/profile/organization');
@@ -102,7 +103,7 @@ export const deleteOrganizationAction = async (organizationId: unknown): Promise
 		return resultFail('Invalid organization id.');
 	}
 
-	const result = await deleteOrganization(sessionResult.data.id, parsedOrganizationId.data);
+	const result = await deleteOrganization(sessionResult.data, parsedOrganizationId.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -138,4 +139,13 @@ export const getOrganizationProgramOptionsAction = async (): Promise<Result<{ id
 	}
 
 	return getOrganizationProgramOptions(sessionResult.data.id);
+};
+
+export const getOrganizationCountryOptionsAction = async (): Promise<Result<{ id: string; name: string }[]>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	return getOrganizationCountryOptions(sessionResult.data.id);
 };

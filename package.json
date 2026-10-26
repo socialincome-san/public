@@ -1,12 +1,12 @@
 {
 	"name": "socialincome",
 	"private": true,
-	"workspaces": ["website", "design-system"],
+	"workspaces": ["website", "design-system", "image-generator"],
 	"overrides": {
-		"@radix-ui/react-dismissable-layer": "1.1.20",
-		"@radix-ui/react-focus-scope": "1.2.0",
+		"@radix-ui/react-dismissable-layer": "1.2.1",
+		"@radix-ui/react-focus-scope": "1.3.1",
 		"axios": "1.20.0",
-		"body-parser": "2.3.0",
+		"body-parser": "2.4.0",
 		"fast-xml-builder": "1.3.1",
 		"firebase-admin": {
 			"jwks-rsa": "3.2.2"
@@ -17,7 +17,7 @@
 		"isomorphic-dompurify": {
 			"jsdom": "26.1.0"
 		},
-		"protobufjs": "8.8.0",
+		"protobufjs": "8.8.1",
 		"uuid": "14.0.2",
 		"tabbable": "6.5.0",
 		"nanoid": "6.0.2"

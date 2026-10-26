@@ -1,5 +1,6 @@
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
+import type { PersonContribution } from '@/modules/community/community.types';
 import type { ResolvedArticle } from '@/modules/storyblok-content/storyblok-content.types';
 import type { ISbStoryData } from '@storyblok/js';
 
@@ -68,8 +69,9 @@ export type JournalPersonPageData = {
 	breadcrumbs: JournalBreadcrumbLink[];
 	roleLabels: Record<string, string>;
 	circleLabels: Record<string, string>;
-	workStyleLabels: Record<string, string>;
 	timeCommitmentLabels: Record<string, string>;
+	contributions: PersonContribution[];
+	otherPersons: ISbStoryData<Person>[];
 };
 
 export const JOURNAL_CACHE_TAG = 'journal';

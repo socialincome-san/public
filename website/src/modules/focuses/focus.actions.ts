@@ -25,7 +25,7 @@ export const createFocusAction = async (input: unknown): Promise<Result<FocusPay
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createFocus(sessionResult.data.id, parsedInput.data);
+	const result = await createFocus(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -41,7 +41,7 @@ export const updateFocusAction = async (input: unknown): Promise<Result<FocusPay
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateFocus(sessionResult.data.id, parsedInput.data);
+	const result = await updateFocus(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -70,7 +70,7 @@ export const deleteFocusAction = async (input: unknown): Promise<Result<{ id: st
 		return resultFail('Invalid input.');
 	}
 
-	const result = await deleteFocus(sessionResult.data.id, parsedInput.data);
+	const result = await deleteFocus(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;

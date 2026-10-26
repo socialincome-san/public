@@ -121,6 +121,7 @@ export type PublicProgramStats = {
 	payoutCurrency: Currency;
 	totalPayoutsSum: number;
 	totalPayoutsSumChf: number;
+	isConcluded: boolean;
 };
 
 export type PublicProgramStatsMap = Record<string, PublicProgramStats>;
@@ -136,6 +137,7 @@ export type ProgramSettingsPayload = {
 	};
 	amountOfRecipientsForStart: number | null;
 	coveredByReserves: boolean;
+	isConcluded: boolean;
 	programDurationInMonths: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;

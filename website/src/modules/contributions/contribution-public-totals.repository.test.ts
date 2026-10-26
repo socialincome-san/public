@@ -29,7 +29,10 @@ jest.mock('@/lib/database/prisma', () => ({
 	},
 }));
 
-import { findSucceededContributionsByContributorCountry, findSucceededContributionTotal } from './contribution.repository';
+import {
+	findSucceededContributionsByContributorCountry,
+	findSucceededContributionTotal,
+} from './contribution.repository.read';
 
 describe('public contribution total repository queries', () => {
 	const dateRange = {

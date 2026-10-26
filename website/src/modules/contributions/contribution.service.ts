@@ -6,6 +6,8 @@ import {
 	type CountryCode,
 } from '@/generated/prisma/enums';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
@@ -18,10 +20,12 @@ import {
 } from '@/modules/contributors/contributor.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { getCampaigns } from '@/modules/storyblok-content/storyblok-content.cache';
+import type { UserSession } from '@/modules/users/user.types';
 import type { ISbStoryData } from '@storyblok/js';
 import { endOfYear, startOfYear, subDays } from 'date-fns';
 import { canListContributions, canReadContribution, canWriteContribution } from './contribution.permissions';
-import * as contributionRepository from './contribution.repository';
+import * as contributionRepository from './contribution.repository.read';
+import * as contributionWriteRepository from './contribution.repository.write';
 import {
 	contributionCreateSchema,
 	contributionUpdateSchema,
@@ -311,6 +315,16 @@ export const getSucceededForContributorAndYear = async (
 	}
 };
 
+export const hasSucceededContributionsBefore = async (contributorId: string, before: Date): Promise<Result<boolean>> => {
+	try {
+		return resultOk((await contributionRepository.countSucceededContributionsBefore(contributorId, before)) > 0);
+	} catch (error) {
+		console.error(error);
+
+		return resultFail('Could not count earlier contributions');
+	}
+};
+
 export const getContributorContributionSummary = async (
 	contributorId: string,
 ): Promise<Result<ContributorContributionSummary>> => {
@@ -454,7 +468,7 @@ export const getContributionFormOptions = async (userId: string): Promise<Result
 };
 
 export const updateContribution = async (
-	userId: string,
+	session: UserSession,
 	input: UpdateContributionInput,
 ): Promise<Result<ContributionPayload>> => {
 	const validatedInputResult = validateUpdateInput(input);
@@ -464,7 +478,7 @@ export const updateContribution = async (
 	const validatedInput = validatedInputResult.data;
 
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -493,7 +507,11 @@ export const updateContribution = async (
 			return resultFail('Permission denied');
 		}
 
-		const updatedContribution = await contributionRepository.updateContribution(validatedInput.id, validatedInput);
+		const updatedContribution = await contributionWriteRepository.updateContribution(
+			getSessionAuditContext(session),
+			validatedInput.id,
+			validatedInput,
+		);
 
 		return resultOk(toContributionPayload(updatedContribution));
 	} catch (error) {
@@ -504,7 +522,7 @@ export const updateContribution = async (
 };
 
 export const createContribution = async (
-	userId: string,
+	session: UserSession,
 	input: CreateContributionInput,
 ): Promise<Result<ContributionPayload>> => {
 	const validatedInputResult = validateCreateInput(input);
@@ -514,7 +532,7 @@ export const createContribution = async (
 	const validatedInput = validatedInputResult.data;
 
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -535,7 +553,7 @@ export const createContribution = async (
 			return resultFail('Permission denied');
 		}
 
-		const created = await contributionRepository.createContribution(validatedInput);
+		const created = await contributionWriteRepository.createContribution(getSessionAuditContext(session), validatedInput);
 
 		return resultOk(toContributionPayload(created));
 	} catch (error) {
@@ -546,16 +564,22 @@ export const createContribution = async (
 };
 
 export const upsertFromStripeEvent = async (
+	audit: AuditContext,
 	contributionData: StripeContributionCreateData,
 	paymentEventData: PaymentEventCreateData,
 ): Promise<Result<ContributionRecord>> => {
 	try {
-		const paymentEvent = await contributionRepository.updatePaymentEventFromStripe(contributionData, paymentEventData);
-		if (!paymentEvent.contribution) {
-			return resultFail('Could not create or update contribution from Stripe event');
-		}
+		const existing = await contributionRepository.findPaymentEventByTransactionId(paymentEventData.transactionId);
+		const contribution = existing?.contribution
+			? await contributionWriteRepository.updateContributionFromStripe(
+					audit,
+					existing.contribution.id,
+					contributionData,
+					paymentEventData,
+				)
+			: await contributionWriteRepository.createContributionFromStripe(audit, contributionData, paymentEventData);
 
-		return resultOk(toContributionRecord(paymentEvent.contribution));
+		return resultOk(toContributionRecord(contribution));
 	} catch (error) {
 		console.error(error);
 
@@ -563,17 +587,21 @@ export const upsertFromStripeEvent = async (
 	}
 };
 
-export const upsertFromBankTransfer = async (paymentEvent: BankTransferUpsertInput): Promise<Result<PaymentEventRecord>> => {
+export const upsertFromBankTransfer = async (
+	audit: AuditContext,
+	paymentEvent: BankTransferUpsertInput,
+): Promise<Result<PaymentEventRecord>> => {
 	try {
 		const existing = await contributionRepository.findPaymentEventByTransactionId(paymentEvent.transactionId);
 		if (existing?.contribution?.status === ContributionStatus.pending) {
-			return resultOk(await contributionRepository.updatePaymentEventFromBankTransfer(existing.id, paymentEvent));
-		}
-		if (existing) {
-			return resultOk(await contributionRepository.createPaymentEventFromBankTransfer(paymentEvent, true));
+			return resultOk(
+				await contributionWriteRepository.updateContributionFromBankTransfer(audit, existing.contribution.id, paymentEvent),
+			);
 		}
 
-		return resultOk(await contributionRepository.createPaymentEventFromBankTransfer(paymentEvent, false));
+		return resultOk(
+			await contributionWriteRepository.createContributionFromBankTransfer(audit, paymentEvent, Boolean(existing)),
+		);
 	} catch (error) {
 		console.error(error);
 

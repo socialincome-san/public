@@ -4,7 +4,7 @@ import type { RichTextAlignmentProps, RichTextHeadingProps } from '@/components/
 import {
 	buildLinkRel,
 	getRichTextAlignmentClassName,
-	removeStoryblokPagesFolder,
+	resolveRichTextHref,
 	storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/shared-resolvers';
 import { cn } from '@socialincome/design-system/cn';
@@ -45,7 +45,7 @@ const createLinkResolver =
 
 		return (
 			<NextLink
-				href={removeStoryblokPagesFolder(href)}
+				href={resolveRichTextHref(href)}
 				className={cn(className, 'hover:underline')}
 				target={props.target}
 				rel={buildLinkRel(props.target, props.rel)}

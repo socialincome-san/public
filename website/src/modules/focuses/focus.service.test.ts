@@ -1,4 +1,6 @@
+import { UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
+import type { UserSession } from '@/modules/users/user.types';
 import type { PublicFocusStatsBySlugMap } from './focus.types';
 
 const mockIsAdmin = jest.fn();
@@ -24,20 +26,23 @@ jest.mock('@/modules/recipients/recipient.service', () => ({
 	countCandidatesForLocalPartners: mockCountCandidatesForLocalPartners,
 }));
 
-jest.mock('./focus.repository', () => ({
+jest.mock('./focus.repository.read', () => ({
 	findFocusById: mockFindFocusById,
 	findPaginatedFocuses: mockFindPaginatedFocuses,
 	findFocusOptions: mockFindFocusOptions,
 	findFocusStatsBySlugs: mockFindFocusStatsBySlugs,
 	findFocusByName: mockFindFocusByName,
 	findFocusBySlug: mockFindFocusBySlug,
+	findFocusForDeletion: mockFindFocusForDeletion,
+}));
+
+jest.mock('./focus.repository.write', () => ({
 	createFocus: mockCreateFocus,
 	updateFocus: mockUpdateFocus,
-	findFocusForDeletion: mockFindFocusForDeletion,
 	deleteFocus: mockDeleteFocus,
 }));
 
-import { getPaginatedFocusTableView, getPublicFocusStatsBySlugs } from './focus.service';
+import { deleteFocus, getPaginatedFocusTableView, getPublicFocusStatsBySlugs } from './focus.service';
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -105,5 +110,40 @@ describe('focus service', () => {
 				countryIsoCodes: ['KE', 'SL'],
 			},
 		});
+	});
+});
+
+describe('focus write attribution', () => {
+	const admin: UserSession = {
+		type: 'user',
+		id: 'admin-1',
+		gender: null,
+		email: null,
+		firstName: 'Max',
+		lastName: 'Admin',
+		language: null,
+		street: null,
+		number: null,
+		city: null,
+		zip: null,
+		country: null,
+		role: UserRole.admin,
+		activeOrganization: null,
+		organizations: [],
+		programs: [],
+		hasAnyOperatorProgramAccess: false,
+	};
+
+	test('attributes deletes to the admin', async () => {
+		mockIsAdmin.mockResolvedValue({ success: true, data: true });
+		mockFindFocusForDeletion.mockResolvedValue({ id: 'entity-1', _count: { localPartners: 0, programs: 0 } });
+		mockDeleteFocus.mockResolvedValue({ id: 'entity-1' });
+
+		await deleteFocus(admin, 'entity-1');
+
+		expect(mockDeleteFocus).toHaveBeenCalledWith(
+			{ actor: { type: 'user', id: 'admin-1', name: 'Max Admin' }, source: 'portal' },
+			'entity-1',
+		);
 	});
 });

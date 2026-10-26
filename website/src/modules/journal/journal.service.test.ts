@@ -4,7 +4,6 @@ const mockGetOverviewAuthors = jest.fn();
 const mockGetOverviewArticleTypes = jest.fn();
 const mockGetPrimaryRoleLabels = jest.fn();
 const mockGetCircleLabels = jest.fn();
-const mockGetWorkStyleLabels = jest.fn();
 const mockGetTimeCommitmentLabels = jest.fn();
 const mockGetTag = jest.fn();
 const mockGetArticleType = jest.fn();
@@ -21,13 +20,14 @@ const mockGetPerson = jest.fn();
 const mockGetRelativeArticles = jest.fn();
 const mockGetLatestJournalArticles = jest.fn();
 const mockGetArticlesByUuids = jest.fn();
+const mockGetAllPersons = jest.fn();
+const mockGetPersonContributions = jest.fn();
 
 jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getOverviewAuthors: mockGetOverviewAuthors,
 	getOverviewArticleTypes: mockGetOverviewArticleTypes,
 	getPrimaryRoleLabels: mockGetPrimaryRoleLabels,
 	getCircleLabels: mockGetCircleLabels,
-	getWorkStyleLabels: mockGetWorkStyleLabels,
 	getTimeCommitmentLabels: mockGetTimeCommitmentLabels,
 	getTag: mockGetTag,
 	getArticleType: mockGetArticleType,
@@ -44,9 +44,20 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getRelativeArticles: mockGetRelativeArticles,
 	getLatestJournalArticles: mockGetLatestJournalArticles,
 	getArticlesByUuids: mockGetArticlesByUuids,
+	getAllPersons: mockGetAllPersons,
 }));
 
-import { getJournalArticlePageData, getJournalOverviewPageData, getJournalPersonPageData } from './journal.service';
+jest.mock('@/modules/community/community.cache', () => ({
+	getPersonContributions: mockGetPersonContributions,
+}));
+
+import {
+	getJournalArticlePageData,
+	getJournalArticlesByArticleType,
+	getJournalArticlesByTag,
+	getJournalOverviewPageData,
+	getJournalPersonPageData,
+} from './journal.service';
 
 const labels = {
 	homeLabel: 'Home',
@@ -94,7 +105,6 @@ beforeEach(() => {
 	mockGetOverviewArticleTypes.mockResolvedValue({ success: true, data: [articleType] });
 	mockGetPrimaryRoleLabels.mockResolvedValue({ success: true, data: { editor: 'Editor' } });
 	mockGetCircleLabels.mockResolvedValue({ success: true, data: { 'tech-circle': 'tech-circle' } });
-	mockGetWorkStyleLabels.mockResolvedValue({ success: true, data: { Async: 'Asynchron' } });
 	mockGetTimeCommitmentLabels.mockResolvedValue({ success: true, data: { 'On a break': 'Pause' } });
 	mockGetArticlesByTag.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByArticleType.mockResolvedValue({ success: true, data: [article] });
@@ -107,6 +117,8 @@ beforeEach(() => {
 	mockGetArticle.mockResolvedValue({ success: true, data: article });
 	mockGetPerson.mockResolvedValue({ success: true, data: author });
 	mockGetRelativeArticles.mockResolvedValue({ success: true, data: [article] });
+	mockGetAllPersons.mockResolvedValue({ success: true, data: [] });
+	mockGetPersonContributions.mockResolvedValue({ success: true, data: [] });
 });
 
 describe('getJournalOverviewPageData', () => {
@@ -188,7 +200,7 @@ describe('getJournalArticlePageData', () => {
 				breadcrumbs: [
 					{ label: 'Home', href: '/de/chf' },
 					{ label: 'Journal', href: '/de/chf/journal' },
-					{ label: 'A story with context', href: '/de/chf/journal/a-story' },
+					{ label: 'A story', href: '/de/chf/journal/a-story' },
 				],
 			},
 			status: undefined,
@@ -197,7 +209,45 @@ describe('getJournalArticlePageData', () => {
 	});
 });
 
+const volunteer = (uuid: string, circles: string[], overrides: Record<string, unknown> = {}) => ({
+	uuid,
+	slug: uuid,
+	content: {
+		volunteerStatus: 'active',
+		activeCircleMember: circles,
+		avatar: { filename: `${uuid}.jpg` },
+		...overrides,
+	},
+});
+
 describe('getJournalPersonPageData', () => {
+	test('teases other active volunteers with a portrait, those from shared circles first', async () => {
+		mockGetPerson.mockResolvedValue({
+			success: true,
+			data: { ...author, content: { ...author.content, activeCircleMember: ['tech'] } },
+		});
+		mockGetAllPersons.mockResolvedValue({
+			success: true,
+			data: [
+				volunteer('other-circle', ['finance']),
+				volunteer('same-circle', ['tech']),
+				volunteer('inactive', ['tech'], { volunteerStatus: 'inactive' }),
+				volunteer('no-portrait', ['tech'], { avatar: { filename: '' } }),
+				volunteer('author-1', ['tech']),
+			],
+		});
+
+		const result = await getJournalPersonPageData({
+			lang: 'de',
+			currency: 'CHF',
+			slug: 'ada',
+			parentLabel: 'People',
+			homeLabel: 'Home',
+		});
+
+		expect(result.success && result.data.otherPersons.map((person) => person.uuid)).toEqual(['same-circle', 'other-circle']);
+	});
+
 	test('resolves articles, option labels, pagination, and person breadcrumbs', async () => {
 		const result = await getJournalPersonPageData({
 			lang: 'de',
@@ -216,7 +266,6 @@ describe('getJournalPersonPageData', () => {
 			articles: [article],
 			roleLabels: { editor: 'Editor' },
 			circleLabels: { 'tech-circle': 'tech-circle' },
-			workStyleLabels: { Async: 'Asynchron' },
 			timeCommitmentLabels: { 'On a break': 'Pause' },
 			showMoreArticlesLink: true,
 			pathname: '/de/chf/person/ada',
@@ -225,6 +274,38 @@ describe('getJournalPersonPageData', () => {
 				{ label: 'People', href: '/de/chf/people' },
 				{ label: 'Ada Lovelace', href: '/de/chf/person/ada' },
 			],
+		});
+	});
+});
+
+describe('getJournalArticlesByTag', () => {
+	test('loads the articles with the tag', async () => {
+		expect(await getJournalArticlesByTag('de', 'tag-1')).toEqual({ success: true, data: [article] });
+		expect(mockGetArticlesByTag).toHaveBeenCalledWith('tag-1', 'de');
+	});
+
+	test('fails when the articles cannot be loaded', async () => {
+		mockGetArticlesByTag.mockResolvedValueOnce({ success: false, error: 'Storyblok error', status: 500 });
+
+		expect(await getJournalArticlesByTag('de', 'tag-1')).toMatchObject({
+			success: false,
+			error: 'Could not load journal articles',
+		});
+	});
+});
+
+describe('getJournalArticlesByArticleType', () => {
+	test('loads the articles of the type', async () => {
+		expect(await getJournalArticlesByArticleType('de', 'type-1')).toEqual({ success: true, data: [article] });
+		expect(mockGetArticlesByArticleType).toHaveBeenCalledWith('type-1', 'de');
+	});
+
+	test('fails when the articles cannot be loaded', async () => {
+		mockGetArticlesByArticleType.mockResolvedValueOnce({ success: false, error: 'Storyblok error', status: 500 });
+
+		expect(await getJournalArticlesByArticleType('de', 'type-1')).toMatchObject({
+			success: false,
+			error: 'Could not load journal articles',
 		});
 	});
 });

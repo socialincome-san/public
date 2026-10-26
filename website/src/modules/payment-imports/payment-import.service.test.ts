@@ -7,6 +7,7 @@ import {
 	downloadPostFinanceReports,
 	listPostFinanceReportFileNames,
 } from '@/integrations/postfinance/postfinance-sftp.integration';
+import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { getFallbackCampaign } from '@/modules/campaigns/campaign.service';
 import { upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
 import type { PaymentEventRecord } from '@/modules/contributions/contribution.types';
@@ -23,6 +24,9 @@ jest.mock('@/integrations/firebase/firebase-storage.integration', () => ({
 jest.mock('@/integrations/postfinance/postfinance-sftp.integration', () => ({
 	downloadPostFinanceReports: jest.fn(),
 	listPostFinanceReportFileNames: jest.fn(),
+}));
+jest.mock('@/lib/utils/slack-alert', () => ({
+	sendSlackAlert: jest.fn(),
 }));
 jest.mock('@/modules/campaigns/campaign.service', () => ({
 	getFallbackCampaign: jest.fn(),
@@ -142,6 +146,55 @@ describe('parseCamt054Contributions', () => {
 			currency: 'CHF',
 		});
 	});
+
+	test('skips Stripe payouts by debtor IBAN or name without alerting about the missing reference', () => {
+		const stripePayoutByName = `<Ntry>
+			<Amt Ccy="CHF">100.00</Amt>
+			<NtryDtls>
+				<TxDtls>
+					<RltdPties>
+						<Dbtr><Pty><Nm>Stripe Payments UK Ltd</Nm></Pty></Dbtr>
+					</RltdPties>
+					<RmtInf><Ustrd>NOTPROVIDED</Ustrd></RmtInf>
+				</TxDtls>
+			</NtryDtls>
+		</Ntry>`;
+		const stripePayoutByIban = `<Ntry>
+			<Amt Ccy="CHF">100.00</Amt>
+			<NtryDtls>
+				<TxDtls>
+					<RltdPties><DbtrAcct><Id><IBAN>LU72 4080 0000 0001 0375</IBAN></Id></DbtrAcct></RltdPties>
+					<RmtInf><Ustrd>NOTPROVIDED</Ustrd></RmtInf>
+				</TxDtls>
+			</NtryDtls>
+		</Ntry>`;
+		const result = parseCamt054Contributions(
+			camt054TwoEntries.replace('</Ntfctn>', `${stripePayoutByName}${stripePayoutByIban}</Ntfctn>`),
+		);
+
+		expect(result.success).toBe(true);
+		if (!result.success) {
+			throw new Error(result.error);
+		}
+
+		expect(result.data).toHaveLength(2);
+		expect(sendSlackAlert).not.toHaveBeenCalled();
+	});
+
+	test('alerts for non-Stripe entries without a reference', () => {
+		const missingReferenceEntry = `<Ntry>
+			<Amt Ccy="CHF">100.00</Amt>
+			<NtryDtls><TxDtls><RmtInf><Ustrd>NOTPROVIDED</Ustrd></RmtInf></TxDtls></NtryDtls>
+		</Ntry>`;
+
+		parseCamt054Contributions(camt054TwoEntries.replace('</Ntfctn>', `${missingReferenceEntry}</Ntfctn>`));
+
+		expect(sendSlackAlert).toHaveBeenCalledWith(
+			'Skipped processing a payment entry without reference ID',
+			expect.anything(),
+		);
+		expect(typeof jest.mocked(sendSlackAlert).mock.calls[0]?.[1]?.rawContent).toBe('string');
+	});
 });
 
 describe('importPaymentFiles', () => {
@@ -204,7 +257,7 @@ describe('importPaymentFiles', () => {
 		expect(downloadPostFinanceReports).toHaveBeenCalledWith([paymentReportName, balanceReportName]);
 		expect(findContributorsByPaymentReferenceIds).toHaveBeenCalledWith([contributorReferenceId, contributorReferenceId]);
 		expect(upsertFromBankTransfer).toHaveBeenCalledTimes(2);
-		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[0]).toMatchObject({
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[1]).toMatchObject({
 			transactionId: contributionReferenceId,
 			contribution: {
 				campaignId: 'fallback-campaign-id',
@@ -213,7 +266,7 @@ describe('importPaymentFiles', () => {
 				currency: 'CHF',
 			},
 		});
-		expect(jest.mocked(upsertFromBankTransfer).mock.calls[1]?.[0]).toMatchObject({
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[1]?.[1]).toMatchObject({
 			contribution: {
 				amountChf: 2,
 				currency: 'CHF',
@@ -309,14 +362,18 @@ describe('importPaymentFiles', () => {
 			success: true,
 			data: [paymentEvent],
 		});
-		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[0]).toMatchObject({
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[0]).toEqual({
+			actor: { type: 'system', id: 'payment-files-import' },
+			source: 'system',
+		});
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[1]).toMatchObject({
 			contribution: {
 				amount: 100,
 				currency: 'EUR',
 				amountChf: Math.round((100 / 0.95) * 100) / 100,
 			},
 		});
-		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[0].contribution.amountChf).not.toBe(100);
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[1].contribution.amountChf).not.toBe(100);
 
 		jest.mocked(getLatestRates).mockResolvedValue({
 			success: false,

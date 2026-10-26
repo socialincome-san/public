@@ -2,7 +2,6 @@
 
 import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-logos';
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
-import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { cn } from '@socialincome/design-system/cn';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -16,8 +15,8 @@ import { PaymentMethodOption } from './payment-method-option';
 
 export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
-	const currency = useWebsiteCurrency();
-	const view = selectPaymentView(state.context, currency);
+	const { currency } = state.context;
+	const view = selectPaymentView(state.context);
 	const isQrAvailable = isWizardQrCurrencySupported(currency);
 
 	useEffect(() => {
@@ -93,7 +92,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 						}
 
 						send({ type: 'START_STRIPE_CHECKOUT' });
-						void requestStripeEmbeddedCheckout(checkoutContext, currency, send);
+						void requestStripeEmbeddedCheckout(checkoutContext, send);
 
 						return;
 					}

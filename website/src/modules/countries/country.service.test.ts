@@ -1,4 +1,6 @@
+import { UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
+import type { UserSession } from '@/modules/users/user.types';
 
 const mockIsAdmin = jest.fn();
 const mockFindCountryById = jest.fn();
@@ -24,19 +26,23 @@ jest.mock('@/integrations/world-bank/world-bank.integration', () => ({
 	fetchWorldBankIndicator: jest.fn(),
 }));
 
-jest.mock('./country.repository', () => ({
+jest.mock('./country.repository.read', () => ({
 	findCountryById: mockFindCountryById,
 	findPaginatedCountries: mockFindPaginatedCountries,
 	findCountriesForFeasibility: mockFindCountriesForFeasibility,
 	findPublicCountryStats: mockFindPublicCountryStats,
 	findCountryByIsoCode: mockFindCountryByIsoCode,
+	findCountryForDeletion: mockFindCountryForDeletion,
+}));
+
+jest.mock('./country.repository.write', () => ({
 	createCountry: mockCreateCountry,
 	updateCountry: mockUpdateCountry,
-	findCountryForDeletion: mockFindCountryForDeletion,
 	deleteCountry: mockDeleteCountry,
 }));
 
 import {
+	deleteCountry,
 	getPaginatedCountryTableView,
 	getProgramCountryFeasibility,
 	getPublicCountryStatsByIsoCodes,
@@ -167,5 +173,40 @@ describe('country service', () => {
 		const data = expectSuccess(await getPublicCountryStatsByIsoCodes(['SL']));
 
 		expect(data).toEqual({ SL: { programsCount: 1, recipientsCount: 4, candidatesCount: 0 } });
+	});
+});
+
+describe('country write attribution', () => {
+	const admin: UserSession = {
+		type: 'user',
+		id: 'admin-1',
+		gender: null,
+		email: null,
+		firstName: 'Max',
+		lastName: 'Admin',
+		language: null,
+		street: null,
+		number: null,
+		city: null,
+		zip: null,
+		country: null,
+		role: UserRole.admin,
+		activeOrganization: null,
+		organizations: [],
+		programs: [],
+		hasAnyOperatorProgramAccess: false,
+	};
+
+	test('attributes deletes to the admin', async () => {
+		mockIsAdmin.mockResolvedValue({ success: true, data: true });
+		mockFindCountryForDeletion.mockResolvedValue({ id: 'entity-1', _count: { programs: 0 } });
+		mockDeleteCountry.mockResolvedValue({ id: 'entity-1' });
+
+		await deleteCountry(admin, 'entity-1');
+
+		expect(mockDeleteCountry).toHaveBeenCalledWith(
+			{ actor: { type: 'user', id: 'admin-1', name: 'Max Admin' }, source: 'portal' },
+			'entity-1',
+		);
 	});
 });

@@ -62,6 +62,29 @@ export const Sizes: Story = {
 	),
 };
 
+export const StickyHeader: Story = {
+	render: () => (
+		<div className="h-64 overflow-y-auto">
+			<Table stickyHeader>
+				<TableHeader sticky>
+					<TableRow>
+						<TableHead>Country</TableHead>
+						<TableHead>Recipients</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					{Array.from({ length: 12 }, (_, index) => (
+						<TableRow key={index}>
+							<TableCell>Country {index + 1}</TableCell>
+							<TableCell>{(index + 1) * 12}</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</div>
+	),
+};
+
 export const InteractiveRows: Story = {
 	render: () => (
 		<Table>

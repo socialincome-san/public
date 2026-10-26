@@ -3,7 +3,8 @@ import type { CountryCode } from '@/generated/prisma/enums';
 const mockFindSucceededContributionTotal = jest.fn();
 const mockFindSucceededContributionsByContributorCountry = jest.fn();
 
-jest.mock('./contribution.repository', () => ({
+jest.mock('./contribution.repository.write', () => ({}));
+jest.mock('./contribution.repository.read', () => ({
 	findSucceededContributionTotal: mockFindSucceededContributionTotal,
 	findSucceededContributionsByContributorCountry: mockFindSucceededContributionsByContributorCountry,
 }));

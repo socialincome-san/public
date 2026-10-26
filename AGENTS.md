@@ -19,8 +19,8 @@ Open-source platform for unconditional basic income. Read the
 - The website backend is a modular monolith: `src/modules` (business
   logic), `src/integrations` (external APIs), `src/lib` (domain-free
   kernel). Expected failures are returned as `Result<T>`, not thrown.
-- Recipient writes are audited through `*.repository.write.ts`
-  (`website/src/lib/audit/README.md`).
+- Writes to data people edit are audited through
+  `*.repository.write.ts` (`website/src/lib/audit/README.md`).
 - ESLint enforces most of this. Fix the code, never disable a rule.
 
 ## Working Rules

@@ -1,5 +1,6 @@
 import {
 	type Currency,
+	type DonationInterval,
 	type SubscriptionCancellationReason,
 	type SubscriptionPaymentMethod,
 	type SubscriptionStatus,
@@ -130,6 +131,18 @@ export type SubscriptionUpsertResult = {
 	bankStandingOrderReference: string | null;
 	campaignId: string;
 	status: SubscriptionStatus;
+};
+
+export type StripeSubscriptionInput = {
+	stripeSubscriptionId: string;
+	contributorId: string;
+	campaignId: string;
+	amount: number;
+	currency: Currency;
+	interval: DonationInterval;
+	status: SubscriptionStatus;
+	canceledAt: Date | null;
+	coverTransactionCosts: boolean;
 };
 
 export type UpsertBankStandingOrderInput = {

@@ -1,17 +1,21 @@
 import { CountryCode, ProgramPermission } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { nowMs } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { createFirebaseUserByEmail, findFirebaseUserByEmail, updateFirebaseUserByUid } from '@/modules/auth/auth.service';
 import { subscribeToNewsletter, toNewsletterLanguage } from '@/modules/newsletter/newsletter.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import type { UserSession } from '@/modules/users/user.types';
 import {
 	canCreateContributor,
 	canListContributors,
 	canReadContributor,
 	canUpdateContributor,
 } from './contributor.permissions';
-import * as contributorRepository from './contributor.repository';
+import * as contributorRepository from './contributor.repository.read';
+import * as contributorWriteRepository from './contributor.repository.write';
 import {
 	contributorCreateSchema,
 	contributorUpdateSchema,
@@ -363,7 +367,7 @@ export const findContributorsByPaymentReferenceIds = async (
 };
 
 export const updateContributor = async (
-	userId: string,
+	session: UserSession,
 	input: UpdateContributorInput,
 ): Promise<Result<ContributorRecord>> => {
 	const inputResult = validateContributorUpdateInput(input);
@@ -373,7 +377,7 @@ export const updateContributor = async (
 	const validatedInput = inputResult.data;
 
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -415,26 +419,12 @@ export const updateContributor = async (
 			}
 		}
 
-		const updated = await contributorRepository.updateContributor(validatedInput, {
+		const updated = await contributorWriteRepository.updateContributor(getSessionAuditContext(session), validatedInput, {
 			contactId: existing.contact.id,
 			phoneId: existing.contact.phone?.id,
 			phoneNumber: existing.contact.phone?.number,
 			addressId: existing.contact.address?.id,
 		});
-
-		const previousPhoneId = existing.contact.phone?.id;
-		const previousPhoneNumber = existing.contact.phone?.number ?? null;
-		const didRemovePhone = !validatedInput.contact.phone;
-		const didChangePhoneNumber =
-			Boolean(validatedInput.contact.phone) && validatedInput.contact.phone !== previousPhoneNumber;
-		if ((didRemovePhone || didChangePhoneNumber) && previousPhoneId) {
-			await contributorRepository.deletePhoneIfOrphaned(previousPhoneId);
-		}
-
-		const previousAddressId = existing.contact.address?.id;
-		if (previousAddressId && !hasAddressInput(validatedInput.contact)) {
-			await contributorRepository.deleteAddressIfOrphaned(previousAddressId);
-		}
 
 		return resultOk(updated);
 	} catch (error) {
@@ -445,6 +435,7 @@ export const updateContributor = async (
 };
 
 export const updateContributorSelf = async (
+	audit: AuditContext,
 	contributorId: string,
 	input: UpdateContributorSelfInput,
 ): Promise<Result<ContributorRecord>> => {
@@ -465,7 +456,8 @@ export const updateContributorSelf = async (
 			}
 		}
 
-		const updatedContributor = await contributorRepository.updateContributorSelf(
+		const updatedContributor = await contributorWriteRepository.updateContributorSelf(
+			audit,
 			contributorId,
 			input,
 			existing.contact.id,
@@ -481,6 +473,7 @@ export const updateContributorSelf = async (
 };
 
 export const getOrCreateContributorWithFirebaseAuth = async (
+	audit: AuditContext,
 	contributorData: StripeContributorData,
 ): Promise<Result<{ contributor: ContributorWithContact; isNewContributor: boolean }>> => {
 	try {
@@ -494,7 +487,8 @@ export const getOrCreateContributorWithFirebaseAuth = async (
 
 		if (existingResult.data) {
 			if (!existingResult.data.stripeCustomerId) {
-				const updated = await contributorRepository.updateContributorStripeCustomerId(
+				const updated = await contributorWriteRepository.updateContributorStripeCustomerId(
+					audit,
 					existingResult.data.id,
 					contributorData.stripeCustomerId,
 				);
@@ -515,7 +509,8 @@ export const getOrCreateContributorWithFirebaseAuth = async (
 			return resultFail('Could not create contributor authentication user');
 		}
 
-		const contributor = await contributorRepository.createContributorFromStripeData(
+		const contributor = await contributorWriteRepository.createContributorFromStripeData(
+			audit,
 			contributorData,
 			firebaseResult.data.uid,
 		);
@@ -529,6 +524,7 @@ export const getOrCreateContributorWithFirebaseAuth = async (
 };
 
 export const getOrCreateContributorForAccount = async (
+	audit: AuditContext,
 	accountId: string,
 	stripeCustomerId: string,
 	contactId: string,
@@ -537,7 +533,11 @@ export const getOrCreateContributorForAccount = async (
 		const existing = await contributorRepository.findContributorByAccountId(accountId);
 		if (existing) {
 			if (!existing.stripeCustomerId) {
-				const updated = await contributorRepository.updateContributorStripeCustomerId(existing.id, stripeCustomerId);
+				const updated = await contributorWriteRepository.updateContributorStripeCustomerId(
+					audit,
+					existing.id,
+					stripeCustomerId,
+				);
 
 				return resultOk({ contributor: updated, isNewContributor: false });
 			}
@@ -545,7 +545,12 @@ export const getOrCreateContributorForAccount = async (
 			return resultOk({ contributor: existing, isNewContributor: false });
 		}
 
-		const contributor = await contributorRepository.createContributorForAccount(accountId, stripeCustomerId, contactId);
+		const contributor = await contributorWriteRepository.createContributorForAccount(
+			audit,
+			accountId,
+			stripeCustomerId,
+			contactId,
+		);
 
 		return resultOk({ contributor, isNewContributor: true });
 	} catch (error) {
@@ -570,7 +575,11 @@ export const getOrCreateReferenceIdByEmail = async (email: string): Promise<Resu
 	}
 };
 
-export const getOwnedPaymentReferenceId = async (contributorId: string, email: string): Promise<Result<string | null>> => {
+export const getOwnedPaymentReferenceId = async (
+	audit: AuditContext,
+	contributorId: string,
+	email: string,
+): Promise<Result<string | null>> => {
 	try {
 		const contributor = await contributorRepository.findContributorPaymentReferenceById(contributorId);
 		const contributorEmail = contributor?.contact?.email;
@@ -588,7 +597,7 @@ export const getOwnedPaymentReferenceId = async (contributorId: string, email: s
 			return referenceResult;
 		}
 
-		const updated = await updateContributorSelf(contributorId, {
+		const updated = await updateContributorSelf(audit, contributorId, {
 			paymentReferenceId: referenceResult.data,
 			contact: { email: contributorEmail },
 		});
@@ -605,6 +614,7 @@ export const getOwnedPaymentReferenceId = async (contributorId: string, email: s
 };
 
 export const getOrCreateContributorByReferenceId = async (
+	audit: AuditContext,
 	contributorData: BankContributorData,
 ): Promise<Result<ContributorRecord>> => {
 	try {
@@ -618,7 +628,7 @@ export const getOrCreateContributorByReferenceId = async (
 		const existingByEmail = await contributorRepository.findContributorIdByEmail(contributorData.email);
 		if (existingByEmail) {
 			if (existingByEmail.paymentReferenceId !== contributorData.paymentReferenceId) {
-				const updated = await updateContributorSelf(existingByEmail.id, {
+				const updated = await updateContributorSelf(audit, existingByEmail.id, {
 					paymentReferenceId: contributorData.paymentReferenceId,
 					contact: {
 						email: contributorData.email,
@@ -649,7 +659,8 @@ export const getOrCreateContributorByReferenceId = async (
 			return resultFail('Could not create contributor authentication user');
 		}
 
-		const newContributor = await contributorRepository.createContributorFromBankData(
+		const newContributor = await contributorWriteRepository.createContributorFromBankData(
+			audit,
 			contributorData,
 			firebaseResult.data.uid,
 		);
@@ -669,6 +680,7 @@ export const getOrCreateContributorByReferenceId = async (
 };
 
 export const getOrCreateContributorFromEmailAndName = async (
+	audit: AuditContext,
 	accountData: CampaignGuestAccountData,
 ): Promise<Result<{ contributor: ContributorWithContact; isNewContributor: boolean }>> => {
 	try {
@@ -688,7 +700,8 @@ export const getOrCreateContributorFromEmailAndName = async (
 		}
 
 		try {
-			const contributor = await contributorRepository.createContributorFromEmailAndName(
+			const contributor = await contributorWriteRepository.createContributorFromEmailAndName(
+				audit,
 				accountData,
 				firebaseResult.data.uid,
 			);
@@ -717,7 +730,7 @@ export const getOrCreateContributorFromEmailAndName = async (
 };
 
 export const createContributor = async (
-	userId: string,
+	session: UserSession,
 	input: CreateContributorInput,
 ): Promise<Result<ContributorRecord>> => {
 	const inputResult = validateContributorCreateInput(input);
@@ -727,7 +740,7 @@ export const createContributor = async (
 	const validatedInput = inputResult.data;
 
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -751,7 +764,11 @@ export const createContributor = async (
 			return resultFail('Could not create contributor authentication user');
 		}
 
-		const contributor = await contributorRepository.createContributor(validatedInput, firebaseResult.data.uid);
+		const contributor = await contributorWriteRepository.createContributor(
+			getSessionAuditContext(session),
+			validatedInput,
+			firebaseResult.data.uid,
+		);
 
 		return resultOk(contributor);
 	} catch (error) {
@@ -867,9 +884,6 @@ const parseCountryCode = (value: string | undefined): CountryCode | undefined =>
 
 	return Object.values(CountryCode).find((country) => country === normalizedValue);
 };
-
-const hasAddressInput = (contact: CreateContributorInput['contact']): boolean =>
-	[contact.street, contact.number, contact.city, contact.zip, contact.country].some(Boolean);
 
 const isExpectedContributorCreateUniqueConstraint = (error: unknown): boolean => {
 	if (typeof error !== 'object' || error === null || !('code' in error) || error.code !== 'P2002') {

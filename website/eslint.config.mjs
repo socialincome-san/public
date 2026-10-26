@@ -85,13 +85,23 @@ const moduleSyntaxSelectors = [
 
 // Models whose writes are audited. Only *.repository.write.ts may write
 // them, each write through auditedWrite (src/lib/audit/README.md).
-const auditedModels = ['recipient'];
-
-// Repositories that still write audited models without an audit event. Move
-// these writes into a write repository; never add to this list.
-const unauditedWriteRepositories = [
-	'src/modules/candidates/candidate.repository.ts',
-	'src/modules/programs/program.repository.ts',
+const auditedModels = [
+	'recipient',
+	'payout',
+	'contributor',
+	'contribution',
+	'subscription',
+	'donationCertificate',
+	'localPartner',
+	'campaign',
+	'survey',
+	'expense',
+	'country',
+	'focus',
+	'mobileMoneyProvider',
+	'program',
+	'user',
+	'organization',
 ];
 
 const auditedModelWriteSelector = {
@@ -342,12 +352,6 @@ export default [
 		},
 	},
 	{
-		files: unauditedWriteRepositories,
-		rules: {
-			'no-restricted-syntax': ['error', ...moduleSyntaxSelectors, repositoryIncludeSelector],
-		},
-	},
-	{
 		files: ['src/modules/**/*.repository.write.ts'],
 		rules: {
 			'no-restricted-syntax': [
@@ -502,7 +506,7 @@ export default [
 	},
 	{
 		files: ['src/app/**/*.{ts,tsx}'],
-		ignores: ['src/app/api/health/database/route.ts', 'src/app/api/v1/twilio/**/*.{ts,tsx}'],
+		ignores: ['src/app/api/v1/twilio/**/*.{ts,tsx}'],
 		rules: {
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
@@ -534,6 +538,14 @@ export default [
 		ignores: ['src/generated/**', 'src/lib/database/migrations/**'],
 		rules: {
 			'backend-architecture/kebab-case-paths': 'error',
+			// Raw SQL bypasses select, the audited-model guard and auditedWrite.
+			'no-restricted-properties': [
+				'error',
+				...['$executeRaw', '$executeRawUnsafe', '$queryRaw', '$queryRawUnsafe'].map((property) => ({
+					property,
+					message: 'Use the Prisma query API instead of raw SQL.',
+				})),
+			],
 		},
 	},
 	{

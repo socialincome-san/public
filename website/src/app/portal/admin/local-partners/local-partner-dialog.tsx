@@ -1,5 +1,6 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { localPartnerCandidatesTableConfig } from '@/components/data-table/configs/candidates-table.config';
 import { localPartnerRecipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
@@ -68,6 +69,7 @@ export const LocalPartnerDialog = ({ open, onOpenChange, localPartnerId, errorMe
 							/>
 						),
 					},
+					auditLogTab('local-partner', localPartnerId),
 				]}
 			/>
 		);
@@ -75,7 +77,7 @@ export const LocalPartnerDialog = ({ open, onOpenChange, localPartnerId, errorMe
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add local partner</DialogTitle>
 				</DialogHeader>

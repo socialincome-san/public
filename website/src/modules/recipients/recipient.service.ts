@@ -4,7 +4,6 @@ import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
-import type { AuditLogEntity } from '@/modules/audit/audit.types';
 import {
 	createFirebaseUserByPhoneNumber,
 	decodeFirebaseTokenFromRequest,
@@ -347,7 +346,14 @@ export const updateRecipientSelf = async (
 		}
 
 		const updatedRecipient = await recipientWriteRepository.updateRecipientSelf(
-			{ actor: { type: 'recipient', id: recipientIdResult.data }, source: 'mobile-app' },
+			{
+				actor: {
+					type: 'recipient',
+					id: recipientIdResult.data,
+					name: `${existing.contact.firstName} ${existing.contact.lastName}`,
+				},
+				source: 'mobile-app',
+			},
 			recipientIdResult.data,
 			inputResult.data,
 			existing.paymentInformation?.code ?? null,
@@ -451,36 +457,49 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 	}
 };
 
-/** Recipients whose audit events the user may see: those in programs they operate. */
-export const getRecipientsForAuditLog = async (userId: string): Promise<Result<AuditLogEntity[]>> => {
+/** Moves every recipient of a program back to the pool, e.g. before the program is deleted. The caller authorizes. */
+export const removeRecipientsFromProgram = async (audit: AuditContext, programId: string): Promise<Result<void>> => {
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
-		if (!accessResult.success) {
-			return resultFail(accessResult.error);
-		}
-
-		const programIds = accessResult.data
-			.filter(({ permission }) => permission === ProgramPermission.operator)
-			.map(({ programId }) => programId);
-		if (programIds.length === 0) {
-			return resultOk([]);
-		}
-
-		const recipients = await recipientRepository.findRecipientsForAuditLog(programIds);
-
-		return resultOk(
-			recipients.map((recipient) => ({
-				id: recipient.id,
-				name: `${recipient.contact.firstName} ${recipient.contact.lastName}`,
-				context: recipient.program?.name ?? '',
-			})),
+		const recipients = await recipientRepository.findRecipientIdsByProgram(programId);
+		await recipientWriteRepository.removeRecipientsFromProgram(
+			audit,
+			recipients.map(({ id }) => id),
+			programId,
 		);
-	} catch (error) {
-		console.error('Could not fetch recipients for the audit log', { userId, error });
 
-		return resultFail('Could not fetch recipients for the audit log');
+		return resultOk(undefined);
+	} catch (error) {
+		console.error('Could not unassign recipients from program', { programId, error });
+
+		return resultFail('Could not unassign recipients from program');
 	}
 };
+
+/** Who acts when a recipient writes, e.g. in the app or on a survey page, with the name the audit log shows. */
+export const getRecipientAuditContext = async (
+	recipientId: string,
+	source: AuditContext['source'],
+): Promise<Result<AuditContext>> => {
+	try {
+		const recipient = await recipientRepository.findRecipientName(recipientId);
+
+		return resultOk({
+			actor: {
+				type: 'recipient',
+				id: recipientId,
+				name: recipient ? `${recipient.contact.firstName} ${recipient.contact.lastName}` : null,
+			},
+			source,
+		});
+	} catch (error) {
+		console.error('Could not load recipient for the audit context', { recipientId, error });
+
+		return resultFail('Could not load recipient');
+	}
+};
+
+/** Candidates are recipient rows, so the candidates module stores their audit events with this entity. */
+export const recipientAuditedEntity = recipientWriteRepository.recipientEntity;
 
 export const getRecipientById = async (session: Session, recipientId: string): Promise<Result<RecipientPayload>> => {
 	try {
@@ -1225,6 +1244,9 @@ const getPaginatedTableViewForPrograms = async (
 	}
 	const localPartnerOption = localPartnerOptionResult.data;
 	const localPartnerFilterOptions = localPartnerOption ? [localPartnerOption] : [];
+	if (requestedLocalPartnerId && !localPartnerOption) {
+		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions });
+	}
 	const selectedProgramId = normalizeOptionalFilter(query.programId);
 	if (selectedProgramId && !programIds.includes(selectedProgramId)) {
 		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions });

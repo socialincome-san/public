@@ -3,6 +3,8 @@ import {
 	isFirebaseStorageConfigured,
 	uploadFileToFirebaseStorage,
 } from '@/integrations/firebase/firebase-storage.integration';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { loadMessages } from '@/lib/i18n/messages';
 import { TIME_ZONE } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
@@ -13,12 +15,15 @@ import type { ContributionDonationEntry } from '@/modules/contributions/contribu
 import { getContributorFilterOption, getContributorsByIds } from '@/modules/contributors/contributor.service';
 import type { ContributorDonationCertificate } from '@/modules/contributors/contributor.types';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { createTranslator } from 'next-intl';
+import { randomUUID } from 'node:crypto';
 import { createWriteStream } from 'node:fs';
 import * as path from 'node:path';
 import PDFDocument from 'pdfkit';
 import { withFile } from 'tmp-promise';
-import * as donationCertificateRepository from './donation-certificate.repository';
+import * as donationCertificateRepository from './donation-certificate.repository.read';
+import * as donationCertificateWriteRepository from './donation-certificate.repository.write';
 import type {
 	DonationCertificateError,
 	DonationCertificatePaginatedTableView,
@@ -113,13 +118,13 @@ export const getDonationCertificateContributorOptions = async (
 ): Promise<Result<ContributorDonationCertificate[]>> => getContributorsByIds({ actorUserId: userId });
 
 export const createDonationCertificatesForUser = async (
-	userId: string,
+	session: UserSession,
 	year: number,
 	contributorIds: string[],
 	language?: LanguageCode,
 ): Promise<Result<string>> => {
 	const scopedContributorsResult = await getContributorsByIds({
-		actorUserId: userId,
+		actorUserId: session.id,
 		contributorIds,
 	});
 	if (!scopedContributorsResult.success) {
@@ -130,6 +135,7 @@ export const createDonationCertificatesForUser = async (
 	}
 
 	return createDonationCertificates(
+		getSessionAuditContext(session),
 		year,
 		scopedContributorsResult.data.map(({ id }) => id),
 		language,
@@ -137,6 +143,7 @@ export const createDonationCertificatesForUser = async (
 };
 
 export const createDonationCertificateForContributor = async (
+	audit: AuditContext,
 	year: number,
 	contributorId: string,
 	language?: LanguageCode,
@@ -160,16 +167,6 @@ export const createDonationCertificateForContributor = async (
 			LANGUAGE_CODES.find((candidate) => candidate === language) ??
 			LANGUAGE_CODES.find((candidate) => candidate === contributor.language) ??
 			DEFAULT_DONATION_CERTIFICATE_LANGUAGE;
-		const existingCertificate = await donationCertificateRepository.findDonationCertificateByYearAndLanguage(
-			year,
-			contributorId,
-			certificateLanguage,
-		);
-		if (existingCertificate) {
-			console.info('Donation certificate already exists', { contributorId, year, language: certificateLanguage });
-
-			return resultFail(DONATION_CERTIFICATE_ALREADY_EXISTS);
-		}
 
 		const contributionsResult = await getSucceededForContributorAndYear(contributorId, year);
 		if (!contributionsResult.success) {
@@ -183,7 +180,7 @@ export const createDonationCertificateForContributor = async (
 			return resultFail(DONATION_CERTIFICATE_NO_CONTRIBUTIONS);
 		}
 
-		const destinationFilePath = `users/${contributor.authId}/donation-certificates/${year}_${certificateLanguage}.pdf`;
+		const destinationFilePath = `users/${contributor.authId}/donation-certificates/${year}_${certificateLanguage}_${randomUUID()}.pdf`;
 		const fileResult = await withFile(async ({ path: temporaryFilePath }) => {
 			const writeResult = await writeDonationCertificatePdf(
 				temporaryFilePath,
@@ -202,7 +199,7 @@ export const createDonationCertificateForContributor = async (
 			return resultFail(DONATION_CERTIFICATE_TECHNICAL_ERROR);
 		}
 
-		await donationCertificateRepository.createDonationCertificate({
+		await donationCertificateWriteRepository.createDonationCertificate(audit, {
 			year,
 			language: certificateLanguage,
 			storagePath: destinationFilePath,
@@ -219,6 +216,7 @@ export const createDonationCertificateForContributor = async (
 };
 
 const createDonationCertificates = async (
+	audit: AuditContext,
 	year: number,
 	contributorIds: string[],
 	language?: LanguageCode,
@@ -226,21 +224,18 @@ const createDonationCertificates = async (
 	try {
 		let successCount = 0;
 		const creationWithFailures: string[] = [];
-		const skippedExists: string[] = [];
 		const skippedNoContributions: string[] = [];
 
 		await Promise.all(
 			contributorIds.map(async (contributorId) => {
-				const result = await createDonationCertificateForContributor(year, contributorId, language);
+				const result = await createDonationCertificateForContributor(audit, year, contributorId, language);
 				if (result.success) {
 					successCount++;
 
 					return;
 				}
 
-				if (result.error === DONATION_CERTIFICATE_ALREADY_EXISTS) {
-					skippedExists.push(contributorId);
-				} else if (result.error === DONATION_CERTIFICATE_NO_CONTRIBUTIONS) {
+				if (result.error === DONATION_CERTIFICATE_NO_CONTRIBUTIONS) {
 					skippedNoContributions.push(contributorId);
 				} else {
 					creationWithFailures.push(contributorId);
@@ -251,7 +246,6 @@ const createDonationCertificates = async (
 		if (successCount === 0) {
 			console.error('No donation certificates were created', {
 				year,
-				skippedExistingContributorIds: skippedExists,
 				skippedWithoutContributionsContributorIds: skippedNoContributions,
 				failedContributorIds: creationWithFailures,
 			});
@@ -260,7 +254,6 @@ const createDonationCertificates = async (
 		}
 
 		const success = `Successfully created ${successCount} donation certificates for ${year}.
-					Skipped, because certificate already exists (${skippedExists.length}): ${skippedExists.join(', ')}
 					Skipped, because no contributions available for contribot (${skippedNoContributions.length}): ${skippedNoContributions.join(', ')}
 					Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`;
 		console.info(success);
@@ -410,5 +403,4 @@ const groupContributionsByCurrency = (contributions: ContributionDonationEntry[]
 const ASSET_DIR = path.join(process.cwd(), 'public', 'assets');
 const DONATION_CERTIFICATE_TECHNICAL_ERROR: DonationCertificateError = 'technicalError';
 const DONATION_CERTIFICATE_BUCKET_MISSING: DonationCertificateError = 'bucketMissing';
-const DONATION_CERTIFICATE_ALREADY_EXISTS: DonationCertificateError = 'alreadyExists';
 const DONATION_CERTIFICATE_NO_CONTRIBUTIONS: DonationCertificateError = 'noContributions';

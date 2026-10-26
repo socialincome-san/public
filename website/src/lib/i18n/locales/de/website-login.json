@@ -2,26 +2,41 @@
 	"metadata": {
 		"title": "Login | Social Income"
 	},
-	"title": "Melde dich an",
-	"email": "E-Mail",
-	"signing-in": "Anmelden...",
-	"password": "Passwort",
-	"submit-button": "Anmeldelink senden",
+	"nav-label": "Anmelden",
+	"page": {
+		"title": "Bei Social Income anmelden",
+		"description": "Ein Login für Contributors, Partner und Programmteams. Wir bringen dich an den richtigen Ort.",
+		"email": "E-Mail",
+		"submit-button": "Anmeldelink senden",
+		"sending": "Wird gesendet…",
+		"image-alt": "Frauen tragen Waren auf dem Kopf durch eine Marktstrasse in Sierra Leone",
+		"quote": "Wir leben in einer Welt voller Möglichkeiten – sorgen wir dafür, dass wir dieses Privileg mit allen anderen teilen.",
+		"quote-author": "Carlos, Vereinigte Staaten",
+		"support": "Probleme beim Anmelden? Kontaktiere <link>support@socialincome.org</link>",
+		"no-account": {
+			"title": "Noch kein Konto?",
+			"description": "Spende und wir erstellen dein Konto automatisch."
+		}
+	},
+	"sent": {
+		"title": "Schau in dein Postfach",
+		"description": "Wenn ein Konto für <strong>{email}</strong> existiert, senden wir dir in Kürze einen Anmeldelink per E-Mail.",
+		"retry": "Andere E-Mail verwenden",
+		"hint": "Nichts angekommen? Schau im Spam-Ordner nach."
+	},
 	"confirm-login": {
 		"title": "Anmeldung abschliessen",
 		"body": "Klicke auf den Button unten, um die Anmeldung abzuschliessen.",
 		"cta": "Anmeldung abschliessen",
 		"return-home": "Zurück zur Startseite"
 	},
-	"flyout": {
-		"login-button": "Anmelden",
-		"title": "Anmelden",
-		"magic-link-description": "Wir senden dir einen Magic Link zum Anmelden.",
-		"sending": "Wird gesendet...",
-		"sent-message": "Wenn ein Konto für {email} existiert, senden wir dir in Kürze einen Anmeldelink per E-Mail.",
-		"retry": "Erneut versuchen",
-		"support-prefix": "Wenn sie nicht ankommt, kontaktiere",
-		"no-account": "Du hast noch kein Konto?"
+	"finish-login": {
+		"checking": "Link wird geprüft…",
+		"signing-in": "Du wirst angemeldet…",
+		"signing-in-description": "Das dauert nur einen Moment.",
+		"error-title": "Anmeldung fehlgeschlagen",
+		"error-description": "Der Link ist ungültig oder wurde bereits verwendet. Fordere einen neuen an, um dich anzumelden.",
+		"error-cta": "Neuen Link anfordern"
 	},
 	"error": {
 		"invalid-email": "Ungültige E-Mail-Adresse"

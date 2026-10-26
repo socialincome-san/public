@@ -1,5 +1,6 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { organizationExpensesTableConfig } from '@/components/data-table/configs/expenses-table.config';
 import { organizationAdminMembersTableConfig } from '@/components/data-table/configs/organization-members-table.config';
@@ -114,6 +115,7 @@ export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props
 							/>
 						),
 					},
+					auditLogTab('organization', organizationId),
 				]}
 			/>
 		);
@@ -121,7 +123,7 @@ export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add organization</DialogTitle>
 				</DialogHeader>

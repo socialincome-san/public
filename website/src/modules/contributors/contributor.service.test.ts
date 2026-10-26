@@ -12,15 +12,18 @@ const mockFindContributorByPaymentReferenceId = jest.fn();
 const mockFindContributorForSelfUpdate = jest.fn();
 const mockUpdateContributorSelf = jest.fn();
 
-jest.mock('./contributor.repository', () => ({
-	findContributorByEmail: mockFindContributorByEmail,
+jest.mock('./contributor.repository.write', () => ({
 	createContributorFromEmailAndName: mockCreateContributorFromEmailAndName,
+	updateContributorSelf: mockUpdateContributorSelf,
+}));
+
+jest.mock('./contributor.repository.read', () => ({
+	findContributorByEmail: mockFindContributorByEmail,
 	findContributorByEmailOrFirebaseAuthUserId: mockFindContributorByEmailOrFirebaseAuthUserId,
 	findContributorPaymentReferenceByEmail: mockFindContributorPaymentReferenceByEmail,
 	findContributorPaymentReferenceById: mockFindContributorPaymentReferenceById,
 	findContributorByPaymentReferenceId: mockFindContributorByPaymentReferenceId,
 	findContributorForSelfUpdate: mockFindContributorForSelfUpdate,
-	updateContributorSelf: mockUpdateContributorSelf,
 }));
 
 jest.mock('@/modules/auth/auth.service', () => ({
@@ -53,6 +56,8 @@ const expectSuccess = <T>(result: Result<T>): T => {
 	return result.data;
 };
 
+const audit = { actor: { type: 'system' as const, id: 'qr-bill' }, source: 'system' as const };
+
 const accountData = {
 	email: 'ada@example.com',
 	firstName: 'Ada',
@@ -71,7 +76,7 @@ describe('getOrCreateContributorFromEmailAndName', () => {
 		};
 		mockFindContributorByEmail.mockResolvedValue(existing);
 
-		const result = await getOrCreateContributorFromEmailAndName(accountData);
+		const result = await getOrCreateContributorFromEmailAndName(audit, accountData);
 
 		expect(expectSuccess(result)).toEqual({ contributor: existing, isNewContributor: false });
 		expect(mockFindFirebaseUserByEmail).not.toHaveBeenCalled();
@@ -88,14 +93,14 @@ describe('getOrCreateContributorFromEmailAndName', () => {
 		};
 		mockCreateContributorFromEmailAndName.mockResolvedValue(created);
 
-		const result = await getOrCreateContributorFromEmailAndName(accountData);
+		const result = await getOrCreateContributorFromEmailAndName(audit, accountData);
 
 		expect(expectSuccess(result)).toEqual({ contributor: created, isNewContributor: true });
 		expect(mockCreateFirebaseUserByEmail).toHaveBeenCalledWith({
 			email: 'ada@example.com',
 			displayName: 'Ada Lovelace',
 		});
-		expect(mockCreateContributorFromEmailAndName).toHaveBeenCalledWith(accountData, 'firebase-uid-1');
+		expect(mockCreateContributorFromEmailAndName).toHaveBeenCalledWith(audit, accountData, 'firebase-uid-1');
 	});
 
 	test('fails when Firebase user creation fails', async () => {
@@ -103,7 +108,7 @@ describe('getOrCreateContributorFromEmailAndName', () => {
 		mockFindFirebaseUserByEmail.mockResolvedValue({ success: true, data: null });
 		mockCreateFirebaseUserByEmail.mockResolvedValue({ success: false, error: 'firebase-down' });
 
-		const result = await getOrCreateContributorFromEmailAndName(accountData);
+		const result = await getOrCreateContributorFromEmailAndName(audit, accountData);
 
 		expect(result.success).toBe(false);
 		if (!result.success) {
@@ -126,7 +131,7 @@ describe('getOrCreateContributorFromEmailAndName', () => {
 		});
 		mockFindContributorByEmailOrFirebaseAuthUserId.mockResolvedValue(concurrent);
 
-		const result = await getOrCreateContributorFromEmailAndName(accountData);
+		const result = await getOrCreateContributorFromEmailAndName(audit, accountData);
 
 		expect(expectSuccess(result)).toEqual({ contributor: concurrent, isNewContributor: false });
 		expect(mockFindContributorByEmailOrFirebaseAuthUserId).toHaveBeenCalledWith('ada@example.com', 'firebase-uid-1');
@@ -146,7 +151,7 @@ describe('getOrCreateContributorFromEmailAndName', () => {
 		});
 		mockFindContributorByEmailOrFirebaseAuthUserId.mockResolvedValue(concurrent);
 
-		const result = await getOrCreateContributorFromEmailAndName(accountData);
+		const result = await getOrCreateContributorFromEmailAndName(audit, accountData);
 
 		expect(expectSuccess(result)).toEqual({ contributor: concurrent, isNewContributor: false });
 		expect(mockFindContributorByEmailOrFirebaseAuthUserId).toHaveBeenCalledWith('ada@example.com', 'firebase-uid-1');
@@ -158,7 +163,7 @@ describe('getOrCreateContributorFromEmailAndName', () => {
 		mockCreateFirebaseUserByEmail.mockResolvedValue({ success: true, data: { uid: 'firebase-uid-1' } });
 		mockCreateContributorFromEmailAndName.mockRejectedValue(new Error('db-down'));
 
-		const result = await getOrCreateContributorFromEmailAndName(accountData);
+		const result = await getOrCreateContributorFromEmailAndName(audit, accountData);
 
 		expect(result.success).toBe(false);
 		if (!result.success) {
@@ -206,7 +211,7 @@ describe('getOrCreateReferenceIdByEmail', () => {
 			contact: { email: 'Donor@Example.com' },
 		});
 
-		const result = await getOwnedPaymentReferenceId('contributor-1', 'donor@example.com');
+		const result = await getOwnedPaymentReferenceId(audit, 'contributor-1', 'donor@example.com');
 
 		expect(result).toEqual({ success: true, data: '1735689600000', status: undefined });
 	});
@@ -218,7 +223,7 @@ describe('getOrCreateReferenceIdByEmail', () => {
 			contact: { email: 'owner@example.com' },
 		});
 
-		const result = await getOwnedPaymentReferenceId('contributor-1', 'other@example.com');
+		const result = await getOwnedPaymentReferenceId(audit, 'contributor-1', 'other@example.com');
 
 		expect(result).toEqual({ success: true, data: null, status: undefined });
 	});
@@ -235,7 +240,7 @@ describe('getOrCreateReferenceIdByEmail', () => {
 		});
 		mockUpdateContributorSelf.mockResolvedValue({ id: 'contributor-1' });
 
-		const result = await getOwnedPaymentReferenceId('contributor-1', 'donor@example.com');
+		const result = await getOwnedPaymentReferenceId(audit, 'contributor-1', 'donor@example.com');
 
 		expect(result.success).toBe(true);
 		if (!result.success) {
@@ -243,6 +248,7 @@ describe('getOrCreateReferenceIdByEmail', () => {
 		}
 		expect(result.data).toBe(String(new Date('2023-11-14T22:13:20.000Z').getTime()));
 		expect(mockUpdateContributorSelf).toHaveBeenCalledWith(
+			audit,
 			'contributor-1',
 			expect.objectContaining({ paymentReferenceId: result.data }),
 			'contact-1',

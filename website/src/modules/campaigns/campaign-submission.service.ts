@@ -9,12 +9,14 @@ import {
 	uploadStoryblokAsset,
 } from '@/integrations/storyblok/storyblok-management.integration';
 import { verifyTurnstileToken } from '@/integrations/turnstile/turnstile.integration';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { slugify } from '@/lib/utils/string-utils';
 import { isProgramEligibleForPublicSubmission } from '@/modules/programs/program-public-submission.service';
 import { randomBytes, randomUUID } from 'crypto';
-import * as campaignRepository from './campaign.repository';
+import * as campaignRepository from './campaign.repository.read';
+import * as campaignWriteRepository from './campaign.repository.write';
 import { validateCampaignSubmissionImageBuffer, type CampaignSubmissionFields } from './campaign.schemas';
 import {
 	type CampaignSubmissionImageSource,
@@ -51,6 +53,7 @@ const filenameFromUrl = (url: string) => {
 };
 
 export const submitCampaign = async (
+	audit: AuditContext,
 	fields: CampaignSubmissionFields,
 	imageSource: CampaignSubmissionImageSource,
 	optionalImages: CampaignSubmissionOptionalImages = { profilePicture: null, sectionImage: null },
@@ -84,7 +87,7 @@ export const submitCampaign = async (
 		}
 		const primaryImage = imageResult.data;
 
-		const campaign = await campaignRepository.createCampaign({
+		const campaign = await campaignWriteRepository.createCampaign(audit, {
 			goal: fields.goal,
 			currency: fields.currency,
 			endDate: fields.endDate,
@@ -106,17 +109,17 @@ export const submitCampaign = async (
 		]);
 
 		if (!primaryResult.success) {
-			await compensateSubmissionFailure(cleanupState);
+			await compensateSubmissionFailure(audit, cleanupState);
 
 			return resultFail('submission-failed', 503);
 		}
 		if (!profileResult.success) {
-			await compensateSubmissionFailure(cleanupState);
+			await compensateSubmissionFailure(audit, cleanupState);
 
 			return resultFail('submission-failed', 503);
 		}
 		if (!sectionResult.success) {
-			await compensateSubmissionFailure(cleanupState);
+			await compensateSubmissionFailure(audit, cleanupState);
 
 			return resultFail('submission-failed', 503);
 		}
@@ -147,16 +150,16 @@ export const submitCampaign = async (
 				: {}),
 		});
 		if (!storyResult.success) {
-			await compensateSubmissionFailure(cleanupState);
+			await compensateSubmissionFailure(audit, cleanupState);
 
 			return resultFail('submission-failed', storyResult.status ?? 503);
 		}
 		cleanupState.storyId = storyResult.data.storyId;
 
 		if (!contributorId) {
-			const claimId = await createCampaignPendingRecord(campaign.id);
+			const claimId = await createCampaignPendingRecord(audit, campaign.id);
 			if (!claimId) {
-				await compensateSubmissionFailure(cleanupState);
+				await compensateSubmissionFailure(audit, cleanupState);
 
 				return resultFail('submission-failed', 503);
 			}
@@ -166,17 +169,17 @@ export const submitCampaign = async (
 
 		return resultOk({ slug });
 	} catch (error) {
-		await compensateSubmissionFailure(cleanupState);
+		await compensateSubmissionFailure(audit, cleanupState);
 		console.error(error, { slug });
 
 		return resultFail('submission-failed', 503);
 	}
 };
 
-const createCampaignPendingRecord = async (campaignId: string): Promise<string | null> => {
+const createCampaignPendingRecord = async (audit: AuditContext, campaignId: string): Promise<string | null> => {
 	for (let attempt = 1; attempt <= claimIdCreateMaxAttempts; attempt += 1) {
 		const claimId = generateClaimId();
-		const created = await campaignRepository.createCampaignPending(campaignId, claimId);
+		const created = await campaignWriteRepository.createCampaignPending(audit, campaignId, claimId);
 		if (created.kind === 'created') {
 			return claimId;
 		}
@@ -273,7 +276,7 @@ const resolveImage = async (
 	}
 };
 
-const compensateSubmissionFailure = async (state: SubmissionCleanupState): Promise<void> => {
+const compensateSubmissionFailure = async (audit: AuditContext, state: SubmissionCleanupState): Promise<void> => {
 	if (state.storyId) {
 		await deleteStoryblokStory(state.storyId);
 	}
@@ -284,7 +287,7 @@ const compensateSubmissionFailure = async (state: SubmissionCleanupState): Promi
 
 	if (state.campaignId) {
 		try {
-			await campaignRepository.deleteCampaign(state.campaignId);
+			await campaignWriteRepository.deleteCampaigns(audit, [state.campaignId]);
 		} catch (error) {
 			console.error(error, { campaignId: state.campaignId });
 		}

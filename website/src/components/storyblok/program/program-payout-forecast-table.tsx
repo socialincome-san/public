@@ -2,6 +2,7 @@
 
 import { makePayoutForecastColumns } from '@/components/data-table/columns/payout-forecast';
 import { BaseTable } from '@/components/data-table/elements/base-table';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { InfoIcon } from 'lucide-react';
@@ -10,11 +11,13 @@ import { useTranslations } from 'next-intl';
 type Props = {
 	rows: PayoutForecastTableViewRow[];
 	titleInfoTooltip?: string;
+	lang: WebsiteLanguage;
+	displayCurrency: WebsiteCurrency;
 };
 
-export const ProgramPayoutForecastTable = ({ rows, titleInfoTooltip }: Props) => {
+export const ProgramPayoutForecastTable = ({ rows, titleInfoTooltip, lang, displayCurrency }: Props) => {
 	const t = useTranslations('website-common');
-	const columns = makePayoutForecastColumns(undefined, undefined, undefined, t);
+	const columns = makePayoutForecastColumns(undefined, undefined, undefined, t, { displayCurrency, lang });
 
 	return (
 		<div className="flex flex-col gap-4">

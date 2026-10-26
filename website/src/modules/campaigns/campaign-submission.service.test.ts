@@ -12,7 +12,7 @@ type CreateCampaignInput = {
 	contributorId?: string | null;
 };
 type CreateCampaignResult = { kind: 'created'; id: string; slug: string } | { kind: 'slug-exists' };
-const mockCreateCampaign = jest.fn<Promise<CreateCampaignResult>, [CreateCampaignInput]>();
+const mockCreateCampaign = jest.fn<Promise<CreateCampaignResult>, [unknown, CreateCampaignInput]>();
 const mockCreateCampaignPending = jest.fn();
 const mockDeleteCampaign = jest.fn();
 const mockCampaignStoryExists = jest.fn();
@@ -31,11 +31,14 @@ jest.mock('@/modules/programs/program-public-submission.service', () => ({
 	isProgramEligibleForPublicSubmission: mockIsProgramEligibleForPublicSubmission,
 }));
 
-jest.mock('./campaign.repository', () => ({
+jest.mock('./campaign.repository.read', () => ({
 	findCampaignIdBySlug: mockFindCampaignIdBySlug,
+}));
+
+jest.mock('./campaign.repository.write', () => ({
 	createCampaign: mockCreateCampaign,
 	createCampaignPending: mockCreateCampaignPending,
-	deleteCampaign: mockDeleteCampaign,
+	deleteCampaigns: mockDeleteCampaign,
 }));
 
 jest.mock('@/integrations/storyblok/storyblok-management.integration', () => ({
@@ -49,6 +52,8 @@ jest.mock('@/integrations/storyblok/storyblok-management.integration', () => ({
 }));
 
 import { submitCampaign } from './campaign-submission.service';
+
+const guestAudit = { actor: { type: 'system' as const, id: 'campaign-submission' }, source: 'system' as const };
 
 const pngImage = {
 	buffer: Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]),
@@ -77,10 +82,10 @@ const baseFields = {
 
 const submit = (
 	fields = baseFields,
-	imageSource: Parameters<typeof submitCampaign>[1] = { kind: 'upload', image: pngImage },
-	optionalImages?: Parameters<typeof submitCampaign>[2],
+	imageSource: Parameters<typeof submitCampaign>[2] = { kind: 'upload', image: pngImage },
+	optionalImages?: Parameters<typeof submitCampaign>[3],
 	contributorId?: string | null,
-) => submitCampaign(fields, imageSource, optionalImages, contributorId, 'turnstile-token');
+) => submitCampaign(guestAudit, fields, imageSource, optionalImages, contributorId, 'turnstile-token');
 
 describe('submitCampaign', () => {
 	const consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
@@ -164,6 +169,7 @@ describe('submitCampaign', () => {
 		}
 		expect(mockCreateCampaign).toHaveBeenCalledTimes(1);
 		expect(mockCreateCampaign).toHaveBeenCalledWith(
+			guestAudit,
 			expect.objectContaining({
 				slug: 'my-campaign',
 				programId: 'program-1',
@@ -171,7 +177,11 @@ describe('submitCampaign', () => {
 			}),
 		);
 		expect(mockCreateCampaignPending).toHaveBeenCalledTimes(1);
-		expect(mockCreateCampaignPending).toHaveBeenCalledWith('campaign-1', result.success ? result.data.claimId : undefined);
+		expect(mockCreateCampaignPending).toHaveBeenCalledWith(
+			guestAudit,
+			'campaign-1',
+			result.success ? result.data.claimId : undefined,
+		);
 		expect(mockCreatePublishedCampaignStory).toHaveBeenCalledWith(
 			expect.objectContaining({
 				slug: 'my-campaign',
@@ -191,7 +201,7 @@ describe('submitCampaign', () => {
 		if (result.success) {
 			expect(result.data.claimId).toBeUndefined();
 		}
-		expect(mockCreateCampaign).toHaveBeenCalledWith(expect.objectContaining({ contributorId: 'contributor-1' }));
+		expect(mockCreateCampaign).toHaveBeenCalledWith(guestAudit, expect.objectContaining({ contributorId: 'contributor-1' }));
 		expect(mockCreateCampaignPending).not.toHaveBeenCalled();
 	});
 
@@ -202,7 +212,7 @@ describe('submitCampaign', () => {
 		if (result.success) {
 			expect(result.data.claimId).toMatch(/^[0-9A-Za-z]{8}$/);
 		}
-		expect(mockCreateCampaign).toHaveBeenCalledWith(expect.objectContaining({ contributorId: null }));
+		expect(mockCreateCampaign).toHaveBeenCalledWith(guestAudit, expect.objectContaining({ contributorId: null }));
 		expect(mockCreateCampaignPending).toHaveBeenCalledTimes(1);
 	});
 
@@ -290,7 +300,7 @@ describe('submitCampaign', () => {
 		expect(result.success).toBe(false);
 		expect(mockDeleteStoryblokAsset).toHaveBeenCalledWith(10);
 		expect(mockDeleteStoryblokAsset).toHaveBeenCalledWith(11);
-		expect(mockDeleteCampaign).toHaveBeenCalledWith('campaign-1');
+		expect(mockDeleteCampaign).toHaveBeenCalledWith(guestAudit, ['campaign-1']);
 	});
 
 	test('submit cleans up successful uploads when a parallel Storyblok upload fails', async () => {
@@ -326,7 +336,7 @@ describe('submitCampaign', () => {
 		expect(result.success).toBe(false);
 		expect(mockDeleteStoryblokAsset).toHaveBeenCalledWith(10);
 		expect(mockDeleteStoryblokAsset).toHaveBeenCalledWith(12);
-		expect(mockDeleteCampaign).toHaveBeenCalledWith('campaign-1');
+		expect(mockDeleteCampaign).toHaveBeenCalledWith(guestAudit, ['campaign-1']);
 	});
 
 	test('submit downloads and re-uploads a default image from the defaults folder', async () => {
@@ -354,7 +364,7 @@ describe('submitCampaign', () => {
 			'image/png',
 			expect.objectContaining({ focus: '100x120:100x120' }),
 		);
-		expect(mockCreateCampaign).toHaveBeenCalledWith(expect.objectContaining({ goal: null }));
+		expect(mockCreateCampaign).toHaveBeenCalledWith(guestAudit, expect.objectContaining({ goal: null }));
 		expect(mockCreatePublishedCampaignStory).toHaveBeenCalledWith(expect.objectContaining({ public: false }));
 	});
 
@@ -440,7 +450,7 @@ describe('submitCampaign', () => {
 		if (result.success) {
 			expect(result.data.slug).toBe('my-campaign-2');
 		}
-		expect(mockCreateCampaign).toHaveBeenCalledWith(expect.objectContaining({ slug: 'my-campaign-2' }));
+		expect(mockCreateCampaign).toHaveBeenCalledWith(guestAudit, expect.objectContaining({ slug: 'my-campaign-2' }));
 		expect(mockCreatePublishedCampaignStory).toHaveBeenCalledWith(
 			expect.objectContaining({
 				slug: 'my-campaign-2',
@@ -463,7 +473,7 @@ describe('submitCampaign', () => {
 		if (result.success) {
 			expect(result.data.slug).toBe('my-campaign-3');
 		}
-		expect(mockCreateCampaign).toHaveBeenCalledWith(expect.objectContaining({ slug: 'my-campaign-3' }));
+		expect(mockCreateCampaign).toHaveBeenCalledWith(guestAudit, expect.objectContaining({ slug: 'my-campaign-3' }));
 	});
 
 	test('submit returns submission-failed when Storyblok uniqueness lookup fails', async () => {
@@ -493,7 +503,7 @@ describe('submitCampaign', () => {
 		if (result.success) {
 			expect(result.data.slug).toMatch(uuidSlug);
 		}
-		expect(mockCreateCampaign.mock.calls[0]?.[0].slug).toMatch(uuidSlug);
+		expect(mockCreateCampaign.mock.calls[0]?.[1].slug).toMatch(uuidSlug);
 		expect(mockFindCampaignIdBySlug).toHaveBeenCalledTimes(20);
 	});
 

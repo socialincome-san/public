@@ -1,4 +1,6 @@
 import { CountryCode, Gender, type Profile } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import {
@@ -8,8 +10,10 @@ import {
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
+import { recipientAuditedEntity } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
-import * as candidateRepository from './candidate.repository';
+import * as candidateRepository from './candidate.repository.read';
+import * as candidateWriteRepository from './candidate.repository.write';
 import { candidateCreateSchema, type CandidateCreateInput, type CandidateUpdateInput } from './candidate.schemas';
 import type {
 	CandidatePayload,
@@ -164,7 +168,11 @@ export const exportCandidatesCsv = async (session: Session): Promise<Result<stri
 	}
 };
 
-export const createCandidate = async (session: Session, input: CandidateCreateInput): Promise<Result<CandidatePayload>> => {
+export const createCandidate = async (
+	session: Session,
+	input: CandidateCreateInput,
+	auditMetadata?: AuditContext['metadata'],
+): Promise<Result<CandidatePayload>> => {
 	if (session.type === 'contributor') {
 		return resultFail('Permission denied');
 	}
@@ -197,7 +205,14 @@ export const createCandidate = async (session: Session, input: CandidateCreateIn
 		}
 
 		try {
-			return resultOk(await candidateRepository.createCandidate(input, localPartnerId));
+			return resultOk(
+				await candidateWriteRepository.createCandidate(
+					recipientAuditedEntity,
+					{ ...getSessionAuditContext(session), metadata: auditMetadata },
+					input,
+					localPartnerId,
+				),
+			);
 		} catch (error) {
 			if (paymentPhone) {
 				await deleteFirebaseUserByPhoneNumberIfExists(paymentPhone);
@@ -265,16 +280,20 @@ export const updateCandidate = async (session: Session, input: CandidateUpdateIn
 			firebaseChange = 'changed';
 		}
 
-		const updated = await candidateRepository.updateCandidate(effectiveInput, {
-			contactId: existing.contact.id,
-			contactPhoneId: existing.contact.phone?.id,
-			contactPhoneNumber: existing.contact.phone?.number,
-			contactAddressId: existing.contact.address?.id,
-			paymentInformationId: existing.paymentInformation?.id,
-			paymentPhoneId: existing.paymentInformation?.phone?.id,
-			paymentPhoneNumber: existing.paymentInformation?.phone?.number,
-		});
-		await cleanupCandidateRelations(existing, effectiveInput);
+		const updated = await candidateWriteRepository.updateCandidate(
+			recipientAuditedEntity,
+			getSessionAuditContext(session),
+			effectiveInput,
+			{
+				contactId: existing.contact.id,
+				contactPhoneId: existing.contact.phone?.id,
+				contactPhoneNumber: existing.contact.phone?.number,
+				contactAddressId: existing.contact.address?.id,
+				paymentInformationId: existing.paymentInformation?.id,
+				paymentPhoneId: existing.paymentInformation?.phone?.id,
+				paymentPhoneNumber: existing.paymentInformation?.phone?.number,
+			},
+		);
 
 		return resultOk(updated);
 	} catch (error) {
@@ -300,12 +319,7 @@ export const deleteCandidate = async (session: Session, candidateId: string): Pr
 			return accessResult;
 		}
 
-		await candidateRepository.deleteCandidateData({
-			candidateId,
-			contactId: existing.contactId,
-			paymentInformationId: existing.paymentInformationId,
-		});
-		await cleanupDeletedCandidateRelations(candidateId, existing);
+		await candidateWriteRepository.deleteCandidate(recipientAuditedEntity, getSessionAuditContext(session), candidateId);
 
 		const paymentPhone = existing.paymentInformation?.phone?.number;
 		if (paymentPhone) {
@@ -357,8 +371,9 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 			return resultFail('CSV contains invalid candidate data');
 		}
 
+		const importId = crypto.randomUUID();
 		for (const candidate of candidates) {
-			const result = await createCandidate(session, candidate);
+			const result = await createCandidate(session, candidate, { operation: 'csv-import', importId });
 			if (!result.success) {
 				console.error('Could not create candidate from CSV', { error: result.error });
 
@@ -375,6 +390,7 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 };
 
 export const assignRandomCandidatesToProgram = async (
+	audit: AuditContext,
 	programId: string,
 	amount: number,
 	filter: UnassignedCandidateFilter,
@@ -384,7 +400,14 @@ export const assignRandomCandidatesToProgram = async (
 	}
 
 	try {
-		const assignment = await candidateRepository.updateUnassignedCandidateAssignments(filter, programId, amount);
+		const candidates = await candidateRepository.findUnassignedCandidateIds(filter);
+		const assignment = await candidateWriteRepository.updateUnassignedCandidateAssignments(
+			recipientAuditedEntity,
+			audit,
+			candidates.map(({ id }) => id),
+			programId,
+			amount,
+		);
 		if (assignment.outcome === 'insufficient') {
 			console.warn('Not enough candidates available for assignment', { programId, requested: amount });
 
@@ -534,41 +557,6 @@ const validateCandidateUpdateUniqueness = async (
 	}
 
 	return resultOk(undefined);
-};
-
-const cleanupCandidateRelations = async (
-	existing: NonNullable<Awaited<ReturnType<typeof candidateRepository.findCandidateForUpdate>>>,
-	input: CandidateUpdateInput,
-): Promise<void> => {
-	if (existing.contact.phone?.id) {
-		await candidateRepository.deletePhoneIfOrphaned(existing.contact.phone.id);
-	}
-	if (existing.paymentInformation?.phone?.id) {
-		await candidateRepository.deletePhoneIfOrphaned(existing.paymentInformation.phone.id);
-	}
-	if (
-		existing.contact.address?.id &&
-		![input.contact.street, input.contact.number, input.contact.city, input.contact.zip, input.contact.country].some(Boolean)
-	) {
-		await candidateRepository.deleteAddressIfOrphaned(existing.contact.address.id);
-	}
-};
-
-const cleanupDeletedCandidateRelations = async (
-	candidateId: string,
-	existing: NonNullable<Awaited<ReturnType<typeof candidateRepository.findCandidateForDeletion>>>,
-): Promise<void> => {
-	const cleanups = [
-		existing.contact.phoneId ? candidateRepository.deletePhoneIfOrphaned(existing.contact.phoneId) : null,
-		existing.paymentInformation?.phone?.id
-			? candidateRepository.deletePhoneIfOrphaned(existing.paymentInformation.phone.id)
-			: null,
-		existing.contact.addressId ? candidateRepository.deleteAddressIfOrphaned(existing.contact.addressId) : null,
-	].filter((cleanup): cleanup is Promise<boolean> => cleanup !== null);
-	const results = await Promise.allSettled(cleanups);
-	if (results.some(({ status }) => status === 'rejected')) {
-		console.warn('Candidate deleted but relation cleanup failed', { candidateId });
-	}
 };
 
 const compensateFirebaseChange = async (

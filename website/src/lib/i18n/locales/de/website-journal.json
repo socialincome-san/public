@@ -11,20 +11,21 @@
 		"article-count": "{count, plural, one {{count} Artikel} other {{count} Artikel}}"
 	},
 	"person": {
-		"articles": "Artikel",
-		"circle-active": "Aktives Mitglied",
-		"circle-interested": "Interessiertes Mitglied",
-		"work-style": "Arbeitsweise",
-		"likes-deadline": "Deadlines",
-		"likes-deadline-yes": "Mag Deadlines",
-		"likes-deadline-no": "Lieber ohne Deadlines",
+		"articles": "Artikel von {name}",
 		"time-commitment": "Zeitaufwand",
 		"time-commitment-unit": "Std. / Woche",
 		"breadcrumb": "Personen",
 		"role": "Rolle",
 		"circles": "Kreise",
-		"commitment": "Freiwilligen-Engagement",
-		"opens-in-new-tab": "(öffnet in neuem Tab)"
+		"opens-in-new-tab": "(öffnet in neuem Tab)",
+		"volunteering-since": "Freiwillig seit",
+		"contributions-title": "Beiträge zur Website",
+		"contributions-description": "{name} hat an {count, plural, one {# Seite} other {# Seiten}} dieser Website mitgearbeitet.",
+		"contributions-show-all": "Alle {count} Seiten anzeigen",
+		"contributions-show-fewer": "Weniger Seiten anzeigen",
+		"more-people": "Weitere Menschen hinter Social Income",
+		"articles-show-all": "Alle {count} Artikel anzeigen",
+		"articles-show-fewer": "Weniger Artikel anzeigen"
 	},
 	"article": {
 		"keep-reading": "Weiterlesen",

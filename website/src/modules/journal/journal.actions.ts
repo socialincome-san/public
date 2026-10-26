@@ -8,6 +8,8 @@ import type { ISbStoryData } from '@storyblok/js';
 import {
 	getJournalArticle,
 	getJournalArticlePageData,
+	getJournalArticlesByArticleType,
+	getJournalArticlesByTag,
 	getJournalArticlesByUuids,
 	getJournalPerson,
 	getJournalPersonPageData,
@@ -15,6 +17,8 @@ import {
 } from './journal.cache';
 import {
 	journalArticleRequestSchema,
+	journalArticlesByArticleTypeRequestSchema,
+	journalArticlesByTagRequestSchema,
 	journalArticlesByUuidsRequestSchema,
 	journalLanguageRequestSchema,
 	journalPageRequestSchema,
@@ -59,5 +63,23 @@ export const getJournalArticlesByUuidsAction = async (input: unknown): Promise<R
 
 	return parsed.success
 		? getJournalArticlesByUuids(parsed.data.language, parsed.data.articleUuids)
+		: resultFail('Invalid journal articles request');
+};
+
+export const getJournalArticlesByTagAction = async (input: unknown): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	const parsed = journalArticlesByTagRequestSchema.safeParse(input);
+
+	return parsed.success
+		? getJournalArticlesByTag(parsed.data.language, parsed.data.tagUuid)
+		: resultFail('Invalid journal articles request');
+};
+
+export const getJournalArticlesByArticleTypeAction = async (
+	input: unknown,
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	const parsed = journalArticlesByArticleTypeRequestSchema.safeParse(input);
+
+	return parsed.success
+		? getJournalArticlesByArticleType(parsed.data.language, parsed.data.articleTypeUuid)
 		: resultFail('Invalid journal articles request');
 };

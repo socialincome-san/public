@@ -1,3 +1,4 @@
+import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import type { JournalRssArticle } from '@/lib/storyblok/journal-rss';
@@ -11,8 +12,11 @@ import {
 	createWebsitePersonLink,
 	getArticleTitle,
 	getArticleTypeLabel,
+	getPersonAvatarSrc,
 	getPersonDisplayName,
+	toStringArray,
 } from '@/lib/storyblok/storyblok-utils';
+import * as community from '@/modules/community/community.cache';
 import * as storyblokContent from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type {
@@ -27,6 +31,22 @@ import type {
 } from './journal.types';
 
 const JOURNAL_RELATED_ARTICLES_COUNT = 3;
+const OTHER_PERSONS_COUNT = 8;
+
+// Active volunteers with a portrait, those sharing a circle with the person first
+const pickOtherPersons = (person: ISbStoryData<Person>, persons: ISbStoryData<Person>[]) => {
+	const circles = new Set(toStringArray(person.content.activeCircleMember));
+	const candidates = persons.filter(
+		(other) => other.uuid !== person.uuid && other.content.volunteerStatus === 'active' && getPersonAvatarSrc(other),
+	);
+	const sharesCircle = (other: ISbStoryData<Person>) =>
+		toStringArray(other.content.activeCircleMember).some((circle) => circles.has(circle));
+
+	return [...candidates.filter(sharesCircle), ...candidates.filter((other) => !sharesCircle(other))].slice(
+		0,
+		OTHER_PERSONS_COUNT,
+	);
+};
 
 export const getJournalOverviewPageData = async (
 	request: JournalOverviewRequest,
@@ -153,7 +173,7 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 				homeLabel,
 				parentLabel,
 				journalPath,
-				getArticleTitle(story, true),
+				getArticleTitle(story),
 				createWebsiteJournalArticleLink(slug, lang, currency),
 				lang,
 				currency,
@@ -174,18 +194,24 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			return resultFail('Journal person not found', personResult.status);
 		}
 		const person = personResult.data;
-		const [articlesResult, roleLabelsResult, circleLabelsResult, workStyleLabelsResult, timeCommitmentLabelsResult] =
-			await Promise.all([
-				storyblokContent.getArticlesByAuthor(person.uuid, lang),
-				storyblokContent.getPrimaryRoleLabels(lang),
-				storyblokContent.getCircleLabels(lang),
-				storyblokContent.getWorkStyleLabels(lang),
-				storyblokContent.getTimeCommitmentLabels(lang),
-			]);
+		const [
+			articlesResult,
+			roleLabelsResult,
+			circleLabelsResult,
+			timeCommitmentLabelsResult,
+			personsResult,
+			contributionsResult,
+		] = await Promise.all([
+			storyblokContent.getArticlesByAuthor(person.uuid, lang),
+			storyblokContent.getPrimaryRoleLabels(lang),
+			storyblokContent.getCircleLabels(lang),
+			storyblokContent.getTimeCommitmentLabels(lang),
+			storyblokContent.getAllPersons(lang),
+			community.getPersonContributions(person.uuid, lang, currency),
+		]);
 		const articles = articlesResult.success ? articlesResult.data : [];
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 		const circleLabels = circleLabelsResult.success ? circleLabelsResult.data : {};
-		const workStyleLabels = workStyleLabelsResult.success ? workStyleLabelsResult.data : {};
 		const timeCommitmentLabels = timeCommitmentLabelsResult.success ? timeCommitmentLabelsResult.data : {};
 		const totalInDefault = await getDefaultLanguageCount(lang, articles.length, () =>
 			storyblokContent.getArticleCountByAuthorForDefaultLang(person.uuid),
@@ -209,8 +235,9 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			),
 			roleLabels,
 			circleLabels,
-			workStyleLabels,
 			timeCommitmentLabels,
+			contributions: contributionsResult.success ? contributionsResult.data : [],
+			otherPersons: personsResult.success ? pickOtherPersons(person, personsResult.data) : [],
 		});
 	} catch (error) {
 		console.error('Could not load journal person', { error });
@@ -277,6 +304,36 @@ export const getJournalArticlesByUuids = async (
 		return result.success ? result : resultFail('Could not load journal articles', result.status);
 	} catch (error) {
 		console.error('Could not load journal articles', { error });
+
+		return resultFail('Could not load journal articles');
+	}
+};
+
+export const getJournalArticlesByTag = async (
+	language: string,
+	tagUuid: string,
+): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
+	try {
+		const result = await storyblokContent.getArticlesByTag(tagUuid, language);
+
+		return result.success ? result : resultFail('Could not load journal articles', result.status);
+	} catch (error) {
+		console.error('Could not load journal articles by tag', { error });
+
+		return resultFail('Could not load journal articles');
+	}
+};
+
+export const getJournalArticlesByArticleType = async (
+	language: string,
+	articleTypeUuid: string,
+): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
+	try {
+		const result = await storyblokContent.getArticlesByArticleType(articleTypeUuid, language);
+
+		return result.success ? result : resultFail('Could not load journal articles', result.status);
+	} catch (error) {
+		console.error('Could not load journal articles by article type', { error });
 
 		return resultFail('Could not load journal articles');
 	}

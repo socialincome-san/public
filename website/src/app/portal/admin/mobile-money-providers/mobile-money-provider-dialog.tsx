@@ -1,5 +1,6 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { mobileMoneyProviderCountriesTableConfig } from '@/components/data-table/configs/countries-table.config';
 import { mobileMoneyProviderChildrenTableConfig } from '@/components/data-table/configs/mobile-money-providers-table.config';
@@ -93,6 +94,7 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Pr
 							/>
 						),
 					},
+					auditLogTab('mobile-money-provider', providerId),
 				]}
 			/>
 		);
@@ -100,7 +102,7 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Pr
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add mobile money provider</DialogTitle>
 				</DialogHeader>

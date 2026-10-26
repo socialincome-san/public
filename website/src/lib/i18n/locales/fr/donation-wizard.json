@@ -2,12 +2,7 @@
 	"modal": {
 		"title": "Faire un don",
 		"campaign-for": "Pour {title}",
-		"closeConfirm": {
-			"title": "Fermer le don ?",
-			"description": "Si tu fermes maintenant, ta progression dans ce don sera perdue.",
-			"cancel": "Continuer le don",
-			"confirm": "Fermer"
-		}
+		"currency": "Devise"
 	},
 	"stepAmount": {
 		"title": "Faire un don",
@@ -52,7 +47,7 @@
 		"email": "E-mail",
 		"accountCreateHint": "S'il n'existe pas encore de compte avec cet e-mail, nous en créerons un pour toi.",
 		"noBackAfterGenerateHint": "Après la génération du code QR, tu ne pourras plus modifier le montant, le mode de paiement ni les coordonnées dans ce parcours.",
-		"generateCta": "Générer le code QR pour le paiement",
+		"generateCta": "Générer le code QR",
 		"generating": "Génération…",
 		"generateError": "Impossible de générer la facture QR. Réessaie."
 	},
@@ -144,5 +139,10 @@
 		"zewo": "Certifié ZEWO",
 		"why-one-percent": "Pourquoi donner 1% ?",
 		"pay-with": "Payer avec"
+	},
+	"resumeBar": {
+		"label": "Don rapide",
+		"summary": "{cadence, select, monthly {Donner {amount} par mois, modifier le montant} other {Donner {amount} une fois, modifier le montant}}",
+		"continue": "Continuer"
 	}
 }

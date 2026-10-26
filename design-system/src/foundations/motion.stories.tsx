@@ -64,6 +64,11 @@ const MotionOverview = () => (
 				<AnimationRow name="animate-globe-badge" duration="350ms">
 					<div className="bg-card animate-globe-badge rounded-full px-4 py-2 text-sm shadow-md">CHF 50</div>
 				</AnimationRow>
+				<AnimationRow name="animate-settle-zoom" duration="24s">
+					<div className="bg-primary/20 h-12 w-24 overflow-hidden rounded-md">
+						<div className="bg-primary/40 animate-settle-zoom size-full" />
+					</div>
+				</AnimationRow>
 				<AnimationRow name="animate-gauge-arc-draw" duration="900ms">
 					<svg viewBox="0 0 100 50" className="text-primary h-12 w-24" aria-hidden>
 						<path

@@ -45,7 +45,11 @@
 			"city": "Ort",
 			"zip": "PLZ",
 			"name": "Name",
-			"focuses": "Schwerpunkte"
+			"focuses": "Schwerpunkte",
+			"validation": {
+				"required": "Dieses Feld ist erforderlich.",
+				"invalid-email": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
+			}
 		}
 	},
 	"sections": {
@@ -185,7 +189,6 @@
 		"generate-certificate": "Spendebescheinigung erstellen",
 		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Erstelle welche mit \"Spendebescheinigung erstellen\". <br></br> Bei Fragen kannst du uns jederzeit <contact>kontaktieren</contact>.",
 		"no-contributions": "Keine Beiträge gefunden, daher kein Zertifikat. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org.",
-		"already-exists": "Zertifikat für ausgewähltes Jahr und Sprache existiert bereits. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org.",
 		"technical-error": "Es ist ein technischer Fehler aufgetreten, bitte probiere es noch einmal. Wenn dies weiterhin passiert, melde dich bei contributors@socialincome.org.",
 		"generate-dialog": {
 			"dialog_title": "Spendenbescheinigung erstellen",

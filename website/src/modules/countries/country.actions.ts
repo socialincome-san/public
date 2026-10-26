@@ -54,7 +54,7 @@ export const createCountryAction = async (input: unknown): Promise<Result<Countr
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createCountry(sessionResult.data.id, parsedInput.data);
+	const result = await createCountry(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -70,7 +70,7 @@ export const updateCountryAction = async (input: unknown): Promise<Result<Countr
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateCountry(sessionResult.data.id, parsedInput.data);
+	const result = await updateCountry(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;
@@ -86,7 +86,7 @@ export const deleteCountryAction = async (input: unknown): Promise<Result<{ id: 
 		return resultFail('Invalid input.');
 	}
 
-	const result = await deleteCountry(sessionResult.data.id, parsedInput.data);
+	const result = await deleteCountry(sessionResult.data, parsedInput.data);
 	revalidatePath(REVALIDATE_PATH);
 
 	return result;

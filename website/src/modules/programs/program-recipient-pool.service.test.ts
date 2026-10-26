@@ -1,5 +1,6 @@
-import { CountryCode, Currency, PayoutInterval, Profile, ProgramPermission } from '@/generated/prisma/enums';
+import { CountryCode, Currency, PayoutInterval, Profile, ProgramPermission, UserRole } from '@/generated/prisma/enums';
 import { resultFail, resultOk } from '@/lib/result';
+import type { UserSession } from '@/modules/users/user.types';
 
 const mockGetAccessiblePrograms = jest.fn();
 const mockFindProgramRecipientPoolContext = jest.fn();
@@ -23,7 +24,7 @@ jest.mock('@/modules/focuses/focus.service', () => ({
 jest.mock('./program-stats.service', () => ({
 	calculateProgramBudget: mockCalculateProgramBudget,
 }));
-jest.mock('./program.repository', () => ({
+jest.mock('./program.repository.read', () => ({
 	findProgramRecipientPoolContext: mockFindProgramRecipientPoolContext,
 }));
 
@@ -32,6 +33,26 @@ import {
 	getProgramRecipientPoolSetup,
 	previewProgramRecipientPool,
 } from './program-recipient-pool.service';
+
+const operator: UserSession = {
+	type: 'user',
+	id: 'user-1',
+	gender: null,
+	email: null,
+	firstName: 'Max',
+	lastName: 'Operator',
+	language: null,
+	street: null,
+	number: null,
+	city: null,
+	zip: null,
+	country: null,
+	role: UserRole.user,
+	activeOrganization: null,
+	organizations: [],
+	programs: [],
+	hasAnyOperatorProgramAccess: true,
+};
 
 const program = {
 	id: 'program-1',
@@ -92,7 +113,7 @@ describe('program recipient pool', () => {
 			resultOk([{ programId: 'program-1', programName: 'Program', permission: ProgramPermission.owner }]),
 		);
 
-		await expect(assignProgramRecipientsFromPool('user-1', { ...emptySelection, recipientCount: 1 })).resolves.toEqual(
+		await expect(assignProgramRecipientsFromPool(operator, { ...emptySelection, recipientCount: 1 })).resolves.toEqual(
 			resultFail('Permission denied'),
 		);
 		expect(mockAssignRandomCandidatesToProgram).not.toHaveBeenCalled();
@@ -120,7 +141,7 @@ describe('program recipient pool', () => {
 			profiles: [Profile.female, Profile.youth],
 			localPartnerIds: ['partner-1'],
 		});
-		await assignProgramRecipientsFromPool('user-1', {
+		await assignProgramRecipientsFromPool(operator, {
 			...emptySelection,
 			focusIds: ['focus-health'],
 			profiles: [Profile.female, Profile.youth],
@@ -135,7 +156,16 @@ describe('program recipient pool', () => {
 			localPartnerIds: ['partner-1'],
 		};
 		expect(mockCountUnassignedCandidates).toHaveBeenCalledWith(expectedFilter);
-		expect(mockAssignRandomCandidatesToProgram).toHaveBeenCalledWith('program-1', 2, expectedFilter);
+		expect(mockAssignRandomCandidatesToProgram).toHaveBeenCalledWith(
+			{
+				actor: { type: 'user', id: 'user-1', name: 'Max Operator' },
+				source: 'portal',
+				metadata: { operation: 'recipient-pool-assignment', programId: 'program-1' },
+			},
+			'program-1',
+			2,
+			expectedFilter,
+		);
 	});
 
 	test('counts all unassigned candidates in the program country when no filters are selected', async () => {
@@ -186,7 +216,7 @@ describe('program recipient pool', () => {
 	test('returns the candidate service failure when not enough candidates are available', async () => {
 		mockAssignRandomCandidatesToProgram.mockResolvedValue(resultFail('Not enough candidates available'));
 
-		await expect(assignProgramRecipientsFromPool('user-1', { ...emptySelection, recipientCount: 9 })).resolves.toEqual(
+		await expect(assignProgramRecipientsFromPool(operator, { ...emptySelection, recipientCount: 9 })).resolves.toEqual(
 			resultFail('Not enough candidates available'),
 		);
 	});
@@ -194,7 +224,7 @@ describe('program recipient pool', () => {
 	test('returns the number of candidates actually assigned', async () => {
 		mockAssignRandomCandidatesToProgram.mockResolvedValue(resultOk({ assigned: 2 }));
 
-		await expect(assignProgramRecipientsFromPool('user-1', { ...emptySelection, recipientCount: 2 })).resolves.toEqual(
+		await expect(assignProgramRecipientsFromPool(operator, { ...emptySelection, recipientCount: 2 })).resolves.toEqual(
 			resultOk({ assigned: 2 }),
 		);
 	});

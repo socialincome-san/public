@@ -1,5 +1,6 @@
 'use client';
 
+import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { focusLocalPartnersTableConfig } from '@/components/data-table/configs/local-partners-table.config';
 import { focusProgramsTableConfig } from '@/components/data-table/configs/programs-table.config';
@@ -76,6 +77,7 @@ export const FocusDialog = ({ open, onOpenChange, focusId, errorMessage, onError
 							/>
 						),
 					},
+					auditLogTab('focus', focusId),
 				]}
 			/>
 		);
@@ -83,7 +85,7 @@ export const FocusDialog = ({ open, onOpenChange, focusId, errorMessage, onError
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>Add focus</DialogTitle>
 				</DialogHeader>

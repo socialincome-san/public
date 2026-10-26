@@ -1,4 +1,5 @@
-jest.mock('./campaign.repository', () => ({
+jest.mock('./campaign.repository.write', () => ({}));
+jest.mock('./campaign.repository.read', () => ({
 	findCampaignsForCmsJoin: jest.fn(),
 	findCampaignsForPublicStats: jest.fn(),
 	findCampaignTableEntries: jest.fn(),
@@ -24,7 +25,7 @@ import { ProgramPermission, type Currency } from '@/generated/prisma/enums';
 import { resultOk, type Result } from '@/lib/result';
 import { getLatestRateForCurrency } from '@/modules/exchange-rates/exchange-rate.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
-import * as campaignRepository from './campaign.repository';
+import * as campaignRepository from './campaign.repository.read';
 import {
 	getCampaignsForCmsJoin,
 	getCampaignTableEntries,
