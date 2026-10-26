@@ -14,7 +14,7 @@ const meta = {
 		layout: 'padded',
 		docs: {
 			description: {
-				component: 'The title and lead text at the top of an overview page. Renders nothing without both.',
+				component: 'An introduction for a page or section, with an optional eyebrow. Renders nothing without content.',
 			},
 		},
 	},
@@ -28,4 +28,20 @@ export const Default: Story = {};
 
 export const TitleOnly: Story = {
 	args: { description: undefined },
+};
+
+export const Section: Story = {
+	args: { variant: 'section', eyebrow: 'Country office', title: 'Liberia' },
+};
+
+export const SectionTitleOnly: Story = {
+	args: { variant: 'section', title: 'Liberia', description: undefined },
+};
+
+export const SectionLongText: Story = {
+	args: {
+		variant: 'section',
+		eyebrow: 'Our local country office team',
+		title: 'Democratic Republic of the Congo',
+	},
 };
