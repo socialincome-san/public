@@ -56,25 +56,31 @@ to the existing GPT Image 2.5 Flare model. References are not stored in
 the gallery; only the generated result is saved. Remove the reference to
 return to text-only generation.
 
-## Area edits
+## Image comments
 
-After generation, **Edit Area** opens the selection tools beside the
-download action. Choose **Mark to Remove** or **Mark to Change**, paint
-with the brush, and use the eraser, undo, or clear selection to refine
-the mask. Brush size is measured in displayed pixels. **Done** closes
-the tools and focuses the existing prompt. Removal instructions are
-optional; changes require a prompt. Clearing the selection returns to
-normal generation.
+**Comment** on a generated image or gallery card opens a large modal
+with the original-resolution image. Click to place numbered comments,
+describe each change, and edit or remove comments before applying them.
+Drag a pin to reposition it without changing its comment. Pins stay
+inside the image; arrow keys move a focused pin by one original-image
+pixel, or ten pixels with Shift. Keyboard users can move the placement
+point with arrow keys and press Enter or Space. Up to 20 comments of
+2,000 characters each are supported.
 
-Edits use the same generation endpoint and GPT Image 2.5 Flare model,
-with the original image and an alpha-inverted PNG mask passed through
-the AI SDK's `prompt.images` and `prompt.mask`. The server validates
-file sizes, formats, and matching dimensions before generation. Sharp
-composites only selected pixels onto the original, preserving the
-unselected area even if the provider modifies it. The edited PNG is
-saved in the gallery. Failed edits retain the original and selection for
-retrying. Reference uploads and format changes are disabled while
-editing.
+The existing generation endpoint receives the original image and every
+comment's exact pixel coordinates (top-left origin, x rightward, y
+downward), unaffected by display scaling. It validates coordinates,
+image size and dimensions and passes all comments and the original to
+GPT Image 2.5 Flare through `prompt.images`, without masks. The prompt
+asks the provider to preserve unrelated areas; this is not a pixel-level
+preservation guarantee.
+
+Each successful edit is inserted as a separate gallery image, never
+overwriting the source. The modal displays the new version and supports
+further comments on it. Versions are independent saved copies using the
+existing table; no schema migration is needed. Failed edits keep the
+image and comments for retrying. `?original=1` on the gallery image API
+serves the full-resolution source rather than the thumbnail.
 
 ## Checks
 

@@ -1,0 +1,3 @@
+export const MAX_COMMENT_IMAGE_BYTES = 20 * 1024 * 1024;
+export const MAX_IMAGE_COMMENTS = 20;
+export const MAX_COMMENT_LENGTH = 2000;

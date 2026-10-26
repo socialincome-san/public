@@ -5,10 +5,11 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
-import { Download, Info, Pencil } from 'lucide-react';
+import { Download, Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { ImageCommentModal } from '../image-comment-modal';
 import { STYLE_TEMPLATE } from '../style-template';
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {
@@ -19,6 +20,27 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
 
 const getUserPrompt = (prompt: string | null) => {
 	if (!prompt) return 'No prompt saved.';
+	if (prompt.startsWith('Edit the supplied original image according to all of the following comments.')) {
+		const marker = ' Comments: ';
+		const start = prompt.indexOf(marker);
+		if (start === -1) return 'No user prompt.';
+		try {
+			const comments: unknown = JSON.parse(prompt.slice(start + marker.length));
+			if (!Array.isArray(comments)) return 'No user prompt.';
+			return (
+				comments
+					.flatMap((comment: unknown) =>
+						typeof comment === 'object' && comment !== null && 'text' in comment && typeof comment.text === 'string'
+							? [comment.text.trim()]
+							: [],
+					)
+					.filter(Boolean)
+					.join('\n') || 'No user prompt.'
+			);
+		} catch {
+			return 'No user prompt.';
+		}
+	}
 	return (prompt.startsWith(STYLE_TEMPLATE) ? prompt.slice(STYLE_TEMPLATE.length).trim() : prompt) || 'No user prompt.';
 };
 
@@ -101,18 +123,7 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 										</div>
 									</TooltipContent>
 								</Tooltip>
-								<Tooltip delayDuration={500}>
-									<TooltipTrigger asChild>
-										<Button asChild variant="ghost" size="icon-sm">
-											<Link href={`/images/${image.id}/edit`} aria-label="Edit image" prefetch={false}>
-												<Pencil aria-hidden="true" />
-											</Link>
-										</Button>
-									</TooltipTrigger>
-									<TooltipContent side="top" sideOffset={8}>
-										Edit image
-									</TooltipContent>
-								</Tooltip>
+								<ImageCommentModal src={`/api/gallery-images/${image.id}?original=1`} />
 								<Button asChild variant="outline" size="sm">
 									<a href={`/api/gallery-images/${image.id}?download=1`} download>
 										<Download aria-hidden="true" /> Download

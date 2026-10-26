@@ -8,6 +8,14 @@ const meta = {
 	title: 'Overlays/Dialog',
 	component: Dialog,
 	tags: ['autodocs'],
+	parameters: {
+		docs: {
+			description: {
+				component:
+					'Accessible dialogs with automatic, fixed or viewport desktop heights and independently scrolling bodies.',
+			},
+		},
+	},
 } satisfies Meta<typeof Dialog>;
 
 export default meta;
@@ -42,14 +50,18 @@ export const Default: Story = {
 	render: () => <DialogExample />,
 };
 
-const ScrollingDialogExample = () => {
+const ScrollingDialogExample = ({ height = 'fixed' }: { height?: 'fixed' | 'viewport' }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<>
 			<Button onClick={() => setOpen(true)}>Open dialog with long content</Button>
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent size="md" height="fixed">
+				<DialogContent
+					size={height === 'viewport' ? 'xl' : 'md'}
+					height={height}
+					padding={height === 'viewport' ? 'responsive' : 'default'}
+				>
 					<DialogHeader>
 						<DialogTitle size="lg">Terms of service</DialogTitle>
 						<DialogDescription>The header and footer stay visible while the body scrolls.</DialogDescription>
@@ -72,6 +84,10 @@ const ScrollingDialogExample = () => {
 
 export const ScrollingBody: Story = {
 	render: () => <ScrollingDialogExample />,
+};
+
+export const Viewport: Story = {
+	render: () => <ScrollingDialogExample height="viewport" />,
 };
 
 const AlertDialogExample = ({ divided = true }: { divided?: boolean }) => {

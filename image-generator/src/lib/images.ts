@@ -10,6 +10,15 @@ export type GalleryBatch = {
 	hasMore: boolean;
 };
 
+export const mergeGalleryBatch = (current: GalleryBatch, previous: GalleryBatch): GalleryBatch => {
+	const currentIds = new Set(current.images.map((image) => String(image.id)));
+	const previousIds = new Set(previous.images.map((image) => String(image.id)));
+	return {
+		images: [...current.images, ...previous.images.filter((image) => !currentIds.has(String(image.id)))],
+		hasMore: previous.hasMore || (current.hasMore && current.images.some((image) => !previousIds.has(String(image.id)))),
+	};
+};
+
 export type GeneratedImage = {
 	base64: string;
 	mediaType: string;

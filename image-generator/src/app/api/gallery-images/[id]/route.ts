@@ -13,7 +13,8 @@ export const GET = async (request: Request, { params }: RouteContext<'/api/galle
 	}
 
 	try {
-		const download = new URL(request.url).searchParams.get('download') === '1';
+		const searchParams = new URL(request.url).searchParams;
+		const download = searchParams.get('download') === '1';
 		const image = await getStoredImage(id);
 		if (!image) return new Response('Image not found', { status: 404 });
 		if (!['image/png', 'image/jpeg', 'image/webp'].includes(image.media_type)) {
@@ -21,13 +22,13 @@ export const GET = async (request: Request, { params }: RouteContext<'/api/galle
 		}
 		const original = Buffer.from(image.image_base64, 'base64');
 
-		if (download) {
+		if (download || searchParams.get('original') === '1') {
 			const extension = image.media_type === 'image/jpeg' ? 'jpg' : image.media_type === 'image/webp' ? 'webp' : 'png';
 			return new Response(new Uint8Array(original), {
 				headers: {
 					...cacheHeaders,
 					'Content-Type': image.media_type,
-					'Content-Disposition': `attachment; filename="social-income-${id}.${extension}"`,
+					'Content-Disposition': `${download ? 'attachment' : 'inline'}; filename="social-income-${id}.${extension}"`,
 				},
 			});
 		}

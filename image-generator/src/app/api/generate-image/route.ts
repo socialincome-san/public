@@ -1,6 +1,7 @@
 import { buildPrompt } from '@/app/style-template';
 import { saveImage } from '@/lib/database';
-import { compositeImageEdit, MAX_EDIT_IMAGE_BYTES, prepareImageEdit } from '@/lib/image-edit';
+import { MAX_COMMENT_IMAGE_BYTES } from '@/lib/image-comment-limits';
+import { prepareImageComments } from '@/lib/image-comments';
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
 import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
 import { generateImage } from 'ai';
@@ -30,14 +31,6 @@ const prepareReferenceImage = async (reference: FormDataEntryValue | null): Prom
 	}
 };
 
-const buildEditPrompt = (text: string, mode: 'remove' | 'change'): string => {
-	const instructions =
-		mode === 'remove'
-			? 'Remove the objects in the masked area and reconstruct the surface or background that would naturally be behind them. Do not leave holes, cutouts or blank patches. Do not add replacement objects.'
-			: 'Redraw or repair the selected detail according to the user instructions below. Keep the object intact and reconstruct a complete, continuous surface. Do not remove the selected detail or replace it with background unless the user explicitly requests that. Do not introduce holes, cutouts or blank patches.';
-	return `Edit only the masked area of this image. The mask identifies where to paint; it is not a hole or an instruction to erase. Preserve the rest of the image, its composition, colors and watercolor style. Match the surrounding edges, perspective, lighting and watercolor texture so the edited area joins naturally with the original. ${instructions} User instructions: ${text}`;
-};
-
 export const POST = async (request: Request) => {
 	let body: FormData;
 	try {
@@ -46,37 +39,29 @@ export const POST = async (request: Request) => {
 		return errorResponse('Please enter a prompt.', 400);
 	}
 	const textPrompt = body.get('prompt');
-	if (typeof textPrompt !== 'string') {
-		return errorResponse('Please enter a prompt.', 400);
-	}
-	const text = textPrompt.trim();
-	const editMode = body.get('editMode');
-	const editImage = body.get('editImage');
-	const selectionMask = body.get('selectionMask');
-	const isEdit = editMode !== null || editImage !== null || selectionMask !== null;
-	let edit: Awaited<ReturnType<typeof prepareImageEdit>> | undefined;
+	const text = typeof textPrompt === 'string' ? textPrompt.trim() : '';
+	const commentImage = body.get('commentImage');
+	const comments = body.get('comments');
+	const isEdit = commentImage !== null || comments !== null;
+	let edit: Awaited<ReturnType<typeof prepareImageComments>> | undefined;
 	if (isEdit) {
-		if (
-			(editMode !== 'remove' && editMode !== 'change') ||
-			!(editImage instanceof File) ||
-			!(selectionMask instanceof File)
-		) {
-			return errorResponse('Provide an image, selection and valid edit mode.', 400);
+		if (!(commentImage instanceof File) || typeof comments !== 'string') {
+			return errorResponse('Provide an original image and comments.', 400);
 		}
-		if (editImage.size > MAX_EDIT_IMAGE_BYTES || selectionMask.size > MAX_EDIT_IMAGE_BYTES) {
-			return errorResponse('Image and selection must each be 20 MB or smaller.', 413);
+		if (commentImage.size > MAX_COMMENT_IMAGE_BYTES) {
+			return errorResponse('Image must be 20 MB or smaller.', 413);
 		}
 		const editReference = body.get('referenceImage');
 		if (editReference instanceof File && editReference.size > 0) {
-			return errorResponse('Reference images cannot be combined with area edits.', 400);
+			return errorResponse('Reference images cannot be combined with image comments.', 400);
 		}
 		try {
-			edit = await prepareImageEdit(editImage, selectionMask);
+			edit = await prepareImageComments(commentImage, comments);
 		} catch (error) {
-			return errorResponse(error instanceof Error ? error.message : 'Invalid image selection.', 400);
+			return errorResponse(error instanceof Error ? error.message : 'Invalid image comments.', 400);
 		}
 	}
-	if (!text && editMode !== 'remove') return errorResponse('Please enter a prompt.', 400);
+	if (!text && !edit) return errorResponse('Please enter a prompt.', 400);
 	const aspectRatio = body.get('aspectRatio') ?? DEFAULT_IMAGE_FORMAT.value;
 	const format = IMAGE_FORMATS.find((item) => item.value === aspectRatio);
 	if (!format) return errorResponse('Unsupported aspect ratio', 400);
@@ -84,11 +69,11 @@ export const POST = async (request: Request) => {
 	if (referenceBytes instanceof Response) return referenceBytes;
 
 	try {
-		const prompt = edit ? buildEditPrompt(text, editMode === 'remove' ? 'remove' : 'change') : buildPrompt(text);
+		const prompt = edit ? edit.prompt : buildPrompt(text);
 		const { image } = await generateImage({
 			model: 'openai/gpt-image-2.5-flare',
 			prompt: edit
-				? { text: prompt, images: [edit.image], mask: edit.mask }
+				? { text: prompt, images: [edit.image] }
 				: referenceBytes
 					? { text: prompt, images: [referenceBytes] }
 					: prompt,
@@ -100,11 +85,8 @@ export const POST = async (request: Request) => {
 		if (width !== (edit?.width ?? format.width) || height !== (edit?.height ?? format.height)) {
 			return errorResponse('The image provider did not return the selected format. Please try again.', 502);
 		}
-		const result = edit
-			? { base64: (await compositeImageEdit(edit, image.uint8Array)).toString('base64'), mediaType: 'image/png' }
-			: image;
-		await saveImage(prompt, result);
-		return Response.json({ error: null, imageBase64: result.base64, mediaType: result.mediaType, width, height });
+		await saveImage(prompt, image);
+		return Response.json({ error: null, imageBase64: image.base64, mediaType: image.mediaType, width, height });
 	} catch (error) {
 		console.error('Image generation failed', error);
 		return errorResponse('Image generation failed', 500);

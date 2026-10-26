@@ -40,6 +40,7 @@ const dialogContentVariants = cva(
 				sm: 'sm:max-w-md',
 				md: 'sm:max-w-2xl',
 				lg: 'sm:max-w-4xl',
+				xl: 'sm:w-[calc(100vw-2rem)] sm:max-w-[90rem] lg:w-[86vw]',
 				full: 'sm:w-site-width sm:max-w-none',
 			},
 			surface: {
@@ -49,17 +50,23 @@ const dialogContentVariants = cva(
 			// Header, body and footer use --dialog-px to bleed to the edges
 			padding: {
 				default: 'gap-4 px-(--dialog-px) py-6 [--dialog-px:--spacing(6)]',
+				responsive: [
+					'gap-3 px-(--dialog-px) pt-[max(--spacing(4),env(safe-area-inset-top))] pb-[max(--spacing(4),env(safe-area-inset-bottom))] transition-none [--dialog-px:--spacing(4)]',
+					'sm:gap-4 sm:py-6 sm:[--dialog-px:--spacing(6)]',
+					'sm:[@media(max-height:30rem)]:gap-2 sm:[@media(max-height:30rem)]:pt-[max(--spacing(3),env(safe-area-inset-top))] sm:[@media(max-height:30rem)]:pb-[max(--spacing(3),env(safe-area-inset-bottom))] sm:[@media(max-height:30rem)]:[--dialog-px:--spacing(4)]',
+				].join(' '),
 				vertical: 'gap-4 py-6 [--dialog-px:0px]',
 				none: 'gap-0 p-0 [--dialog-px:0px]',
 			},
 			height: {
 				auto: '',
 				fixed: 'sm:h-[min(46rem,90dvh)]',
+				viewport: 'sm:h-[88dvh] sm:[@media(max-height:30rem)]:h-dvh sm:[@media(max-height:30rem)]:max-h-dvh',
 			},
 		},
 		compoundVariants: [
 			{
-				size: ['sm', 'md', 'lg', 'full'],
+				size: ['sm', 'md', 'lg', 'xl', 'full'],
 				className:
 					'max-sm:inset-0 max-sm:h-dvh max-sm:max-h-dvh max-sm:w-full max-sm:max-w-none max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-none max-sm:data-[state=open]:zoom-in-100 max-sm:data-[state=closed]:zoom-out-100',
 			},
