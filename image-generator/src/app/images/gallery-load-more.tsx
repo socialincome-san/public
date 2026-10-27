@@ -1,49 +1,38 @@
 'use client';
 
-import { isGalleryBatch, type GalleryImage } from '@/lib/images';
+import { isGalleryBatch, type GalleryBatch, type GalleryImage } from '@/lib/images';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { useActionState } from 'react';
 import { ImageGallery } from './image-gallery';
 
-type State = {
-	images: GalleryImage[];
-	hasMore: boolean;
-	offset: number;
-	error: string | null;
-};
+// Only the batches loaded here live in state; the first batch stays a prop, so a refresh after an edit shows new images.
+type State = { loaded: GalleryImage[]; hasMore: boolean | null; error: string | null };
 
-const loadMore = async (previous: State): Promise<State> => {
-	try {
-		const response = await fetch(`/api/gallery-images?offset=${previous.offset}`);
-		const batch: unknown = await response.json();
-		if (!response.ok || !isGalleryBatch(batch)) {
+export const GalleryLoadMore = ({ images: firstBatch, hasMore: firstBatchHasMore }: GalleryBatch) => {
+	const [state, loadMore, isPending] = useActionState(
+		async (previous: State): Promise<State> => {
+			try {
+				const response = await fetch(`/api/gallery-images?offset=${firstBatch.length + previous.loaded.length}`);
+				const batch: unknown = await response.json();
+				if (response.ok && isGalleryBatch(batch)) {
+					return { loaded: [...previous.loaded, ...batch.images], hasMore: batch.hasMore, error: null };
+				}
+			} catch {
+				// Falls through to the error state.
+			}
 			return { ...previous, error: 'Images could not be loaded. Please try again.' };
-		}
-		const existingIds = new Set(previous.images.map((image) => String(image.id)));
-		return {
-			images: [...previous.images, ...batch.images.filter((image) => !existingIds.has(String(image.id)))],
-			hasMore: batch.hasMore,
-			offset: previous.offset + batch.images.length,
-			error: null,
-		};
-	} catch {
-		return { ...previous, error: 'Images could not be loaded. Please try again.' };
-	}
-};
-
-export const GalleryLoadMore = ({ images, hasMore }: { images: GalleryImage[]; hasMore: boolean }) => {
-	const [state, formAction, isPending] = useActionState(loadMore, {
-		images,
-		hasMore,
-		offset: images.length,
-		error: null,
-	});
+		},
+		{ loaded: [], hasMore: null, error: null },
+	);
+	// New images shift later batches by a few places, so the same image can arrive twice.
+	const images = [...new Map([...firstBatch, ...state.loaded].map((image) => [String(image.id), image])).values()];
+	const hasMore = state.hasMore ?? firstBatchHasMore;
 
 	return (
 		<>
-			<ImageGallery images={state.images} />
-			{state.hasMore && (
-				<form action={formAction} className="mt-8 flex justify-center">
+			<ImageGallery images={images} />
+			{hasMore && (
+				<form action={loadMore} className="mt-8 flex justify-center">
 					<Button type="submit" disabled={isPending}>
 						{isPending ? 'Loading …' : 'Load more'}
 					</Button>

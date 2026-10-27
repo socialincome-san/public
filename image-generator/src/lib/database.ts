@@ -2,6 +2,7 @@ import 'server-only';
 
 import { Pool } from 'pg';
 import { type GalleryImage, type GeneratedImage } from './images';
+import { extractUserInput } from './prompts';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -14,6 +15,7 @@ export const getGalleryBatch = async (offset: number) => {
 	return {
 		images: result.rows.slice(0, 24).map((image) => ({
 			...image,
+			prompt: image.prompt && extractUserInput(image.prompt),
 			created_at: image.created_at?.toISOString() ?? null,
 		})),
 		hasMore: result.rows.length > 24,
@@ -28,10 +30,11 @@ export const getStoredImage = async (id: string): Promise<{ image_base64: string
 	return result.rows[0];
 };
 
-export const saveImage = async (prompt: string, image: GeneratedImage) => {
-	await pool.query('INSERT INTO generated_images (prompt, image_base64, media_type) VALUES ($1, $2, $3)', [
-		prompt,
-		image.base64,
-		image.mediaType,
-	]);
+export const saveImage = async (prompt: string, image: GeneratedImage): Promise<GalleryImage['id']> => {
+	const result = await pool.query<Pick<GalleryImage, 'id'>>(
+		'INSERT INTO generated_images (prompt, image_base64, media_type) VALUES ($1, $2, $3) RETURNING id',
+		[prompt, image.base64, image.mediaType],
+	);
+
+	return result.rows[0].id;
 };

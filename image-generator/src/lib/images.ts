@@ -15,27 +15,52 @@ export type GeneratedImage = {
 	mediaType: string;
 };
 
-export const isGenerateResponse = (
-	value: unknown,
-): value is {
-	error: string | null;
-	imageBase64: string | null;
-	mediaType: string | null;
-	width: number | null;
-	height: number | null;
-} =>
-	typeof value === 'object' &&
-	value !== null &&
-	'error' in value &&
-	(value.error === null || typeof value.error === 'string') &&
-	'imageBase64' in value &&
-	(value.imageBase64 === null || typeof value.imageBase64 === 'string') &&
-	'mediaType' in value &&
-	(value.mediaType === null || typeof value.mediaType === 'string') &&
-	'width' in value &&
-	(value.width === null || (typeof value.width === 'number' && Number.isInteger(value.width) && value.width > 0)) &&
-	'height' in value &&
-	(value.height === null || (typeof value.height === 'number' && Number.isInteger(value.height) && value.height > 0));
+export type SavedImage = {
+	id: GalleryImage['id'];
+	width: number;
+	height: number;
+};
+
+/** What the generate and edit routes return. */
+export type ImageResponse = { image: SavedImage } | { error: string };
+
+export const isImageId = (value: unknown): value is string =>
+	typeof value === 'string' &&
+	(/^[1-9][0-9]{0,18}$/.test(value) || /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value));
+
+type ImageVariant = 'preview' | 'original' | 'transparent';
+
+export const imageUrl = (id: GalleryImage['id'], variant: ImageVariant, { download = false } = {}) => {
+	const params = new URLSearchParams({ variant });
+	if (download) {
+		params.set('download', '1');
+	}
+
+	return `/api/gallery-images/${id}?${params}`;
+};
+
+const isPositiveInteger = (value: unknown) => typeof value === 'number' && Number.isInteger(value) && value > 0;
+
+export const isImageResponse = (value: unknown): value is ImageResponse => {
+	if (typeof value !== 'object' || value === null) {
+		return false;
+	}
+	if ('error' in value) {
+		return typeof value.error === 'string';
+	}
+
+	return (
+		'image' in value &&
+		typeof value.image === 'object' &&
+		value.image !== null &&
+		'id' in value.image &&
+		(typeof value.image.id === 'string' || typeof value.image.id === 'number') &&
+		'width' in value.image &&
+		isPositiveInteger(value.image.width) &&
+		'height' in value.image &&
+		isPositiveInteger(value.image.height)
+	);
+};
 
 export const isGalleryBatch = (value: unknown): value is GalleryBatch =>
 	typeof value === 'object' &&

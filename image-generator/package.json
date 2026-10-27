@@ -2,12 +2,14 @@
 	"name": "image-generator",
 	"version": "0.1.0",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint",
 		"typecheck": "next typegen && tsc --noEmit",
+		"test:unit": "node --test src/lib/*.test.ts",
 		"format:check": "prettier --check . --config prettier.config.mjs",
 		"format:fix": "prettier --write . --config prettier.config.mjs",
 		"check:unused": "knip --config knip.config.ts"
