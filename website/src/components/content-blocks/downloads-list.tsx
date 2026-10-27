@@ -80,6 +80,7 @@ export const DownloadsList = async ({ documents, boardHref }: Props) => {
 
 							return {
 								label: language,
+								shortLabel: t(`downloads.languages-short.${file.language}`),
 								href: file.url,
 								ariaLabel: t('downloads.download-label', { title: document.title, language }),
 								tooltip: language,

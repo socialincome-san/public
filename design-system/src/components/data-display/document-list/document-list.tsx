@@ -18,7 +18,7 @@ export const DocumentListGroup = ({ title, children, footer }: DocumentListGroup
 			<h3 className="text-foreground bg-muted/40 border-border border-b px-4 py-4 text-2xl font-semibold sm:px-6 sm:py-5">
 				{title}
 			</h3>
-			<ul>{children}</ul>
+			<ul className="@container/document-list">{children}</ul>
 			{footer}
 		</section>
 	</Card>
@@ -54,6 +54,8 @@ type DocumentListAuthor = {
 
 type DocumentListDownload = {
 	label: string;
+	// Shown instead of the label when the row is narrow, e.g. "EN" for "English"
+	shortLabel?: string;
 	href: string;
 	ariaLabel: string;
 	tooltip?: string;
@@ -95,8 +97,8 @@ export const DocumentListItem = ({
 	const shortenNames = visibleAuthors.length > 1;
 
 	return (
-		<li className="border-border hover:bg-muted/50 grid grid-cols-[3rem_minmax(0,1fr)] items-start gap-x-4 gap-y-3 border-t px-4 py-4 transition-colors first:border-t-0 sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:items-center sm:px-6">
-			<div className="bg-muted text-muted-foreground relative row-span-2 flex h-16 w-12 items-center justify-center overflow-hidden rounded-lg sm:row-span-1">
+		<li className="border-border hover:bg-muted/50 grid grid-cols-[3rem_minmax(0,1fr)_auto] items-center gap-x-4 border-t px-4 py-4 transition-colors first:border-t-0 sm:px-6">
+			<div className="bg-muted text-muted-foreground relative flex h-16 w-12 items-center justify-center overflow-hidden rounded-lg">
 				{thumbnailSrc ? (
 					<NextImage src={thumbnailSrc} alt="" fill sizes="48px" className="object-cover" />
 				) : (
@@ -150,7 +152,7 @@ export const DocumentListItem = ({
 					</div>
 				) : null}
 			</div>
-			<div className="col-start-2 flex flex-wrap gap-2 sm:col-start-auto sm:justify-end">
+			<div className="flex flex-col items-end gap-2 @lg/document-list:flex-row @lg/document-list:flex-wrap @lg/document-list:justify-end">
 				{downloads.map((download) => (
 					<Button key={download.href} variant="outline" size="sm" asChild>
 						<NextLink
@@ -161,7 +163,14 @@ export const DocumentListItem = ({
 							title={download.tooltip}
 						>
 							<DownloadIcon aria-hidden />
-							{download.label}
+							{download.shortLabel ? (
+								<>
+									<span className="@lg/document-list:hidden">{download.shortLabel}</span>
+									<span className="hidden @lg/document-list:inline">{download.label}</span>
+								</>
+							) : (
+								download.label
+							)}
 						</NextLink>
 					</Button>
 				))}

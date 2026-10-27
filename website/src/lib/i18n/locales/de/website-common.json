@@ -103,13 +103,18 @@
 			"certification": "Zertifizierung"
 		},
 		"search-label": "Dokumente durchsuchen",
-		"search-placeholder": "Dokumente durchsuchen",
+		"search-placeholder": "Suchen",
 		"no-results": "Keine Dokumente entsprechen deiner Suche.",
 		"download-label": "{title} auf {language} herunterladen",
 		"languages": {
 			"en": "Englisch",
 			"de": "Deutsch",
 			"en+de": "Englisch & Deutsch"
+		},
+		"languages-short": {
+			"en": "EN",
+			"de": "DE",
+			"en+de": "EN/DE"
 		},
 		"board-approval": {
 			"message": "{count, plural, one {Dieses Dokument wurde} other {Diese Dokumente wurden}} von unserem Vorstand geprüft und genehmigt.",

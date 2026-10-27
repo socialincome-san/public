@@ -103,13 +103,18 @@
 			"certification": "Certificazione"
 		},
 		"search-label": "Cerca documenti",
-		"search-placeholder": "Cerca documenti",
+		"search-placeholder": "Cerca",
 		"no-results": "Nessun documento corrisponde alla tua ricerca.",
 		"download-label": "Scarica {title} in {language}",
 		"languages": {
 			"en": "Inglese",
 			"de": "Tedesco",
 			"en+de": "Inglese & tedesco"
+		},
+		"languages-short": {
+			"en": "EN",
+			"de": "DE",
+			"en+de": "EN/DE"
 		},
 		"board-approval": {
 			"message": "{count, plural, one {Questo documento è stato esaminato e approvato} other {Questi documenti sono stati esaminati e approvati}} dal nostro Consiglio.",

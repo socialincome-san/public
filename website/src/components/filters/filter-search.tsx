@@ -32,7 +32,8 @@ export const FilterSearch = ({ queryKey, label, placeholder }: FilterSearchProps
 		}
 
 		searchDebounceRef.current = setTimeout(() => {
-			const nextParams = new URLSearchParams(searchParams.toString());
+			// Read the URL when the timer fires, not when typing started: a filter picked in the meantime must survive
+			const nextParams = new URLSearchParams(window.location.search);
 			const searchQuery = nextValue.trim();
 
 			if (searchQuery.length > 0) {

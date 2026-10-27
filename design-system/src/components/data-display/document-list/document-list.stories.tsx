@@ -32,7 +32,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'Downloadable documents grouped in cards, for example by year. Each row shows a thumbnail, up to three authors with stacked avatars, an optional note and one download per file. With several authors the names shorten to first names when the row is narrow. Documents can carry a tick (e.g. approved), and a group can end with a footer that explains it.',
+					'Downloadable documents grouped in cards, for example by year. Each row shows a thumbnail, up to three authors with stacked avatars, an optional note and one download per file. On narrow rows, several authors shorten to first names and downloads to their short label (e.g. EN). Documents can carry a tick (e.g. approved), and a group can end with a footer that explains it.',
 			},
 		},
 	},
@@ -58,8 +58,13 @@ export const SeveralAuthors: Story = {
 		title: 'Financial Statement 2025',
 		authors: [kerstin, sara, lukas],
 		downloads: [
-			{ label: 'English', href: '#statement-en', ariaLabel: 'Download Financial Statement 2025 in English' },
-			{ label: 'German', href: '#statement-de', ariaLabel: 'Download Financial Statement 2025 in German' },
+			{
+				label: 'English',
+				shortLabel: 'EN',
+				href: '#statement-en',
+				ariaLabel: 'Download Financial Statement 2025 in English',
+			},
+			{ label: 'German', shortLabel: 'DE', href: '#statement-de', ariaLabel: 'Download Financial Statement 2025 in German' },
 		],
 	},
 };
@@ -101,8 +106,18 @@ export const Group: Story = {
 				title="Financial Statement 2025"
 				authors={[kerstin, lukas]}
 				downloads={[
-					{ label: 'English', href: '#statement-en', ariaLabel: 'Download Financial Statement 2025 in English' },
-					{ label: 'German', href: '#statement-de', ariaLabel: 'Download Financial Statement 2025 in German' },
+					{
+						label: 'English',
+						shortLabel: 'EN',
+						href: '#statement-en',
+						ariaLabel: 'Download Financial Statement 2025 in English',
+					},
+					{
+						label: 'German',
+						shortLabel: 'DE',
+						href: '#statement-de',
+						ariaLabel: 'Download Financial Statement 2025 in German',
+					},
 				]}
 			/>
 			<DocumentListItem
