@@ -288,11 +288,12 @@ export interface DonationsTotal {
 }
 
 export interface Downloads {
-  heading?: string;
   tableHeaderLabelFilename: string;
   tableHeaderLabelInfo: string;
   tableHeaderLabelLink: string;
   documents: (ISbStoryData<Document> | string)[];
+  year?: string;
+  showFilters?: boolean;
   boardLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "downloads";
   _uid: string;

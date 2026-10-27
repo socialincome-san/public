@@ -1,7 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { FilterDropdown } from '@/components/filters/filter-dropdown';
 import { FilterSearch } from '@/components/filters/filter-search';
-import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Document, Downloads, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import {
@@ -14,7 +13,6 @@ import {
 import { getPersonsByUuidsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
-import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable } from '@storyblok/react';
 import { getTranslations } from 'next-intl/server';
@@ -84,6 +82,7 @@ export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Pro
 		return null;
 	}
 
+	const fixedYear = nonEmpty(blok.year?.trim());
 	const authorUuids = [...new Set(storyDocuments.flatMap(getAuthorUuids))];
 	const [t, resolvedSearchParams, personsResult] = await Promise.all([
 		getTranslations('website-common'),
@@ -103,8 +102,11 @@ export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Pro
 			),
 		)
 		// A document without files has nothing to download, e.g. a language version that was merged into another document
-		.filter((document) => document.files.length > 0);
-	const query = resolvedSearchParams ?? {};
+		.filter((document) => document.files.length > 0)
+		.filter((document) => !fixedYear || String(document.year) === fixedYear);
+	const showFilters = blok.showFilters !== false;
+	// Without a filter bar the URL can't be changed back, so it mustn't narrow the list either
+	const query = showFilters ? (resolvedSearchParams ?? {}) : {};
 	const yearOptions = [...new Set(documents.map((document) => String(document.year)))]
 		.sort((a, b) => b.localeCompare(a))
 		.map((year) => ({ value: year, label: year }));
@@ -126,22 +128,19 @@ export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Pro
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok)}>
-			<div className="space-y-6">
-				{blok.heading && (
-					<SectionHeading align="left">
-						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
-					</SectionHeading>
-				)}
-				<div className="mx-auto max-w-220 space-y-8">
+			<div className="mx-auto max-w-220 space-y-8">
+				{showFilters ? (
 					<FilterBar
 						filters={
 							<>
-								<FilterDropdown
-									allLabel={t('downloads.all-years', { count: yearOptions.length })}
-									options={yearOptions}
-									queryKey={YEAR_QUERY_KEY}
-									selectedValue={selectedYear}
-								/>
+								{fixedYear ? null : (
+									<FilterDropdown
+										allLabel={t('downloads.all-years', { count: yearOptions.length })}
+										options={yearOptions}
+										queryKey={YEAR_QUERY_KEY}
+										selectedValue={selectedYear}
+									/>
+								)}
 								<FilterDropdown
 									allLabel={t('downloads.all-documents', { count: categoryOptions.length })}
 									options={categoryOptions}
@@ -159,12 +158,12 @@ export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Pro
 							/>
 						}
 					/>
-					<DownloadsList
-						documents={visibleDocuments}
-						// There is no board page yet; the people page introduces the board
-						boardHref={boardHref === '#' ? createWebsitePeoplePath(lang, currency) : boardHref}
-					/>
-				</div>
+				) : null}
+				<DownloadsList
+					documents={visibleDocuments}
+					// There is no board page yet; the people page introduces the board
+					boardHref={boardHref === '#' ? createWebsitePeoplePath(lang, currency) : boardHref}
+				/>
 			</div>
 		</BlockWrapper>
 	);

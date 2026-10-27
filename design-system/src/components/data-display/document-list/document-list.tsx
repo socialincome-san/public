@@ -110,7 +110,7 @@ export const DocumentListItem = ({
 				<p className="text-foreground text-base font-medium wrap-break-word">
 					{title}
 					{checkLabel ? (
-						<span className="ml-1.5 inline-flex align-middle">
+						<span className="ml-1.5 inline-flex -translate-y-0.5 align-middle">
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<button
