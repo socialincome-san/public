@@ -1,4 +1,6 @@
 import { getStoredImage } from '@/lib/database';
+import { isImageId, isImageVariant } from '@/lib/images';
+import { removePaperBackgroundInWorker } from '@/lib/paper-cutout-in-worker';
 import sharp from 'sharp';
 
 const cacheHeaders = {
@@ -6,40 +8,51 @@ const cacheHeaders = {
 	'X-Content-Type-Options': 'nosniff',
 };
 
+const EXTENSIONS: Record<string, string> = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' };
+
+/**
+ * `?variant=preview` (default) an 800px WebP, `original` the stored image, `transparent` a PNG without the white
+ * paper. `&download=1` serves it as an attachment.
+ */
 export const GET = async (request: Request, { params }: RouteContext<'/api/gallery-images/[id]'>) => {
 	const { id } = await params;
-	if (!/^[1-9][0-9]{0,18}$/.test(id) && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
-		return new Response('Image not found', { status: 404 });
-	}
+	if (!isImageId(id)) return new Response('Image not found', { status: 404 });
+
+	const { searchParams } = new URL(request.url);
+	const variant = searchParams.get('variant') ?? 'preview';
+	if (!isImageVariant(variant)) return new Response('Unknown variant', { status: 400 });
+	const download = searchParams.get('download') === '1';
 
 	try {
-		const download = new URL(request.url).searchParams.get('download') === '1';
 		const image = await getStoredImage(id);
 		if (!image) return new Response('Image not found', { status: 404 });
-		if (!['image/png', 'image/jpeg', 'image/webp'].includes(image.media_type)) {
-			return new Response('Unsupported image format', { status: 415 });
-		}
+		const extension = EXTENSIONS[image.media_type];
+		if (!extension) return new Response('Unsupported image format', { status: 415 });
 		const original = Buffer.from(image.image_base64, 'base64');
 
-		if (download) {
-			const extension = image.media_type === 'image/jpeg' ? 'jpg' : image.media_type === 'image/webp' ? 'webp' : 'png';
-			return new Response(new Uint8Array(original), {
+		const respond = (body: Buffer, contentType: string, filename: string) =>
+			new Response(new Uint8Array(body), {
 				headers: {
 					...cacheHeaders,
-					'Content-Type': image.media_type,
-					'Content-Disposition': `attachment; filename="social-income-${id}.${extension}"`,
+					'Content-Type': contentType,
+					'Content-Disposition': `${download ? 'attachment' : 'inline'}; filename="${filename}"`,
 				},
 			});
-		}
 
-		const preview = await sharp(original)
-			.rotate()
-			.resize({ width: 800, height: 800, fit: 'inside', withoutEnlargement: true })
-			.webp({ quality: 75 })
-			.toBuffer();
-		return new Response(new Uint8Array(preview), {
-			headers: { ...cacheHeaders, 'Content-Type': 'image/webp' },
-		});
+		switch (variant) {
+			case 'original':
+				return respond(original, image.media_type, `social-income-${id}.${extension}`);
+			case 'transparent':
+				return respond(await removePaperBackgroundInWorker(original), 'image/png', `social-income-${id}-transparent.png`);
+			case 'preview': {
+				const preview = await sharp(original)
+					.rotate()
+					.resize({ width: 800, height: 800, fit: 'inside', withoutEnlargement: true })
+					.webp({ quality: 75 })
+					.toBuffer();
+				return respond(preview, 'image/webp', `social-income-${id}.webp`);
+			}
+		}
 	} catch (error) {
 		console.error('Gallery image loading failed', error);
 		return new Response('Image could not be loaded', { status: 500 });

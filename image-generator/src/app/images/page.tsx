@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 import { GalleryLoadMore } from './gallery-load-more';
 
 const GalleryContent = async () => {
-	const batch = await getGalleryBatch(0);
+	const batch = await getGalleryBatch();
 	return <GalleryLoadMore {...batch} />;
 };
 
