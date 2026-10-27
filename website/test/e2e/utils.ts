@@ -124,6 +124,9 @@ export const clickDataTableActionItem = async (page: Page, actionItemTestId: str
 	const actionButton = page.getByTestId('data-table-actions-button').filter({ visible: true });
 	const actionItem = page.getByTestId(actionItemTestId).filter({ visible: true });
 
+	// count() doesn't wait, so wait for the toolbar first or a not yet rendered trigger counts as "no dropdown"
+	await actionButton.or(actionItem).first().waitFor();
+
 	// If there's only one action, we render a primary button directly instead of the dropdown.
 	// The dropdown also stays open after a dialog opened from it closes, blocking clicks on its trigger.
 	if ((await actionButton.count()) === 0 || (await actionItem.isVisible())) {
