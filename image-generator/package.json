@@ -14,8 +14,8 @@
 	},
 	"dependencies": {
 		"@socialincome/design-system": "*",
-		"ai": "7.0.143",
-		"lucide-react": "1.59.0",
+		"ai": "7.0.150",
+		"lucide-react": "1.61.0",
 		"next": "16.4.2",
 		"pg": "^8.23.1",
 		"react": "19.3.1",

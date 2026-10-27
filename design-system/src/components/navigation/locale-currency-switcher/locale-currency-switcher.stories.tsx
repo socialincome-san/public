@@ -20,17 +20,27 @@ const countries = [
 	{ value: 'SL', label: 'Sierra Leone' },
 ];
 
-const InteractiveSwitcher = ({ variant, withCountry }: { variant?: 'ghost' | 'outline'; withCountry?: boolean }) => {
+const countryCurrencies: Record<string, string> = { CH: 'CHF', DE: 'EUR' };
+
+type InteractiveSwitcherProps = {
+	variant?: 'ghost' | 'outline';
+	withCountry?: boolean;
+	hideCountryCurrency?: boolean;
+};
+
+const InteractiveSwitcher = ({ variant, withCountry, hideCountryCurrency }: InteractiveSwitcherProps) => {
 	const [open, setOpen] = useState(false);
 	const [language, setLanguage] = useState('en');
 	const [currency, setCurrency] = useState('USD');
 	const [country, setCountry] = useState('CH');
+	const isCountryCurrency = countryCurrencies[country] === currency;
 
 	return (
 		<LocaleCurrencySwitcher
 			ariaLabel="Change language and currency"
 			variant={variant}
 			icon={withCountry && country !== 'auto' ? <CountryFlag country={country} size="sm" decorative /> : undefined}
+			triggerLabel={hideCountryCurrency && isCountryCurrency ? language.toUpperCase() : undefined}
 			open={open}
 			onOpenChange={setOpen}
 			language={{
@@ -71,4 +81,9 @@ export const Outline: Story = {
 
 export const WithCountry: Story = {
 	render: () => <InteractiveSwitcher withCountry />,
+};
+
+// The button leaves out the currency when it is the country's own, e.g. CHF in Switzerland.
+export const HideCountryCurrency: Story = {
+	render: () => <InteractiveSwitcher withCountry hideCountryCurrency />,
 };

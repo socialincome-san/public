@@ -355,6 +355,17 @@ export interface HeroVideo {
   [k: string]: unknown;
 }
 
+export interface IframeEmbed {
+  code: string;
+  caption?: string;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "iframeEmbed";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface ImageText {
   content?: StoryblokRichTextDoc;
   image: StoryblokAsset;
@@ -400,8 +411,10 @@ export interface Inflows {
 
 export interface JournalTeasers {
   heading?: string;
-  articlesDisplayMode: "latest" | "selected";
+  articlesDisplayMode: "latest" | "selected" | "tag" | "articleType";
   selectedArticles?: (ISbStoryData<Article> | string)[];
+  selectedTag?: ISbStoryData<Tag> | string;
+  selectedArticleType?: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
@@ -612,6 +625,7 @@ export interface Page {
     | TwoColumn
     | Inflows
     | Outflows
+    | IframeEmbed
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
@@ -729,6 +743,7 @@ export interface ProgramGrid {
   heading?: string;
   description?: string;
   showAllPrograms?: boolean;
+  hideConcludedPrograms?: boolean;
   programs?: (ISbStoryData<Program> | string)[];
   button?: Button[];
   disableMarginTop?: boolean;
@@ -940,6 +955,7 @@ export interface TwoColumn {
     | TransparencySummary
     | TransparencyCountries
     | ReservesBlock
+    | IframeEmbed
   )[];
   rightColumn: (
     | DonationsTotal
@@ -973,6 +989,7 @@ export interface TwoColumn {
     | TransparencySummary
     | TransparencyCountries
     | ReservesBlock
+    | IframeEmbed
   )[];
   columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   disableMarginTop?: boolean;

@@ -5,10 +5,11 @@ import { type WithoutClassName } from '../../../without-class-name';
 type TableProps = WithoutClassName<React.HTMLAttributes<HTMLTableElement>> & {
 	/** Read by the cells through the group/table data attribute */
 	size?: 'sm' | 'default' | 'lg';
+	stickyHeader?: boolean;
 };
 
-const Table = React.forwardRef<HTMLTableElement, TableProps>(({ size = 'default', ...props }, ref) => (
-	<div className="relative w-full overflow-auto">
+const Table = React.forwardRef<HTMLTableElement, TableProps>(({ size = 'default', stickyHeader = false, ...props }, ref) => (
+	<div className={stickyHeader ? 'relative w-full overflow-x-auto overflow-y-clip' : 'relative w-full overflow-auto'}>
 		<table
 			ref={ref}
 			data-size={size}
@@ -21,8 +22,10 @@ Table.displayName = 'Table';
 
 const TableHeader = React.forwardRef<
 	HTMLTableSectionElement,
-	WithoutClassName<React.HTMLAttributes<HTMLTableSectionElement>>
->((props, ref) => <thead ref={ref} className="bg-muted" {...props} />);
+	WithoutClassName<React.HTMLAttributes<HTMLTableSectionElement>> & { sticky?: boolean }
+>(({ sticky = false, ...props }, ref) => (
+	<thead ref={ref} className={sticky ? 'bg-muted sticky top-0 z-10' : 'bg-muted'} {...props} />
+));
 TableHeader.displayName = 'TableHeader';
 
 const TableBody = React.forwardRef<HTMLTableSectionElement, WithoutClassName<React.HTMLAttributes<HTMLTableSectionElement>>>(
