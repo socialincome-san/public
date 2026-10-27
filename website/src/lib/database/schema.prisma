@@ -711,6 +711,17 @@ model SentEmail {
   @@map("sent_email")
 }
 
+model MagicLinkRateLimit {
+  id              String   @id @default(cuid()) @map("id")
+  keyHash         String   @unique @map("key_hash")
+  windowStartedAt DateTime @map("window_started_at") @db.Timestamptz(3)
+  requestCount    Int      @default(0) @map("request_count")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([windowStartedAt])
+  @@map("magic_link_rate_limit")
+}
+
 model DonationCertificate {
   id                String      @id @default(cuid()) @map("id")
   legacyFirestoreId String?     @unique @map("legacy_firestore_id")
