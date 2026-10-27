@@ -30,6 +30,7 @@ type ImageCommentEditorProps = {
 
 const KEYBOARD_STEP = 0.01;
 const KEYBOARD_STEP_LARGE = 0.05;
+const DRAG_THRESHOLD_PX = 6;
 
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
@@ -53,7 +54,8 @@ export const ImageCommentEditor = ({
 	const fieldIdPrefix = useId();
 	const frameRef = useRef<HTMLDivElement>(null);
 	// A drag ends with a click; it should not also focus the field, which opens the keyboard on phones.
-	const wasDraggedRef = useRef(false);
+	// A tap with a slightly moving finger still counts as a click.
+	const pointerDownRef = useRef<{ x: number; y: number } | null>(null);
 	const canAdd = !disabled && comments.length < maxComments;
 
 	const pointerPosition = (event: { clientX: number; clientY: number }) => {
@@ -96,7 +98,6 @@ export const ImageCommentEditor = ({
 		}
 		const position = pointerPosition(event);
 		if (position) {
-			wasDraggedRef.current = true;
 			updateComment(comment.id, position);
 		}
 	};
@@ -129,12 +130,17 @@ export const ImageCommentEditor = ({
 							style={{ left: `${comment.x * 100}%`, top: `${comment.y * 100}%` }}
 							className="bg-primary text-primary-foreground shadow-raised focus-visible:ring-ring absolute flex size-9 -translate-x-1/2 -translate-y-1/2 cursor-grab touch-none items-center justify-center rounded-full border-2 border-white text-sm font-bold select-none focus-visible:ring-2 focus-visible:outline-none active:cursor-grabbing disabled:cursor-default"
 							onPointerDown={(event) => {
-								wasDraggedRef.current = false;
+								pointerDownRef.current = { x: event.clientX, y: event.clientY };
 								event.currentTarget.setPointerCapture(event.pointerId);
 							}}
 							onPointerMove={(event) => movePinWithPointer(event, comment)}
 							onClick={(event) => {
-								if (event.detail !== 0 && wasDraggedRef.current) {
+								const start = pointerDownRef.current;
+								const wasDragged =
+									event.detail !== 0 &&
+									start !== null &&
+									Math.hypot(event.clientX - start.x, event.clientY - start.y) > DRAG_THRESHOLD_PX;
+								if (wasDragged) {
 									return;
 								}
 								document.getElementById(`${fieldIdPrefix}-${comment.id}`)?.focus();

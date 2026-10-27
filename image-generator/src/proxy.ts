@@ -32,7 +32,9 @@ export const proxy = (request: NextRequest) => {
 		});
 	}
 	// Browsers resend Basic credentials on cross-site form posts, so another site could start paid generations.
-	if (request.method !== 'GET' && request.method !== 'HEAD' && request.headers.get('origin') !== request.nextUrl.origin) {
+	// Sec-Fetch-Site comes from the browser and, unlike request.nextUrl, does not depend on the proxy in front of the app.
+	const fetchSite = request.headers.get('sec-fetch-site');
+	if (request.method !== 'GET' && request.method !== 'HEAD' && fetchSite !== null && fetchSite !== 'same-origin') {
 		return new NextResponse('Cross-site request rejected', { status: 403 });
 	}
 	return NextResponse.next();
