@@ -38,7 +38,7 @@ export default function GenerateDonationCertificateDialog({
 	const t = useTranslations('website-me');
 
 	const generateCertificates = () => {
-		setSuccess(false);
+		setSuccess(undefined);
 		setError(undefined);
 		startTransition(async () => {
 			const result = await createCurrentContributorDonationCertificateAction({ year, language });
@@ -59,7 +59,7 @@ export default function GenerateDonationCertificateDialog({
 	};
 
 	const onOpenChange = (open: boolean) => {
-		setSuccess(false);
+		setSuccess(undefined);
 		setError(undefined);
 		setOpen(open);
 	};
@@ -124,7 +124,7 @@ export default function GenerateDonationCertificateDialog({
 					</Button>
 
 					{Boolean(success ?? error) && (
-						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
+						<div className="bg-muted border-border rounded-lg border p-2 text-xs">
 							{success && (
 								<p className="text-confirm text-sm">{t('donation-certificates.generate-dialog.status_success')}</p>
 							)}
