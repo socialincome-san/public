@@ -86,9 +86,9 @@ else; this is not a pixel-level guarantee.
 The download menu offers the original and a PNG with a transparent
 background. `src/lib/paper-cutout.ts` removes the white paper with
 Sharp, no AI involved. It takes about half a second for 1024×1024 and
-runs in a worker thread, so other requests are not blocked. Removed are
+runs in a worker thread, so other requests are not blocked. It removes
 paper connected to the border, enclosed gaps and slivers between hair
-strands go, but only when they are as bare as the paper. Painted white,
+strands, but only when they are as bare as the paper. Painted white,
 such as a white shirt, has brushwork and stays. Outlines get a soft edge
 coloured from the painted pixels inside. The thresholds are tuned to the
 current style on white paper.
