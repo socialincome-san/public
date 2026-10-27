@@ -3,8 +3,9 @@ import { FilterDropdown } from '@/components/filters/filter-dropdown';
 import { FilterSearch } from '@/components/filters/filter-search';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Document, Downloads, Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteBasePath, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import {
+	createWebsitePeoplePath,
 	createWebsitePersonLink,
 	getPersonAvatarSrc,
 	getPersonDisplayName,
@@ -115,6 +116,7 @@ export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Pro
 	const searchQuery = getQueryValue(query, SEARCH_QUERY_KEY).toLowerCase();
 	const selectedYear = yearOptions.some((option) => option.value === yearQuery) ? yearQuery : undefined;
 	const selectedCategory = categoryOptions.some((option) => option.value === categoryQuery) ? categoryQuery : undefined;
+	const boardHref = resolveStoryblokLink(blok.boardLink, lang, currency);
 	const visibleDocuments = documents.filter(
 		(document) =>
 			(!selectedYear || String(document.year) === selectedYear) &&
@@ -160,11 +162,7 @@ export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Pro
 					<DownloadsList
 						documents={visibleDocuments}
 						// There is no board page yet; the people page introduces the board
-						boardHref={
-							blok.boardLink?.cached_url || blok.boardLink?.url
-								? resolveStoryblokLink(blok.boardLink, lang, currency)
-								: `${getWebsiteBasePath(lang, currency)}/people`
-						}
+						boardHref={boardHref === '#' ? createWebsitePeoplePath(lang, currency) : boardHref}
 					/>
 				</div>
 			</div>

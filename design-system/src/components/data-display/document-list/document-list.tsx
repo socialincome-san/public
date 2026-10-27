@@ -3,6 +3,7 @@ import NextImage from 'next/image';
 import NextLink from 'next/link';
 import { Fragment, type ReactNode } from 'react';
 import { Button } from '../../actions/button/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../overlays/tool-tip/tool-tip';
 import { AvatarStack } from '../avatar-stack/avatar-stack';
 import { Card } from '../card/card';
 
@@ -109,9 +110,19 @@ export const DocumentListItem = ({
 				<p className="text-foreground text-base font-medium wrap-break-word">
 					{title}
 					{checkLabel ? (
-						<span title={checkLabel} className="ml-1.5 inline-flex align-middle">
-							<CheckIcon className="text-confirm size-3.5" aria-hidden />
-							<span className="sr-only">{checkLabel}</span>
+						<span className="ml-1.5 inline-flex align-middle">
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<button
+										type="button"
+										aria-label={checkLabel}
+										className="focus-visible:ring-ring inline-flex rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+									>
+										<CheckIcon className="text-confirm size-3.5" aria-hidden />
+									</button>
+								</TooltipTrigger>
+								<TooltipContent sideOffset={8}>{checkLabel}</TooltipContent>
+							</Tooltip>
 						</span>
 					) : null}
 				</p>
