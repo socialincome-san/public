@@ -27,9 +27,10 @@ type Props = {
 	senderName?: string;
 	imageSrc?: string | null;
 	imageAlt?: string;
+	campaignId?: string;
 };
 
-export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt = '' }: Props) => {
+export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt = '', campaignId }: Props) => {
 	const t = useTranslations('website-newsletter');
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -42,6 +43,7 @@ export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt =
 			email: values.email,
 			language: lang === 'de' ? 'de' : 'en',
 			...(trimmedFirstName ? { firstname: trimmedFirstName } : {}),
+			...(campaignId ? { campaignId } : {}),
 		};
 
 		try {

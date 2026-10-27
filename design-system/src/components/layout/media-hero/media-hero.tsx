@@ -85,21 +85,24 @@ export const MediaHero = ({
 			) : null}
 
 			{controlsStart || controlsEnd ? (
-				<div className="pointer-events-none absolute inset-x-8 bottom-8 z-30 flex items-center justify-between">
+				// Same width as the content, so the controls line up with the text and the site header.
+				<div className="w-site-width max-w-content pointer-events-none absolute inset-x-0 bottom-8 z-30 mx-auto flex items-center justify-between">
 					<div className="pointer-events-auto flex items-center gap-2">{controlsStart}</div>
 					<div className="pointer-events-auto flex items-center gap-2">{controlsEnd}</div>
 				</div>
 			) : null}
 
 			{expanded ? null : (
-				<div className={contentVariants({ align })}>
+				// Keeps the text clear of the controls at the bottom of small screens.
+				<div className={cn(contentVariants({ align }), controlsStart || controlsEnd ? 'mb-24' : undefined)}>
 					<div className="flex min-w-0 flex-1 flex-col gap-10">{children}</div>
 					{aside ? <div className="hidden shrink-0 lg:block">{aside}</div> : null}
 				</div>
 			)}
 		</div>
 
-		{mobileAside && !expanded ? (
+		{/* Stays while the media is expanded: it sits below the frame, and removing it would make the page jump. */}
+		{mobileAside ? (
 			<div className="lg:hidden">
 				<BlockWrapper marginTop="none" marginBottom="none">
 					{mobileAside}
@@ -114,6 +117,15 @@ const titleVariants = cva('', {
 		variant: {
 			bold: 'text-5xl leading-tight font-bold text-pretty md:text-6xl',
 			light: 'text-4xl xl:text-6xl [&_strong]:font-bold',
+		},
+	},
+});
+
+const descriptionVariants = cva('', {
+	variants: {
+		variant: {
+			bold: 'text-xl',
+			light: 'text-2xl',
 		},
 	},
 });
@@ -158,7 +170,7 @@ export const MediaHeroIntro = ({
 				) : null}
 			</h1>
 		) : null}
-		{description ? <p className="text-xl">{description}</p> : null}
+		{description ? <p className={descriptionVariants({ variant })}>{description}</p> : null}
 		{children}
 	</div>
 );

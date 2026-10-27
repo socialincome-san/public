@@ -9,7 +9,16 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
+import { DonationResumeBar } from '../resume-bar/donation-resume-bar';
+import {
+	clearResumableDonation,
+	getResumableDonationVersion,
+	resumableSteps,
+	storeResumableDonation,
+	type ResumableDonation,
+} from '../resume-bar/resumable-donation';
 import { DonationCurrencySelect } from '../shared/donation-currency-select';
+import { requestStripeEmbeddedCheckout } from '../steps/step-stripe-checkout/request-stripe-embedded-checkout';
 import {
 	clearStoredStripeCheckoutContext,
 	readStoredStripeCheckoutContext,
@@ -26,6 +35,12 @@ type Props = {
 	children: ReactNode;
 };
 
+// A Stripe return URL can be opened without a payment, so that case clears only once Stripe confirms it was paid.
+const completionEvents = new Set<Parameters<DonationWizardSend>[0]['type']>([
+	'STRIPE_CHECKOUT_COMPLETE',
+	'QR_PAYMENT_CONFIRMED',
+]);
+
 export const DonationModalProvider = ({ children }: Props) => {
 	const [state, , actorRef] = useMachine(donationWizardMachine);
 	const websiteCurrency = useWebsiteCurrency();
@@ -33,10 +48,31 @@ export const DonationModalProvider = ({ children }: Props) => {
 	// Every step sends through here, so the funnel is tracked in one place with the context after the transition.
 	const send = useCallback<DonationWizardSend>(
 		(event) => {
-			const previousStep = actorRef.getSnapshot().value;
+			const previous = actorRef.getSnapshot();
+			// Every way of closing (button, backdrop, swipe) lands here, so the bar can offer what was left unfinished.
+			if (event.type === 'CLOSE') {
+				// While the impact numbers load, the wizard already shows the step it is about to enter.
+				const step = resumableSteps.find(
+					(resumableStep) =>
+						previous.matches(resumableStep) ||
+						(previous.matches('loadingCommunityStats') && previous.context.pendingStep === resumableStep),
+				);
+				if (step) {
+					storeResumableDonation(step, previous.context);
+				} else if (previous.matches('stepQrBill')) {
+					// The donor may pay the QR bill from their bank, so the bar must not offer the same donation again.
+					clearResumableDonation();
+				}
+			}
+
+			const previousStep = previous.value;
 			actorRef.send(event);
 			const next = actorRef.getSnapshot();
 			const changedStep = next.value !== previousStep;
+
+			if (changedStep && completionEvents.has(event.type)) {
+				clearResumableDonation();
+			}
 
 			const funnelEvent = getDonationFunnelEvent(event.type, changedStep, next.context);
 			if (funnelEvent) {
@@ -50,8 +86,10 @@ export const DonationModalProvider = ({ children }: Props) => {
 				(event.type === 'STRIPE_CHECKOUT_COMPLETE' || event.type === 'OPEN_FROM_STRIPE_RETURN')
 			) {
 				// Only a checkout that Stripe reports as paid counts as a completed donation.
+				const resumableVersion = getResumableDonationVersion();
 				void getPaidStripeCheckoutDonationAction(stripeCheckoutSessionId).then((result) => {
 					if (result.success) {
+						clearResumableDonation(resumableVersion);
 						const completedEvent = getDonationCompletedEvent(result.data);
 						trackEvent(completedEvent.name, completedEvent.properties);
 					}
@@ -95,9 +133,28 @@ export const DonationModalProvider = ({ children }: Props) => {
 		send({ type: 'OPEN_FROM_FORM', context });
 	};
 
+	const resumeDonation = ({ step, context }: ResumableDonation) => {
+		send({ type: 'RESUME', context, step });
+		// The card form is normally requested by the payment step's button, which a resumed donation skips.
+		if (step === 'stepStripeCheckout') {
+			void requestStripeEmbeddedCheckout(actorRef.getSnapshot().context, send);
+		}
+	};
+
+	const openWizardAfterPayment = (context: DonationAmountContext, sessionId: string) => {
+		// The wallet sheet may finish while the donor has opened the wizard; onboarding only starts from closed.
+		if (!actorRef.getSnapshot().matches('closed')) {
+			send({ type: 'CLOSE' });
+		}
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: context.currency });
+	};
+
 	return (
-		<DonationModalContext.Provider value={{ openWizardAtAmountStep, openWizardWithFormAmount }}>
+		<DonationModalContext.Provider
+			value={{ isOpen, openWizardAtAmountStep, openWizardWithFormAmount, resumeDonation, openWizardAfterPayment }}
+		>
 			{children}
+			<DonationResumeBar />
 
 			<Dialog
 				open={isOpen}

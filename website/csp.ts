@@ -82,6 +82,9 @@ const FRAME_SRC = [
 	'https://player.mux.com',
 	'https://challenges.cloudflare.com',
 	`https://${FIREBASE_AUTH_DOMAIN}`,
+	// Storyblok "Embed (iframe)" block. Add a host here to allow editors to embed it.
+	'https://calendar.google.com',
+	'https://dataembed.worldbank.org',
 ] as const;
 
 const MEDIA_SRC = ["'self'", 'blob:', 'https://*.mux.com', 'https://*.edgemv.mux.com', 'https://a.storyblok.com'] as const;
