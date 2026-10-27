@@ -1,6 +1,7 @@
 'use client';
 
 import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
+import { formatImageCost } from '@/lib/image-cost';
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
 import { imageUrl, type SavedImage } from '@/lib/images';
 import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
@@ -17,6 +18,7 @@ import {
 	SelectValue,
 } from '@socialincome/design-system/forms/select/select';
 import { Textarea } from '@socialincome/design-system/forms/textarea/textarea';
+import { ImageHistory } from '@socialincome/design-system/navigation/image-history/image-history';
 import { DropdownMenuItem } from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { Upload } from 'lucide-react';
 import Image from 'next/image';
@@ -31,13 +33,16 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 	const [prompt, setPrompt] = useState('');
 	const [aspectRatio, setAspectRatio] = useState<string>(DEFAULT_IMAGE_FORMAT.value);
 	const [country, setCountry] = useState<string>(DEFAULT_COUNTRY.value);
-	// The generated image followed by every version made in the edit dialog; the latest one is shown.
+	// Session history: each image is saved in the gallery, but the navigation resets on reload.
 	const [versions, setVersions] = useState<SavedImage[]>([]);
+	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+	// Remount the editor on explicit selection, not when an edit appends a version while its dialog is open.
+	const [editSelection, setEditSelection] = useState(0);
 	const [error, setError] = useState<string | null>(null);
 	const [isPending, startTransition] = useTransition();
 	const canSubmit = !isPending && prompt.trim() !== '';
-	const [generated] = versions;
-	const image = versions.at(-1);
+	const activeIndex = selectedIndex ?? versions.length - 1;
+	const image = versions[activeIndex];
 
 	const generate = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -50,7 +55,9 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 				return;
 			}
 			setError(null);
-			setVersions([result.image]);
+			setVersions((previous) => [...previous, result.image]);
+			setSelectedIndex(null);
+			setEditSelection((previous) => previous + 1);
 		});
 	};
 
@@ -63,45 +70,67 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<div className="flex flex-1 flex-col justify-between">
-			<div className="flex flex-1 flex-col items-center justify-center px-4 py-8 text-center sm:py-16">
-				{!image && !isPending && children}
+			<ImageHistory
+				label="Version history"
+				items={versions.map((version, index) => ({
+					src: imageUrl(version.id, 'preview'),
+					label: `Version ${index + 1}, ${version.cost_usd === null ? 'price unavailable' : `price ${formatImageCost(version.cost_usd)}`}`,
+					badge: formatImageCost(version.cost_usd),
+					tooltip: version.prompt ?? undefined,
+				}))}
+				selectedIndex={activeIndex}
+				disabled={isPending}
+				onSelect={(index) => {
+					if (index === activeIndex) return;
+					setSelectedIndex(index);
+					setEditSelection((previous) => previous + 1);
+				}}
+			>
+				<div className="flex w-full flex-1 flex-col items-center justify-center px-4 py-8 text-center sm:py-16">
+					{!image && !isPending && children}
 
-				{isPending && (
-					<div className="flex flex-col items-center gap-5 text-center">
-						<div className="text-primary flex items-center justify-center">
-							<AnimatedSILogoIcon width={84} height={48} />
+					{isPending && (
+						<div className="flex flex-col items-center gap-5 text-center">
+							<div className="text-primary flex items-center justify-center">
+								<AnimatedSILogoIcon width={84} height={48} />
+							</div>
+							<p className="text-muted-foreground text-sm font-medium sm:text-base">
+								Generating your watercolor image. This may take up to a minute ...
+							</p>
 						</div>
-						<p className="text-muted-foreground text-sm font-medium sm:text-base">
-							Generating your watercolor image. This may take up to a minute ...
-						</p>
-					</div>
-				)}
+					)}
 
-				{generated && image && !isPending && (
-					<div className="flex flex-col items-center gap-6">
-						<Image
-							src={imageUrl(image.id, 'original')}
-							width={image.width}
-							height={image.height}
-							alt="Generated"
-							unoptimized
-							className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
-						/>
-						<div className="flex flex-wrap items-center justify-center gap-3">
-							<DownloadMenu imageId={image.id} variant="default" size="md" />
-							<ImageEditDialog
-								key={generated.id}
-								imageId={generated.id}
-								size="md"
-								onEdited={(edited) => setVersions((previous) => [...previous, edited])}
+					{image && !isPending && (
+						<div className="flex max-w-full flex-col items-center gap-6">
+							<p className="text-muted-foreground text-sm">Version {activeIndex + 1}</p>
+							<Image
+								src={imageUrl(image.id, 'original')}
+								width={image.width}
+								height={image.height}
+								alt="Generated"
+								unoptimized
+								className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
 							/>
-							<Button asChild variant="outline" size="md">
-								<Link href="/images">View in gallery →</Link>
-							</Button>
+							<div className="grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
+								<DownloadMenu imageId={image.id} variant="default" size="md" fullWidth />
+								<ImageEditDialog
+									key={editSelection}
+									image={image}
+									size="md"
+									fullWidth
+									onEdited={(edited) => {
+										setVersions((previous) => [...previous, edited]);
+										setSelectedIndex(null);
+									}}
+								/>
+								<Button asChild variant="outline" size="md" fullWidth>
+									<Link href="/images">View in gallery →</Link>
+								</Button>
+							</div>
 						</div>
-					</div>
-				)}
-			</div>
+					)}
+				</div>
+			</ImageHistory>
 
 			<div className="mx-auto w-full max-w-5xl px-4 pt-4 pb-8">
 				<form onSubmit={generate} className="flex w-full flex-col gap-6">

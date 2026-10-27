@@ -45,6 +45,8 @@ const meta = {
 			remove: 'Remove',
 			placeholder: 'Describe what should change here …',
 			empty: 'Click the image to add a comment.',
+			helpLabel: 'How image edits work',
+			help: 'Click to mark an area, describe the change, then create a new version. Drag pins to move them.',
 		},
 	},
 } satisfies Meta<typeof ImageCommentEditor>;

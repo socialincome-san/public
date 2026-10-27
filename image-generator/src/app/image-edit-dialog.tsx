@@ -1,12 +1,14 @@
 'use client';
 
 import { MAX_COMMENT_LENGTH, MAX_IMAGE_COMMENTS } from '@/lib/image-comments';
+import { formatImageCost } from '@/lib/image-cost';
 import { type GalleryImage, imageUrl, type SavedImage } from '@/lib/images';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	type ImageComment,
 	ImageCommentEditor,
 } from '@socialincome/design-system/forms/image-comment-editor/image-comment-editor';
+import { ImageHistory } from '@socialincome/design-system/navigation/image-history/image-history';
 import {
 	Dialog,
 	DialogBody,
@@ -21,15 +23,18 @@ import { useState, useTransition } from 'react';
 import { requestImage } from './request-image';
 
 type ImageEditDialogProps = {
-	imageId: GalleryImage['id'];
+	image: GalleryImage;
 	size: 'sm' | 'md';
+	fullWidth?: boolean;
 	onEdited: (image: SavedImage) => void;
 };
 
 /** Comments on an image become a new version in the gallery; the dialog then shows that version for further rounds. */
-export const ImageEditDialog = ({ imageId, size, onEdited }: ImageEditDialogProps) => {
+export const ImageEditDialog = ({ image, size, fullWidth, onEdited }: ImageEditDialogProps) => {
 	const [open, setOpen] = useState(false);
-	const [currentId, setCurrentId] = useState(imageId);
+	const [versions, setVersions] = useState<GalleryImage[]>([image]);
+	const [selectedIndex, setSelectedIndex] = useState(0);
+	const currentId = versions[selectedIndex].id;
 	const [comments, setComments] = useState<ImageComment[]>([]);
 	const [error, setError] = useState<string | null>(null);
 	const [hasNewVersion, setHasNewVersion] = useState(false);
@@ -47,7 +52,8 @@ export const ImageEditDialog = ({ imageId, size, onEdited }: ImageEditDialogProp
 				return;
 			}
 			setError(null);
-			setCurrentId(result.image.id);
+			setVersions((previous) => [...previous, result.image]);
+			setSelectedIndex(versions.length);
 			setComments([]);
 			setHasNewVersion(true);
 			onEdited(result.image);
@@ -55,35 +61,52 @@ export const ImageEditDialog = ({ imageId, size, onEdited }: ImageEditDialogProp
 
 	return (
 		<>
-			<Button type="button" variant="outline" size={size} onClick={() => setOpen(true)}>
+			<Button type="button" variant="outline" size={size} fullWidth={fullWidth} onClick={() => setOpen(true)}>
 				<MessageSquarePlus aria-hidden="true" /> Edit
 			</Button>
 			<Dialog open={open} onOpenChange={setOpen} dismissible={!isPending} drawerOnMobile={false}>
 				<DialogContent size="xl" height="full">
 					<DialogHeader>
-						<DialogTitle size="lg">Edit image</DialogTitle>
-						<DialogDescription>
-							Click the image where something should change and describe the change. Drag a pin to move it. Each round saves
-							a new version to the gallery and keeps the original.
-						</DialogDescription>
+						<DialogTitle size="lg">Edit image · Version {selectedIndex + 1}</DialogTitle>
+						<DialogDescription visuallyHidden>Add comments to create a new version of this image.</DialogDescription>
 					</DialogHeader>
 					<DialogBody>
-						<ImageCommentEditor
-							src={imageUrl(currentId, 'original')}
-							alt="Image to edit"
-							comments={comments}
-							onCommentsChange={setComments}
-							maxComments={MAX_IMAGE_COMMENTS}
-							maxLength={MAX_COMMENT_LENGTH}
+						<ImageHistory
+							label="Version history"
+							items={versions.map((version, index) => ({
+								src: imageUrl(version.id, 'preview'),
+								label: `Version ${index + 1}, ${version.cost_usd === null ? 'price unavailable' : `price ${formatImageCost(version.cost_usd)}`}`,
+								badge: formatImageCost(version.cost_usd),
+							}))}
+							selectedIndex={selectedIndex}
 							disabled={isPending}
-							labels={{
-								addComment: 'Add a comment to the image',
-								comment: 'Comment',
-								remove: 'Remove',
-								placeholder: 'Describe what should change here …',
-								empty: `Click the image to add up to ${MAX_IMAGE_COMMENTS} comments.`,
+							onSelect={(index) => {
+								if (index === selectedIndex) return;
+								setSelectedIndex(index);
+								setComments([]);
+								setError(null);
+								setHasNewVersion(false);
 							}}
-						/>
+						>
+							<ImageCommentEditor
+								src={imageUrl(currentId, 'original')}
+								alt="Image to edit"
+								comments={comments}
+								onCommentsChange={setComments}
+								maxComments={MAX_IMAGE_COMMENTS}
+								maxLength={MAX_COMMENT_LENGTH}
+								disabled={isPending}
+								labels={{
+									addComment: 'Add a comment to the image',
+									comment: 'Comment',
+									remove: 'Remove',
+									placeholder: 'Describe what should change here …',
+									empty: `Click the image to add up to ${MAX_IMAGE_COMMENTS} comments.`,
+									helpLabel: 'How image edits work',
+									help: 'Click to mark an area, describe the change, then create a new version. Drag pins to move them. Switching versions clears drafts.',
+								}}
+							/>
+						</ImageHistory>
 					</DialogBody>
 					{error && (
 						<p className="text-destructive text-sm" role="alert">
