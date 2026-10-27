@@ -1,6 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
-import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
 import { blockMargins } from '@/components/content-blocks/block-margins';
+import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
