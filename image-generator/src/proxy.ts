@@ -1,9 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { createHash, timingSafeEqual } from 'node:crypto';
+import { timingSafeEqual } from 'node:crypto';
 
-// Hashing first gives both sides the same length, which timingSafeEqual requires.
-const isPassword = (candidate: string, password: string) =>
-	timingSafeEqual(createHash('sha256').update(candidate).digest(), createHash('sha256').update(password).digest());
+// timingSafeEqual needs equal lengths; checking the length first reveals only the password's length.
+const isPassword = (candidate: string, password: string) => {
+	const candidateBytes = Buffer.from(candidate);
+	const passwordBytes = Buffer.from(password);
+	return candidateBytes.length === passwordBytes.length && timingSafeEqual(candidateBytes, passwordBytes);
+};
 
 const isAuthenticated = (request: NextRequest) => {
 	const header = request.headers.get('authorization');
