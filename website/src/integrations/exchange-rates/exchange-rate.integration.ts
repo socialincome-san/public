@@ -1,6 +1,9 @@
 import { resultFail, resultOk, type Result } from '@/lib/result';
 
 const ETHERSCAN_API_URL = 'https://api.etherscan.io/v2/api';
+const FIAT_MAX_ATTEMPTS = 5;
+const FIAT_RETRY_DELAY_MS = 2000;
+const FIAT_REQUEST_TIMEOUT_MS = 30_000;
 
 export type FiatExchangeRateResponse = {
 	base: string;
@@ -14,34 +17,48 @@ export const fetchFiatExchangeRates = async (day: string): Promise<Result<FiatEx
 		return resultFail('Exchange rates API is not configured');
 	}
 
-	try {
-		const response = await fetch(`https://api.apilayer.com/exchangerates_data/${day}?base=chf`, {
-			method: 'GET',
-			headers: { apiKey },
-		});
-		if (!response.ok) {
-			console.error('Exchange rates provider request failed', {
-				day,
-				status: response.status,
-				statusText: response.statusText,
+	for (let attempt = 1; attempt <= FIAT_MAX_ATTEMPTS; attempt += 1) {
+		try {
+			const response = await fetch(`https://api.apilayer.com/exchangerates_data/${day}?base=chf`, {
+				method: 'GET',
+				headers: { apiKey },
+				signal: AbortSignal.timeout(FIAT_REQUEST_TIMEOUT_MS),
 			});
+			if (!response.ok) {
+				const context = { day, attempt, status: response.status, statusText: response.statusText };
+				const retryable = response.status === 408 || response.status >= 500;
+				if (!retryable || attempt === FIAT_MAX_ATTEMPTS) {
+					console.error('Exchange rates provider request failed', context);
 
-			return resultFail('Exchange rates provider request failed');
+					return resultFail('Exchange rates provider request failed');
+				}
+
+				await response.body?.cancel();
+				console.warn('Exchange rates provider request failed; retrying', context);
+			} else {
+				const data: unknown = await response.json();
+				if (!isFiatExchangeRateResponse(data)) {
+					console.error('Exchange rates provider returned an invalid response', { day, attempt });
+
+					return resultFail('Exchange rates provider returned an invalid response');
+				}
+
+				return resultOk(data);
+			}
+		} catch (error) {
+			if (attempt === FIAT_MAX_ATTEMPTS) {
+				console.error('Could not fetch exchange rates', { day, attempt, error });
+
+				return resultFail('Could not fetch exchange rates');
+			}
+
+			console.warn('Could not fetch exchange rates; retrying', { day, attempt, error });
 		}
 
-		const data: unknown = await response.json();
-		if (!isFiatExchangeRateResponse(data)) {
-			console.error('Exchange rates provider returned an invalid response', { day });
-
-			return resultFail('Exchange rates provider returned an invalid response');
-		}
-
-		return resultOk(data);
-	} catch (error) {
-		console.error('Could not fetch exchange rates', { day, error });
-
-		return resultFail('Could not fetch exchange rates');
+		await new Promise((resolve) => setTimeout(resolve, FIAT_RETRY_DELAY_MS));
 	}
+
+	return resultFail('Could not fetch exchange rates');
 };
 
 export const fetchEthUsdPrice = async (): Promise<Result<number>> => {
