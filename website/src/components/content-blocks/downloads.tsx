@@ -33,7 +33,7 @@ const SEARCH_QUERY_KEY = 'search';
 // Storyblok doesn't resolve relations nested inside resolved relations, so authors arrive as uuids and the people are
 // loaded separately
 const getAuthorUuids = (document: ISbStoryData<Document>) =>
-	(document.content.authors ?? []).filter((author) => typeof author === 'string').slice(0, 3);
+	document.content.authors?.filter((author) => typeof author === 'string').slice(0, 3) ?? [];
 
 type DocumentAuthor = DownloadDocument['authors'][number];
 
@@ -130,7 +130,7 @@ export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Pro
 						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}
-				<div className="mx-auto max-w-[880px] space-y-8">
+				<div className="mx-auto max-w-220 space-y-8">
 					<FilterBar
 						filters={
 							<>
