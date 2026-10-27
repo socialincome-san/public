@@ -209,7 +209,7 @@
 		},
 		"runway": {
 			"description": "{count, plural, one {Even if every donor stopped giving today, we could keep paying recipients for {count} more month.} other {Even if every donor stopped giving today, we could keep paying recipients for {count} more months.}}",
-			"zewo-hint": "In line with ZEWO"
+			"zewo-hint": "In line with <zewo>ZEWO</zewo>"
 		},
 		"countries": {
 			"headline": "{count, plural, one {Donations totaling {amount} arrived from {countriesCount} country} other {Donations totaling {amount} arrived from {countriesCount} countries}}",
@@ -424,7 +424,8 @@
 	},
 	"wallet": {
 		"paid-out": "Paid out",
-		"recipients": "Recipients"
+		"recipients": "Recipients",
+		"concluded": "Concluded"
 	},
 	"person-grid": {
 		"search-placeholder": "Search by name",

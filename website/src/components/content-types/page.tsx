@@ -1,5 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
@@ -7,6 +8,7 @@ import { ExplainerVideoHeaderBlock } from '@/components/content-blocks/explainer
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
+import { IframeEmbedBlock } from '@/components/content-blocks/iframe-embed';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
@@ -38,6 +40,7 @@ import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/newsletter/newsletter-signup';
 import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Fragment, type ReactNode } from 'react';
 
 type PageBlock = Page['content'][number];
@@ -75,6 +78,12 @@ const renderPageBlock = (
 			return <FaqSelectionBlock blok={block} lang={lang} currency={currency} />;
 		case 'heroVideo':
 			return <HeroVideoBlockServer blok={block} lang={lang} currency={currency} />;
+		case 'iframeEmbed':
+			return (
+				<BlockWrapper {...blockMargins(block)}>
+					<IframeEmbedBlock blok={block} />
+				</BlockWrapper>
+			);
 		case 'imageText':
 			return <ImageTextBlock blok={block} />;
 		case 'impactMeasurement':

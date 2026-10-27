@@ -45,7 +45,11 @@
 			"city": "Città",
 			"zip": "CAP",
 			"name": "Nome",
-			"focuses": "Focus"
+			"focuses": "Focus",
+			"validation": {
+				"required": "Questo campo è obbligatorio.",
+				"invalid-email": "Inserisci un indirizzo email valido."
+			}
 		}
 	},
 	"sections": {
