@@ -164,6 +164,9 @@ const renderPageBlock = (
 			return <VideoTextBlock blok={block} />;
 		case 'runwayMonthGrid':
 			return <RunwayMonthGridBlock blok={block} lang={lang} />;
+		// Already in Storyblok; its renderer comes with feature/country-office
+		case 'countryOffice':
+			return null;
 		default:
 			block satisfies never;
 

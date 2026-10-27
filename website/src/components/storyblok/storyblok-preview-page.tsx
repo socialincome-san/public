@@ -38,6 +38,7 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, currency, previewR
 					blok={story.content}
 					lang={lang}
 					currency={currency}
+					searchParams={Promise.resolve(searchParams)}
 					afterHero={community ? <CommunityRow data={community} /> : null}
 				/>
 			);
