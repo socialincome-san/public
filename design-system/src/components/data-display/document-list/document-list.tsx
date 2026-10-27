@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CheckIcon, DownloadIcon, FileTextIcon } from 'lucide-react';
+import { ArrowRightIcon, BadgeCheckIcon, DownloadIcon, FileTextIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
 import { Fragment, type ReactNode } from 'react';
@@ -33,11 +33,11 @@ type DocumentListGroupFooterProps = {
 
 export const DocumentListGroupFooter = ({ message, linkLabel, linkHref }: DocumentListGroupFooterProps) => (
 	<div className="border-border text-muted-foreground flex flex-wrap items-center gap-1.5 border-t px-4 py-3.5 text-sm sm:px-6">
-		<CheckIcon className="text-confirm size-3.5 shrink-0" aria-hidden />
+		<BadgeCheckIcon className="text-confirm size-4 shrink-0" strokeWidth={1.7} aria-hidden />
 		<p className="min-w-0 flex-1">{message}</p>
 		<NextLink
 			href={linkHref}
-			className="text-foreground hover:text-primary focus-visible:ring-ring inline-flex basis-full items-center gap-1 rounded-sm pl-5 font-medium underline underline-offset-3 transition-colors focus-visible:ring-2 focus-visible:outline-none sm:ml-auto sm:basis-auto sm:pl-0"
+			className="text-foreground hover:text-primary focus-visible:ring-ring inline-flex basis-full items-center gap-1 rounded-sm pl-5.5 font-medium underline underline-offset-3 transition-colors focus-visible:ring-2 focus-visible:outline-none sm:ml-auto sm:basis-auto sm:pl-0"
 		>
 			{linkLabel}
 			<ArrowRightIcon className="size-3.5" aria-hidden />
@@ -118,7 +118,7 @@ export const DocumentListItem = ({
 										aria-label={checkLabel}
 										className="focus-visible:ring-ring inline-flex rounded-sm focus-visible:ring-2 focus-visible:outline-none"
 									>
-										<CheckIcon className="text-confirm size-3.5" aria-hidden />
+										<BadgeCheckIcon className="text-confirm size-4" strokeWidth={1.7} aria-hidden />
 									</button>
 								</TooltipTrigger>
 								<TooltipContent sideOffset={8}>{checkLabel}</TooltipContent>
