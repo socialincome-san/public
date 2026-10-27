@@ -92,6 +92,31 @@
 		"opens-in-new-tab": "(s'ouvre dans un nouvel onglet)",
 		"website": "Site web"
 	},
+	"downloads": {
+		"all-years": "Toutes les années ({count})",
+		"all-documents": "Tous les documents ({count})",
+		"document-count": "{count, plural, one {# document} other {# documents}}",
+		"categories": {
+			"annual-report": "Rapport annuel",
+			"financial-statement": "Comptes annuels",
+			"audit-report": "Rapport de révision",
+			"certification": "Certification"
+		},
+		"search-label": "Rechercher des documents",
+		"search-placeholder": "Rechercher des documents",
+		"no-results": "Aucun document ne correspond à votre recherche.",
+		"download-label": "Télécharger {title} en {language}",
+		"languages": {
+			"en": "Anglais",
+			"de": "Allemand",
+			"en+de": "Anglais & allemand"
+		},
+		"board-approval": {
+			"message": "{count, plural, one {Ce document a été examiné et approuvé} other {Ces documents ont été examinés et approuvés}} par notre Conseil.",
+			"approved": "Approuvé par le Conseil",
+			"link": "Découvrir notre Conseil"
+		}
+	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",
 		"no-results": "Aucun axe ne correspond aux filtres sélectionnés.",

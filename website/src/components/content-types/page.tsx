@@ -71,7 +71,7 @@ const renderPageBlock = (
 		case 'donationsTotal':
 			return <DonationsTotalBlockServer blok={block} lang={lang} currency={currency} />;
 		case 'downloads':
-			return <DownloadsBlock blok={block} />;
+			return <DownloadsBlock blok={block} lang={lang} currency={currency} searchParams={searchParams} />;
 		case 'explainerVideoHeader':
 			return <ExplainerVideoHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'faqSelection':

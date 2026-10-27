@@ -92,6 +92,31 @@
 		"opens-in-new-tab": "(si apre in una nuova scheda)",
 		"website": "Sito web"
 	},
+	"downloads": {
+		"all-years": "Tutti gli anni ({count})",
+		"all-documents": "Tutti i documenti ({count})",
+		"document-count": "{count, plural, one {# documento} other {# documenti}}",
+		"categories": {
+			"annual-report": "Rapporto annuale",
+			"financial-statement": "Conto annuale",
+			"audit-report": "Rapporto di revisione",
+			"certification": "Certificazione"
+		},
+		"search-label": "Cerca documenti",
+		"search-placeholder": "Cerca documenti",
+		"no-results": "Nessun documento corrisponde alla tua ricerca.",
+		"download-label": "Scarica {title} in {language}",
+		"languages": {
+			"en": "Inglese",
+			"de": "Tedesco",
+			"en+de": "Inglese & tedesco"
+		},
+		"board-approval": {
+			"message": "{count, plural, one {Questo documento è stato esaminato e approvato} other {Questi documenti sono stati esaminati e approvati}} dal nostro Consiglio.",
+			"approved": "Approvato dal Consiglio",
+			"link": "Il nostro Consiglio"
+		}
+	},
 	"focuses-page": {
 		"empty": "Nessun focus trovato.",
 		"no-results": "Nessun focus corrisponde ai filtri selezionati.",

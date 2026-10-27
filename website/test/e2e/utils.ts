@@ -120,8 +120,9 @@ export const selectOptionByTestId = async (page: Page, fieldName: string, option
 };
 
 export const clickDataTableActionItem = async (page: Page, actionItemTestId: string) => {
-	const actionButton = page.getByTestId('data-table-actions-button');
-	const actionItem = page.getByTestId(actionItemTestId);
+	// Some pages render the table twice (one copy hidden), so only visible matches count
+	const actionButton = page.getByTestId('data-table-actions-button').filter({ visible: true });
+	const actionItem = page.getByTestId(actionItemTestId).filter({ visible: true });
 
 	// If there's only one action, we render a primary button directly instead of the dropdown.
 	// The dropdown also stays open after a dialog opened from it closes, blocking clicks on its trigger.
