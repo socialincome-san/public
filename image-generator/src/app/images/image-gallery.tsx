@@ -8,7 +8,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-sy
 import { Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { DownloadMenu } from '../download-menu';
 import { ImageEditDialog } from '../image-edit-dialog';
@@ -51,9 +50,12 @@ const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string
 	);
 };
 
-export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
-	const router = useRouter();
+type ImageGalleryProps = {
+	images: GalleryImage[];
+	onImageAdded: (image: GalleryImage) => void;
+};
 
+export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 	if (images.length === 0) {
 		return (
 			<div className="border-border bg-card flex flex-col items-center justify-center rounded-3xl border p-12 text-center sm:p-16">
@@ -100,7 +102,7 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 										</div>
 									</TooltipContent>
 								</Tooltip>
-								<ImageEditDialog imageId={image.id} size="sm" onEdited={() => router.refresh()} />
+								<ImageEditDialog imageId={image.id} size="sm" onEdited={onImageAdded} />
 								<DownloadMenu imageId={image.id} variant="outline" size="sm" />
 							</div>
 						</div>

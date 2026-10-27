@@ -35,9 +35,11 @@ Auth accepts any username and checks the configured password.
   for one day, nothing extra is stored. Authenticated images bypass
   Next's image optimizer.
 - `/images` server-renders the first batch of 24. Load more fetches
-  `/api/gallery-images?offset=24` and so on; images that arrive twice
-  after an edit are shown once. The gallery shows only the user's part
-  of each saved prompt (`extractUserInput`).
+  `/api/gallery-images?after=<id of the last shown image>`; the cursor
+  keeps batches stable while new images are saved. Versions made in the
+  gallery's edit dialog are added at the top without a reload. The
+  gallery shows only the user's part of each saved prompt
+  (`extractUserInput`).
 - Enter submits the prompt; Shift+Enter inserts a newline.
 - The format select defaults to square and offers 1:1, 4:5, 9:16, 16:9,
   4:3, 3:2 and 3:4, labelled by platform. Sizes are custom pixel sizes

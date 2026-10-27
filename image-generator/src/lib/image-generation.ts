@@ -44,7 +44,7 @@ export const generateAndSaveImage = async ({
 	if (metadata.width !== width || metadata.height !== height) {
 		return imageErrorResponse('The image provider did not return the selected format. Please try again.', 502);
 	}
-	const id = await saveImage(prompt, image);
+	const saved = await saveImage(prompt, image);
 
-	return Response.json({ image: { id, width, height } } satisfies ImageResponse);
+	return Response.json({ image: { ...saved, width, height } } satisfies ImageResponse);
 };
