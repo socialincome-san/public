@@ -92,6 +92,36 @@
 		"opens-in-new-tab": "(opens in a new tab)",
 		"website": "Website"
 	},
+	"downloads": {
+		"all-years": "All years ({count})",
+		"all-documents": "All documents ({count})",
+		"document-count": "{count, plural, one {# document} other {# documents}}",
+		"categories": {
+			"annual-report": "Annual Report",
+			"financial-statement": "Financial Statement",
+			"audit-report": "Audit Report",
+			"certification": "Certification"
+		},
+		"search-label": "Search documents",
+		"search-placeholder": "Search",
+		"no-results": "No documents match your search.",
+		"download-label": "Download {title} in {language}",
+		"languages": {
+			"en": "English",
+			"de": "German",
+			"en+de": "English & German"
+		},
+		"languages-short": {
+			"en": "EN",
+			"de": "DE",
+			"en+de": "EN/DE"
+		},
+		"board-approval": {
+			"message": "{count, plural, one {This document has} other {These documents have}} been reviewed and approved by our Board.",
+			"approved": "Approved by the Board",
+			"link": "Meet our Board"
+		}
+	},
 	"focuses-page": {
 		"empty": "No focuses found.",
 		"no-results": "No focuses match the selected filters.",

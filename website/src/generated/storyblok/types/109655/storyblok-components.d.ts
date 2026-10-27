@@ -216,6 +216,19 @@ export interface Country {
   [k: string]: unknown;
 }
 
+export interface CountryOffice {
+  countryOffice: number | string;
+  title?: string;
+  heading: string;
+  description?: string;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "countryOffice";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface CountryOverview {
   title?: string;
   text?: string;
@@ -227,9 +240,26 @@ export interface CountryOverview {
 
 export interface Document {
   title?: string;
-  file: StoryblokAsset;
+  category: "annual-report" | "financial-statement" | "audit-report" | "certification";
+  year?: string;
+  publishedAt?: string;
+  note?: string;
+  files?: DocumentFile[];
+  authors?: (ISbStoryData<Person> | string)[];
+  boardApproved?: boolean;
+  thumbnail?: StoryblokAsset;
+  file?: StoryblokAsset;
   language?: string;
   component: "document";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface DocumentFile {
+  file: StoryblokAsset;
+  language: "en" | "de" | "en+de";
+  component: "documentFile";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -258,11 +288,13 @@ export interface DonationsTotal {
 }
 
 export interface Downloads {
-  heading?: string;
   tableHeaderLabelFilename: string;
   tableHeaderLabelInfo: string;
   tableHeaderLabelLink: string;
   documents: (ISbStoryData<Document> | string)[];
+  year?: string;
+  showFilters?: boolean;
+  boardLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "downloads";
   _uid: string;
   _editable?: string | undefined;
@@ -638,6 +670,7 @@ export interface Page {
     | CircleGrid
     | TaskCards
     | IframeEmbed
+    | CountryOffice
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
