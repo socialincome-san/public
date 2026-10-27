@@ -28,7 +28,10 @@ export const isImageId = (value: unknown): value is string =>
 	typeof value === 'string' &&
 	(/^[1-9][0-9]{0,18}$/.test(value) || /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value));
 
-type ImageVariant = 'preview' | 'original' | 'transparent';
+const IMAGE_VARIANTS = ['preview', 'original', 'transparent'] as const;
+type ImageVariant = (typeof IMAGE_VARIANTS)[number];
+
+export const isImageVariant = (value: string): value is ImageVariant => IMAGE_VARIANTS.some((variant) => variant === value);
 
 export const imageUrl = (id: GalleryImage['id'], variant: ImageVariant, { download = false } = {}) => {
 	const params = new URLSearchParams({ variant });

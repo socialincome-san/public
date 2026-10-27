@@ -52,6 +52,8 @@ export const ImageCommentEditor = ({
 }: ImageCommentEditorProps) => {
 	const fieldIdPrefix = useId();
 	const frameRef = useRef<HTMLDivElement>(null);
+	// A drag ends with a click; it should not also focus the field, which opens the keyboard on phones.
+	const wasDraggedRef = useRef(false);
 	const canAdd = !disabled && comments.length < maxComments;
 
 	const pointerPosition = (event: { clientX: number; clientY: number }) => {
@@ -94,6 +96,7 @@ export const ImageCommentEditor = ({
 		}
 		const position = pointerPosition(event);
 		if (position) {
+			wasDraggedRef.current = true;
 			updateComment(comment.id, position);
 		}
 	};
@@ -125,9 +128,17 @@ export const ImageCommentEditor = ({
 							aria-label={`${labels.comment} ${index + 1}`}
 							style={{ left: `${comment.x * 100}%`, top: `${comment.y * 100}%` }}
 							className="bg-primary text-primary-foreground shadow-raised focus-visible:ring-ring absolute flex size-9 -translate-x-1/2 -translate-y-1/2 cursor-grab touch-none items-center justify-center rounded-full border-2 border-white text-sm font-bold select-none focus-visible:ring-2 focus-visible:outline-none active:cursor-grabbing disabled:cursor-default"
-							onPointerDown={(event) => event.currentTarget.setPointerCapture(event.pointerId)}
+							onPointerDown={(event) => {
+								wasDraggedRef.current = false;
+								event.currentTarget.setPointerCapture(event.pointerId);
+							}}
 							onPointerMove={(event) => movePinWithPointer(event, comment)}
-							onClick={() => document.getElementById(`${fieldIdPrefix}-${comment.id}`)?.focus()}
+							onClick={(event) => {
+								if (event.detail !== 0 && wasDraggedRef.current) {
+									return;
+								}
+								document.getElementById(`${fieldIdPrefix}-${comment.id}`)?.focus();
+							}}
 							onKeyDown={(event) => movePinWithKeyboard(event, comment)}
 						>
 							{index + 1}

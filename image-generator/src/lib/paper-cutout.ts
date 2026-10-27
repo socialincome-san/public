@@ -1,5 +1,3 @@
-import 'server-only';
-
 import sharp from 'sharp';
 
 // Removes the white paper behind a generated watercolor illustration and returns a transparent PNG.

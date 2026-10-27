@@ -11,7 +11,7 @@ const REFERENCES_PER_IMAGE = 8;
 // A fresh random subset per image keeps any single reference, such as one dress pattern, from dominating the output.
 export const pickStyleReferences = async (set: Country['styleReferences']): Promise<Buffer[]> => {
 	const dir = join(STYLE_REFERENCES_DIR, set);
-	const files = await readdir(dir);
+	const files = (await readdir(dir)).filter((file) => /\.(jpe?g|png|webp)$/i.test(file));
 	const picked = files
 		.map((file) => ({ file, order: Math.random() }))
 		.sort((a, b) => a.order - b.order)

@@ -1,6 +1,6 @@
 import { getStoredImage } from '@/lib/database';
-import { isImageId } from '@/lib/images';
-import { removePaperBackground } from '@/lib/paper-cutout';
+import { isImageId, isImageVariant } from '@/lib/images';
+import { removePaperBackgroundInWorker } from '@/lib/paper-cutout-in-worker';
 import sharp from 'sharp';
 
 const cacheHeaders = {
@@ -20,6 +20,7 @@ export const GET = async (request: Request, { params }: RouteContext<'/api/galle
 
 	const { searchParams } = new URL(request.url);
 	const variant = searchParams.get('variant') ?? 'preview';
+	if (!isImageVariant(variant)) return new Response('Unknown variant', { status: 400 });
 	const download = searchParams.get('download') === '1';
 
 	try {
@@ -42,7 +43,7 @@ export const GET = async (request: Request, { params }: RouteContext<'/api/galle
 			case 'original':
 				return respond(original, image.media_type, `social-income-${id}.${extension}`);
 			case 'transparent':
-				return respond(await removePaperBackground(original), 'image/png', `social-income-${id}-transparent.png`);
+				return respond(await removePaperBackgroundInWorker(original), 'image/png', `social-income-${id}-transparent.png`);
 			case 'preview': {
 				const preview = await sharp(original)
 					.rotate()
@@ -51,8 +52,6 @@ export const GET = async (request: Request, { params }: RouteContext<'/api/galle
 					.toBuffer();
 				return respond(preview, 'image/webp', `social-income-${id}.webp`);
 			}
-			default:
-				return new Response('Unknown variant', { status: 400 });
 		}
 	} catch (error) {
 		console.error('Gallery image loading failed', error);

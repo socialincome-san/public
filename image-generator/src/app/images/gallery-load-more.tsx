@@ -11,16 +11,11 @@ type State = { loaded: GalleryImage[]; hasMore: boolean | null; error: string | 
 export const GalleryLoadMore = ({ images: firstBatch, hasMore: firstBatchHasMore }: GalleryBatch) => {
 	const [state, loadMore, isPending] = useActionState(
 		async (previous: State): Promise<State> => {
-			try {
-				const response = await fetch(`/api/gallery-images?offset=${firstBatch.length + previous.loaded.length}`);
-				const batch: unknown = await response.json();
-				if (response.ok && isGalleryBatch(batch)) {
-					return { loaded: [...previous.loaded, ...batch.images], hasMore: batch.hasMore, error: null };
-				}
-			} catch {
-				// Falls through to the error state.
-			}
-			return { ...previous, error: 'Images could not be loaded. Please try again.' };
+			const batch: unknown = await fetch(`/api/gallery-images?offset=${firstBatch.length + previous.loaded.length}`)
+				.then((response) => response.json())
+				.catch(() => null);
+			if (!isGalleryBatch(batch)) return { ...previous, error: 'Images could not be loaded. Please try again.' };
+			return { loaded: [...previous.loaded, ...batch.images], hasMore: batch.hasMore, error: null };
 		},
 		{ loaded: [], hasMore: null, error: null },
 	);
