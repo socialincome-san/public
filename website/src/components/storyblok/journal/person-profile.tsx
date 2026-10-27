@@ -103,12 +103,13 @@ export const PersonProfile = ({
 	const workStyle = getOptionCode(person.content.workStyle);
 	const workStyleLabel = workStyleLabels[workStyle] ?? workStyle;
 	// An unchecked box can also mean nobody filled it in, so "no deadlines" only shows next to a work style
-	const deadlineInfo = likesDeadline ? t('person.likes-deadlines') : t('person.prefers-no-deadlines');
+	const deadlineInfo =
+		likesDeadline === undefined ? undefined : likesDeadline ? t('person.likes-deadlines') : t('person.prefers-no-deadlines');
 	const workStyleInfo =
 		workStyle || likesDeadline ? (
 			<>
 				{workStyle && <p>{t('person.work-style', { style: workStyleLabel })}</p>}
-				<p>{deadlineInfo}</p>
+				{deadlineInfo && <p>{deadlineInfo}</p>}
 			</>
 		) : undefined;
 	const facts = [
@@ -127,7 +128,7 @@ export const PersonProfile = ({
 			: workStyle
 				? [{ label: t('person.work-style-title'), value: workStyleLabel, info: deadlineInfo }]
 				: likesDeadline
-					? [{ label: t('person.deadline-preference'), value: deadlineInfo }]
+					? [{ label: t('person.deadline-preference'), value: t('person.likes-deadlines') }]
 					: []),
 	];
 	const circles = getPersonCircles(person.content, circleLabels);
