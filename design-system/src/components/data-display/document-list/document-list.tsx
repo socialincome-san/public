@@ -106,7 +106,7 @@ export const DocumentListItem = ({
 				)}
 			</div>
 			<div className="@container/document min-w-0 space-y-1">
-				<p className="text-foreground text-base font-medium">
+				<p className="text-foreground text-base font-medium wrap-break-word">
 					{title}
 					{checkLabel ? (
 						<span title={checkLabel} className="ml-1.5 inline-flex align-middle">
