@@ -1,4 +1,4 @@
-import { getStoredImage } from '@/lib/database';
+import { deleteImage, getStoredImage } from '@/lib/database';
 import { isImageId } from '@/lib/images';
 import { removePaperBackgroundInWorker } from '@/lib/paper-cutout-in-worker';
 
@@ -35,5 +35,18 @@ export const GET = async (request: Request, { params }: RouteContext<'/api/galle
 	} catch (error) {
 		console.error('Gallery image loading failed', error);
 		return new Response('Image could not be loaded', { status: 500 });
+	}
+};
+
+export const DELETE = async (_request: Request, { params }: RouteContext<'/api/gallery-images/[id]'>) => {
+	const { id } = await params;
+	if (!isImageId(id)) return Response.json({ error: 'Image not found.' }, { status: 404 });
+
+	try {
+		if (!(await deleteImage(id))) return Response.json({ error: 'Image not found.' }, { status: 404 });
+		return new Response(null, { status: 204 });
+	} catch (error) {
+		console.error('Deleting gallery image failed', error);
+		return Response.json({ error: 'Image could not be deleted. Please try again.' }, { status: 500 });
 	}
 };

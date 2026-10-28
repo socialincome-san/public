@@ -1,9 +1,9 @@
-import { getStoredImage } from '@/lib/database';
+import { deleteImage, getStoredImage } from '@/lib/database';
 import { removePaperBackgroundInWorker } from '@/lib/paper-cutout-in-worker';
-import { GET } from './route';
+import { DELETE, GET } from './route';
 
 jest.mock('server-only', () => ({}));
-jest.mock('@/lib/database', () => ({ getStoredImage: jest.fn() }));
+jest.mock('@/lib/database', () => ({ getStoredImage: jest.fn(), deleteImage: jest.fn() }));
 jest.mock('@/lib/paper-cutout-in-worker', () => ({ removePaperBackgroundInWorker: jest.fn() }));
 
 const imageUrl = 'https://test.public.blob.vercel-storage.com/images/original.png';
@@ -49,4 +49,14 @@ test('returns not found for an unmigrated or missing image', async () => {
 	const response = await GET(new Request('http://localhost/api/gallery-images/1?variant=transparent'), context);
 	expect(response.status).toBe(404);
 	expect(request).not.toHaveBeenCalled();
+});
+
+test('preserves the soft-delete endpoint without loading or deleting Blob contents', async () => {
+	jest.mocked(deleteImage).mockResolvedValueOnce(true);
+	const fetchImage = jest.spyOn(globalThis, 'fetch');
+	const response = await DELETE(new Request('http://localhost/api/gallery-images/1', { method: 'DELETE' }), context);
+	expect(response.status).toBe(204);
+	expect(deleteImage).toHaveBeenCalledWith('1');
+	expect(getStoredImage).not.toHaveBeenCalled();
+	expect(fetchImage).not.toHaveBeenCalled();
 });

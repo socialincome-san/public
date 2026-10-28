@@ -7,6 +7,7 @@ const image = {
 	prompt: 'A bicycle',
 	media_type: 'image/png',
 	created_at: null,
+	cost_usd: null,
 	imageUrl,
 	previewUrl,
 	width: 1024,

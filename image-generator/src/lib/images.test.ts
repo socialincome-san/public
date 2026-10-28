@@ -14,6 +14,7 @@ test('validates generated URL responses and error responses', () => {
 		prompt: null,
 		media_type: 'image/png',
 		created_at: null,
+		cost_usd: null,
 		imageUrl,
 		previewUrl,
 		width: 1024,
@@ -24,6 +25,8 @@ test('validates generated URL responses and error responses', () => {
 	expect(isImageResponse({ image: { ...image, imageUrl: undefined } })).toBe(false);
 	expect(isImageResponse({ image: { ...image, previewUrl: 123 } })).toBe(false);
 	expect(isImageResponse({ image: { ...image, width: 0 } })).toBe(false);
+	expect(isImageResponse({ image: { ...image, cost_usd: 0.04 } })).toBe(true);
+	expect(isImageResponse({ image: { ...image, cost_usd: -1 } })).toBe(false);
 });
 
 test('only builds the per-image route for transparent cutouts', () => {
@@ -32,7 +35,7 @@ test('only builds the per-image route for transparent cutouts', () => {
 });
 
 test('requires both URLs on every gallery image', () => {
-	const image = { id: 1, prompt: null, media_type: 'image/png', created_at: null, imageUrl, previewUrl };
+	const image = { id: 1, prompt: null, media_type: 'image/png', created_at: null, cost_usd: null, imageUrl, previewUrl };
 	expect(isGalleryBatch({ images: [image], hasMore: false })).toBe(true);
 	expect(isGalleryBatch({ images: [{ ...image, imageUrl: null }], hasMore: false })).toBe(false);
 	expect(isGalleryBatch({ images: [{ ...image, previewUrl: undefined }], hasMore: false })).toBe(false);

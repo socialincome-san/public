@@ -26,10 +26,10 @@ const toGalleryImage = (row: GalleryRow): GalleryImage => ({
 export const getGalleryBatch = async (afterId?: string) => {
 	// Mirrors ORDER BY created_at DESC NULLS LAST, id DESC: rows without a date come last, ordered by id.
 	const result = await pool.query<GalleryRow>(
-		`SELECT image.id, image.prompt, image.media_type, image.created_at,
+		`SELECT image.id, image.prompt, image.media_type, image.created_at, image.cost_usd,
 			image.image_url AS "imageUrl", image.preview_url AS "previewUrl"
 		FROM generated_images image
-		WHERE image.image_url IS NOT NULL AND image.preview_url IS NOT NULL AND ($1::text IS NULL OR EXISTS (
+		WHERE image.status = 'active' AND image.image_url IS NOT NULL AND image.preview_url IS NOT NULL AND ($1::text IS NULL OR EXISTS (
 			SELECT 1 FROM generated_images after_image
 			WHERE after_image.id::text = $1 AND (
 				CASE WHEN after_image.created_at IS NULL
@@ -53,19 +53,19 @@ export const getGalleryBatch = async (afterId?: string) => {
 
 export const getStoredImage = async (id: string): Promise<{ imageUrl: string; media_type: string } | undefined> => {
 	const result = await pool.query<{ imageUrl: string; media_type: string }>(
-		'SELECT image_url AS "imageUrl", media_type FROM generated_images WHERE id = $1 AND image_url IS NOT NULL',
+		'SELECT image_url AS "imageUrl", media_type FROM generated_images WHERE id = $1 AND status = \'active\' AND image_url IS NOT NULL',
 		[id],
 	);
 	return result.rows[0];
 };
 
-export const saveImage = async (prompt: string, image: GeneratedImage): Promise<GalleryImage> => {
+export const saveImage = async (prompt: string, image: GeneratedImage, costUsd: number | null): Promise<GalleryImage> => {
 	const stored = await uploadImage(image);
 	let result: QueryResult<GalleryRow>;
 	try {
 		result = await pool.query<GalleryRow>(
-			'INSERT INTO generated_images (prompt, image_url, preview_url, media_type) VALUES ($1, $2, $3, $4) RETURNING id, prompt, media_type, created_at, image_url AS "imageUrl", preview_url AS "previewUrl"',
-			[prompt, stored.imageUrl, stored.previewUrl, image.mediaType],
+			'INSERT INTO generated_images (prompt, image_url, preview_url, media_type, cost_usd) VALUES ($1, $2, $3, $4, $5) RETURNING id, prompt, media_type, created_at, cost_usd, image_url AS "imageUrl", preview_url AS "previewUrl"',
+			[prompt, stored.imageUrl, stored.previewUrl, image.mediaType, costUsd],
 		);
 	} catch (error) {
 		if (isConfirmedWriteFailure(error)) {
@@ -80,4 +80,11 @@ export const saveImage = async (prompt: string, image: GeneratedImage): Promise<
 		throw error;
 	}
 	return toGalleryImage(result.rows[0]);
+};
+
+export const deleteImage = async (id: string): Promise<boolean> => {
+	const result = await pool.query("UPDATE generated_images SET status = 'deleted' WHERE id = $1 AND status = 'active'", [
+		id,
+	]);
+	return result.rowCount === 1;
 };

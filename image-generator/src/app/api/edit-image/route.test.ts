@@ -39,7 +39,7 @@ test('fetches the Blob original and passes it to shared generation without chang
 	expect(fetchImage).toHaveBeenCalledWith(imageUrl);
 	expect(generateAndSaveImage).toHaveBeenCalledWith({
 		prompt: expect.stringContaining('Make the bag yellow'),
-		images: [expect.any(Buffer)],
+		images: [expect.any(Buffer), expect.any(Buffer)],
 		width: 32,
 		height: 16,
 	});

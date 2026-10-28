@@ -36,6 +36,14 @@ ALTER TABLE generated_images ADD COLUMN image_url text, ADD COLUMN preview_url t
 ALTER TABLE generated_images ALTER COLUMN image_base64 DROP NOT NULL;
 ```
 
+Apply `migrations/add-image-status.sql` once to the existing database
+before deploying this version. Existing images remain active; deleting
+one only sets its status to `deleted` and hides it from the gallery.
+
+Apply `migrations/add-image-cost.sql` once before deploying image cost
+badges. New images store the AI Gateway's reported USD cost; existing
+images have no recorded cost and show an unavailable badge.
+
 Start the app with `npm run dev` and open http://localhost:3000. Basic
 Auth accepts any username and checks the configured password.
 
@@ -113,11 +121,22 @@ numbered comment, drag a pin or move it with the arrow keys, and
 describe each change. Up to 20 comments of 2,000 characters.
 
 The edit route looks up the stored URL by id, fetches the Blob original,
-and sends it with a prompt that lists each change with its position in
-percent of the image. It keeps the original size, saves the result as a
-new gallery image and never overwrites the source. The dialog then shows
-the new version for further rounds. The prompt asks to keep everything
-else; this is not a pixel-level guarantee.
+and sends the clean original plus a separate numbered location guide.
+The guide marks each comment's exact image position with a crosshair;
+the prompt also includes its percentage and original-image pixel
+location. It keeps the original size, saves the result as a new gallery
+image and never overwrites the source. The dialog then shows the new
+version for further rounds. The prompt asks to keep everything else;
+this is not a pixel-level guarantee.
+
+## Session version history
+
+Each successful generation or edit adds a thumbnail in the generator.
+The gallery's edit dialog also shows a thumbnail for its original and
+each edit made in that dialog. Select an older version to edit it again;
+this adds a new one without removing later versions. All images are
+saved independently in the gallery. History lasts only for the current
+page session; version relationships are not stored in the database.
 
 ## Transparent download
 

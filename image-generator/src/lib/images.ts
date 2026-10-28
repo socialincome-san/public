@@ -5,6 +5,7 @@ export type GalleryImage = {
 	created_at: string | null;
 	imageUrl: string;
 	previewUrl: string;
+	cost_usd: number | null;
 };
 
 export type GalleryBatch = {
@@ -65,7 +66,10 @@ const isGalleryImage = (value: unknown): value is GalleryImage =>
 	'imageUrl' in value &&
 	typeof value.imageUrl === 'string' &&
 	'previewUrl' in value &&
-	typeof value.previewUrl === 'string';
+	typeof value.previewUrl === 'string' &&
+	'cost_usd' in value &&
+	(value.cost_usd === null ||
+		(typeof value.cost_usd === 'number' && Number.isFinite(value.cost_usd) && value.cost_usd >= 0));
 
 export const isImageResponse = (value: unknown): value is ImageResponse => {
 	if (typeof value !== 'object' || value === null) {
