@@ -11,6 +11,7 @@ const homeLink: StoryblokPublishedLink = {
 	alternates: [
 		{ lang: 'de', path: '', name: null, published: true, translated_slug: 'pages/home' },
 		{ lang: 'fr', path: '', name: null, published: false, translated_slug: 'pages/home' },
+		{ lang: 'it', path: '', name: null, published: null, translated_slug: 'pages/home' },
 	],
 };
 

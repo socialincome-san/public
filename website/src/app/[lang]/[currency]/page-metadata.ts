@@ -36,7 +36,7 @@ export const getLinkPathTails = (link: StoryblokPublishedLink): LanguagePathTail
 	}
 
 	for (const alternate of link.alternates ?? []) {
-		if (!mainWebsiteLanguages.includes(alternate.lang as WebsiteLanguage) || alternate.published === false) {
+		if (!mainWebsiteLanguages.includes(alternate.lang as WebsiteLanguage) || alternate.published !== true) {
 			continue;
 		}
 
