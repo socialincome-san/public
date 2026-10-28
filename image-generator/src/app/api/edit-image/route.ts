@@ -19,9 +19,11 @@ export const POST = (request: Request) =>
 
 		const stored = await getStoredImage(body.imageId);
 		if (!stored) return imageErrorResponse('Image not found.', 404);
+		const response = await fetch(stored.imageUrl);
+		if (!response.ok) return imageErrorResponse('Image could not be loaded.', 502);
 
 		// Normalize to PNG with the orientation the browser showed when the comments were placed.
-		const original = await sharp(Buffer.from(stored.image_base64, 'base64'))
+		const original = await sharp(await response.arrayBuffer())
 			.autoOrient()
 			.png()
 			.toBuffer({ resolveWithObject: true });

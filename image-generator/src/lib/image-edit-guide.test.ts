@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
 import sharp from 'sharp';
 import { createImageEditGuide } from './image-edit-guide.ts';
 
@@ -28,11 +27,10 @@ test('marks exact fractional and edge positions on a separate guide for square, 
 			const offset = (pixelY * size.width + pixelX) * info.channels;
 			assert.deepEqual([...data.subarray(offset, offset + 3)], [255, 0, 255]);
 		}
-		assert.deepEqual(
+		expect(
 			await sharp(original)
 				.stats()
 				.then(({ channels }) => channels.map(({ mean }) => mean)),
-			[255, 255, 255],
-		);
+		).toEqual([255, 255, 255]);
 	}
 });

@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
 import { buildEditPrompt, buildGeneratePrompt, extractUserInput } from './prompts.ts';
 
 test('a generate prompt adds the setting and keeps the subject recoverable', () => {

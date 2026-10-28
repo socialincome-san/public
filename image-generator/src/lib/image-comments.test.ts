@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
 import { getImageCommentPoint, MAX_COMMENT_LENGTH, MAX_IMAGE_COMMENTS, parseImageComments } from './image-comments.ts';
 
 const comment = { x: 0.5, y: 0.25, text: '  Make the shirt blue  ' };

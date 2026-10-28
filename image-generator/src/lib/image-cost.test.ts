@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
 import { formatImageCost, getGenerationCost } from './image-cost.ts';
 
 test('uses actual gateway costs for an image, including multiple calls and free generations', () => {

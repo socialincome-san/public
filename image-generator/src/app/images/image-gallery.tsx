@@ -1,6 +1,6 @@
 'use client';
 
-import { type GalleryImage, imageUrl } from '@/lib/images';
+import { type GalleryImage } from '@/lib/images';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
@@ -25,7 +25,7 @@ const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string
 	return (
 		<div className="bg-muted/40 relative aspect-video w-full overflow-hidden" aria-busy={status === 'loading'}>
 			<Image
-				src={imageUrl(image.id, 'preview')}
+				src={image.previewUrl}
 				width={640}
 				height={360}
 				alt={prompt}
@@ -106,7 +106,7 @@ export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 									</TooltipContent>
 								</Tooltip>
 								<ImageEditDialog image={image} size="sm" onEdited={onImageAdded} />
-								<DownloadMenu imageId={image.id} variant="outline" size="sm" />
+								<DownloadMenu image={image} variant="outline" size="sm" />
 								<DeleteImageDialog
 									imageId={image.id}
 									onDeleted={() => setDeletedIds((previous) => [...previous, String(image.id)])}

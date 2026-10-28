@@ -1,7 +1,7 @@
 import { isImageResponse, type ImageResponse } from '@/lib/images';
 
 /** Calls the generate or edit route. Network and server failures come back as an error message, never thrown. */
-export const requestImage = async (url: string, body: FormData | string): Promise<ImageResponse> => {
+export const requestImage = async (url: string, body: FormData | string, refresh?: () => void): Promise<ImageResponse> => {
 	const json: unknown = await fetch(url, {
 		method: 'POST',
 		body,
@@ -10,5 +10,7 @@ export const requestImage = async (url: string, body: FormData | string): Promis
 		.then((response) => response.json())
 		.catch(() => null);
 
-	return isImageResponse(json) ? json : { error: 'Image generation failed. Please try again.' };
+	if (!isImageResponse(json)) return { error: 'Image generation failed. Please try again.' };
+	if ('image' in json) refresh?.();
+	return json;
 };
