@@ -39,6 +39,7 @@ import {
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
 	STORYBLOK_PAGES_FOLDER,
 } from '@/lib/storyblok/storyblok-paths';
+import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
 import { cache } from 'react';
@@ -82,6 +83,7 @@ const STORIES_PATH_PARAMS = {
 const PRIMARY_ROLES_DATASOURCE = 'primaryroles';
 const CIRCLES_DATASOURCE = 'circles';
 const TIME_COMMITMENTS_DATASOURCE = 'time-commitment';
+const WORK_STYLES_DATASOURCE = 'work-style';
 const CONTRIBUTION_AREAS_DATASOURCE = 'contribution-areas';
 
 const JOURNAL_TEASER_LIMIT = 3;
@@ -186,23 +188,36 @@ export const getPersonsByCountryOffice = async (
 	});
 };
 
-const getDatasourceEntries = async (datasourceSlug: string, language: string): Promise<Result<Record<string, string>>> => {
+const getDatasourceEntries = async (
+	datasourceSlug: string,
+	language: string,
+	getDefaultLabel: (entry: StoryblokDatasourceEntry) => string = (entry) => entry.name,
+): Promise<Result<Record<string, string>>> => {
 	const result = await fetchDatasourceEntriesCached(datasourceSlug, language);
 	if (!result.success) {
 		return resultFail('Could not fetch Storyblok datasource entries');
 	}
 
-	return resultOk(Object.fromEntries(result.data.map((entry) => [entry.value, entry.dimension_value ?? entry.name])));
+	return resultOk(
+		Object.fromEntries(result.data.map((entry) => [entry.value, entry.dimension_value ?? getDefaultLabel(entry)])),
+	);
 };
+
+// Circles, time commitments and work styles store a slug as the entry name and the English text as the value.
+// Circles show their slug ("Communication Circle") because the value alone ("Communication") reads like a role.
+const getEntryValue = (entry: StoryblokDatasourceEntry): string => entry.value;
 
 export const getPrimaryRoleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(PRIMARY_ROLES_DATASOURCE, language);
 
 export const getCircleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
-	getDatasourceEntries(CIRCLES_DATASOURCE, language);
+	getDatasourceEntries(CIRCLES_DATASOURCE, language, (entry) => humanizeIdentifier(entry.name));
 
 export const getTimeCommitmentLabels = async (language: string): Promise<Result<Record<string, string>>> =>
-	getDatasourceEntries(TIME_COMMITMENTS_DATASOURCE, language);
+	getDatasourceEntries(TIME_COMMITMENTS_DATASOURCE, language, getEntryValue);
+
+export const getWorkStyleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
+	getDatasourceEntries(WORK_STYLES_DATASOURCE, language, getEntryValue);
 
 export const getContributionAreaLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(CONTRIBUTION_AREAS_DATASOURCE, language);

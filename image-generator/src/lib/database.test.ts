@@ -1,5 +1,5 @@
 import { DatabaseError } from 'pg';
-import { getGalleryBatch, saveImage } from './database';
+import { getGalleryBatch, getStoredImage, saveImage } from './database';
 import { deleteStoredImages, uploadImage } from './image-storage';
 
 const mockQuery = jest.fn();
@@ -27,11 +27,23 @@ beforeEach(() => {
 afterEach(() => jest.restoreAllMocks());
 
 test('saves only URLs and metadata and returns the uploaded URLs', async () => {
-	await expect(saveImage('A watercolor', image)).resolves.toEqual(stored);
+	const saved = {
+		id: '1',
+		prompt: 'Subject: A watercolor',
+		media_type: 'image/png',
+		created_at: new Date('2026-10-28T12:00:00Z'),
+		...stored,
+	};
+	mockQuery.mockResolvedValueOnce({ rows: [saved] });
+	await expect(saveImage('Subject: A watercolor', image)).resolves.toEqual({
+		...saved,
+		prompt: 'A watercolor',
+		created_at: saved.created_at.toISOString(),
+	});
 	expect(uploadImage).toHaveBeenCalledWith(image);
 	expect(mockQuery).toHaveBeenCalledWith(
-		'INSERT INTO generated_images (prompt, image_url, preview_url, media_type) VALUES ($1, $2, $3, $4)',
-		['A watercolor', stored.imageUrl, stored.previewUrl, 'image/png'],
+		'INSERT INTO generated_images (prompt, image_url, preview_url, media_type) VALUES ($1, $2, $3, $4) RETURNING id, prompt, media_type, created_at, image_url AS "imageUrl", preview_url AS "previewUrl"',
+		['Subject: A watercolor', stored.imageUrl, stored.previewUrl, 'image/png'],
 	);
 	expect(deleteStoredImages).not.toHaveBeenCalled();
 });
@@ -88,14 +100,30 @@ test('paginates metadata and URLs without selecting Base64', async () => {
 			...stored,
 		})),
 	});
-	const batch = await getGalleryBatch(24);
+	const batch = await getGalleryBatch('24');
 	expect(batch.hasMore).toBe(true);
 	expect(batch.images).toHaveLength(24);
 	expect(batch.images[0]).toMatchObject({ ...stored, created_at: null });
 	expect(batch.images[1]?.created_at).toBe(created.toISOString());
-	expect(mockQuery).toHaveBeenCalledWith(expect.not.stringContaining('image_base64'), [24]);
+	expect(mockQuery).toHaveBeenCalledWith(expect.not.stringContaining('image_base64'), ['24', 25]);
 	expect(mockQuery).toHaveBeenCalledWith(
-		expect.stringContaining('WHERE image_url IS NOT NULL AND preview_url IS NOT NULL'),
-		[24],
+		expect.stringContaining('WHERE image.image_url IS NOT NULL AND image.preview_url IS NOT NULL'),
+		['24', 25],
 	);
+});
+
+test('loads an original URL for editing without selecting Base64', async () => {
+	mockQuery.mockResolvedValueOnce({ rows: [{ imageUrl: stored.imageUrl, media_type: 'image/png' }] });
+	await expect(getStoredImage('1')).resolves.toEqual({ imageUrl: stored.imageUrl, media_type: 'image/png' });
+	expect(mockQuery).toHaveBeenCalledWith(expect.not.stringContaining('image_base64'), ['1']);
+});
+
+test('starts the gallery without a cursor and exposes user prompts', async () => {
+	mockQuery.mockResolvedValueOnce({
+		rows: [{ id: '1', prompt: 'Style. Subject: A bicycle', media_type: 'image/png', created_at: null, ...stored }],
+	});
+	const batch = await getGalleryBatch();
+	expect(mockQuery).toHaveBeenCalledWith(expect.any(String), [null, 25]);
+	expect(batch.images[0]?.prompt).toBe('A bicycle');
+	expect(batch.hasMore).toBe(false);
 });

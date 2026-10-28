@@ -1,4 +1,4 @@
-import { imageDownloadUrl, isGalleryBatch, isGenerateResponse } from './images';
+import { imageDownloadUrl, isGalleryBatch, isImageResponse, imageUrl as transparentImageUrl } from './images';
 
 const imageUrl = 'https://test.public.blob.vercel-storage.com/images/social-income.png';
 const previewUrl = 'https://test.public.blob.vercel-storage.com/previews/social-income.webp';
@@ -9,18 +9,26 @@ test('builds a cross-origin attachment URL without duplicating query parameters'
 });
 
 test('validates generated URL responses and error responses', () => {
-	expect(isGenerateResponse({ error: null, imageUrl, previewUrl, mediaType: 'image/png', width: 1024, height: 1024 })).toBe(
-		true,
-	);
-	expect(
-		isGenerateResponse({ error: 'Failed', imageUrl: null, previewUrl: null, mediaType: null, width: null, height: null }),
-	).toBe(true);
-	expect(isGenerateResponse({ error: null, imageBase64: 'legacy', mediaType: 'image/png', width: 1024, height: 1024 })).toBe(
-		false,
-	);
-	expect(
-		isGenerateResponse({ error: null, imageUrl, previewUrl: 123, mediaType: 'image/png', width: 1024, height: 1024 }),
-	).toBe(false);
+	const image = {
+		id: '1',
+		prompt: null,
+		media_type: 'image/png',
+		created_at: null,
+		imageUrl,
+		previewUrl,
+		width: 1024,
+		height: 1024,
+	};
+	expect(isImageResponse({ image })).toBe(true);
+	expect(isImageResponse({ error: 'Failed' })).toBe(true);
+	expect(isImageResponse({ image: { ...image, imageUrl: undefined } })).toBe(false);
+	expect(isImageResponse({ image: { ...image, previewUrl: 123 } })).toBe(false);
+	expect(isImageResponse({ image: { ...image, width: 0 } })).toBe(false);
+});
+
+test('only builds the per-image route for transparent cutouts', () => {
+	expect(transparentImageUrl('1')).toBe('/api/gallery-images/1?variant=transparent');
+	expect(transparentImageUrl('1', { download: true })).toBe('/api/gallery-images/1?variant=transparent&download=1');
 });
 
 test('requires both URLs on every gallery image', () => {

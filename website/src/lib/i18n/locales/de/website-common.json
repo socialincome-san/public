@@ -409,6 +409,16 @@
 			}
 		}
 	},
+	"circles": {
+		"title": "Kreise",
+		"member-summary": "{active} aktiv · {interested, plural, one {# interessiertes Mitglied} other {# interessierte Mitglieder}}",
+		"members-empty": "Noch keine Mitglieder",
+		"empty": "Noch keine Kreise."
+	},
+	"task-cards": {
+		"show-all": "Alle {count} Aufgaben anzeigen",
+		"show-fewer": "Weniger Aufgaben anzeigen"
+	},
 	"breadcrumb": {
 		"home": "Startseite"
 	},

@@ -41,10 +41,11 @@ Auth accepts any username and checks the configured password.
 
 ## Implementation
 
-- `src/app/api/generate-image/route.ts` validates the prompt, generates
-  an image with the fixed watercolor style, and saves it before
-  returning.
-- `src/lib/database.ts` owns the PostgreSQL pool and image queries.
+- `src/lib/` holds the logic: `prompts.ts` (all prompt text),
+  `image-generation.ts` (model call, size check, save),
+  `style-references.ts`, `countries.ts`, `image-formats.ts`,
+  `image-comments.ts`, `paper-cutout.ts` and `database.ts` (PostgreSQL
+  pool and queries). Routes in `src/app/api` validate input and call it.
 - `src/lib/image-storage.ts` uploads the original and an 800px WebP
   preview (fit inside, quality 75) to the public Blob store once. Both
   have random suffixes and a one-year cache lifetime. The database
@@ -54,38 +55,81 @@ Auth accepts any username and checks the configured password.
   outcome unknown, blobs are retained and their URLs logged. Check the
   database before removing any of them. Cleanup failures log the orphan
   URLs for manual removal.
-- `/images` server-renders the first metadata batch. The load-more
-  button fetches `/api/gallery-images?offset=24` and subsequent batches
-  of 24.
-- Gallery previews and generator originals load directly from the Blob
-  CDN with Next's optimizer disabled. The old per-image preview/original
-  API route is removed. Original downloads append `?download=1` to the
-  Blob URL, since HTML's `download` attribute alone does not work across
-  domains.
+- Both `POST /api/generate-image` (multipart: prompt, format, country,
+  optional reference) and `POST /api/edit-image` (JSON: image id and
+  comments) answer
+  `{ image: { id, imageUrl, previewUrl, width, height, ...metadata } }`
+  or `{ error }`.
+- Gallery previews and generator/edit originals load directly from the
+  Blob CDN with Next's optimizer disabled. Original downloads append
+  `?download=1` to the Blob URL, since HTML's `download` attribute alone
+  does not work across domains.
+- `/api/gallery-images/[id]?variant=transparent` fetches the Blob
+  original and removes its paper background. `&download=1` makes it an
+  attachment. Preview and original variants are removed.
+- `/images` server-renders the first batch of 24. Load more fetches
+  `/api/gallery-images?after=<id of the last shown image>`; the cursor
+  keeps batches stable while new images are saved. Versions made in the
+  gallery's edit dialog are added at the top without a reload. The
+  gallery shows only the user's part of each saved prompt
+  (`extractUserInput`).
 - Unmigrated images are temporarily excluded from the gallery. Migrate
   them before reopening the app after deployment.
 - Enter submits the prompt; Shift+Enter inserts a newline. Navigation
   preserves page state through Next.js Cache Components.
-- The format selector defaults to square and supports 1:1, 16:9, 9:16,
-  4:3, 3:4, and 3:2. GPT Image 2.5 Flare supports all six natively via
-  custom pixel sizes, passed through the AI SDK's `size` option.
-  Dimensions are multiples of 16 and within the provider's pixel limits
+- The format select defaults to square and offers 1:1, 4:5, 9:16, 16:9,
+  4:3, 3:2 and 3:4, labelled by platform. Sizes are custom pixel sizes
+  passed through the AI SDK's `size` option, multiples of 16 within the
+  provider's limits
   ([provider documentation](https://developers.openai.com/api/docs/guides/image-generation#size-and-quality-options)).
-  The API rejects unsupported ratios and mismatched output instead of
-  silently cropping or stretching. Actual image dimensions are returned
-  for the generated preview; the gallery and download keep the original.
+  The API rejects output that does not match instead of cropping.
+
+## Style references and countries
+
+Every generation sends 8 randomly picked approved Social Income
+illustrations from `src/style-references/` as style references to GPT
+Image 2.5 Sunburst. A fresh subset per image keeps one reference from
+dominating. `next.config.ts` traces the folder into the generate route.
+
+The country select (Sierra Leone, Liberia, Ghana, Global) adds typical
+local details from `src/lib/countries.ts` to the prompt and picks the
+reference set: `west-africa/` for the three countries, `global/` (light
+skin, no landmarks) for Global. The country details are a draft and
+still need checking by people who know the countries.
 
 ## Reference images
 
 Reference images are optional. Upload a JPEG, PNG, or WebP up to 10 MB
-and 40 megapixels, then use the prompt to request a watercolor
-transformation or describe how to use the image as inspiration. The
-generator sends the prompt, ratio, and file as multipart `FormData`. The
-server validates and decodes the image, removes metadata, normalizes
-orientation, and passes its bytes through the AI SDK's `prompt.images`
-to the existing GPT Image 2.5 Flare model. References are not stored in
-the gallery; only the generated result is saved. Remove the reference to
-return to text-only generation.
+and 40 megapixels. The server validates it, removes metadata, normalizes
+orientation and sends it before the style references; the prompt marks
+it as a content reference for subject and composition, not for style.
+References are not stored, only the result is.
+
+## Editing with comments
+
+**Edit** in the generator or on a gallery card opens a large dialog with
+the original image. Click (or press Enter on) the image to add a
+numbered comment, drag a pin or move it with the arrow keys, and
+describe each change. Up to 20 comments of 2,000 characters.
+
+The edit route looks up the stored URL by id, fetches the Blob original,
+and sends it with a prompt that lists each change with its position in
+percent of the image. It keeps the original size, saves the result as a
+new gallery image and never overwrites the source. The dialog then shows
+the new version for further rounds. The prompt asks to keep everything
+else; this is not a pixel-level guarantee.
+
+## Transparent download
+
+The download menu offers the original and a PNG with a transparent
+background. `src/lib/paper-cutout.ts` removes the white paper with
+Sharp, no AI involved. It takes about half a second for 1024×1024 and
+runs in a worker thread, so other requests are not blocked. It removes
+paper connected to the border, enclosed gaps and slivers between hair
+strands, but only when they are as bare as the paper. Painted white,
+such as a white shirt, has brushwork and stays. Outlines get a soft edge
+coloured from the painted pixels inside. The thresholds are tuned to the
+current style on white paper.
 
 ## Checks
 
@@ -157,8 +201,7 @@ back to the Base64-based application without restoring the backup.
    gallery. Run the script again; it should report zero migrations.
 4. Open a Blob URL in a private window: the image is public. The app
    still requires Basic Auth.
-
-The edit dialog and transparent-download route mentioned in issue #3308
-are not present in this checkout. When those features are added, they
-must fetch the stored `imageUrl` rather than read Base64, and edits must
-reuse `saveImage` without overwriting the old image.
+5. Generate an image and open the gallery without refreshing: it should
+   appear immediately. Edit it with comments, confirm a new version is
+   saved while the original remains, and test the transparent PNG
+   download.
