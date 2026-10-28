@@ -3,6 +3,8 @@ import { importExchangeRates } from '@/modules/exchange-rates/exchange-rate.serv
 import { withSchedulerAuth } from '@/server/scheduler-auth';
 import { NextResponse } from 'next/server';
 
+export const maxDuration = 60;
+
 export const GET = withSchedulerAuth(async () => {
 	try {
 		const result = await importExchangeRates();
