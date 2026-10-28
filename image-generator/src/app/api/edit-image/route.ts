@@ -1,5 +1,6 @@
 import { getStoredImage } from '@/lib/database';
 import { parseImageComments } from '@/lib/image-comments';
+import { createImageEditGuide } from '@/lib/image-edit-guide';
 import { generateAndSaveImage, handleImageRequest, imageErrorResponse } from '@/lib/image-generation';
 import { isImageId } from '@/lib/images';
 import { buildEditPrompt } from '@/lib/prompts';
@@ -26,8 +27,8 @@ export const POST = (request: Request) =>
 			.toBuffer({ resolveWithObject: true });
 
 		return generateAndSaveImage({
-			prompt: buildEditPrompt(comments),
-			images: [original.data],
+			prompt: buildEditPrompt(comments, original.info),
+			images: [original.data, await createImageEditGuide(original.data, comments, original.info)],
 			width: original.info.width,
 			height: original.info.height,
 		});

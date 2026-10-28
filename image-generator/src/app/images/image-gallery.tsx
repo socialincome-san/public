@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { DownloadMenu } from '../download-menu';
 import { ImageEditDialog } from '../image-edit-dialog';
+import { DeleteImageDialog } from './delete-image-dialog';
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {
 	dateStyle: 'medium',
@@ -56,7 +57,9 @@ type ImageGalleryProps = {
 };
 
 export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
-	if (images.length === 0) {
+	const [deletedIds, setDeletedIds] = useState<string[]>([]);
+	const visibleImages = images.filter((image) => !deletedIds.includes(String(image.id)));
+	if (visibleImages.length === 0) {
 		return (
 			<div className="border-border bg-card flex flex-col items-center justify-center rounded-3xl border p-12 text-center sm:p-16">
 				<Badge variant="outline">Gallery empty</Badge>
@@ -75,7 +78,7 @@ export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 
 	return (
 		<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{images.map((image) => {
+			{visibleImages.map((image) => {
 				const prompt = image.prompt || 'No prompt saved.';
 				return (
 					<article key={image.id} className="border-border bg-card flex flex-col overflow-hidden rounded-2xl border">
@@ -102,8 +105,12 @@ export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 										</div>
 									</TooltipContent>
 								</Tooltip>
-								<ImageEditDialog imageId={image.id} size="sm" onEdited={onImageAdded} />
+								<ImageEditDialog image={image} size="sm" onEdited={onImageAdded} />
 								<DownloadMenu imageId={image.id} variant="outline" size="sm" />
+								<DeleteImageDialog
+									imageId={image.id}
+									onDeleted={() => setDeletedIds((previous) => [...previous, String(image.id)])}
+								/>
 							</div>
 						</div>
 					</article>
