@@ -4,8 +4,13 @@ import { TabNavigation } from '@/components/tab-navigation';
 import { getWebsiteBasePath, toWebsiteCurrency } from '@/lib/i18n/utils';
 import { requireSessions } from '@/server/session';
 import { Card } from '@socialincome/design-system/data-display/card/card';
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import type { PropsWithChildren } from 'react';
+
+export const metadata: Metadata = {
+	robots: { index: false, follow: false },
+};
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang, currency } = await params;

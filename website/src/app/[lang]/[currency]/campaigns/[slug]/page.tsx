@@ -1,9 +1,9 @@
 import { type DefaultLayoutPropsWithSlug } from '@/app/[lang]/[currency]';
+import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
 import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import { loadCampaignDetailData } from '@/components/storyblok/campaign/load-campaign-detail-data';
 import { toWebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { getWebsiteAlternates } from '@/lib/utils/metadata';
-import { getCampaignFallbackMetadata, getCampaignPageMetadata } from '@/modules/campaigns/campaign-public-website.service';
+import { getStoryblokMetadataImage } from '@/lib/storyblok/storyblok-utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
 import { notFound } from 'next/navigation';
 
@@ -11,22 +11,17 @@ export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) =
 	const { slug, lang } = await params;
 	const data = await loadCampaignDetailData(slug, lang);
 
-	if (!data) {
-		const fallback = await getCampaignFallbackMetadata(lang as WebsiteLanguage);
-
-		return fallback.success ? fallback.data : {};
-	}
-
-	const metadata = await getCampaignPageMetadata(lang as WebsiteLanguage, {
-		title: data.title,
-		description: data.description,
-		primaryImage: data.primaryImage,
-	});
-
-	return {
-		...(metadata.success ? metadata.data : {}),
-		...getWebsiteAlternates(lang as WebsiteLanguage, `campaigns/${slug}`),
-	};
+	return getPageMetadata(
+		lang as WebsiteLanguage,
+		`campaigns/${slug}`,
+		data
+			? {
+					title: data.title,
+					description: data.description,
+					image: getStoryblokMetadataImage(data.primaryImage, data.title),
+				}
+			: {},
+	);
 };
 
 export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlug) {

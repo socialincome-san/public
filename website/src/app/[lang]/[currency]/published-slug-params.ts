@@ -6,8 +6,8 @@ const EMPTY_PARAMS_PLACEHOLDER_SLUG = '__no-published-slugs__';
 
 /**
  * Only prerendered slugs get their metadata in the static <head>. Unlisted slugs stream it into <body>,
- * where Google ignores rel=canonical and hreflang. Every slug is listed for every language because
- * hreflang links all languages, translated or not.
+ * where Google ignores rel=canonical and hreflang. Every slug is listed for every language because an
+ * untranslated language still renders the fallback content, and its canonical must point to a translation.
  */
 export const getPublishedSlugParams = async (parentPathTail = '') => {
 	const result = await getPublishedPageLinks();

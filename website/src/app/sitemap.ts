@@ -1,77 +1,35 @@
+import { findPathTails, getLinkPathTails } from '@/app/[lang]/[currency]/page-metadata';
 import { getCampaignStoryblokSlug } from '@/components/storyblok/campaign/campaign.utils';
 import { defaultCurrency, defaultLanguage, mainWebsiteLanguages, type WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	getWebsitePathTailFromStoryblokSlug,
 	getWebsitePublicPath,
-	isRoutableWebsiteStoryblokSlug,
 	WEBSITE_JOURNAL_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
+import { type LanguagePathTails } from '@/lib/utils/metadata';
 import { WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
 import { getCampaigns, getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { StoryblokPublishedLink } from '@/modules/storyblok-content/storyblok-content.types';
 import type { MetadataRoute } from 'next';
 
-type PathTailByLanguage = Map<WebsiteLanguage, string>;
-
 // Only the canonical currency: the other currencies show the same content with converted amounts.
 const absoluteUrl = (lang: WebsiteLanguage, pathTail: string) =>
 	`${WEBSITE_ORIGIN}${getWebsitePublicPath(lang, defaultCurrency, pathTail)}`;
 
-const isInvalidPathTail = (pathTail: string) =>
-	mainWebsiteLanguages.some((websiteLang) => pathTail === websiteLang || pathTail.startsWith(`${websiteLang}/`));
-
-const toPathTail = (slug: string): string | undefined => {
-	if (!isRoutableWebsiteStoryblokSlug(slug)) {
-		return undefined;
-	}
-
-	const pathTail = getWebsitePathTailFromStoryblokSlug(slug);
-	if (pathTail.startsWith('auth/') || isInvalidPathTail(pathTail)) {
-		return undefined;
-	}
-
-	return pathTail;
-};
-
-const isIndividualCampaignPathTail = (pathTail: string) => pathTail.startsWith('campaigns/');
-
-const collectLanguagesForLink = (link: StoryblokPublishedLink): PathTailByLanguage => {
-	const languages = new Map<WebsiteLanguage, string>();
-	const enAlternate = link.alternates?.find((alternate) => alternate.lang === defaultLanguage);
-	const defaultPathTail = toPathTail(link.slug);
-
-	if (defaultPathTail && enAlternate?.published !== false) {
-		languages.set(defaultLanguage, defaultPathTail);
-	}
-
-	for (const alternate of link.alternates ?? []) {
-		if (!mainWebsiteLanguages.includes(alternate.lang as WebsiteLanguage) || alternate.published === false) {
-			continue;
-		}
-
-		const pathTail = toPathTail(alternate.translated_slug);
-		if (pathTail) {
-			languages.set(alternate.lang as WebsiteLanguage, pathTail);
-		}
-	}
-
-	return languages;
-};
-
-const collectStoryblokEntries = (links: StoryblokPublishedLink[]): PathTailByLanguage[] => {
-	const entries: PathTailByLanguage[] = [];
+const collectStoryblokEntries = (links: StoryblokPublishedLink[]): LanguagePathTails[] => {
+	const entries: LanguagePathTails[] = [];
 
 	for (const link of links) {
 		if (link.is_folder || !link.published) {
 			continue;
 		}
 
-		const defaultPathTail = toPathTail(link.slug);
-		if (defaultPathTail && isIndividualCampaignPathTail(defaultPathTail)) {
+		// Campaigns are listed from their own stories below.
+		if (getWebsitePathTailFromStoryblokSlug(link.slug).startsWith('campaigns/')) {
 			continue;
 		}
 
-		const languages = collectLanguagesForLink(link);
+		const languages = getLinkPathTails(link);
 		if (languages.size > 0) {
 			entries.push(languages);
 		}
@@ -80,7 +38,8 @@ const collectStoryblokEntries = (links: StoryblokPublishedLink[]): PathTailByLan
 	return entries;
 };
 
-const collectCampaignEntries = async (): Promise<PathTailByLanguage[]> => {
+// Only listed campaigns, in the languages their page metadata names.
+const collectCampaignEntries = async (links: StoryblokPublishedLink[]): Promise<LanguagePathTails[]> => {
 	const result = await getCampaigns(defaultLanguage);
 	if (!result.success) {
 		return [];
@@ -92,13 +51,11 @@ const collectCampaignEntries = async (): Promise<PathTailByLanguage[]> => {
 			return [];
 		}
 
-		const pathTail = `campaigns/${slug}`;
-
-		return [new Map(mainWebsiteLanguages.map((lang) => [lang, pathTail]))];
+		return [findPathTails(links, `campaigns/${slug}`)];
 	});
 };
 
-const ensureJournalIndex = (entries: PathTailByLanguage[]) => {
+const ensureJournalIndex = (entries: LanguagePathTails[]) => {
 	const hasJournalIndex = entries.some((languages) =>
 		[...languages.values()].some((pathTail) => pathTail === WEBSITE_JOURNAL_PATH_SEGMENT),
 	);
@@ -108,7 +65,7 @@ const ensureJournalIndex = (entries: PathTailByLanguage[]) => {
 	}
 };
 
-const getPrimaryEntry = (languages: PathTailByLanguage) => {
+const getPrimaryEntry = (languages: LanguagePathTails) => {
 	if (languages.has(defaultLanguage)) {
 		return { lang: defaultLanguage, pathTail: languages.get(defaultLanguage)! };
 	}
@@ -121,8 +78,8 @@ const getPrimaryEntry = (languages: PathTailByLanguage) => {
 	return { lang, pathTail };
 };
 
-const dedupeEntries = (entries: PathTailByLanguage[]) => {
-	const byPathTail = new Map<string, PathTailByLanguage>();
+const dedupeEntries = (entries: LanguagePathTails[]) => {
+	const byPathTail = new Map<string, LanguagePathTails>();
 
 	for (const languages of entries) {
 		const primary = getPrimaryEntry(languages);
@@ -134,7 +91,7 @@ const dedupeEntries = (entries: PathTailByLanguage[]) => {
 	return [...byPathTail.values()];
 };
 
-const buildEntry = (languages: PathTailByLanguage): MetadataRoute.Sitemap => {
+const buildEntry = (languages: LanguagePathTails): MetadataRoute.Sitemap => {
 	const primary = getPrimaryEntry(languages);
 	if (!primary) {
 		return [];
@@ -160,7 +117,10 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 			throw new Error(linksResult.error ?? 'Failed to fetch Storyblok page links');
 		}
 
-		const entries = dedupeEntries([...collectStoryblokEntries(linksResult.data), ...(await collectCampaignEntries())]);
+		const entries = dedupeEntries([
+			...collectStoryblokEntries(linksResult.data),
+			...(await collectCampaignEntries(linksResult.data)),
+		]);
 
 		ensureJournalIndex(entries);
 
