@@ -1,8 +1,8 @@
+import { getSearchQuery } from '@/components/filters/filter-query';
 import type { LocalPartnerStory } from './local-partner.types';
 import {
 	getCountryFilterOptions,
 	getCountryQuery,
-	getSearchQuery,
 	localPartnerMatchesCountryQuery,
 	localPartnerMatchesSearchQuery,
 } from './local-partners-overview.server';

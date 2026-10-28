@@ -85,6 +85,7 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 								},
 							]
 						: []),
+					...(programDetailData.stats?.isConcluded ? [{ label: t('wallet.concluded') }] : []),
 				]}
 			/>
 			<div className="flex flex-col gap-8 py-8">

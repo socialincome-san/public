@@ -8,15 +8,13 @@ import {
 	DropdownMenuTrigger,
 } from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { applyQueryParamOverrides, type FilterQueryParamOverride } from './filter-query';
 
 type FilterOption = {
 	value: string;
 	label: string;
-};
-
-export type FilterQueryParamOverride = {
-	key: string;
-	value?: string;
+	/** Shown in the pill once selected, when the label is too long for it, e.g. "SDG 12" */
+	shortLabel?: string;
 };
 
 type FilterDropdownProps = {
@@ -33,16 +31,6 @@ type FilterDropdownProps = {
 	queryParamOverrides?: FilterQueryParamOverride[];
 };
 
-const applyQueryParamOverrides = (params: URLSearchParams, overrides: FilterQueryParamOverride[] = []) => {
-	overrides.forEach(({ key, value }) => {
-		if (value) {
-			params.set(key, value);
-		} else {
-			params.delete(key);
-		}
-	});
-};
-
 export const FilterDropdown = ({
 	allLabel,
 	options,
@@ -56,7 +44,7 @@ export const FilterDropdown = ({
 	const searchParams = useSearchParams();
 	const selectedOption = options.find((option) => option.value === selectedValue);
 	const isHighlighted = clearValue !== undefined ? selectedValue !== clearValue : Boolean(selectedOption);
-	const buttonLabel = selectedOption?.label ?? allLabel ?? '';
+	const buttonLabel = selectedOption?.shortLabel ?? selectedOption?.label ?? allLabel ?? '';
 
 	const updateFilter = (value: string | undefined) => {
 		const nextParams = new URLSearchParams(searchParams.toString());
@@ -72,6 +60,11 @@ export const FilterDropdown = ({
 		const nextQuery = nextParams.toString();
 		router.replace(nextQuery.length > 0 ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
 	};
+
+	// With a single option there is nothing to choose: it would narrow the list to what it already shows
+	if (options.length < 2) {
+		return null;
+	}
 
 	return (
 		<div className="min-w-0 flex-auto">

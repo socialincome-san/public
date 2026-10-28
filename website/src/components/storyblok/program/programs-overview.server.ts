@@ -1,25 +1,16 @@
 import type { AnySearchParams } from '@/app/page-props';
+import { getQueryValue } from '@/components/filters/filter-query';
+import type { FilterStatus } from '@/components/filters/status-filter';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { getCountryNameByCode } from '@/lib/types/country';
-import type { PublicProgramFilterDataMap } from '@/modules/programs/program.types';
+import type { PublicProgramFilterDataMap, PublicProgramStatsMap } from '@/modules/programs/program.types';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from './program.utils';
-import { COUNTRY_QUERY_KEY, FOCUS_QUERY_KEY, SEARCH_QUERY_KEY } from './programs-overview-query';
+import { COUNTRY_QUERY_KEY, FOCUS_QUERY_KEY } from './programs-overview-query';
 
 type FilterOption = {
 	value: string;
 	label: string;
-};
-
-const getQueryValue = (searchParams: AnySearchParams | undefined, key: string) => {
-	const value = searchParams?.[key];
-	const firstValue = Array.isArray(value) ? value.at(0) : value;
-
-	return typeof firstValue === 'string' ? firstValue.trim() : '';
-};
-
-export const getSearchQuery = (searchParams?: AnySearchParams) => {
-	return getQueryValue(searchParams, SEARCH_QUERY_KEY);
 };
 
 export const getCountryQuery = (searchParams?: AnySearchParams) => {
@@ -29,6 +20,16 @@ export const getCountryQuery = (searchParams?: AnySearchParams) => {
 export const getFocusQuery = (searchParams?: AnySearchParams) => {
 	return getQueryValue(searchParams, FOCUS_QUERY_KEY);
 };
+
+// Every program that isn't marked as concluded counts as active, also when its stats are missing
+export const getProgramStatus = (program: ProgramStory, statsByPortalSlug: PublicProgramStatsMap): FilterStatus =>
+	statsByPortalSlug[getProgramPortalSlug(program.content)]?.isConcluded ? 'concluded' : 'active';
+
+export const programMatchesStatusQuery = (
+	program: ProgramStory,
+	statsByPortalSlug: PublicProgramStatsMap,
+	selectedStatus: FilterStatus | undefined,
+) => !selectedStatus || getProgramStatus(program, statsByPortalSlug) === selectedStatus;
 
 const normalizeSearchValue = (value: string) => value.toLowerCase();
 

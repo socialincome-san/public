@@ -2,7 +2,8 @@ import type { AnySearchParams } from '@/app/page-props';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CampaignsOverview } from '@/components/campaign/campaigns-overview';
-import { getStateQuery, resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
+import { resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
+import { showsFilterBar } from '@/components/filters/filter-query';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -21,7 +22,12 @@ type Props = {
 	searchParams: Promise<AnySearchParams>;
 };
 
-const FilteredCampaigns = async ({ lang, currency, searchParams }: Omit<Props, 'overview'>) => {
+const FilteredCampaigns = async ({
+	lang,
+	currency,
+	searchParams,
+	showFilters,
+}: Omit<Props, 'overview'> & { showFilters: boolean }) => {
 	const [campaignStoriesResult, campaignsResult, resolvedSearchParams] = await Promise.all([
 		getCampaignsAction(lang),
 		// Activity filter is applied in CampaignsOverview via isCampaignPubliclyActive.
@@ -42,8 +48,8 @@ const FilteredCampaigns = async ({ lang, currency, searchParams }: Omit<Props, '
 			statsById={statsById}
 			lang={lang}
 			currency={currency}
-			showStateFilter={true}
-			selectedState={getStateQuery(resolvedSearchParams)}
+			searchParams={showFilters ? resolvedSearchParams : {}}
+			showFilters={showFilters}
 		/>
 	);
 };
@@ -65,7 +71,12 @@ export const CampaignsOverviewPage = async ({ overview, lang, currency, searchPa
 				<div className="flex w-full flex-col gap-8">
 					<PageIntro title={title} description={text} />
 					<Suspense fallback={<AppLoadingSkeleton />}>
-						<FilteredCampaigns lang={lang} currency={currency} searchParams={searchParams} />
+						<FilteredCampaigns
+							lang={lang}
+							currency={currency}
+							searchParams={searchParams}
+							showFilters={showsFilterBar(overview.content)}
+						/>
 					</Suspense>
 				</div>
 			</BlockWrapper>
