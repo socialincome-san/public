@@ -59,8 +59,8 @@ export const POST = async (request: Request) => {
 		if (width !== format.width || height !== format.height) {
 			return errorResponse('The image provider did not return the selected format. Please try again.', 502);
 		}
-		await saveImage(prompt, image);
-		return Response.json({ error: null, imageBase64: image.base64, mediaType: image.mediaType, width, height });
+		const stored = await saveImage(prompt, image);
+		return Response.json({ error: null, ...stored, mediaType: image.mediaType, width, height });
 	} catch (error) {
 		console.error('Image generation failed', error);
 		return errorResponse('Image generation failed', 500);
@@ -68,4 +68,4 @@ export const POST = async (request: Request) => {
 };
 
 const errorResponse = (error: string, status: number) =>
-	Response.json({ error, imageBase64: null, mediaType: null, width: null, height: null }, { status });
+	Response.json({ error, imageUrl: null, previewUrl: null, mediaType: null, width: null, height: null }, { status });

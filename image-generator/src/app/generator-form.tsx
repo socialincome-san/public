@@ -1,7 +1,7 @@
 'use client';
 
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
-import { isGenerateResponse } from '@/lib/images';
+import { imageDownloadUrl, isGenerateResponse } from '@/lib/images';
 import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
 import { AddMenu } from '@socialincome/design-system/actions/add-menu/add-menu';
 import { Button } from '@socialincome/design-system/actions/button/button';
@@ -32,7 +32,7 @@ const generate = async (previous: GenerationState, formData: FormData): Promise<
 		}
 		return {
 			...previous,
-			imageSrc: json.imageBase64 && json.mediaType ? `data:${json.mediaType};base64,${json.imageBase64}` : null,
+			imageSrc: json.imageUrl,
 			error: json.error,
 			width: json.width ?? previous.width,
 			height: json.height ?? previous.height,
@@ -83,11 +83,12 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 							width={width}
 							height={height}
 							alt="Generated"
+							unoptimized
 							className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
 						/>
 						<div className="flex flex-wrap items-center justify-center gap-3">
 							<Button asChild size="md">
-								<a href={imageSrc} download="generated-image.png">
+								<a href={imageDownloadUrl(imageSrc)} download>
 									Download PNG
 								</a>
 							</Button>

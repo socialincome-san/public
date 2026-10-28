@@ -3,6 +3,8 @@ export type GalleryImage = {
 	prompt: string | null;
 	media_type: string;
 	created_at: string | null;
+	imageUrl: string;
+	previewUrl: string;
 };
 
 export type GalleryBatch = {
@@ -11,15 +13,27 @@ export type GalleryBatch = {
 };
 
 export type GeneratedImage = {
-	base64: string;
+	uint8Array: Uint8Array;
 	mediaType: string;
+};
+
+export type StoredImage = {
+	imageUrl: string;
+	previewUrl: string;
+};
+
+export const imageDownloadUrl = (imageUrl: string) => {
+	const url = new URL(imageUrl);
+	url.searchParams.set('download', '1');
+	return url.toString();
 };
 
 export const isGenerateResponse = (
 	value: unknown,
 ): value is {
 	error: string | null;
-	imageBase64: string | null;
+	imageUrl: string | null;
+	previewUrl: string | null;
 	mediaType: string | null;
 	width: number | null;
 	height: number | null;
@@ -28,8 +42,10 @@ export const isGenerateResponse = (
 	value !== null &&
 	'error' in value &&
 	(value.error === null || typeof value.error === 'string') &&
-	'imageBase64' in value &&
-	(value.imageBase64 === null || typeof value.imageBase64 === 'string') &&
+	'imageUrl' in value &&
+	(value.imageUrl === null || typeof value.imageUrl === 'string') &&
+	'previewUrl' in value &&
+	(value.previewUrl === null || typeof value.previewUrl === 'string') &&
 	'mediaType' in value &&
 	(value.mediaType === null || typeof value.mediaType === 'string') &&
 	'width' in value &&
@@ -55,5 +71,9 @@ export const isGalleryBatch = (value: unknown): value is GalleryBatch =>
 			'media_type' in image &&
 			typeof image.media_type === 'string' &&
 			'created_at' in image &&
-			(image.created_at === null || typeof image.created_at === 'string'),
+			(image.created_at === null || typeof image.created_at === 'string') &&
+			'imageUrl' in image &&
+			typeof image.imageUrl === 'string' &&
+			'previewUrl' in image &&
+			typeof image.previewUrl === 'string',
 	);

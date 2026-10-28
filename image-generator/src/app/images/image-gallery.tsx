@@ -1,6 +1,6 @@
 'use client';
 
-import { type GalleryImage } from '@/lib/images';
+import { type GalleryImage, imageDownloadUrl } from '@/lib/images';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
@@ -28,7 +28,7 @@ const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string
 	return (
 		<div className="bg-muted/40 relative aspect-video w-full overflow-hidden" aria-busy={status === 'loading'}>
 			<Image
-				src={`/api/gallery-images/${image.id}`}
+				src={image.previewUrl}
 				width={640}
 				height={360}
 				alt={prompt}
@@ -102,7 +102,7 @@ export const ImageGallery = ({ images }: { images: GalleryImage[] }) => {
 									</TooltipContent>
 								</Tooltip>
 								<Button asChild variant="outline" size="sm">
-									<a href={`/api/gallery-images/${image.id}?download=1`} download>
+									<a href={imageDownloadUrl(image.imageUrl)} download>
 										<Download aria-hidden="true" /> Download
 									</a>
 								</Button>
