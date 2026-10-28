@@ -51,7 +51,7 @@ export const DeleteImageDialog = ({ imageId, onDeleted }: { imageId: string | nu
 					<DialogHeader divided={false}>
 						<DialogTitle>Delete image?</DialogTitle>
 						<DialogDescription>
-							This hides the image from the gallery. Other images and versions are not deleted.
+							This deletes the image from the gallery. Other images and versions are not deleted.
 						</DialogDescription>
 					</DialogHeader>
 					{error && (

@@ -74,9 +74,9 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 				label="Version history"
 				items={versions.map((version, index) => ({
 					src: imageUrl(version.id, 'preview'),
-					label: `Version ${index + 1}, ${version.cost_usd === null ? 'price unavailable' : `price ${formatImageCost(version.cost_usd)}`}`,
-					badge: formatImageCost(version.cost_usd),
-					tooltip: version.prompt ?? undefined,
+					label: `Version ${index + 1}`,
+					badge: `V${index + 1}`,
+					tooltip: version.cost_usd === null ? 'Price unavailable' : formatImageCost(version.cost_usd),
 				}))}
 				selectedIndex={activeIndex}
 				disabled={isPending}

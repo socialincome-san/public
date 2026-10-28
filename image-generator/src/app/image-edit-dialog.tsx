@@ -75,8 +75,9 @@ export const ImageEditDialog = ({ image, size, fullWidth, onEdited }: ImageEditD
 							label="Version history"
 							items={versions.map((version, index) => ({
 								src: imageUrl(version.id, 'preview'),
-								label: `Version ${index + 1}, ${version.cost_usd === null ? 'price unavailable' : `price ${formatImageCost(version.cost_usd)}`}`,
-								badge: formatImageCost(version.cost_usd),
+								label: `Version ${index + 1}`,
+								badge: `V${index + 1}`,
+								tooltip: version.cost_usd === null ? 'Price unavailable' : formatImageCost(version.cost_usd),
 							}))}
 							selectedIndex={selectedIndex}
 							disabled={isPending}
@@ -103,7 +104,7 @@ export const ImageEditDialog = ({ image, size, fullWidth, onEdited }: ImageEditD
 									placeholder: 'Describe what should change here …',
 									empty: `Click the image to add up to ${MAX_IMAGE_COMMENTS} comments.`,
 									helpLabel: 'How image edits work',
-									help: 'Click to mark an area, describe the change, then create a new version. Drag pins to move them. Switching versions clears drafts.',
+									help: 'Click to mark an area, describe the change, then create a new version. Drag pins to move them.',
 								}}
 							/>
 						</ImageHistory>

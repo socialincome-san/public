@@ -48,8 +48,7 @@ export const ImageHistory = ({ items, selectedIndex, onSelect, label, disabled, 
 									</button>
 								</TooltipTrigger>
 								<TooltipContent side="right" sideOffset={8}>
-									{item.label}
-									{item.tooltip ? ` · ${item.tooltip}` : ''}
+									{item.tooltip ?? item.label}
 								</TooltipContent>
 							</Tooltip>
 						</li>
