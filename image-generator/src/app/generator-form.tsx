@@ -13,11 +13,16 @@ import { DropdownMenuItem } from '@socialincome/design-system/overlays/dropdown-
 import { Upload } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { type KeyboardEvent, type ReactNode, useActionState, useRef, useState } from 'react';
 
 type GenerationState = { imageSrc: string | null; error: string | null; width: number; height: number };
 
-const generate = async (previous: GenerationState, formData: FormData): Promise<GenerationState> => {
+export const generate = async (
+	refresh: () => void,
+	previous: GenerationState,
+	formData: FormData,
+): Promise<GenerationState> => {
 	const prompt = formData.get('prompt');
 	if (typeof prompt !== 'string' || !prompt.trim()) return previous;
 
@@ -30,6 +35,7 @@ const generate = async (previous: GenerationState, formData: FormData): Promise<
 		if (!isGenerateResponse(json) || (!response.ok && !json.error)) {
 			return { ...previous, error: 'Image generation failed. Please try again.' };
 		}
+		if (response.ok && !json.error && json.imageUrl) refresh();
 		return {
 			...previous,
 			imageSrc: json.imageUrl,
@@ -43,10 +49,11 @@ const generate = async (previous: GenerationState, formData: FormData): Promise<
 };
 
 export const GeneratorForm = ({ children }: { children: ReactNode }) => {
+	const router = useRouter();
 	const referenceInputRef = useRef<HTMLInputElement>(null);
 	const [prompt, setPrompt] = useState('');
 	const [aspectRatio, setAspectRatio] = useState<string>(DEFAULT_IMAGE_FORMAT.value);
-	const [{ imageSrc, error, width, height }, formAction, isPending] = useActionState(generate, {
+	const [{ imageSrc, error, width, height }, formAction, isPending] = useActionState(generate.bind(null, router.refresh), {
 		imageSrc: null,
 		error: null,
 		width: DEFAULT_IMAGE_FORMAT.width,
