@@ -11,7 +11,8 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: 'A wrapping list of tags, optionally with a count each, e.g. circles or contribution roles.',
+				component:
+					'A wrapping list of tags, optionally with a count each, e.g. circles or contribution roles. Light tags stand apart from the default ones, and tags with a link show an arrow.',
 			},
 		},
 	},
@@ -30,6 +31,21 @@ export const WithCounts: Story = {
 			{ label: 'Research', count: 4 },
 			{ label: 'Translation', count: 3 },
 			{ label: 'Development', count: 1 },
+		],
+	},
+};
+
+export const WithLightTags: Story = {
+	args: {
+		items: [{ label: 'Technology' }, { label: 'Partnerships' }, { label: 'Community', variant: 'light' }],
+	},
+};
+
+export const WithLinks: Story = {
+	args: {
+		items: [
+			{ label: 'Technology Circle', href: '#', variant: 'solid' },
+			{ label: 'Community Circle', href: '#', variant: 'light' },
 		],
 	},
 };

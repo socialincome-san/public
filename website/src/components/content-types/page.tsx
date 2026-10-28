@@ -1,5 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { blockMargins } from '@/components/content-blocks/block-margins';
+import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
@@ -26,6 +27,7 @@ import { ReservesBlock } from '@/components/content-blocks/reserves-block';
 import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
 import { RunwayMonthGridBlock } from '@/components/content-blocks/runway-month-grid-block';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
+import { TaskCardsBlock } from '@/components/content-blocks/task-cards';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
@@ -62,6 +64,8 @@ const renderPageBlock = (
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ): ReactNode => {
 	switch (block.component) {
+		case 'circleGrid':
+			return <CircleGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'donationGlobe':
 			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':
@@ -122,6 +126,8 @@ const renderPageBlock = (
 			return <RichtextButtonHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'spacer':
 			return <SpacerBlock blok={block} />;
+		case 'taskCards':
+			return <TaskCardsBlock blok={block} />;
 		case 'teamGrid':
 			return <TeamGridBlock blok={block} lang={lang} />;
 		case 'testimonial':

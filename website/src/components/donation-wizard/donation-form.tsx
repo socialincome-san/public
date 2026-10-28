@@ -18,7 +18,7 @@ export const DonationForm = ({ campaignId, onBeforeOpen }: Props) => {
 	const form = useDonationFormState();
 
 	return (
-		<div data-testid="donation-wizard-hero-form" ref={observeDonationForm} className="w-full">
+		<div data-testid="donation-wizard-hero-form" data-clarity-mask="true" ref={observeDonationForm} className="w-full">
 			<DonationAmountFields
 				placement="hero"
 				currency={currency}
