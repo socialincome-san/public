@@ -33,6 +33,8 @@ jest.mock('@/modules/auth/auth.service', () => ({
 }));
 jest.mock('@/modules/users/user.service', () => ({ isAdmin: () => Promise.resolve({ success: true, data: true }) }));
 
+jest.mock('@/modules/recipients/recipient.service', () => ({ recipientStatusService: {} }));
+
 import type { UserSession } from '@/modules/users/user.types';
 import { localPartnerUpdateSchema } from './local-partner.schemas';
 import { deleteLocalPartner, updateLocalPartner } from './local-partner.service';

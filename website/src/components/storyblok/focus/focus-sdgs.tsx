@@ -1,3 +1,4 @@
+import { cn } from '@socialincome/design-system/cn';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { InfoIcon } from 'lucide-react';
 import { getSdg, type SdgValue } from './sdgs';
@@ -24,7 +25,8 @@ const resolveSdgs = (values: SdgValue[]) => {
 export const FocusSdgs = ({ values = [], label, layout = 'stacked' }: Props) => {
 	const sdgs = resolveSdgs(values);
 	const badges = (
-		<div className="flex min-h-7 flex-wrap items-center gap-1">
+		// Stacked next to stats, the badge row is as tall as their text-2xl numbers so the labels line up
+		<div className={cn('flex flex-wrap items-center gap-1', layout === 'stacked' ? 'min-h-8' : 'min-h-7')}>
 			{sdgs.length > 0 ? (
 				sdgs.map((sdg) => (
 					<span

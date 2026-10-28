@@ -24,3 +24,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+/** Inside a FilterBar the compact placeholder shows while the search sits below the filters; see Layout/FilterBar */
+export const WithCompactPlaceholder: Story = {
+	args: { placeholder: 'Search', compactPlaceholder: 'Search 18 programs' },
+};

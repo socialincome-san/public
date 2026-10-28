@@ -1,3 +1,4 @@
+import { getSearchQuery } from '@/components/filters/filter-query';
 import type { PublicFocusStatsBySlugMap } from '@/modules/focuses/focus.types';
 import type { FocusStory } from './focus.types';
 import {
@@ -8,7 +9,6 @@ import {
 	getCountryQuery,
 	getSdgFilterOptions,
 	getSdgQuery,
-	getSearchQuery,
 	sortFocusesByCandidatesCountDesc,
 } from './focuses-overview.server';
 
@@ -84,9 +84,9 @@ describe('focuses overview server helpers', () => {
 		const sdgOptions = getSdgFilterOptions(focuses);
 
 		expect(sdgOptions).toEqual([
-			{ value: '1', label: 'SDG 1: No Poverty' },
-			{ value: '3', label: 'SDG 3: Good Health and Well-being' },
-			{ value: '4', label: 'SDG 4: Quality Education' },
+			{ value: '1', label: 'SDG 1: No Poverty', shortLabel: 'SDG 1' },
+			{ value: '3', label: 'SDG 3: Good Health and Well-being', shortLabel: 'SDG 3' },
+			{ value: '4', label: 'SDG 4: Quality Education', shortLabel: 'SDG 4' },
 		]);
 	});
 

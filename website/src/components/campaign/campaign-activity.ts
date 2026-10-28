@@ -1,5 +1,3 @@
-import type { PublicCampaignActivity } from '@/modules/campaigns/campaign.types';
-
 type CampaignActivityInput = {
 	endDate: Date;
 	goal?: unknown;
@@ -22,12 +20,4 @@ export const isCampaignActive = ({ endDate, goal, amountCollected, now = Date.no
 	}
 
 	return amountCollected < goalAmount;
-};
-
-export const matchesPublicCampaignActivity = (isActive: boolean, activity: PublicCampaignActivity): boolean => {
-	if (activity === 'all') {
-		return true;
-	}
-
-	return activity === 'active' ? isActive : !isActive;
 };

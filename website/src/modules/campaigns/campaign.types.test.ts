@@ -1,4 +1,4 @@
-import { isCampaignActive, matchesPublicCampaignActivity } from '@/components/campaign/campaign-activity';
+import { isCampaignActive } from '@/components/campaign/campaign-activity';
 import { readTurnstileToken } from './campaign.schemas';
 
 const now = new Date('2025-06-15T12:00:00.000Z').getTime();
@@ -68,19 +68,6 @@ describe('isCampaignPubliclyActive', () => {
 				now,
 			}),
 		).toBe(true);
-	});
-});
-
-describe('matchesPublicCampaignActivity', () => {
-	test.each([
-		{ isActive: true, activity: 'active' as const, expected: true },
-		{ isActive: false, activity: 'active' as const, expected: false },
-		{ isActive: true, activity: 'inactive' as const, expected: false },
-		{ isActive: false, activity: 'inactive' as const, expected: true },
-		{ isActive: true, activity: 'all' as const, expected: true },
-		{ isActive: false, activity: 'all' as const, expected: true },
-	])('returns $expected for isActive=$isActive activity=$activity', ({ isActive, activity, expected }) => {
-		expect(matchesPublicCampaignActivity(isActive, activity)).toBe(expected);
 	});
 });
 
