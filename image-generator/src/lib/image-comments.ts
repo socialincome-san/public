@@ -4,7 +4,12 @@ export const MAX_IMAGE_COMMENTS = 20;
 export const MAX_COMMENT_LENGTH = 2000;
 
 /** `x` and `y` are fractions of the image size (0–1), measured from the top-left corner. */
-type ImageComment = { x: number; y: number; text: string };
+export type ImageComment = { x: number; y: number; text: string };
+
+export const getImageCommentPoint = (
+	{ x, y }: Pick<ImageComment, 'x' | 'y'>,
+	{ width, height }: { width: number; height: number },
+) => ({ x: Math.min(width - 1, x * width), y: Math.min(height - 1, y * height) });
 
 const isFraction = (value: unknown): value is number =>
 	typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
