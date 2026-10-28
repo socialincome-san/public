@@ -117,6 +117,19 @@ const OPEN_GRAPH_LOCALES: Partial<Record<WebsiteLanguage, string>> = {
 const getWebsitePath = (language: WebsiteLanguage, pathTail: string) =>
 	getWebsitePublicPath(language, defaultCurrency, pathTail);
 
+const getContentLanguage = (lang: WebsiteLanguage, pathTails: LanguagePathTails) => {
+	const languages = mainWebsiteLanguages.filter((language) => pathTails.has(language));
+
+	return pathTails.has(lang) ? lang : (languages.find((language) => language === defaultLanguage) ?? languages[0]);
+};
+
+/** The canonical path of a page: its own translation, or the one that a language without a translation falls back to. */
+export const getCanonicalPath = (lang: WebsiteLanguage, pathTails: LanguagePathTails) => {
+	const contentLanguage = getContentLanguage(lang, pathTails);
+
+	return contentLanguage ? getWebsitePath(contentLanguage, pathTails.get(contentLanguage) ?? '') : undefined;
+};
+
 export type WebsitePageMetadata = {
 	title?: string | null;
 	description?: string | null;
@@ -140,11 +153,9 @@ export const getWebsitePageMetadata = async (
 	{ title, description, image, article, ...metadata }: WebsitePageMetadata,
 ): Promise<Metadata> => {
 	const languages = mainWebsiteLanguages.filter((language) => pathTails.has(language));
-	const contentLanguage = pathTails.has(lang)
-		? lang
-		: (languages.find((language) => language === defaultLanguage) ?? languages[0]);
+	const contentLanguage = getContentLanguage(lang, pathTails);
 	const path = (language: WebsiteLanguage) => getWebsitePath(language, pathTails.get(language) ?? '');
-	const canonical = contentLanguage ? path(contentLanguage) : undefined;
+	const canonical = getCanonicalPath(lang, pathTails);
 
 	const defaults = await getMetadata(lang, 'website-common');
 	const pageTitle = formatPageTitle(title);

@@ -272,9 +272,6 @@ export const createWebsiteCirclePath = (circleCode: string, language: string, cu
 export const createWebsitePeoplePath = (language: string, currency: WebsiteCurrency) =>
 	createWebsitePath(language, currency, WEBSITE_PEOPLE_PATH_SEGMENT);
 
-const createWebsiteJournalArticleCanonicalUrl = (slug: string, language: string) =>
-	`${WEBSITE_ORIGIN}${getWebsiteBasePath(language, defaultCurrency)}/journal/${slug}`;
-
 export const resolveStoryblokLink = (
 	link: StoryblokMultilink | undefined,
 	language: string,
@@ -347,11 +344,15 @@ export const getArticlePageMetadata = (story: ISbStoryData<ResolvedArticle>, lan
 	} satisfies WebsitePageMetadata;
 };
 
-export const getArticlePageStructuredData = (story: ISbStoryData<ResolvedArticle>, language: string, slug: string) => {
+export const getArticlePageStructuredData = (
+	story: ISbStoryData<ResolvedArticle>,
+	language: string,
+	canonicalPath: string,
+) => {
 	const image = getStoryblokMetadataImage(story.content.image);
 
 	return getArticleStructuredData({
-		url: createWebsiteJournalArticleCanonicalUrl(slug, language),
+		url: `${WEBSITE_ORIGIN}${canonicalPath}`,
 		headline: story.content.title,
 		description: story.content.leadText?.trim(),
 		image: typeof image === 'string' ? image : image.url,

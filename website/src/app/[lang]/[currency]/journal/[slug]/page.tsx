@@ -1,8 +1,9 @@
-import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
+import { getPageCanonicalPath, getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
 import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { JsonLd } from '@/components/structured-data/json-ld';
-import { toWebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { defaultCurrency, toWebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import { getArticlePageMetadata, getArticlePageStructuredData } from '@/lib/storyblok/storyblok-utils';
 import { getJournalArticle, getJournalArticlePageData } from '@/modules/journal/journal.cache';
 import { getTranslations } from 'next-intl/server';
@@ -29,7 +30,11 @@ export default async function Page(props: JournalArticlePageProps) {
 	const { slug, lang, currency: currencySegment } = await props.params;
 	const currency = toWebsiteCurrency(currencySegment);
 
-	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('website-common')]);
+	const [t, tCommon, canonicalPath] = await Promise.all([
+		getTranslations('website-journal'),
+		getTranslations('website-common'),
+		getPageCanonicalPath(lang, `journal/${slug}`),
+	]);
 
 	const pageResult = await getJournalArticlePageData({
 		lang,
@@ -45,7 +50,13 @@ export default async function Page(props: JournalArticlePageProps) {
 
 	return (
 		<>
-			<JsonLd data={getArticlePageStructuredData(pageResult.data.story, lang, slug)} />
+			<JsonLd
+				data={getArticlePageStructuredData(
+					pageResult.data.story,
+					lang,
+					canonicalPath ?? getWebsitePublicPath(lang, defaultCurrency, `journal/${slug}`),
+				)}
+			/>
 			<ArticleDetail
 				story={pageResult.data.story}
 				slug={slug}

@@ -1,6 +1,11 @@
 import { defaultLanguage, mainWebsiteLanguages, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getWebsitePathTailFromStoryblokSlug, isRoutableWebsiteStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
-import { getWebsitePageMetadata, type LanguagePathTails, type WebsitePageMetadata } from '@/lib/utils/metadata';
+import {
+	getCanonicalPath,
+	getWebsitePageMetadata,
+	type LanguagePathTails,
+	type WebsitePageMetadata,
+} from '@/lib/utils/metadata';
 import { getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { StoryblokPublishedLink } from '@/modules/storyblok-content/storyblok-content.types';
 
@@ -26,7 +31,7 @@ export const getLinkPathTails = (link: StoryblokPublishedLink): LanguagePathTail
 	const enAlternate = link.alternates?.find((alternate) => alternate.lang === defaultLanguage);
 	const defaultPathTail = toPathTail(link.slug);
 
-	if (defaultPathTail && enAlternate?.published !== false) {
+	if (defaultPathTail !== undefined && enAlternate?.published !== false) {
 		languages.set(defaultLanguage, defaultPathTail);
 	}
 
@@ -36,7 +41,7 @@ export const getLinkPathTails = (link: StoryblokPublishedLink): LanguagePathTail
 		}
 
 		const pathTail = toPathTail(alternate.translated_slug);
-		if (pathTail) {
+		if (pathTail !== undefined) {
 			languages.set(alternate.lang as WebsiteLanguage, pathTail);
 		}
 	}
@@ -62,6 +67,9 @@ const getPagePathTails = async (pathTail: string) => {
 
 	return findPathTails(result.success ? result.data : [], pathTail);
 };
+
+export const getPageCanonicalPath = async (lang: WebsiteLanguage, pathTail: string) =>
+	getCanonicalPath(lang, await getPagePathTails(pathTail));
 
 export const getPageMetadata = async (lang: WebsiteLanguage, pathTail: string, page: WebsitePageMetadata) =>
 	getWebsitePageMetadata(lang, await getPagePathTails(pathTail), page);

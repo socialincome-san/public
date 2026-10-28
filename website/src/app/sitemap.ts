@@ -71,7 +71,7 @@ const getPrimaryEntry = (languages: LanguagePathTails) => {
 	}
 
 	const [lang, pathTail] = languages.entries().next().value ?? [];
-	if (!lang || !pathTail) {
+	if (!lang || pathTail === undefined) {
 		return undefined;
 	}
 
