@@ -299,21 +299,23 @@ export const resolveStoryblokLink = (
 const METADATA_IMAGE_WIDTH = 1200;
 const METADATA_IMAGE_HEIGHT = 630;
 
+// Without an image the page falls back to the default share image of its language.
 export const getStoryblokMetadataImage = (
 	asset: { filename?: string | null; focus?: string | null; alt?: string | null } | null | undefined,
 	fallbackAlt?: string,
 ) => {
-	const alt = asset?.alt?.trim() ? asset.alt.trim() : fallbackAlt;
+	if (!asset?.filename) {
+		return undefined;
+	}
+	const alt = asset.alt?.trim() ? asset.alt.trim() : fallbackAlt;
 
 	return toProductionMetadataImage(
-		asset?.filename
-			? {
-					url: formatStoryblokUrlDirect(asset.filename, METADATA_IMAGE_WIDTH, METADATA_IMAGE_HEIGHT, asset.focus),
-					width: METADATA_IMAGE_WIDTH,
-					height: METADATA_IMAGE_HEIGHT,
-					...(alt ? { alt } : {}),
-				}
-			: undefined,
+		{
+			url: formatStoryblokUrlDirect(asset.filename, METADATA_IMAGE_WIDTH, METADATA_IMAGE_HEIGHT, asset.focus),
+			width: METADATA_IMAGE_WIDTH,
+			height: METADATA_IMAGE_HEIGHT,
+			...(alt ? { alt } : {}),
+		},
 		DEFAULT_OPEN_GRAPH_IMAGE_URL,
 	);
 };
@@ -355,7 +357,7 @@ export const getArticlePageStructuredData = (
 		url: `${WEBSITE_ORIGIN}${canonicalPath}`,
 		headline: story.content.title,
 		description: story.content.leadText?.trim(),
-		image: typeof image === 'string' ? image : image.url,
+		image: image === undefined ? DEFAULT_OPEN_GRAPH_IMAGE_URL : typeof image === 'string' ? image : image.url,
 		datePublished: formatStoryblokDateToIso(story.first_published_at),
 		dateModified: formatStoryblokDateToIso(story.updated_at),
 		author: { name: getArticleAuthorName(story.content), url: getArticleAuthorUrl(story, language) },

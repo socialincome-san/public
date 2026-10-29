@@ -3,6 +3,7 @@ import { defaultCurrency, defaultLanguage, mainWebsiteLanguages, WebsiteLanguage
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	DEFAULT_OPEN_GRAPH_IMAGE_URL,
+	DEFAULT_TWITTER_IMAGE_URL,
 	toProductionMetadataUrl,
 	WEBSITE_ORIGIN,
 	type MetadataImage,
@@ -58,7 +59,7 @@ export const getMetadata = async (
 			card: 'summary_large_image',
 			site: '@so_income',
 			creator: '@so_income',
-			images: toProductionMetadataUrl(translate('twitter-image'), DEFAULT_OPEN_GRAPH_IMAGE_URL),
+			images: toProductionMetadataUrl(translate('twitter-image'), DEFAULT_TWITTER_IMAGE_URL),
 		},
 	} satisfies Metadata;
 
@@ -75,6 +76,12 @@ export const getMetadata = async (
 		},
 	};
 };
+
+// The portal, partner space and API docs have no language, so they share the images without text.
+export const languageNeutralImages = {
+	openGraph: { images: DEFAULT_OPEN_GRAPH_IMAGE_URL },
+	twitter: { images: DEFAULT_TWITTER_IMAGE_URL },
+} satisfies Metadata;
 
 const normalizeWhitespace = (text: string | null | undefined) => text?.replaceAll(/\s+/g, ' ').trim() ?? '';
 
@@ -192,7 +199,7 @@ export const getWebsitePageMetadata = async (
 			...defaults.twitter,
 			title: socialTitle,
 			description: pageDescription ?? undefined,
-			images,
+			images: image ?? defaults.twitter?.images,
 		},
 	};
 };
