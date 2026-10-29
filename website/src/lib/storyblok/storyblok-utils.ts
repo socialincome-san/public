@@ -299,7 +299,16 @@ export const resolveStoryblokLink = (
 const METADATA_IMAGE_WIDTH = 1200;
 const METADATA_IMAGE_HEIGHT = 630;
 
-// Without an image the page falls back to the default share image of its language.
+const isStoryblokAssetUrl = (url: string) => {
+	try {
+		return new URL(url).hostname.endsWith('.storyblok.com');
+	} catch {
+		return false;
+	}
+};
+
+// Without an image the page falls back to the default share image of its language. Only Storyblok's own assets can
+// be cropped; an external URL is used as it is, without guessing its size.
 export const getStoryblokMetadataImage = (
 	asset: { filename?: string | null; focus?: string | null; alt?: string | null } | null | undefined,
 	fallbackAlt?: string,
@@ -308,16 +317,15 @@ export const getStoryblokMetadataImage = (
 		return undefined;
 	}
 	const alt = asset.alt?.trim() ? asset.alt.trim() : fallbackAlt;
+	const image = isStoryblokAssetUrl(asset.filename)
+		? {
+				url: formatStoryblokUrlDirect(asset.filename, METADATA_IMAGE_WIDTH, METADATA_IMAGE_HEIGHT, asset.focus),
+				width: METADATA_IMAGE_WIDTH,
+				height: METADATA_IMAGE_HEIGHT,
+			}
+		: { url: asset.filename };
 
-	return toProductionMetadataImage(
-		{
-			url: formatStoryblokUrlDirect(asset.filename, METADATA_IMAGE_WIDTH, METADATA_IMAGE_HEIGHT, asset.focus),
-			width: METADATA_IMAGE_WIDTH,
-			height: METADATA_IMAGE_HEIGHT,
-			...(alt ? { alt } : {}),
-		},
-		DEFAULT_OPEN_GRAPH_IMAGE_URL,
-	);
+	return toProductionMetadataImage({ ...image, ...(alt ? { alt } : {}) }, DEFAULT_OPEN_GRAPH_IMAGE_URL);
 };
 
 const getArticleAuthorName = (article: ResolvedArticle) =>
