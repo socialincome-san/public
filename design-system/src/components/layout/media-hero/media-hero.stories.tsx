@@ -100,3 +100,29 @@ export const Statement: Story = {
 		),
 	},
 };
+
+export const WithFocalPoint: Story = {
+	args: {
+		image: {
+			...image,
+			objectPosition: '20% 30%',
+		},
+		aside: <DonationCard />,
+		mobileAside: <DonationCard />,
+		children: (
+			<MediaHeroIntro
+				title="Sierra Leone"
+				eyebrow={
+					<MediaHeroChips>
+						<Badge variant="frosted">Country</Badge>
+					</MediaHeroChips>
+				}
+			>
+				<MediaHeroChips>
+					<MediaHeroPill>162 Recipients</MediaHeroPill>
+					<MediaHeroPill>3 Programs</MediaHeroPill>
+				</MediaHeroChips>
+			</MediaHeroIntro>
+		),
+	},
+};
