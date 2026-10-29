@@ -2,6 +2,7 @@ import NextImage from 'next/image';
 import NextLink from 'next/link';
 import { type ComponentProps, type ComponentType, type ReactNode } from 'react';
 import { type WithoutClassName } from '../../../without-class-name';
+import { AnimatedLogo } from '../../brand/animated-logo/animated-logo';
 import { SocialIncomeLogo } from '../../brand/logo/logo';
 import { ContactIcon, PaperPlaneIcon } from '../../icons/custom-icons/custom-icons';
 import {
@@ -61,6 +62,8 @@ type SiteFooterProps = {
 	supportedBy?: SiteFooterSupportedBy;
 	/** Shown next to the copyright, e.g. a `SiteFooterButton` to reopen the cookie settings. */
 	legal?: ReactNode;
+	/** Light logo animation that plays once when the footer scrolls into view; the static logo otherwise. */
+	logoAnimationSrc?: string;
 };
 
 export const SiteFooterButton = (props: WithoutClassName<ComponentProps<'button'>>) => (
@@ -97,14 +100,14 @@ const SupportedBy = ({ label, logoSrc, logoAlt, link }: SiteFooterSupportedBy) =
 	</div>
 );
 
-export const SiteFooter = ({ groups, copyright, supportedBy, legal }: SiteFooterProps) => (
+export const SiteFooter = ({ groups, copyright, supportedBy, legal, logoAnimationSrc }: SiteFooterProps) => (
 	<div className="bg-primary text-primary-foreground max-w-content mx-auto grid w-full grid-cols-1 gap-4 rounded-t-3xl px-8 pt-10 pb-8 sm:px-16 sm:pt-14 lg:grid-cols-[334px_auto] lg:grid-rows-[auto_1fr]">
 		<div className="order-1 lg:col-start-1 lg:row-start-1">
-			<SocialIncomeLogo width={222} height={22} />
+			{logoAnimationSrc ? <AnimatedLogo src={logoAnimationSrc} /> : <SocialIncomeLogo width={222} height={22} />}
 		</div>
 		<div className="order-2 mt-8 flex flex-col lg:contents">
 			<div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-16">
-				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+				<div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4">
 					{groups.map((group) => (
 						<div key={group.id}>
 							<h2 className="text-primary-foreground text-lg font-bold">{group.label}</h2>
