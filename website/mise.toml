@@ -1,6 +1,6 @@
 [tools]
 node = "24"
-java = "23"
+java = "25"
 
 [tasks.install]
 run = "npm ci --prefix .."
