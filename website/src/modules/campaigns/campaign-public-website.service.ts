@@ -2,11 +2,8 @@ import type { CampaignGlobals, Faq } from '@/generated/storyblok/types/109655/st
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
-import { getMetadata } from '@/lib/utils/metadata';
-import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataUrl } from '@/lib/utils/metadata-image';
 import { getCampaignGlobals } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
-import type { Metadata } from 'next';
 import type { CampaignNewsletterContent, CampaignPageContent } from './campaign.types';
 
 const NEWSLETTER_IMAGE_SIZE = 60;
@@ -42,42 +39,6 @@ export const getCampaignPageContent = async (
 		return resultFail('Could not load campaign page content');
 	}
 };
-
-export const getCampaignPageMetadata = async (
-	lang: WebsiteLanguage,
-	campaign: {
-		title: string;
-		description: string;
-		primaryImage?: { filename?: string | null } | null;
-	},
-): Promise<Result<Metadata>> => {
-	const primaryImage = campaign.primaryImage?.filename?.trim();
-	const campaignMetadata = {
-		title: campaign.title,
-		description: campaign.description,
-		...(primaryImage
-			? {
-					openGraph: {
-						title: campaign.title,
-						description: campaign.description,
-						images: toProductionMetadataUrl(primaryImage, DEFAULT_OPEN_GRAPH_IMAGE_URL),
-					},
-					twitter: {
-						title: campaign.title,
-						card: 'summary_large_image' as const,
-						site: '@so_income',
-						creator: '@so_income',
-						images: toProductionMetadataUrl(primaryImage, DEFAULT_OPEN_GRAPH_IMAGE_URL),
-					},
-				}
-			: {}),
-	};
-
-	return resultOk(await getMetadata(lang, 'website-campaign', campaignMetadata));
-};
-
-export const getCampaignFallbackMetadata = async (lang: WebsiteLanguage): Promise<Result<Metadata>> =>
-	resultOk(await getMetadata(lang, 'website-campaign'));
 
 const toResolvedFaqs = (faqReferences: unknown[]): ISbStoryData<Faq>[] =>
 	faqReferences.filter((reference): reference is ISbStoryData<Faq> => typeof reference === 'object' && reference !== null);

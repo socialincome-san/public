@@ -1,15 +1,20 @@
 import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[currency]';
+import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
 import { CampaignsOverviewPage } from '@/components/campaign/campaigns-overview-page';
 import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCampaignsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
-import { getWebsiteAlternates } from '@/lib/utils/metadata';
+import { getTitleAndTextMetadata } from '@/lib/storyblok/storyblok-utils';
 import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
-export const generateMetadata = async ({ params }: DefaultLayoutProps) =>
-	getWebsiteAlternates((await params).lang as WebsiteLanguage, 'campaigns');
+export const generateMetadata = async ({ params }: DefaultLayoutProps) => {
+	const lang = (await params).lang as WebsiteLanguage;
+	const overviewResult = await getStoryWithFallback<ISbStoryData<CampaignOverview>>(getCampaignsOverviewStoryPath(), lang);
+
+	return getPageMetadata(lang, 'campaigns', overviewResult.success ? getTitleAndTextMetadata(overviewResult.data) : {});
+};
 
 export default async function CampaignsOverviewRoute({ params, searchParams }: DefaultPageProps) {
 	const { lang, currency } = await params;

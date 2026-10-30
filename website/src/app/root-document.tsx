@@ -30,7 +30,6 @@ const IntlProvider = async ({ children }: PropsWithChildren) => (
 export const RootDocument = ({ lang, children }: PropsWithChildren<{ lang: string }>) => (
 	<html lang={lang} suppressHydrationWarning={true}>
 		<head>
-			<title>Social Income</title>
 			<meta name="app-version" content={appVersion} />
 			<meta name="app-environment" content={appEnv} />
 			<meta name="app-build-timestamp" content={buildTime} />

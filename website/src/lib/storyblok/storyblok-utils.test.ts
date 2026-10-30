@@ -5,6 +5,7 @@ import {
 	formatStoryblokUrl,
 	getPersonCircles,
 	getScaledAssetDimensions,
+	getStoryblokMetadataImage,
 	getVolunteerDurationParts,
 	isResolvedArticle,
 	resolveStoryblokLink,
@@ -115,5 +116,29 @@ describe('getPersonCircles', () => {
 		expect(getPersonCircles({ activeCircleMember: ['lead-team'] }, { 'lead-team': 'Lead-Team' })).toEqual([
 			{ code: 'lead-team', label: 'Lead-Team', status: 'active' },
 		]);
+	});
+});
+
+describe('getStoryblokMetadataImage', () => {
+	it('crops Storyblok assets to 1200×630', () => {
+		expect(
+			getStoryblokMetadataImage({ filename: 'https://a.storyblok.com/f/1/3000x2000/abc/hero.jpg', alt: 'Hero' }),
+		).toEqual({
+			url: 'https://a.storyblok.com/f/1/3000x2000/abc/hero.jpg/m/1200x630/smart',
+			width: 1200,
+			height: 630,
+			alt: 'Hero',
+		});
+	});
+
+	it('uses external images as they are', () => {
+		expect(getStoryblokMetadataImage({ filename: 'https://images.example.org/hero.jpg' }, 'Title')).toEqual({
+			url: 'https://images.example.org/hero.jpg',
+			alt: 'Title',
+		});
+	});
+
+	it('returns nothing without an image, so the default of the language applies', () => {
+		expect(getStoryblokMetadataImage({ filename: '' })).toBeUndefined();
 	});
 });
