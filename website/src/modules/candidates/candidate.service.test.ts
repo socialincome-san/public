@@ -3,10 +3,12 @@ import { CountryCode } from '@/generated/prisma/enums';
 const mockIsAdmin = jest.fn();
 const mockRecipientEntity = { type: 'recipient' };
 const mockFindCandidateById = jest.fn();
+const mockFindPaginatedCandidates = jest.fn();
 const mockCountCandidates = jest.fn();
 const mockFindUnassignedCandidateIds = jest.fn();
 const mockUpdateUnassignedCandidateAssignments = jest.fn();
 const audit = { actor: { type: 'user' as const, id: 'user-1' }, source: 'portal' as const };
+const mockGetOperatorProgramCountriesForUser = jest.fn();
 
 jest.mock('@/modules/recipients/recipient.service', () => ({ recipientAuditedEntity: mockRecipientEntity }));
 
@@ -18,10 +20,15 @@ jest.mock('@/modules/countries/country.service', () => ({
 	getCountryIsoCode: jest.fn(),
 }));
 
+jest.mock('@/modules/program-access/program-access.service', () => ({
+	getOperatorProgramCountriesForUser: mockGetOperatorProgramCountriesForUser,
+}));
+
 jest.mock('@/modules/auth/auth.service', () => ({}));
 
 jest.mock('./candidate.repository.read', () => ({
 	findCandidateById: mockFindCandidateById,
+	findPaginatedCandidates: mockFindPaginatedCandidates,
 	countCandidates: mockCountCandidates,
 	findUnassignedCandidateIds: mockFindUnassignedCandidateIds,
 }));
@@ -29,7 +36,12 @@ jest.mock('./candidate.repository.write', () => ({
 	updateUnassignedCandidateAssignments: mockUpdateUnassignedCandidateAssignments,
 }));
 
-import { assignRandomCandidatesToProgram, getCandidate, getCandidateCount } from './candidate.service';
+import {
+	assignRandomCandidatesToProgram,
+	getCandidate,
+	getCandidateCount,
+	getPaginatedCandidateTableViewForOperator,
+} from './candidate.service';
 
 describe('candidate service', () => {
 	beforeEach(() => {
@@ -79,6 +91,42 @@ describe('candidate service', () => {
 			data: { count: 12 },
 			status: undefined,
 		});
+	});
+
+	test('limits the operator pool to countries from all of the user’s operator programs', async () => {
+		const query = { page: 1, pageSize: 10, search: '' };
+		mockGetOperatorProgramCountriesForUser.mockResolvedValue({ success: true, data: [CountryCode.GH, CountryCode.SL] });
+		mockFindPaginatedCandidates.mockResolvedValue({ candidates: [], totalCount: 0, filterSource: [] });
+
+		await expect(getPaginatedCandidateTableViewForOperator('user-1', query)).resolves.toMatchObject({
+			success: true,
+			data: {
+				tableRows: [],
+				totalCount: 0,
+				countryFilterOptions: [],
+				genderFilterOptions: [],
+				localPartnerFilterOptions: [],
+			},
+		});
+		expect(mockFindPaginatedCandidates).toHaveBeenCalledWith({
+			query,
+			localPartnerId: undefined,
+			country: undefined,
+			gender: undefined,
+			allowedCountryCodes: [CountryCode.GH, CountryCode.SL],
+		});
+	});
+
+	test('returns an empty pool without querying candidates when the user has no operator countries', async () => {
+		mockGetOperatorProgramCountriesForUser.mockResolvedValue({ success: true, data: [] });
+
+		await expect(
+			getPaginatedCandidateTableViewForOperator('user-1', { page: 1, pageSize: 10, search: '' }),
+		).resolves.toMatchObject({
+			success: true,
+			data: { tableRows: [], totalCount: 0 },
+		});
+		expect(mockFindPaginatedCandidates).not.toHaveBeenCalled();
 	});
 
 	test('filters candidate counts by local partner', async () => {
