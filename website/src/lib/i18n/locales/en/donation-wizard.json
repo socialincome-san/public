@@ -5,8 +5,7 @@
 		"currency": "Currency"
 	},
 	"stepAmount": {
-		"title": "What’s your 1 %?",
-		"title-statement": "Donate your 1 %",
+		"title": "Donate your 1 %",
 		"title-custom-amount": "Your donation",
 		"monthly-income-label": "Your monthly income",
 		"choose-own-amount": "Or choose own amount",

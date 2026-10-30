@@ -8,7 +8,7 @@ export type PlanTier = '1x' | '2x';
 export type PaymentMethod = 'qr' | 'online';
 export type OneTimePlanChoice = 'one-time' | 'monthly-half';
 
-export const DONATION_MONTHLY_INCOME_MIN = 50;
+const DONATION_MONTHLY_INCOME_MIN = 50;
 export const DONATION_MONTHLY_INCOME_MAX = 1000_000;
 export const DONATION_CUSTOM_AMOUNT_MIN = 1;
 export const DONATION_CUSTOM_AMOUNT_MAX = 1000_000;

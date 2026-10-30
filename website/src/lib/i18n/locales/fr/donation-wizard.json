@@ -5,8 +5,7 @@
 		"currency": "Devise"
 	},
 	"stepAmount": {
-		"title": "Quel est ton 1 % ?",
-		"title-statement": "Donne ton 1 %",
+		"title": "Donne ton 1 %",
 		"title-custom-amount": "Ton don",
 		"monthly-income-label": "Ton revenu mensuel",
 		"choose-own-amount": "Ou choisis ton propre montant",

@@ -19,13 +19,6 @@ import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 const amountFieldBorder = 'border-input/60';
 const monthlyAmountTextClass = 'text-lg leading-none font-medium';
 
-// Two headlines for the hero box: a question ("Wie viel ist dein 1 %?") or a statement ("Spende dein 1 %")
-const heroTitleKeys = {
-	question: 'stepAmount.title',
-	statement: 'stepAmount.title-statement',
-} as const;
-const heroTitleVariant: keyof typeof heroTitleKeys = 'statement';
-
 // Both amount fields take whole numbers only, so everything but digits is dropped while typing
 const parseWholeNumber = (raw: string): number | null => {
 	const digits = raw.replace(/\D/g, '');
@@ -99,7 +92,7 @@ export const DonationAmountFields = ({
 				<div className="mb-4 flex items-center justify-between gap-3">
 					<h2 className="text-foreground text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
 						{/* A custom amount is no longer the 1 %, so the headline turns neutral while it is in use */}
-						{t(isCustomAmountActive ? 'stepAmount.title-custom-amount' : heroTitleKeys[heroTitleVariant])}
+						{t(isCustomAmountActive ? 'stepAmount.title-custom-amount' : 'stepAmount.title')}
 					</h2>
 					{/* Negative margin keeps the card height that donationHeroCardSizeClass snapshots. */}
 					{placement === 'hero' && isSwissVisitor && (
