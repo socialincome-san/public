@@ -33,6 +33,10 @@ export type TableQueryState = {
 	recipientId?: string;
 	contributorId?: string;
 	entityType?: string;
+	paymentPhone?: string;
+	contactPhone?: string;
+	firstName?: string;
+	lastName?: string;
 };
 
 type QueryValue = string | string[] | number | null | undefined;
@@ -62,6 +66,10 @@ type TableQueryInput = {
 	recipientId?: QueryValue;
 	contributorId?: QueryValue;
 	entityType?: QueryValue;
+	paymentPhone?: QueryValue;
+	contactPhone?: QueryValue;
+	firstName?: QueryValue;
+	lastName?: QueryValue;
 };
 
 const takeFirst = (value: QueryValue): string | undefined => {
@@ -133,6 +141,10 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const recipientId = normalizeToken(input.recipientId, MAX_QUERY_TOKEN_LENGTH);
 	const contributorId = normalizeToken(input.contributorId, MAX_QUERY_TOKEN_LENGTH);
 	const entityType = normalizeToken(input.entityType, MAX_QUERY_TOKEN_LENGTH);
+	const paymentPhone = normalizeToken(input.paymentPhone, MAX_SEARCH_LENGTH);
+	const contactPhone = normalizeToken(input.contactPhone, MAX_SEARCH_LENGTH);
+	const firstName = normalizeToken(input.firstName, MAX_SEARCH_LENGTH);
+	const lastName = normalizeToken(input.lastName, MAX_SEARCH_LENGTH);
 
 	return {
 		page,
@@ -159,6 +171,10 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		recipientId: recipientId || undefined,
 		contributorId: contributorId || undefined,
 		entityType: entityType || undefined,
+		paymentPhone: paymentPhone || undefined,
+		contactPhone: contactPhone || undefined,
+		firstName: firstName || undefined,
+		lastName: lastName || undefined,
 	};
 };
 
@@ -188,6 +204,10 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		recipientId: searchParams.recipientId,
 		contributorId: searchParams.contributorId,
 		entityType: searchParams.entityType,
+		paymentPhone: searchParams.paymentPhone,
+		contactPhone: searchParams.contactPhone,
+		firstName: searchParams.firstName,
+		lastName: searchParams.lastName,
 	});
 };
 
@@ -228,6 +248,10 @@ export const applyTableQueryPatch = (
 		recipientId: hasPatchKey('recipientId') ? patch.recipientId : currentSearchParams.get('recipientId'),
 		contributorId: hasPatchKey('contributorId') ? patch.contributorId : currentSearchParams.get('contributorId'),
 		entityType: hasPatchKey('entityType') ? patch.entityType : currentSearchParams.get('entityType'),
+		paymentPhone: hasPatchKey('paymentPhone') ? patch.paymentPhone : currentSearchParams.get('paymentPhone'),
+		contactPhone: hasPatchKey('contactPhone') ? patch.contactPhone : currentSearchParams.get('contactPhone'),
+		firstName: hasPatchKey('firstName') ? patch.firstName : currentSearchParams.get('firstName'),
+		lastName: hasPatchKey('lastName') ? patch.lastName : currentSearchParams.get('lastName'),
 	});
 
 	const nextParams = new URLSearchParams(currentSearchParams.toString());
@@ -340,6 +364,26 @@ export const applyTableQueryPatch = (
 		nextParams.set('entityType', nextQuery.entityType);
 	} else {
 		nextParams.delete('entityType');
+	}
+	if (nextQuery.paymentPhone) {
+		nextParams.set('paymentPhone', nextQuery.paymentPhone);
+	} else {
+		nextParams.delete('paymentPhone');
+	}
+	if (nextQuery.contactPhone) {
+		nextParams.set('contactPhone', nextQuery.contactPhone);
+	} else {
+		nextParams.delete('contactPhone');
+	}
+	if (nextQuery.firstName) {
+		nextParams.set('firstName', nextQuery.firstName);
+	} else {
+		nextParams.delete('firstName');
+	}
+	if (nextQuery.lastName) {
+		nextParams.set('lastName', nextQuery.lastName);
+	} else {
+		nextParams.delete('lastName');
 	}
 
 	return nextParams;

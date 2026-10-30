@@ -18,6 +18,7 @@ export type DataTableToolbarFilter = {
 	label: string;
 	placeholder: string;
 	value?: string;
+	type?: 'select' | 'text';
 	options: DataTableToolbarFilterOption[];
 	onChange: (value: string | undefined) => void;
 };
@@ -268,6 +269,24 @@ export const DataTableToolbar = ({
 								</div>
 								<div className="space-y-2">
 									{filters.map((filter) => {
+										if (filter.type === 'text') {
+											return (
+												<div key={filter.id} className="space-y-1">
+													<label className="text-muted-foreground text-xs" htmlFor={`data-table-filter-${filter.id}`}>
+														{filter.label}
+													</label>
+													<Input
+														id={`data-table-filter-${filter.id}`}
+														key={`${filter.id}-${filter.value ?? ''}`}
+														placeholder={filter.placeholder}
+														defaultValue={filter.value}
+														onChange={(event) => filter.onChange(event.target.value || undefined)}
+														data-testid={`data-table-filter-${filter.id}-input`}
+													/>
+												</div>
+											);
+										}
+
 										const hasOptions = filter.options.length > 0;
 
 										return (
