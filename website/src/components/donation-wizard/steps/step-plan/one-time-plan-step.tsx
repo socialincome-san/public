@@ -16,7 +16,7 @@ export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
 	const language = useLocale();
 	const { currency } = state.context;
-	const view = selectOneTimePlanView(state.context);
+	const view = selectOneTimePlanView(state.context, state.matches('loadingCommunityStats'));
 	const toBenefits = (descriptors: PlanBenefitDescriptor[]) =>
 		descriptors.map((descriptor) => resolvePlanBenefit(descriptor, t, language));
 
