@@ -291,6 +291,7 @@ export const getProgramSettings = async (userId: string, programId: string): Pro
 			country: program.country,
 			amountOfRecipientsForStart: program.amountOfRecipientsForStart,
 			coveredByReserves: program.coveredByReserves,
+			isConcluded: program.isConcluded,
 			programDurationInMonths: program.programDurationInMonths,
 			payoutPerInterval: Number(program.payoutPerInterval),
 			payoutInterval: program.payoutInterval,
@@ -377,19 +378,20 @@ export const createProgram = async (
 			};
 		}
 
-		const [activeOrganizationResult, operatorOrganizationResult, countryResult] = await Promise.all([
+		const [activeOrganizationResult, countryResult] = await Promise.all([
 			getActiveOrganizationId(userId),
-			getOperatorFallbackOrganizationId(),
 			getCountryIsoCode(input.countryId),
 		]);
 		if (!activeOrganizationResult.success) {
 			return resultFail(activeOrganizationResult.error);
 		}
-		if (!operatorOrganizationResult.success) {
-			return resultFail(operatorOrganizationResult.error);
-		}
 		if (!countryResult.success) {
 			return resultFail(countryResult.error);
+		}
+
+		const operatorOrganizationResult = await getOperatorFallbackOrganizationId(countryResult.data);
+		if (!operatorOrganizationResult.success) {
+			return resultFail(operatorOrganizationResult.error);
 		}
 
 		const programName = `${getCountryNameByCode(countryResult.data)} Program ${Math.floor(10000 + Math.random() * 90000)}`;
@@ -577,6 +579,7 @@ const toPublicProgramStats = (program: PublicProgramStatsRecord): PublicProgramS
 	payoutCurrency: program.country.currency,
 	totalPayoutsSum: sumPayoutAmounts(program.recipients),
 	totalPayoutsSumChf: sumPayoutAmountsChf(program.recipients),
+	isConcluded: program.isConcluded,
 });
 
 const toPublicProgramDetails = (program: PublicProgramRecord): PublicProgramDetails => {

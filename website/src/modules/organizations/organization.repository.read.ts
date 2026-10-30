@@ -1,4 +1,5 @@
 import { Prisma, ProgramPermission } from '@/generated/prisma/client';
+import { CountryCode } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { OrganizationMemberTableQuery, OrganizationTableQuery } from './organization.types';
@@ -130,9 +131,24 @@ export const findOrganizationOptions = async () =>
 		orderBy: { name: 'asc' },
 	});
 
-export const findOperatorFallbackOrganization = async () =>
+export const findOperatorFallbackOrganization = async (countryCode: CountryCode) =>
 	prisma.organization.findFirst({
-		where: { isOperatorFallback: true },
+		where: { operatorFallbackCountryCode: countryCode },
+		select: { id: true },
+	});
+
+export const findOrganizationCountryOptions = async () =>
+	prisma.country.findMany({
+		select: { isoCode: true },
+		orderBy: { isoCode: 'asc' },
+	});
+
+export const findOrganizationByOperatorFallbackCountry = async (countryCode: CountryCode, excludeOrganizationId?: string) =>
+	prisma.organization.findFirst({
+		where: {
+			operatorFallbackCountryCode: countryCode,
+			...(excludeOrganizationId ? { id: { not: excludeOrganizationId } } : {}),
+		},
 		select: { id: true },
 	});
 
@@ -148,6 +164,7 @@ export const findOrganizationById = async (organizationId: string) =>
 		select: {
 			id: true,
 			name: true,
+			operatorFallbackCountryCode: true,
 			organizationAccesses: {
 				select: {
 					userId: true,

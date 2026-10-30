@@ -13,7 +13,7 @@ export type StripeApiPrice = Stripe.Price;
 
 export type StripeCheckoutCreateInput = {
 	mode: 'subscription' | 'payment';
-	uiMode?: 'embedded_page';
+	uiMode?: 'embedded_page' | 'elements';
 	customerId?: string;
 	createCustomerIfMissing: boolean;
 	currency: string;
@@ -762,12 +762,8 @@ const toCheckoutSessionCreateParams = (input: StripeCheckoutCreateInput): Stripe
 				},
 			},
 		],
-		...(input.uiMode
-			? {
-					redirect_on_completion: input.returnUrl ? 'if_required' : 'never',
-					...(input.returnUrl ? { return_url: input.returnUrl } : {}),
-				}
-			: {}),
+		...(input.uiMode === 'embedded_page' ? { redirect_on_completion: input.returnUrl ? 'if_required' : 'never' } : {}),
+		...(input.uiMode && input.returnUrl ? { return_url: input.returnUrl } : {}),
 		...(input.successUrl ? { success_url: input.successUrl } : {}),
 		locale: 'auto',
 		...(metadata ? { metadata } : {}),

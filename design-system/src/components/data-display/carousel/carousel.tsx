@@ -169,7 +169,10 @@ const CarouselContent = React.forwardRef<HTMLDivElement, CarouselContentProps>((
 	return (
 		<div
 			ref={carouselRef}
-			className={cn('overflow-hidden', scrollFade && orientation === 'horizontal' && canScrollNext && 'scroll-fade-e')}
+			className={cn(
+				'-my-3 overflow-hidden py-3',
+				scrollFade && orientation === 'horizontal' && canScrollNext && 'scroll-fade-e',
+			)}
 		>
 			<div
 				ref={ref}

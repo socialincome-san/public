@@ -145,5 +145,10 @@
 		"zewo": "ZEWO certified",
 		"why-one-percent": "Why donating 1%?",
 		"pay-with": "Pay with"
+	},
+	"resumeBar": {
+		"label": "Quick donation",
+		"summary": "{cadence, select, monthly {Donate {amount} monthly, change amount} other {Donate {amount} once, change amount}}",
+		"continue": "Continue"
 	}
 }
