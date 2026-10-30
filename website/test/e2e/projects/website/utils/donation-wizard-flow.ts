@@ -28,15 +28,15 @@ export const openDonationWizardFromNav = async (page: Page) => {
 	await waitForWizardStep(wizard(page), 'donation-wizard-step-amount');
 };
 
-// The amount step defaults to monthly and only shows a link to the other cadence, whose test id names that cadence.
-const selectCadence = async (scope: Locator, cadence: 'monthly' | 'one-time') => {
-	const switchToCadence = scope.getByTestId(`donation-wizard-cadence-${cadence}`);
-	if ((await switchToCadence.count()) > 0) {
-		await switchToCadence.click();
+// The amount step defaults to monthly; the link below the button donates with the other cadence, whose test id names that cadence.
+const submitAmount = async (scope: Locator, cadence: 'monthly' | 'one-time') => {
+	const otherCadenceLink = scope.getByTestId(`donation-wizard-cadence-${cadence}`);
+	if ((await otherCadenceLink.count()) > 0) {
+		await otherCadenceLink.click();
+
+		return;
 	}
-	await expect(
-		scope.getByTestId(cadence === 'monthly' ? 'donation-wizard-cadence-one-time' : 'donation-wizard-cadence-monthly'),
-	).toBeVisible();
+	await scope.getByTestId('donation-wizard-amount-continue').click();
 };
 
 const completeHeroAmountFields = async (scope: Locator, monthlyIncome: number, cadence: 'monthly' | 'one-time') => {
@@ -48,8 +48,7 @@ const completeHeroAmountFields = async (scope: Locator, monthlyIncome: number, c
 	await incomeInput.blur();
 	await expect(scope.getByTestId('donation-wizard-one-percent')).toContainText(String(expectedOnePercent));
 	await scope.getByTestId('donation-wizard-one-percent').click();
-	await selectCadence(scope, cadence);
-	await scope.getByTestId('donation-wizard-amount-continue').click();
+	await submitAmount(scope, cadence);
 };
 
 export const openDonationWizardFromHero = async (
@@ -82,8 +81,7 @@ export const completeAmountStep = async (page: Page, monthlyIncome: number) => {
 	await incomeInput.blur();
 	await expect(modal.getByTestId('donation-wizard-one-percent')).toContainText(String(expectedOnePercent));
 	await modal.getByTestId('donation-wizard-one-percent').click();
-	await selectCadence(modal, 'monthly');
-	await modal.getByTestId('donation-wizard-amount-continue').click();
+	await submitAmount(modal, 'monthly');
 	await waitForWizardStep(modal, 'donation-wizard-step-monthly-plan');
 };
 

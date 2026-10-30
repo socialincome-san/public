@@ -10,9 +10,7 @@ import NextImage from 'next/image';
 import { useId, useState } from 'react';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
-	DONATION_CUSTOM_AMOUNT_MIN,
 	DONATION_MONTHLY_INCOME_MAX,
-	DONATION_MONTHLY_INCOME_MIN,
 	type Cadence,
 	type PresetAmount,
 } from '../../utils/donation-amount';
@@ -20,6 +18,23 @@ import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 
 const amountFieldBorder = 'border-input/60';
 const monthlyAmountTextClass = 'text-lg leading-none font-medium';
+
+// Two headlines for the hero box: a question ("Wie viel ist dein 1 %?") or a statement ("Spende dein 1 %")
+const heroTitleKeys = {
+	question: 'stepAmount.title',
+	statement: 'stepAmount.title-statement',
+} as const;
+const heroTitleVariant: keyof typeof heroTitleKeys = 'statement';
+
+// Both amount fields take whole numbers only, so everything but digits is dropped while typing
+const parseWholeNumber = (raw: string): number | null => {
+	const digits = raw.replace(/\D/g, '');
+
+	return digits === '' ? null : Number(digits);
+};
+
+// Quick picks shown inside the custom amount field while it is focused
+const customAmountChips = [40, 60, 100] as const;
 
 export const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
 
@@ -39,13 +54,13 @@ type DonationAmountFieldsActions = {
 	setMonthlyIncome: (value: number | null) => void;
 	setPresetAmount: (value: PresetAmount | 'other') => void;
 	setCustomAmount: (value: number | null) => void;
-	setCadence: (value: Cadence) => void;
 };
 
 type Props = {
 	values: DonationAmountFieldsValues;
 	actions: DonationAmountFieldsActions;
-	onSubmit: () => void;
+	// Submits the amount with the given cadence, so the link below the button can go straight into the other cadence's flow
+	onSubmit: (cadence: Cadence) => void;
 	placement?: 'wizard' | 'hero';
 	currency: WebsiteCurrency;
 	showTitle?: boolean;
@@ -83,7 +98,8 @@ export const DonationAmountFields = ({
 			{showTitle && (
 				<div className="mb-4 flex items-center justify-between gap-3">
 					<h2 className="text-foreground text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
-						{t('stepAmount.title')}
+						{/* A custom amount is no longer the 1 %, so the headline turns neutral while it is in use */}
+						{t(isCustomAmountActive ? 'stepAmount.title-custom-amount' : heroTitleKeys[heroTitleVariant])}
 					</h2>
 					{/* Negative margin keeps the card height that donationHeroCardSizeClass snapshots. */}
 					{placement === 'hero' && isSwissVisitor && (
@@ -122,21 +138,20 @@ export const DonationAmountFields = ({
 							variant="bare"
 							id={monthlyIncomeInputId}
 							data-testid="donation-wizard-monthly-income"
-							type="number"
-							min={DONATION_MONTHLY_INCOME_MIN}
-							max={DONATION_MONTHLY_INCOME_MAX}
+							type="text"
+							inputMode="numeric"
+							pattern="[0-9]*"
 							value={values.monthlyIncome ?? ''}
 							onFocus={actions.selectOnePercent}
 							onChange={(e) => {
-								const raw = e.target.value;
-								if (raw === '') {
+								const parsed = parseWholeNumber(e.target.value);
+								if (parsed === null) {
 									actions.setMonthlyIncome(null);
 
 									return;
 								}
 
-								const parsed = parseFloat(raw);
-								if (!isNaN(parsed) && parsed <= DONATION_MONTHLY_INCOME_MAX) {
+								if (parsed <= DONATION_MONTHLY_INCOME_MAX) {
 									actions.setMonthlyIncome(parsed);
 								}
 							}}
@@ -185,14 +200,15 @@ export const DonationAmountFields = ({
 					{t('stepAmount.custom-amount-label')} ({currency})
 				</label>
 				<div className="h-3.5" aria-hidden />
-				<div className={monthlyAmountTextClass}>
+				{/* The chips share the number's row; the shift puts their bottom edge on the bottom of the digits */}
+				<div className={cn(monthlyAmountTextClass, 'flex items-baseline gap-2')}>
 					<Input
 						variant="bare"
 						id={customAmountInputId}
-						type="number"
+						type="text"
+						inputMode="numeric"
+						pattern="[0-9]*"
 						data-testid="donation-wizard-custom-amount"
-						min={DONATION_CUSTOM_AMOUNT_MIN}
-						max={DONATION_CUSTOM_AMOUNT_MAX}
 						value={values.customAmount ?? ''}
 						onFocus={() => {
 							setIsCustomAmountFocused(true);
@@ -202,18 +218,44 @@ export const DonationAmountFields = ({
 						}}
 						onBlur={() => setIsCustomAmountFocused(false)}
 						onChange={(e) => {
-							const raw = e.target.value;
-							if (raw === '') {
+							const parsed = parseWholeNumber(e.target.value);
+							if (parsed === null) {
 								actions.setCustomAmount(null);
 
 								return;
 							}
-							const parsed = parseFloat(raw);
-							if (!isNaN(parsed) && parsed <= DONATION_CUSTOM_AMOUNT_MAX) {
+							if (parsed <= DONATION_CUSTOM_AMOUNT_MAX) {
 								actions.setCustomAmount(parsed);
 							}
 						}}
 					/>
+					{/* The chips only show while the field is focused; mouse down on them keeps the focus */}
+					{isCustomAmountFocused && (
+						<div className="-my-1 flex shrink-0 -translate-y-2 gap-1.5">
+							{customAmountChips.map((amount) => (
+								<button
+									key={amount}
+									type="button"
+									data-testid={`donation-wizard-custom-amount-chip-${amount}`}
+									aria-pressed={values.customAmount === amount}
+									// The field label already names the currency, so the chips only show the number
+									aria-label={`${currency} ${amount}`}
+									// Keeps the focus in the field so the chips stay visible while clicking
+									onMouseDown={(e) => e.preventDefault()}
+									onClick={() => actions.setCustomAmount(amount)}
+									className={cn(
+										amountFieldBorder,
+										'text-2xs cursor-pointer rounded-full border px-2.5 py-1 font-medium whitespace-nowrap transition-colors',
+										values.customAmount === amount
+											? 'bg-muted text-foreground'
+											: 'bg-card text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+									)}
+								>
+									{amount}
+								</button>
+							))}
+						</div>
+					)}
 				</div>
 			</div>
 
@@ -222,7 +264,7 @@ export const DonationAmountFields = ({
 				data-testid="donation-wizard-amount-continue"
 				fullWidth
 				disabled={!values.isValid}
-				onClick={onSubmit}
+				onClick={() => onSubmit(values.cadence)}
 			>
 				{values.resolvedAmount === null
 					? t('stepAmount.donate-now')
@@ -230,12 +272,13 @@ export const DonationAmountFields = ({
 						? t('stepAmount.donate-monthly-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
 						: t('stepAmount.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })}
 			</Button>
-			{/* Monthly is the default; the other cadence is a quiet text switch below the button */}
+			{/* Monthly is the default; the other cadence is a quiet text link below the button that donates with that cadence */}
 			<button
 				type="button"
 				data-testid={values.cadence === 'monthly' ? 'donation-wizard-cadence-one-time' : 'donation-wizard-cadence-monthly'}
-				onClick={() => actions.setCadence(values.cadence === 'monthly' ? 'one-time' : 'monthly')}
-				className="text-muted-foreground hover:text-foreground mt-4 -mb-2 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors md:-mb-4"
+				disabled={!values.isValid}
+				onClick={() => onSubmit(values.cadence === 'monthly' ? 'one-time' : 'monthly')}
+				className="text-muted-foreground hover:text-foreground mt-4 -mb-2 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors disabled:pointer-events-none disabled:opacity-50 md:-mb-4"
 			>
 				{values.resolvedAmount === null
 					? t(values.cadence === 'monthly' ? 'stepAmount.switch-to-one-time' : 'stepAmount.switch-to-monthly')

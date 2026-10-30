@@ -5,7 +5,9 @@
 		"currency": "Valuta"
 	},
 	"stepAmount": {
-		"title": "Fai una donazione",
+		"title": "Quanto è il tuo 1 %?",
+		"title-statement": "Dona il tuo 1 %",
+		"title-custom-amount": "La tua donazione",
 		"monthly-income-label": "Il tuo reddito mensile",
 		"choose-own-amount": "Oppure scegli un importo personalizzato",
 		"your-one-percent": "Il tuo 1 %",
