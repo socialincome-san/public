@@ -209,7 +209,7 @@ class _App extends StatelessWidget {
                   case AuthStatus.updateRecipientSuccess:
                   case AuthStatus.updatingRecipient:
                     FlutterNativeSplash.remove();
-                    if (state.recipient?.termsAccepted == true) {
+                    if (demoManager.isDemoEnabled || state.recipient?.termsAccepted == true) {
                       return const MainAppPage();
                     } else {
                       return const TermsAndConditionsPage();
