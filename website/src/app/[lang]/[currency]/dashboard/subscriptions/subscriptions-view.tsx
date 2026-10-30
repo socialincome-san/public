@@ -35,7 +35,6 @@ export const SubscriptionsView = async ({ lang, currency }: Props) => {
 	const { activeSubscriptions, upcomingPayments, monthlyContribution, contributionSummary } = dashboardResult.data;
 
 	const labels = {
-		title: t('sections.contributions.subscriptions'),
 		donateNow: t('donate-now'),
 		monthlyContribution: t('subscriptions.summary.monthly-contribution'),
 		totalContributions: t('subscriptions.summary.total-contributions'),
@@ -58,8 +57,8 @@ export const SubscriptionsView = async ({ lang, currency }: Props) => {
 
 	return (
 		<div className="flex flex-col gap-6" data-testid="subscriptions-dashboard">
-			<div className="flex items-center justify-between gap-6">
-				<h2 className="text-3xl font-medium">{labels.title}</h2>
+			<h2 className="sr-only">{t('sections.contributions.subscriptions')}</h2>
+			<div className="flex justify-end">
 				<Button asChild>
 					<Link href={getWebsiteBasePath(lang, currency)}>{labels.donateNow}</Link>
 				</Button>
