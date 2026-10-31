@@ -50,20 +50,27 @@ const getAuthorName = (author: Article['author']) => {
 		return '';
 	}
 
-	const fullName = typeof author.content.fullName === 'string' ? author.content.fullName.trim() : '';
-	if (fullName) {
-		return fullName;
-	}
-
 	const firstName = typeof author.content.firstName === 'string' ? author.content.firstName.trim() : '';
 	const lastName = typeof author.content.lastName === 'string' ? author.content.lastName.trim() : '';
 	const name = `${firstName} ${lastName}`.trim();
+	if (name) {
+		return name;
+	}
 
-	return name || (typeof author.content.name === 'string' && author.content.name.trim()) || '';
+	const fullName = typeof author.content.fullName === 'string' ? author.content.fullName.trim() : '';
+
+	return fullName || (typeof author.content.name === 'string' && author.content.name.trim()) || '';
 };
 
+const getAuthorId = (author: Article['author']) =>
+	isRecord(author) && typeof author.uuid === 'string' ? author.uuid : author;
+
 const getAuthorNames = ({ author, coAuthors }: JournalRssArticle['content']) => {
-	const names = [author, ...(coAuthors ?? [])].map(getAuthorName).filter(Boolean);
+	const authors = [author, ...(coAuthors ?? [])];
+	const names = authors
+		.filter((person, index) => authors.findIndex((other) => getAuthorId(other) === getAuthorId(person)) === index)
+		.map(getAuthorName)
+		.filter(Boolean);
 
 	return names.length > 0 ? names : ['Social Income'];
 };

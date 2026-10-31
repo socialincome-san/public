@@ -120,6 +120,14 @@ describe('article authors', () => {
 		expect(authors.map(({ uuid }) => uuid)).toEqual(['ada', 'grace']);
 	});
 
+	it('lists an author picked twice once', () => {
+		const authors = getArticleAuthors(
+			resolvedArticle([person('ada', 'Ada', 'Lovelace'), person('grace', 'Grace', 'Hopper')]),
+		);
+
+		expect(authors.map(({ uuid }) => uuid)).toEqual(['ada', 'grace']);
+	});
+
 	it('uses the full name for a single author and first names for several', () => {
 		const single = getArticleAuthors(resolvedArticle());
 		const several = getArticleAuthors(
@@ -129,6 +137,12 @@ describe('article authors', () => {
 		expect(formatArticleAuthorNames(single, 'en')).toBe('Ada Lovelace');
 		expect(formatArticleAuthorNames(several, 'en')).toBe('Ada, Grace, and Alan');
 		expect(formatArticleAuthorNames(several, 'de')).toBe('Ada, Grace und Alan');
+	});
+
+	it('uses full names when co-authors share a first name', () => {
+		const authors = getArticleAuthors(resolvedArticle([person('ada-byron', 'Ada', 'Byron')]));
+
+		expect(formatArticleAuthorNames(authors, 'en')).toBe('Ada Lovelace and Ada Byron');
 	});
 });
 

@@ -54,6 +54,18 @@ describe('buildJournalRssFeed', () => {
 		]);
 	});
 
+	it('names each author once, preferring first and last name', () => {
+		const lead = { uuid: 'lead', content: { firstName: 'Ada', lastName: 'Lovelace', fullName: 'Ada King' } };
+		const coAuthored = article('dup', 'Dup', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');
+		const content = { ...coAuthored.content, author: lead, coAuthors: [lead] };
+		const document = new DOMParser().parseFromString(
+			buildJournalRssFeed([{ ...coAuthored, content } as unknown as JournalRssArticle]),
+			'text/xml',
+		);
+
+		expect([...document.getElementsByTagName('dc:creator')].map((creator) => creator.textContent)).toEqual(['Ada Lovelace']);
+	});
+
 	it('removes XML 1.0 control characters while preserving valid text', () => {
 		const document = new DOMParser().parseFromString(
 			buildJournalRssFeed([
