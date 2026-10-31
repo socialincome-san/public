@@ -1,6 +1,6 @@
 'use client';
 
-import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
+import { ArticleAuthors } from '@/components/storyblok/journal/article-authors';
 import { VideoBadge } from '@/components/storyblok/journal/video-badge';
 import { useIsMobile } from '@/lib/hooks/use-is-mobile';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
@@ -9,8 +9,8 @@ import {
 	createWebsiteJournalPath,
 	formatStoryblokDate,
 	formatStoryblokUrl,
+	getArticleAuthors,
 	getArticleTitle,
-	getPersonDisplayName,
 } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
@@ -40,7 +40,7 @@ export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', 
 	const isMobile = useIsMobile();
 	const effectiveVariant = isMobile ? 'featured' : variant;
 	const { content } = article;
-	const author = content.author;
+	const authors = getArticleAuthors(content);
 	const href = article.slug
 		? createWebsiteJournalArticleLink(article.slug, lang, currency)
 		: createWebsiteJournalPath(lang, currency);
@@ -77,10 +77,7 @@ export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', 
 				)}
 				<div className="flex flex-1 flex-col justify-between gap-3 p-4 lg:p-6">
 					<h3 className="text-foreground text-2xl md:text-3xl">{title}</h3>
-					<div className="flex items-center gap-2">
-						<AuthorAvatar author={author} size="sm" />
-						<span className="text-sm font-bold">{getPersonDisplayName(author)}</span>
-					</div>
+					<ArticleAuthors authors={authors} lang={lang} />
 				</div>
 			</Link>
 		);
@@ -97,10 +94,7 @@ export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', 
 			>
 				<div className="flex flex-col justify-between gap-3 py-3 lg:px-4 lg:py-6">
 					<h3 className="text-foreground text-xl md:text-2xl lg:text-3xl">{title}</h3>
-					<div className="flex items-center gap-2">
-						<AuthorAvatar author={author} size="sm" />
-						<span className="text-sm font-bold">{getPersonDisplayName(author)}</span>
-					</div>
+					<ArticleAuthors authors={authors} lang={lang} />
 				</div>
 				{imageSrc && (
 					<div className="relative">
@@ -155,9 +149,8 @@ export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', 
 					</time>
 				</div>
 				<h3 className="text-foreground line-clamp-3 text-xl font-bold md:text-2xl">{title}</h3>
-				<div className="mt-auto flex items-center gap-2">
-					<AuthorAvatar author={author} size="sm" />
-					<span className="text-sm font-bold">{getPersonDisplayName(author)}</span>
+				<div className="mt-auto">
+					<ArticleAuthors authors={authors} lang={lang} />
 				</div>
 				{content.leadText && (
 					<p className="text-muted-foreground line-clamp-4 text-sm leading-relaxed">{content.leadText}</p>

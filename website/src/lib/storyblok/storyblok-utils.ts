@@ -52,6 +52,25 @@ export const getArticleTypeLabel = (articleType: ISbStoryData<ArticleType>) => {
 export const getPersonDisplayName = (person: ISbStoryData<Person>) =>
 	`${person.content.firstName} ${person.content.lastName}`.trim() || person.content.fullName;
 
+const getPersonFirstName = (person: ISbStoryData<Person>) => person.content.firstName.trim() || getPersonDisplayName(person);
+
+export const getArticleAuthors = (article: ResolvedArticle): ISbStoryData<Person>[] =>
+	[
+		article.author,
+		// Unpublished co-authors stay unresolved uuids
+		...(article.coAuthors ?? []).filter((coAuthor): coAuthor is ISbStoryData<Person> => typeof coAuthor !== 'string'),
+	].filter((person, index, all) => all.findIndex((other) => other.uuid === person.uuid) === index);
+
+// Several full names don't fit next to an avatar stack, so co-authored articles name authors by first name
+// unless two of them share one
+export const formatArticleAuthorNames = (authors: ISbStoryData<Person>[], language: string) => {
+	const firstNames = authors.map(getPersonFirstName);
+	const names =
+		authors.length > 1 && new Set(firstNames).size === firstNames.length ? firstNames : authors.map(getPersonDisplayName);
+
+	return new Intl.ListFormat(language, { type: 'conjunction' }).format(names);
+};
+
 export const getPersonAvatarSrc = (person: ISbStoryData<Person>) => {
 	const filename = person.content.avatar?.filename;
 
@@ -300,7 +319,7 @@ export const resolveStoryblokLink = (
 
 export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>, url: string): Metadata => {
 	const article = story.content;
-	const authorsFullName = `${article.author.content.firstName} ${article.author.content.lastName}`;
+	const authorNames = getArticleAuthors(article).map(getPersonDisplayName);
 	const imageFilename = article.image?.filename;
 	const tags = article.tags?.map((tag) => tag.content.value).join(', ');
 	const dimensions = imageFilename ? getDimensionsFromStoryblokImageUrl(imageFilename) : {};
@@ -323,7 +342,7 @@ export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>,
 		title: article.title,
 		description: article.leadText,
 		keywords: tags,
-		authors: { name: authorsFullName },
+		authors: authorNames.map((name) => ({ name })),
 		openGraph: {
 			title: article.title,
 			description: article.leadText,
@@ -342,7 +361,7 @@ export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>,
 		other: {
 			'article:published_time': formatStoryblokDateToIso(story.first_published_at),
 			'article:modified_time': formatStoryblokDateToIso(story.updated_at),
-			'article:author': authorsFullName,
+			'article:author': authorNames,
 			'article:section': 'News',
 			...(tags ? { 'article:tag': tags } : {}),
 		},

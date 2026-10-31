@@ -10,6 +10,7 @@ import {
 	createWebsiteJournalTagLink,
 	createWebsitePeoplePath,
 	createWebsitePersonLink,
+	getArticleAuthors,
 	getArticleTitle,
 	getArticleTypeLabel,
 	getPersonAvatarSrc,
@@ -157,18 +158,31 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 			return resultFail('Journal article not found', articleResult.status);
 		}
 		const story = articleResult.data;
-		const relatedResult = await storyblokContent.getRelativeArticles(
-			story.content.author.uuid,
-			story.id,
-			story.content.tags?.map((tag) => tag.uuid) ?? [],
-			lang,
-			JOURNAL_RELATED_ARTICLES_COUNT,
-		);
+		const authors = getArticleAuthors(story.content);
+		const [relatedResult, roleLabelsResult, circleLabelsResult, articleCountResults] = await Promise.all([
+			storyblokContent.getRelativeArticles(
+				authors.map((author) => author.uuid),
+				story.id,
+				story.content.tags?.map((tag) => tag.uuid) ?? [],
+				lang,
+				JOURNAL_RELATED_ARTICLES_COUNT,
+			),
+			storyblokContent.getPrimaryRoleLabels(lang),
+			storyblokContent.getCircleLabels(lang),
+			Promise.all(authors.map((author) => storyblokContent.getArticleCountByAuthorForDefaultLang(author.uuid))),
+		]);
 		const journalPath = createWebsiteJournalPath(lang, currency);
 
 		return resultOk({
 			story,
+			authors: authors.map((person, index) => {
+				const countResult = articleCountResults[index];
+
+				return { person, articleCount: countResult?.success ? countResult.data : 0 };
+			}),
 			relatedArticles: relatedResult.success ? relatedResult.data : [],
+			roleLabels: roleLabelsResult.success ? roleLabelsResult.data : {},
+			circleLabels: circleLabelsResult.success ? circleLabelsResult.data : {},
 			breadcrumbs: buildJournalArticleBreadcrumbs(
 				homeLabel,
 				parentLabel,

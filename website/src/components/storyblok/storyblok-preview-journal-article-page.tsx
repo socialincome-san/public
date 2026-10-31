@@ -1,6 +1,7 @@
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getArticleAuthors } from '@/lib/storyblok/storyblok-utils';
 import { getJournalArticleAction, getJournalArticlePageDataAction } from '@/modules/journal/journal.actions';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
@@ -49,12 +50,21 @@ export const StoryblokPreviewJournalArticlePage = async ({
 				return notFound();
 			}
 
+			// The visual editor sends unsaved author changes in `story`, so only the counts come from the saved article
+			const articleCounts = new Map(pageResult.data.authors.map(({ person, articleCount }) => [person.uuid, articleCount]));
+
 			return (
 				<ArticleDetail
 					story={story}
 					slug={slug}
 					lang={lang}
 					currency={currency}
+					authors={getArticleAuthors(story.content).map((person) => ({
+						person,
+						articleCount: articleCounts.get(person.uuid) ?? 0,
+					}))}
+					roleLabels={pageResult.data.roleLabels}
+					circleLabels={pageResult.data.circleLabels}
 					relatedArticles={pageResult.data.relatedArticles}
 					breadcrumbs={pageResult.data.breadcrumbs}
 				/>
