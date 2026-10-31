@@ -40,6 +40,20 @@ describe('buildJournalRssFeed', () => {
 		}
 	});
 
+	it('lists every resolved author as a creator', () => {
+		const coAuthored = article('co', 'Co', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');
+		const content = { ...coAuthored.content, coAuthors: [{ content: { fullName: 'B. Author' } }, 'unpublished-uuid'] };
+		const document = new DOMParser().parseFromString(
+			buildJournalRssFeed([{ ...coAuthored, content } as unknown as JournalRssArticle]),
+			'text/xml',
+		);
+
+		expect([...document.getElementsByTagName('dc:creator')].map((creator) => creator.textContent)).toEqual([
+			'A. Author',
+			'B. Author',
+		]);
+	});
+
 	it('removes XML 1.0 control characters while preserving valid text', () => {
 		const document = new DOMParser().parseFromString(
 			buildJournalRssFeed([

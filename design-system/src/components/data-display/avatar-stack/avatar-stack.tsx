@@ -11,6 +11,7 @@ const ringVariants = cva('ring-card rounded-full', {
 		size: {
 			xs: 'ring-2',
 			sm: 'ring-2',
+			default: 'ring-2',
 			lg: 'ring-2',
 			xl: 'ring-3',
 		},

@@ -208,7 +208,7 @@ describe('getJournalArticlePageData', () => {
 			},
 			status: undefined,
 		});
-		expect(mockGetRelativeArticles).toHaveBeenCalledWith('author-1', 1, ['tag-1'], 'de', 3);
+		expect(mockGetRelativeArticles).toHaveBeenCalledWith(['author-1'], 1, ['tag-1'], 'de', 3);
 	});
 });
 

@@ -6,7 +6,7 @@ export type JournalRssArticle = {
 	first_published_at?: string | null;
 	published_at?: string | null;
 	created_at: string;
-	content: Pick<Article, 'title' | 'leadText' | 'author'>;
+	content: Pick<Article, 'title' | 'leadText' | 'author' | 'coAuthors'>;
 };
 
 const DEFAULT_FEED_LANGUAGE = 'en';
@@ -47,7 +47,7 @@ const getPublicationTimestamp = (article: JournalRssArticle) => {
 
 const getAuthorName = (author: Article['author']) => {
 	if (!author || typeof author === 'string' || !isRecord(author) || !isRecord(author.content)) {
-		return 'Social Income';
+		return '';
 	}
 
 	const fullName = typeof author.content.fullName === 'string' ? author.content.fullName.trim() : '';
@@ -59,7 +59,13 @@ const getAuthorName = (author: Article['author']) => {
 	const lastName = typeof author.content.lastName === 'string' ? author.content.lastName.trim() : '';
 	const name = `${firstName} ${lastName}`.trim();
 
-	return name || (typeof author.content.name === 'string' && author.content.name.trim()) || 'Social Income';
+	return name || (typeof author.content.name === 'string' && author.content.name.trim()) || '';
+};
+
+const getAuthorNames = ({ author, coAuthors }: JournalRssArticle['content']) => {
+	const names = [author, ...(coAuthors ?? [])].map(getAuthorName).filter(Boolean);
+
+	return names.length > 0 ? names : ['Social Income'];
 };
 
 const formatRssDate = (value: string | null | undefined) => {
@@ -91,7 +97,7 @@ export const buildJournalRssFeed = (
 				`<link>${escapeXml(link)}</link>`,
 				`<guid isPermaLink="true">${escapeXml(link)}</guid>`,
 				...(publicationDate ? [`<pubDate>${publicationDate}</pubDate>`] : []),
-				`<dc:creator>${escapeXml(getAuthorName(article.content.author))}</dc:creator>`,
+				...getAuthorNames(article.content).map((name) => `<dc:creator>${escapeXml(name)}</dc:creator>`),
 				`<description>${escapeXml(article.content.leadText?.trim() ?? '')}</description>`,
 				'</item>',
 			].join('');

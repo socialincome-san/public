@@ -10,6 +10,7 @@ import {
 	createWebsiteJournalTagLink,
 	createWebsitePeoplePath,
 	createWebsitePersonLink,
+	getArticleAuthors,
 	getArticleTitle,
 	getArticleTypeLabel,
 	getPersonAvatarSrc,
@@ -158,7 +159,7 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 		}
 		const story = articleResult.data;
 		const relatedResult = await storyblokContent.getRelativeArticles(
-			story.content.author.uuid,
+			getArticleAuthors(story.content).map((author) => author.uuid),
 			story.id,
 			story.content.tags?.map((tag) => tag.uuid) ?? [],
 			lang,
