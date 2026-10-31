@@ -1,5 +1,5 @@
 [tools]
-node = "24"
+node = "26"
 java = "25"
 
 [tasks.install]
