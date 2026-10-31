@@ -5,7 +5,8 @@
 		"currency": "Valuta"
 	},
 	"stepAmount": {
-		"title": "Fai una donazione",
+		"title": "Dona il tuo 1 %",
+		"title-custom-amount": "La tua donazione",
 		"monthly-income-label": "Il tuo reddito mensile",
 		"choose-own-amount": "Oppure scegli un importo personalizzato",
 		"your-one-percent": "Il tuo 1 %",
@@ -14,7 +15,13 @@
 		"one-time": "Una tantum",
 		"donate-now": "Dona ora",
 		"donate-now-with-amount": "Dona {amount} ora",
-		"custom-amount-placeholder": "Importo"
+		"donate-monthly-with-amount": "Dona {amount} al mese",
+		"switch-to-one-time": "Dona una sola volta",
+		"switch-to-one-time-with-amount": "Dona {amount} una sola volta",
+		"switch-to-monthly": "Dona ogni mese",
+		"switch-to-monthly-with-amount": "Dona {amount} al mese",
+		"custom-amount-placeholder": "Importo",
+		"custom-amount-label": "Importo personalizzato"
 	},
 	"stepPlan": {
 		"monthly-title": "Donazione mensile",

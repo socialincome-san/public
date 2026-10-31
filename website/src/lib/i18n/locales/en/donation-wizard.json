@@ -5,7 +5,8 @@
 		"currency": "Currency"
 	},
 	"stepAmount": {
-		"title": "Make a donation",
+		"title": "Donate your 1 %",
+		"title-custom-amount": "Your donation",
 		"monthly-income-label": "Your monthly income",
 		"choose-own-amount": "Or choose own amount",
 		"your-one-percent": "Your 1 %",
@@ -14,7 +15,13 @@
 		"one-time": "One-time",
 		"donate-now": "Donate now",
 		"donate-now-with-amount": "Donate {amount} now",
-		"custom-amount-placeholder": "Amount"
+		"donate-monthly-with-amount": "Donate {amount} monthly",
+		"switch-to-one-time": "Donate once",
+		"switch-to-one-time-with-amount": "Donate {amount} once",
+		"switch-to-monthly": "Donate monthly",
+		"switch-to-monthly-with-amount": "Donate {amount} monthly",
+		"custom-amount-placeholder": "Amount",
+		"custom-amount-label": "Custom amount"
 	},
 	"stepPlan": {
 		"monthly-title": "Monthly Donation",
