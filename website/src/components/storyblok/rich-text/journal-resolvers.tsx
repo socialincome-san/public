@@ -108,6 +108,12 @@ export const bannerRichTextNodeResolvers = {
 	[NODE_PARAGRAPH]: (children: ReactNode, props?: RichTextAlignmentProps) => (
 		<p className={cn('my-4 leading-normal first:mt-0 last:mb-0', getRichTextAlignmentClassName(props))}>{children}</p>
 	),
+	// Numbers drawn as text instead of list markers: markers use tabular figures and hang left of the banner's text
+	[NODE_OL]: (children: ReactNode) => (
+		<ol className="my-4 list-none space-y-1 pl-0 [counter-reset:banner-list] *:relative *:pl-[1.5em] *:[counter-increment:banner-list] *:before:absolute *:before:left-0 *:before:content-[counter(banner-list)_'.'] first:mt-0 last:mb-0">
+			{children}
+		</ol>
+	),
 };
 
 export const footnoteRichTextNodeResolvers = {
