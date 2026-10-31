@@ -12,6 +12,7 @@ export const DATA_TABLE_FETCH_PREFIX_REGEX = /^Could not fetch [^:]+:\s*/i;
 
 export const CSV_DOUBLE_QUOTES_REGEX = /"/g;
 export const CSV_NEEDS_QUOTES_REGEX = /[",\n]/;
+export const CSV_PHONE_WITHOUT_PLUS_REGEX = /^[1-9]\d{1,14}$/;
 
 // Matches a time-commitment datasource value that is a plain number of hours ("1-2", "16+"), as
 // opposed to a worded entry such as "On a break" — only the former takes an "hrs/week" unit.

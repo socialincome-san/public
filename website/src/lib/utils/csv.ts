@@ -1,7 +1,7 @@
 import { Gender } from '@/generated/prisma/enums';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { format, isValid, parse } from 'date-fns';
-import { CSV_DOUBLE_QUOTES_REGEX, CSV_NEEDS_QUOTES_REGEX } from './regex';
+import { CSV_DOUBLE_QUOTES_REGEX, CSV_NEEDS_QUOTES_REGEX, CSV_PHONE_WITHOUT_PLUS_REGEX } from './regex';
 
 export type CsvRow = Record<string, string>;
 
@@ -53,6 +53,13 @@ const parseOptionalCsvValue = (value: string | undefined): string | undefined =>
 	return trimmedValue ?? undefined;
 };
 
+// Spreadsheet apps turn a leading "+" into a formula, so the CSV may hold phone numbers without it.
+const parseCsvPhone = (value: string | undefined): string | undefined => {
+	const trimmedValue = parseOptionalCsvValue(value);
+
+	return trimmedValue && CSV_PHONE_WITHOUT_PLUS_REGEX.test(trimmedValue) ? `+${trimmedValue}` : trimmedValue;
+};
+
 const parseCsvGender = (rowNumber: number, value: string | undefined): Result<Gender | null> => {
 	const normalizedValue = parseOptionalCsvValue(value)?.toLowerCase();
 	if (!normalizedValue) {
@@ -101,8 +108,8 @@ export const parseCsvOptionalFields = (rowNumber: number, row: Record<string, st
 	}
 
 	return resultOk({
-		contactPhone: parseOptionalCsvValue(row.contactPhone),
-		paymentPhone: parseOptionalCsvValue(row.paymentPhone),
+		contactPhone: parseCsvPhone(row.contactPhone),
+		paymentPhone: parseCsvPhone(row.paymentPhone),
 		dateOfBirth: dateOfBirthResult.data,
 		gender: genderResult.data,
 		paymentInformationCode: parseOptionalCsvValue(row.paymentInformationCode) ?? null,
