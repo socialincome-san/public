@@ -38,6 +38,8 @@ export const Banner = ({ variant, size, collapsible, children }: BannerProps) =>
 	const contentId = useId();
 	const collapsed = collapsible !== undefined && !expanded;
 	const contentRef = useRef<HTMLDivElement>(null);
+	// Child selectors only reach elements, so plain text is clamped on the container instead
+	const isText = typeof children === 'string' || typeof children === 'number';
 
 	// Later blocks are display: none and so unfocusable, but links clamped away inside the first block keep their
 	// layout below the visible line. Only those leave the tab order; links on the visible line stay reachable.
@@ -65,7 +67,7 @@ export const Banner = ({ variant, size, collapsible, children }: BannerProps) =>
 			observer.disconnect();
 			links.forEach((link) => link.removeAttribute('tabindex'));
 		};
-	}, [collapsed]);
+	}, [collapsed, children]);
 
 	return (
 		<div className={bannerVariants({ variant, size })}>
@@ -76,7 +78,8 @@ export const Banner = ({ variant, size, collapsible, children }: BannerProps) =>
 				id={contentId}
 				className={cn(
 					'min-w-0 flex-1',
-					collapsed && '*:not-first:hidden *:first:my-0 *:first:line-clamp-1 [&_a]:relative [&_a]:z-10',
+					collapsed &&
+						(isText ? 'line-clamp-1' : '*:not-first:hidden *:first:my-0 *:first:line-clamp-1 [&_a]:relative [&_a]:z-10'),
 				)}
 			>
 				{children}
