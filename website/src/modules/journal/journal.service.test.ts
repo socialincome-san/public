@@ -186,7 +186,7 @@ describe('getJournalOverviewPageData', () => {
 });
 
 describe('getJournalArticlePageData', () => {
-	test('resolves related articles and article breadcrumbs', async () => {
+	test('resolves authors with their article count, related articles and article breadcrumbs', async () => {
 		const result = await getJournalArticlePageData({
 			lang: 'de',
 			currency: 'CHF',
@@ -199,16 +199,20 @@ describe('getJournalArticlePageData', () => {
 			success: true,
 			data: {
 				story: article,
+				authors: [{ person: author, articleCount: 2 }],
 				relatedArticles: [article],
 				breadcrumbs: [
 					{ label: 'Home', href: '/de/chf' },
 					{ label: 'Journal', href: '/de/chf/journal' },
 					{ label: 'A story', href: '/de/chf/journal/a-story' },
 				],
+				roleLabels: { editor: 'Editor' },
+				circleLabels: { 'tech-circle': 'tech-circle' },
 			},
 			status: undefined,
 		});
 		expect(mockGetRelativeArticles).toHaveBeenCalledWith(['author-1'], 1, ['tag-1'], 'de', 3);
+		expect(mockGetArticleCountByAuthorForDefaultLang).toHaveBeenCalledWith('author-1');
 	});
 });
 

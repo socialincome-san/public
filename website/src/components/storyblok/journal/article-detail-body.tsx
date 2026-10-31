@@ -1,10 +1,8 @@
 import { DonationForm } from '@/components/donation-wizard/donation-form';
-import { ArticleAuthorLinks } from '@/components/storyblok/journal/article-authors';
 import { ArticleRichText } from '@/components/storyblok/journal/article-rich-text';
 import { OriginalLanguageLink } from '@/components/storyblok/journal/original-language-link';
 import { TagBadge } from '@/components/storyblok/journal/tag-badge';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getArticleAuthors } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
 import { getTranslations } from 'next-intl/server';
@@ -54,8 +52,6 @@ export const ArticleDetailBody = async ({ story, slug, lang, currency }: Props) 
 					))}
 				</div>
 			)}
-
-			<ArticleAuthorLinks authors={getArticleAuthors(article)} lang={lang} currency={currency} />
 		</>
 	);
 };

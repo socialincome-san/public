@@ -32,7 +32,7 @@ export const ArticleAuthorLinks = ({ authors, lang, currency }: Props & { curren
 
 	return (
 		<div className="flex items-center gap-3">
-			<AvatarStack people={authors.map(toStackPerson)} size="xl" />
+			<AvatarStack people={authors.map(toStackPerson)} size="lg" />
 			<p className="text-lg font-medium">
 				{parts.map((part, index) => {
 					if (part.type === 'literal') {
