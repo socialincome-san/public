@@ -4,7 +4,8 @@ import { Banner } from './banner';
 const text = (
 	<>
 		<p className="mb-4">
-			Social Income pays <a href="#">unconditional basic incomes</a> to people living in poverty in Sierra Leone.
+			Social Income pays <a href="#">unconditional basic incomes</a> to people living in poverty in Sierra Leone.{' '}
+			<a href="#">How it works</a>
 		</p>
 		<p>
 			Every month, recipients receive their income directly on their mobile phones. They decide for themselves what they
@@ -19,7 +20,7 @@ const meta = {
 	tags: ['autodocs'],
 	decorators: [
 		(Story) => (
-			<div className="max-w-xl">
+			<div className="w-xl max-w-full">
 				<Story />
 			</div>
 		),
@@ -71,5 +72,21 @@ export const CollapsedByDefault: Story = {
 	args: {
 		variant: 'gradient',
 		collapsible: { expandLabel: 'Show more', collapseLabel: 'Show less', defaultCollapsed: true },
+	},
+};
+
+export const CollapsedWithShortFirstLine: Story = {
+	args: {
+		variant: 'highlight',
+		collapsible: { expandLabel: 'Show more', collapseLabel: 'Show less', defaultCollapsed: true },
+		children: (
+			<>
+				<p className="mb-4">First tasks for a volunteer</p>
+				<ul className="list-disc pl-6">
+					<li>Join the onboarding call</li>
+					<li>Pick a first task from the board</li>
+				</ul>
+			</>
+		),
 	},
 };

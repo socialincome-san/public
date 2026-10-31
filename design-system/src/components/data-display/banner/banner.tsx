@@ -2,7 +2,7 @@
 
 import { cva, type VariantProps } from 'class-variance-authority';
 import { ChevronDownIcon } from 'lucide-react';
-import { useId, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { cn } from '../../../cn';
 
 // The translucent variants let the page gradient through at 70%: the darkest alpha that keeps text contrast
@@ -37,11 +37,48 @@ export const Banner = ({ variant, size, collapsible, children }: BannerProps) =>
 	const [expanded, setExpanded] = useState(!collapsible?.defaultCollapsed);
 	const contentId = useId();
 	const collapsed = collapsible !== undefined && !expanded;
+	const contentRef = useRef<HTMLDivElement>(null);
+
+	// Later blocks are display: none and so unfocusable, but links clamped away inside the first block keep their
+	// layout below the visible line. Only those leave the tab order; links on the visible line stay reachable.
+	useEffect(() => {
+		const firstBlock = contentRef.current?.firstElementChild;
+		if (!collapsed || !firstBlock) {
+			return;
+		}
+		const links = [...firstBlock.querySelectorAll('a')];
+		const updateClippedLinks = () => {
+			const visibleBottom = firstBlock.getBoundingClientRect().bottom;
+			for (const link of links) {
+				if (link.getBoundingClientRect().top >= visibleBottom) {
+					link.setAttribute('tabindex', '-1');
+				} else {
+					link.removeAttribute('tabindex');
+				}
+			}
+		};
+		updateClippedLinks();
+		const observer = new ResizeObserver(updateClippedLinks);
+		observer.observe(firstBlock);
+
+		return () => {
+			observer.disconnect();
+			links.forEach((link) => link.removeAttribute('tabindex'));
+		};
+	}, [collapsed]);
 
 	return (
 		<div className={bannerVariants({ variant, size })}>
-			{/* Links lift above the stretched toggle, so a link in the visible first line stays clickable */}
-			<div id={contentId} className={cn('min-w-0 flex-1', collapsed && 'line-clamp-1 [&_a]:relative [&_a]:z-10')}>
+			{/* Clamping only the first block keeps the ellipsis for a first line that wraps: clamping the whole content
+			    adds one whenever later blocks are cut. Links lift above the stretched toggle to stay clickable. */}
+			<div
+				ref={contentRef}
+				id={contentId}
+				className={cn(
+					'min-w-0 flex-1',
+					collapsed && '*:not-first:hidden *:first:my-0 *:first:line-clamp-1 [&_a]:relative [&_a]:z-10',
+				)}
+			>
 				{children}
 			</div>
 			{collapsible ? (
