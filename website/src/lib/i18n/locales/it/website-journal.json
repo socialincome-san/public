@@ -54,5 +54,9 @@
 			"original": "Prima pubblicazione",
 			"related": "Queste fonti offrono contesto e informazioni"
 		}
+	},
+	"banner": {
+		"expand": "Mostra di più",
+		"collapse": "Mostra di meno"
 	}
 }

@@ -54,5 +54,9 @@
 			"original": "Erstveröffentlichung",
 			"related": "Diese Quellen lieferten Informationen und Kontext"
 		}
+	},
+	"banner": {
+		"expand": "Mehr anzeigen",
+		"collapse": "Weniger anzeigen"
 	}
 }
