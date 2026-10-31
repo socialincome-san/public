@@ -54,6 +54,21 @@ describe('buildJournalRssFeed', () => {
 		]);
 	});
 
+	it('keeps a resolved co-author whose uuid is also the unresolved lead author', () => {
+		const coAuthored = article('unresolved', 'Unresolved', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');
+		const content = {
+			...coAuthored.content,
+			author: 'lead',
+			coAuthors: [{ uuid: 'lead', content: { firstName: 'Ada', lastName: 'Lovelace' } }],
+		};
+		const document = new DOMParser().parseFromString(
+			buildJournalRssFeed([{ ...coAuthored, content } as unknown as JournalRssArticle]),
+			'text/xml',
+		);
+
+		expect([...document.getElementsByTagName('dc:creator')].map((creator) => creator.textContent)).toEqual(['Ada Lovelace']);
+	});
+
 	it('names each author once, preferring first and last name', () => {
 		const lead = { uuid: 'lead', content: { firstName: 'Ada', lastName: 'Lovelace', fullName: 'Ada King' } };
 		const coAuthored = article('dup', 'Dup', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');

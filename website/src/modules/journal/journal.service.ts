@@ -159,7 +159,7 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 		}
 		const story = articleResult.data;
 		const authors = getArticleAuthors(story.content);
-		const [relatedResult, roleLabelsResult, circleLabelsResult, articleCountResults] = await Promise.all([
+		const [relatedResult, roleLabelsResult, circleLabelsResult, articleCountsResult] = await Promise.all([
 			storyblokContent.getRelativeArticles(
 				authors.map((author) => author.uuid),
 				story.id,
@@ -169,17 +169,14 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 			),
 			storyblokContent.getPrimaryRoleLabels(lang),
 			storyblokContent.getCircleLabels(lang),
-			Promise.all(authors.map((author) => storyblokContent.getArticleCountByAuthorForDefaultLang(author.uuid))),
+			getJournalAuthorArticleCounts(authors.map((author) => author.uuid)),
 		]);
+		const articleCounts = articleCountsResult.success ? articleCountsResult.data : {};
 		const journalPath = createWebsiteJournalPath(lang, currency);
 
 		return resultOk({
 			story,
-			authors: authors.map((person, index) => {
-				const countResult = articleCountResults[index];
-
-				return { person, articleCount: countResult?.success ? countResult.data : 0 };
-			}),
+			authors: authors.map((person) => ({ person, articleCount: articleCounts[person.uuid] ?? 0 })),
 			relatedArticles: relatedResult.success ? relatedResult.data : [],
 			roleLabels: roleLabelsResult.success ? roleLabelsResult.data : {},
 			circleLabels: circleLabelsResult.success ? circleLabelsResult.data : {},
@@ -198,6 +195,22 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 
 		return resultFail('Could not load journal article');
 	}
+};
+
+export const getJournalAuthorArticleCounts = async (authorIds: string[]): Promise<Result<Record<string, number>>> => {
+	const results = await Promise.all(
+		authorIds.map((authorId) => storyblokContent.getArticleCountByAuthorForDefaultLang(authorId)),
+	);
+
+	return resultOk(
+		Object.fromEntries(
+			authorIds.map((authorId, index) => {
+				const result = results[index];
+
+				return [authorId, result?.success ? result.data : 0];
+			}),
+		),
+	);
 };
 
 export const getJournalPersonPageData = async (request: JournalPageRequest): Promise<Result<JournalPersonPageData>> => {
