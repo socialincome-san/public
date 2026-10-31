@@ -47,8 +47,10 @@ export interface ArticleType {
 
 export interface BannerSection {
   text: StoryblokRichTextDoc;
-  color: "darkBlue" | "blue" | "white";
+  color: "darkBlue" | "blue" | "white" | "gradient" | "highlight";
   smallText?: boolean;
+  collapsible?: boolean;
+  collapsedByDefault?: boolean;
   component: "bannerSection";
   _uid: string;
   _editable?: string | undefined;
