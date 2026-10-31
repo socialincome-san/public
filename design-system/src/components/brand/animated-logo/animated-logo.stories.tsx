@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { AnimatedLogo } from './animated-logo';
 
 const meta = {
-	title: 'Brand/Animated Logo',
+	title: 'Brand/Logo/Animated',
 	component: AnimatedLogo,
 	tags: ['autodocs'],
 	parameters: {
 		docs: {
 			description: {
 				component:
-					'Social Income wordmark as a Lottie animation, in white for dark backgrounds or blue for light ones. Animates in once, the first time it is fully in view, and shows the final frame when reduced motion is preferred.',
+					'Social Income wordmark as a Lottie animation, in white for dark backgrounds or blue for light ones. Animates in once, the first time it is fully in view, and shows the final frame when reduced motion is preferred. The static logos are under Brand › Logo › Static.',
 			},
 		},
 	},
@@ -20,6 +20,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const White: Story = {
+	parameters: { docs: { description: { story: 'Site footer.' } } },
 	args: {
 		src: 'https://a.storyblok.com/f/109655/x/880b0018b3/social_income_logo_animation_white.json',
 	},

@@ -1,4 +1,6 @@
 import type { Preview } from '@storybook/nextjs-vite';
+import { create } from 'storybook/theming';
+import { fontBase } from './font';
 
 import '../src/styles.css';
 
@@ -7,6 +9,7 @@ const preview: Preview = {
 		layout: 'centered',
 		docs: {
 			codePanel: true,
+			theme: create({ base: 'light', fontBase }),
 		},
 		options: {
 			storySort: {
@@ -22,6 +25,7 @@ const preview: Preview = {
 					'Data Display',
 					'Layout',
 					'Brand',
+					['Logo', ['Static', 'Animated']],
 					'Icons',
 				],
 			},
