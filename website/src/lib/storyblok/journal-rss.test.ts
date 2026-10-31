@@ -18,7 +18,7 @@ const article = (
 			component: 'article',
 			title,
 			leadText,
-			author: { content: { fullName: 'A. Author' } },
+			author: { uuid: 'a-author', content: { fullName: 'A. Author' } },
 		},
 	}) as unknown as JournalRssArticle;
 
@@ -42,7 +42,10 @@ describe('buildJournalRssFeed', () => {
 
 	it('lists every resolved author as a creator', () => {
 		const coAuthored = article('co', 'Co', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');
-		const content = { ...coAuthored.content, coAuthors: [{ content: { fullName: 'B. Author' } }, 'unpublished-uuid'] };
+		const content = {
+			...coAuthored.content,
+			coAuthors: [{ uuid: 'b-author', content: { fullName: 'B. Author' } }, 'unpublished-uuid'],
+		};
 		const document = new DOMParser().parseFromString(
 			buildJournalRssFeed([{ ...coAuthored, content } as unknown as JournalRssArticle]),
 			'text/xml',
@@ -72,7 +75,7 @@ describe('buildJournalRssFeed', () => {
 	it('names each author once, preferring first and last name', () => {
 		const lead = { uuid: 'lead', content: { firstName: 'Ada', lastName: 'Lovelace', fullName: 'Ada King' } };
 		const coAuthored = article('dup', 'Dup', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');
-		const content = { ...coAuthored.content, author: lead, coAuthors: [lead] };
+		const content = { ...coAuthored.content, author: lead, coAuthors: [{ ...lead, content: { ...lead.content } }] };
 		const document = new DOMParser().parseFromString(
 			buildJournalRssFeed([{ ...coAuthored, content } as unknown as JournalRssArticle]),
 			'text/xml',

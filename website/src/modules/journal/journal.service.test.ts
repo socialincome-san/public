@@ -57,6 +57,7 @@ import {
 	getJournalArticlePageData,
 	getJournalArticlesByArticleType,
 	getJournalArticlesByTag,
+	getJournalAuthorArticleCounts,
 	getJournalOverviewPageData,
 	getJournalPersonPageData,
 } from './journal.service';
@@ -282,6 +283,30 @@ describe('getJournalPersonPageData', () => {
 				{ label: 'People', href: '/de/chf/people' },
 				{ label: 'Ada Lovelace', href: '/de/chf/person/ada' },
 			],
+		});
+	});
+});
+
+describe('getJournalAuthorArticleCounts', () => {
+	test('counts the articles of each author', async () => {
+		mockGetArticleCountByAuthorForDefaultLang.mockResolvedValueOnce({ success: true, data: 5 });
+
+		expect(await getJournalAuthorArticleCounts(['author-1', 'author-2'])).toEqual({
+			success: true,
+			data: { 'author-1': 5, 'author-2': 2 },
+		});
+	});
+
+	test('fails when a count cannot be loaded', async () => {
+		mockGetArticleCountByAuthorForDefaultLang.mockResolvedValueOnce({
+			success: false,
+			error: 'Storyblok error',
+			status: 500,
+		});
+
+		expect(await getJournalAuthorArticleCounts(['author-1', 'author-2'])).toMatchObject({
+			success: false,
+			error: 'Could not load author article counts',
 		});
 	});
 });

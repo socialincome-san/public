@@ -62,14 +62,11 @@ const getAuthorName = (author: Article['author']) => {
 	return fullName || (typeof author.content.name === 'string' && author.content.name.trim()) || '';
 };
 
-const getAuthorId = (author: Article['author']) =>
-	isRecord(author) && typeof author.uuid === 'string' ? author.uuid : author;
-
 const getAuthorNames = ({ author, coAuthors }: JournalRssArticle['content']) => {
 	// Unresolved authors are bare uuids, which would otherwise hide the resolved entry for the same person
 	const authors = [author, ...(coAuthors ?? [])].filter((person) => typeof person !== 'string');
 	const names = authors
-		.filter((person, index) => authors.findIndex((other) => getAuthorId(other) === getAuthorId(person)) === index)
+		.filter((person, index) => authors.findIndex((other) => other.uuid === person.uuid) === index)
 		.map(getAuthorName)
 		.filter(Boolean);
 

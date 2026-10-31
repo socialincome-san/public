@@ -24,7 +24,7 @@ export const journalArticlesByUuidsRequestSchema = z.object({
 });
 
 export const journalAuthorArticleCountsRequestSchema = z.object({
-	authorIds: z.array(z.string().trim().min(1)),
+	authorIds: z.array(z.string().trim().min(1)).max(50),
 });
 
 export const journalArticlesByTagRequestSchema = z.object({

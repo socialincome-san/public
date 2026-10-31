@@ -199,18 +199,20 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 
 export const getJournalAuthorArticleCounts = async (authorIds: string[]): Promise<Result<Record<string, number>>> => {
 	const results = await Promise.all(
-		authorIds.map((authorId) => storyblokContent.getArticleCountByAuthorForDefaultLang(authorId)),
+		authorIds.map(async (authorId) => ({
+			authorId,
+			result: await storyblokContent.getArticleCountByAuthorForDefaultLang(authorId),
+		})),
 	);
+	const counts: Record<string, number> = {};
+	for (const { authorId, result } of results) {
+		if (!result.success) {
+			return resultFail('Could not load author article counts');
+		}
+		counts[authorId] = result.data;
+	}
 
-	return resultOk(
-		Object.fromEntries(
-			authorIds.map((authorId, index) => {
-				const result = results[index];
-
-				return [authorId, result?.success ? result.data : 0];
-			}),
-		),
-	);
+	return resultOk(counts);
 };
 
 export const getJournalPersonPageData = async (request: JournalPageRequest): Promise<Result<JournalPersonPageData>> => {
