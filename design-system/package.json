@@ -59,7 +59,7 @@
 		"vaul": "1.1.2"
 	},
 	"devDependencies": {
-		"@smartive/eslint-config": "7.0.3",
+		"@smartive/eslint-config": "10.0.0",
 		"@smartive/prettier-config": "3.1.2",
 		"@storybook/addon-a11y": "10.6.4",
 		"@storybook/addon-designs": "12.0.0",
