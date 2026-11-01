@@ -45,7 +45,11 @@
 			"city": "City",
 			"zip": "Zip",
 			"name": "Name",
-			"focuses": "Focuses"
+			"focuses": "Focuses",
+			"validation": {
+				"required": "This field is required.",
+				"invalid-email": "Please enter a valid email address."
+			}
 		}
 	},
 	"sections": {

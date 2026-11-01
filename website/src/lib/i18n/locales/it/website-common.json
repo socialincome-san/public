@@ -209,7 +209,7 @@
 		},
 		"runway": {
 			"description": "Anche se ogni donatore smettesse di donare oggi, potremmo continuare a pagare i beneficiari per altri {count} mesi.",
-			"zewo-hint": "In linea con ZEWO"
+			"zewo-hint": "In linea con <zewo>ZEWO</zewo>"
 		},
 		"countries": {
 			"headline": "{count, plural, one {Donazioni per un totale di {amount} sono arrivate da {countriesCount} paese} other {Donazioni per un totale di {amount} sono arrivate da {countriesCount} paesi}}",
@@ -409,12 +409,23 @@
 			}
 		}
 	},
+	"circles": {
+		"title": "Circoli",
+		"member-summary": "{active, plural, one {# attivo} other {# attivi}} · {interested, plural, one {# membro interessato} other {# membri interessati}}",
+		"members-empty": "Ancora nessun membro",
+		"empty": "Ancora nessun circolo."
+	},
+	"task-cards": {
+		"show-all": "Mostra tutte le {count} attività",
+		"show-fewer": "Mostra meno attività"
+	},
 	"breadcrumb": {
 		"home": "Inizio"
 	},
 	"wallet": {
 		"paid-out": "Versato",
-		"recipients": "Beneficiari"
+		"recipients": "Beneficiari",
+		"concluded": "Concluso"
 	},
 	"person-grid": {
 		"search-placeholder": "Cerca per nome",

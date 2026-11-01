@@ -5,6 +5,7 @@ const mockRemoveRecipientsFromProgram = jest.fn();
 const mockDeleteProgram = jest.fn();
 const mockCreateProgram = jest.fn();
 const mockUpdateOrganizationProgramAccesses = jest.fn();
+const mockGetOperatorFallbackOrganizationId = jest.fn();
 
 const mockCreateDefaultCampaign = jest.fn();
 const mockDetachProgramSurveys = jest.fn();
@@ -35,7 +36,7 @@ jest.mock('@/modules/countries/country.service', () => ({
 }));
 jest.mock('@/modules/organizations/organization.service', () => ({
 	createOrganizationFromEmail: () => Promise.resolve({ success: true, data: { id: 'organization-1' } }),
-	getOperatorFallbackOrganizationId: () => Promise.resolve({ success: true, data: 'organization-2' }),
+	getOperatorFallbackOrganizationId: mockGetOperatorFallbackOrganizationId,
 }));
 jest.mock('@/modules/users/user.service', () => ({
 	createPublicOnboardingUser: () => Promise.resolve({ success: true, data: { userId: 'user-2' } }),
@@ -88,6 +89,7 @@ describe('program recipient write attribution', () => {
 		mockDeleteProgramCampaigns.mockResolvedValue({ success: true, data: undefined });
 		mockDetachProgramSurveys.mockResolvedValue({ success: true, data: undefined });
 		mockCreateProgram.mockResolvedValue({ id: 'program-1' });
+		mockGetOperatorFallbackOrganizationId.mockResolvedValue({ success: true, data: 'organization-2' });
 	});
 
 	test('attributes candidate assignment and the default campaign to the portal user or the new website user', async () => {
@@ -103,6 +105,8 @@ describe('program recipient write attribution', () => {
 			input,
 			expect.objectContaining({ ownerOrganizationId: 'organization-1', operatorOrganizationId: 'organization-2' }),
 		);
+		expect(mockGetOperatorFallbackOrganizationId).toHaveBeenNthCalledWith(1, CountryCode.SL);
+		expect(mockGetOperatorFallbackOrganizationId).toHaveBeenNthCalledWith(2, CountryCode.SL);
 		expect(mockCreateDefaultCampaign.mock.calls.map(([audit]: unknown[]) => audit)).toEqual(
 			mockAssignRandomCandidatesToProgram.mock.calls.map(([audit]: unknown[]) => audit),
 		);

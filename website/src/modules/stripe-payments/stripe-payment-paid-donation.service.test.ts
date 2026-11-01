@@ -93,3 +93,22 @@ describe('getPaidCheckoutDonation donor status', () => {
 		});
 	});
 });
+
+describe('getPaidCheckoutDonation session type', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockFindContributor.mockResolvedValue({ success: true, data: null });
+	});
+
+	it('accepts sessions from the donation bar', async () => {
+		mockRetrieveStripeCheckoutSession.mockResolvedValue({ success: true, data: { ...paidSession, ui_mode: 'elements' } });
+
+		expect((await getPaidCheckoutDonation('cs_123')).success).toBe(true);
+	});
+
+	it('rejects hosted checkout sessions', async () => {
+		mockRetrieveStripeCheckoutSession.mockResolvedValue({ success: true, data: { ...paidSession, ui_mode: 'hosted_page' } });
+
+		expect(await getPaidCheckoutDonation('cs_123')).toEqual({ success: false, error: 'Invalid checkout session type' });
+	});
+});
