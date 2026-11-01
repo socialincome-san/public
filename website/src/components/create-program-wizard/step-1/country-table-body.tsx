@@ -36,8 +36,8 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 			className="max-h-96 w-full max-w-full min-w-0 overflow-x-auto overflow-y-auto rounded-xl border"
 		>
 			<div className="min-w-[820px]">
-				<Table>
-					<TableHeader>
+				<Table stickyHeader>
+					<TableHeader sticky>
 						<TableRow>
 							<TableHead width="fit" />
 							<TableHead />

@@ -27,6 +27,8 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
 import { FormActions, type ExtraAction } from './form-actions';
 
+type FormZodObject = ZodObject<Record<string, z.core.$ZodType>>;
+
 export type FormField = {
 	label: string;
 	placeholder?: string;
@@ -44,7 +46,7 @@ export type FormSchema = {
 };
 
 // recursively build Zod Schema from Form Schema
-const buildZodSchema = (schemaDef: FormSchema): ZodObject<any> => {
+const buildZodSchema = (schemaDef: FormSchema): FormZodObject => {
 	const result: Record<string, ZodTypeAny> = {};
 
 	for (const key in schemaDef.fields) {
@@ -66,91 +68,93 @@ const isFormField = (obj: unknown): obj is FormField => {
 	return obj !== null && typeof obj === 'object' && !('fields' in obj);
 };
 
-// get first level or nested def object from Zod Schema
-const getDef = (key: string, zodSchema: z.ZodObject<any>, parentKey?: string) => {
-	const zodShape = zodSchema.shape as Record<string, { _def?: unknown }>;
-	if (!parentKey) {
-		return zodShape[String(key)]?._def;
-	}
-	const nestedShapeFactory = (zodShape[parentKey]?._def as { shape?: unknown })?.shape as
-		(() => Record<string, { _def?: unknown }>) | undefined;
-	const nestedShape = nestedShapeFactory ? nestedShapeFactory() : undefined;
-
-	return nestedShape?.[String(key)]?._def;
-};
-
-const getTypeName = (def: unknown): string | undefined => {
-	if (!def || typeof def !== 'object') {
-		return undefined;
-	}
-	const maybeTypeName = (def as { typeName?: unknown }).typeName;
-
-	return typeof maybeTypeName === 'string' ? maybeTypeName : undefined;
-};
-
-// get Zod Type by Form Schema key
-const getType = (key: string, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
-	const def = getDef(key, zodSchema, parentKey);
-	const unwrappedDef = unwrapOptional(def);
-	const type = getTypeName(unwrappedDef) ?? 'ZodUnknown';
-	if (type === 'ZodEffects') {
-		return (
-			getTypeName(
-				(unwrappedDef as { innerType?: { _def?: { schema?: { _def?: unknown } } } }).innerType?._def?.schema?._def,
-			) ?? type
-		);
-	}
-	if (type === 'ZodUnion') {
-		const unionOptionType = getTypeName((unwrappedDef as { options?: { _def?: unknown }[] }).options?.[0]?._def);
-
-		return unionOptionType ?? type;
-	}
-	if (type === 'ZodNativeEnum') {
-		return 'ZodEnum';
-	}
-
-	return type;
-};
-
-const isOptional = (key: string, zodSchema: z.ZodObject<any>, parentOption?: string) => {
-	let def: unknown = getDef(key, zodSchema, parentOption);
-	while (def && typeof def === 'object') {
-		const type = getTypeName(def);
-		if (type === 'ZodOptional' || type === 'ZodNullable') {
-			return true;
-		}
-		if (type !== 'ZodDefault') {
-			break;
-		}
-		def = (def as { innerType?: { _def?: unknown } }).innerType?._def;
-	}
-
-	return false;
-};
-
-const unwrapOptional = (def: unknown) => {
-	let current = def;
-	while (current && typeof current === 'object') {
-		const type = getTypeName(current);
-		if (type === 'ZodOptional' || type === 'ZodNullable' || type === 'ZodDefault') {
-			current = (current as { innerType?: { _def?: unknown } }).innerType?._def;
-			continue;
-		}
-		break;
+const unwrapOptional = (schema: z.core.$ZodType | undefined): z.core.$ZodType | undefined => {
+	let current = schema;
+	while (current instanceof z.ZodOptional || current instanceof z.ZodNullable || current instanceof z.ZodDefault) {
+		current = current.unwrap();
 	}
 
 	return current;
 };
 
-const getEnumArrayValues = (key: string, zodSchema: z.ZodObject<any>, parentOption?: string): Record<string, string> => {
-	let def: unknown = getDef(key, zodSchema, parentOption);
-	def = unwrapOptional(def);
+// transforms and preprocessing are pipes in Zod 4, the schema being edited is the non-transform side
+const unwrapPipe = (schema: z.core.$ZodType | undefined): z.core.$ZodType | undefined => {
+	let current = unwrapOptional(schema);
+	while (current instanceof z.ZodPipe) {
+		current = unwrapOptional(current.in instanceof z.ZodTransform ? current.out : current.in);
+	}
 
-	if (getTypeName(def) !== 'ZodArray') {
+	return current;
+};
+
+// get first level or nested schema from Zod Schema
+const getFieldSchema = (key: string, zodSchema: FormZodObject, parentKey?: string): z.core.$ZodType | undefined => {
+	if (!parentKey) {
+		return zodSchema.shape[key];
+	}
+	const parent = zodSchema.shape[parentKey];
+
+	return parent instanceof z.ZodObject ? (parent.shape as Record<string, z.core.$ZodType>)[key] : undefined;
+};
+
+// get Zod Type by Form Schema key
+const getType = (key: string, zodSchema: FormZodObject, parentKey?: string): string => {
+	const schema = unwrapPipe(getFieldSchema(key, zodSchema, parentKey));
+	if (schema instanceof z.ZodUnion) {
+		return getTypeNameOf(unwrapPipe(schema.options[0]));
+	}
+
+	return getTypeNameOf(schema);
+};
+
+const getTypeNameOf = (schema: z.core.$ZodType | undefined): string => {
+	if (schema instanceof z.ZodString) {
+		return 'ZodString';
+	}
+	if (schema instanceof z.ZodNumber) {
+		return 'ZodNumber';
+	}
+	if (schema instanceof z.ZodBoolean) {
+		return 'ZodBoolean';
+	}
+	if (schema instanceof z.ZodDate) {
+		return 'ZodDate';
+	}
+	if (schema instanceof z.ZodEnum) {
+		return 'ZodEnum';
+	}
+	if (schema instanceof z.ZodArray) {
+		return 'ZodArray';
+	}
+	if (schema instanceof z.ZodObject) {
+		return 'ZodObject';
+	}
+	if (schema instanceof z.ZodUnion) {
+		return 'ZodUnion';
+	}
+
+	return 'ZodUnknown';
+};
+
+const isOptional = (key: string, zodSchema: FormZodObject, parentOption?: string) => {
+	let schema = getFieldSchema(key, zodSchema, parentOption);
+	while (schema instanceof z.ZodDefault) {
+		schema = schema.unwrap();
+	}
+
+	return schema instanceof z.ZodOptional || schema instanceof z.ZodNullable;
+};
+
+const toStringRecord = (values: Readonly<Record<string, string | number>>): Record<string, string> =>
+	Object.fromEntries(Object.entries(values).filter((entry): entry is [string, string] => typeof entry[1] === 'string'));
+
+const getEnumArrayValues = (key: string, zodSchema: FormZodObject, parentOption?: string): Record<string, string> => {
+	const schema = unwrapOptional(getFieldSchema(key, zodSchema, parentOption));
+	if (!(schema instanceof z.ZodArray) || !(schema.element instanceof z.ZodEnum)) {
 		return {};
 	}
 
-	return (def as { type?: { _def?: { values?: Record<string, string> } } }).type?._def?.values ?? {};
+	return toStringRecord(schema.element.enum);
 };
 
 type Props = {
@@ -327,7 +331,7 @@ const GenericFormField = ({
 	readOnly,
 }: {
 	option: string;
-	zodSchema: z.ZodObject<any>;
+	zodSchema: FormZodObject;
 	form: UseFormReturn;
 	formSchema: FormSchema;
 	isLoading: boolean;
@@ -341,35 +345,18 @@ const GenericFormField = ({
 		: formSchema.fields[option];
 
 	const getEnumValues = (key: string, parentOption?: string): Record<string, string> => {
-		const def = getDef(key, zodSchema, parentOption);
-		if (isOptional(key, zodSchema, parentOption)) {
-			return (def as { innerType?: { _def?: { values?: Record<string, string> } } }).innerType?._def?.values ?? {};
-		}
+		const schema = unwrapPipe(getFieldSchema(key, zodSchema, parentOption));
 
-		return getType(key, zodSchema, parentOption) === 'ZodEnum'
-			? ((def as { values?: Record<string, string> }).values ?? {})
-			: {};
+		return schema instanceof z.ZodEnum ? toStringRecord(schema.enum) : {};
 	};
 
 	const getDateMinMax = (key: string, parentOption?: string): { min?: Date; max?: Date } => {
-		let def = getDef(key, zodSchema, parentOption);
-		if (isOptional(key, zodSchema, parentOption)) {
-			def = (def as { innerType?: { _def?: unknown } }).innerType?._def;
-		}
-		const dateConstraints: { min?: Date; max?: Date } = {};
-		const checks = (def as { checks?: { kind?: string; value?: string | number | Date }[] } | undefined)?.checks;
-
-		if (checks) {
-			for (const check of checks) {
-				if (check.kind === 'min' && check.value !== undefined) {
-					dateConstraints.min = new Date(check.value);
-				} else if (check.kind === 'max' && check.value !== undefined) {
-					dateConstraints.max = new Date(check.value);
-				}
-			}
+		const schema = unwrapPipe(getFieldSchema(key, zodSchema, parentOption));
+		if (!(schema instanceof z.ZodDate)) {
+			return {};
 		}
 
-		return dateConstraints;
+		return { min: schema.minDate ?? undefined, max: schema.maxDate ?? undefined };
 	};
 
 	const label = `${formFieldSchema.label} ${!isOptional(option, zodSchema, parentOption) ? '*' : ''}`;

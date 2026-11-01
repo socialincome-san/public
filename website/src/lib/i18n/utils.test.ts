@@ -1,5 +1,12 @@
 import { NextRequest } from 'next/server';
-import { findBestLocale, getWebsiteBasePath, parseCurrencySegment, toCurrencySegment, toWebsiteCurrency } from './utils';
+import {
+	findBestLocale,
+	getCurrencyForCountry,
+	getWebsiteBasePath,
+	parseCurrencySegment,
+	toCurrencySegment,
+	toWebsiteCurrency,
+} from './utils';
 
 const request = (headers: Record<string, string>) => new NextRequest('https://socialincome.org/', { headers });
 
@@ -47,5 +54,19 @@ describe('findBestLocale', () => {
 			currency: 'USD',
 		});
 		expect(findBestLocale(request({}))).toEqual({ language: 'en', currency: 'USD' });
+	});
+});
+
+describe('getCurrencyForCountry', () => {
+	test("returns the country's own currency when the website supports it", () => {
+		expect(getCurrencyForCountry('CH')).toBe('CHF');
+		expect(getCurrencyForCountry('DE')).toBe('EUR');
+		expect(getCurrencyForCountry('US')).toBe('USD');
+	});
+
+	test('returns nothing for unsupported currencies and countries without a known currency', () => {
+		expect(getCurrencyForCountry('GB')).toBeUndefined();
+		expect(getCurrencyForCountry('AQ')).toBeUndefined();
+		expect(getCurrencyForCountry(undefined)).toBeUndefined();
 	});
 });

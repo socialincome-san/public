@@ -23,9 +23,13 @@ export const fetchStoryblokStory = async <T>(slug: string, params: ISbStoriesPar
 
 		return resultOk(data.story);
 	} catch (error) {
-		console.error('Could not fetch Storyblok story', { slug, error });
+		const status = getErrorStatus(error);
+		// A missing story is an expected outcome (unknown slugs, folders without a story), not an error
+		if (status !== 404) {
+			console.error('Could not fetch Storyblok story', { slug, error });
+		}
 
-		return resultFail('Could not fetch Storyblok story', getErrorStatus(error));
+		return resultFail('Could not fetch Storyblok story', status);
 	}
 };
 

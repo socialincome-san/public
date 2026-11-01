@@ -139,5 +139,10 @@
 		"zewo": "ZEWO zertifiziert",
 		"why-one-percent": "Warum 1% spenden?",
 		"pay-with": "Bezahlen mit"
+	},
+	"resumeBar": {
+		"label": "Schnell spenden",
+		"summary": "{cadence, select, monthly {{amount} monatlich spenden, Betrag ändern} other {{amount} einmalig spenden, Betrag ändern}}",
+		"continue": "Weiter"
 	}
 }

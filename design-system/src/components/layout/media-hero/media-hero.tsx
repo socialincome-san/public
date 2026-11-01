@@ -85,21 +85,24 @@ export const MediaHero = ({
 			) : null}
 
 			{controlsStart || controlsEnd ? (
-				<div className="pointer-events-none absolute inset-x-4 bottom-8 z-30 flex items-center justify-between lg:inset-x-8">
+				// Same width as the content, so the controls line up with the text and the site header.
+				<div className="w-site-width max-w-content pointer-events-none absolute inset-x-0 bottom-8 z-30 mx-auto flex items-center justify-between">
 					<div className="pointer-events-auto flex items-center gap-2">{controlsStart}</div>
 					<div className="pointer-events-auto flex items-center gap-2">{controlsEnd}</div>
 				</div>
 			) : null}
 
 			{expanded ? null : (
-				<div className={contentVariants({ align })}>
+				// Keeps the text clear of the controls at the bottom of small screens.
+				<div className={cn(contentVariants({ align }), controlsStart || controlsEnd ? 'mb-24' : undefined)}>
 					<div className="flex min-w-0 flex-1 flex-col gap-10">{children}</div>
 					{aside ? <div className="hidden shrink-0 lg:block">{aside}</div> : null}
 				</div>
 			)}
 		</div>
 
-		{mobileAside && !expanded ? (
+		{/* Stays while the media is expanded: it sits below the frame, and removing it would make the page jump. */}
+		{mobileAside ? (
 			<div className="lg:hidden">
 				<BlockWrapper marginTop="none" marginBottom="none">
 					{mobileAside}
@@ -114,6 +117,15 @@ const titleVariants = cva('', {
 		variant: {
 			bold: 'text-5xl leading-tight font-bold text-pretty md:text-6xl',
 			light: 'text-4xl xl:text-6xl [&_strong]:font-bold',
+		},
+	},
+});
+
+const descriptionVariants = cva('', {
+	variants: {
+		variant: {
+			bold: 'text-xl',
+			light: 'text-2xl',
 		},
 	},
 });
@@ -143,38 +155,28 @@ export const MediaHeroIntro = ({
 	shadow = false,
 	glow = false,
 	children,
-}: MediaHeroIntroProps) => {
-	const gap = variant === 'light' ? 'gap-6' : 'gap-4';
-	const text = (
-		<div className={cn('flex flex-col', variant === 'light' ? 'gap-3' : 'gap-4', glow && 'relative isolate')}>
-			{glow ? <div aria-hidden className="absolute -inset-8 -z-10 rounded-full bg-black/30 blur-[100px]" /> : null}
-			{title ? (
-				<h1 className={titleVariants({ variant })}>
-					{title}
-					{titleIcon ? (
-						<NextImage
-							src={titleIcon.src}
-							alt={titleIcon.alt}
-							width={44}
-							height={32}
-							className="ml-3 inline-block h-8 w-11 rounded-sm align-baseline md:ml-4"
-						/>
-					) : null}
-				</h1>
-			) : null}
-			{description ? <p className="text-lg lg:text-xl">{description}</p> : null}
-		</div>
-	);
-
-	return (
-		<div className={cn('flex max-w-2xl flex-col', gap, shadow && 'drop-shadow-on-media')}>
-			{eyebrow}
-			{kicker ? <p className="text-lg">{kicker}</p> : null}
-			{title || description ? text : null}
-			{children}
-		</div>
-	);
-};
+}: MediaHeroIntroProps) => (
+	<div className={cn('flex max-w-2xl flex-col', variant === 'light' ? 'gap-6' : 'gap-4', shadow && 'drop-shadow-on-media')}>
+		{eyebrow}
+		{kicker ? <p className="text-lg">{kicker}</p> : null}
+		{title ? (
+			<h1 className={titleVariants({ variant })}>
+				{title}
+				{titleIcon ? (
+					<NextImage
+						src={titleIcon.src}
+						alt={titleIcon.alt}
+						width={44}
+						height={32}
+						className="ml-3 inline-block h-8 w-11 rounded-sm align-baseline md:ml-4"
+					/>
+				) : null}
+			</h1>
+		) : null}
+		{description ? <p className={descriptionVariants({ variant })}>{description}</p> : null}
+		{children}
+	</div>
+);
 
 export const MediaHeroChips = ({ children }: { children: ReactNode }) => (
 	<div className="flex flex-wrap gap-2">{children}</div>
