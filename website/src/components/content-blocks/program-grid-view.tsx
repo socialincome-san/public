@@ -9,18 +9,31 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { getTranslations } from 'next-intl/server';
 import NextLink from 'next/link';
 
+const getPortalSlugs = (programs: ProgramStory[]) => [
+	...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean)),
+];
+
+export const getVisiblePrograms = async (programs: ProgramStory[], blok: ProgramGrid): Promise<ProgramStory[]> => {
+	if (!blok.hideConcludedPrograms) {
+		return programs;
+	}
+	const statsResult = await getPublicProgramStatsByPortalSlugsAction(getPortalSlugs(programs));
+	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
+
+	return programs.filter((program) => !statsByPortalSlug[getProgramPortalSlug(program.content)]?.isConcluded);
+};
+
 type Props = {
 	programs: ProgramStory[];
-	allProgramsCount: number;
+	allProgramsCount?: number;
 	blok: ProgramGrid;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 };
 
-export const ProgramGridView = async ({ programs, allProgramsCount, blok, lang, currency }: Props) => {
-	const programPortalSlugs = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
+export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok, lang, currency }: Props) => {
 	const [statsResult, t] = await Promise.all([
-		getPublicProgramStatsByPortalSlugsAction(programPortalSlugs),
+		getPublicProgramStatsByPortalSlugsAction(getPortalSlugs(programs)),
 		getTranslations('website-common'),
 	]);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};

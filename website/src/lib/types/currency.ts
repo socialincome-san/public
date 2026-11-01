@@ -168,14 +168,12 @@ const countryToCurrency = new Map<CountryCode, Currency>([
 	['ZW', 'ZWL'],
 ]);
 
-export const bestGuessCurrency = (country: CountryCode | undefined): Currency => {
-	if (!country) {
-		return FALLBACK_CURRENCY;
-	}
-	const currency = countryToCurrency.get(country);
+/** The country's currency, or `undefined` when it is not in the list. */
+export const getCountryCurrency = (country: CountryCode | undefined): Currency | undefined =>
+	country ? countryToCurrency.get(country) : undefined;
 
-	return currency ?? FALLBACK_CURRENCY;
-};
+export const bestGuessCurrency = (country: CountryCode | undefined): Currency =>
+	getCountryCurrency(country) ?? FALLBACK_CURRENCY;
 
 export const isValidCurrency = (currency: string | undefined): currency is Currency => {
 	return allCurrencies.includes(currency as Currency);

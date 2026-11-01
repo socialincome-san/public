@@ -8,6 +8,7 @@ const completedPayoutStatuses = [PayoutStatus.paid, PayoutStatus.confirmed];
 
 const publicProgramStatsSelect = {
 	slug: true,
+	isConcluded: true,
 	country: { select: { isoCode: true, currency: true } },
 	_count: { select: { campaigns: true, recipients: true } },
 	recipients: {
@@ -239,6 +240,7 @@ export const findProgramSettings = async (programId: string) =>
 			country: { select: { isoCode: true, currency: true } },
 			amountOfRecipientsForStart: true,
 			coveredByReserves: true,
+			isConcluded: true,
 			programDurationInMonths: true,
 			payoutPerInterval: true,
 			payoutInterval: true,
