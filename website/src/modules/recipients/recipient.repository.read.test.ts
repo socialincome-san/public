@@ -12,7 +12,7 @@ jest.mock('@/lib/database/prisma', () => ({
 	},
 }));
 
-import { findRecipientTableSource } from './recipient.repository.read';
+import { findRecipientTableSource, findSurveyRecipients } from './recipient.repository.read';
 
 const expectedWhere = (search: string, phoneSearch?: string): Prisma.RecipientWhereInput => ({
 	AND: [
@@ -71,5 +71,11 @@ describe('recipient table phone search', () => {
 		const where = await search('Awa');
 
 		expect(where).toEqual(expectedWhere('Awa'));
+	});
+
+	test('excludes interrupted recipients from survey generation', async () => {
+		await findSurveyRecipients(['program-1'], new Date('2025-06-15T12:00:00.000Z'));
+
+		expect(mockFindMany.mock.calls[0]?.[0].where).toHaveProperty('interruptedAt', null);
 	});
 });

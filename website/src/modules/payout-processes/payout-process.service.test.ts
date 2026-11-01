@@ -56,6 +56,7 @@ const createRecipient = (
 	id: `recipient-${payoutCountryCode}-${phoneNumber ?? 'none'}`,
 	startDate: new Date('2025-01-01T12:00:00.000Z'),
 	suspendedAt: null,
+	interruptedAt: null,
 	contact: { firstName: 'Amie', lastName: 'Kamara' },
 	paymentInformation: {
 		code: 'PI-1',

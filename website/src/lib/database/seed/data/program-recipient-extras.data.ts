@@ -309,6 +309,8 @@ export const extraProgramRecipientsData: Recipient[] = extraProgramRecipientDefi
 		startDate: new Date(Date.UTC(2024, 9, Math.min(index, 28))),
 		suspendedAt: null,
 		suspensionReason: null,
+		interruptedAt: null,
+		interruptionComment: null,
 		successorName: null,
 		termsAccepted: true,
 		paymentInformationId,

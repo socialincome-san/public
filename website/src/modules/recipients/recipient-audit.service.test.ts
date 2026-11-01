@@ -14,6 +14,7 @@ const mockDeleteFirebaseUser = jest.fn();
 const updateContext = {
 	programId: 'program-1',
 	localPartnerId: 'partner-1',
+	interruptedAt: null,
 	contact: { id: 'contact-1', email: null, phone: null, address: null },
 	paymentInformation: null,
 };
@@ -49,6 +50,9 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 }));
 jest.mock('@/modules/local-partners/local-partner.service', () => ({ getLocalPartnerOptions: jest.fn() }));
 jest.mock('@/modules/programs/program-reference.service', () => ({ getProgramNameById: jest.fn() }));
+jest.mock('@/modules/surveys/survey-interruption.service', () => ({
+	removeOutstandingSurveysForInterruptedRecipient: jest.fn().mockResolvedValue({ success: true, data: undefined }),
+}));
 
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import type { UserSession } from '@/modules/users/user.types';
@@ -103,6 +107,8 @@ const input: UpdateRecipientInput = {
 	startDate: null,
 	suspendedAt: null,
 	suspensionReason: null,
+	interrupted: false,
+	interruptionComment: null,
 	successorName: null,
 	termsAccepted: true,
 	contact: {

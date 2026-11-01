@@ -17,6 +17,8 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			startDate: 'Start date',
 			suspendedAt: 'Suspended at',
 			suspensionReason: 'Suspension reason',
+			interruptedAt: 'Interrupted at',
+			interruptionComment: 'Interruption comment',
 			successorName: 'Successor',
 			termsAccepted: 'Terms accepted',
 			'contact.firstName': 'First name',

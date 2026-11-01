@@ -91,6 +91,8 @@ const recipientAuditSnapshotSelect = {
 	startDate: true,
 	suspendedAt: true,
 	suspensionReason: true,
+	interruptedAt: true,
+	interruptionComment: true,
 	successorName: true,
 	termsAccepted: true,
 	contact: {
@@ -166,6 +168,7 @@ type RecipientUpdatePersistenceContext = {
 	paymentInformationId: string | undefined;
 	paymentPhoneId: string | undefined;
 	paymentPhoneNumber: string | undefined;
+	interruptedAt: Date | null;
 };
 
 const buildRecipientCreateData = (input: CreateRecipientInput): Prisma.RecipientCreateInput => {
@@ -177,6 +180,8 @@ const buildRecipientCreateData = (input: CreateRecipientInput): Prisma.Recipient
 		startDate: input.startDate ?? null,
 		suspendedAt: input.suspendedAt ?? null,
 		suspensionReason: input.suspensionReason ?? null,
+		interruptedAt: input.interrupted ? new Date() : null,
+		interruptionComment: input.interruptionComment ?? null,
 		successorName: input.successorName ?? null,
 		termsAccepted: input.termsAccepted ?? false,
 		program: { connect: { id: input.programId } },
@@ -233,6 +238,8 @@ const buildRecipientUpdateData = (
 		startDate: input.startDate ?? null,
 		suspendedAt: input.suspendedAt ?? null,
 		suspensionReason: input.suspensionReason ?? null,
+		interruptedAt: input.interrupted ? (context.interruptedAt ?? new Date()) : null,
+		interruptionComment: input.interruptionComment ?? null,
 		successorName: input.successorName ?? null,
 		termsAccepted: input.termsAccepted ?? false,
 		program: input.programId ? { connect: { id: input.programId } } : undefined,
