@@ -309,10 +309,14 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onChanged: (value) {
+                  onChanged: (value) async {
+                    if (value == null) return;
+
                     // change language accordingly
-                    context.read<SettingsCubit>().changeLanguage(value!);
-                    context.read<AuthCubit>().updateRecipient(
+                    final settingsCubit = context.read<SettingsCubit>();
+                    final authCubit = context.read<AuthCubit>();
+                    await settingsCubit.changeLanguage(value);
+                    authCubit.updateRecipient(
                       selfUpdate: RecipientSelfUpdate(language: value),
                     );
                   },
