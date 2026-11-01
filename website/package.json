@@ -123,7 +123,7 @@
 		"@types/three": "0.186.0",
 		"d3-geo": "3.1.1",
 		"dotenv-cli": "11.0.0",
-		"eslint": "9.39.5",
+		"eslint": "10.13.0",
 		"eslint-config-next": "16.4.3",
 		"eslint-plugin-react": "7.37.5",
 		"firebase-tools": "15.34.1",
