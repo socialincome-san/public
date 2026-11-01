@@ -75,7 +75,7 @@
 			"wire-transfer": "Banküberweisung"
 		},
 		"status": {
-			"succeeded": "Bezahlt",
+			"succeeded": "Erfolgreich",
 			"pending": "In Bearbeitung",
 			"failed": "Fehlgeschlagen",
 			"unknown": "Unbekannt"
@@ -161,14 +161,14 @@
 			"monthly-contribution": "Monatlicher Beitrag",
 			"total-contributions": "Gesamtbeiträge",
 			"no-active-subscriptions": "Keine aktiven Abonnemente",
-			"active-subscriptions-count": "{count} aktive Abonnemente",
-			"contributions-since": "{count} Beiträge seit {date}",
+			"active-subscriptions-count": "{count, plural, one {# aktives Abonnement} other {# aktive Abonnemente}}",
+			"contributions-since": "{count, plural, one {# Beitrag seit {date}} other {# Beiträge seit {date}}}",
 			"no-contributions-yet": "Noch keine Beiträge"
 		},
 		"active-subscriptions": "Aktive Abonnemente",
 		"upcoming-payments": "Bevorstehende Zahlungen",
 		"scheduled": "Geplant",
-		"per-month": "pro Monat",
+		"per-month": "/ Monat",
 		"since": "seit",
 		"card-fallback": "Karte",
 		"cover-transaction-costs": {
@@ -186,8 +186,8 @@
 		"created": "Erstellt",
 		"language": "Sprache",
 		"year": "Jahr",
-		"generate-certificate": "Spendebescheinigung erstellen",
-		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Erstelle welche mit \"Spendebescheinigung erstellen\". <br></br> Bei Fragen kannst du uns jederzeit <contact>kontaktieren</contact>.",
+		"generate-certificate": "Generieren",
+		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Erstelle welche mit \"Generieren\". <br></br> Bei Fragen kannst du uns jederzeit <contact>kontaktieren</contact>.",
 		"no-contributions": "Keine Beiträge gefunden, daher kein Zertifikat. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org.",
 		"technical-error": "Es ist ein technischer Fehler aufgetreten, bitte probiere es noch einmal. Wenn dies weiterhin passiert, melde dich bei contributors@socialincome.org.",
 		"generate-dialog": {
