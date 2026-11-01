@@ -79,11 +79,11 @@ class _DashboardViewState extends State<_DashboardView> {
     try {
       final hasSeenWelcomeMessage =
           await _preferences.getBool("$_welcomeMessageKeyPrefix$recipientId") ?? false;
-      if (!mounted) return;
+      if (!mounted || _recipientId != recipientId) return;
       setState(() => _showWelcomeMessage = !hasSeenWelcomeMessage);
     } on Exception catch (exception, stackTrace) {
       await crashReportingRepository.logError(exception, stackTrace);
-      if (!mounted) return;
+      if (!mounted || _recipientId != recipientId) return;
       setState(() => _showWelcomeMessage = true);
     }
   }
@@ -95,7 +95,7 @@ class _DashboardViewState extends State<_DashboardView> {
 
     try {
       await _preferences.setBool("$_welcomeMessageKeyPrefix$recipientId", true);
-      if (!mounted) return;
+      if (!mounted || _recipientId != recipientId) return;
       setState(() => _showWelcomeMessage = false);
     } on Exception catch (exception, stackTrace) {
       await crashReportingRepository.logError(exception, stackTrace);
@@ -145,6 +145,20 @@ class _DashboardViewState extends State<_DashboardView> {
           },
           child: MultiBlocListener(
             listeners: [
+              BlocListener<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  final recipientId = state.recipient?.id;
+                  if (recipientId == _recipientId) return;
+
+                  setState(() {
+                    _recipientId = recipientId;
+                    _showWelcomeMessage = false;
+                  });
+                  if (recipientId != null) {
+                    unawaited(_loadWelcomeMessage(recipientId));
+                  }
+                },
+              ),
               BlocListener<PayoutsCubit, PayoutsState>(
                 listener: (context, state) {
                   if (state.status == PayoutsStatus.failure) {
