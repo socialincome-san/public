@@ -21,6 +21,7 @@ import {
 	verifyTwilioOtp,
 } from '@/integrations/twilio/twilio-otp.integration';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import { isRecipientPhoneNumberPreselected } from '@/modules/recipients/recipient-auth.service';
 import type { VerifyOtpInput } from './auth.schemas';
 import type { AuthToken, AuthUser, AuthUserUpdate, SessionCookie, VerifyOtpResult } from './auth.types';
 
@@ -183,6 +184,16 @@ const finalizeOtpVerification = async (phoneNumber: string): Promise<Result<Veri
 	}
 
 	const isNewUser = existingUserResult.data === null;
+	if (isNewUser && !shouldBypassOtp(phoneNumber)) {
+		const recipientResult = await isRecipientPhoneNumberPreselected(phoneNumber);
+		if (!recipientResult.success) {
+			return resultFail(recipientResult.error);
+		}
+		if (!recipientResult.data) {
+			return resultFail('Phone number is not registered to a recipient');
+		}
+	}
+
 	const userResult = existingUserResult.data
 		? resultOk(existingUserResult.data)
 		: await createFirebaseUserByPhoneNumberIntegration(phoneNumber);
