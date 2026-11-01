@@ -139,6 +139,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get dashboardUp2Date => 'Ɔltin de fayn fayn wan. Nɔ gɛt yus tide.';
 
   @override
+  String get dashboardWelcomeMessage => 'Congrats, you don aktivate yu account pan di app successfully.';
+
+  @override
   String get edit => 'Chenj am';
 
   @override

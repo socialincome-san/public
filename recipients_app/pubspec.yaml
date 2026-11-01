@@ -41,6 +41,7 @@ dependencies:
   path: ^1.9.1
   path_provider: ^2.1.6
   sentry_flutter: ^9.22.0
+  shared_preferences: ^2.5.5
   url_launcher: ^6.3.2
   webview_flutter: ^4.14.0
 
