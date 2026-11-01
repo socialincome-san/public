@@ -6,6 +6,7 @@ import type { DonationAmountContext } from '../utils/donation-amount';
 
 type DonationModalContextValue = {
 	isOpen: boolean;
+	visitorCountryCode: string | null;
 	openWizardAtAmountStep: () => void;
 	openWizardWithFormAmount: (context: DonationAmountContext) => void;
 	// Reopens a donation from the donation bar on the step it was left
