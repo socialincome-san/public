@@ -107,6 +107,38 @@ describe('buildProgramAboutContent', () => {
 		expect(overlayPartyValues).toEqual(['Migros', 'Social Income SL', 'Jamil Foundation']);
 	});
 
+	test.each([
+		[true, 'Concluded'],
+		[false, 'Active'],
+	])('shows the program status after the start date when concluded is %s', (isConcluded, status) => {
+		const content = buildProgramAboutContent({
+			programDetailData: {
+				...baseProgramDetailData,
+				stats: {
+					campaignsCount: 1,
+					recipientsCount: 10,
+					countryIsoCode: 'SL',
+					payoutCurrency: 'SLE',
+					totalPayoutsSum: 4000,
+					totalPayoutsSumChf: 160,
+					isConcluded,
+				},
+			},
+			t,
+			lang: 'en',
+			currency: 'CHF',
+		});
+
+		expect(content.cardRows.slice(-2).map((row) => row.label)).toEqual(['Start date', 'Program status']);
+		expect(content.cardRows.at(-1)?.value).toBe(status);
+		expect(content.overlaySections[1]?.rows.map((row) => row.label)).toEqual([
+			'Duration',
+			'Start date',
+			'Program status',
+			'Payment amount',
+		]);
+	});
+
 	test('includes local partner link when slug is available', () => {
 		const content = buildProgramAboutContent({
 			programDetailData: baseProgramDetailData,

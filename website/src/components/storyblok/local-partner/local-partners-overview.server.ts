@@ -1,28 +1,21 @@
 import type { AnySearchParams } from '@/app/page-props';
+import { getQueryValue } from '@/components/filters/filter-query';
+import type { FilterStatus } from '@/components/filters/status-filter';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
+import type { PublicLocalPartnerOverviewStatsMap } from '@/modules/local-partners/local-partner.types';
 import type { LocalPartnerStory } from './local-partner.types';
 import {
 	getLocalPartnerDescription,
 	getLocalPartnerIsoCode,
+	getLocalPartnerPortalSlug,
 	getLocalPartnerSlug,
 	getLocalPartnerTitle,
 } from './local-partner.utils';
-import { COUNTRY_QUERY_KEY, SEARCH_QUERY_KEY } from './local-partners-overview-query';
+import { COUNTRY_QUERY_KEY } from './local-partners-overview-query';
 
 export type FilterOption = {
 	value: string;
 	label: string;
-};
-
-const getQueryValue = (searchParams: AnySearchParams | undefined, key: string) => {
-	const value = searchParams?.[key];
-	const firstValue = Array.isArray(value) ? value.at(0) : value;
-
-	return typeof firstValue === 'string' ? firstValue.trim() : '';
-};
-
-export const getSearchQuery = (searchParams?: AnySearchParams) => {
-	return getQueryValue(searchParams, SEARCH_QUERY_KEY);
 };
 
 export const getCountryQuery = (searchParams?: AnySearchParams) => {
@@ -60,6 +53,13 @@ export const localPartnerMatchesCountryQuery = (
 
 	return getNormalizedIsoCode(localPartner) === selectedCountryIsoCode;
 };
+
+// A partnership is concluded once none of its recipients is active or still to start; partners without stats count as active
+export const getLocalPartnerStatus = (
+	localPartner: LocalPartnerStory,
+	statsByPortalSlug: PublicLocalPartnerOverviewStatsMap,
+): FilterStatus =>
+	statsByPortalSlug[getLocalPartnerPortalSlug(localPartner.content)]?.isConcluded ? 'concluded' : 'active';
 
 export const getCountryFilterOptions = (localPartners: LocalPartnerStory[]): FilterOption[] => {
 	const optionsByCountryIsoCode = new Map<string, FilterOption>();

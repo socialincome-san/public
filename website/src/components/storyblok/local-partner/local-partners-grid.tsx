@@ -3,7 +3,7 @@ import {
 	LocalPartnerTeaserCard,
 } from '@/components/storyblok/local-partner/local-partner-teaser-card';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getLocalPartnerOverviewStatsAction } from '@/modules/local-partners/local-partner.actions';
+import type { PublicLocalPartnerOverviewStatsMap } from '@/modules/local-partners/local-partner.types';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { getTranslations } from 'next-intl/server';
 import type { LocalPartnerStory } from './local-partner.types';
@@ -11,18 +11,20 @@ import { getLocalPartnerPortalSlug } from './local-partner.utils';
 
 type Props = {
 	localPartners: LocalPartnerStory[];
+	statsByPortalSlug: PublicLocalPartnerOverviewStatsMap;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 	hasActiveFilters?: boolean;
 };
 
-export const LocalPartnersGrid = async ({ localPartners, lang, currency, hasActiveFilters = false }: Props) => {
-	const portalSlugs = localPartners.map((localPartner) => getLocalPartnerPortalSlug(localPartner.content)).filter(Boolean);
-	const [t, statsResult] = await Promise.all([
-		getTranslations('website-common'),
-		getLocalPartnerOverviewStatsAction(portalSlugs),
-	]);
-	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
+export const LocalPartnersGrid = async ({
+	localPartners,
+	statsByPortalSlug,
+	lang,
+	currency,
+	hasActiveFilters = false,
+}: Props) => {
+	const t = await getTranslations('website-common');
 
 	return (
 		<CardGrid emptyMessage={t(hasActiveFilters ? 'local-partners-page.no-results' : 'local-partners-page.empty')}>

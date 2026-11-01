@@ -3,27 +3,29 @@
 import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { SEARCH_QUERY_KEY } from './local-partners-overview-query';
+import { applyQueryParamOverrides, type FilterQueryParamOverride } from './filter-query';
 
-type Props = {
-	defaultValue: string;
+type FilterSearchProps = {
+	queryKey: string;
 	label: string;
 	placeholder: string;
+	compactPlaceholder?: string;
+	queryParamOverrides?: FilterQueryParamOverride[];
 };
 
 const SEARCH_DEBOUNCE_MS = 300;
 
-export const LocalPartnersOverviewSearch = ({ defaultValue, label, placeholder }: Props) => {
+export const FilterSearch = ({
+	queryKey,
+	label,
+	placeholder,
+	compactPlaceholder,
+	queryParamOverrides,
+}: FilterSearchProps) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
-	const currentValue = searchParams.get(SEARCH_QUERY_KEY) ?? defaultValue;
 	const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-	const searchParamsRef = useRef(searchParams);
-
-	useEffect(() => {
-		searchParamsRef.current = searchParams;
-	}, [searchParams]);
 
 	useEffect(() => {
 		return () => {
@@ -39,14 +41,17 @@ export const LocalPartnersOverviewSearch = ({ defaultValue, label, placeholder }
 		}
 
 		searchDebounceRef.current = setTimeout(() => {
-			const nextParams = new URLSearchParams(searchParamsRef.current.toString());
+			// Read the URL when the timer fires, not when typing started: a filter picked in the meantime must survive
+			const nextParams = new URLSearchParams(window.location.search);
 			const searchQuery = nextValue.trim();
 
 			if (searchQuery.length > 0) {
-				nextParams.set(SEARCH_QUERY_KEY, searchQuery);
+				nextParams.set(queryKey, searchQuery);
 			} else {
-				nextParams.delete(SEARCH_QUERY_KEY);
+				nextParams.delete(queryKey);
 			}
+
+			applyQueryParamOverrides(nextParams, queryParamOverrides);
 
 			const nextQuery = nextParams.toString();
 			router.replace(nextQuery.length > 0 ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
@@ -57,7 +62,8 @@ export const LocalPartnersOverviewSearch = ({ defaultValue, label, placeholder }
 		<SearchInput
 			aria-label={label}
 			placeholder={placeholder}
-			defaultValue={currentValue}
+			compactPlaceholder={compactPlaceholder}
+			defaultValue={searchParams.get(queryKey) ?? ''}
 			onChange={(event) => updateSearch(event.target.value)}
 		/>
 	);

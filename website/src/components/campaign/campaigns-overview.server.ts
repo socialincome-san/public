@@ -1,4 +1,3 @@
-import type { AnySearchParams } from '@/app/page-props';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import {
 	getCampaignPortalSlug,
@@ -11,24 +10,12 @@ import type {
 	PublicCampaignStatsMap,
 	PublicCampaignsWithStats,
 } from '@/modules/campaigns/campaign.types';
-import {
-	DEFAULT_CAMPAIGN_STATE,
-	isCampaignStateFilter,
-	STATE_QUERY_KEY,
-	type CampaignStateFilter,
-} from './campaigns-overview-query';
 
-const getQueryValue = (searchParams: AnySearchParams | undefined, key: string) => {
-	const value = searchParams?.[key];
-	const firstValue = Array.isArray(value) ? value.at(0) : value;
+export const campaignMatchesSearchQuery = (campaign: PublicCampaignCard, searchQuery: string) => {
+	const keywords = [campaign.title, campaign.creatorName ?? ''].join(' ').toLowerCase();
+	const searchTerms = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
 
-	return typeof firstValue === 'string' ? firstValue.trim() : '';
-};
-
-export const getStateQuery = (searchParams?: AnySearchParams): CampaignStateFilter => {
-	const value = getQueryValue(searchParams, STATE_QUERY_KEY);
-
-	return isCampaignStateFilter(value) ? value : DEFAULT_CAMPAIGN_STATE;
+	return searchTerms.length > 0 && searchTerms.every((term) => keywords.includes(term));
 };
 
 export const resolveCampaignsWithCmsEntries = (
