@@ -350,6 +350,12 @@ abstract class AppLocalizations {
   /// **'You are up to date.\nNo news today.'**
   String get dashboardUp2Date;
 
+  /// No description provided for @dashboardWelcomeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to the Social Income app!'**
+  String get dashboardWelcomeMessage;
+
   /// No description provided for @edit.
   ///
   /// In en, this message translates to:
