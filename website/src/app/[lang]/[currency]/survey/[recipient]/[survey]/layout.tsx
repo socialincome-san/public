@@ -12,7 +12,7 @@ export type SurveyPageProps = {
 
 export default function Layout({ children }: PropsWithChildren<SurveyPageProps>) {
 	return (
-		<section className="w-site-width max-w-content mx-auto px-4 py-6 sm:py-10 lg:py-14">
+		<section className="w-site-width max-w-content mx-auto py-6 sm:py-10 lg:px-4 lg:py-14">
 			<div className="bg-card/95 ring-foreground/5 shadow-overlay overflow-hidden rounded-4xl ring-1 backdrop-blur">
 				<div className="px-4 py-6 sm:px-8 sm:py-8 lg:px-10">{children}</div>
 			</div>

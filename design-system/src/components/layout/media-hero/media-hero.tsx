@@ -140,6 +140,8 @@ type MediaHeroIntroProps = {
 	description?: string;
 	// Lifts the text off busy images
 	shadow?: boolean;
+	// A wide, soft dark backdrop behind the title and description
+	glow?: boolean;
 	children?: ReactNode;
 };
 
@@ -151,6 +153,7 @@ export const MediaHeroIntro = ({
 	titleIcon,
 	description,
 	shadow = false,
+	glow = false,
 	children,
 }: MediaHeroIntroProps) => (
 	<div className={cn('flex max-w-2xl flex-col', variant === 'light' ? 'gap-6' : 'gap-4', shadow && 'drop-shadow-on-media')}>
