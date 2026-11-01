@@ -24,7 +24,7 @@ const int kMaxReviewDays = 10;
 const _kOnHoldCandidateStates = [PayoutStatus.paid, PayoutStatus.contested, PayoutStatus.failed];
 
 class PayoutsCubit extends Cubit<PayoutsState> {
-  final Recipient recipient;
+  Recipient recipient;
   final PaymentRepository paymentRepository;
   final CrashReportingRepository crashReportingRepository;
 
@@ -77,6 +77,11 @@ class PayoutsCubit extends Cubit<PayoutsState> {
         );
       },
     );
+  }
+
+  Future<void> updateRecipient(Recipient updatedRecipient) async {
+    recipient = updatedRecipient;
+    await loadPayments();
   }
 
   Future<void> confirmPayment(Payout payout) async {

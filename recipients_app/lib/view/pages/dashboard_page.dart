@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:io";
 
 import "package:app/core/cubits/auth/auth_cubit.dart";
@@ -52,8 +53,27 @@ class _DashboardView extends StatefulWidget {
   State<_DashboardView> createState() => _DashboardViewState();
 }
 
-class _DashboardViewState extends State<_DashboardView> {
+class _DashboardViewState extends State<_DashboardView> with WidgetsBindingObserver {
   final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(context.read<AuthCubit>().refreshRecipient());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +108,7 @@ class _DashboardViewState extends State<_DashboardView> {
           onRefresh: () async {
             context.read<PayoutsCubit>().loadPayments();
             context.read<SurveyCubit>().getSurveys();
+            await context.read<AuthCubit>().refreshRecipient();
           },
           child: MultiBlocListener(
             listeners: [
@@ -134,18 +155,38 @@ class _DashboardViewState extends State<_DashboardView> {
                 },
               ),
             ],
-            child: Padding(
-              padding: AppSpacings.h8,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) => const SizedBox(height: 4),
-                      itemCount: items.length,
-                      itemBuilder: (context, index) => items[index],
+            child: BlocListener<AuthCubit, AuthState>(
+              listenWhen: (previous, current) {
+                final previousProgram = previous.recipient?.program;
+                final currentProgram = current.recipient?.program;
+                if (previousProgram == null || currentProgram == null) return false;
+
+                return previousProgram.id != currentProgram.id ||
+                    previousProgram.programDurationInMonths != currentProgram.programDurationInMonths ||
+                    previousProgram.payoutInterval != currentProgram.payoutInterval ||
+                    previousProgram.payoutPerInterval != currentProgram.payoutPerInterval ||
+                    previousProgram.country.isoCode != currentProgram.country.isoCode ||
+                    previousProgram.country.currency != currentProgram.country.currency;
+              },
+              listener: (context, state) {
+                final recipient = state.recipient;
+                if (recipient != null) {
+                  unawaited(context.read<PayoutsCubit>().updateRecipient(recipient));
+                }
+              },
+              child: Padding(
+                padding: AppSpacings.h8,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => const SizedBox(height: 4),
+                        itemCount: items.length,
+                        itemBuilder: (context, index) => items[index],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
