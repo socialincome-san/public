@@ -136,8 +136,6 @@ class PayoutsCubit extends Cubit<PayoutsState> {
       final currentPayment = payouts[i];
       PayoutUiStatus paymentUiStatus = PayoutUiStatus.empty;
       switch (currentPayment.status) {
-        case PayoutStatus.created:
-          paymentUiStatus = PayoutUiStatus.toBePaid;
         case PayoutStatus.paid:
           final isRecent = _isRecent(currentPayment);
           paymentUiStatus = isRecent ? PayoutUiStatus.recentToReview : PayoutUiStatus.toReview;
@@ -149,8 +147,6 @@ class PayoutsCubit extends Cubit<PayoutsState> {
           paymentUiStatus = PayoutUiStatus.contested;
         case PayoutStatus.failed:
           paymentUiStatus = PayoutUiStatus.failed;
-        case PayoutStatus.other:
-          paymentUiStatus = PayoutUiStatus.empty;
       }
 
       if (_kOnHoldCandidateStates.contains(previousState) &&
