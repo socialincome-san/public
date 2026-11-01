@@ -19,6 +19,18 @@ const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountC
 });
 
 describe('donation-amount', () => {
+	describe('getInitialDonationContext', () => {
+		test('uses a country-specific income example when available', () => {
+			expect(getInitialDonationContext('CHF', 'CH').monthlyIncome).toBe(8000);
+			expect(getInitialDonationContext('USD', 'CH').monthlyIncome).toBe(9090);
+		});
+
+		test('keeps the existing default income when no example is available', () => {
+			expect(getInitialDonationContext('CHF', 'US').monthlyIncome).toBe(5000);
+			expect(getInitialDonationContext('CHF', null).monthlyIncome).toBe(5000);
+		});
+	});
+
 	describe('getOnlineTransactionCost', () => {
 		test('returns 3% of the base amount rounded to two decimals', () => {
 			expect(getOnlineTransactionCost(100)).toBe(3);
