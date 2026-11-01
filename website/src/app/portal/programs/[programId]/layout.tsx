@@ -28,7 +28,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const sections = [
 		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
 		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
-		{ href: `/portal/programs/${programId}/payout-forecast`, label: 'Payout Forecast' },
+		{ href: `/portal/programs/${programId}/finances`, label: 'Finances' },
 		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
 	];
 
