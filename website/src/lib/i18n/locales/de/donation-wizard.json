@@ -5,16 +5,23 @@
 		"currency": "Währung"
 	},
 	"stepAmount": {
-		"title": "Spenden",
-		"monthly-income-label": "Ihr monatliches Einkommen",
+		"title": "Spende dein 1 %",
+		"title-custom-amount": "Deine Spende",
+		"monthly-income-label": "Dein Monatseinkommen",
 		"choose-own-amount": "Oder eigenen Betrag wählen",
-		"your-one-percent": "Ihr 1 %",
+		"your-one-percent": "Dein 1 %",
 		"other": "Andere",
 		"monthly": "Monatlich",
 		"one-time": "Einmalig",
 		"donate-now": "Jetzt spenden",
 		"donate-now-with-amount": "Jetzt {amount} spenden",
-		"custom-amount-placeholder": "Betrag"
+		"donate-monthly-with-amount": "Jetzt {amount} monatlich spenden",
+		"switch-to-one-time": "Einmalig spenden",
+		"switch-to-one-time-with-amount": "{amount} einmalig spenden",
+		"switch-to-monthly": "Monatlich spenden",
+		"switch-to-monthly-with-amount": "{amount} monatlich spenden",
+		"custom-amount-placeholder": "Betrag",
+		"custom-amount-label": "Eigener Betrag"
 	},
 	"stepPlan": {
 		"monthly-title": "Monatliche Spende",

@@ -28,12 +28,12 @@ export const DonationForm = ({ campaignId, onBeforeOpen }: Props) => {
 					setMonthlyIncome: form.setMonthlyIncome,
 					setPresetAmount: form.setPresetAmount,
 					setCustomAmount: form.setCustomAmount,
-					setCadence: form.setCadence,
 				}}
-				onSubmit={() => {
+				onSubmit={(cadence) => {
 					if (form.isValid) {
 						onBeforeOpen?.();
-						openWizardWithFormAmount(campaignId ? { ...form.context, campaignId } : form.context);
+						const context = { ...form.context, cadence };
+						openWizardWithFormAmount(campaignId ? { ...context, campaignId } : context);
 					}
 				}}
 			/>

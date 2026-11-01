@@ -5,16 +5,23 @@
 		"currency": "Devise"
 	},
 	"stepAmount": {
-		"title": "Faire un don",
-		"monthly-income-label": "Votre revenu mensuel",
+		"title": "Donne ton 1 %",
+		"title-custom-amount": "Ton don",
+		"monthly-income-label": "Ton revenu mensuel",
 		"choose-own-amount": "Ou choisis ton propre montant",
-		"your-one-percent": "Votre 1 %",
+		"your-one-percent": "Ton 1 %",
 		"other": "Autre",
 		"monthly": "Mensuel",
 		"one-time": "Unique",
 		"donate-now": "Donner maintenant",
 		"donate-now-with-amount": "Donner {amount} maintenant",
-		"custom-amount-placeholder": "Montant"
+		"donate-monthly-with-amount": "Donner {amount} par mois",
+		"switch-to-one-time": "Donner une seule fois",
+		"switch-to-one-time-with-amount": "Donner {amount} une seule fois",
+		"switch-to-monthly": "Donner chaque mois",
+		"switch-to-monthly-with-amount": "Donner {amount} par mois",
+		"custom-amount-placeholder": "Montant",
+		"custom-amount-label": "Montant libre"
 	},
 	"stepPlan": {
 		"monthly-title": "Don mensuel",
@@ -75,7 +82,7 @@
 		"qr-payment-unavailable": "Disponible uniquement en CHF et EUR",
 		"minimal-costs": "Coûts minimaux",
 		"online": "Carte de crédit",
-		"your-donation": "Votre don",
+		"your-donation": "Ton don",
 		"generate-qr-code": "Générer le code QR",
 		"pay-online": "Payer en ligne",
 		"cover-costs-description": "Assure-toi que l'intégralité de ton don nous parvienne.",
