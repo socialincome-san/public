@@ -79,12 +79,8 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider<DemoManager>(create: (context) => demoManager),
         RepositoryProvider<AppCacheDatabase>.value(value: cacheDatabase),
-        RepositoryProvider<ConnectivityService>.value(
-          value: connectivityService,
-        ),
-        RepositoryProvider(
-          create: (context) => MessagingRepository(messaging: messaging),
-        ),
+        RepositoryProvider<ConnectivityService>.value(value: connectivityService),
+        RepositoryProvider(create: (context) => MessagingRepository(messaging: messaging)),
         RepositoryProvider(
           create: (context) => UserRepository(
             remoteDataSource: userRemoteDataSource,
@@ -121,8 +117,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => AuthCubit(
-              crashReportingRepository: context
-                  .read<CrashReportingRepository>(),
+              crashReportingRepository: context.read<CrashReportingRepository>(),
               userRepository: context.read<UserRepository>(),
               authService: context.read<AuthService>(),
               cacheDatabase: context.read<AppCacheDatabase>(),
@@ -137,12 +132,13 @@ class MyApp extends StatelessWidget {
             create: (context) => SettingsCubit(
               defaultLocale: const Locale("en", "US"),
               messagingRepository: context.read<MessagingRepository>(),
-              crashReportingRepository: context
-                  .read<CrashReportingRepository>(),
+              crashReportingRepository: context.read<CrashReportingRepository>(),
             )..initMessaging(),
           ),
         ],
-        child: _App(appVersionInfo: appVersionInfo),
+        child: _App(
+          appVersionInfo: appVersionInfo,
+        ),
       ),
     );
   }

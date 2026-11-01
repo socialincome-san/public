@@ -23,7 +23,9 @@ import "package:package_info_plus/package_info_plus.dart";
 class AccountPage extends StatefulWidget {
   final Recipient recipient;
 
-  const AccountPage({required this.recipient});
+  const AccountPage({
+    required this.recipient,
+  });
 
   @override
   State<AccountPage> createState() => AccountPageState();
@@ -67,7 +69,9 @@ class AccountPageState extends State<AccountPage> {
     _emailController = TextEditingController(
       text: widget.recipient.contact.email,
     );
-    _birthDateController = TextEditingController(text: "");
+    _birthDateController = TextEditingController(
+      text: "",
+    );
     _paymentNumberController = TextEditingController(
       text: widget.recipient.paymentInformation?.phone.number ?? "",
     );
@@ -130,7 +134,8 @@ class AccountPageState extends State<AccountPage> {
             message: context.l10n.offlineMutationError,
             type: FlushbarType.error,
           );
-        } else if (state.status == AuthStatus.updateRecipientFailure && state.exception is! OfflineMutationException) {
+        } else if (state.status == AuthStatus.updateRecipientFailure &&
+            state.exception is! OfflineMutationException) {
           FlushbarHelper.showFlushbar(
             context,
             message: context.l10n.profileUpdateError,
@@ -265,9 +270,7 @@ class AccountPageState extends State<AccountPage> {
                           // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
                           if (context.mounted) {
                             context.read<AuthCubit>().updateRecipient(
-                              selfUpdate: RecipientSelfUpdate(
-                                dateOfBirth: value,
-                              ),
+                              selfUpdate: RecipientSelfUpdate(dateOfBirth: value),
                             );
                             _birthDateController.text = getFormattedDate(value, locale) ?? "";
                           }
@@ -540,7 +543,10 @@ class AccountPageState extends State<AccountPage> {
     );
   }
 
-  String? getFormattedDate(DateTime? date, String locale) {
+  String? getFormattedDate(
+    DateTime? date,
+    String locale,
+  ) {
     if (date == null) return null;
     return DateFormat.yMd(locale).format(date);
   }

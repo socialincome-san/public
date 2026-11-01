@@ -20,14 +20,18 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class MessagingRepository {
   final FirebaseMessaging messaging;
 
-  MessagingRepository({required this.messaging}) {
+  MessagingRepository({
+    required this.messaging,
+  }) {
     messaging.onTokenRefresh.listen((event) {
       log("PUSHNOTIFICATION: FCM Token refreshed: $event");
     });
   }
 
   Future<void> initNotifications() async {
-    await messaging.requestPermission(criticalAlert: true);
+    await messaging.requestPermission(
+      criticalAlert: true,
+    );
 
     /// This is needed for testing and specific targeting of devices
     final token = await getToken();
@@ -106,14 +110,10 @@ class MessagingRepository {
       } on FirebaseException catch (e) {
         if (e.code != "apns-token-not-set") rethrow;
         if (attempt == maxRetries - 1) {
-          log(
-            "PUSHNOTIFICATION: Failed to get FCM token after $maxRetries retries: ${e.code}",
-          );
+          log("PUSHNOTIFICATION: Failed to get FCM token after $maxRetries retries: ${e.code}");
           break;
         }
-        log(
-          "PUSHNOTIFICATION: APNS token not yet set, retrying (${attempt + 1}/$maxRetries)",
-        );
+        log("PUSHNOTIFICATION: APNS token not yet set, retrying (${attempt + 1}/$maxRetries)");
       }
     }
     return null;
@@ -122,12 +122,8 @@ class MessagingRepository {
   static void logRemoteMessage(RemoteMessage message) {
     if (message.notification != null) {
       log("RemoteMessage message.notification: ${message.notification}");
-      log(
-        'RemoteMessage message.notification?.title: ${message.notification?.title ?? ''}',
-      );
-      log(
-        'RemoteMessage message.notification?.body: ${message.notification?.body ?? ''}',
-      );
+      log('RemoteMessage message.notification?.title: ${message.notification?.title ?? ''}');
+      log('RemoteMessage message.notification?.body: ${message.notification?.body ?? ''}');
     }
     log("RemoteMessage message.messageType: ${message.messageType}");
     log("RemoteMessage message.messageId: ${message.messageId}");
