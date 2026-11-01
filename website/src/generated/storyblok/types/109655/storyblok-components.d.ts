@@ -643,6 +643,9 @@ export interface Page {
   communityContributors?: CommunityContributorGroup[];
   communityContactEmail?: string;
   communityArticles?: (ISbStoryData<Article> | string)[];
+  metaTitle?: string;
+  metaDescription?: string;
+  metaImage?: StoryblokAsset;
   component: "page";
   _uid: string;
   _editable?: string | undefined;

@@ -1,12 +1,11 @@
 import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[currency]';
-import { ContentPage } from '@/app/[lang]/[currency]/content-page';
+import { ContentPage, getContentPageMetadata } from '@/app/[lang]/[currency]/content-page';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCirclesOverviewStoryPath, WEBSITE_CIRCLE_PATH_SEGMENT } from '@/lib/storyblok/storyblok-paths';
-import { getWebsiteAlternates } from '@/lib/utils/metadata';
 import { getTranslations } from 'next-intl/server';
 
 export const generateMetadata = async ({ params }: DefaultLayoutProps) =>
-	getWebsiteAlternates((await params).lang as WebsiteLanguage, WEBSITE_CIRCLE_PATH_SEGMENT);
+	getContentPageMetadata(getCirclesOverviewStoryPath(), (await params).lang as WebsiteLanguage, WEBSITE_CIRCLE_PATH_SEGMENT);
 
 export default async function CirclesOverviewRoute({ params, searchParams }: DefaultPageProps) {
 	const { lang, currency } = await params;

@@ -1,8 +1,10 @@
+import { getPageCanonicalPath, getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
 import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
-import { toWebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { createWebsiteJournalArticleCanonicalUrl, generateMetaDataForArticle } from '@/lib/storyblok/storyblok-utils';
-import { getWebsiteAlternates } from '@/lib/utils/metadata';
+import { JsonLd } from '@/components/structured-data/json-ld';
+import { defaultCurrency, toWebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
+import { getArticlePageMetadata, getArticlePageStructuredData } from '@/lib/storyblok/storyblok-utils';
 import { getJournalArticle, getJournalArticlePageData } from '@/modules/journal/journal.cache';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -16,24 +18,23 @@ export const generateStaticParams = () => getPublishedSlugParams('journal');
 export const generateMetadata = async (props: JournalArticlePageProps) => {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getJournalArticle(lang, slug);
-	if (!articleResponse.success) {
-		return {};
-	}
 
-	return {
-		...generateMetaDataForArticle(
-			articleResponse.data,
-			createWebsiteJournalArticleCanonicalUrl(articleResponse.data.slug, lang),
-		),
-		...getWebsiteAlternates(lang, `journal/${slug}`),
-	};
+	return getPageMetadata(
+		lang,
+		`journal/${slug}`,
+		articleResponse.success ? getArticlePageMetadata(articleResponse.data, lang) : {},
+	);
 };
 
 export default async function Page(props: JournalArticlePageProps) {
 	const { slug, lang, currency: currencySegment } = await props.params;
 	const currency = toWebsiteCurrency(currencySegment);
 
-	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('website-common')]);
+	const [t, tCommon, canonicalPath] = await Promise.all([
+		getTranslations('website-journal'),
+		getTranslations('website-common'),
+		getPageCanonicalPath(lang, `journal/${slug}`),
+	]);
 
 	const pageResult = await getJournalArticlePageData({
 		lang,
@@ -48,13 +49,22 @@ export default async function Page(props: JournalArticlePageProps) {
 	}
 
 	return (
-		<ArticleDetail
-			story={pageResult.data.story}
-			slug={slug}
-			lang={lang}
-			currency={currency}
-			relatedArticles={pageResult.data.relatedArticles}
-			breadcrumbs={pageResult.data.breadcrumbs}
-		/>
+		<>
+			<JsonLd
+				data={getArticlePageStructuredData(
+					pageResult.data.story,
+					lang,
+					canonicalPath ?? getWebsitePublicPath(lang, defaultCurrency, `journal/${slug}`),
+				)}
+			/>
+			<ArticleDetail
+				story={pageResult.data.story}
+				slug={slug}
+				lang={lang}
+				currency={currency}
+				relatedArticles={pageResult.data.relatedArticles}
+				breadcrumbs={pageResult.data.breadcrumbs}
+			/>
+		</>
 	);
 }

@@ -1,10 +1,11 @@
 {
 	"metadata": {
 		"title": "Social Income",
+		"home-title": "Social Income: trasferimenti di denaro a persone in povertà",
 		"description": "Social Income è un'organizzazione non-profit che fornisce trasferimenti di denaro incondizionati alle persone bisognose",
 		"keywords": "Social Income, Reddito di Base Universale, Trasferimenti Diretti di Denaro, Non Profit, ONG",
-		"og-image": "/assets/metadata/og/default.jpg",
-		"twitter-image": "/assets/metadata/twitter/default.jpg"
+		"og-image": "/assets/metadata/og/default-2026-it.jpg",
+		"twitter-image": "/assets/metadata/twitter/default-2026-it.jpg"
 	},
 	"navigation": {
 		"finances": "Finanze",
