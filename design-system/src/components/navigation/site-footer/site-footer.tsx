@@ -101,7 +101,7 @@ const SupportedBy = ({ label, logoSrc, logoAlt, link }: SiteFooterSupportedBy) =
 );
 
 export const SiteFooter = ({ groups, copyright, supportedBy, legal, logoAnimationSrc }: SiteFooterProps) => (
-	<div className="bg-primary text-primary-foreground max-w-content mx-auto grid w-full grid-cols-1 gap-4 rounded-t-3xl px-8 pt-10 pb-8 sm:px-16 sm:pt-14 lg:grid-cols-[334px_auto] lg:grid-rows-[auto_1fr]">
+	<div className="bg-primary text-primary-foreground max-w-content mx-auto grid w-full grid-cols-1 gap-4 rounded-t-3xl px-8 pt-10 pb-8 sm:px-16 sm:pt-14 lg:mb-10 lg:grid-cols-[334px_auto] lg:grid-rows-[auto_1fr] lg:rounded-3xl">
 		<div className="order-1 lg:col-start-1 lg:row-start-1">
 			{logoAnimationSrc ? <AnimatedLogo src={logoAnimationSrc} /> : <SocialIncomeLogo width={222} height={22} />}
 		</div>
