@@ -27,8 +27,6 @@ class PayoutStatusMapper extends EnumMapper<PayoutStatus> {
   @override
   PayoutStatus decode(dynamic value) {
     switch (value) {
-      case r'created':
-        return PayoutStatus.created;
       case r'paid':
         return PayoutStatus.paid;
       case r'confirmed':
@@ -37,8 +35,6 @@ class PayoutStatusMapper extends EnumMapper<PayoutStatus> {
         return PayoutStatus.contested;
       case r'failed':
         return PayoutStatus.failed;
-      case r'other':
-        return PayoutStatus.other;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -47,8 +43,6 @@ class PayoutStatusMapper extends EnumMapper<PayoutStatus> {
   @override
   dynamic encode(PayoutStatus self) {
     switch (self) {
-      case PayoutStatus.created:
-        return r'created';
       case PayoutStatus.paid:
         return r'paid';
       case PayoutStatus.confirmed:
@@ -57,8 +51,6 @@ class PayoutStatusMapper extends EnumMapper<PayoutStatus> {
         return r'contested';
       case PayoutStatus.failed:
         return r'failed';
-      case PayoutStatus.other:
-        return r'other';
     }
   }
 }
@@ -69,4 +61,3 @@ extension PayoutStatusMapperExtension on PayoutStatus {
     return MapperContainer.globals.toValue<PayoutStatus>(this) as String;
   }
 }
-

@@ -28,7 +28,7 @@
 	"devDependencies": {
 		"@smartive/prettier-config": "3.1.2",
 		"@tailwindcss/turbopack": "4.3.3",
-		"@types/node": "24.19.2",
+		"@types/node": "26.6.6",
 		"@types/pg": "8.23.1",
 		"@types/react": "19.3.0",
 		"@types/react-dom": "19.3.0",
