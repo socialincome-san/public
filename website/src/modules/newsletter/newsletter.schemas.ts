@@ -9,6 +9,13 @@ export const subscribeToNewsletterSchema = z.object({
 	language: z.enum(NEWSLETTER_LANGUAGES),
 	country: z.nativeEnum(CountryCode).optional(),
 	isContributor: z.boolean().optional(),
+	campaignId: z
+		.string()
+		.trim()
+		.min(1)
+		.max(128)
+		.regex(/^[a-zA-Z0-9_-]+$/)
+		.optional(),
 });
 
 export type SubscribeToNewsletterInput = z.infer<typeof subscribeToNewsletterSchema>;
