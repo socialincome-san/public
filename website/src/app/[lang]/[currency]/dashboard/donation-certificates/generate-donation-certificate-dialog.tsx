@@ -1,7 +1,6 @@
 'use client';
 
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, type LanguageCode } from '@/lib/types/language';
-import { now } from '@/lib/utils/now';
 import { createCurrentContributorDonationCertificateAction } from '@/modules/donation-certificates/donation-certificate.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
@@ -21,17 +20,17 @@ import {
 import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 
-const CURRENT_YEAR = now().getFullYear();
-const CERTIFICATE_YEARS = Array.from({ length: 6 }, (_value, index) => CURRENT_YEAR - 5 + index);
 const LANGUAGES: LanguageCode[] = ['en', 'de', 'fr', 'it'];
 export default function GenerateDonationCertificateDialog({
 	open,
 	setOpen,
+	years,
 }: {
 	open: boolean;
 	setOpen: (open: boolean) => void;
+	years: number[];
 }) {
-	const [year, setYear] = useState<number>(CURRENT_YEAR - 1);
+	const [year, setYear] = useState<number | undefined>(years[0]);
 	const [language, setLanguage] = useState<LanguageCode | undefined>(DEFAULT_LANGUAGE);
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<boolean>();
@@ -39,7 +38,7 @@ export default function GenerateDonationCertificateDialog({
 	const t = useTranslations('website-me');
 
 	const generateCertificates = () => {
-		setSuccess(false);
+		setSuccess(undefined);
 		setError(undefined);
 		startTransition(async () => {
 			const result = await createCurrentContributorDonationCertificateAction({ year, language });
@@ -60,7 +59,7 @@ export default function GenerateDonationCertificateDialog({
 	};
 
 	const onOpenChange = (open: boolean) => {
-		setSuccess(false);
+		setSuccess(undefined);
 		setError(undefined);
 		setOpen(open);
 	};
@@ -78,18 +77,19 @@ export default function GenerateDonationCertificateDialog({
 						<p className="text-muted-foreground mb-1 text-xs">
 							{t('donation-certificates.generate-dialog.description_year')}
 						</p>
-						<Select value={year.toString()} onValueChange={(e: string) => setYear(parseInt(e))}>
+						<Select value={year?.toString()} disabled={!years.length} onValueChange={(e: string) => setYear(parseInt(e))}>
 							<SelectTrigger>
 								<SelectValue placeholder={t('donation-certificates.generate-dialog.placeholder_year')} />
 							</SelectTrigger>
 							<SelectContent>
-								{CERTIFICATE_YEARS.map((year) => (
+								{years.map((year) => (
 									<SelectItem value={year.toString()} key={year}>
 										{year}
 									</SelectItem>
 								))}
 							</SelectContent>
 						</Select>
+						{!years.length && <p className="text-muted-foreground text-sm">{t('donation-certificates.no-contributions')}</p>}
 					</div>
 
 					<div className="flex flex-col gap-2">
@@ -117,14 +117,14 @@ export default function GenerateDonationCertificateDialog({
 						</Select>
 					</div>
 
-					<Button disabled={isLoading} fullWidth onClick={() => generateCertificates()}>
+					<Button disabled={isLoading || !year} fullWidth onClick={() => generateCertificates()}>
 						{isLoading
 							? t('donation-certificates.generate-dialog.state_generating')
 							: t('donation-certificates.generate-dialog.button_generate')}
 					</Button>
 
 					{Boolean(success ?? error) && (
-						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
+						<div className="bg-muted border-border rounded-lg border p-2 text-xs">
 							{success && (
 								<p className="text-confirm text-sm">{t('donation-certificates.generate-dialog.status_success')}</p>
 							)}
