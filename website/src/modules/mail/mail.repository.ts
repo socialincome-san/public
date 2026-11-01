@@ -60,6 +60,12 @@ export const findSentEmailBySubject = async (subject: string) =>
 		select: { id: true },
 	});
 
+export const findSentEmailBySubjectAndToEmail = (subject: string, toEmail: string) =>
+	prisma.sentEmail.findFirst({
+		where: { subject, toEmail },
+		select: { id: true },
+	});
+
 export const createSentEmail = async (input: {
 	toEmail: string;
 	fromEmail: string;
