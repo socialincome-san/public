@@ -29,6 +29,17 @@
 		border-color: var(--color-border, currentColor);
 	}
 
+	/* WebKit draws its own clear button in search fields, in a colour CSS can't set; redraw it as a muted X */
+	input[type='search']::-webkit-search-cancel-button {
+		appearance: none;
+		width: 1rem;
+		height: 1rem;
+		cursor: pointer;
+		background-color: hsl(var(--muted-foreground));
+		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E")
+			center / contain no-repeat;
+	}
+
 	/* Typography plugin customization (prose colors) */
 	.prose,
 	.prose h1 {

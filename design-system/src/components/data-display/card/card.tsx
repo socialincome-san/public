@@ -12,6 +12,7 @@ const cardVariants = cva('relative overflow-hidden rounded-3xl transition-all', 
 		elevation: {
 			raised: 'shadow-lg',
 			flat: 'border-border border shadow-sm',
+			soft: 'shadow-card',
 		},
 		surface: {
 			default: 'bg-background',
