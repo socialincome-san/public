@@ -14,12 +14,13 @@ type DownloadMenuProps = {
 	imageId: GalleryImage['id'];
 	variant: 'default' | 'outline';
 	size: 'sm' | 'md';
+	fullWidth?: boolean;
 };
 
-export const DownloadMenu = ({ imageId, variant, size }: DownloadMenuProps) => (
+export const DownloadMenu = ({ imageId, variant, size, fullWidth }: DownloadMenuProps) => (
 	<DropdownMenu modal={false}>
 		<DropdownMenuTrigger asChild>
-			<Button type="button" variant={variant} size={size}>
+			<Button type="button" variant={variant} size={size} fullWidth={fullWidth}>
 				<Download aria-hidden="true" /> Download <ChevronDown aria-hidden="true" />
 			</Button>
 		</DropdownMenuTrigger>

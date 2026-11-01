@@ -3,6 +3,7 @@ export type GalleryImage = {
 	prompt: string | null;
 	media_type: string;
 	created_at: string | null;
+	cost_usd: number | null;
 };
 
 export type GalleryBatch = {
@@ -53,7 +54,10 @@ const isGalleryImage = (value: unknown): value is GalleryImage =>
 	'media_type' in value &&
 	typeof value.media_type === 'string' &&
 	'created_at' in value &&
-	(value.created_at === null || typeof value.created_at === 'string');
+	(value.created_at === null || typeof value.created_at === 'string') &&
+	'cost_usd' in value &&
+	(value.cost_usd === null ||
+		(typeof value.cost_usd === 'number' && Number.isFinite(value.cost_usd) && value.cost_usd >= 0));
 
 export const isImageResponse = (value: unknown): value is ImageResponse => {
 	if (typeof value !== 'object' || value === null) {
