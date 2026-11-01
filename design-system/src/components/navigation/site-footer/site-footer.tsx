@@ -121,7 +121,7 @@ export const SiteFooter = ({ groups, copyright, supportedBy, legal, logoAnimatio
 												href={link.href}
 												target={link.newTab ? '_blank' : '_self'}
 												rel={link.newTab ? 'noopener noreferrer' : undefined}
-												className="text-primary-foreground/60 hover:text-primary-foreground flex items-center gap-3 font-medium transition-colors"
+												className="text-primary-foreground/60 hover:text-primary-foreground flex items-center gap-3 font-medium wrap-anywhere transition-colors"
 											>
 												{Icon && (
 													<span className="text-input">
