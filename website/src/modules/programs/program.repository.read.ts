@@ -208,6 +208,7 @@ export const findProgramPayoutForecastSource = async (programId: string) =>
 				select: {
 					startDate: true,
 					suspendedAt: true,
+					interruptedAt: true,
 					payouts: {
 						where: { status: { in: completedPayoutStatuses } },
 						select: { id: true },
@@ -277,6 +278,7 @@ export const findProgramDashboardSource = async (programId: string) =>
 					id: true,
 					startDate: true,
 					suspendedAt: true,
+					interruptedAt: true,
 					payouts: {
 						select: {
 							paymentAt: true,

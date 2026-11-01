@@ -20,6 +20,11 @@ export const updateSurvey = async (
 		transaction.survey.update({ where: { id: surveyId }, data: input, select: surveyRecordSelect }),
 	);
 
+export const deleteSurvey = async (audit: AuditContext, surveyId: string) =>
+	auditedWrite({ entity: surveyEntity, context: audit, action: 'delete', entityId: surveyId }, (transaction) =>
+		transaction.survey.delete({ where: { id: surveyId }, select: surveyRecordSelect }),
+	);
+
 export const removeSurveySchedules = async (audit: AuditContext, surveyIds: string[]) =>
 	auditedWrite({ entity: surveyEntity, context: audit, action: 'update', entityId: surveyIds }, (transaction) =>
 		transaction.survey.updateMany({ where: { id: { in: surveyIds } }, data: { surveyScheduleId: null } }),

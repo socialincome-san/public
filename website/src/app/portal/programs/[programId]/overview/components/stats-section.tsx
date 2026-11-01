@@ -271,6 +271,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 									value={formatNumber(stats.suspendedRecipientsCount)}
 									info={suspendedRecipientsExplanation}
 								/>
+								<Stat label="Interrupted" value={formatNumber(stats.interruptedRecipientsCount)} />
 								<Stat
 									label="Completed"
 									value={formatNumber(stats.completedRecipientsCount)}

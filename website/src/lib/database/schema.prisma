@@ -733,6 +733,8 @@ model Recipient {
   contact              Contact             @relation(fields: [contactId], references: [id])
   suspendedAt          DateTime?           @map("suspended_at") @db.Timestamptz(3)
   suspensionReason     String?             @map("suspension_reason")
+  interruptedAt        DateTime?           @map("interrupted_at") @db.Timestamptz(3)
+  interruptionComment String?             @map("interruption_comment")
   startDate            DateTime?           @map("start_date") @db.Timestamptz(3)
   successorName        String?             @map("successor_name")
   termsAccepted        Boolean             @default(false) @map("terms_accepted")
