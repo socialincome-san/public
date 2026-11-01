@@ -2,26 +2,11 @@
 	"modal": {
 		"title": "Fai una donazione",
 		"campaign-for": "Per {title}",
-		"closeConfirm": {
-			"title": "Chiudere la donazione?",
-			"description": "Se chiudi ora, i progressi di questa donazione andranno persi.",
-			"cancel": "Continua a donare",
-			"confirm": "Chiudi"
-		}
+		"currency": "Valuta"
 	},
 	"stepAmount": {
 		"title": "Fai una donazione",
-		"monthly-income-label": "Reddito mensile",
-		"country-label": "Paese",
-		"country-placeholder": "Scegli un paese",
-		"example-income-note": "Reddito di esempio per {country}, basato sul salario lordo mensile {metric} del {year}. Adeguarlo al tuo reddito.",
-		"wage-metric-mean": "medio",
-		"wage-metric-median": "mediano",
-		"source-link": "Fonte: {source}",
-		"currency-conversion-note": "Tassi di cambio del {year}",
-		"manual-income-note": "Viene utilizzato il reddito inserito.",
-		"generic-income-note": "Scegli un paese per vedere un esempio di salario. Nel frattempo suggeriamo {amount}.",
-		"unsupported-country-note": "Non è disponibile un esempio salariale affidabile per {country}. Suggeriamo {amount}.",
+		"monthly-income-label": "Il tuo reddito mensile",
 		"choose-own-amount": "Oppure scegli un importo personalizzato",
 		"your-one-percent": "Il tuo 1 %",
 		"other": "Altro",
@@ -62,7 +47,7 @@
 		"email": "E-mail",
 		"accountCreateHint": "Se non esiste ancora un account con questa e-mail, ne creeremo uno per te.",
 		"noBackAfterGenerateHint": "Dopo aver generato il codice QR, non potrai più modificare importo, metodo di pagamento o dati di contatto in questo flusso.",
-		"generateCta": "Genera codice QR per il pagamento",
+		"generateCta": "Genera codice QR",
 		"generating": "Generazione…",
 		"generateError": "Impossibile generare la QR-fattura. Riprova."
 	},
@@ -154,5 +139,10 @@
 		"zewo": "Certificato ZEWO",
 		"why-one-percent": "Perché donare l'1%?",
 		"pay-with": "Paga con"
+	},
+	"resumeBar": {
+		"label": "Donazione rapida",
+		"summary": "{cadence, select, monthly {Dona {amount} al mese, modifica l'importo} other {Dona {amount} una volta, modifica l'importo}}",
+		"continue": "Continua"
 	}
 }

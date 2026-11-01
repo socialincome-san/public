@@ -23,9 +23,13 @@
 		"supported-by-link-aria": "Site web Plattform Partner"
 	},
 	"locale-currency-switcher": {
-		"aria-label": "Modifier la langue et la devise",
+		"aria-label": "Modifier la langue, la devise et le pays",
 		"language": "Langue",
-		"currency": "Devise"
+		"currency": "Devise",
+		"country": "Pays",
+		"country-automatic": "Automatique",
+		"country-search": "Rechercher un pays",
+		"country-empty": "Aucun pays trouvé."
 	},
 	"countries-page": {
 		"empty": "Aucun pays trouvé.",
@@ -205,7 +209,7 @@
 		},
 		"runway": {
 			"description": "Même si tous les donateurs cessaient de donner aujourd’hui, nous pourrions continuer à verser les paiements aux bénéficiaires pendant {count} mois supplémentaires.",
-			"zewo-hint": "Conforme à ZEWO"
+			"zewo-hint": "Conforme à <zewo>ZEWO</zewo>"
 		},
 		"countries": {
 			"headline": "{count, plural, one {Des dons totalisant {amount} sont arrivés de {countriesCount} pays} other {Des dons totalisant {amount} sont arrivés de {countriesCount} pays}}",
@@ -405,12 +409,23 @@
 			}
 		}
 	},
+	"circles": {
+		"title": "Cercles",
+		"member-summary": "{active, plural, one {# actif} other {# actifs}} · {interested, plural, one {# membre intéressé} other {# membres intéressés}}",
+		"members-empty": "Pas encore de membres",
+		"empty": "Pas encore de cercles."
+	},
+	"task-cards": {
+		"show-all": "Afficher les {count} tâches",
+		"show-fewer": "Afficher moins de tâches"
+	},
 	"breadcrumb": {
 		"home": "Accueil"
 	},
 	"wallet": {
 		"paid-out": "Versé",
-		"recipients": "Bénéficiaires"
+		"recipients": "Bénéficiaires",
+		"concluded": "Terminé"
 	},
 	"person-grid": {
 		"search-placeholder": "Rechercher par nom",

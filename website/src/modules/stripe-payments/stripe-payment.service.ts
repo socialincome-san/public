@@ -43,7 +43,7 @@ import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { titleCase } from '@/lib/utils/string-utils';
 import { getCampaignById, getDefaultCampaignForProgram, getFallbackCampaign } from '@/modules/campaigns/campaign.service';
-import { upsertFromStripeEvent } from '@/modules/contributions/contribution.service';
+import { hasSucceededContributionsBefore, upsertFromStripeEvent } from '@/modules/contributions/contribution.service';
 import type { PaymentEventCreateData, StripeContributionCreateData } from '@/modules/contributions/contribution.types';
 import {
 	findContributorByAccountId,
@@ -217,9 +217,9 @@ export const createEmbeddedCheckoutSession = async (
 			returnUrl: returnUrlResult.data,
 			stripeCustomerId: input.stripeCustomerId,
 			campaignId,
-			source: 'donation-wizard',
+			source: input.uiMode === 'elements' ? 'donation-bar' : 'donation-wizard',
 			coverTransactionCosts,
-			uiMode: 'embedded_page',
+			uiMode: input.uiMode ?? 'embedded_page',
 		});
 		if (!checkoutResult.success) {
 			return checkoutResult;
@@ -247,7 +247,7 @@ export const getPaidCheckoutDonation = async (sessionId: string): Promise<Result
 			return sessionResult;
 		}
 
-		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		const paidCheck = assertWizardCheckoutSessionPaid(sessionResult.data);
 		if (!paidCheck.success) {
 			return paidCheck;
 		}
@@ -262,6 +262,7 @@ export const getPaidCheckoutDonation = async (sessionId: string): Promise<Result
 			amount: amountTotal / 100,
 			currency: currency.toUpperCase(),
 			recurring: mode === 'subscription',
+			donorStatus: await getDonorStatus(sessionResult.data),
 		});
 	} catch (error) {
 		console.error(error);
@@ -277,7 +278,7 @@ export const getCheckoutOnboardingPrefill = async (sessionId: string): Promise<R
 			return sessionResult;
 		}
 
-		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		const paidCheck = assertWizardCheckoutSessionPaid(sessionResult.data);
 		if (!paidCheck.success) {
 			return paidCheck;
 		}
@@ -317,7 +318,7 @@ export const updateContributorAfterCheckout = async (
 			return sessionResult;
 		}
 
-		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		const paidCheck = assertWizardCheckoutSessionPaid(sessionResult.data);
 		if (!paidCheck.success) {
 			return paidCheck;
 		}
@@ -393,7 +394,7 @@ export const updateContributorReferralAfterCheckout = async (
 			return sessionResult;
 		}
 
-		const paidCheck = assertEmbeddedCheckoutSessionPaid(sessionResult.data);
+		const paidCheck = assertWizardCheckoutSessionPaid(sessionResult.data);
 		if (!paidCheck.success) {
 			return paidCheck;
 		}
@@ -1259,7 +1260,7 @@ const createCheckoutSession = async (input: {
 	accountId?: string;
 	source?: string;
 	coverTransactionCosts?: boolean;
-	uiMode?: 'embedded_page';
+	uiMode?: 'embedded_page' | 'elements';
 }): Promise<Result<{ sessionId: string; clientSecret: string | null; url: string | null }>> => {
 	const productId = input.recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME;
 	if (!productId) {
@@ -1372,8 +1373,9 @@ const splitContributorName = (fullName?: string | null): StripeContributorNamePa
 	};
 };
 
-const assertEmbeddedCheckoutSessionPaid = (session: StripeApiCheckoutSession): Result<void> => {
-	if (session.ui_mode !== 'embedded_page') {
+const assertWizardCheckoutSessionPaid = (session: StripeApiCheckoutSession): Result<void> => {
+	// Only the donation wizard (embedded form) and the donation bar (Express Checkout Element) create these modes.
+	if (session.ui_mode !== 'embedded_page' && session.ui_mode !== 'elements') {
 		return resultFail('Invalid checkout session type');
 	}
 	if (session.status !== 'complete') {
@@ -1384,6 +1386,37 @@ const assertEmbeddedCheckoutSessionPaid = (session: StripeApiCheckoutSession): R
 	}
 
 	return resultOk(undefined);
+};
+
+/**
+ * Whether the account behind a checkout had earlier successful contributions. `undefined` when the lookup fails, so
+ * the purchase event is still tracked.
+ */
+const getDonorStatus = async (session: StripeApiCheckoutSession): Promise<PaidCheckoutDonation['donorStatus']> => {
+	const stripeCustomerId = resolveStripeResourceId(session.customer);
+	if (!stripeCustomerId) {
+		return 'new';
+	}
+
+	const contributorResult = await findContributorByStripeCustomerOrEmail(
+		stripeCustomerId,
+		session.customer_details?.email ?? undefined,
+	);
+	if (!contributorResult.success) {
+		return undefined;
+	}
+	if (!contributorResult.data) {
+		return 'new';
+	}
+
+	// Only contributions created before the session count, so this checkout's own contribution never does, even when
+	// the Stripe webhook has already stored it.
+	const earlierResult = await hasSucceededContributionsBefore(contributorResult.data.id, new Date(session.created * 1000));
+	if (!earlierResult.success) {
+		return undefined;
+	}
+
+	return earlierResult.data ? 'returning' : 'new';
 };
 
 const normalizeCheckoutEmail = (email: string): string => email.trim().toLowerCase();

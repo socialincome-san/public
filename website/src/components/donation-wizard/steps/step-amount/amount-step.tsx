@@ -1,26 +1,11 @@
 'use client';
 
-import { useVisitorCountryCode, useWebsiteCurrency } from '@/lib/i18n/website-currency';
-import { useEffect } from 'react';
-import { isDonationExampleCountryCode } from '../../utils/donation-example-income';
 import { createStep1Actions, selectStep1FormView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { DonationAmountFields } from './donation-amount-fields';
 
 export const AmountStep = ({ state, send }: DonationWizardStepProps) => {
-	const currency = useWebsiteCurrency();
-	const visitorCountryCode = useVisitorCountryCode();
-
-	useEffect(() => {
-		if (
-			visitorCountryCode &&
-			isDonationExampleCountryCode(visitorCountryCode) &&
-			state.context.exampleCountryCode !== visitorCountryCode &&
-			!state.context.countryIsManuallySelected
-		) {
-			send({ type: 'SET_COUNTRY', countryCode: visitorCountryCode, source: 'detected' });
-		}
-	}, [send, state.context.countryIsManuallySelected, state.context.exampleCountryCode, visitorCountryCode]);
+	const { currency } = state.context;
 
 	return (
 		<DonationAmountFields

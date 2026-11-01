@@ -1,4 +1,4 @@
-import { defaultCurrency, isWebsiteCurrency, type WebsiteCurrency } from '@/lib/i18n/utils';
+import { isWebsiteCurrency, type WebsiteCurrency } from '@/lib/i18n/utils';
 import type {
 	Cadence,
 	DonationAmountContext,
@@ -7,7 +7,6 @@ import type {
 	PlanTier,
 	PresetAmount,
 } from '../../utils/donation-amount';
-import { isDonationExampleCountryCode, type DonationExampleCountryCode } from '../../utils/donation-example-income';
 
 export const STRIPE_CHECKOUT_SESSION_ID_PARAM = 'donation_checkout_session_id';
 
@@ -17,12 +16,6 @@ const isRecord = (value: unknown): value is Record<string, unknown> => typeof va
 
 const isNullableNumber = (value: unknown): value is number | null =>
 	value === null || (typeof value === 'number' && Number.isFinite(value));
-
-const isNullableDonationExampleCountryCode = (value: unknown): value is DonationExampleCountryCode | null =>
-	value === null || (typeof value === 'string' && isDonationExampleCountryCode(value));
-
-const isStoredWebsiteCurrency = (value: unknown): value is WebsiteCurrency =>
-	typeof value === 'string' && isWebsiteCurrency(value);
 
 const isPresetAmount = (value: unknown): value is PresetAmount | 'other' =>
 	value === 25 || value === 50 || value === 100 || value === 'other';
@@ -40,18 +33,15 @@ const isOneTimePlanChoice = (value: unknown): value is OneTimePlanChoice => valu
 
 const getStorageKey = (sessionId: string): string => `${STORAGE_KEY_PREFIX}${sessionId}`;
 
-const parseStoredContext = (value: unknown, fallbackCurrency: WebsiteCurrency): DonationAmountContext | null => {
+export const parseStoredContext = (value: unknown, fallbackCurrency?: WebsiteCurrency): DonationAmountContext | null => {
 	if (!isRecord(value)) {
 		return null;
 	}
 
 	const {
+		// Contexts stored before the wizard tracked its own currency have none.
+		currency = fallbackCurrency,
 		monthlyIncome,
-		monthlyIncomeCurrency,
-		monthlyIncomeSource,
-		exampleCountryCode,
-		countryIsManuallySelected,
-		donationAmountIsManual,
 		selectedAmount,
 		customAmount,
 		cadence,
@@ -65,17 +55,9 @@ const parseStoredContext = (value: unknown, fallbackCurrency: WebsiteCurrency): 
 	} = value;
 
 	if (
+		typeof currency !== 'string' ||
+		!isWebsiteCurrency(currency) ||
 		!isNullableNumber(monthlyIncome) ||
-		(monthlyIncomeCurrency !== undefined &&
-			monthlyIncomeCurrency !== null &&
-			!isStoredWebsiteCurrency(monthlyIncomeCurrency)) ||
-		(monthlyIncomeSource !== undefined &&
-			monthlyIncomeSource !== 'example' &&
-			monthlyIncomeSource !== 'manual' &&
-			monthlyIncomeSource !== 'generic') ||
-		(exampleCountryCode !== undefined && !isNullableDonationExampleCountryCode(exampleCountryCode)) ||
-		(countryIsManuallySelected !== undefined && typeof countryIsManuallySelected !== 'boolean') ||
-		(donationAmountIsManual !== undefined && typeof donationAmountIsManual !== 'boolean') ||
 		!isNullablePresetAmount(selectedAmount) ||
 		!isNullableNumber(customAmount) ||
 		!isCadence(cadence) ||
@@ -91,15 +73,8 @@ const parseStoredContext = (value: unknown, fallbackCurrency: WebsiteCurrency): 
 	}
 
 	return {
+		currency,
 		monthlyIncome,
-		monthlyIncomeCurrency: isStoredWebsiteCurrency(monthlyIncomeCurrency) ? monthlyIncomeCurrency : fallbackCurrency,
-		monthlyIncomeSource:
-			monthlyIncomeSource === 'example' || monthlyIncomeSource === 'manual' || monthlyIncomeSource === 'generic'
-				? monthlyIncomeSource
-				: 'manual',
-		exampleCountryCode: isNullableDonationExampleCountryCode(exampleCountryCode) ? exampleCountryCode : null,
-		countryIsManuallySelected: countryIsManuallySelected === true,
-		donationAmountIsManual: donationAmountIsManual ?? selectedAmount !== null,
 		selectedAmount,
 		customAmount,
 		cadence,
@@ -111,6 +86,21 @@ const parseStoredContext = (value: unknown, fallbackCurrency: WebsiteCurrency): 
 		returnsToOneTimePlanStep,
 		campaignId,
 	};
+};
+
+/** A donation saved as JSON, or `null` when it is missing or no longer valid. */
+const parseStoredDonation = (value: string | null, fallbackCurrency?: WebsiteCurrency): DonationAmountContext | null => {
+	if (!value) {
+		return null;
+	}
+
+	try {
+		const parsed: unknown = JSON.parse(value);
+
+		return parseStoredContext(parsed, fallbackCurrency);
+	} catch {
+		return null;
+	}
 };
 
 export const buildStripeCheckoutReturnPath = (): string | undefined => {
@@ -126,26 +116,23 @@ export const storeStripeCheckoutContext = (sessionId: string, context: DonationA
 		return;
 	}
 
-	window.sessionStorage.setItem(getStorageKey(sessionId), JSON.stringify(context));
+	try {
+		window.sessionStorage.setItem(getStorageKey(sessionId), JSON.stringify(context));
+	} catch {
+		// Storage is blocked: the payment still goes through, onboarding then starts from the website's defaults.
+	}
 };
 
 export const readStoredStripeCheckoutContext = (
 	sessionId: string,
-	fallbackCurrency: WebsiteCurrency = defaultCurrency,
+	fallbackCurrency: WebsiteCurrency,
 ): DonationAmountContext | null => {
 	if (typeof window === 'undefined') {
 		return null;
 	}
 
-	const value = window.sessionStorage.getItem(getStorageKey(sessionId));
-	if (!value) {
-		return null;
-	}
-
 	try {
-		const parsed: unknown = JSON.parse(value);
-
-		return parseStoredContext(parsed, fallbackCurrency);
+		return parseStoredDonation(window.sessionStorage.getItem(getStorageKey(sessionId)), fallbackCurrency);
 	} catch {
 		return null;
 	}
@@ -156,5 +143,9 @@ export const clearStoredStripeCheckoutContext = (sessionId: string): void => {
 		return;
 	}
 
-	window.sessionStorage.removeItem(getStorageKey(sessionId));
+	try {
+		window.sessionStorage.removeItem(getStorageKey(sessionId));
+	} catch {
+		// Storage is blocked, so nothing was stored.
+	}
 };

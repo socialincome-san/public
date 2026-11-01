@@ -2,26 +2,11 @@
 	"modal": {
 		"title": "Faire un don",
 		"campaign-for": "Pour {title}",
-		"closeConfirm": {
-			"title": "Fermer le don ?",
-			"description": "Si tu fermes maintenant, ta progression dans ce don sera perdue.",
-			"cancel": "Continuer le don",
-			"confirm": "Fermer"
-		}
+		"currency": "Devise"
 	},
 	"stepAmount": {
 		"title": "Faire un don",
-		"monthly-income-label": "Revenu mensuel",
-		"country-label": "Pays",
-		"country-placeholder": "Choisir un pays",
-		"example-income-note": "Revenu indicatif pour {country}, basé sur le salaire brut mensuel {metric} de {year}. Adaptez-le à votre revenu.",
-		"wage-metric-mean": "moyen",
-		"wage-metric-median": "médian",
-		"source-link": "Source : {source}",
-		"currency-conversion-note": "Taux de change de {year}",
-		"manual-income-note": "Le revenu que vous avez saisi est utilisé.",
-		"generic-income-note": "Choisissez un pays pour voir un exemple de salaire. En attendant, nous suggérons {amount}.",
-		"unsupported-country-note": "Aucun exemple de salaire fiable n’est disponible pour {country}. Nous suggérons {amount}.",
+		"monthly-income-label": "Votre revenu mensuel",
 		"choose-own-amount": "Ou choisis ton propre montant",
 		"your-one-percent": "Votre 1 %",
 		"other": "Autre",
@@ -62,7 +47,7 @@
 		"email": "E-mail",
 		"accountCreateHint": "S'il n'existe pas encore de compte avec cet e-mail, nous en créerons un pour toi.",
 		"noBackAfterGenerateHint": "Après la génération du code QR, tu ne pourras plus modifier le montant, le mode de paiement ni les coordonnées dans ce parcours.",
-		"generateCta": "Générer le code QR pour le paiement",
+		"generateCta": "Générer le code QR",
 		"generating": "Génération…",
 		"generateError": "Impossible de générer la facture QR. Réessaie."
 	},
@@ -154,5 +139,10 @@
 		"zewo": "Certifié ZEWO",
 		"why-one-percent": "Pourquoi donner 1% ?",
 		"pay-with": "Payer avec"
+	},
+	"resumeBar": {
+		"label": "Don rapide",
+		"summary": "{cadence, select, monthly {Donner {amount} par mois, modifier le montant} other {Donner {amount} une fois, modifier le montant}}",
+		"continue": "Continuer"
 	}
 }

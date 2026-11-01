@@ -2,26 +2,11 @@
 	"modal": {
 		"title": "Make a donation",
 		"campaign-for": "For {title}",
-		"closeConfirm": {
-			"title": "Close donation?",
-			"description": "If you close now, your progress in this donation will be lost.",
-			"cancel": "Continue donating",
-			"confirm": "Close"
-		}
+		"currency": "Currency"
 	},
 	"stepAmount": {
 		"title": "Make a donation",
-		"monthly-income-label": "Monthly income",
-		"country-label": "Country",
-		"country-placeholder": "Choose a country",
-		"example-income-note": "Example income for {country}, based on the {metric} gross monthly wage in {year}. Adjust it to your income.",
-		"wage-metric-mean": "mean",
-		"wage-metric-median": "median",
-		"source-link": "Source: {source}",
-		"currency-conversion-note": "Exchange rates from {year}",
-		"manual-income-note": "Using the income you entered.",
-		"generic-income-note": "Choose a country to see a wage example. Until then, we suggest {amount}.",
-		"unsupported-country-note": "No reliable wage example is available for {country}. We suggest {amount}.",
+		"monthly-income-label": "Your monthly income",
 		"choose-own-amount": "Or choose own amount",
 		"your-one-percent": "Your 1 %",
 		"other": "Other",
@@ -62,7 +47,7 @@
 		"email": "E-Mail",
 		"accountCreateHint": "If no account exists for this email yet, we'll create one for you.",
 		"noBackAfterGenerateHint": "After you generate the QR code, you can't change the amount, payment method, or contact details in this flow.",
-		"generateCta": "Generate QR-Code for payment",
+		"generateCta": "Generate QR-Code",
 		"generating": "Generating…",
 		"generateError": "Could not generate QR bill. Please try again."
 	},
@@ -154,5 +139,10 @@
 		"zewo": "ZEWO certified",
 		"why-one-percent": "Why donating 1%?",
 		"pay-with": "Pay with"
+	},
+	"resumeBar": {
+		"label": "Quick donation",
+		"summary": "{cadence, select, monthly {Donate {amount} monthly, change amount} other {Donate {amount} once, change amount}}",
+		"continue": "Continue"
 	}
 }

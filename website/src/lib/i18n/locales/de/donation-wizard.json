@@ -2,26 +2,11 @@
 	"modal": {
 		"title": "Spenden",
 		"campaign-for": "Für {title}",
-		"closeConfirm": {
-			"title": "Spende schliessen?",
-			"description": "Wenn du jetzt schliesst, geht dein Fortschritt in dieser Spende verloren.",
-			"cancel": "Weiter spenden",
-			"confirm": "Schliessen"
-		}
+		"currency": "Währung"
 	},
 	"stepAmount": {
 		"title": "Spenden",
-		"monthly-income-label": "Monatliches Einkommen",
-		"country-label": "Land",
-		"country-placeholder": "Land auswählen",
-		"example-income-note": "Beispieleinkommen für {country}, basierend auf dem monatlichen Brutto-{metric}lohn von {year}. Passe es an dein Einkommen an.",
-		"wage-metric-mean": "Durchschnitts",
-		"wage-metric-median": "Median",
-		"source-link": "Quelle: {source}",
-		"currency-conversion-note": "Wechselkurse von {year}",
-		"manual-income-note": "Dein eingegebenes Einkommen wird verwendet.",
-		"generic-income-note": "Wähle ein Land für ein Lohnbeispiel. Bis dahin schlagen wir {amount} vor.",
-		"unsupported-country-note": "Für {country} ist kein verlässliches Lohnbeispiel verfügbar. Wir schlagen {amount} vor.",
+		"monthly-income-label": "Ihr monatliches Einkommen",
 		"choose-own-amount": "Oder eigenen Betrag wählen",
 		"your-one-percent": "Ihr 1 %",
 		"other": "Andere",
@@ -62,7 +47,7 @@
 		"email": "E-Mail",
 		"accountCreateHint": "Wenn es noch kein Konto mit dieser E-Mail gibt, legen wir eines für dich an.",
 		"noBackAfterGenerateHint": "Nach dem Generieren des QR-Codes kannst du Betrag, Zahlungsart und Kontaktdaten in diesem Ablauf nicht mehr ändern.",
-		"generateCta": "QR-Code für Zahlung generieren",
+		"generateCta": "QR-Code generieren",
 		"generating": "Wird generiert…",
 		"generateError": "QR-Rechnung konnte nicht erstellt werden. Bitte erneut versuchen."
 	},
@@ -154,5 +139,10 @@
 		"zewo": "ZEWO zertifiziert",
 		"why-one-percent": "Warum 1% spenden?",
 		"pay-with": "Bezahlen mit"
+	},
+	"resumeBar": {
+		"label": "Schnell spenden",
+		"summary": "{cadence, select, monthly {{amount} monatlich spenden, Betrag ändern} other {{amount} einmalig spenden, Betrag ändern}}",
+		"continue": "Weiter"
 	}
 }

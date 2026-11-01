@@ -70,12 +70,13 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 			)}
 
 			<Dialog open={isOpen} onOpenChange={(nextOpen) => send({ type: nextOpen ? 'OPEN' : 'CLOSE' })}>
-				<DialogContent size="full">
+				<DialogContent size="lg">
 					<DialogHeader>
 						<DialogTitle>{t('modal.title')}</DialogTitle>
 					</DialogHeader>
 
-					<CreateProgramWizard state={state} send={send} onGoToLogin={() => router.replace(loginPath)} />
+					{/* Full page load, so Clarity from the public page does not keep recording on the login page. */}
+					<CreateProgramWizard state={state} send={send} onGoToLogin={() => window.location.replace(loginPath)} />
 				</DialogContent>
 			</Dialog>
 		</>

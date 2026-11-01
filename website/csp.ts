@@ -14,6 +14,8 @@ const PRODUCTION_SCRIPT_SRC = [
 	'https://app.storyblok.com',
 	'https://static.cloudflareinsights.com',
 	'https://challenges.cloudflare.com',
+	// Needed for Firebase Auth's Google sign-in helpers (gapi).
+	'https://apis.google.com',
 ] as const;
 
 const DEVELOPMENT_SCRIPT_SRC_EXTRA = [
@@ -58,12 +60,17 @@ const PRODUCTION_CONNECT_SRC = [
 	// The dotLottie renderer fetches its WASM binary from jsDelivr, falling back to unpkg.
 	'https://cdn.jsdelivr.net',
 	'https://unpkg.com',
+	// Needed for Firebase Auth's Google sign-in.
+	'https://www.googleapis.com',
 ] as const;
 
 const LOCALHOST_CONNECT_SRC = ['http://localhost:*', 'ws://localhost:*'] as const;
 
 /** Extra hosts for Firebase Auth/Storage/Functions emulators (local/e2e production builds). */
 const EMULATOR_CONNECT_SRC_EXTRA = ['http://127.0.0.1:*', 'ws://127.0.0.1:*'] as const;
+
+// Needed for Firebase Auth's Google sign-in, which opens a hidden iframe from the auth domain.
+const FIREBASE_AUTH_DOMAIN = process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? 'social-income-prod.firebaseapp.com';
 
 const FRAME_SRC = [
 	"'self'",
@@ -74,6 +81,10 @@ const FRAME_SRC = [
 	'https://www.youtube-nocookie.com',
 	'https://player.mux.com',
 	'https://challenges.cloudflare.com',
+	`https://${FIREBASE_AUTH_DOMAIN}`,
+	// Storyblok "Embed (iframe)" block. Add a host here to allow editors to embed it.
+	'https://calendar.google.com',
+	'https://dataembed.worldbank.org',
 ] as const;
 
 const MEDIA_SRC = ["'self'", 'blob:', 'https://*.mux.com', 'https://*.edgemv.mux.com', 'https://a.storyblok.com'] as const;
@@ -106,6 +117,8 @@ const GOOGLE_COUNTRY_DOMAINS = [
 	'https://www.google.it',
 	'https://www.google.co.uk',
 	'https://www.google.nl',
+	'https://www.google.ca',
+	'https://www.google.com.au',
 ] as const;
 
 const GOOGLE_TAG_SRC = {
@@ -143,6 +156,14 @@ const GOOGLE_TAG_SRC = {
 	frame: ['https://www.googletagmanager.com', 'https://*.doubleclick.net'],
 } as const;
 
+// Microsoft Clarity, loaded only after consent. Hosts from
+// https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-csp
+const CLARITY_SRC = {
+	script: ['https://www.clarity.ms', 'https://*.clarity.ms'],
+	img: ['https://*.clarity.ms', 'https://c.bing.com'],
+	connect: ['https://www.clarity.ms', 'https://*.clarity.ms'],
+} as const;
+
 const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== 'production' }: CspOptions = {}) => {
 	const isUsingFirebaseEmulators = Boolean(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL);
 	const isVercelPreview = process.env.VERCEL_ENV === 'preview';
@@ -157,11 +178,11 @@ const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== '
 
 	const directives = [
 		`default-src 'self'`,
-		`script-src ${joinSources([...scriptSrc, ...GOOGLE_TAG_SRC.script, ...toolbarSrc('script')])}`,
+		`script-src ${joinSources([...scriptSrc, ...GOOGLE_TAG_SRC.script, ...CLARITY_SRC.script, ...toolbarSrc('script')])}`,
 		`style-src ${joinSources([...STYLE_SRC, ...GOOGLE_TAG_SRC.style, ...toolbarSrc('style')])}`,
-		`img-src ${joinSources([...IMG_SRC, ...GOOGLE_TAG_SRC.img, ...toolbarSrc('img')])}`,
+		`img-src ${joinSources([...IMG_SRC, ...GOOGLE_TAG_SRC.img, ...CLARITY_SRC.img, ...toolbarSrc('img')])}`,
 		`font-src ${joinSources([...FONT_SRC, ...GOOGLE_TAG_SRC.font, ...toolbarSrc('font')])}`,
-		`connect-src ${joinSources([...connectSrc, ...GOOGLE_TAG_SRC.connect, ...toolbarSrc('connect')])}`,
+		`connect-src ${joinSources([...connectSrc, ...GOOGLE_TAG_SRC.connect, ...CLARITY_SRC.connect, ...toolbarSrc('connect')])}`,
 		`frame-src ${joinSources([...FRAME_SRC, ...GOOGLE_TAG_SRC.frame, ...toolbarSrc('frame')])}`,
 		`media-src ${joinSources(MEDIA_SRC)}`,
 		`worker-src ${joinSources(WORKER_SRC)}`,

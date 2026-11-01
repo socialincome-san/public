@@ -1,4 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
+import { blockMargins } from '@/components/content-blocks/block-margins';
+import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
@@ -6,6 +8,7 @@ import { ExplainerVideoHeaderBlock } from '@/components/content-blocks/explainer
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
+import { IframeEmbedBlock } from '@/components/content-blocks/iframe-embed';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
@@ -24,6 +27,7 @@ import { ReservesBlock } from '@/components/content-blocks/reserves-block';
 import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
 import { RunwayMonthGridBlock } from '@/components/content-blocks/runway-month-grid-block';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
+import { TaskCardsBlock } from '@/components/content-blocks/task-cards';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
@@ -36,6 +40,7 @@ import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/newsletter/newsletter-signup';
 import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Fragment, type ReactNode } from 'react';
 
 type PageBlock = Page['content'][number];
@@ -59,6 +64,8 @@ const renderPageBlock = (
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ): ReactNode => {
 	switch (block.component) {
+		case 'circleGrid':
+			return <CircleGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'donationGlobe':
 			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':
@@ -71,6 +78,12 @@ const renderPageBlock = (
 			return <FaqSelectionBlock blok={block} lang={lang} currency={currency} />;
 		case 'heroVideo':
 			return <HeroVideoBlockServer blok={block} lang={lang} currency={currency} />;
+		case 'iframeEmbed':
+			return (
+				<BlockWrapper {...blockMargins(block)}>
+					<IframeEmbedBlock blok={block} />
+				</BlockWrapper>
+			);
 		case 'imageText':
 			return <ImageTextBlock blok={block} />;
 		case 'impactMeasurement':
@@ -113,6 +126,8 @@ const renderPageBlock = (
 			return <RichtextButtonHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'spacer':
 			return <SpacerBlock blok={block} />;
+		case 'taskCards':
+			return <TaskCardsBlock blok={block} />;
 		case 'teamGrid':
 			return <TeamGridBlock blok={block} lang={lang} />;
 		case 'testimonial':

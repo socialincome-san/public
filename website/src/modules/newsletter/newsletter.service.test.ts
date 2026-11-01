@@ -44,6 +44,21 @@ describe('newsletter service', () => {
 		});
 	});
 
+	test('passes the campaign ID through to SendGrid', async () => {
+		await subscribeToNewsletter({
+			email: 'ada@example.com',
+			language: 'en',
+			campaignId: 'campaign-123',
+		});
+
+		expect(mockUpsertSendgridNewsletterSubscription).toHaveBeenCalledWith({
+			email: 'ada@example.com',
+			language: 'en',
+			campaignId: 'campaign-123',
+			status: 'subscribed',
+		});
+	});
+
 	test('unsubscribes a contributor and defaults missing language and country', async () => {
 		await expect(
 			unsubscribeFromNewsletter({

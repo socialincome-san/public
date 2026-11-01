@@ -1,8 +1,9 @@
 'use client';
 
-import { useVisitorCountryCode, useWebsiteCurrency } from '@/lib/i18n/website-currency';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { useDonationFormState } from './hooks/use-donation-form-state';
 import { useDonationModal } from './hooks/use-donation-modal';
+import { observeDonationForm } from './resume-bar/donation-form-visibility';
 import { DonationAmountFields } from './steps/step-amount/donation-amount-fields';
 import { selectStep1FormView } from './wizard/donation-machine-selectors';
 
@@ -13,12 +14,11 @@ type Props = {
 
 export const DonationForm = ({ campaignId, onBeforeOpen }: Props) => {
 	const currency = useWebsiteCurrency();
-	const visitorCountryCode = useVisitorCountryCode();
 	const { openWizardWithFormAmount } = useDonationModal();
-	const form = useDonationFormState(currency, visitorCountryCode);
+	const form = useDonationFormState();
 
 	return (
-		<div data-testid="donation-wizard-hero-form" className="w-full">
+		<div data-testid="donation-wizard-hero-form" data-clarity-mask="true" ref={observeDonationForm} className="w-full">
 			<DonationAmountFields
 				placement="hero"
 				currency={currency}
@@ -26,7 +26,6 @@ export const DonationForm = ({ campaignId, onBeforeOpen }: Props) => {
 				actions={{
 					selectOnePercent: form.selectOnePercent,
 					setMonthlyIncome: form.setMonthlyIncome,
-					setCountry: form.setCountry,
 					setPresetAmount: form.setPresetAmount,
 					setCustomAmount: form.setCustomAmount,
 					setCadence: form.setCadence,

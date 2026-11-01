@@ -23,9 +23,13 @@
 		"supported-by-link-aria": "Plattform Partner Webseite"
 	},
 	"locale-currency-switcher": {
-		"aria-label": "Sprache und Währung ändern",
+		"aria-label": "Sprache, Währung und Land ändern",
 		"language": "Sprache",
-		"currency": "Währung"
+		"currency": "Währung",
+		"country": "Land",
+		"country-automatic": "Automatisch",
+		"country-search": "Land suchen",
+		"country-empty": "Kein Land gefunden."
 	},
 	"countries-page": {
 		"empty": "Keine Länder gefunden.",
@@ -205,7 +209,7 @@
 		},
 		"runway": {
 			"description": "Selbst wenn heute alle Spender:innen aufhören würden zu spenden, könnten wir Empfänger:innen noch {count} Monate lang weiter auszahlen.",
-			"zewo-hint": "Im Einklang mit ZEWO"
+			"zewo-hint": "Im Einklang mit <zewo>ZEWO</zewo>"
 		},
 		"countries": {
 			"headline": "{count, plural, one {Spenden im Wert von {amount} kamen aus {countriesCount} Land} other {Spenden im Wert von {amount} kamen aus {countriesCount} Ländern}}",
@@ -405,12 +409,23 @@
 			}
 		}
 	},
+	"circles": {
+		"title": "Kreise",
+		"member-summary": "{active} aktiv · {interested, plural, one {# interessiertes Mitglied} other {# interessierte Mitglieder}}",
+		"members-empty": "Noch keine Mitglieder",
+		"empty": "Noch keine Kreise."
+	},
+	"task-cards": {
+		"show-all": "Alle {count} Aufgaben anzeigen",
+		"show-fewer": "Weniger Aufgaben anzeigen"
+	},
 	"breadcrumb": {
 		"home": "Startseite"
 	},
 	"wallet": {
 		"paid-out": "Ausbezahlt",
-		"recipients": "Empfänger:innen"
+		"recipients": "Empfänger:innen",
+		"concluded": "Abgeschlossen"
 	},
 	"person-grid": {
 		"search-placeholder": "Nach Namen suchen",

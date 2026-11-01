@@ -40,4 +40,16 @@ describe('CountryFlag', () => {
 
 		act(() => root.unmount());
 	});
+
+	test('renders the fallback instead of the country code when the flag is missing', () => {
+		const container = document.createElement('div');
+		const root = createRoot(container);
+
+		act(() => root.render(<CountryFlag country="RE" fallback={<span data-testid="fallback" />} />));
+		act(() => container.querySelector<HTMLButtonElement>('[data-testid="flag-image"]')?.click());
+		expect(container.querySelector('[data-testid="fallback"]')).not.toBeNull();
+		expect(container.textContent).not.toBe('RE');
+
+		act(() => root.unmount());
+	});
 });
