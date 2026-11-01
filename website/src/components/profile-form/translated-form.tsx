@@ -39,6 +39,8 @@ export type ProfileFormTranslations = {
 	language: string;
 	name: string;
 	focuses: string;
+	required: string;
+	invalidEmail: string;
 };
 
 type Props = {
@@ -86,6 +88,8 @@ export const TranslatedProfileForm = async ({ session, isNewsletterSubscribed }:
 		language: t('profile.form.language'),
 		name: t('profile.form.name'),
 		focuses: t('profile.form.focuses'),
+		required: t('profile.form.validation.required'),
+		invalidEmail: t('profile.form.validation.invalid-email'),
 	};
 
 	return <ProfileForm session={session} translations={translations} isNewsletterSubscribed={isNewsletterSubscribed} />;
