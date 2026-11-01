@@ -24,10 +24,19 @@ type Props = {
 	currency: WebsiteCurrency;
 	activeProgramsCount: number;
 	recipientsCount: number;
+	candidatesCount: number;
 	community: CommunityPanelData | null;
 };
 
-export const CountryDetail = async ({ country, lang, currency, activeProgramsCount, recipientsCount, community }: Props) => {
+export const CountryDetail = async ({
+	country,
+	lang,
+	currency,
+	activeProgramsCount,
+	recipientsCount,
+	candidatesCount,
+	community,
+}: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
 	const countryTitle = getCountryTitle(country.content);
 	const localPartners = getCountryLocalPartners(country.content);
@@ -60,6 +69,10 @@ export const CountryDetail = async ({ country, lang, currency, activeProgramsCou
 					{
 						value: recipientsCount,
 						label: recipientsCount === 1 ? t('countries-page.recipient-singular') : t('countries-page.recipient-plural'),
+					},
+					{
+						value: candidatesCount,
+						label: candidatesCount === 1 ? t('countries-page.candidate-singular') : t('countries-page.candidate-plural'),
 					},
 				]}
 			/>

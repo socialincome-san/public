@@ -33,9 +33,9 @@ export const StoryblokPreviewCountryPage = async ({ storyPath, lang, currency, p
 				getCountryPageStatsAction(story.content.isoCode.toString()),
 				getCommunityPanelDataAction({ page: story.content, language: lang, currency }),
 			]);
-			const { activeProgramsCount, recipientsCount } = statsResult.success
+			const { activeProgramsCount, recipientsCount, candidatesCount } = statsResult.success
 				? statsResult.data
-				: { activeProgramsCount: 0, recipientsCount: 0 };
+				: { activeProgramsCount: 0, recipientsCount: 0, candidatesCount: 0 };
 
 			return (
 				<CountryDetail
@@ -44,6 +44,7 @@ export const StoryblokPreviewCountryPage = async ({ storyPath, lang, currency, p
 					currency={currency}
 					activeProgramsCount={activeProgramsCount}
 					recipientsCount={recipientsCount}
+					candidatesCount={candidatesCount}
 					community={communityResult.success ? communityResult.data : null}
 				/>
 			);
