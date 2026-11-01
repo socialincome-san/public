@@ -1,10 +1,13 @@
 // "unreachable_from_main" is ignored beacuse of the vm:entry-point function "_firebaseMessagingBackgroundHandler"
 // ignore_for_file: unreachable_from_main
+import "dart:async";
 import "dart:developer";
 import "dart:io";
 
 import "package:firebase_core/firebase_core.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter_local_notifications/flutter_local_notifications.dart";
 
 /// This must be a top level function in order to work
 @pragma("vm:entry-point")
@@ -17,10 +20,23 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class MessagingRepository {
+  static const _androidNotificationChannelId = "social_income_notifications";
+  static const _androidNotificationChannelName = "Social Income";
+  static const _androidNotificationChannelDescription =
+      "Updates from Social Income";
+  static const _androidNotificationChannel = AndroidNotificationChannel(
+    _androidNotificationChannelId,
+    _androidNotificationChannelName,
+    description: _androidNotificationChannelDescription,
+    importance: Importance.high,
+  );
+
   final FirebaseMessaging messaging;
+  final FlutterLocalNotificationsPlugin localNotifications;
 
   MessagingRepository({
     required this.messaging,
+    required this.localNotifications,
   }) {
     messaging.onTokenRefresh.listen((event) {
       log("PUSHNOTIFICATION: FCM Token refreshed: $event");
@@ -31,11 +47,27 @@ class MessagingRepository {
     await messaging.requestPermission(
       criticalAlert: true,
     );
+    final notificationsInitialized = await localNotifications.initialize(
+      settings: const InitializationSettings(
+        android: AndroidInitializationSettings("ic_launcher_foreground"),
+        iOS: DarwinInitializationSettings(
+          requestAlertPermission: false,
+          requestBadgePermission: false,
+          requestSoundPermission: false,
+        ),
+      ),
+    );
+    if (notificationsInitialized != true) {
+      throw Exception("Failed to initialize local notifications.");
+    }
+    await localNotifications
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(_androidNotificationChannel);
 
     /// This is needed for testing and specific targeting of devices
     final token = await getToken();
     log("PUSHNOTIFICATION: Current FCM token: $token");
-         
+
     /// Get any messages which caused the application to open from a terminated state.
     final initialMessage = await messaging.getInitialMessage();
     if (initialMessage != null){
@@ -50,24 +82,51 @@ class MessagingRepository {
 
     // Set a function which is called to handle any interaction when the app is in the foreground via a Stream listener
     // For showing local notifications another package is needed: flutter_local_notifications => https://pub.dev/packages/flutter_local_notifications#-supported-platforms
-    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-    /// Notification messages which arrive while the app is in foreground will not display a visible notification by default. 
-    /// To override this behavior on iOS, we update the presentation options for the app to change this behaviour.
-    /// To override this behavior on Android, you must create a "High Priority" notification channel which can be done 
-    /// with the above mentioned package "flutter_local_notifications".
-    /// See also blog article: https://medium.com/@ChanakaDev/android-channels-in-flutter-003907b151e5
-    messaging.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
+    FirebaseMessaging.onMessage.listen(
+      (message) => unawaited(handleForegroundMessage(message)),
     );
   }
 
-  void _handleForegroundMessage(RemoteMessage message) {
-    // TODO implement displaying push notifications if app is open
+  @visibleForTesting
+  Future<void> handleForegroundMessage(RemoteMessage message) async {
     log("PUSHNOTIFICATION: Foreground Message received");
     logRemoteMessage(message);
+
+    final title = message.notification?.title ?? _stringValue(message.data["title"]);
+    final body = message.notification?.body ?? _stringValue(message.data["body"]);
+    if ((title == null || title.isEmpty) && (body == null || body.isEmpty)) {
+      return;
+    }
+
+    try {
+      await localNotifications.show(
+        id: message.messageId?.hashCode ?? message.hashCode,
+        title: title,
+        body: body,
+        notificationDetails: const NotificationDetails(
+          android: AndroidNotificationDetails(
+            _androidNotificationChannelId,
+            _androidNotificationChannelName,
+            channelDescription: _androidNotificationChannelDescription,
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+            presentBanner: true,
+            presentList: true,
+          ),
+        ),
+      );
+    } on Exception catch (exception, stackTrace) {
+      log(
+        "PUSHNOTIFICATION: Failed to show foreground notification",
+        error: exception,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   void _handleBackgroundMessage(RemoteMessage message) {
@@ -103,6 +162,8 @@ class MessagingRepository {
     }
     return null;
   }
+
+  String? _stringValue(Object? value) => value is String ? value : null;
 
   static void logRemoteMessage(RemoteMessage message) {
     if (message.notification != null) {
