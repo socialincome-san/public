@@ -247,20 +247,23 @@ const DialogFooter = ({ divided = true, ...props }: DialogSectionProps) => (
 );
 DialogFooter.displayName = 'DialogFooter';
 
-const dialogTitleVariants = cva('text-primary leading-snug font-medium tracking-tight text-balance focus:outline-none', {
-	variants: {
-		size: {
-			default: 'text-xl',
-			lg: 'text-xl sm:text-2xl',
+const dialogTitleVariants = cva(
+	'text-primary leading-snug font-medium tracking-tight text-balance wrap-anywhere focus:outline-none',
+	{
+		variants: {
+			size: {
+				default: 'text-xl',
+				lg: 'text-xl sm:text-2xl',
+			},
+			visuallyHidden: {
+				true: 'sr-only',
+			},
 		},
-		visuallyHidden: {
-			true: 'sr-only',
+		defaultVariants: {
+			size: 'default',
 		},
 	},
-	defaultVariants: {
-		size: 'default',
-	},
-});
+);
 
 const DialogTitle = React.forwardRef<
 	React.ElementRef<typeof DialogPrimitive.Title>,
