@@ -926,7 +926,8 @@ export const getPaginatedRecipientTableViewByLocalPartnerId = async (
 ): Promise<Result<RecipientPaginatedTableView>> => {
 	try {
 		const selectedStatus = parseRecipientStatusFilter(query.recipientStatus);
-		const shouldProcessStatus = query.sortBy === 'status' || Boolean(selectedStatus);
+		const shouldProcessStatus =
+			query.sortBy === 'status' || query.sortBy === 'payoutsProgressPercent' || Boolean(selectedStatus);
 		const [{ recipients, totalCount }, filterSource] = await Promise.all([
 			recipientRepository.findLocalPartnerRecipientTableSource({
 				localPartnerId,
@@ -1253,7 +1254,8 @@ const getPaginatedTableViewForPrograms = async (
 	}
 
 	const selectedStatus = parseRecipientStatusFilter(query.recipientStatus);
-	const shouldProcessStatus = query.sortBy === 'status' || Boolean(selectedStatus);
+	const shouldProcessStatus =
+		query.sortBy === 'status' || query.sortBy === 'payoutsProgressPercent' || Boolean(selectedStatus);
 	const { recipients, totalCount } = await recipientRepository.findRecipientTableSource({
 		programIds,
 		localPartnerId: localPartnerOption?.id,
@@ -1360,7 +1362,13 @@ const processStatusRows = (
 ): RecipientTableViewRow[] => {
 	const filteredRows = status ? rows.filter((row) => row.status === status) : rows;
 	if (query.sortBy !== 'status') {
-		return filteredRows;
+		if (query.sortBy !== 'payoutsProgressPercent') {
+			return filteredRows;
+		}
+
+		const direction = query.sortDirection === 'asc' ? 1 : -1;
+
+		return [...filteredRows].sort((left, right) => (left.payoutsProgressPercent - right.payoutsProgressPercent) * direction);
 	}
 
 	const direction = query.sortDirection === 'asc' ? 1 : -1;

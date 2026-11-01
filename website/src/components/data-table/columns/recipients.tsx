@@ -20,19 +20,31 @@ const buildRecipientLeadColumns = <TRow extends PublicRecipientTableViewRow>(
 	{
 		id: 'recipient',
 		accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
-		header: (ctx) => <SortableHeader ctx={ctx}>{columnLabel(translator, 'column-recipient', 'Recipient')}</SortableHeader>,
+		header: (ctx) => (
+			<SortableHeader ctx={ctx} sortable>
+				{columnLabel(translator, 'column-recipient', 'Recipient')}
+			</SortableHeader>
+		),
 		cell: (ctx) => <TextCell ctx={ctx} />,
 	},
 	{
 		id: 'country',
 		accessorFn: (row) => row.country ?? '',
-		header: (ctx) => <SortableHeader ctx={ctx}>{columnLabel(translator, 'country', 'Country')}</SortableHeader>,
+		header: (ctx) => (
+			<SortableHeader ctx={ctx} sortable>
+				{columnLabel(translator, 'country', 'Country')}
+			</SortableHeader>
+		),
 		cell: ({ row }) => <CountryFlagCell country={row.original.country} />,
 	},
 	{
 		id: 'status',
 		accessorFn: (row) => row.status,
-		header: (ctx) => <SortableHeader ctx={ctx}>{columnLabel(translator, 'column-status', 'Status')}</SortableHeader>,
+		header: (ctx) => (
+			<SortableHeader ctx={ctx} sortable>
+				{columnLabel(translator, 'column-status', 'Status')}
+			</SortableHeader>
+		),
 		cell: (ctx) => <StatusCell ctx={ctx} variant="recipient" />,
 	},
 ];
@@ -44,7 +56,11 @@ const buildRecipientTailColumns = <TRow extends PublicRecipientTableViewRow>(
 	const columns: ColumnDef<TRow>[] = [
 		{
 			accessorKey: 'dateOfBirth',
-			header: (ctx) => <SortableHeader ctx={ctx}>{columnLabel(translator, 'column-age', 'Age')}</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx} sortable>
+					{columnLabel(translator, 'column-age', 'Age')}
+				</SortableHeader>
+			),
 			cell: (ctx) => <AgeCell ctx={ctx} />,
 		},
 	];
@@ -53,7 +69,9 @@ const buildRecipientTailColumns = <TRow extends PublicRecipientTableViewRow>(
 		columns.push({
 			accessorKey: 'localPartnerName',
 			header: (ctx) => (
-				<SortableHeader ctx={ctx}>{columnLabel(translator, 'column-local-partner', 'Local Partner')}</SortableHeader>
+				<SortableHeader ctx={ctx} sortable>
+					{columnLabel(translator, 'column-local-partner', 'Local Partner')}
+				</SortableHeader>
 			),
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		});
@@ -62,17 +80,29 @@ const buildRecipientTailColumns = <TRow extends PublicRecipientTableViewRow>(
 	columns.push(
 		{
 			accessorKey: 'startDate',
-			header: (ctx) => <SortableHeader ctx={ctx}>{columnLabel(translator, 'start-date', 'Start date')}</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx} sortable>
+					{columnLabel(translator, 'start-date', 'Start date')}
+				</SortableHeader>
+			),
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'payoutsProgressPercent',
-			header: (ctx) => <SortableHeader ctx={ctx}>{columnLabel(translator, 'column-progress', 'Progress')}</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx} sortable>
+					{columnLabel(translator, 'column-progress', 'Progress')}
+				</SortableHeader>
+			),
 			cell: (ctx) => <ProgressCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>{columnLabel(translator, 'column-created', 'Created')}</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx} sortable>
+					{columnLabel(translator, 'column-created', 'Created')}
+				</SortableHeader>
+			),
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 	);
@@ -82,7 +112,11 @@ const buildRecipientTailColumns = <TRow extends PublicRecipientTableViewRow>(
 
 const buildRecipientProgramColumn = (translator?: ColumnLabelTranslator): ColumnDef<RecipientTableViewRow> => ({
 	accessorKey: 'programName',
-	header: (ctx) => <SortableHeader ctx={ctx}>{columnLabel(translator, 'column-program', 'Program')}</SortableHeader>,
+	header: (ctx) => (
+		<SortableHeader ctx={ctx} sortable>
+			{columnLabel(translator, 'column-program', 'Program')}
+		</SortableHeader>
+	),
 	cell: (ctx) => <TextCell ctx={ctx} />,
 });
 
@@ -107,7 +141,11 @@ export const makeRecipientColumns = (
 		...buildRecipientLeadColumns<RecipientTableViewRow>(),
 		{
 			accessorKey: 'paymentCode',
-			header: (ctx) => <SortableHeader ctx={ctx}>Payment code</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx} sortable>
+					Payment code
+				</SortableHeader>
+			),
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		...buildRecipientTailColumns<RecipientTableViewRow>(hideLocalPartner),
