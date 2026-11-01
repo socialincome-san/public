@@ -79,8 +79,12 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider<DemoManager>(create: (context) => demoManager),
         RepositoryProvider<AppCacheDatabase>.value(value: cacheDatabase),
-        RepositoryProvider<ConnectivityService>.value(value: connectivityService),
-        RepositoryProvider(create: (context) => MessagingRepository(messaging: messaging)),
+        RepositoryProvider<ConnectivityService>.value(
+          value: connectivityService,
+        ),
+        RepositoryProvider(
+          create: (context) => MessagingRepository(messaging: messaging),
+        ),
         RepositoryProvider(
           create: (context) => UserRepository(
             remoteDataSource: userRemoteDataSource,
@@ -117,7 +121,8 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => AuthCubit(
-              crashReportingRepository: context.read<CrashReportingRepository>(),
+              crashReportingRepository: context
+                  .read<CrashReportingRepository>(),
               userRepository: context.read<UserRepository>(),
               authService: context.read<AuthService>(),
               cacheDatabase: context.read<AppCacheDatabase>(),
@@ -132,13 +137,12 @@ class MyApp extends StatelessWidget {
             create: (context) => SettingsCubit(
               defaultLocale: const Locale("en", "US"),
               messagingRepository: context.read<MessagingRepository>(),
-              crashReportingRepository: context.read<CrashReportingRepository>(),
+              crashReportingRepository: context
+                  .read<CrashReportingRepository>(),
             )..initMessaging(),
           ),
         ],
-        child: _App(
-          appVersionInfo: appVersionInfo,
-        ),
+        child: _App(appVersionInfo: appVersionInfo),
       ),
     );
   }
@@ -173,7 +177,7 @@ class _App extends StatelessWidget {
       home: AppUpdateCheckWidget(
         appVersionInfo: appVersionInfo,
         child: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state.status == AuthStatus.authenticatedWithoutRecipient) {
               // Sign out the user to clean up auth state
               context.read<AuthService>().signOut();
@@ -189,7 +193,9 @@ class _App extends StatelessWidget {
               final selectedLanguage = state.recipient?.contact.language;
 
               if (selectedLanguage != null) {
-                context.read<SettingsCubit>().changeLanguage(selectedLanguage);
+                await context.read<SettingsCubit>().changeLanguage(
+                  selectedLanguage,
+                );
               }
             }
           },

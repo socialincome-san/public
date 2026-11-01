@@ -21,24 +21,30 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> initMessaging() async {
     try {
       await messagingRepository.initNotifications();
+      await messagingRepository.updateNotificationTopics(
+        state.locale.languageCode == "kri" ? LanguageCode.kri : LanguageCode.en,
+      );
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
     }
   }
 
   /// Currently english = en and krio = kri are supported
-  void changeLanguage(LanguageCode language) {
-    final locale = language == LanguageCode.kri ? const Locale("kri") : const Locale("en", "US");
+  Future<void> changeLanguage(LanguageCode language) async {
+    final locale = language == LanguageCode.kri
+        ? const Locale("kri")
+        : const Locale("en", "US");
 
     // check whats the current language
     // if its the same as the new language, do nothing
     if (state.locale == locale) return;
 
-    emit(
-      SettingsState(
-        status: SettingsStatus.success,
-        locale: locale,
-      ),
-    );
+    emit(SettingsState(status: SettingsStatus.success, locale: locale));
+
+    try {
+      await messagingRepository.updateNotificationTopics(language);
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
+    }
   }
 }
