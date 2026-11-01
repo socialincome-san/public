@@ -5,6 +5,7 @@ const mockValidateConfiguration = jest.fn();
 const mockRequestTwilioOtp = jest.fn();
 const mockVerifyTwilioOtp = jest.fn();
 const mockFindFirebaseUser = jest.fn();
+const mockIsRecipientPhoneNumberPreselected = jest.fn();
 const mockCreateFirebaseUser = jest.fn();
 const mockCreateFirebaseToken = jest.fn();
 const mockCreateFirebaseSessionCookie = jest.fn();
@@ -26,6 +27,10 @@ jest.mock('@/integrations/firebase/firebase-auth.integration', () => ({
 	createFirebaseCustomToken: (...args: unknown[]): unknown => mockCreateFirebaseToken(...args),
 	createFirebaseSessionCookie: (...args: unknown[]): unknown => mockCreateFirebaseSessionCookie(...args),
 	verifyFirebaseSessionCookie: (...args: unknown[]): unknown => mockVerifyFirebaseSessionCookie(...args),
+}));
+
+jest.mock('@/modules/recipients/recipient-auth.service', () => ({
+	isRecipientPhoneNumberPreselected: (...args: unknown[]): unknown => mockIsRecipientPhoneNumberPreselected(...args),
 }));
 
 beforeEach(() => {
@@ -59,6 +64,45 @@ test('verifies OTP and returns a Firebase custom token for an existing user', as
 	expect(await verifyOtp({ phoneNumber: '+41791234567', otp: '123456' })).toEqual(
 		resultOk({ customToken: 'token1', isNewUser: false, uid: 'uid1' }),
 	);
+	expect(mockIsRecipientPhoneNumberPreselected).not.toHaveBeenCalled();
+});
+
+test('rejects new accounts for phone numbers that are not preselected recipients', async () => {
+	mockVerifyTwilioOtp.mockResolvedValue(resultOk({ approved: true }));
+	mockFindFirebaseUser.mockResolvedValue(resultOk(null));
+	mockIsRecipientPhoneNumberPreselected.mockResolvedValue(resultOk(false));
+
+	expect(await verifyOtp({ phoneNumber: '+41791234567', otp: '123456' })).toEqual(
+		resultFail('Phone number is not registered to a recipient'),
+	);
+	expect(mockIsRecipientPhoneNumberPreselected).toHaveBeenCalledWith('+41791234567');
+	expect(mockCreateFirebaseUser).not.toHaveBeenCalled();
+	expect(mockCreateFirebaseToken).not.toHaveBeenCalled();
+});
+
+test('creates an account for a preselected recipient', async () => {
+	mockVerifyTwilioOtp.mockResolvedValue(resultOk({ approved: true }));
+	mockFindFirebaseUser.mockResolvedValue(resultOk(null));
+	mockIsRecipientPhoneNumberPreselected.mockResolvedValue(resultOk(true));
+	mockCreateFirebaseUser.mockResolvedValue(resultOk({ uid: 'uid1' }));
+	mockCreateFirebaseToken.mockResolvedValue(resultOk('token1'));
+
+	expect(await verifyOtp({ phoneNumber: '+41791234567', otp: '123456' })).toEqual(
+		resultOk({ customToken: 'token1', isNewUser: true, uid: 'uid1' }),
+	);
+});
+
+test('allows the configured app review phone to create an account without recipient lookup', async () => {
+	process.env.APP_REVIEW_MODE_ENABLED = 'true';
+	process.env.APP_REVIEW_PHONE_NUMBER = '+41791234567';
+	mockFindFirebaseUser.mockResolvedValue(resultOk(null));
+	mockCreateFirebaseUser.mockResolvedValue(resultOk({ uid: 'uid1' }));
+	mockCreateFirebaseToken.mockResolvedValue(resultOk('token1'));
+
+	expect(await verifyOtp({ phoneNumber: '+41791234567', otp: '123456' })).toEqual(
+		resultOk({ customToken: 'token1', isNewUser: true, uid: 'uid1' }),
+	);
+	expect(mockIsRecipientPhoneNumberPreselected).not.toHaveBeenCalled();
 });
 
 test('rejects an unapproved OTP without creating an auth user', async () => {
