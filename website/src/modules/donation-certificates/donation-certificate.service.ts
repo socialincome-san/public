@@ -1,5 +1,6 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
 import {
+	downloadFirebaseStorageFile,
 	isFirebaseStorageConfigured,
 	uploadFileToFirebaseStorage,
 } from '@/integrations/firebase/firebase-storage.integration';
@@ -39,18 +40,12 @@ export const getPaginatedDonationCertificates = async (
 	query: DonationCertificateTableQuery,
 ): Promise<Result<DonationCertificatePaginatedTableView>> => {
 	try {
-		const accessibleProgramsResult = await getAccessiblePrograms(userId);
+		const accessibleProgramsResult = await getOperatorProgramIds(userId);
 		if (!accessibleProgramsResult.success) {
 			return resultFail(accessibleProgramsResult.error);
 		}
 
-		const accessibleProgramIds = Array.from(
-			new Set(
-				accessibleProgramsResult.data
-					.filter(({ permission }) => permission === ProgramPermission.operator)
-					.map(({ programId }) => programId),
-			),
-		);
+		const accessibleProgramIds = accessibleProgramsResult.data;
 		if (accessibleProgramIds.length === 0) {
 			return resultOk({ tableRows: [], totalCount: 0, contributorFilterOptions: [] });
 		}
@@ -76,7 +71,6 @@ export const getPaginatedDonationCertificates = async (
 			contributorFirstName: certificate.contributor.contact?.firstName ?? '',
 			contributorLastName: certificate.contributor.contact?.lastName ?? '',
 			email: certificate.contributor.contact?.email ?? '',
-			storagePath: certificate.storagePath,
 			createdAt: certificate.createdAt,
 		}));
 
@@ -85,6 +79,50 @@ export const getPaginatedDonationCertificates = async (
 		console.error('Could not fetch donation certificates', { userId, error });
 
 		return resultFail('Could not fetch donation certificates');
+	}
+};
+
+export const downloadDonationCertificateForUser = async (
+	userId: string,
+	certificateId: string,
+): Promise<Result<{ contents: Buffer; filename: string }>> => {
+	try {
+		const accessibleProgramsResult = await getOperatorProgramIds(userId);
+		if (!accessibleProgramsResult.success) {
+			return resultFail(accessibleProgramsResult.error);
+		}
+		if (accessibleProgramsResult.data.length === 0) {
+			return resultFail('Donation certificate not found');
+		}
+
+		const certificate = await donationCertificateRepository.findDonationCertificateForPrograms(
+			certificateId,
+			accessibleProgramsResult.data,
+		);
+		if (!certificate) {
+			return resultFail('Donation certificate not found');
+		}
+
+		const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+		if (!bucketName) {
+			console.error('Firebase Storage bucket name missing', { userId, certificateId });
+
+			return resultFail('Could not download donation certificate');
+		}
+
+		const fileResult = await downloadFirebaseStorageFile(bucketName, certificate.storagePath);
+		if (!fileResult.success) {
+			return resultFail('Could not download donation certificate');
+		}
+
+		return resultOk({
+			contents: fileResult.data,
+			filename: `donation-certificate-${certificate.year}.pdf`,
+		});
+	} catch (error) {
+		console.error('Could not download donation certificate', { userId, certificateId, error });
+
+		return resultFail('Could not download donation certificate');
 	}
 };
 
@@ -404,3 +442,20 @@ const ASSET_DIR = path.join(process.cwd(), 'public', 'assets');
 const DONATION_CERTIFICATE_TECHNICAL_ERROR: DonationCertificateError = 'technicalError';
 const DONATION_CERTIFICATE_BUCKET_MISSING: DonationCertificateError = 'bucketMissing';
 const DONATION_CERTIFICATE_NO_CONTRIBUTIONS: DonationCertificateError = 'noContributions';
+
+const getOperatorProgramIds = async (userId: string): Promise<Result<string[]>> => {
+	const accessibleProgramsResult = await getAccessiblePrograms(userId);
+	if (!accessibleProgramsResult.success) {
+		return resultFail(accessibleProgramsResult.error);
+	}
+
+	return resultOk(
+		Array.from(
+			new Set(
+				accessibleProgramsResult.data
+					.filter(({ permission }) => permission === ProgramPermission.operator)
+					.map(({ programId }) => programId),
+			),
+		),
+	);
+};
