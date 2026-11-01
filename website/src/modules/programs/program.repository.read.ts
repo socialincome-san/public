@@ -64,6 +64,10 @@ export const findPublicProgramFilterDataBySlugs = async (slugs: string[]) =>
 					focus: { select: { id: true, slug: true } },
 				},
 			},
+			recipients: {
+				distinct: ['localPartnerId'],
+				select: { localPartner: { select: { slug: true } } },
+			},
 		},
 	});
 

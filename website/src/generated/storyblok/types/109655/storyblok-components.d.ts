@@ -759,9 +759,15 @@ export interface Program {
 export interface ProgramGrid {
   heading?: string;
   description?: string;
+  filterBy?: "" | "country" | "focus" | "localPartner";
+  filterCountry?: ISbStoryData<Country> | string;
+  filterFocus?: ISbStoryData<Focus> | string;
+  filterLocalPartner?: ISbStoryData<LocalPartner> | string;
   showAllPrograms?: boolean;
-  hideConcludedPrograms?: boolean;
   programs?: (ISbStoryData<Program> | string)[];
+  hideConcludedPrograms?: boolean;
+  sortBy?: "" | "newest" | "recipients" | "alphabetical";
+  maxPrograms?: "" | "3" | "6" | "9";
   button?: Button[];
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;

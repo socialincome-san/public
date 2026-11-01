@@ -103,6 +103,7 @@ export const getPublicProgramFilterDataByPortalSlugs = async (
 						programId: program.id,
 						countryIsoCode: program.country.isoCode,
 						focuses: program.targetFocuses.map(({ focus }) => focus),
+						localPartnerSlugs: program.recipients.map(({ localPartner }) => localPartner.slug),
 					},
 				]),
 			),
