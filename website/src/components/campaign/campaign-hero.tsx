@@ -4,7 +4,11 @@ import { CampaignFundraisingPills } from '@/components/campaign/campaign-fundrai
 import { getCampaignDaysRemaining } from '@/components/campaign/get-campaign-days-remaining';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
+import {
+	formatStoryblokResizeUrl,
+	getScaledAssetDimensions,
+	getStoryblokImageObjectPosition,
+} from '@/lib/storyblok/storyblok-utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
 import {
@@ -16,7 +20,6 @@ import {
 import { getTranslations } from 'next-intl/server';
 
 const HERO_HEADER_IMAGE_WIDTH = 1920;
-const HERO_HEADER_IMAGE_HEIGHT = 1080;
 
 type Props = {
 	campaign: CampaignPage;
@@ -33,9 +36,14 @@ export const CampaignHero = async ({ campaign, title, creatorName, quote, primar
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const raisedPercent = campaign.percentageCollected ?? 0;
 	const isActive = campaign.isActive;
-	const heroImageSrc = primaryImage?.filename
-		? formatStoryblokUrl(primaryImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, primaryImage.focus)
+	const scaledDimensions = primaryImage?.filename
+		? getScaledAssetDimensions({ filename: primaryImage.filename }, HERO_HEADER_IMAGE_WIDTH)
 		: null;
+	const heroImageSrc =
+		scaledDimensions && primaryImage?.filename
+			? formatStoryblokResizeUrl(primaryImage.filename, scaledDimensions.width, scaledDimensions.height)
+			: null;
+	const objectPosition = getStoryblokImageObjectPosition(primaryImage);
 	const heroImageAlt = primaryImage?.alt ?? title;
 	const locale = getSafeNumberFormatLocale(lang);
 	const { remainingDays, progress: daysProgress } = getCampaignDaysRemaining({
@@ -52,7 +60,7 @@ export const CampaignHero = async ({ campaign, title, creatorName, quote, primar
 
 	return (
 		<MediaHero
-			image={heroImageSrc ? { src: heroImageSrc, alt: heroImageAlt } : null}
+			image={heroImageSrc ? { src: heroImageSrc, alt: heroImageAlt, objectPosition } : null}
 			overlay="strong"
 			top={fundraisingPillLabels.length > 0 ? <CampaignFundraisingPills labels={fundraisingPillLabels} /> : null}
 			aside={isActive ? <CampaignDonationFormServer {...donationFormProps} /> : null}

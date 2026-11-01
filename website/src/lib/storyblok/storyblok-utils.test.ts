@@ -5,6 +5,7 @@ import {
 	formatStoryblokUrl,
 	getPersonCircles,
 	getScaledAssetDimensions,
+	getStoryblokImageObjectPosition,
 	getVolunteerDurationParts,
 	isResolvedArticle,
 	resolveStoryblokLink,
@@ -43,6 +44,67 @@ describe('Storyblok presentation utilities', () => {
 			width: 175,
 			height: 131,
 		});
+	});
+
+	it('calculates CSS object-position from Storyblok image focus metadata', () => {
+		const landscapeAsset = {
+			filename: 'https://a.storyblok.com/f/123456/1200x800/program.jpg',
+			focus: '300x200:301x201',
+		};
+		expect(getStoryblokImageObjectPosition(landscapeAsset)).toBe('25% 25%');
+
+		const portraitAsset = {
+			filename: 'https://a.storyblok.com/f/123456/800x1200/portrait.jpg',
+			focus: '400x300:401x301',
+		};
+		expect(getStoryblokImageObjectPosition(portraitAsset)).toBe('50% 25%');
+
+		const widescreenAsset = {
+			filename: 'https://a.storyblok.com/f/123456/1920x1080/hero.jpg',
+			focus: '960x540:961x541',
+		};
+		expect(getStoryblokImageObjectPosition(widescreenAsset)).toBe('50% 50%');
+
+		const clampedAsset = {
+			filename: 'https://a.storyblok.com/f/123456/1200x800/program.jpg',
+			focus: '1500x1000:1501x1001',
+		};
+		expect(getStoryblokImageObjectPosition(clampedAsset)).toBe('100% 100%');
+	});
+
+	it('supports legacy zero-size focus metadata', () => {
+		const asset = {
+			filename: 'https://a.storyblok.com/f/123456/1200x800/program.jpg',
+			focus: '600x400:600x400',
+		};
+
+		expect(getStoryblokImageObjectPosition(asset)).toBe('50% 50%');
+	});
+
+	it('returns fallback 50% 50% when focus metadata is malformed but filename has dimensions', () => {
+		const asset = {
+			filename: 'https://a.storyblok.com/f/123456/1200x800/program.jpg',
+			focus: 'invalid',
+		};
+
+		expect(getStoryblokImageObjectPosition(asset)).toBe('50% 50%');
+	});
+
+	it('returns undefined when focus or filename is missing or unparseable', () => {
+		expect(getStoryblokImageObjectPosition(null)).toBeUndefined();
+		expect(getStoryblokImageObjectPosition(undefined)).toBeUndefined();
+		expect(
+			getStoryblokImageObjectPosition({ filename: 'https://a.storyblok.com/f/123456/1200x800/program.jpg' }),
+		).toBeUndefined();
+		expect(
+			getStoryblokImageObjectPosition({ filename: 'https://a.storyblok.com/f/123456/1200x800/program.jpg', focus: null }),
+		).toBeUndefined();
+		expect(
+			getStoryblokImageObjectPosition({ filename: 'https://a.storyblok.com/f/123456/1200x800/program.jpg', focus: '' }),
+		).toBeUndefined();
+		expect(
+			getStoryblokImageObjectPosition({ filename: 'https://example.com/not-storyblok.jpg', focus: '100x100:101x101' }),
+		).toBeUndefined();
 	});
 });
 
