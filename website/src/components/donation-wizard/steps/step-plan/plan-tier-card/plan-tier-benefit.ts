@@ -3,4 +3,5 @@ export type PlanTierBenefit = {
 	label: string;
 	icon?: 'check' | 'heart';
 	emphasis?: boolean;
+	placeholder?: boolean;
 };
