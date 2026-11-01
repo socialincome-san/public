@@ -148,7 +148,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
                       context.read<AuthCubit>().updateRecipient(
                         selfUpdate: RecipientSelfUpdate(
                           termsAccepted: true,
-                          successorName: successorName.isEmpty ? null : successorName,
+                          successorName: successorName,
                         ),
                       );
                     },
