@@ -67,3 +67,17 @@ export const getDonationCompletedEvent = (donation: PaidCheckoutDonation) => ({
 		items: [{ item_id: 'donation', item_name: 'Donation', price: donation.amount, quantity: 1 }],
 	},
 });
+
+/** Properties of the donation bar events, shaped like the funnel events so they can be compared. */
+export const getDonationBarEventProperties = (
+	value: number,
+	currency: string,
+	cadence: Cadence,
+	paymentMethod?: string,
+) => ({
+	value,
+	currency,
+	donation_type: toDonationType(cadence),
+	// Pushed even when unknown: Tag Manager would otherwise keep the value of an earlier event.
+	payment_method: paymentMethod,
+});

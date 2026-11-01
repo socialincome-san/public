@@ -105,6 +105,8 @@ describe('storyblok-paths', () => {
 		expect(getWebsitePathTailFromStoryblokSlug('pages/local-partners/local-partners')).toBe('local-partners');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/focuses/poverty')).toBe('focuses/poverty');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/focuses/focuses')).toBe('focuses');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/circle/circle')).toBe('circle');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/circle/communication')).toBe('circle/communication');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/countries/sierra-leone')).toBe('countries/sierra-leone');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/countries/countries')).toBe('countries');
 		expect(getWebsitePathTailFromStoryblokSlug('pages/campaigns/campaigns')).toBe('campaigns');

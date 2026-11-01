@@ -27,9 +27,10 @@ type Props = {
 	senderName?: string;
 	imageSrc?: string | null;
 	imageAlt?: string;
+	campaignId?: string;
 };
 
-export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt = '' }: Props) => {
+export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt = '', campaignId }: Props) => {
 	const t = useTranslations('website-newsletter');
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -42,6 +43,7 @@ export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt =
 			email: values.email,
 			language: lang === 'de' ? 'de' : 'en',
 			...(trimmedFirstName ? { firstname: trimmedFirstName } : {}),
+			...(campaignId ? { campaignId } : {}),
 		};
 
 		try {
@@ -70,6 +72,7 @@ export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt =
 				<div className="flex min-w-0 flex-col gap-8">
 					<Form {...form}>
 						<form
+							data-clarity-mask="true"
 							onSubmit={form.handleSubmit(onSubmit)}
 							className="flex min-w-0 flex-col items-stretch gap-4 sm:flex-row sm:items-end"
 						>

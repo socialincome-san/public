@@ -5,15 +5,12 @@
 		"og-image": "/assets/metadata/og/default.jpg",
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
-	"donate-now": "Jetzt spenden",
 	"video-controls": {
 		"play-video": "Video abspielen",
 		"pause-video": "Video pausieren",
-		"mute-video": "Video stummschalten",
-		"unmute-video": "Video-Ton einschalten",
 		"show-captions": "Untertitel anzeigen",
 		"hide-captions": "Untertitel ausblenden",
-		"expand-video-view": "Videoansicht vergrössern",
-		"exit-expanded-video-view": "Vergrösserte Videoansicht verlassen"
+		"play-with-sound": "Mit Ton abspielen",
+		"mute": "Ton aus"
 	}
 }

@@ -1245,6 +1245,9 @@ const getPaginatedTableViewForPrograms = async (
 	}
 	const localPartnerOption = localPartnerOptionResult.data;
 	const localPartnerFilterOptions = localPartnerOption ? [localPartnerOption] : [];
+	if (requestedLocalPartnerId && !localPartnerOption) {
+		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions });
+	}
 	const selectedProgramId = normalizeOptionalFilter(query.programId);
 	if (selectedProgramId && !programIds.includes(selectedProgramId)) {
 		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions });
