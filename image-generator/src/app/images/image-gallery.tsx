@@ -82,7 +82,15 @@ export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 				const prompt = image.prompt || 'No prompt saved.';
 				return (
 					<article key={image.id} className="border-border bg-card flex flex-col overflow-hidden rounded-2xl border">
-						<GalleryPreview image={image} prompt={prompt} />
+						<div className="relative">
+							<GalleryPreview image={image} prompt={prompt} />
+							<div className="bg-card absolute top-3 right-3 rounded-full">
+								<DeleteImageDialog
+									imageId={image.id}
+									onDeleted={() => setDeletedIds((previous) => [...previous, String(image.id)])}
+								/>
+							</div>
+						</div>
 						<div className="mt-auto flex flex-wrap items-center justify-between gap-3 p-4">
 							<div className="text-muted-foreground text-xs">
 								{image.created_at ? (
@@ -107,10 +115,6 @@ export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 								</Tooltip>
 								<ImageEditDialog image={image} size="sm" onEdited={onImageAdded} />
 								<DownloadMenu imageId={image.id} variant="outline" size="sm" />
-								<DeleteImageDialog
-									imageId={image.id}
-									onDeleted={() => setDeletedIds((previous) => [...previous, String(image.id)])}
-								/>
 							</div>
 						</div>
 					</article>
