@@ -114,7 +114,7 @@ export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 									</TooltipContent>
 								</Tooltip>
 								<ImageEditDialog image={image} size="sm" onEdited={onImageAdded} />
-								<DownloadMenu imageId={image.id} variant="outline" size="sm" />
+								<DownloadMenu image={image} variant="outline" size="sm" />
 							</div>
 						</div>
 					</article>
