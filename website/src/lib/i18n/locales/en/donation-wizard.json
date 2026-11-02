@@ -23,7 +23,8 @@
 		"custom-amount-placeholder": "Amount",
 		"custom-amount-label": "Custom amount",
 		"whole-amount-only": "Whole amounts only",
-		"below-minimum": "At least {amount}"
+		"below-minimum": "At least {amount}",
+		"above-maximum": "At most {amount}"
 	},
 	"stepPlan": {
 		"monthly-title": "Monthly Donation",

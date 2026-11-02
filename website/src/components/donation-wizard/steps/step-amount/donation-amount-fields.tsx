@@ -5,7 +5,7 @@ import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { Input } from '@socialincome/design-system/forms/input/input';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import NextImage from 'next/image';
 import { useId, useState } from 'react';
 import {
@@ -33,6 +33,8 @@ const parseWholeNumber = (raw: string): number | 'invalid' | null => {
 
 	return /^\d+$/.test(trimmed) ? Number(trimmed) : 'invalid';
 };
+
+type RejectedInput = { text: string; reason: 'not-whole' | 'above-max' };
 
 // Quick picks shown inside the custom amount field while it is focused
 const customAmountChips = [40, 60, 100] as const;
@@ -76,6 +78,7 @@ export const DonationAmountFields = ({
 	showTitle = true,
 }: Props) => {
 	const t = useTranslations('donation-wizard');
+	const locale = useLocale();
 	const isSwissVisitor = useIsSwissVisitor();
 	// The hero renders the box twice (mobile and desktop), so labels need ids unique per instance
 	const idPrefix = useId();
@@ -85,17 +88,21 @@ export const DonationAmountFields = ({
 	const customAmountHintId = `${idPrefix}-custom-amount-hint`;
 	const [isCustomAmountFocused, setIsCustomAmountFocused] = useState(false);
 	// Rejected text stays in the field as typed, so the person sees what to fix; valid input lives in values
-	const [invalidMonthlyIncome, setInvalidMonthlyIncome] = useState<string | null>(null);
-	const [invalidCustomAmount, setInvalidCustomAmount] = useState<string | null>(null);
+	const [invalidMonthlyIncome, setInvalidMonthlyIncome] = useState<RejectedInput | null>(null);
+	const [invalidCustomAmount, setInvalidCustomAmount] = useState<RejectedInput | null>(null);
+	const rejectedHint = ({ reason }: RejectedInput, max: number) =>
+		reason === 'not-whole'
+			? t('stepAmount.whole-amount-only')
+			: t('stepAmount.above-maximum', { amount: `${currency} ${new Intl.NumberFormat(locale).format(max)}` });
 	const monthlyIncomeHint =
 		invalidMonthlyIncome !== null
-			? t('stepAmount.whole-amount-only')
+			? rejectedHint(invalidMonthlyIncome, DONATION_MONTHLY_INCOME_MAX)
 			: values.monthlyIncome !== null && values.monthlyIncome < DONATION_MONTHLY_INCOME_MIN
 				? t('stepAmount.below-minimum', { amount: `${currency} ${DONATION_MONTHLY_INCOME_MIN}` })
 				: null;
 	const customAmountHint =
 		invalidCustomAmount !== null
-			? t('stepAmount.whole-amount-only')
+			? rejectedHint(invalidCustomAmount, DONATION_CUSTOM_AMOUNT_MAX)
 			: values.customAmount !== null && values.customAmount < DONATION_CUSTOM_AMOUNT_MIN
 				? t('stepAmount.below-minimum', { amount: `${currency} ${DONATION_CUSTOM_AMOUNT_MIN}` })
 				: null;
@@ -159,14 +166,14 @@ export const DonationAmountFields = ({
 							type="text"
 							inputMode="numeric"
 							pattern="[0-9]*"
-							value={invalidMonthlyIncome ?? values.monthlyIncome ?? ''}
+							value={invalidMonthlyIncome?.text ?? values.monthlyIncome ?? ''}
 							aria-invalid={monthlyIncomeHint !== null}
 							aria-describedby={monthlyIncomeHint === null ? undefined : monthlyIncomeHintId}
 							onFocus={actions.selectOnePercent}
 							onChange={(e) => {
 								const parsed = parseWholeNumber(e.target.value);
 								if (parsed === 'invalid') {
-									setInvalidMonthlyIncome(e.target.value);
+									setInvalidMonthlyIncome({ text: e.target.value, reason: 'not-whole' });
 									actions.setMonthlyIncome(null);
 
 									return;
@@ -178,9 +185,13 @@ export const DonationAmountFields = ({
 									return;
 								}
 
-								if (parsed <= DONATION_MONTHLY_INCOME_MAX) {
-									actions.setMonthlyIncome(parsed);
+								if (parsed > DONATION_MONTHLY_INCOME_MAX) {
+									setInvalidMonthlyIncome({ text: e.target.value, reason: 'above-max' });
+									actions.setMonthlyIncome(null);
+
+									return;
 								}
+								actions.setMonthlyIncome(parsed);
 							}}
 						/>
 					</div>
@@ -248,7 +259,7 @@ export const DonationAmountFields = ({
 						inputMode="numeric"
 						pattern="[0-9]*"
 						data-testid="donation-wizard-custom-amount"
-						value={invalidCustomAmount ?? values.customAmount ?? ''}
+						value={invalidCustomAmount?.text ?? values.customAmount ?? ''}
 						aria-invalid={customAmountHint !== null}
 						aria-describedby={customAmountHint === null ? undefined : customAmountHintId}
 						onFocus={() => {
@@ -259,7 +270,7 @@ export const DonationAmountFields = ({
 						onChange={(e) => {
 							const parsed = parseWholeNumber(e.target.value);
 							if (parsed === 'invalid') {
-								setInvalidCustomAmount(e.target.value);
+								setInvalidCustomAmount({ text: e.target.value, reason: 'not-whole' });
 								actions.setCustomAmount(null);
 
 								return;
@@ -270,9 +281,13 @@ export const DonationAmountFields = ({
 
 								return;
 							}
-							if (parsed <= DONATION_CUSTOM_AMOUNT_MAX) {
-								actions.setCustomAmount(parsed);
+							if (parsed > DONATION_CUSTOM_AMOUNT_MAX) {
+								setInvalidCustomAmount({ text: e.target.value, reason: 'above-max' });
+								actions.setCustomAmount(null);
+
+								return;
 							}
+							actions.setCustomAmount(parsed);
 						}}
 					/>
 					{/* The chips only show while focus is in the field or on a chip */}

@@ -23,7 +23,8 @@
 		"custom-amount-placeholder": "Betrag",
 		"custom-amount-label": "Eigener Betrag",
 		"whole-amount-only": "Nur ganze Beträge",
-		"below-minimum": "Mindestens {amount}"
+		"below-minimum": "Mindestens {amount}",
+		"above-maximum": "Höchstens {amount}"
 	},
 	"stepPlan": {
 		"monthly-title": "Monatliche Spende",

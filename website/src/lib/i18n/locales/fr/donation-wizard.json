@@ -23,7 +23,8 @@
 		"custom-amount-placeholder": "Montant",
 		"custom-amount-label": "Montant libre",
 		"whole-amount-only": "Montant entier requis",
-		"below-minimum": "Au moins {amount}"
+		"below-minimum": "Au moins {amount}",
+		"above-maximum": "Au maximum {amount}"
 	},
 	"stepPlan": {
 		"monthly-title": "Don mensuel",

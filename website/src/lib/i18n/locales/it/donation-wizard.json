@@ -23,7 +23,8 @@
 		"custom-amount-placeholder": "Importo",
 		"custom-amount-label": "Importo personalizzato",
 		"whole-amount-only": "Solo importi interi",
-		"below-minimum": "Almeno {amount}"
+		"below-minimum": "Almeno {amount}",
+		"above-maximum": "Al massimo {amount}"
 	},
 	"stepPlan": {
 		"monthly-title": "Donazione mensile",
