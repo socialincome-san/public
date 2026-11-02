@@ -28,6 +28,7 @@ const galleryImageSchema = z.object({
 	prompt: z.string().nullable(),
 	previewUrl: previewUrlSchema,
 	costUsd: z.number().finite().nonnegative().nullable(),
+	createdAt: z.iso.datetime().nullable().default(null),
 });
 
 const galleryResponseSchema = z.object({ images: z.array(galleryImageSchema) });

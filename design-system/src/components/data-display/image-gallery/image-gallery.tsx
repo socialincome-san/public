@@ -25,6 +25,7 @@ type ImageGalleryProps = {
 	loadingLabel: string;
 	errorLabel: string;
 	density?: 'comfortable' | 'compact';
+	infoPlacement?: 'metadata' | 'actions';
 	pagination?: { pageSize: number; loadMoreLabel: string };
 	emptyState?: { badge: string; title: string; description: string; action: ReactNode };
 };
@@ -99,6 +100,7 @@ export const ImageGallery = ({
 	loadingLabel,
 	errorLabel,
 	density = 'comfortable',
+	infoPlacement = 'actions',
 	pagination,
 	emptyState,
 }: ImageGalleryProps) => {
@@ -138,28 +140,20 @@ export const ImageGallery = ({
 							image.actions !== undefined) && (
 							<div
 								className={cn(
-									'mt-auto',
-									density === 'compact'
-										? 'grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-1 gap-y-1 p-2 sm:gap-x-2 sm:p-3'
-										: 'flex flex-wrap items-center justify-between gap-3 p-4',
+									'mt-auto flex flex-wrap items-center justify-between gap-3',
+									density === 'compact' ? 'p-2 sm:p-3' : 'p-4',
 								)}
 							>
-								<div className="text-muted-foreground flex min-w-0 items-center gap-2 text-xs [&>div]:max-w-full">
+								<div className="text-muted-foreground flex min-w-0 flex-wrap items-center gap-2 text-xs">
 									{image.date &&
 										(image.date.value ? <time dateTime={image.date.value}>{image.date.label}</time> : image.date.label)}
-									{density === 'comfortable' && image.date && image.price && <span aria-hidden="true">·</span>}
-									{image.price &&
-										(density === 'compact' ? (
-											<Badge variant="outline">
-												<span className="min-w-0 text-xs whitespace-nowrap sm:text-sm">{image.price}</span>
-											</Badge>
-										) : (
-											<span className="whitespace-nowrap">{image.price}</span>
-										))}
+									{image.date && image.price && <span aria-hidden="true">·</span>}
+									{image.price && <span className="whitespace-nowrap">{image.price}</span>}
+									{infoPlacement === 'metadata' && image.prompt && <PromptInfo prompt={image.prompt} />}
 								</div>
-								{(image.prompt !== undefined || image.actions !== undefined) && (
+								{((infoPlacement === 'actions' && image.prompt !== undefined) || image.actions !== undefined) && (
 									<div className="ml-auto flex items-center gap-1">
-										{image.prompt && <PromptInfo prompt={image.prompt} />}
+										{infoPlacement === 'actions' && image.prompt && <PromptInfo prompt={image.prompt} />}
 										{image.actions}
 									</div>
 								)}

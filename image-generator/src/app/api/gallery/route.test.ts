@@ -12,12 +12,14 @@ test('returns the complete gallery list without caching the response', async () 
 			id: '2',
 			prompt: 'A bicycle',
 			costUsd: 0.06,
+			createdAt: '2026-11-02T12:00:00Z',
 			previewUrl: 'https://test.public.blob.vercel-storage.com/previews/bicycle.webp',
 		},
 		{
 			id: '1',
 			prompt: null,
 			costUsd: null,
+			createdAt: null,
 			previewUrl: 'https://test.public.blob.vercel-storage.com/previews/scene.webp',
 		},
 	];

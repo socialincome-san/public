@@ -6,6 +6,7 @@ const image = {
 	id: '1',
 	prompt: 'A bicycle',
 	costUsd: 0.06,
+	createdAt: '2026-11-02T12:00:00Z',
 	previewUrl: 'https://jjjjivv3brvymvql.public.blob.vercel-storage.com/previews/bicycle.webp',
 };
 
@@ -50,6 +51,30 @@ test('uses the full password including colons and non-ASCII characters', async (
 test('accepts an empty gallery', async () => {
 	jest.mocked(fetch).mockResolvedValueOnce(Response.json({ images: [] }));
 	await expect(fetchImageGeneratorGallery()).resolves.toEqual({ success: true, data: [], status: undefined });
+});
+
+test('accepts older gallery responses without creation time', async () => {
+	jest.mocked(fetch).mockResolvedValueOnce(
+		Response.json({
+			images: [
+				{
+					id: image.id,
+					prompt: image.prompt,
+					previewUrl: image.previewUrl,
+					costUsd: image.costUsd,
+				},
+			],
+		}),
+	);
+	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({
+		success: true,
+		data: [{ ...image, createdAt: null }],
+	});
+});
+
+test.each(['not a date', 42])('rejects invalid creation time %s', async (createdAt) => {
+	jest.mocked(fetch).mockResolvedValueOnce(Response.json({ images: [{ ...image, createdAt }] }));
+	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: false });
 });
 
 test('accepts numeric IDs and missing prompts and strips unexpected fields', async () => {

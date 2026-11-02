@@ -21,8 +21,25 @@ const images = examples.map(({ name, description }) => ({
 	id: name,
 	src: `/assets/image-gallery/${name}.webp`,
 	alt: description,
-	price: 'Generated for 0.06 USD',
+	price: '0.06 USD',
+	date: { label: '2 Nov 2026, 13:00', value: '2026-11-02T12:00:00Z' },
 	prompt: { text: description, title: 'Image prompt', triggerLabel: 'Show image prompt' },
+	actions: (
+		<DropdownMenu modal={false}>
+			<DropdownMenuTrigger asChild>
+				<Button variant="outline" size="sm">
+					<Download aria-hidden="true" /> Download <ChevronDown aria-hidden="true" />
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end">
+				<DropdownMenuItem asChild>
+					<a href={`/assets/image-gallery/${name}.webp`} download>
+						Preview (WebP)
+					</a>
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
+	),
 }));
 
 const meta = {
@@ -51,17 +68,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ReadOnly: Story = { args: { density: 'compact' } };
+export const ReadOnly: Story = { args: { density: 'compact', infoPlacement: 'metadata' } };
 
 export const UnavailablePrice: Story = {
 	args: {
 		density: 'compact',
+		infoPlacement: 'metadata',
 		images: images.map((image) => ({ ...image, price: 'Cost unknown' })),
 	},
 };
 
 export const WithLoadMore: Story = {
-	args: { density: 'compact', pagination: { pageSize: 2, loadMoreLabel: 'Load more' } },
+	args: { density: 'compact', infoPlacement: 'metadata', pagination: { pageSize: 2, loadMoreLabel: 'Load more' } },
 };
 
 export const WithActions: Story = {

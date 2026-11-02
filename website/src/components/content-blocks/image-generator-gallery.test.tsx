@@ -2,6 +2,7 @@ import type { ImageGeneratorGallery } from '@/generated/storyblok/types/109655/i
 import { resultFail, resultOk } from '@/lib/result';
 import { getImageGeneratorGalleryAction } from '@/modules/image-generator-gallery/image-generator-gallery.actions';
 import { storyblokEditable } from '@storyblok/react';
+import { type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { ImageGeneratorGalleryBlock } from './image-generator-gallery';
 
@@ -12,6 +13,17 @@ jest.mock('@/modules/image-generator-gallery/image-generator-gallery.actions', (
 jest.mock('@storyblok/react', () => ({
 	storyblokEditable: jest.fn(() => ({ 'data-blok-uid': '109655-gallery' })),
 }));
+
+jest.mock('@socialincome/design-system/overlays/dropdown-menu/dropdown-menu', () => {
+	const Container = ({ children }: { children: ReactNode }) => <>{children}</>;
+
+	return {
+		DropdownMenu: Container,
+		DropdownMenuTrigger: Container,
+		DropdownMenuContent: Container,
+		DropdownMenuItem: Container,
+	};
+});
 
 jest.mock('next-intl/server', () => {
 	const messages = jest.requireActual<typeof import('../../lib/i18n/locales/en/website-image-gallery.json')>(
@@ -35,8 +47,14 @@ beforeEach(() => jest.clearAllMocks());
 test('renders editable gallery images in their supplied order with user prompts as alt text', async () => {
 	jest.mocked(getImageGeneratorGalleryAction).mockResolvedValueOnce(
 		resultOk([
-			{ id: '2', prompt: 'A bicycle', previewUrl: `${blobHost}/previews/bicycle.webp`, costUsd: 0.06 },
-			{ id: '1', prompt: null, previewUrl: `${blobHost}/previews/scene.webp`, costUsd: null },
+			{
+				id: '2',
+				prompt: 'A bicycle',
+				previewUrl: `${blobHost}/previews/bicycle.webp`,
+				costUsd: 0.06,
+				createdAt: '2026-11-02T12:00:00Z',
+			},
+			{ id: '1', prompt: null, previewUrl: `${blobHost}/previews/scene.webp`, costUsd: null, createdAt: null },
 		]),
 	);
 
@@ -51,11 +69,15 @@ test('renders editable gallery images in their supplied order with user prompts 
 	expect(markup).toContain(`${blobHost}/previews/scene.webp`);
 	expect(markup.indexOf('/previews/bicycle.webp')).toBeLessThan(markup.indexOf('/previews/scene.webp'));
 	expect(markup).not.toContain('/_next/image');
-	expect(markup).toContain('Generated for 0.06 USD');
+	expect(markup).toContain('0.06 USD');
+	expect(markup).toContain('dateTime="2026-11-02T12:00:00Z"');
+	expect(markup).toContain('13:00');
 	expect(markup).toContain('Cost unknown');
 	expect(markup).toContain('aria-label="Show image prompt"');
 	expect(markup).not.toContain('Delete image');
-	expect(markup).not.toContain('Download');
+	expect(markup).toContain('Download');
+	expect(markup).toContain(`href="${blobHost}/previews/bicycle.webp?download=1"`);
+	expect(markup).toContain(`href="${blobHost}/previews/scene.webp?download=1"`);
 	expect(markup).not.toContain('Edit image');
 	expect(storyblokEditable).toHaveBeenCalledWith(blok);
 	expect(getImageGeneratorGalleryAction).toHaveBeenCalledTimes(1);
@@ -75,6 +97,7 @@ test('initially renders 24 images and offers a load-more button for the rest', a
 				prompt: null,
 				previewUrl: `${blobHost}/previews/image-${index}.webp`,
 				costUsd: 0.06,
+				createdAt: null,
 			})),
 		),
 	);

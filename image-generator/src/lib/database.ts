@@ -12,7 +12,11 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const BATCH_SIZE = 24;
 
 type GalleryRow = Omit<GalleryImage, 'created_at'> & { created_at: Date | null };
-type GalleryPreview = Pick<GalleryImage, 'id' | 'prompt' | 'previewUrl'> & { costUsd: number | null };
+type GalleryPreview = Pick<GalleryImage, 'id' | 'prompt' | 'previewUrl'> & {
+	costUsd: number | null;
+	createdAt: string | null;
+};
+type GalleryPreviewRow = Omit<GalleryPreview, 'createdAt'> & { createdAt: Date | null };
 
 const toGalleryImage = (row: GalleryRow): GalleryImage => ({
 	...row,
@@ -53,8 +57,8 @@ export const getGalleryBatch = async (afterId?: string) => {
 };
 
 export const getGalleryImages = async (): Promise<GalleryPreview[]> => {
-	const result = await pool.query<GalleryPreview>(
-		`SELECT id, prompt, preview_url AS "previewUrl", cost_usd AS "costUsd"
+	const result = await pool.query<GalleryPreviewRow>(
+		`SELECT id, prompt, preview_url AS "previewUrl", cost_usd AS "costUsd", created_at AS "createdAt"
 		FROM generated_images
 		WHERE status = 'active' AND image_url IS NOT NULL AND preview_url IS NOT NULL
 		ORDER BY created_at DESC NULLS LAST, id DESC`,
@@ -63,6 +67,7 @@ export const getGalleryImages = async (): Promise<GalleryPreview[]> => {
 	return result.rows.map((row) => ({
 		...row,
 		prompt: row.prompt && extractUserInput(row.prompt),
+		createdAt: row.createdAt?.toISOString() ?? null,
 	}));
 };
 

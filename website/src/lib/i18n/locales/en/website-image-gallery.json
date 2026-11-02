@@ -1,6 +1,8 @@
 {
 	"loading": "Loading image …",
 	"loadMore": "Load more",
+	"download": "Download",
+	"downloadPreview": "Preview (WebP)",
 	"imageError": "Image could not be loaded.",
 	"generatedFor": "Generated for {amount} USD",
 	"priceUnavailable": "Cost unknown",

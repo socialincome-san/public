@@ -74,3 +74,33 @@ test('keeps all images visible when pagination is not configured', () => {
 	expect(container.querySelectorAll('article')).toHaveLength(5);
 	expect(container.querySelector('button')).toBeNull();
 });
+
+test('places date, price and info together with download in the action group', () => {
+	act(() =>
+		root.render(
+			<ImageGallery
+				images={[
+					{
+						id: '1',
+						src: '/image.webp',
+						alt: 'Illustration',
+						date: { value: '2026-11-02T12:00:00Z', label: '2 Nov 2026, 13:00' },
+						price: '0.06 USD',
+						prompt: { text: 'Illustration', title: 'Image prompt', triggerLabel: 'Show image prompt' },
+						actions: <button type="button">Download</button>,
+					},
+				]}
+				loadingLabel="Loading"
+				errorLabel="Unavailable"
+				density="compact"
+				infoPlacement="metadata"
+			/>,
+		),
+	);
+	const footer = container.querySelector('article .mt-auto');
+	const metadata = footer?.firstElementChild;
+	expect(metadata?.textContent).toContain('2 Nov 2026, 13:00');
+	expect(metadata?.textContent).toContain('0.06 USD');
+	expect(metadata?.querySelector('[aria-label="Show image prompt"]')).not.toBeNull();
+	expect(metadata?.nextElementSibling?.textContent).toBe('Download');
+});
