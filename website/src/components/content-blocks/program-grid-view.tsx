@@ -53,12 +53,12 @@ const resolveGridFilterValue = async (blok: ProgramGrid, lang: WebsiteLanguage) 
 		case 'country': {
 			const country = await findSelectedStory(blok.filterCountry, () => getCountriesAction(lang));
 
-			return country?.content.isoCode.toString().trim();
+			return country?.content.isoCode?.toString().trim();
 		}
 		case 'focus': {
 			const focus = await findSelectedStory(blok.filterFocus, () => getFocusesAction(lang));
 
-			return focus?.content.portalSlug.trim();
+			return focus?.content.portalSlug?.trim();
 		}
 		case 'localPartner': {
 			const localPartner = await findSelectedStory(blok.filterLocalPartner, () => getLocalPartnersAction(lang));
