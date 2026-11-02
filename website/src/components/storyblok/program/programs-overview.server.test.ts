@@ -48,16 +48,19 @@ const filterDataByPortalSlug = {
 		programId: 'program-kenya-health',
 		countryIsoCode: 'KE',
 		focuses: [{ id: 'focus-health', slug: 'health' }],
+		localPartnerSlugs: [],
 	},
 	'sierra-leone-health': {
 		programId: 'program-sierra-leone-health',
 		countryIsoCode: 'SL',
 		focuses: [{ id: 'focus-health', slug: 'health' }],
+		localPartnerSlugs: [],
 	},
 	'switzerland-education': {
 		programId: 'program-switzerland-education',
 		countryIsoCode: 'CH',
 		focuses: [{ id: 'focus-education', slug: 'education' }],
+		localPartnerSlugs: [],
 	},
 } as PublicProgramFilterDataMap;
 
