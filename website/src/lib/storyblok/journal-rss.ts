@@ -65,7 +65,7 @@ const getAuthorName = (author: Article['author']) => {
 const getAuthorNames = ({ author, coAuthors }: JournalRssArticle['content']) => {
 	// Unresolved authors are bare uuids, which would otherwise hide the resolved entry for the same person.
 	// Storyblok sends no author at all when the relation is empty, whatever the generated type says.
-	const authors = [author, ...(coAuthors ?? [])].filter(
+	const authors = [author, ...(Array.isArray(coAuthors) ? coAuthors : [])].filter(
 		(person) => person !== null && person !== undefined && typeof person !== 'string',
 	);
 	const names = authors
