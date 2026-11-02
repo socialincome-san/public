@@ -10,7 +10,6 @@
 		"lint": "eslint",
 		"typecheck": "next typegen && tsc --noEmit",
 		"test:unit": "jest --runInBand",
-		"migrate:images": "node --conditions=react-server --env-file=.env.local --import tsx scripts/migrate-images-to-blob.ts",
 		"format:check": "prettier --check . --config prettier.config.mjs",
 		"format:fix": "prettier --write . --config prettier.config.mjs",
 		"check:unused": "knip --config knip.config.ts"
@@ -43,7 +42,6 @@
 		"prettier-plugin-organize-imports": "4.3.0",
 		"prettier-plugin-tailwindcss": "0.8.1",
 		"tailwindcss": "4.3.3",
-		"tsx": "4.23.15",
 		"typescript": "5.9.3"
 	}
 }
