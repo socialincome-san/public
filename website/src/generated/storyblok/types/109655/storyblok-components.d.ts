@@ -22,6 +22,7 @@ export interface Article {
   leadText?: string;
   content: StoryblokRichTextDoc;
   author: ISbStoryData<Author> | ISbStoryData<Person> | string;
+  coAuthors?: (ISbStoryData<Person> | string)[];
   displayInOverviewPage?: boolean;
   originalLanguage?: "" | "en" | "fr" | "de" | "it";
   type: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;

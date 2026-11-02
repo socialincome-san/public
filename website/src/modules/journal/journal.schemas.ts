@@ -23,6 +23,10 @@ export const journalArticlesByUuidsRequestSchema = z.object({
 	articleUuids: z.array(z.string().trim().min(1)),
 });
 
+export const journalAuthorArticleCountsRequestSchema = z.object({
+	authorIds: z.array(z.string().trim().min(1)).max(50),
+});
+
 export const journalArticlesByTagRequestSchema = z.object({
 	language: journalLanguageSchema,
 	tagUuid: z.string().trim().min(1),

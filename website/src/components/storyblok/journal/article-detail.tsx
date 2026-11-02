@@ -1,11 +1,12 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
+import { ArticleAuthorCards } from '@/components/storyblok/journal/article-author-cards';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { ArticleDetailBody } from '@/components/storyblok/journal/article-detail-body';
 import { ArticleDetailHeader, ArticleDetailHeroImage } from '@/components/storyblok/journal/article-detail-header';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
-import type { JournalArticle } from '@/modules/journal/journal.types';
+import type { JournalArticle, JournalArticleAuthor } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
@@ -19,11 +20,24 @@ type Props = {
 	slug: string;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
+	authors: JournalArticleAuthor[];
+	roleLabels: Record<string, string>;
+	circleLabels: Record<string, string>;
 	relatedArticles: ISbStoryData<JournalArticle>[];
 	breadcrumbs: BreadcrumbLinkType[];
 };
 
-export const ArticleDetail = async ({ story, slug, lang, currency, relatedArticles, breadcrumbs }: Props) => {
+export const ArticleDetail = async ({
+	story,
+	slug,
+	lang,
+	currency,
+	authors,
+	roleLabels,
+	circleLabels,
+	relatedArticles,
+	breadcrumbs,
+}: Props) => {
 	const t = await getTranslations('website-journal');
 	const article = story.content;
 	const hasHero = !article.useImageOnlyForPreview && Boolean(article.image?.filename);
@@ -49,6 +63,13 @@ export const ArticleDetail = async ({ story, slug, lang, currency, relatedArticl
 				<div className="mx-auto max-w-2xl space-y-10">
 					{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} />}
 					<ArticleDetailBody story={story} slug={slug} lang={lang} currency={currency} />
+					<ArticleAuthorCards
+						authors={authors}
+						roleLabels={roleLabels}
+						circleLabels={circleLabels}
+						lang={lang}
+						currency={currency}
+					/>
 				</div>
 			</div>
 

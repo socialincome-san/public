@@ -18,7 +18,7 @@ const article = (
 			component: 'article',
 			title,
 			leadText,
-			author: { content: { fullName: 'A. Author' } },
+			author: { uuid: 'a-author', content: { fullName: 'A. Author' } },
 		},
 	}) as unknown as JournalRssArticle;
 
@@ -38,6 +38,63 @@ describe('buildJournalRssFeed', () => {
 				`https://socialincome.org/${language}/journal/${language}-story`,
 			);
 		}
+	});
+
+	it('lists every resolved author as a creator', () => {
+		const coAuthored = article('co', 'Co', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');
+		const content = {
+			...coAuthored.content,
+			coAuthors: [{ uuid: 'b-author', content: { fullName: 'B. Author' } }, 'unpublished-uuid'],
+		};
+		const document = new DOMParser().parseFromString(
+			buildJournalRssFeed([{ ...coAuthored, content } as unknown as JournalRssArticle]),
+			'text/xml',
+		);
+
+		expect([...document.getElementsByTagName('dc:creator')].map((creator) => creator.textContent)).toEqual([
+			'A. Author',
+			'B. Author',
+		]);
+	});
+
+	it('keeps a resolved co-author whose uuid is also the unresolved lead author', () => {
+		const coAuthored = article('unresolved', 'Unresolved', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');
+		const content = {
+			...coAuthored.content,
+			author: 'lead',
+			coAuthors: [{ uuid: 'lead', content: { firstName: 'Ada', lastName: 'Lovelace' } }],
+		};
+		const document = new DOMParser().parseFromString(
+			buildJournalRssFeed([{ ...coAuthored, content } as unknown as JournalRssArticle]),
+			'text/xml',
+		);
+
+		expect([...document.getElementsByTagName('dc:creator')].map((creator) => creator.textContent)).toEqual(['Ada Lovelace']);
+	});
+
+	it('falls back to Social Income when the article has no author', () => {
+		const authorless = article('none', 'None', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');
+		const content = { ...authorless.content, author: null };
+		const document = new DOMParser().parseFromString(
+			buildJournalRssFeed([{ ...authorless, content } as unknown as JournalRssArticle]),
+			'text/xml',
+		);
+
+		expect([...document.getElementsByTagName('dc:creator')].map((creator) => creator.textContent)).toEqual([
+			'Social Income',
+		]);
+	});
+
+	it('names each author once, preferring first and last name', () => {
+		const lead = { uuid: 'lead', content: { firstName: 'Ada', lastName: 'Lovelace', fullName: 'Ada King' } };
+		const coAuthored = article('dup', 'Dup', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', 'Lead');
+		const content = { ...coAuthored.content, author: lead, coAuthors: [{ ...lead, content: { ...lead.content } }] };
+		const document = new DOMParser().parseFromString(
+			buildJournalRssFeed([{ ...coAuthored, content } as unknown as JournalRssArticle]),
+			'text/xml',
+		);
+
+		expect([...document.getElementsByTagName('dc:creator')].map((creator) => creator.textContent)).toEqual(['Ada Lovelace']);
 	});
 
 	it('removes XML 1.0 control characters while preserving valid text', () => {

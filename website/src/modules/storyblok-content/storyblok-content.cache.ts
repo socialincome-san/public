@@ -310,7 +310,7 @@ export const getArticle = async (language: string, slug: string): Promise<Result
 };
 
 export const getRelativeArticles = async (
-	authorId: string,
+	authorIds: string[],
 	articleId: number,
 	tags: string[],
 	language: string,
@@ -318,5 +318,5 @@ export const getRelativeArticles = async (
 ): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
 	'use cache';
 
-	return withStoryblokCache(service.getRelativeArticles(authorId, articleId, tags, language, numberOfArticles));
+	return withStoryblokCache(service.getRelativeArticles(authorIds, articleId, tags, language, numberOfArticles));
 };

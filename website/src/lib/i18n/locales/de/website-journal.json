@@ -38,7 +38,11 @@
 	},
 	"article": {
 		"keep-reading": "Weiterlesen",
-		"from-original-language": "Übersetzt aus dem"
+		"from-original-language": "Übersetzt aus dem",
+		"author-cta": "Mehr über {name}",
+		"author": "Autor:in",
+		"author-circles": "Aktiv in",
+		"author-article-count": "{count, plural, one {# Artikel} other {# Artikel}}"
 	},
 	"teasers": {
 		"heading-prefix": "Geschichten & Updates aus ",

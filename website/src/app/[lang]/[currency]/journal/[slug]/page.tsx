@@ -53,6 +53,9 @@ export default async function Page(props: JournalArticlePageProps) {
 			slug={slug}
 			lang={lang}
 			currency={currency}
+			authors={pageResult.data.authors}
+			roleLabels={pageResult.data.roleLabels}
+			circleLabels={pageResult.data.circleLabels}
 			relatedArticles={pageResult.data.relatedArticles}
 			breadcrumbs={pageResult.data.breadcrumbs}
 		/>

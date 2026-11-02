@@ -31,6 +31,13 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 	return cacheResult(service.getJournalArticlePageData(request));
 };
 
+export const getJournalAuthorArticleCounts = async (authorIds: string[]): Promise<Result<Record<string, number>>> => {
+	'use cache';
+	cacheTag(JOURNAL_CACHE_TAG);
+
+	return cacheResult(service.getJournalAuthorArticleCounts(authorIds));
+};
+
 export const getJournalPersonPageData = async (request: JournalPageRequest): Promise<Result<JournalPersonPageData>> => {
 	'use cache';
 	cacheTag(JOURNAL_CACHE_TAG);
