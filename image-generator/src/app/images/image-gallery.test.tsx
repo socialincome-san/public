@@ -16,10 +16,12 @@ const image: GalleryImage = {
 	cost_usd: 0.06,
 };
 
-test('keeps the generator controls when composing the shared gallery', () => {
-	const markup = renderToStaticMarkup(<ImageGallery images={[image]} onImageAdded={jest.fn()} />);
-	expect(markup).toContain('0.06 USD');
+test.each([0.06, null])('preserves the original generator gallery for cost %s', (cost) => {
+	const markup = renderToStaticMarkup(<ImageGallery images={[{ ...image, cost_usd: cost }]} onImageAdded={jest.fn()} />);
+	expect(markup).not.toContain('0.06 USD');
+	expect(markup).not.toContain('Cost unknown');
 	expect(markup).toContain('<time');
+	expect(markup).toContain('13:00');
 	expect(markup).toContain('Show image prompt');
 	expect(markup).toContain('Edit image');
 	expect(markup).toContain('Download image');

@@ -68,8 +68,8 @@ export const WithActions: Story = {
 	args: {
 		images: images.map((image) => ({
 			...image,
-			price: '0.06 USD',
-			date: { label: '2 Nov 2026', value: '2026-11-02' },
+			price: undefined,
+			date: { label: '2 Nov 2026, 13:00', value: '2026-11-02T12:00:00Z' },
 			actions: (
 				<>
 					<Button size="sm" variant="outline">

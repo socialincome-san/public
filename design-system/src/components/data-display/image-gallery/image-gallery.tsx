@@ -156,11 +156,10 @@ export const ImageGallery = ({
 										) : (
 											<span className="whitespace-nowrap">{image.price}</span>
 										))}
-									{density === 'comfortable' && image.prompt && <PromptInfo prompt={image.prompt} />}
 								</div>
-								{((density === 'compact' && image.prompt !== undefined) || image.actions !== undefined) && (
-									<div className="ml-auto flex flex-wrap items-center gap-2">
-										{density === 'compact' && image.prompt && <PromptInfo prompt={image.prompt} />}
+								{(image.prompt !== undefined || image.actions !== undefined) && (
+									<div className="ml-auto flex items-center gap-1">
+										{image.prompt && <PromptInfo prompt={image.prompt} />}
 										{image.actions}
 									</div>
 								)}

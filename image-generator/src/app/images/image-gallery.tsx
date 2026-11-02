@@ -11,6 +11,7 @@ import { DeleteImageDialog } from './delete-image-dialog';
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {
 	dateStyle: 'medium',
+	timeStyle: 'short',
 	timeZone: 'Europe/Zurich',
 });
 
@@ -38,12 +39,10 @@ export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 			}}
 			images={visibleImages.map((image) => {
 				const prompt = image.prompt || 'No prompt saved.';
-				const price = image.cost_usd === null ? 'Cost unknown' : `${image.cost_usd.toFixed(2)} USD`;
 				return {
 					id: String(image.id),
 					src: image.previewUrl,
 					alt: prompt,
-					price,
 					date: {
 						value: image.created_at ?? undefined,
 						label: image.created_at ? dateFormatter.format(new Date(image.created_at)) : 'Date not saved',
