@@ -93,6 +93,7 @@
 		"react-hook-form": "7.91.0",
 		"react-hot-toast": "2.6.1",
 		"react-markdown": "10.1.0",
+		"server-only": "0.0.1",
 		"ssh2-sftp-client": "12.1.1",
 		"storyblok-rich-text-react-renderer": "3.0.1",
 		"stripe": "23.0.1",

@@ -1,0 +1,9 @@
+{
+	"loading": "Bild wird geladen …",
+	"loadMore": "Mehr laden",
+	"imageError": "Das Bild konnte nicht geladen werden.",
+	"generatedFor": "Generiert für {amount} USD",
+	"priceUnavailable": "Kosten unbekannt",
+	"promptTitle": "Bildbeschreibung",
+	"showPrompt": "Bildbeschreibung anzeigen"
+}

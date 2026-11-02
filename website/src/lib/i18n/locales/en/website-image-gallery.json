@@ -1,0 +1,9 @@
+{
+	"loading": "Loading image …",
+	"loadMore": "Load more",
+	"imageError": "Image could not be loaded.",
+	"generatedFor": "Generated for {amount} USD",
+	"priceUnavailable": "Cost unknown",
+	"promptTitle": "Image prompt",
+	"showPrompt": "Show image prompt"
+}

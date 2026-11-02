@@ -1,5 +1,5 @@
 import { DatabaseError } from 'pg';
-import { deleteImage, getGalleryBatch, getStoredImage, saveImage } from './database';
+import { deleteImage, getGalleryBatch, getGalleryImages, getStoredImage, saveImage } from './database';
 import { deleteStoredImages, uploadImage } from './image-storage';
 
 const mockQuery = jest.fn();
@@ -121,6 +121,54 @@ test('loads an original URL for editing without selecting Base64', async () => {
 	await expect(getStoredImage('1')).resolves.toEqual({ imageUrl: stored.imageUrl, media_type: 'image/png' });
 	expect(mockQuery).toHaveBeenCalledWith(expect.not.stringContaining('image_base64'), ['1']);
 	expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining("status = 'active'"), ['1']);
+});
+
+test('loads all active gallery previews newest first and selects only the public metadata', async () => {
+	const rows = Array.from({ length: 30 }, (_, index) => ({
+		id: String(30 - index),
+		prompt: 'Style. Subject: A bicycle',
+		previewUrl: stored.previewUrl,
+		costUsd: 0.06,
+	}));
+	mockQuery.mockResolvedValueOnce({ rows });
+
+	await expect(getGalleryImages()).resolves.toEqual(rows.map((row) => ({ ...row, prompt: 'A bicycle' })));
+	expect(mockQuery).toHaveBeenCalledWith(
+		`SELECT id, prompt, preview_url AS "previewUrl", cost_usd AS "costUsd"
+		FROM generated_images
+		WHERE status = 'active' AND image_url IS NOT NULL AND preview_url IS NOT NULL
+		ORDER BY created_at DESC NULLS LAST, id DESC`,
+	);
+});
+
+test('preserves missing gallery prompts and extracts only user changes for edited images', async () => {
+	mockQuery.mockResolvedValueOnce({
+		rows: [
+			{ id: '3', prompt: null, previewUrl: stored.previewUrl },
+			{ id: '2', prompt: '', previewUrl: stored.previewUrl },
+			{
+				id: '1',
+				prompt: 'Style. Changes:\n1. At 50% from the left, 50% from the top: Add a bicycle',
+				previewUrl: stored.previewUrl,
+			},
+		],
+	});
+
+	await expect(getGalleryImages()).resolves.toEqual([
+		{ id: '3', prompt: null, previewUrl: stored.previewUrl },
+		{ id: '2', prompt: '', previewUrl: stored.previewUrl },
+		{ id: '1', prompt: 'Add a bicycle', previewUrl: stored.previewUrl },
+	]);
+});
+
+test('returns an empty gallery list when there are no active previews', async () => {
+	mockQuery.mockResolvedValueOnce({ rows: [] });
+	await expect(getGalleryImages()).resolves.toEqual([]);
+});
+
+test('propagates gallery query failures to the route handler', async () => {
+	mockQuery.mockRejectedValueOnce(new Error('Connection lost'));
+	await expect(getGalleryImages()).rejects.toThrow('Connection lost');
 });
 
 test('starts the gallery without a cursor and exposes user prompts', async () => {

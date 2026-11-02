@@ -1,0 +1,9 @@
+{
+	"loading": "Caricamento dell’immagine …",
+	"loadMore": "Carica altro",
+	"imageError": "Impossibile caricare l’immagine.",
+	"generatedFor": "Generata per {amount} USD",
+	"priceUnavailable": "Costi ignoti",
+	"promptTitle": "Descrizione dell’immagine",
+	"showPrompt": "Mostra la descrizione dell’immagine"
+}
