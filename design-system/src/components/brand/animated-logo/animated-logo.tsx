@@ -19,7 +19,7 @@ type AnimatedLogoProps = {
 	width?: number;
 };
 
-export const AnimatedLogo = ({ src, width = 222 }: AnimatedLogoProps) => {
+const AnimatedLogoPlayer = ({ src, width }: Required<AnimatedLogoProps>) => {
 	const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
 	const [failed, setFailed] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
@@ -86,3 +86,7 @@ export const AnimatedLogo = ({ src, width = 222 }: AnimatedLogoProps) => {
 		</div>
 	);
 };
+
+export const AnimatedLogo = ({ src, width = 222 }: AnimatedLogoProps) => (
+	<AnimatedLogoPlayer key={src} src={src} width={width} />
+);
