@@ -19,11 +19,15 @@ import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 const amountFieldBorder = 'border-input/60';
 const monthlyAmountTextClass = 'text-lg leading-none font-medium';
 
-// Both amount fields take whole numbers only, so everything but digits is dropped while typing
-const parseWholeNumber = (raw: string): number | null => {
-	const digits = raw.replace(/\D/g, '');
+// Both amount fields take whole numbers only. Apostrophes and spaces are thousands separators and dropped;
+// a dot or comma could be a decimal separator, so dropping it would turn 10.50 into 1050 and is rejected instead.
+const parseWholeNumber = (raw: string): number | 'invalid' | null => {
+	const trimmed = raw.replace(/['’\s]/g, '');
+	if (trimmed === '') {
+		return null;
+	}
 
-	return digits === '' ? null : Number(digits);
+	return /^\d+$/.test(trimmed) ? Number(trimmed) : 'invalid';
 };
 
 // Quick picks shown inside the custom amount field while it is focused
@@ -74,8 +78,11 @@ export const DonationAmountFields = ({
 	const monthlyIncomeInputId = `${idPrefix}-monthly-income`;
 	const customAmountInputId = `${idPrefix}-custom-amount`;
 	const [isCustomAmountFocused, setIsCustomAmountFocused] = useState(false);
+	// Rejected text stays in the field as typed, so the person sees what to fix; valid input lives in values
+	const [invalidMonthlyIncome, setInvalidMonthlyIncome] = useState<string | null>(null);
+	const [invalidCustomAmount, setInvalidCustomAmount] = useState<string | null>(null);
 	const isCustomAmountActive = isCustomAmountFocused || values.selectedAmount === 'other';
-	const isCustomAmountLabelFloating = isCustomAmountFocused || values.customAmount !== null;
+	const isCustomAmountLabelFloating = isCustomAmountFocused || values.customAmount !== null || invalidCustomAmount !== null;
 	// While the custom amount field is in use, the 1 % row looks inactive like the custom field does otherwise
 	const isOnePercentDimmed = isCustomAmountActive;
 
@@ -123,8 +130,14 @@ export const DonationAmountFields = ({
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
-					<label htmlFor={monthlyIncomeInputId} className="text-2xs block font-medium">
-						{t('stepAmount.monthly-income-label')} ({currency})
+					{/* The error takes the label's place so the card keeps its height */}
+					<label
+						htmlFor={monthlyIncomeInputId}
+						className={cn('text-2xs block font-medium', invalidMonthlyIncome !== null && 'text-destructive')}
+					>
+						{invalidMonthlyIncome === null
+							? `${t('stepAmount.monthly-income-label')} (${currency})`
+							: t('stepAmount.whole-amount-only')}
 					</label>
 					<div className={monthlyAmountTextClass}>
 						<Input
@@ -134,10 +147,18 @@ export const DonationAmountFields = ({
 							type="text"
 							inputMode="numeric"
 							pattern="[0-9]*"
-							value={values.monthlyIncome ?? ''}
+							value={invalidMonthlyIncome ?? values.monthlyIncome ?? ''}
+							aria-invalid={invalidMonthlyIncome !== null}
 							onFocus={actions.selectOnePercent}
 							onChange={(e) => {
 								const parsed = parseWholeNumber(e.target.value);
+								if (parsed === 'invalid') {
+									setInvalidMonthlyIncome(e.target.value);
+									actions.setMonthlyIncome(null);
+
+									return;
+								}
+								setInvalidMonthlyIncome(null);
 								if (parsed === null) {
 									actions.setMonthlyIncome(null);
 
@@ -181,6 +202,13 @@ export const DonationAmountFields = ({
 					'focus-within:border-ring focus-within:ring-ring/50 relative mb-4 rounded-md border px-4 py-3 transition-[border-color,box-shadow,background-color,color] focus-within:ring-[3px]',
 					isCustomAmountActive ? 'bg-card text-foreground' : 'bg-card text-muted-foreground opacity-60',
 				)}
+				// Focus counts for the input and the chips together, so tabbing from the input to a chip keeps the chips
+				onFocus={() => setIsCustomAmountFocused(true)}
+				onBlur={(e) => {
+					if (!e.currentTarget.contains(e.relatedTarget)) {
+						setIsCustomAmountFocused(false);
+					}
+				}}
 			>
 				{/* Floating label: rests in the middle while the field is empty, moves up once it is focused or filled */}
 				<label
@@ -188,9 +216,12 @@ export const DonationAmountFields = ({
 					className={cn(
 						'absolute left-4 cursor-text font-medium transition-all',
 						isCustomAmountLabelFloating ? 'text-2xs top-3' : 'top-1/2 -translate-y-1/2 text-sm',
+						invalidCustomAmount !== null && 'text-destructive',
 					)}
 				>
-					{t('stepAmount.custom-amount-label')} ({currency})
+					{invalidCustomAmount === null
+						? `${t('stepAmount.custom-amount-label')} (${currency})`
+						: t('stepAmount.whole-amount-only')}
 				</label>
 				<div className="h-3.5" aria-hidden />
 				{/* The chips share the number's row; the shift puts their bottom edge on the bottom of the digits */}
@@ -202,16 +233,22 @@ export const DonationAmountFields = ({
 						inputMode="numeric"
 						pattern="[0-9]*"
 						data-testid="donation-wizard-custom-amount"
-						value={values.customAmount ?? ''}
+						value={invalidCustomAmount ?? values.customAmount ?? ''}
+						aria-invalid={invalidCustomAmount !== null}
 						onFocus={() => {
-							setIsCustomAmountFocused(true);
 							if (values.selectedAmount !== 'other') {
 								actions.setPresetAmount('other');
 							}
 						}}
-						onBlur={() => setIsCustomAmountFocused(false)}
 						onChange={(e) => {
 							const parsed = parseWholeNumber(e.target.value);
+							if (parsed === 'invalid') {
+								setInvalidCustomAmount(e.target.value);
+								actions.setCustomAmount(null);
+
+								return;
+							}
+							setInvalidCustomAmount(null);
 							if (parsed === null) {
 								actions.setCustomAmount(null);
 
@@ -222,7 +259,7 @@ export const DonationAmountFields = ({
 							}
 						}}
 					/>
-					{/* The chips only show while the field is focused; mouse down on them keeps the focus */}
+					{/* The chips only show while focus is in the field or on a chip */}
 					{isCustomAmountFocused && (
 						<div className="-my-1 flex shrink-0 -translate-y-2 gap-1.5">
 							{customAmountChips.map((amount) => (
@@ -233,9 +270,12 @@ export const DonationAmountFields = ({
 									aria-pressed={values.customAmount === amount}
 									// The field label already names the currency, so the chips only show the number
 									aria-label={`${currency} ${amount}`}
-									// Keeps the focus in the field so the chips stay visible while clicking
+									// Safari does not focus buttons on click, so without this the blur would hide the chips before the click lands
 									onMouseDown={(e) => e.preventDefault()}
-									onClick={() => actions.setCustomAmount(amount)}
+									onClick={() => {
+										setInvalidCustomAmount(null);
+										actions.setCustomAmount(amount);
+									}}
 									className={cn(
 										amountFieldBorder,
 										'text-2xs cursor-pointer rounded-full border px-2.5 py-1 font-medium whitespace-nowrap transition-colors',

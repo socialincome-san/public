@@ -21,7 +21,8 @@
 		"switch-to-monthly": "Dona ogni mese",
 		"switch-to-monthly-with-amount": "Dona {amount} al mese",
 		"custom-amount-placeholder": "Importo",
-		"custom-amount-label": "Importo personalizzato"
+		"custom-amount-label": "Importo personalizzato",
+		"whole-amount-only": "Solo importi interi"
 	},
 	"stepPlan": {
 		"monthly-title": "Donazione mensile",

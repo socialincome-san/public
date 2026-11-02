@@ -21,7 +21,8 @@
 		"switch-to-monthly": "Donate monthly",
 		"switch-to-monthly-with-amount": "Donate {amount} monthly",
 		"custom-amount-placeholder": "Amount",
-		"custom-amount-label": "Custom amount"
+		"custom-amount-label": "Custom amount",
+		"whole-amount-only": "Whole amounts only"
 	},
 	"stepPlan": {
 		"monthly-title": "Monthly Donation",

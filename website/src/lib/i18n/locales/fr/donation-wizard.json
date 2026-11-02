@@ -21,7 +21,8 @@
 		"switch-to-monthly": "Donner chaque mois",
 		"switch-to-monthly-with-amount": "Donner {amount} par mois",
 		"custom-amount-placeholder": "Montant",
-		"custom-amount-label": "Montant libre"
+		"custom-amount-label": "Montant libre",
+		"whole-amount-only": "Montant entier requis"
 	},
 	"stepPlan": {
 		"monthly-title": "Don mensuel",
