@@ -8,6 +8,7 @@ const badgeVariants = cva(
 	'inline-flex items-center gap-1.5 rounded-full border text-xs transition-opacity [a:hover>&]:opacity-80',
 	{
 		variants: {
+			// Dark variants set scheme-dark, so content such as AnimatedCircleIcon switches to its light colors
 			variant: {
 				default: 'bg-muted border-border text-foreground',
 				secondary: 'bg-warning-foreground border-warning/30 text-foreground',
@@ -18,15 +19,17 @@ const badgeVariants = cva(
 				country: 'bg-background border-border text-foreground',
 				fundraising:
 					'bg-confirm-foreground border-confirm/30 text-foreground text-sm leading-none font-medium whitespace-nowrap',
-				video: 'bg-black/60 border-white/40 text-white backdrop-blur-sm',
+				video: 'bg-black/60 border-white/40 text-white backdrop-blur-sm scheme-dark',
 				frosted: 'bg-white/80 border-white/40 text-foreground whitespace-nowrap backdrop-blur-sm',
-				primary: 'bg-primary border-primary text-primary-foreground',
+				primary: 'bg-primary border-primary text-primary-foreground scheme-dark',
 				'primary-outline': 'border-primary/40 text-primary bg-transparent',
 			},
 			size: {
 				sm: 'gap-0.5 px-2 py-0.5 text-2xs',
 				default: 'px-1.5 py-1',
 				lg: 'px-3 py-1.5 font-medium',
+				// A leading icon sits close to the rounded edge
+				xl: 'gap-2 px-4 py-1.5 text-sm font-medium has-[>svg:first-child]:pl-1.5',
 			},
 		},
 		compoundVariants: [
