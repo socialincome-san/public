@@ -66,7 +66,7 @@ export const selectCustomAmountChip = async (
 
 	await expect(customAmountInput).toHaveValue(String(amount));
 	await expect(chip).toHaveAttribute('aria-pressed', 'true');
-	await expect(heroForm.getByTestId('donation-wizard-amount-continue')).toContainText(`CHF ${amount}`);
+	await expect(heroForm.getByTestId('donation-wizard-amount-continue')).toContainText(new RegExp(`CHF ${amount}(?!\\d)`));
 };
 
 const completeHeroAmountFields = async (scope: Locator, monthlyIncome: number, cadence: 'monthly' | 'one-time') => {

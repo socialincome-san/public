@@ -10,7 +10,9 @@ import NextImage from 'next/image';
 import { useId, useState } from 'react';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
+	DONATION_CUSTOM_AMOUNT_MIN,
 	DONATION_MONTHLY_INCOME_MAX,
+	DONATION_MONTHLY_INCOME_MIN,
 	type Cadence,
 	type PresetAmount,
 } from '../../utils/donation-amount';
@@ -18,6 +20,8 @@ import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 
 const amountFieldBorder = 'border-input/60';
 const monthlyAmountTextClass = 'text-lg leading-none font-medium';
+// Pulled up under the field above it, which keeps its own bottom margin
+const fieldHintClass = 'text-destructive text-2xs -mt-2 mb-4 font-medium';
 
 // Both amount fields take whole numbers only. Apostrophes and spaces are thousands separators and dropped;
 // a dot or comma could be a decimal separator, so dropping it would turn 10.50 into 1050 and is rejected instead.
@@ -77,10 +81,24 @@ export const DonationAmountFields = ({
 	const idPrefix = useId();
 	const monthlyIncomeInputId = `${idPrefix}-monthly-income`;
 	const customAmountInputId = `${idPrefix}-custom-amount`;
+	const monthlyIncomeHintId = `${idPrefix}-monthly-income-hint`;
+	const customAmountHintId = `${idPrefix}-custom-amount-hint`;
 	const [isCustomAmountFocused, setIsCustomAmountFocused] = useState(false);
 	// Rejected text stays in the field as typed, so the person sees what to fix; valid input lives in values
 	const [invalidMonthlyIncome, setInvalidMonthlyIncome] = useState<string | null>(null);
 	const [invalidCustomAmount, setInvalidCustomAmount] = useState<string | null>(null);
+	const monthlyIncomeHint =
+		invalidMonthlyIncome !== null
+			? t('stepAmount.whole-amount-only')
+			: values.monthlyIncome !== null && values.monthlyIncome < DONATION_MONTHLY_INCOME_MIN
+				? t('stepAmount.below-minimum', { amount: `${currency} ${DONATION_MONTHLY_INCOME_MIN}` })
+				: null;
+	const customAmountHint =
+		invalidCustomAmount !== null
+			? t('stepAmount.whole-amount-only')
+			: values.customAmount !== null && values.customAmount < DONATION_CUSTOM_AMOUNT_MIN
+				? t('stepAmount.below-minimum', { amount: `${currency} ${DONATION_CUSTOM_AMOUNT_MIN}` })
+				: null;
 	const isCustomAmountActive = isCustomAmountFocused || values.selectedAmount === 'other';
 	const isCustomAmountLabelFloating = isCustomAmountFocused || values.customAmount !== null || invalidCustomAmount !== null;
 	// While the custom amount field is in use, the 1 % row looks inactive like the custom field does otherwise
@@ -130,14 +148,8 @@ export const DonationAmountFields = ({
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
-					{/* The error takes the label's place so the card keeps its height */}
-					<label
-						htmlFor={monthlyIncomeInputId}
-						className={cn('text-2xs block font-medium', invalidMonthlyIncome !== null && 'text-destructive')}
-					>
-						{invalidMonthlyIncome === null
-							? `${t('stepAmount.monthly-income-label')} (${currency})`
-							: t('stepAmount.whole-amount-only')}
+					<label htmlFor={monthlyIncomeInputId} className="text-2xs block font-medium">
+						{t('stepAmount.monthly-income-label')} ({currency})
 					</label>
 					<div className={monthlyAmountTextClass}>
 						<Input
@@ -148,7 +160,8 @@ export const DonationAmountFields = ({
 							inputMode="numeric"
 							pattern="[0-9]*"
 							value={invalidMonthlyIncome ?? values.monthlyIncome ?? ''}
-							aria-invalid={invalidMonthlyIncome !== null}
+							aria-invalid={monthlyIncomeHint !== null}
+							aria-describedby={monthlyIncomeHint === null ? undefined : monthlyIncomeHintId}
 							onFocus={actions.selectOnePercent}
 							onChange={(e) => {
 								const parsed = parseWholeNumber(e.target.value);
@@ -190,6 +203,11 @@ export const DonationAmountFields = ({
 					<div className={cn(monthlyAmountTextClass, 'py-0.5 whitespace-nowrap')}>{values.onePercent}</div>
 				</button>
 			</div>
+			{monthlyIncomeHint !== null && (
+				<p id={monthlyIncomeHintId} className={fieldHintClass}>
+					{monthlyIncomeHint}
+				</p>
+			)}
 
 			<div className="mb-4 flex items-center gap-4">
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
@@ -216,12 +234,9 @@ export const DonationAmountFields = ({
 					className={cn(
 						'absolute left-4 cursor-text font-medium transition-all',
 						isCustomAmountLabelFloating ? 'text-2xs top-3' : 'top-1/2 -translate-y-1/2 text-sm',
-						invalidCustomAmount !== null && 'text-destructive',
 					)}
 				>
-					{invalidCustomAmount === null
-						? `${t('stepAmount.custom-amount-label')} (${currency})`
-						: t('stepAmount.whole-amount-only')}
+					{t('stepAmount.custom-amount-label')} ({currency})
 				</label>
 				<div className="h-3.5" aria-hidden />
 				{/* The chips share the number's row; the shift puts their bottom edge on the bottom of the digits */}
@@ -234,7 +249,8 @@ export const DonationAmountFields = ({
 						pattern="[0-9]*"
 						data-testid="donation-wizard-custom-amount"
 						value={invalidCustomAmount ?? values.customAmount ?? ''}
-						aria-invalid={invalidCustomAmount !== null}
+						aria-invalid={customAmountHint !== null}
+						aria-describedby={customAmountHint === null ? undefined : customAmountHintId}
 						onFocus={() => {
 							if (values.selectedAmount !== 'other') {
 								actions.setPresetAmount('other');
@@ -291,6 +307,11 @@ export const DonationAmountFields = ({
 					)}
 				</div>
 			</div>
+			{customAmountHint !== null && (
+				<p id={customAmountHintId} className={fieldHintClass}>
+					{customAmountHint}
+				</p>
+			)}
 
 			<Button
 				type="button"

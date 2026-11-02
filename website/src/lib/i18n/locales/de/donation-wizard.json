@@ -22,7 +22,8 @@
 		"switch-to-monthly-with-amount": "{amount} monatlich spenden",
 		"custom-amount-placeholder": "Betrag",
 		"custom-amount-label": "Eigener Betrag",
-		"whole-amount-only": "Nur ganze Beträge"
+		"whole-amount-only": "Nur ganze Beträge",
+		"below-minimum": "Mindestens {amount}"
 	},
 	"stepPlan": {
 		"monthly-title": "Monatliche Spende",
