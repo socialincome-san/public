@@ -8,19 +8,19 @@ const badgeVariants = cva(
 	'inline-flex items-center gap-1.5 rounded-full border text-xs transition-opacity [a:hover>&]:opacity-80',
 	{
 		variants: {
-			// Dark variants set scheme-dark, so content such as AnimatedCircleIcon switches to its light colors
+			// Filled variants set their color scheme, so content such as AnimatedCircleIcon matches the badge, not its parent
 			variant: {
-				default: 'bg-muted border-border text-foreground',
-				secondary: 'bg-warning-foreground border-warning/30 text-foreground',
-				outline: 'bg-accent border-accent text-accent-foreground',
+				default: 'bg-muted border-border text-foreground scheme-light',
+				secondary: 'bg-warning-foreground border-warning/30 text-foreground scheme-light',
+				outline: 'bg-accent border-accent text-accent-foreground scheme-light',
 				'outline-solid': 'border-foreground text-foreground bg-transparent',
-				destructive: 'bg-destructive-foreground border-destructive/30 text-destructive',
-				verified: 'bg-confirm-foreground border-confirm/30 text-confirm',
-				country: 'bg-background border-border text-foreground',
+				destructive: 'bg-destructive-foreground border-destructive/30 text-destructive scheme-light',
+				verified: 'bg-confirm-foreground border-confirm/30 text-confirm scheme-light',
+				country: 'bg-background border-border text-foreground scheme-light',
 				fundraising:
-					'bg-confirm-foreground border-confirm/30 text-foreground text-sm leading-none font-medium whitespace-nowrap',
+					'bg-confirm-foreground border-confirm/30 text-foreground text-sm leading-none font-medium whitespace-nowrap scheme-light',
 				video: 'bg-black/60 border-white/40 text-white backdrop-blur-sm scheme-dark',
-				frosted: 'bg-white/80 border-white/40 text-foreground whitespace-nowrap backdrop-blur-sm',
+				frosted: 'bg-white/80 border-white/40 text-foreground whitespace-nowrap backdrop-blur-sm scheme-light',
 				primary: 'bg-primary border-primary text-primary-foreground scheme-dark',
 				'primary-outline': 'border-primary/40 text-primary bg-transparent',
 			},
