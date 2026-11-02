@@ -54,5 +54,9 @@
 			"original": "Originally published as",
 			"related": "These sources provided background and insights"
 		}
+	},
+	"banner": {
+		"expand": "Show more",
+		"collapse": "Show less"
 	}
 }
