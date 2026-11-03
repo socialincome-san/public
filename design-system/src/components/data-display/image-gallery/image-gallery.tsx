@@ -124,7 +124,7 @@ export const ImageGallery = ({
 				className={cn(
 					'grid',
 					density === 'compact'
-						? 'grid-cols-1 gap-3 min-[380px]:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4'
+						? 'grid-cols-[repeat(auto-fit,minmax(min(100%,22rem),1fr))] gap-3 sm:gap-6'
 						: 'grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3',
 				)}
 			>
@@ -140,11 +140,17 @@ export const ImageGallery = ({
 							image.actions !== undefined) && (
 							<div
 								className={cn(
-									'mt-auto flex flex-wrap items-center justify-between gap-3',
+									'mt-auto flex items-center justify-between gap-3',
+									infoPlacement === 'actions' && 'flex-wrap',
 									density === 'compact' ? 'p-2 sm:p-3' : 'p-4',
 								)}
 							>
-								<div className="text-muted-foreground flex min-w-0 flex-wrap items-center gap-2 text-xs">
+								<div
+									className={cn(
+										'text-muted-foreground flex min-w-0 items-center gap-2 text-xs',
+										infoPlacement === 'metadata' ? 'whitespace-nowrap' : 'flex-wrap',
+									)}
+								>
 									{image.date &&
 										(image.date.value ? <time dateTime={image.date.value}>{image.date.label}</time> : image.date.label)}
 									{image.date && image.price && <span aria-hidden="true">·</span>}
@@ -152,7 +158,7 @@ export const ImageGallery = ({
 									{infoPlacement === 'metadata' && image.prompt && <PromptInfo prompt={image.prompt} />}
 								</div>
 								{((infoPlacement === 'actions' && image.prompt !== undefined) || image.actions !== undefined) && (
-									<div className="ml-auto flex items-center gap-1">
+									<div className="ml-auto flex shrink-0 items-center gap-1">
 										{infoPlacement === 'actions' && image.prompt && <PromptInfo prompt={image.prompt} />}
 										{image.actions}
 									</div>

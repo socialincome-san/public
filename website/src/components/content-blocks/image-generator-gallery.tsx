@@ -4,14 +4,7 @@ import { getImageGeneratorGalleryAction } from '@/modules/image-generator-galler
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { ImageGallery } from '@socialincome/design-system/data-display/image-gallery/image-gallery';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { storyblokEditable } from '@storyblok/react';
-import { ChevronDown, Download } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
@@ -38,8 +31,8 @@ export const ImageGeneratorGalleryBlock = async ({ blok, lang }: Props) => {
 		timeZone: TIME_ZONE,
 	});
 	const images = result.data.map((image) => {
-		const downloadUrl = new URL(image.previewUrl);
-		downloadUrl.searchParams.set('download', '1');
+		const downloadUrl = image.imageUrl ? new URL(image.imageUrl) : null;
+		downloadUrl?.searchParams.set('download', '1');
 		const cost =
 			image.costUsd === null ? t('priceUnavailable') : t('generatedFor', { amount: priceFormatter.format(image.costUsd) });
 
@@ -52,22 +45,13 @@ export const ImageGeneratorGalleryBlock = async ({ blok, lang }: Props) => {
 			prompt: image.prompt
 				? { text: `${cost}\n\n${image.prompt}`, title: t('promptTitle'), triggerLabel: t('showPrompt') }
 				: undefined,
-			actions: (
-				<DropdownMenu modal={false}>
-					<DropdownMenuTrigger asChild>
-						<Button variant="outline" size="sm">
-							<Download aria-hidden="true" /> {t('download')} <ChevronDown aria-hidden="true" />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuItem asChild>
-							<a href={downloadUrl.href} download>
-								{t('downloadPreview')}
-							</a>
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-			),
+			actions: downloadUrl ? (
+				<Button variant="outline" size="sm" asChild>
+					<a href={downloadUrl.href} download>
+						{t('download')}
+					</a>
+				</Button>
+			) : undefined,
 		};
 	});
 

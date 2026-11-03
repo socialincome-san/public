@@ -21,10 +21,18 @@ test('tags successful gallery results and uses the days profile', async () => {
 			id: '2',
 			prompt: 'A bicycle',
 			previewUrl: 'https://example.com/previews/bicycle.webp',
+			imageUrl: 'https://example.com/images/bicycle.png',
 			costUsd: 0.06,
 			createdAt: '2026-11-02T12:00:00Z',
 		},
-		{ id: '1', prompt: null, previewUrl: 'https://example.com/previews/scene.webp', costUsd: null, createdAt: null },
+		{
+			id: '1',
+			prompt: null,
+			previewUrl: 'https://example.com/previews/scene.webp',
+			imageUrl: null,
+			costUsd: null,
+			createdAt: null,
+		},
 	]);
 	jest.mocked(fetchImageGeneratorGallery).mockResolvedValueOnce(result);
 

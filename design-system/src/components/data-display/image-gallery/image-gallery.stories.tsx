@@ -25,20 +25,11 @@ const images = examples.map(({ name, description }) => ({
 	date: { label: '2 Nov 2026, 13:00', value: '2026-11-02T12:00:00Z' },
 	prompt: { text: description, title: 'Image prompt', triggerLabel: 'Show image prompt' },
 	actions: (
-		<DropdownMenu modal={false}>
-			<DropdownMenuTrigger asChild>
-				<Button variant="outline" size="sm">
-					<Download aria-hidden="true" /> Download <ChevronDown aria-hidden="true" />
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
-				<DropdownMenuItem asChild>
-					<a href={`/assets/image-gallery/${name}.webp`} download>
-						Preview (WebP)
-					</a>
-				</DropdownMenuItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
+		<Button variant="outline" size="sm" asChild>
+			<a href={`/assets/image-gallery/${name}.webp`} download>
+				Download
+			</a>
+		</Button>
 	),
 }));
 

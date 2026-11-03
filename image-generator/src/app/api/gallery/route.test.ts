@@ -14,6 +14,7 @@ test('returns the complete gallery list without caching the response', async () 
 			costUsd: 0.06,
 			createdAt: '2026-11-02T12:00:00Z',
 			previewUrl: 'https://test.public.blob.vercel-storage.com/previews/bicycle.webp',
+			imageUrl: 'https://test.public.blob.vercel-storage.com/images/bicycle.png',
 		},
 		{
 			id: '1',
@@ -21,6 +22,7 @@ test('returns the complete gallery list without caching the response', async () 
 			costUsd: null,
 			createdAt: null,
 			previewUrl: 'https://test.public.blob.vercel-storage.com/previews/scene.webp',
+			imageUrl: 'https://test.public.blob.vercel-storage.com/images/scene.png',
 		},
 	];
 	jest.mocked(getGalleryImages).mockResolvedValueOnce(images);

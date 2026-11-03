@@ -2,7 +2,6 @@ import type { ImageGeneratorGallery } from '@/generated/storyblok/types/109655/i
 import { resultFail, resultOk } from '@/lib/result';
 import { getImageGeneratorGalleryAction } from '@/modules/image-generator-gallery/image-generator-gallery.actions';
 import { storyblokEditable } from '@storyblok/react';
-import { type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { ImageGeneratorGalleryBlock } from './image-generator-gallery';
 
@@ -13,17 +12,6 @@ jest.mock('@/modules/image-generator-gallery/image-generator-gallery.actions', (
 jest.mock('@storyblok/react', () => ({
 	storyblokEditable: jest.fn(() => ({ 'data-blok-uid': '109655-gallery' })),
 }));
-
-jest.mock('@socialincome/design-system/overlays/dropdown-menu/dropdown-menu', () => {
-	const Container = ({ children }: { children: ReactNode }) => <>{children}</>;
-
-	return {
-		DropdownMenu: Container,
-		DropdownMenuTrigger: Container,
-		DropdownMenuContent: Container,
-		DropdownMenuItem: Container,
-	};
-});
 
 jest.mock('next-intl/server', () => {
 	const messages = jest.requireActual<typeof import('../../lib/i18n/locales/en/website-image-gallery.json')>(
@@ -43,18 +31,32 @@ const blok: ImageGeneratorGallery = { component: 'imageGeneratorGallery', _uid: 
 const blobHost = 'https://jjjjivv3brvymvql.public.blob.vercel-storage.com';
 
 beforeEach(() => jest.clearAllMocks());
+afterEach(() => jest.restoreAllMocks());
 
 test('renders editable gallery images in their supplied order with user prompts as alt text', async () => {
+	jest.replaceProperty(process, 'env', {
+		...process.env,
+		IMAGE_GENERATOR_URL: 'https://internal-generator.example.com',
+		IMAGE_GENERATOR_PASSWORD: 'server-only-generator-secret',
+	});
 	jest.mocked(getImageGeneratorGalleryAction).mockResolvedValueOnce(
 		resultOk([
 			{
 				id: '2',
 				prompt: 'A bicycle',
 				previewUrl: `${blobHost}/previews/bicycle.webp`,
+				imageUrl: `${blobHost}/images/bicycle.png`,
 				costUsd: 0.06,
 				createdAt: '2026-11-02T12:00:00Z',
 			},
-			{ id: '1', prompt: null, previewUrl: `${blobHost}/previews/scene.webp`, costUsd: null, createdAt: null },
+			{
+				id: '1',
+				prompt: null,
+				previewUrl: `${blobHost}/previews/scene.webp`,
+				imageUrl: null,
+				costUsd: null,
+				createdAt: null,
+			},
 		]),
 	);
 
@@ -76,9 +78,15 @@ test('renders editable gallery images in their supplied order with user prompts 
 	expect(markup).toContain('aria-label="Show image prompt"');
 	expect(markup).not.toContain('Delete image');
 	expect(markup).toContain('Download');
-	expect(markup).toContain(`href="${blobHost}/previews/bicycle.webp?download=1"`);
-	expect(markup).toContain(`href="${blobHost}/previews/scene.webp?download=1"`);
+	expect(markup).toContain(`href="${blobHost}/images/bicycle.png?download=1"`);
+	expect(markup.match(/<a\b[^>]*\bdownload=""/g)).toHaveLength(1);
+	expect(markup).not.toContain('/api/image-generator-gallery/');
+	expect(markup).not.toContain('Transparent background');
+	expect(markup).not.toContain(`href="${blobHost}/previews/scene.webp?download=1"`);
 	expect(markup).not.toContain('Edit image');
+	expect(markup).not.toContain('internal-generator.example.com');
+	expect(markup).not.toContain('server-only-generator-secret');
+	expect(markup).not.toContain('type="password"');
 	expect(storyblokEditable).toHaveBeenCalledWith(blok);
 	expect(getImageGeneratorGalleryAction).toHaveBeenCalledTimes(1);
 });
@@ -96,6 +104,7 @@ test('initially renders 24 images and offers a load-more button for the rest', a
 				id: String(index),
 				prompt: null,
 				previewUrl: `${blobHost}/previews/image-${index}.webp`,
+				imageUrl: null,
 				costUsd: 0.06,
 				createdAt: null,
 			})),

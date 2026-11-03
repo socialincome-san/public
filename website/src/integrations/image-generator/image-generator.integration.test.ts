@@ -8,6 +8,7 @@ const image = {
 	costUsd: 0.06,
 	createdAt: '2026-11-02T12:00:00Z',
 	previewUrl: 'https://jjjjivv3brvymvql.public.blob.vercel-storage.com/previews/bicycle.webp',
+	imageUrl: 'https://jjjjivv3brvymvql.public.blob.vercel-storage.com/images/bicycle.png',
 };
 
 beforeEach(() => {
@@ -21,6 +22,14 @@ beforeEach(() => {
 });
 
 afterEach(() => jest.restoreAllMocks());
+
+test.each([
+	'https://evil.example/images/original.png',
+	'https://jjjjivv3brvymvql.public.blob.vercel-storage.com/previews/original.webp',
+])('rejects untrusted original image URL %s', async (imageUrl) => {
+	jest.mocked(fetch).mockResolvedValueOnce(Response.json({ images: [{ ...image, imageUrl }] }));
+	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: false });
+});
 
 test('fetches validated images with server-side Basic Auth and no fetch cache or redirects', async () => {
 	const timeout = jest.spyOn(AbortSignal, 'timeout');
@@ -68,7 +77,7 @@ test('accepts older gallery responses without creation time', async () => {
 	);
 	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({
 		success: true,
-		data: [{ ...image, createdAt: null }],
+		data: [{ ...image, createdAt: null, imageUrl: null }],
 	});
 });
 

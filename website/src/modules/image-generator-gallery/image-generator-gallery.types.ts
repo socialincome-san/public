@@ -2,6 +2,7 @@ export type ImageGeneratorGalleryImage = {
 	id: string | number;
 	prompt: string | null;
 	previewUrl: string;
+	imageUrl: string | null;
 	costUsd: number | null;
 	createdAt: string | null;
 };

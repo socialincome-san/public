@@ -6,27 +6,29 @@ import { z } from 'zod';
 const BLOB_HOSTNAME = 'jjjjivv3brvymvql.public.blob.vercel-storage.com';
 const REQUEST_TIMEOUT_MS = 10_000;
 
-const previewUrlSchema = z.string().refine((value) => {
-	try {
-		const url = new URL(value);
+const blobUrlSchema = (folder: 'images' | 'previews') =>
+	z.string().refine((value) => {
+		try {
+			const url = new URL(value);
 
-		return (
-			url.protocol === 'https:' &&
-			url.hostname === BLOB_HOSTNAME &&
-			url.port === '' &&
-			url.username === '' &&
-			url.password === '' &&
-			url.pathname.startsWith('/previews/')
-		);
-	} catch {
-		return false;
-	}
-});
+			return (
+				url.protocol === 'https:' &&
+				url.hostname === BLOB_HOSTNAME &&
+				url.port === '' &&
+				url.username === '' &&
+				url.password === '' &&
+				url.pathname.startsWith(`/${folder}/`)
+			);
+		} catch {
+			return false;
+		}
+	});
 
 const galleryImageSchema = z.object({
 	id: z.union([z.string().min(1), z.number().int().positive()]),
 	prompt: z.string().nullable(),
-	previewUrl: previewUrlSchema,
+	previewUrl: blobUrlSchema('previews'),
+	imageUrl: blobUrlSchema('images').nullable().default(null),
 	costUsd: z.number().finite().nonnegative().nullable(),
 	createdAt: z.iso.datetime().nullable().default(null),
 });

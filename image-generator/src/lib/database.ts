@@ -12,7 +12,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const BATCH_SIZE = 24;
 
 type GalleryRow = Omit<GalleryImage, 'created_at'> & { created_at: Date | null };
-type GalleryPreview = Pick<GalleryImage, 'id' | 'prompt' | 'previewUrl'> & {
+type GalleryPreview = Pick<GalleryImage, 'id' | 'prompt' | 'previewUrl' | 'imageUrl'> & {
 	costUsd: number | null;
 	createdAt: string | null;
 };
@@ -58,7 +58,7 @@ export const getGalleryBatch = async (afterId?: string) => {
 
 export const getGalleryImages = async (): Promise<GalleryPreview[]> => {
 	const result = await pool.query<GalleryPreviewRow>(
-		`SELECT id, prompt, preview_url AS "previewUrl", cost_usd AS "costUsd", created_at AS "createdAt"
+		`SELECT id, prompt, preview_url AS "previewUrl", image_url AS "imageUrl", cost_usd AS "costUsd", created_at AS "createdAt"
 		FROM generated_images
 		WHERE status = 'active' AND image_url IS NOT NULL AND preview_url IS NOT NULL
 		ORDER BY created_at DESC NULLS LAST, id DESC`,

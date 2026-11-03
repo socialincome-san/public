@@ -129,6 +129,7 @@ test('loads all active gallery previews newest first and selects only the public
 		prompt: 'Style. Subject: A bicycle',
 		previewUrl: stored.previewUrl,
 		costUsd: 0.06,
+		imageUrl: stored.imageUrl,
 		createdAt: index === 0 ? new Date('2026-11-02T12:00:00Z') : null,
 	}));
 	mockQuery.mockResolvedValueOnce({ rows });
@@ -137,7 +138,7 @@ test('loads all active gallery previews newest first and selects only the public
 		rows.map((row) => ({ ...row, prompt: 'A bicycle', createdAt: row.createdAt?.toISOString() ?? null })),
 	);
 	expect(mockQuery).toHaveBeenCalledWith(
-		`SELECT id, prompt, preview_url AS "previewUrl", cost_usd AS "costUsd", created_at AS "createdAt"
+		`SELECT id, prompt, preview_url AS "previewUrl", image_url AS "imageUrl", cost_usd AS "costUsd", created_at AS "createdAt"
 		FROM generated_images
 		WHERE status = 'active' AND image_url IS NOT NULL AND preview_url IS NOT NULL
 		ORDER BY created_at DESC NULLS LAST, id DESC`,
