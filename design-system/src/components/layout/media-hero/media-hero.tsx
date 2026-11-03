@@ -125,7 +125,7 @@ const descriptionVariants = cva('', {
 	variants: {
 		variant: {
 			bold: 'text-xl',
-			light: 'text-2xl',
+			light: 'text-lg lg:text-2xl',
 		},
 	},
 });
