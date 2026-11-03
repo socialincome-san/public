@@ -38,7 +38,11 @@
 	},
 	"article": {
 		"keep-reading": "Lire la suite",
-		"from-original-language": "Traduit de"
+		"from-original-language": "Traduit de",
+		"author-cta": "En savoir plus sur {name}",
+		"author": "Auteur·rice",
+		"author-circles": "Actif·ve dans",
+		"author-article-count": "{count, plural, one {# article} other {# articles}}"
 	},
 	"teasers": {
 		"heading-prefix": "Histoires et actualités de ",

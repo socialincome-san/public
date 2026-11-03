@@ -57,6 +57,7 @@ import {
 	getJournalArticlePageData,
 	getJournalArticlesByArticleType,
 	getJournalArticlesByTag,
+	getJournalAuthorArticleCounts,
 	getJournalOverviewPageData,
 	getJournalPersonPageData,
 } from './journal.service';
@@ -186,7 +187,7 @@ describe('getJournalOverviewPageData', () => {
 });
 
 describe('getJournalArticlePageData', () => {
-	test('resolves related articles and article breadcrumbs', async () => {
+	test('resolves authors with their article count, related articles and article breadcrumbs', async () => {
 		const result = await getJournalArticlePageData({
 			lang: 'de',
 			currency: 'CHF',
@@ -199,16 +200,20 @@ describe('getJournalArticlePageData', () => {
 			success: true,
 			data: {
 				story: article,
+				authors: [{ person: author, articleCount: 2 }],
 				relatedArticles: [article],
 				breadcrumbs: [
 					{ label: 'Home', href: '/de/chf' },
 					{ label: 'Journal', href: '/de/chf/journal' },
 					{ label: 'A story', href: '/de/chf/journal/a-story' },
 				],
+				roleLabels: { editor: 'Editor' },
+				circleLabels: { 'tech-circle': 'tech-circle' },
 			},
 			status: undefined,
 		});
-		expect(mockGetRelativeArticles).toHaveBeenCalledWith('author-1', 1, ['tag-1'], 'de', 3);
+		expect(mockGetRelativeArticles).toHaveBeenCalledWith(['author-1'], 1, ['tag-1'], 'de', 3);
+		expect(mockGetArticleCountByAuthorForDefaultLang).toHaveBeenCalledWith('author-1');
 	});
 });
 
@@ -278,6 +283,30 @@ describe('getJournalPersonPageData', () => {
 				{ label: 'People', href: '/de/chf/people' },
 				{ label: 'Ada Lovelace', href: '/de/chf/person/ada' },
 			],
+		});
+	});
+});
+
+describe('getJournalAuthorArticleCounts', () => {
+	test('counts the articles of each author', async () => {
+		mockGetArticleCountByAuthorForDefaultLang.mockResolvedValueOnce({ success: true, data: 5 });
+
+		expect(await getJournalAuthorArticleCounts(['author-1', 'author-2'])).toEqual({
+			success: true,
+			data: { 'author-1': 5, 'author-2': 2 },
+		});
+	});
+
+	test('fails when a count cannot be loaded', async () => {
+		mockGetArticleCountByAuthorForDefaultLang.mockResolvedValueOnce({
+			success: false,
+			error: 'Storyblok error',
+			status: 500,
+		});
+
+		expect(await getJournalAuthorArticleCounts(['author-1', 'author-2'])).toMatchObject({
+			success: false,
+			error: 'Could not load author article counts',
 		});
 	});
 });
