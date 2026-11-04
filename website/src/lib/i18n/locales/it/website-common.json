@@ -58,6 +58,8 @@
 		"no-results": "Nessun partner locale corrisponde ai filtri selezionati.",
 		"search-label": "Cerca partner locali",
 		"search-placeholder": "Cerca",
+		"search-placeholder-count": "Cerca tra {count, plural, one {# partner} other {# partner}}",
+		"local-partner-count": "{count, plural, one {# partner} other {# partner}}",
 		"all-countries": "Tutti i paesi ({count})",
 		"recipient-singular": "beneficiario",
 		"recipient-plural": "beneficiari",
@@ -98,6 +100,8 @@
 		"load-stats-error": "Impossibile caricare le statistiche dei focus.",
 		"search-label": "Cerca focus",
 		"search-placeholder": "Cerca",
+		"search-placeholder-count": "Cerca tra {count, plural, one {# focus} other {# focus}}",
+		"focus-count": "{count, plural, one {# focus} other {# focus}}",
 		"all-countries": "Tutti i paesi ({count})",
 		"all-sdgs": "Tutti gli SDG ({count})",
 		"recipients": "Beneficiari",
@@ -119,6 +123,8 @@
 		"empty": "Nessun programma trovato.",
 		"search-label": "Cerca programmi",
 		"search-placeholder": "Cerca",
+		"search-placeholder-count": "Cerca tra {count, plural, one {# programma} other {# programmi}}",
+		"program-count": "{count, plural, one {# programma} other {# programmi}}",
 		"all-countries": "Tutti i paesi ({count})",
 		"all-focuses": "Tutti i focus ({count})",
 		"view-all": "Visualizza tutti i {count} programmi",
@@ -241,6 +247,7 @@
 		"month-singular": "mese",
 		"month-plural": "mesi",
 		"start-date": "Data di inizio",
+		"program-status": "Stato del programma",
 		"view-demographics": "Vedi dati demografici",
 		"program-recipients-title": "Beneficiari del programma",
 		"completed-surveys": "Sondaggi completati",
@@ -279,15 +286,16 @@
 	},
 	"campaigns-page": {
 		"empty": "Nessuna campagna trovata.",
+		"search-label": "Cerca campagne",
+		"search-placeholder": "Cerca",
+		"search-placeholder-count": "Cerca tra {count, plural, one {# campagna} other {# campagne}}",
+		"campaign-count": "{count, plural, one {# campagna} other {# campagne}}",
 		"contribution-singular": "contributo",
 		"contribution-plural": "contributi",
 		"day-left-singular": "giorno rimanente",
 		"day-left-plural": "giorni rimanenti",
 		"raised-percentage": "{percentage}% raccolti ({currency})",
 		"about": "Informazioni su",
-		"all-states": "Tutte",
-		"state-active": "Attiva",
-		"state-inactive": "Inattiva",
 		"create-campaign": "Crea campagna",
 		"submission": {
 			"program-step-title": "Per quale programma vorresti creare una campagna?",
@@ -418,6 +426,11 @@
 	"task-cards": {
 		"show-all": "Mostra tutte le {count} attività",
 		"show-fewer": "Mostra meno attività"
+	},
+	"status-filter": {
+		"all": "Tutti gli stati ({count})",
+		"active": "Attivo",
+		"concluded": "Concluso"
 	},
 	"breadcrumb": {
 		"home": "Inizio"

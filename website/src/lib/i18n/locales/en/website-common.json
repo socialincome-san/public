@@ -58,6 +58,8 @@
 		"no-results": "No local partners match the selected filters.",
 		"search-label": "Search local partners",
 		"search-placeholder": "Search",
+		"search-placeholder-count": "Search {count, plural, one {# partner} other {# partners}}",
+		"local-partner-count": "{count, plural, one {# partner} other {# partners}}",
 		"all-countries": "All countries ({count})",
 		"recipient-singular": "recipient",
 		"recipient-plural": "recipients",
@@ -98,6 +100,8 @@
 		"load-stats-error": "Could not load focus statistics.",
 		"search-label": "Search focuses",
 		"search-placeholder": "Search",
+		"search-placeholder-count": "Search {count, plural, one {# focus} other {# focuses}}",
+		"focus-count": "{count, plural, one {# focus} other {# focuses}}",
 		"all-countries": "All countries ({count})",
 		"all-sdgs": "All SDGs ({count})",
 		"recipients": "Recipients",
@@ -119,6 +123,8 @@
 		"empty": "No programs found.",
 		"search-label": "Search programs",
 		"search-placeholder": "Search",
+		"search-placeholder-count": "Search {count, plural, one {# program} other {# programs}}",
+		"program-count": "{count, plural, one {# program} other {# programs}}",
 		"all-countries": "All countries ({count})",
 		"all-focuses": "All focuses ({count})",
 		"view-all": "View all {count} programs",
@@ -241,6 +247,7 @@
 		"month-singular": "month",
 		"month-plural": "months",
 		"start-date": "Start date",
+		"program-status": "Program status",
 		"view-demographics": "View demographics",
 		"program-recipients-title": "Program Recipients",
 		"completed-surveys": "Completed surveys",
@@ -279,15 +286,16 @@
 	},
 	"campaigns-page": {
 		"empty": "No campaigns found.",
+		"search-label": "Search campaigns",
+		"search-placeholder": "Search",
+		"search-placeholder-count": "Search {count, plural, one {# campaign} other {# campaigns}}",
+		"campaign-count": "{count, plural, one {# campaign} other {# campaigns}}",
 		"contribution-singular": "contribution",
 		"contribution-plural": "contributions",
 		"day-left-singular": "day left",
 		"day-left-plural": "days left",
 		"raised-percentage": "{percentage}% raised ({currency})",
 		"about": "About",
-		"all-states": "All",
-		"state-active": "Active",
-		"state-inactive": "Inactive",
 		"create-campaign": "Create campaign",
 		"submission": {
 			"program-step-title": "Which program would you like to create a campaign for?",
@@ -418,6 +426,11 @@
 	"task-cards": {
 		"show-all": "Show all {count} tasks",
 		"show-fewer": "Show fewer tasks"
+	},
+	"status-filter": {
+		"all": "All statuses ({count})",
+		"active": "Active",
+		"concluded": "Concluded"
 	},
 	"breadcrumb": {
 		"home": "Home"

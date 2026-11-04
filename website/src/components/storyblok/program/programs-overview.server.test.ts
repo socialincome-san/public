@@ -1,12 +1,14 @@
-import type { PublicProgramFilterDataMap } from '@/modules/programs/program.types';
+import type { PublicProgramFilterDataMap, PublicProgramStatsMap } from '@/modules/programs/program.types';
 import type { ProgramStory } from './program.types';
 import {
 	getCountryFilterOptions,
 	getFilterDataForPrograms,
 	getFocusIdBySlug,
 	getFocusQuery,
+	getProgramStatus,
 	programMatchesFocusQuery,
 	programMatchesSearchQuery,
+	programMatchesStatusQuery,
 } from './programs-overview.server';
 
 const createProgram = ({ portalSlug, title, description }: { portalSlug: string; title: string; description: string }) =>
@@ -95,5 +97,34 @@ describe('programs overview server helpers', () => {
 		const searchFilteredPrograms = focusScopedPrograms.filter((program) => programMatchesSearchQuery(program, 'cash kenya'));
 
 		expect(searchFilteredPrograms.map((program) => program.content.portalSlug)).toEqual(['kenya-health']);
+	});
+
+	test('filters programs by status, counting programs without stats as active', () => {
+		const createStats = (isConcluded: boolean) => ({
+			campaignsCount: 1,
+			recipientsCount: 10,
+			countryIsoCode: 'KE' as const,
+			payoutCurrency: 'KES' as const,
+			totalPayoutsSum: 0,
+			totalPayoutsSumChf: 0,
+			isConcluded,
+		});
+		const statsByPortalSlug: PublicProgramStatsMap = {
+			'kenya-health': createStats(true),
+			'sierra-leone-health': createStats(false),
+		};
+		const portalSlugsWithStatus = (status: 'active' | 'concluded') =>
+			programs
+				.filter((program) => programMatchesStatusQuery(program, statsByPortalSlug, status))
+				.map((program) => program.content.portalSlug);
+
+		expect(portalSlugsWithStatus('concluded')).toEqual(['kenya-health']);
+		expect(portalSlugsWithStatus('active')).toEqual(['sierra-leone-health', 'switzerland-education']);
+		expect(programs.filter((program) => programMatchesStatusQuery(program, statsByPortalSlug, undefined))).toHaveLength(3);
+		expect(programs.map((program) => getProgramStatus(program, statsByPortalSlug))).toEqual([
+			'concluded',
+			'active',
+			'active',
+		]);
 	});
 });

@@ -63,6 +63,7 @@ type PartyRowsByRole = Partial<Record<PartyRole, ProgramAboutDetailRow>>;
 type ProgramDesignRows = {
 	duration?: ProgramAboutDetailRow;
 	startDate?: ProgramAboutDetailRow;
+	status?: ProgramAboutDetailRow;
 	paymentAmount?: ProgramAboutDetailRow;
 };
 
@@ -107,6 +108,7 @@ const buildPartyRowsByRole = (
 const buildProgramDesignRows = (
 	programDetails: NonNullable<ProgramDetailData['programDetails']>,
 	durationMonths: number | undefined,
+	isConcluded: boolean | undefined,
 	lang: WebsiteLanguage,
 	locale: string,
 	t: ProgramAboutTranslator,
@@ -127,6 +129,13 @@ const buildProgramDesignRows = (
 		};
 	}
 
+	if (isConcluded !== undefined) {
+		programDesignRows.status = {
+			label: t('program-detail-page.program-status'),
+			value: isConcluded ? t('status-filter.concluded') : t('status-filter.active'),
+		};
+	}
+
 	if (programDetails.payoutPerInterval !== undefined && programDetails.payoutCurrency && programDetails.payoutInterval) {
 		programDesignRows.paymentAmount = {
 			label: t('program-detail-page.payment-amount'),
@@ -144,13 +153,16 @@ const buildProgramDesignRows = (
 };
 
 const programDesignRowsToOverlayArray = (programDesignRows: ProgramDesignRows): ProgramAboutDetailRow[] =>
-	[programDesignRows.duration, programDesignRows.startDate, programDesignRows.paymentAmount].filter(
-		(row): row is ProgramAboutDetailRow => row !== undefined,
-	);
+	[
+		programDesignRows.duration,
+		programDesignRows.startDate,
+		programDesignRows.status,
+		programDesignRows.paymentAmount,
+	].filter((row): row is ProgramAboutDetailRow => row !== undefined);
 
 const deriveCardRows = (partyRowsByRole: PartyRowsByRole, programDesignRows: ProgramDesignRows): ProgramAboutDetailRow[] => [
 	...partyRowsToOrderedArray(partyRowsByRole, CARD_PARTY_ORDER),
-	...[programDesignRows.duration, programDesignRows.startDate].filter(
+	...[programDesignRows.duration, programDesignRows.startDate, programDesignRows.status].filter(
 		(row): row is ProgramAboutDetailRow => row !== undefined,
 	),
 ];
@@ -162,7 +174,7 @@ export const buildProgramAboutContent = ({
 	currency,
 	countryName,
 }: BuildProgramAboutContentInput): ProgramAboutContent => {
-	const { description, programDetails, dashboardStats } = programDetailData;
+	const { description, programDetails, dashboardStats, stats } = programDetailData;
 	const locale = getSafeNumberFormatLocale(lang);
 	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails?.programDurationInMonths;
 	const localPartnerHref = programDetails?.localPartnerSlug
@@ -174,7 +186,7 @@ export const buildProgramAboutContent = ({
 
 	if (programDetails) {
 		const partyRowsByRole = buildPartyRowsByRole(programDetails, localPartnerHref, t);
-		const programDesignRows = buildProgramDesignRows(programDetails, durationMonths, lang, locale, t);
+		const programDesignRows = buildProgramDesignRows(programDetails, durationMonths, stats?.isConcluded, lang, locale, t);
 
 		const partiesRows = partyRowsToOrderedArray(partyRowsByRole, OVERLAY_PARTY_ORDER);
 		if (partiesRows.length > 0) {

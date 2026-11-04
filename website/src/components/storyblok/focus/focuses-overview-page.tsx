@@ -1,6 +1,7 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { showsFilterBar } from '@/components/filters/filter-query';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { FocusesOverview } from '@/components/storyblok/focus/focuses-overview';
 import type { FocusOverview } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -24,6 +25,7 @@ export const FocusesOverviewPage = async ({ overview, lang, currency, searchPara
 	const focuses = (focusesResult.success ? focusesResult.data : []) as FocusStory[];
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
+	const showFilters = showsFilterBar(overview.content);
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: title,
@@ -39,7 +41,13 @@ export const FocusesOverviewPage = async ({ overview, lang, currency, searchPara
 				<div className="flex w-full flex-col gap-8">
 					<PageIntro title={title} description={text} />
 					<Suspense fallback={<AppLoadingSkeleton />}>
-						<FocusesOverview focuses={focuses} lang={lang} currency={currency} searchParams={searchParams} />
+						<FocusesOverview
+							focuses={focuses}
+							lang={lang}
+							currency={currency}
+							searchParams={showFilters ? searchParams : Promise.resolve({})}
+							showFilters={showFilters}
+						/>
 					</Suspense>
 				</div>
 			</BlockWrapper>
