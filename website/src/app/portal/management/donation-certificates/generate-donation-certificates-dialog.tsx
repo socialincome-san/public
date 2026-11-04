@@ -153,7 +153,7 @@ export default function GenerateDonationCertificatesDialog({
 						{isLoading ? 'Generating...' : 'Generate Certificates'}
 					</Button>
 					{Boolean(success ?? error) && (
-						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
+						<div className="bg-muted border-border rounded-lg border p-2 text-xs">
 							{success && <p className="text-confirm text-sm">{success}</p>}
 							{error && <p className="text-destructive text-sm">{error}</p>}
 						</div>
