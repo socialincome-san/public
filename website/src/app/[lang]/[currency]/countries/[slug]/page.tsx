@@ -29,9 +29,9 @@ export default async function CountryPage({ params }: DefaultLayoutPropsWithSlug
 		getCountryPageStats(countryResult.data.content.isoCode.toString()),
 		getCommunityPanelData(pickCommunityPage(countryResult.data.content), lang, toWebsiteCurrency(currency)),
 	]);
-	const { activeProgramsCount, recipientsCount } = statsResult.success
+	const { activeProgramsCount, recipientsCount, candidatesCount } = statsResult.success
 		? statsResult.data
-		: { activeProgramsCount: 0, recipientsCount: 0 };
+		: { activeProgramsCount: 0, recipientsCount: 0, candidatesCount: 0 };
 
 	return (
 		<CountryDetail
@@ -40,6 +40,7 @@ export default async function CountryPage({ params }: DefaultLayoutPropsWithSlug
 			currency={toWebsiteCurrency(currency)}
 			activeProgramsCount={activeProgramsCount}
 			recipientsCount={recipientsCount}
+			candidatesCount={candidatesCount}
 			community={communityResult.success ? communityResult.data : null}
 		/>
 	);

@@ -8,6 +8,7 @@ const mockFindPaginatedCountries = jest.fn();
 const mockFindCountriesForFeasibility = jest.fn();
 const mockFindUnassignedRecipientCountries = jest.fn();
 const mockFindPublicCountryStats = jest.fn();
+const mockCountCandidatesForLocalPartnerCountry = jest.fn();
 const mockFindCountryByIsoCode = jest.fn();
 const mockCreateCountry = jest.fn();
 const mockUpdateCountry = jest.fn();
@@ -20,6 +21,7 @@ jest.mock('@/modules/users/user.service', () => ({
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
 	getUnassignedRecipientCountries: mockFindUnassignedRecipientCountries,
+	countCandidatesForLocalPartnerCountry: mockCountCandidatesForLocalPartnerCountry,
 }));
 
 jest.mock('@/integrations/world-bank/world-bank.integration', () => ({
@@ -41,7 +43,12 @@ jest.mock('./country.repository.write', () => ({
 	deleteCountry: mockDeleteCountry,
 }));
 
-import { deleteCountry, getPaginatedCountryTableView, getProgramCountryFeasibility } from './country.service';
+import {
+	deleteCountry,
+	getCountryPageStats,
+	getPaginatedCountryTableView,
+	getProgramCountryFeasibility,
+} from './country.service';
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -129,6 +136,32 @@ describe('country service', () => {
 		expect(data.rows.find((row) => row.id === 'country-sl')?.stats.candidateCount).toBe(1);
 		expect(data.rows.find((row) => row.id === 'country-ke')?.stats.candidateCount).toBe(2);
 		expect(data.rows.find((row) => row.id === 'country-ug')?.stats.candidateCount).toBe(0);
+	});
+
+	test('counts candidates by local partner country on the country page', async () => {
+		mockFindPublicCountryStats.mockResolvedValue([
+			{ ...createCountry('country-sl', 'SL'), programs: [{ _count: { recipients: 4 } }], _count: { programs: 1 } },
+		]);
+		mockCountCandidatesForLocalPartnerCountry.mockResolvedValue({ success: true, data: 3 });
+
+		const data = expectSuccess(await getCountryPageStats('sl'));
+
+		expect(data).toEqual({ activeProgramsCount: 1, recipientsCount: 4, candidatesCount: 3 });
+		expect(mockCountCandidatesForLocalPartnerCountry).toHaveBeenCalledWith('SL');
+	});
+
+	test('fails the country page stats when the candidate count fails', async () => {
+		mockFindPublicCountryStats.mockResolvedValue([
+			{ ...createCountry('country-sl', 'SL'), programs: [{ _count: { recipients: 4 } }], _count: { programs: 1 } },
+		]);
+		mockCountCandidatesForLocalPartnerCountry.mockResolvedValue({
+			success: false,
+			error: 'Could not count candidates',
+		});
+
+		const result = await getCountryPageStats('SL');
+
+		expect(result.success).toBe(false);
 	});
 });
 

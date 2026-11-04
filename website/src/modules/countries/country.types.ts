@@ -126,6 +126,7 @@ export type CountryStatisticRow = {
 export type CountryPageStats = {
 	activeProgramsCount: number;
 	recipientsCount: number;
+	candidatesCount: number;
 };
 
 export const NETWORK_TECH_LABELS: Record<NetworkTechnology, string> = {
