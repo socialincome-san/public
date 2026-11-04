@@ -1,11 +1,12 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[currency]';
+import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
 import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { pickCommunityPage } from '@/components/community/pick-community-page';
 import { FocusDetail } from '@/components/storyblok/focus/focus-detail';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { toWebsiteCurrency } from '@/lib/i18n/utils';
-import { getWebsiteAlternates } from '@/lib/utils/metadata';
+import { getTitleAndTextMetadata } from '@/lib/storyblok/storyblok-utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
 import { getFocusBySlug } from '@/modules/storyblok-content/storyblok-content.cache';
 import { notFound } from 'next/navigation';
@@ -17,7 +18,13 @@ export const generateStaticParams = () => getPublishedSlugParams('focuses');
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;
 
-	return getWebsiteAlternates(lang as WebsiteLanguage, `focuses/${slug}`);
+	const focusResult = await getFocusBySlug(slug, lang);
+
+	return getPageMetadata(
+		lang as WebsiteLanguage,
+		`focuses/${slug}`,
+		focusResult.success ? getTitleAndTextMetadata(focusResult.data) : {},
+	);
 };
 
 export default async function FocusPage({ params, searchParams }: FocusPageProps) {

@@ -1,11 +1,12 @@
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultCurrency, defaultLanguage, getWebsiteBasePath, type WebsiteCurrency } from '@/lib/i18n/utils';
+import { type WebsitePageMetadata } from '@/lib/utils/metadata';
 import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataImage, WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
 import { humanizeIdentifier, slugify } from '@/lib/utils/string-utils';
+import { getArticleStructuredData } from '@/lib/utils/structured-data';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
-import type { Metadata } from 'next';
 import type { ResolvedArticle } from './storyblok-article';
 import { normalizeStoryblokFocusForImageService } from './storyblok-image-focus';
 import {
@@ -162,7 +163,7 @@ export const formatStoryblokResizeUrl = (url: string, width: number, height: num
 	return `${url}?_ratio=${ratio}`;
 };
 
-export const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) =>
+const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) =>
 	`${url}/m/${width}x${height}${focus ? `/filters:focal(${normalizeStoryblokFocusForImageService(focus)})` : '/smart'}`;
 
 const STORYBLOK_SPACE_TIMEZONE = 'Europe/Zurich';
@@ -271,9 +272,6 @@ export const createWebsiteCirclePath = (circleCode: string, language: string, cu
 export const createWebsitePeoplePath = (language: string, currency: WebsiteCurrency) =>
 	createWebsitePath(language, currency, WEBSITE_PEOPLE_PATH_SEGMENT);
 
-export const createWebsiteJournalArticleCanonicalUrl = (slug: string, language: string) =>
-	`${WEBSITE_ORIGIN}${getWebsiteBasePath(language, defaultCurrency)}/journal/${slug}`;
-
 export const resolveStoryblokLink = (
 	link: StoryblokMultilink | undefined,
 	language: string,
@@ -298,53 +296,83 @@ export const resolveStoryblokLink = (
 	return getWebsitePublicPath(language, currency, getWebsitePathTailFromStoryblokSlug(withoutLanguage));
 };
 
-export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>, url: string): Metadata => {
+const METADATA_IMAGE_WIDTH = 1200;
+const METADATA_IMAGE_HEIGHT = 630;
+
+const isStoryblokAssetUrl = (url: string) => {
+	try {
+		return new URL(url).hostname.endsWith('.storyblok.com');
+	} catch {
+		return false;
+	}
+};
+
+// Without an image the page falls back to the default share image of its language. Only Storyblok's own assets can
+// be cropped; an external URL is used as it is, without guessing its size.
+export const getStoryblokMetadataImage = (
+	asset: { filename?: string | null; focus?: string | null; alt?: string | null } | null | undefined,
+	fallbackAlt?: string,
+) => {
+	if (!asset?.filename) {
+		return undefined;
+	}
+	const alt = asset.alt?.trim() ? asset.alt.trim() : fallbackAlt;
+	const image = isStoryblokAssetUrl(asset.filename)
+		? {
+				url: formatStoryblokUrlDirect(asset.filename, METADATA_IMAGE_WIDTH, METADATA_IMAGE_HEIGHT, asset.focus),
+				width: METADATA_IMAGE_WIDTH,
+				height: METADATA_IMAGE_HEIGHT,
+			}
+		: { url: asset.filename };
+
+	return toProductionMetadataImage({ ...image, ...(alt ? { alt } : {}) }, DEFAULT_OPEN_GRAPH_IMAGE_URL);
+};
+
+const getArticleAuthorName = (article: ResolvedArticle) =>
+	`${article.author.content.firstName} ${article.author.content.lastName}`;
+
+const getArticleAuthorUrl = (story: ISbStoryData<ResolvedArticle>, language: string) =>
+	`${WEBSITE_ORIGIN}${createWebsitePersonLink(story.content.author.slug, language, defaultCurrency)}`;
+
+export const getArticlePageMetadata = (story: ISbStoryData<ResolvedArticle>, language: string) => {
 	const article = story.content;
-	const authorsFullName = `${article.author.content.firstName} ${article.author.content.lastName}`;
-	const imageFilename = article.image?.filename;
-	const tags = article.tags?.map((tag) => tag.content.value).join(', ');
-	const dimensions = imageFilename ? getDimensionsFromStoryblokImageUrl(imageFilename) : {};
-	const imageMetaData =
-		imageFilename && dimensions.width && dimensions.height
-			? {
-					url: formatStoryblokUrlDirect(
-						imageFilename,
-						dimensions.width,
-						dimensions.height,
-						article.image.focus ?? undefined,
-					),
-					width: dimensions.width,
-					height: dimensions.height,
-				}
-			: undefined;
-	const metadataImage = toProductionMetadataImage(imageMetaData, DEFAULT_OPEN_GRAPH_IMAGE_URL);
+	const tags = article.tags?.map((tag) => tag.content.value) ?? [];
 
 	return {
 		title: article.title,
 		description: article.leadText,
+		image: getStoryblokMetadataImage(article.image, article.title),
 		keywords: tags,
-		authors: { name: authorsFullName },
-		openGraph: {
-			title: article.title,
-			description: article.leadText,
-			images: metadataImage,
-			url,
-			type: 'article',
+		authors: { name: getArticleAuthorName(article) },
+		article: {
+			publishedTime: formatStoryblokDateToIso(story.first_published_at) || undefined,
+			modifiedTime: formatStoryblokDateToIso(story.updated_at) || undefined,
+			authors: [getArticleAuthorUrl(story, language)],
+			section: 'Journal',
+			tags,
 		},
-		twitter: {
-			title: article.title,
-			description: article.leadText,
-			images: metadataImage,
-			card: 'summary_large_image',
-			site: '@so_income',
-			creator: '@so_income',
-		},
-		other: {
-			'article:published_time': formatStoryblokDateToIso(story.first_published_at),
-			'article:modified_time': formatStoryblokDateToIso(story.updated_at),
-			'article:author': authorsFullName,
-			'article:section': 'News',
-			...(tags ? { 'article:tag': tags } : {}),
-		},
-	};
+	} satisfies WebsitePageMetadata;
 };
+
+export const getArticlePageStructuredData = (
+	story: ISbStoryData<ResolvedArticle>,
+	language: string,
+	canonicalPath: string,
+) => {
+	const image = getStoryblokMetadataImage(story.content.image);
+
+	return getArticleStructuredData({
+		url: `${WEBSITE_ORIGIN}${canonicalPath}`,
+		headline: story.content.title,
+		description: story.content.leadText?.trim(),
+		image: image === undefined ? DEFAULT_OPEN_GRAPH_IMAGE_URL : typeof image === 'string' ? image : image.url,
+		datePublished: formatStoryblokDateToIso(story.first_published_at),
+		dateModified: formatStoryblokDateToIso(story.updated_at),
+		author: { name: getArticleAuthorName(story.content), url: getArticleAuthorUrl(story, language) },
+	});
+};
+
+export const getTitleAndTextMetadata = (story: ISbStoryData<{ title?: string; text?: string }>) => ({
+	title: story.content.title?.trim() ? story.content.title.trim() : story.name,
+	description: story.content.text,
+});
