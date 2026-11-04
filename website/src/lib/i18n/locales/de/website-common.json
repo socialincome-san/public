@@ -92,6 +92,36 @@
 		"opens-in-new-tab": "(öffnet in einem neuen Tab)",
 		"website": "Website"
 	},
+	"downloads": {
+		"all-years": "Alle Jahre ({count})",
+		"all-documents": "Alle Dokumente ({count})",
+		"document-count": "{count, plural, one {# Dokument} other {# Dokumente}}",
+		"categories": {
+			"annual-report": "Jahresbericht",
+			"financial-statement": "Jahresrechnung",
+			"audit-report": "Revisionsbericht",
+			"certification": "Zertifizierung"
+		},
+		"search-label": "Dokumente durchsuchen",
+		"search-placeholder": "Suchen",
+		"no-results": "Keine Dokumente entsprechen deiner Suche.",
+		"download-label": "{title} auf {language} herunterladen",
+		"languages": {
+			"en": "Englisch",
+			"de": "Deutsch",
+			"en+de": "Englisch & Deutsch"
+		},
+		"languages-short": {
+			"en": "EN",
+			"de": "DE",
+			"en+de": "EN/DE"
+		},
+		"board-approval": {
+			"message": "{count, plural, one {Dieses Dokument wurde} other {Diese Dokumente wurden}} von unserem Vorstand geprüft und genehmigt.",
+			"approved": "Vom Vorstand genehmigt",
+			"link": "Unser Vorstand"
+		}
+	},
 	"focuses-page": {
 		"empty": "Keine Schwerpunkte gefunden.",
 		"no-results": "Keine Schwerpunkte entsprechen den ausgewählten Filtern.",

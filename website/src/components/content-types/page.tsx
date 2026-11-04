@@ -71,7 +71,7 @@ const renderPageBlock = (
 		case 'donationsTotal':
 			return <DonationsTotalBlockServer blok={block} lang={lang} currency={currency} />;
 		case 'downloads':
-			return <DownloadsBlock blok={block} />;
+			return <DownloadsBlock blok={block} lang={lang} currency={currency} searchParams={searchParams} />;
 		case 'explainerVideoHeader':
 			return <ExplainerVideoHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'faqSelection':
@@ -164,6 +164,9 @@ const renderPageBlock = (
 			return <VideoTextBlock blok={block} />;
 		case 'runwayMonthGrid':
 			return <RunwayMonthGridBlock blok={block} lang={lang} />;
+		// Already in Storyblok; its renderer comes with feature/country-office
+		case 'countryOffice':
+			return null;
 		default:
 			block satisfies never;
 
