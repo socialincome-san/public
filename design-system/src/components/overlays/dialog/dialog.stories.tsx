@@ -12,7 +12,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'A centered dialog on desktop and a bottom drawer on mobile (below the `sm` breakpoint) that closes with a swipe down. `size` only sets the desktop width: `sm` for confirmations and short messages, `md` for forms and content, `lg` for editors, wizards and media. Turn `dismissible` off while work is in flight, so nothing closes it halfway.',
+					'A centered dialog on desktop and a bottom drawer on mobile (below the `sm` breakpoint) that closes with a swipe down. `size` only sets the desktop width: `sm` for confirmations and short messages, `md` for forms and content, `lg` for editors, wizards and media, `xl` for workspaces such as image editors (with `height="full"`). Turn `dismissible` off while work is in flight, so nothing closes it halfway. Turn `drawerOnMobile` off when the content has its own drag gestures.',
 			},
 		},
 	},
@@ -93,6 +93,34 @@ const ScrollingDialogExample = () => {
 
 export const ScrollingBody: Story = {
 	render: () => <ScrollingDialogExample />,
+};
+
+const WorkspaceExample = () => {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Open workspace</Button>
+			<Dialog open={open} onOpenChange={setOpen} drawerOnMobile={false}>
+				<DialogContent size="xl" height="full">
+					<DialogHeader>
+						<DialogTitle size="lg">Edit image</DialogTitle>
+						<DialogDescription>Stays a dialog on mobile, so dragging inside it does not close it.</DialogDescription>
+					</DialogHeader>
+					<DialogBody>
+						<div className="bg-muted flex-1 rounded-2xl" />
+					</DialogBody>
+					<DialogFooter>
+						<Button onClick={() => setOpen(false)}>Done</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</>
+	);
+};
+
+export const Workspace: Story = {
+	render: () => <WorkspaceExample />,
 };
 
 const ConfirmationExample = () => {

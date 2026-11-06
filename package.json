@@ -19,7 +19,7 @@
 		},
 		"protobufjs": "8.8.1",
 		"uuid": "14.0.2",
-		"tabbable": "6.5.0",
+		"tabbable": "6.5.1",
 		"nanoid": "6.0.2"
 	}
 }
