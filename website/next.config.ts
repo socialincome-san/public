@@ -35,6 +35,11 @@ const nextConfig: NextConfig = {
 				hostname: 'avatars.githubusercontent.com',
 				pathname: '/**',
 			},
+			{
+				protocol: 'https',
+				hostname: 'jjjjivv3brvymvql.public.blob.vercel-storage.com',
+				pathname: '/previews/**',
+			},
 		],
 		loader: 'custom',
 		loaderFile: './src/lib/utils/storyblock-image-loader.ts',
