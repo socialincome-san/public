@@ -23,6 +23,8 @@ const buttonVariants = cva(
 				secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
 				foreground: 'bg-foreground text-primary-foreground shadow-xs hover:bg-foreground/90',
 				ghost: 'hover:bg-accent hover:text-accent-foreground',
+				// Matches the site header menu triggers
+				nav: 'font-bold hover:bg-muted data-[state=open]:bg-muted',
 				link: 'text-primary underline-offset-4 hover:underline',
 				confirmed: 'bg-confirm text-confirm-foreground shadow-xs hover:bg-confirm/90',
 			},
@@ -31,6 +33,7 @@ const buttonVariants = cva(
 				default: 'px-6 py-3 text-center whitespace-normal sm:whitespace-nowrap',
 				sm: 'h-8 px-3 text-xs whitespace-nowrap',
 				md: 'h-10 px-4 whitespace-nowrap',
+				nav: 'h-9 px-3 whitespace-nowrap',
 				lg: 'h-10 px-8 whitespace-nowrap',
 				'icon-sm': 'size-8',
 				icon: 'size-9',

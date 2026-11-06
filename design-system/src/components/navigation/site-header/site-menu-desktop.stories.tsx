@@ -23,28 +23,65 @@ export const Default: Story = {
 		entries: [
 			{
 				type: 'dropdown',
+				id: 'who-we-support',
+				label: 'Who we support',
+				groups: [
+					{
+						id: 'programs',
+						label: 'Programs',
+						subtitle: '19 active programs',
+						links: [
+							{ id: 'mothers', label: 'Mothers and Newborns', href: '/en/usd/programs/mothers' },
+							{ id: 'skills', label: 'Skills for Sustainability', href: '/en/usd/programs/skills' },
+						],
+						overview: { label: 'Show all 19', href: '/en/usd/programs' },
+					},
+					{
+						id: 'focuses',
+						label: 'Our focus areas',
+						subtitle: '16 focus areas',
+						links: [{ id: 'poverty', label: 'Poverty', href: '/en/usd/focuses/poverty' }],
+						overview: { label: 'Show all 16', href: '/en/usd/focuses' },
+					},
+					{
+						id: 'local-partners',
+						label: 'Local Partners',
+						subtitle: '16 partners',
+						links: [{ id: 'aurora', label: 'Aurora Foundation', href: '/en/usd/local-partners/aurora' }],
+						overview: { label: 'Show all 16', href: '/en/usd/local-partners' },
+					},
+				],
+				footer: {
+					label: '102 recipients in:',
+					countries: [
+						{ id: 'sl', country: 'SL', label: 'Sierra Leone (47)', href: '/en/usd/countries/sierra-leone' },
+						{ id: 'lr', country: 'LR', label: 'Liberia (32)', href: '/en/usd/countries/liberia' },
+					],
+					overview: { label: 'All countries', href: '/en/usd/countries' },
+				},
+			},
+			{
+				type: 'dropdown',
 				id: 'about',
 				label: 'About us',
 				groups: [
 					{
 						id: 'organisation',
-						label: 'Organisation',
+						label: 'Social Income',
+						subtitle: '65 volunteers',
 						links: [
-							{ id: 'team', label: 'Team', href: '/en/usd/about-us/team' },
-							{ id: 'finances', label: 'Finances', href: '/en/usd/about-us/finances' },
+							{ id: 'donate', label: 'Donate', href: '/en/usd', onSelect: () => undefined },
+							{ id: 'team', label: 'Our Team', href: '/en/usd/people' },
 						],
-						overview: { label: 'All about us', href: '/en/usd/about-us' },
-					},
-					{
-						id: 'programs',
-						label: 'Programs',
-						links: [{ id: 'sierra-leone', label: 'Sierra Leone', href: '/en/usd/programs/sierra-leone' }],
 					},
 				],
+				footer: {
+					label: 'News from Social Income by email.',
+					overview: { label: 'Subscribe to the newsletter', href: '/en/usd/newsletter' },
+					overviewInline: true,
+				},
 			},
 			{ type: 'link', id: 'journal', label: 'Journal', href: '/en/usd/journal' },
-			{ type: 'link', id: 'github', label: 'GitHub', href: 'https://github.com/socialincome-san/public', newTab: true },
 		],
-		dropdownAside: <div className="bg-card text-muted-foreground rounded-3xl p-6 text-sm">Donation form</div>,
 	},
 };
