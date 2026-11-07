@@ -60,8 +60,11 @@ export const resetQrBillContext = {
 	qrBillError: null,
 };
 
-export const getInitialWizardContext = (currency: WebsiteCurrency): DonationWizardContext => ({
-	...getInitialDonationContext(currency),
+export const getInitialWizardContext = (
+	currency: WebsiteCurrency,
+	countryCode: string | null = null,
+): DonationWizardContext => ({
+	...getInitialDonationContext(currency, countryCode),
 	communityStats: null,
 	pendingStep: null,
 	...resetStripeCheckoutContext,

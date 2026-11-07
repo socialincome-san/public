@@ -1,6 +1,7 @@
 import { getIndirectBeneficiaryCount } from '@/components/program/indirect-beneficiaries';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { ONLINE_TRANSACTION_FEE_RATE } from '@/modules/subscriptions/subscription.types';
+import { getExampleIncome } from './donation-example-income';
 
 export type PresetAmount = 25 | 50 | 100;
 export type Cadence = 'monthly' | 'one-time';
@@ -36,9 +37,12 @@ export type DonationAmountContext = {
 	campaignId?: string;
 };
 
-export const getInitialDonationContext = (currency: WebsiteCurrency): DonationAmountContext => ({
+export const getInitialDonationContext = (
+	currency: WebsiteCurrency,
+	countryCode: string | null = null,
+): DonationAmountContext => ({
 	currency,
-	monthlyIncome: 5000,
+	monthlyIncome: getExampleIncome(countryCode, currency) ?? 5000,
 	selectedAmount: null,
 	customAmount: null,
 	cadence: 'monthly',

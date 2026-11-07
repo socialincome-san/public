@@ -33,6 +33,7 @@ import type { DonationWizardSend } from '../wizard/types';
 
 type Props = {
 	children: ReactNode;
+	visitorCountryCode: string | null;
 };
 
 // A Stripe return URL can be opened without a payment, so that case clears only once Stripe confirms it was paid.
@@ -41,7 +42,7 @@ const completionEvents = new Set<Parameters<DonationWizardSend>[0]['type']>([
 	'QR_PAYMENT_CONFIRMED',
 ]);
 
-export const DonationModalProvider = ({ children }: Props) => {
+export const DonationModalProvider = ({ children, visitorCountryCode }: Props) => {
 	const [state, , actorRef] = useMachine(donationWizardMachine);
 	const websiteCurrency = useWebsiteCurrency();
 
@@ -119,14 +120,20 @@ export const DonationModalProvider = ({ children }: Props) => {
 
 		const context = readStoredStripeCheckoutContext(sessionId, websiteCurrency);
 
-		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: websiteCurrency });
+		send({
+			type: 'OPEN_FROM_STRIPE_RETURN',
+			context,
+			sessionId,
+			currency: websiteCurrency,
+			countryCode: visitorCountryCode,
+		});
 		clearStoredStripeCheckoutContext(sessionId);
 		url.searchParams.delete(STRIPE_CHECKOUT_SESSION_ID_PARAM);
 		window.history.replaceState(null, '', url);
-	}, [send, websiteCurrency]);
+	}, [send, visitorCountryCode, websiteCurrency]);
 
 	const openWizardAtAmountStep = () => {
-		send({ type: 'OPEN', currency: websiteCurrency });
+		send({ type: 'OPEN', currency: websiteCurrency, countryCode: visitorCountryCode });
 	};
 
 	const openWizardWithFormAmount = (context: DonationAmountContext) => {
@@ -146,12 +153,25 @@ export const DonationModalProvider = ({ children }: Props) => {
 		if (!actorRef.getSnapshot().matches('closed')) {
 			send({ type: 'CLOSE' });
 		}
-		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: context.currency });
+		send({
+			type: 'OPEN_FROM_STRIPE_RETURN',
+			context,
+			sessionId,
+			currency: context.currency,
+			countryCode: visitorCountryCode,
+		});
 	};
 
 	return (
 		<DonationModalContext.Provider
-			value={{ isOpen, openWizardAtAmountStep, openWizardWithFormAmount, resumeDonation, openWizardAfterPayment }}
+			value={{
+				isOpen,
+				visitorCountryCode,
+				openWizardAtAmountStep,
+				openWizardWithFormAmount,
+				resumeDonation,
+				openWizardAfterPayment,
+			}}
 		>
 			{children}
 			<DonationResumeBar />

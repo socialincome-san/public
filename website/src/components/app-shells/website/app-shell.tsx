@@ -5,7 +5,9 @@ import { Navbar } from '@/components/app-shells/website/navbar/navbar';
 import { Scope } from '@/components/app-shells/website/navbar/utils';
 import { DonationModalProvider } from '@/components/donation-wizard/modal/donation-modal-provider';
 import { getWebsiteBasePath, type WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { toCountryCode } from '@/lib/types/country';
 import type { Session } from '@/modules/auth/auth.types';
+import { cookies } from 'next/headers';
 import { ReactNode } from 'react';
 
 type WebsiteAppShellProps = {
@@ -16,11 +18,12 @@ type WebsiteAppShellProps = {
 	scope: Scope;
 };
 
-export const WebsiteAppShell = ({ children, sessions, lang, currency, scope }: WebsiteAppShellProps) => {
+export const WebsiteAppShell = async ({ children, sessions, lang, currency, scope }: WebsiteAppShellProps) => {
+	const visitorCountryCode = toCountryCode((await cookies()).get('visitor-country')?.value);
 	const isContained = scope === 'dashboard' || scope === 'partner-space';
 
 	return (
-		<DonationModalProvider>
+		<DonationModalProvider visitorCountryCode={visitorCountryCode}>
 			<div className="bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
 				<Navbar sessions={sessions} lang={lang} currency={currency} scope={scope} />
 				{/* Next.js keeps previously visited pages in the DOM, hidden with an inline `display: none`, so only a

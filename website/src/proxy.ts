@@ -5,6 +5,7 @@ import {
 	toCurrencySegment,
 	type WebsiteCurrency,
 } from '@/lib/i18n/utils';
+import { toCountryCode } from '@/lib/types/country';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
@@ -27,6 +28,33 @@ const redirectToPath = (request: NextRequest, pathname: string, status: 307 | 30
 	return NextResponse.redirect(url, status);
 };
 
+const setVisitorCountryCookie = (request: NextRequest, response: NextResponse) => {
+	const country = toCountryCode(request.headers.get('x-vercel-ip-country'));
+	if (country) {
+		response.cookies.set('visitor-country', country, {
+			httpOnly: true,
+			maxAge: 60 * 60 * 24,
+			path: '/',
+			sameSite: 'lax',
+			secure: request.nextUrl.protocol === 'https:',
+		});
+	}
+
+	return response;
+};
+
+const nextWithVisitorCountry = (request: NextRequest) => {
+	const country = toCountryCode(request.headers.get('x-vercel-ip-country'));
+	const headers = new Headers(request.headers);
+	if (country) {
+		const cookies = request.cookies.getAll().filter(({ name }) => name !== 'visitor-country');
+		cookies.push({ name: 'visitor-country', value: country });
+		headers.set('cookie', cookies.map(({ name, value }) => `${name}=${value}`).join('; '));
+	}
+
+	return setVisitorCountryCookie(request, NextResponse.next({ request: { headers } }));
+};
+
 /**
  * The URL is the only source of language and currency. A complete prefix passes through; old region and
  * upper-case currency segments redirect permanently; any other path gets the visitor's best locale in front.
@@ -38,26 +66,31 @@ export const proxy = (request: NextRequest) => {
 	if (!isWebsiteLanguage(language)) {
 		const best = findBestLocale(request);
 
-		return redirectToPath(
+		return setVisitorCountryCookie(
 			request,
-			`/${best.language}/${toCurrencySegment(best.currency)}${pathname}`.replace(/\/$/, ''),
-			307,
+			redirectToPath(request, `/${best.language}/${toCurrencySegment(best.currency)}${pathname}`.replace(/\/$/, ''), 307),
 		);
 	}
 
 	if (parseCurrencySegment(segment)) {
-		return NextResponse.next();
+		return nextWithVisitorCountry(request);
 	}
 
 	const afterLanguage = pathname.slice(language.length + 1);
 	const knownCurrency = legacyRegionCurrencies.get(segment.toLowerCase()) ?? parseCurrencySegment(segment.toLowerCase());
 	if (knownCurrency) {
-		return redirectToPath(
+		return setVisitorCountryCookie(
 			request,
-			`/${language}/${toCurrencySegment(knownCurrency)}${afterLanguage.slice(segment.length + 1)}`,
-			308,
+			redirectToPath(
+				request,
+				`/${language}/${toCurrencySegment(knownCurrency)}${afterLanguage.slice(segment.length + 1)}`,
+				308,
+			),
 		);
 	}
 
-	return redirectToPath(request, `/${language}/${toCurrencySegment(findBestLocale(request).currency)}${afterLanguage}`, 307);
+	return setVisitorCountryCookie(
+		request,
+		redirectToPath(request, `/${language}/${toCurrencySegment(findBestLocale(request).currency)}${afterLanguage}`, 307),
+	);
 };

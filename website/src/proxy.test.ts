@@ -11,12 +11,13 @@ const redirectOf = (path: string, headers?: Record<string, string>) => {
 };
 
 describe('proxy', () => {
-	test('passes complete language and currency URLs through without looking at the visitor', () => {
+	test('passes complete URLs through and forwards the visitor country for initial defaults', () => {
 		const response = proxy(request('/de/chf/programs?country=SL', { 'x-vercel-ip-country': 'US' }));
 
 		expect(response.headers.get('location')).toBeNull();
 		expect(response.headers.get('x-middleware-next')).toBe('1');
-		expect(response.headers.get('set-cookie')).toBeNull();
+		expect(response.headers.get('set-cookie')).toContain('visitor-country=US');
+		expect(response.headers.get('x-middleware-request-cookie')).toContain('visitor-country=US');
 	});
 
 	test('permanently redirects old region URLs and keeps path and query', () => {

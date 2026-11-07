@@ -35,7 +35,7 @@ export const donationWizardMachine = setup({
 		context: DonationWizardContext;
 		tags: 'currencyEditable';
 		events:
-			| { type: 'OPEN'; currency: WebsiteCurrency }
+			| { type: 'OPEN'; currency: WebsiteCurrency; countryCode?: string | null }
 			| { type: 'OPEN_FROM_FORM'; context: DonationAmountContext }
 			| { type: 'RESUME'; context: DonationAmountContext; step: ResumableWizardStep }
 			| {
@@ -43,6 +43,7 @@ export const donationWizardMachine = setup({
 					context: DonationAmountContext | null;
 					sessionId: string;
 					currency: WebsiteCurrency;
+					countryCode?: string | null;
 			  }
 			| { type: 'CLOSE' }
 			| { type: 'SET_CURRENCY'; value: WebsiteCurrency }
@@ -142,7 +143,7 @@ export const donationWizardMachine = setup({
 				OPEN: {
 					target: 'loadingCommunityStats',
 					actions: assign(({ event }) => ({
-						...getInitialWizardContext(event.currency),
+						...getInitialWizardContext(event.currency, event.countryCode),
 						pendingStep: 'stepAmount' as const,
 					})),
 				},
@@ -173,7 +174,7 @@ export const donationWizardMachine = setup({
 				OPEN_FROM_STRIPE_RETURN: {
 					target: 'stepOnboardingPersonal',
 					actions: assign(({ event }) => ({
-						...getInitialWizardContext(event.currency),
+						...getInitialWizardContext(event.currency, event.countryCode),
 						...(event.context ?? {}),
 						paymentMethod: 'online' as const,
 						stripeCheckoutSessionId: event.sessionId,
