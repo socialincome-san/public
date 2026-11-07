@@ -1591,6 +1591,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Firebase AppCheck: App attestation failed.'**
   String get appAttestationFailedError;
+
+  /// No description provided for @countrySearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by country name or dial code'**
+  String get countrySearchHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

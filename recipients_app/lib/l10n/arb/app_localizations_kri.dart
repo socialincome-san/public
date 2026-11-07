@@ -780,4 +780,7 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get appAttestationFailedError => 'Firebase AppCheck: App attestation failed.';
+
+  @override
+  String get countrySearchHint => 'Luk fɔ di kɔntri nem ɔ di kɔntri kod';
 }

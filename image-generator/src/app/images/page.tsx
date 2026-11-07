@@ -6,7 +6,7 @@ import { GalleryLoadMore } from './gallery-load-more';
 
 const GalleryContent = async () => {
 	const batch = await getGalleryBatch();
-	return <GalleryLoadMore {...batch} />;
+	return <GalleryLoadMore key={batch.images[0]?.id ?? 'empty'} {...batch} />;
 };
 
 export default function ImagesPage() {
