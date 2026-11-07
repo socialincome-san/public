@@ -10,6 +10,11 @@
 		"finances": "Finances",
 		"recipients": "Recipients"
 	},
+	"recipient-status-interrupted": "Interrupted",
+	"audit": {
+		"interrupted-at": "Interrupted at",
+		"interruption-comment": "Interruption comment"
+	},
 	"menu": {
 		"open": "Open menu",
 		"close": "Close menu",

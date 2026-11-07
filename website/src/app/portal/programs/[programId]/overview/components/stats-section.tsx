@@ -9,6 +9,7 @@ import { StatProgress } from '@socialincome/design-system/data-display/stat-prog
 import { Stat } from '@socialincome/design-system/data-display/stat/stat';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { AlertCircle, CheckCircle, TriangleAlert } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { SectionTitle } from './section-title';
 
 type StatsSectionProps = {
@@ -16,7 +17,8 @@ type StatsSectionProps = {
 	stats: ProgramDashboardStats;
 };
 
-export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
+export const StatsSection = async ({ programId, stats }: StatsSectionProps) => {
+	const t = await getTranslations('website-common');
 	const getCreditStatusLabel = (creditsInIntervals: number, totalExpected: number) => {
 		if (creditsInIntervals < 1) {
 			return 'Not secured';
@@ -271,7 +273,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 									value={formatNumber(stats.suspendedRecipientsCount)}
 									info={suspendedRecipientsExplanation}
 								/>
-								<Stat label="Interrupted" value={formatNumber(stats.interruptedRecipientsCount)} />
+								<Stat label={t('recipient-status-interrupted')} value={formatNumber(stats.interruptedRecipientsCount)} />
 								<Stat
 									label="Completed"
 									value={formatNumber(stats.completedRecipientsCount)}

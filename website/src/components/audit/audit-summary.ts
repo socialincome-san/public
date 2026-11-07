@@ -289,6 +289,8 @@ export const getAuditEntityName = ({ entityId, entityName }: AuditTableViewRow):
 export const getAuditActorName = (row: AuditTableViewRow): string =>
 	row.actorName ?? (row.actorType === row.entityType ? getAuditEntityName(row) : row.actorType);
 
+type AuditTranslationKey = 'audit.interrupted-at' | 'audit.interruption-comment';
+
 const formatValue = (value: JsonValue): string | null => {
 	if (value === null || value === '') {
 		return null;
@@ -305,10 +307,18 @@ const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
 const dateFormat = new Intl.DateTimeFormat('de-CH', { dateStyle: 'short' });
 
 /** Field changes for ChangeList; empty for rows that are described by text instead. */
-export const getAuditChangeItems = ({ entityType, action, changes }: AuditTableViewRow): ChangeListItem[] =>
+export const getAuditChangeItems = (
+	{ entityType, action, changes }: AuditTableViewRow,
+	t: (key: AuditTranslationKey) => string,
+): ChangeListItem[] =>
 	action === 'update'
 		? changes.map((change) => ({
-				label: auditEntityTypes[entityType]?.fieldLabels[change.path] ?? change.path,
+				label:
+					entityType === 'recipient' && change.path === 'interruptedAt'
+						? t('audit.interrupted-at')
+						: entityType === 'recipient' && change.path === 'interruptionComment'
+							? t('audit.interruption-comment')
+							: (auditEntityTypes[entityType]?.fieldLabels[change.path] ?? change.path),
 				previous: formatValue(change.old),
 				next: formatValue(change.new),
 			}))

@@ -14,6 +14,18 @@ import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { AuditTableViewRow } from '@/modules/audit/audit.types';
 import { ChangeList } from '@socialincome/design-system/data-display/change-list/change-list';
 import { DataTableTextCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
+import { useTranslations } from 'next-intl';
+
+const AuditChangesCell = ({ row }: { row: AuditTableViewRow }) => {
+	const t = useTranslations('website-common');
+	const description = describeAuditEvent(row);
+
+	return description ? (
+		<DataTableTextCell value={description} />
+	) : (
+		<ChangeList ariaLabel="Changes" items={getAuditChangeItems(row, t)} />
+	);
+};
 
 const entityColumns: ColumnDef<AuditTableViewRow>[] = [
 	{
@@ -38,15 +50,7 @@ export const makeAuditColumns = ({ hideEntity = false }: { hideEntity?: boolean 
 	{
 		id: 'changes',
 		header: 'Changes',
-		cell: ({ row }) => {
-			const description = describeAuditEvent(row.original);
-
-			return description ? (
-				<DataTableTextCell value={description} />
-			) : (
-				<ChangeList ariaLabel="Changes" items={getAuditChangeItems(row.original)} />
-			);
-		},
+		cell: ({ row }) => <AuditChangesCell row={row.original} />,
 	},
 	{
 		id: 'actorName',

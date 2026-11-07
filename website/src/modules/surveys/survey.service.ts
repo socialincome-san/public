@@ -4,7 +4,11 @@ import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now, nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
-import { createFirebaseSurveyUser, synchronizeFirebaseSurveyUser } from '@/modules/auth/auth.service';
+import {
+	createFirebaseSurveyUser,
+	deleteFirebaseUserByUidIfExists,
+	synchronizeFirebaseSurveyUser,
+} from '@/modules/auth/auth.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import {
 	getRecipientAuditContext,
@@ -433,7 +437,36 @@ export const generateSurveys = async (session: UserSession): Promise<Result<Surv
 
 				return resultFail('Could not create survey authentication user');
 			}
-			await surveyWriteRepository.createSurvey(audit, surveyInput);
+
+			let survey: Awaited<ReturnType<typeof surveyWriteRepository.createSurveyIfRecipientActive>>;
+			try {
+				survey = await surveyWriteRepository.createSurveyIfRecipientActive(audit, surveyInput);
+			} catch (error) {
+				if (!(await deleteGeneratedSurveyUser(firebaseResult.data.uid))) {
+					console.error('Failed to persist generated survey after creating Firebase user', {
+						recipientId: surveyInput.recipientId,
+						error,
+					});
+
+					return resultFail('Could not clean up survey authentication user');
+				}
+
+				console.error('Failed to persist generated survey', {
+					recipientId: surveyInput.recipientId,
+					error,
+				});
+
+				return resultFail('Failed to generate surveys');
+			}
+
+			if (!survey) {
+				if (!(await deleteGeneratedSurveyUser(firebaseResult.data.uid))) {
+					return resultFail('Could not clean up survey authentication user');
+				}
+
+				continue;
+			}
+
 			surveysCreated += 1;
 		}
 
@@ -446,6 +479,17 @@ export const generateSurveys = async (session: UserSession): Promise<Result<Surv
 
 		return resultFail('Failed to generate surveys');
 	}
+};
+
+const deleteGeneratedSurveyUser = async (uid: string): Promise<boolean> => {
+	const result = await deleteFirebaseUserByUidIfExists(uid);
+	if (!result.success) {
+		console.error('Could not delete Firebase user for unpersisted survey', { uid, error: result.error });
+
+		return false;
+	}
+
+	return true;
 };
 
 export const saveSurveyChanges = async (

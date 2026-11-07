@@ -6,10 +6,38 @@ import type { SurveyCreateData, SurveyResponseUpdateInput, SurveyUpdateData } fr
 // Every write here stores a survey audit event in the same transaction.
 // Reads live in survey.repository.read.ts.
 
+const recipientNotActive = new Error('Recipient is not active.');
+
 export const createSurvey = async (audit: AuditContext, input: SurveyCreateData) =>
 	auditedWrite({ entity: surveyEntity, context: audit, action: 'create' }, (transaction) =>
 		transaction.survey.create({ data: input, select: surveyRecordSelect }),
 	);
+
+export const createSurveyIfRecipientActive = async (audit: AuditContext, input: SurveyCreateData) => {
+	try {
+		return await auditedWrite(
+			{ entity: surveyEntity, context: audit, action: 'create' },
+			async (transaction) => {
+				const recipient = await transaction.recipient.findUnique({
+					where: { id: input.recipientId },
+					select: { interruptedAt: true },
+				});
+				if (recipient?.interruptedAt !== null) {
+					throw recipientNotActive;
+				}
+
+				return transaction.survey.create({ data: input, select: surveyRecordSelect });
+			},
+			{ isolationLevel: 'Serializable' },
+		);
+	} catch (error) {
+		if (error === recipientNotActive) {
+			return null;
+		}
+
+		throw error;
+	}
+};
 
 export const updateSurvey = async (
 	audit: AuditContext,
