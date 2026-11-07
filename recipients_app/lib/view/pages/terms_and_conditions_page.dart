@@ -22,6 +22,7 @@ class TermsAndConditionsPage extends StatefulWidget {
 
 class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
   late final TextEditingController _successorNameController;
+  late final TapGestureRecognizer _privacyPolicyRecognizer;
 
   @override
   void initState() {
@@ -29,12 +30,30 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
     _successorNameController = TextEditingController(
       text: context.read<AuthCubit>().state.recipient?.successorName ?? "",
     );
+    _privacyPolicyRecognizer = TapGestureRecognizer()..onTap = _openPrivacyPolicy;
   }
 
   @override
   void dispose() {
     _successorNameController.dispose();
+    _privacyPolicyRecognizer.dispose();
     super.dispose();
+  }
+
+  Future<void> _openPrivacyPolicy() async {
+    const url = "https://socialincome.org/privacy";
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
+    } else {
+      await Clipboard.setData(const ClipboardData(text: url));
+      if (mounted) {
+        FlushbarHelper.showFlushbar(
+          context,
+          message: context.l10n.privacyPolicyError,
+          type: FlushbarType.error,
+        );
+      }
+    }
   }
 
   @override
@@ -56,7 +75,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
       builder: (context, state) => Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title: Text(context.l10n.account),
+          title: Text(context.l10n.onboarding),
           leading: BackButton(
             onPressed: () {
               context.read<AuthCubit>().logout();
@@ -66,99 +85,93 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
         ),
         body: Padding(
           padding: AppSpacings.a16,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 32),
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: context.l10n.acceptAndContinueInfo,
-                              style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextSpan(
-                              text: context.l10n.privacyPolicy,
-                              style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  const url = "https://socialincome.org/privacy";
-                                  if (await canLaunchUrlString(url)) {
-                                    await launchUrlString(url);
-                                  } else {
-                                    Clipboard.setData(
-                                      const ClipboardData(
-                                        text: "https://socialincome.org/privacy",
-                                      ),
-                                    ).then((_) {
-                                      if (context.mounted) {
-                                        FlushbarHelper.showFlushbar(
-                                          context,
-                                          message: context.l10n.privacyPolicyError,
-                                          type: FlushbarType.error,
-                                        );
-                                      }
-                                    });
-                                  }
-                                },
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      Text(
-                        context.l10n.inCaseOfDeathTitle,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        context.l10n.inCaseOfDeathDescription,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(height: 16),
-                      InputText(
-                        hintText: context.l10n.successorName,
-                        controller: _successorNameController,
-                        keyboardType: TextInputType.name,
-                      ),
-                    ],
-                  ),
+          // The footer lives inside the scroll view so it can scroll away when
+          // the keyboard shrinks the viewport, instead of overflowing.
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 16),
+                    Text(
+                      context.l10n.onboardingText,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 32),
+                    Text(
+                      context.l10n.inCaseOfDeathTitle,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      context.l10n.inCaseOfDeathDescription,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    InputText(
+                      hintText: context.l10n.successorName,
+                      controller: _successorNameController,
+                      keyboardType: TextInputType.name,
+                    ),
+                    const SizedBox(height: 64),
+                  ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ButtonBig(
-                    isLoading: state.status == AuthStatus.updatingRecipient,
-                    onPressed: () {
-                      final successorName = _successorNameController.text.trim();
-                      context.read<AuthCubit>().updateRecipient(
-                        selfUpdate: RecipientSelfUpdate(
-                          termsAccepted: true,
-                          successorName: successorName,
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: context.l10n.acceptAndContinueInfo,
+                            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: context.l10n.privacyPolicy,
+                            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: _privacyPolicyRecognizer,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ButtonBig(
+                          isLoading: state.status == AuthStatus.updatingRecipient,
+                          onPressed: () {
+                            final successorName = _successorNameController.text.trim();
+                            context.read<AuthCubit>().updateRecipient(
+                              selfUpdate: RecipientSelfUpdate(
+                                termsAccepted: true,
+                                successorName: successorName,
+                              ),
+                            );
+                          },
+                          label: demoManager.isDemoEnabled
+                              ? context.l10n.acceptAndContinueDemo
+                              : context.l10n.acceptAndContinue,
                         ),
-                      );
-                    },
-                    label: demoManager.isDemoEnabled
-                        ? context.l10n.acceptAndContinueDemo
-                        : context.l10n.acceptAndContinue,
-                  ),
-                ],
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                  ],
+                ),
               ),
-              const SizedBox(height: 32),
             ],
           ),
         ),
