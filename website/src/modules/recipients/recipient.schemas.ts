@@ -72,10 +72,7 @@ export const recipientUpdateSchema = recipientCreateSchema.extend({
 
 export const recipientIdSchema = z.string().trim().min(1, 'Recipient id is required.');
 
-export const publicRecipientProgramIdSchema = z
-	.string({ invalid_type_error: 'Invalid program id' })
-	.trim()
-	.min(1, 'Invalid program id');
+export const publicRecipientProgramIdSchema = z.string('Invalid program id').trim().min(1, 'Invalid program id');
 
 export const recipientSessionTypeSchema = z.enum(['user', 'local-partner', 'contributor']);
 

@@ -75,3 +75,23 @@ export const getJournalArticlesByUuids = async (
 
 	return cacheResult(service.getJournalArticlesByUuids(language, articleUuids));
 };
+
+export const getJournalArticlesByTag = async (
+	language: string,
+	tagUuid: string,
+): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
+	'use cache';
+	cacheTag(JOURNAL_CACHE_TAG);
+
+	return cacheResult(service.getJournalArticlesByTag(language, tagUuid));
+};
+
+export const getJournalArticlesByArticleType = async (
+	language: string,
+	articleTypeUuid: string,
+): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
+	'use cache';
+	cacheTag(JOURNAL_CACHE_TAG);
+
+	return cacheResult(service.getJournalArticlesByArticleType(language, articleTypeUuid));
+};

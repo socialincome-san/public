@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { Currency } from '../../generated/prisma/enums';
 import { getVisitorCountry } from '../geo/visitor-geo';
 import { isValidCountryCode } from '../types/country';
-import { bestGuessCurrency } from '../types/currency';
+import { getCountryCurrency } from '../types/currency';
 import { LanguageCode } from '../types/language';
 
 export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 'kri'>;
@@ -50,12 +50,14 @@ export const getWebsiteBasePath = (lang: string, currency: WebsiteCurrency) => `
 const isMainWebsiteLanguage = (value: string): value is WebsiteLanguage =>
 	mainWebsiteLanguages.some((language) => language === value);
 
-const getCurrencyForCountry = (country: string | undefined): WebsiteCurrency | undefined => {
+/** The country's own currency, if the website supports it. */
+export const getCurrencyForCountry = (country: string | undefined): WebsiteCurrency | undefined => {
 	const countryCode = country?.toUpperCase();
 	if (!countryCode || !isValidCountryCode(countryCode)) {
 		return undefined;
 	}
-	const currency = bestGuessCurrency(countryCode);
+	// Not bestGuessCurrency: its USD fallback would count USD as the own currency of every country missing from the list.
+	const currency = getCountryCurrency(countryCode);
 
 	return isWebsiteCurrency(currency) ? currency : undefined;
 };

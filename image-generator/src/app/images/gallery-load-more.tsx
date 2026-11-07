@@ -1,49 +1,35 @@
 'use client';
 
-import { isGalleryBatch, type GalleryImage } from '@/lib/images';
+import { isGalleryBatch, type GalleryBatch, type GalleryImage } from '@/lib/images';
 import { Button } from '@socialincome/design-system/actions/button/button';
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { ImageGallery } from './image-gallery';
 
-type State = {
-	images: GalleryImage[];
-	hasMore: boolean;
-	offset: number;
-	error: string | null;
-};
+type State = { loaded: GalleryImage[]; hasMore: boolean; error: string | null };
 
-const loadMore = async (previous: State): Promise<State> => {
-	try {
-		const response = await fetch(`/api/gallery-images?offset=${previous.offset}`);
-		const batch: unknown = await response.json();
-		if (!response.ok || !isGalleryBatch(batch)) {
-			return { ...previous, error: 'Images could not be loaded. Please try again.' };
-		}
-		const existingIds = new Set(previous.images.map((image) => String(image.id)));
-		return {
-			images: [...previous.images, ...batch.images.filter((image) => !existingIds.has(String(image.id)))],
-			hasMore: batch.hasMore,
-			offset: previous.offset + batch.images.length,
-			error: null,
-		};
-	} catch {
-		return { ...previous, error: 'Images could not be loaded. Please try again.' };
-	}
-};
-
-export const GalleryLoadMore = ({ images, hasMore }: { images: GalleryImage[]; hasMore: boolean }) => {
-	const [state, formAction, isPending] = useActionState(loadMore, {
-		images,
-		hasMore,
-		offset: images.length,
-		error: null,
-	});
+export const GalleryLoadMore = ({ images: firstBatch, hasMore }: GalleryBatch) => {
+	// Versions made in the edit dialog are newer than everything loaded, so they go first without reloading the page.
+	const [added, setAdded] = useState<GalleryImage[]>([]);
+	const [state, loadMore, isPending] = useActionState(
+		async (previous: State): Promise<State> => {
+			const last = [...firstBatch, ...previous.loaded].at(-1);
+			const batch: unknown = await fetch(`/api/gallery-images?after=${last?.id}`)
+				.then((response) => response.json())
+				.catch(() => null);
+			if (!isGalleryBatch(batch)) return { ...previous, error: 'Images could not be loaded. Please try again.' };
+			return { loaded: [...previous.loaded, ...batch.images], hasMore: batch.hasMore, error: null };
+		},
+		{ loaded: [], hasMore, error: null },
+	);
 
 	return (
 		<>
-			<ImageGallery images={state.images} />
+			<ImageGallery
+				images={[...added, ...firstBatch, ...state.loaded]}
+				onImageAdded={(image) => setAdded((previous) => [image, ...previous])}
+			/>
 			{state.hasMore && (
-				<form action={formAction} className="mt-8 flex justify-center">
+				<form action={loadMore} className="mt-8 flex justify-center">
 					<Button type="submit" disabled={isPending}>
 						{isPending ? 'Loading …' : 'Load more'}
 					</Button>

@@ -70,6 +70,7 @@ export type JournalPersonPageData = {
 	roleLabels: Record<string, string>;
 	circleLabels: Record<string, string>;
 	timeCommitmentLabels: Record<string, string>;
+	workStyleLabels: Record<string, string>;
 	contributions: PersonContribution[];
 	otherPersons: ISbStoryData<Person>[];
 };

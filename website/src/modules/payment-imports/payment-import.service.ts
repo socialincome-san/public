@@ -96,6 +96,10 @@ export const parseCamt054Contributions = (xml: string): Result<BankContribution[
 		const contributions: BankContribution[] = [];
 
 		for (const transaction of transactionDetails) {
+			if (isStripePayout(transaction)) {
+				continue;
+			}
+
 			const referenceId = getNodeText(findDescendantPath(transaction, ['RmtInf', 'Strd', 'CdtrRefInf', 'Ref']));
 			const rawContent = new XMLSerializer().serializeToString(transaction);
 			if (!referenceId) {
@@ -126,6 +130,15 @@ export const parseCamt054Contributions = (xml: string): Result<BankContribution[
 
 		return resultFail('Could not parse payment file');
 	}
+};
+
+const STRIPE_PAYOUT_IBAN = 'LU724080000000010375';
+
+const isStripePayout = (transaction: XmlNode): boolean => {
+	const debtorIban = normalizeIban(getNodeText(findDescendantPath(transaction, ['RltdPties', 'DbtrAcct', 'Id', 'IBAN'])));
+	const debtorName = getNodeText(findDescendantPath(transaction, ['RltdPties', 'Dbtr', 'Pty', 'Nm']));
+
+	return debtorIban === STRIPE_PAYOUT_IBAN || debtorName.toUpperCase() === 'STRIPE PAYMENTS UK LTD';
 };
 
 export const getLatestPostFinanceBalances = async (

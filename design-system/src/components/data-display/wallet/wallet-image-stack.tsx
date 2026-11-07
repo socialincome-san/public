@@ -19,7 +19,7 @@ export const WalletImageStack = ({ images }: WalletImageStackProps) => {
 		>
 			<div
 				className={cn(
-					'relative h-[var(--stack-height)] overflow-hidden rounded-sm',
+					'relative h-[var(--stack-height)] rounded-sm',
 					hasPrimaryImage ? 'm-[calc(2*var(--shadow-size))]' : 'm-[calc(3*var(--shadow-size))]',
 					'mb-0',
 					'[box-shadow:var(--wallet-cards-box-shadow)]',
@@ -27,15 +27,16 @@ export const WalletImageStack = ({ images }: WalletImageStackProps) => {
 				)}
 			>
 				{hasPrimaryImage && primaryImage ? (
-					<>
+					// Cut off at the top and the pocket like the overlay images, but free at the sides, so both copies line up.
+					<div className="absolute inset-0 [clip-path:inset(0_calc(-2*var(--shadow-size))_0_calc(-2*var(--shadow-size)))]">
 						{hoverEffectImage2?.src ? (
-							<WalletLayerImage image={hoverEffectImage2} sizes={WALLET_IMAGE_SIZES} decorative />
+							<WalletLayerImage image={hoverEffectImage2} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="back" />
 						) : null}
 						{hoverEffectImage1?.src ? (
-							<WalletLayerImage image={hoverEffectImage1} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="tilt-right" />
+							<WalletLayerImage image={hoverEffectImage1} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="middle" />
 						) : null}
-						<WalletLayerImage image={primaryImage} sizes={WALLET_IMAGE_SIZES} hoverMotion="tilt-left" />
-					</>
+						<WalletLayerImage image={primaryImage} sizes={WALLET_IMAGE_SIZES} hoverMotion="front" />
+					</div>
 				) : null}
 			</div>
 		</div>

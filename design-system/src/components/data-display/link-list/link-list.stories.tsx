@@ -17,14 +17,14 @@ const meta = {
 	tags: ['autodocs'],
 	args: {
 		items,
-		showMoreLabel: 'Show all 7 pages',
+		showMoreLabel: 'Show all {count} pages',
 		showLessLabel: 'Show fewer pages',
 	},
 	parameters: {
 		docs: {
 			description: {
 				component:
-					'A divided list of links with optional tags on the right. Long lists show the first items and reveal the rest in place.',
+					'A divided list of links with optional tags on the right. Long lists show the first items and reveal the rest in place. With a tag filter, chips with counts above the list narrow it down to one tag.',
 			},
 		},
 	},
@@ -42,4 +42,8 @@ export const Short: Story = {
 
 export const WithoutTags: Story = {
 	args: { items: items.map(({ label, href }) => ({ label, href })) },
+};
+
+export const WithTagFilter: Story = {
+	args: { tagFilter: { allLabel: 'All pages', ariaLabel: 'Filter pages by role' } },
 };

@@ -22,6 +22,7 @@ const SwitcherForVisitor = async (props: Props) => {
 		<LocaleCurrencySwitcher
 			{...props}
 			chosenCountry={getChosenCountry(request.cookies)}
+			visitorCountry={country}
 			icon={country ? <CountryFlag country={country} size="sm" decorative fallback={globe} /> : globe}
 		/>
 	);
@@ -29,7 +30,7 @@ const SwitcherForVisitor = async (props: Props) => {
 
 // Reading the request is dynamic, so the static shell renders the switcher with the globe and the flag streams in.
 export const VisitorLocaleCurrencySwitcher = (props: Props) => (
-	<Suspense fallback={<LocaleCurrencySwitcher {...props} chosenCountry={null} icon={globe} />}>
+	<Suspense fallback={<LocaleCurrencySwitcher {...props} chosenCountry={null} visitorCountry={null} icon={globe} />}>
 		<SwitcherForVisitor {...props} />
 	</Suspense>
 );

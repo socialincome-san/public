@@ -45,7 +45,11 @@
 			"city": "Localité",
 			"zip": "Code postal",
 			"name": "Nom",
-			"focuses": "Axes"
+			"focuses": "Axes",
+			"validation": {
+				"required": "Ce champ est obligatoire.",
+				"invalid-email": "Veuillez saisir une adresse e-mail valide."
+			}
 		}
 	},
 	"sections": {
