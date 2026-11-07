@@ -303,7 +303,16 @@ export const updateRecipient = async (
 				updatedRecipient.id,
 			);
 			if (!cleanupResult.success) {
-				return resultFail(cleanupResult.error);
+				const retryResult = await removeOutstandingSurveysForInterruptedRecipient(
+					getSessionAuditContext(session),
+					updatedRecipient.id,
+				);
+				if (!retryResult.success) {
+					console.error('Recipient update succeeded but survey cleanup remains incomplete', {
+						recipientId: updatedRecipient.id,
+						error: retryResult.error,
+					});
+				}
 			}
 		}
 

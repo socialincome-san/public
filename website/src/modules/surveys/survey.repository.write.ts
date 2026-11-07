@@ -1,4 +1,4 @@
-import type { Prisma } from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 import type { SurveyCreateData, SurveyResponseUpdateInput, SurveyUpdateData } from './survey.types';
@@ -48,10 +48,20 @@ export const updateSurvey = async (
 		transaction.survey.update({ where: { id: surveyId }, data: input, select: surveyRecordSelect }),
 	);
 
-export const deleteSurvey = async (audit: AuditContext, surveyId: string) =>
-	auditedWrite({ entity: surveyEntity, context: audit, action: 'delete', entityId: surveyId }, (transaction) =>
-		transaction.survey.delete({ where: { id: surveyId }, select: surveyRecordSelect }),
-	);
+export const deleteSurvey = async (audit: AuditContext, surveyId: string) => {
+	try {
+		return await auditedWrite(
+			{ entity: surveyEntity, context: audit, action: 'delete', entityId: surveyId },
+			(transaction) => transaction.survey.delete({ where: { id: surveyId }, select: surveyRecordSelect }),
+		);
+	} catch (error) {
+		if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+			return null;
+		}
+
+		throw error;
+	}
+};
 
 export const removeSurveySchedules = async (audit: AuditContext, surveyIds: string[]) =>
 	auditedWrite({ entity: surveyEntity, context: audit, action: 'update', entityId: surveyIds }, (transaction) =>
