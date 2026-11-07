@@ -6,8 +6,15 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
-test('program payout forecast page matches screenshot', async ({ page }) => {
-	await page.goto('/portal/programs/program-si-core-sl/payout-forecast?sortBy=period&sortDirection=asc');
+test('program finances page matches screenshot', async ({ page }) => {
+	await page.goto('/portal/programs/program-si-core-sl/finances?sortBy=period&sortDirection=asc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expectToHaveScreenshot(page);
+});
+
+test('legacy payout forecast URL redirects to program finances', async ({ page }) => {
+	await page.goto('/portal/programs/program-si-core-sl/payout-forecast?sortBy=period&sortDirection=asc');
+
+	await expect(page).toHaveURL(/\/portal\/programs\/program-si-core-sl\/finances\?sortBy=period&sortDirection=asc/);
+	await expect(page.getByTestId('data-table')).toBeVisible();
 });
