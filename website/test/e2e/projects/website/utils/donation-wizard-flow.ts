@@ -28,6 +28,47 @@ export const openDonationWizardFromNav = async (page: Page) => {
 	await waitForWizardStep(wizard(page), 'donation-wizard-step-amount');
 };
 
+// The amount step defaults to monthly; the link below the button donates with the other cadence, whose test id names that cadence.
+const submitAmount = async (scope: Locator, cadence: 'monthly' | 'one-time') => {
+	const otherCadenceLink = scope.getByTestId(`donation-wizard-cadence-${cadence}`);
+	if ((await otherCadenceLink.count()) > 0) {
+		await otherCadenceLink.click();
+
+		return;
+	}
+	await scope.getByTestId('donation-wizard-amount-continue').click();
+};
+
+const CUSTOM_AMOUNT_CHIPS = [40, 60, 100] as const;
+
+export const selectCustomAmountChip = async (
+	page: Page,
+	amount: (typeof CUSTOM_AMOUNT_CHIPS)[number],
+	via: 'mouse' | 'keyboard',
+) => {
+	await page.goto('/en/chf');
+
+	const heroForm = page.getByTestId('donation-wizard-hero-form').first();
+	const customAmountInput = heroForm.getByTestId('donation-wizard-custom-amount');
+	const chip = heroForm.getByTestId(`donation-wizard-custom-amount-chip-${amount}`);
+
+	await expect(heroForm).toBeVisible();
+	await customAmountInput.click();
+	if (via === 'mouse') {
+		await chip.click();
+	} else {
+		for (let i = 0; i <= CUSTOM_AMOUNT_CHIPS.indexOf(amount); i++) {
+			await page.keyboard.press('Tab');
+		}
+		await expect(chip).toBeFocused();
+		await page.keyboard.press('Enter');
+	}
+
+	await expect(customAmountInput).toHaveValue(String(amount));
+	await expect(chip).toHaveAttribute('aria-pressed', 'true');
+	await expect(heroForm.getByTestId('donation-wizard-amount-continue')).toHaveText(`Donate CHF ${amount} monthly`);
+};
+
 const completeHeroAmountFields = async (scope: Locator, monthlyIncome: number, cadence: 'monthly' | 'one-time') => {
 	const incomeInput = scope.getByTestId('donation-wizard-monthly-income');
 	const expectedOnePercent = Math.round(monthlyIncome / 100);
@@ -37,10 +78,7 @@ const completeHeroAmountFields = async (scope: Locator, monthlyIncome: number, c
 	await incomeInput.blur();
 	await expect(scope.getByTestId('donation-wizard-one-percent')).toContainText(String(expectedOnePercent));
 	await scope.getByTestId('donation-wizard-one-percent').click();
-	await scope
-		.getByTestId(cadence === 'monthly' ? 'donation-wizard-cadence-monthly' : 'donation-wizard-cadence-one-time')
-		.click();
-	await scope.getByTestId('donation-wizard-amount-continue').click();
+	await submitAmount(scope, cadence);
 };
 
 export const openDonationWizardFromHero = async (
@@ -73,8 +111,7 @@ export const completeAmountStep = async (page: Page, monthlyIncome: number) => {
 	await incomeInput.blur();
 	await expect(modal.getByTestId('donation-wizard-one-percent')).toContainText(String(expectedOnePercent));
 	await modal.getByTestId('donation-wizard-one-percent').click();
-	await modal.getByTestId('donation-wizard-cadence-monthly').click();
-	await modal.getByTestId('donation-wizard-amount-continue').click();
+	await submitAmount(modal, 'monthly');
 	await waitForWizardStep(modal, 'donation-wizard-step-monthly-plan');
 };
 

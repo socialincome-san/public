@@ -5,8 +5,9 @@ import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { Input } from '@socialincome/design-system/forms/input/input';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import NextImage from 'next/image';
+import { useId, useState } from 'react';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -17,20 +18,26 @@ import {
 } from '../../utils/donation-amount';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 
-const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmount | 'other' }[] = [
-	{ labelKey: 'currency-prefix', value: 25 },
-	{ labelKey: 'currency-prefix', value: 50 },
-	{ labelKey: 'currency-prefix', value: 100 },
-	{ labelKey: 'other', value: 'other' },
-];
-
-const segmentActive = 'bg-card shadow-xs';
-
 const amountFieldBorder = 'border-input/60';
-const amountFieldDivider = 'divide-input/60';
 const monthlyAmountTextClass = 'text-lg leading-none font-medium';
+// Pulled up under the field above it, which keeps its own bottom margin
+const fieldHintClass = 'text-destructive text-2xs -mt-2 mb-4 font-medium';
 
-const monthlyIncomeInputId = 'donation-monthly-income';
+// Both amount fields take whole numbers only. Apostrophes and spaces are thousands separators and dropped;
+// a dot or comma could be a decimal separator, so dropping it would turn 10.50 into 1050 and is rejected instead.
+const parseWholeNumber = (raw: string): number | 'invalid' | null => {
+	const trimmed = raw.replace(/['’\s]/g, '');
+	if (trimmed === '') {
+		return null;
+	}
+
+	return /^\d+$/.test(trimmed) ? Number(trimmed) : 'invalid';
+};
+
+type RejectedInput = { text: string; reason: 'not-whole' | 'above-max' };
+
+// Quick picks shown inside the custom amount field while it is focused
+const customAmountChips = [40, 60, 100] as const;
 
 export const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
 
@@ -50,13 +57,13 @@ type DonationAmountFieldsActions = {
 	setMonthlyIncome: (value: number | null) => void;
 	setPresetAmount: (value: PresetAmount | 'other') => void;
 	setCustomAmount: (value: number | null) => void;
-	setCadence: (value: Cadence) => void;
 };
 
 type Props = {
 	values: DonationAmountFieldsValues;
 	actions: DonationAmountFieldsActions;
-	onSubmit: () => void;
+	// Submits the amount with the given cadence, so the link below the button can go straight into the other cadence's flow
+	onSubmit: (cadence: Cadence) => void;
 	placement?: 'wizard' | 'hero';
 	currency: WebsiteCurrency;
 	showTitle?: boolean;
@@ -71,21 +78,53 @@ export const DonationAmountFields = ({
 	showTitle = true,
 }: Props) => {
 	const t = useTranslations('donation-wizard');
+	const locale = useLocale();
 	const isSwissVisitor = useIsSwissVisitor();
+	// The hero renders the box twice (mobile and desktop), so labels need ids unique per instance
+	const idPrefix = useId();
+	const monthlyIncomeInputId = `${idPrefix}-monthly-income`;
+	const customAmountInputId = `${idPrefix}-custom-amount`;
+	const monthlyIncomeHintId = `${idPrefix}-monthly-income-hint`;
+	const customAmountHintId = `${idPrefix}-custom-amount-hint`;
+	const [isCustomAmountFocused, setIsCustomAmountFocused] = useState(false);
+	// Rejected text stays in the field as typed, so the person sees what to fix; valid input lives in values
+	const [invalidMonthlyIncome, setInvalidMonthlyIncome] = useState<RejectedInput | null>(null);
+	const [invalidCustomAmount, setInvalidCustomAmount] = useState<RejectedInput | null>(null);
+	const rejectedHint = ({ reason }: RejectedInput, max: number) =>
+		reason === 'not-whole'
+			? t('stepAmount.whole-amount-only')
+			: t('stepAmount.above-maximum', { amount: `${currency} ${new Intl.NumberFormat(locale).format(max)}` });
+	const monthlyIncomeHint =
+		invalidMonthlyIncome !== null
+			? rejectedHint(invalidMonthlyIncome, DONATION_MONTHLY_INCOME_MAX)
+			: values.monthlyIncome !== null && values.monthlyIncome < DONATION_MONTHLY_INCOME_MIN
+				? t('stepAmount.below-minimum', { amount: `${currency} ${DONATION_MONTHLY_INCOME_MIN}` })
+				: null;
+	const customAmountHint =
+		invalidCustomAmount !== null
+			? rejectedHint(invalidCustomAmount, DONATION_CUSTOM_AMOUNT_MAX)
+			: values.customAmount !== null && values.customAmount < DONATION_CUSTOM_AMOUNT_MIN
+				? t('stepAmount.below-minimum', { amount: `${currency} ${DONATION_CUSTOM_AMOUNT_MIN}` })
+				: null;
+	const isCustomAmountActive = isCustomAmountFocused || values.selectedAmount === 'other';
+	const isCustomAmountLabelFloating = isCustomAmountFocused || values.customAmount !== null || invalidCustomAmount !== null;
+	// While the custom amount field is in use, the 1 % row looks inactive like the custom field does otherwise
+	const isOnePercentDimmed = isCustomAmountActive;
 
 	return (
 		<div
 			className={cn(
 				getDonationWizardCardClass('stepAmount'),
-				placement === 'hero' && 'mx-0 max-w-none lg:mx-auto lg:w-[400px]',
+				placement === 'hero' && 'mx-0 max-w-none px-7 pt-6 pb-7 sm:px-7 sm:pt-6 sm:pb-7 lg:mx-auto lg:w-[400px]',
 				'text-foreground md:px-9 md:py-9',
 			)}
 			data-testid="donation-wizard-step-amount"
 		>
 			{showTitle && (
-				<div className="mb-5 flex items-center justify-between gap-3">
+				<div className="mb-4 flex items-center justify-between gap-3">
 					<h2 className="text-foreground text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
-						{t('stepAmount.title')}
+						{/* A custom amount is no longer the 1 %, so the headline turns neutral while it is in use */}
+						{t(isCustomAmountActive ? 'stepAmount.title-custom-amount' : 'stepAmount.title')}
 					</h2>
 					{/* Negative margin keeps the card height that donationHeroCardSizeClass snapshots. */}
 					{placement === 'hero' && isSwissVisitor && (
@@ -102,15 +141,21 @@ export const DonationAmountFields = ({
 				</div>
 			)}
 
-			<div className={cn(amountFieldBorder, 'mb-3 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border')}>
+			<div
+				className={cn(
+					amountFieldBorder,
+					'focus-within:border-ring focus-within:ring-ring/50 mb-4 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border transition-[opacity,border-color,box-shadow] focus-within:ring-[3px]',
+					isOnePercentDimmed && 'opacity-60',
+				)}
+			>
 				<div
 					className={cn(
 						amountFieldBorder,
-						'bg-card focus-within:border-ring focus-within:ring-ring/50 relative -m-px rounded-l-md border px-3 py-2 transition-[border-color,box-shadow,color] focus-within:z-10 focus-within:ring-[3px]',
+						'bg-card border-r px-4 py-3 transition-colors',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
-					<label htmlFor={monthlyIncomeInputId} className="text-2xs font-medium">
+					<label htmlFor={monthlyIncomeInputId} className="text-2xs block font-medium">
 						{t('stepAmount.monthly-income-label')} ({currency})
 					</label>
 					<div className={monthlyAmountTextClass}>
@@ -118,23 +163,35 @@ export const DonationAmountFields = ({
 							variant="bare"
 							id={monthlyIncomeInputId}
 							data-testid="donation-wizard-monthly-income"
-							type="number"
-							min={DONATION_MONTHLY_INCOME_MIN}
-							max={DONATION_MONTHLY_INCOME_MAX}
-							value={values.monthlyIncome ?? ''}
+							type="text"
+							inputMode="numeric"
+							pattern="[0-9]*"
+							value={invalidMonthlyIncome?.text ?? values.monthlyIncome ?? ''}
+							aria-invalid={monthlyIncomeHint !== null}
+							aria-describedby={monthlyIncomeHint === null ? undefined : monthlyIncomeHintId}
 							onFocus={actions.selectOnePercent}
 							onChange={(e) => {
-								const raw = e.target.value;
-								if (raw === '') {
+								const parsed = parseWholeNumber(e.target.value);
+								if (parsed === 'invalid') {
+									setInvalidMonthlyIncome({ text: e.target.value, reason: 'not-whole' });
+									actions.setMonthlyIncome(null);
+
+									return;
+								}
+								setInvalidMonthlyIncome(null);
+								if (parsed === null) {
 									actions.setMonthlyIncome(null);
 
 									return;
 								}
 
-								const parsed = parseFloat(raw);
-								if (!isNaN(parsed) && parsed <= DONATION_MONTHLY_INCOME_MAX) {
-									actions.setMonthlyIncome(parsed);
+								if (parsed > DONATION_MONTHLY_INCOME_MAX) {
+									setInvalidMonthlyIncome({ text: e.target.value, reason: 'above-max' });
+									actions.setMonthlyIncome(null);
+
+									return;
 								}
+								actions.setMonthlyIncome(parsed);
 							}}
 						/>
 					</div>
@@ -145,20 +202,25 @@ export const DonationAmountFields = ({
 					aria-pressed={values.onePercentSelected}
 					onClick={actions.selectOnePercent}
 					className={cn(
-						'rounded-r-md px-3 py-2 text-left transition-colors',
+						'px-4 py-3 text-left transition-colors',
 						values.onePercentSelected
 							? 'bg-muted text-foreground'
 							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
 					)}
 				>
-					<div className="text-2xs font-medium">{t('stepAmount.your-one-percent')}</div>
-					<div className={cn(monthlyAmountTextClass, 'whitespace-nowrap')}>
-						{currency} {values.onePercent}
+					<div className="text-2xs font-medium">
+						{t('stepAmount.your-one-percent')} ({currency})
 					</div>
+					<div className={cn(monthlyAmountTextClass, 'py-0.5 whitespace-nowrap')}>{values.onePercent}</div>
 				</button>
 			</div>
+			{monthlyIncomeHint !== null && (
+				<p id={monthlyIncomeHintId} className={fieldHintClass}>
+					{monthlyIncomeHint}
+				</p>
+			)}
 
-			<div className="mb-3 flex items-center gap-4">
+			<div className="mb-4 flex items-center gap-4">
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
 				<div className="text-2xs text-center font-medium">{t('stepAmount.choose-own-amount')}</div>
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
@@ -166,101 +228,136 @@ export const DonationAmountFields = ({
 			<div
 				className={cn(
 					amountFieldBorder,
-					amountFieldDivider,
-					'mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border',
+					'focus-within:border-ring focus-within:ring-ring/50 relative mb-4 rounded-md border px-4 py-3 transition-[border-color,box-shadow,background-color,color] focus-within:ring-[3px]',
+					isCustomAmountActive ? 'bg-card text-foreground' : 'bg-card text-muted-foreground opacity-60',
 				)}
+				// Focus counts for the input and the chips together, so tabbing from the input to a chip keeps the chips
+				onFocus={() => setIsCustomAmountFocused(true)}
+				onBlur={(e) => {
+					if (!e.currentTarget.contains(e.relatedTarget)) {
+						setIsCustomAmountFocused(false);
+					}
+				}}
 			>
-				{amountOptions.map((option) => {
-					const isSelected = option.value === values.selectedAmount;
-
-					return (
-						<button
-							key={option.value}
-							type="button"
-							data-testid={`donation-wizard-preset-${option.value}`}
-							aria-pressed={isSelected}
-							onClick={() => actions.setPresetAmount(option.value)}
-							className={cn(
-								'flex flex-col items-center justify-center p-2.5 leading-none font-medium transition-colors sm:p-3',
-								isSelected ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
-							)}
-						>
-							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-2xs')}>
-								{option.labelKey === 'other' ? t('stepAmount.other') : currency}
-							</span>
-							{option.value !== 'other' && <span>{option.value}</span>}
-						</button>
-					);
-				})}
-			</div>
-
-			{values.selectedAmount === 'other' && (
-				<div className="-mt-2 mb-4">
+				{/* Floating label: rests in the middle while the field is empty, moves up once it is focused or filled */}
+				<label
+					htmlFor={customAmountInputId}
+					className={cn(
+						'absolute left-4 cursor-text font-medium transition-all',
+						isCustomAmountLabelFloating ? 'text-2xs top-3' : 'top-1/2 -translate-y-1/2 text-sm',
+					)}
+				>
+					{t('stepAmount.custom-amount-label')} ({currency})
+				</label>
+				<div className="h-3.5" aria-hidden />
+				{/* The chips share the number's row; the shift puts their bottom edge on the bottom of the digits */}
+				<div className={cn(monthlyAmountTextClass, 'flex items-baseline gap-2')}>
 					<Input
-						type="number"
+						variant="bare"
+						id={customAmountInputId}
+						type="text"
+						inputMode="numeric"
+						pattern="[0-9]*"
 						data-testid="donation-wizard-custom-amount"
-						min={DONATION_CUSTOM_AMOUNT_MIN}
-						max={DONATION_CUSTOM_AMOUNT_MAX}
-						placeholder={t('stepAmount.custom-amount-placeholder')}
-						value={values.customAmount ?? ''}
+						value={invalidCustomAmount?.text ?? values.customAmount ?? ''}
+						aria-invalid={customAmountHint !== null}
+						aria-describedby={customAmountHint === null ? undefined : customAmountHintId}
+						onFocus={() => {
+							if (values.selectedAmount !== 'other') {
+								actions.setPresetAmount('other');
+							}
+						}}
 						onChange={(e) => {
-							const raw = e.target.value;
-							if (raw === '') {
+							const parsed = parseWholeNumber(e.target.value);
+							if (parsed === 'invalid') {
+								setInvalidCustomAmount({ text: e.target.value, reason: 'not-whole' });
 								actions.setCustomAmount(null);
 
 								return;
 							}
-							const parsed = parseFloat(raw);
-							if (!isNaN(parsed) && parsed <= DONATION_CUSTOM_AMOUNT_MAX) {
-								actions.setCustomAmount(parsed);
+							setInvalidCustomAmount(null);
+							if (parsed === null) {
+								actions.setCustomAmount(null);
+
+								return;
 							}
+							if (parsed > DONATION_CUSTOM_AMOUNT_MAX) {
+								setInvalidCustomAmount({ text: e.target.value, reason: 'above-max' });
+								actions.setCustomAmount(null);
+
+								return;
+							}
+							actions.setCustomAmount(parsed);
 						}}
 					/>
+					{/* The chips only show while focus is in the field or on a chip */}
+					{isCustomAmountFocused && (
+						<div className="-my-1 flex shrink-0 -translate-y-2 gap-1.5">
+							{customAmountChips.map((amount) => (
+								<button
+									key={amount}
+									type="button"
+									data-testid={`donation-wizard-custom-amount-chip-${amount}`}
+									aria-pressed={values.customAmount === amount}
+									// The field label already names the currency, so the chips only show the number
+									aria-label={`${currency} ${amount}`}
+									// Safari does not focus buttons on click, so without this the blur would hide the chips before the click lands
+									onMouseDown={(e) => e.preventDefault()}
+									onClick={() => {
+										setInvalidCustomAmount(null);
+										actions.setCustomAmount(amount);
+									}}
+									className={cn(
+										amountFieldBorder,
+										'text-2xs cursor-pointer rounded-full border px-2.5 py-1 font-medium whitespace-nowrap transition-colors',
+										values.customAmount === amount
+											? 'bg-muted text-foreground'
+											: 'bg-card text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+									)}
+								>
+									{amount}
+								</button>
+							))}
+						</div>
+					)}
 				</div>
-			)}
-
-			<div className="bg-accent mb-4 grid grid-cols-2 rounded-md p-1">
-				<button
-					type="button"
-					data-testid="donation-wizard-cadence-monthly"
-					aria-pressed={values.cadence === 'monthly'}
-					onClick={() => actions.setCadence('monthly')}
-					className={cn(
-						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
-						values.cadence === 'monthly'
-							? cn(segmentActive, 'text-foreground')
-							: 'text-muted-foreground hover:text-foreground',
-					)}
-				>
-					{t('stepAmount.monthly')}
-				</button>
-				<button
-					type="button"
-					data-testid="donation-wizard-cadence-one-time"
-					aria-pressed={values.cadence === 'one-time'}
-					onClick={() => actions.setCadence('one-time')}
-					className={cn(
-						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
-						values.cadence === 'one-time'
-							? cn(segmentActive, 'text-foreground')
-							: 'text-muted-foreground hover:text-foreground',
-					)}
-				>
-					{t('stepAmount.one-time')}
-				</button>
 			</div>
+			{customAmountHint !== null && (
+				<p id={customAmountHintId} className={fieldHintClass}>
+					{customAmountHint}
+				</p>
+			)}
 
 			<Button
 				type="button"
 				data-testid="donation-wizard-amount-continue"
 				fullWidth
 				disabled={!values.isValid}
-				onClick={onSubmit}
+				onClick={() => onSubmit(values.cadence)}
 			>
-				{values.resolvedAmount !== null
-					? t('stepAmount.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
-					: t('stepAmount.donate-now')}
+				{values.resolvedAmount === null
+					? t('stepAmount.donate-now')
+					: values.cadence === 'monthly'
+						? t('stepAmount.donate-monthly-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
+						: t('stepAmount.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })}
 			</Button>
+			{/* Monthly is the default; the other cadence is a quiet text link below the button that donates with that cadence */}
+			<button
+				type="button"
+				data-testid={values.cadence === 'monthly' ? 'donation-wizard-cadence-one-time' : 'donation-wizard-cadence-monthly'}
+				disabled={!values.isValid}
+				onClick={() => onSubmit(values.cadence === 'monthly' ? 'one-time' : 'monthly')}
+				className="text-muted-foreground hover:text-foreground mt-4 -mb-2 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors disabled:pointer-events-none disabled:opacity-50 md:-mb-4"
+			>
+				{values.resolvedAmount === null
+					? t(values.cadence === 'monthly' ? 'stepAmount.switch-to-one-time' : 'stepAmount.switch-to-monthly')
+					: t(
+							values.cadence === 'monthly'
+								? 'stepAmount.switch-to-one-time-with-amount'
+								: 'stepAmount.switch-to-monthly-with-amount',
+							{ amount: `${currency} ${values.resolvedAmount}` },
+						)}
+			</button>
 		</div>
 	);
 };
