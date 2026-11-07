@@ -19,7 +19,7 @@ const extractNewsletterTitle = (html: string, filename: string) => {
 	}
 
 	const titleFragment = DOMPurify.sanitize(heading[1], { ALLOWED_TAGS: [], RETURN_DOM_FRAGMENT: true });
-	const title = titleFragment.textContent?.trim();
+	const title = titleFragment.textContent?.replace(/\s+Hi\s+\{\{\s*insert\s+first_name\b[^}]*\}\}\.?\s*$/i, '').trim();
 	if (!title) {
 		throw new Error(`Newsletter ${filename} has an empty h1 title.`);
 	}

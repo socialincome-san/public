@@ -12,6 +12,7 @@ describe('newsletter archive', () => {
 		expect(entries.length).toBeGreaterThan(0);
 		expect(entries).toEqual([...entries].sort((left, right) => right.id.localeCompare(left.id)));
 		expect(entries.every((entry) => entry.title.length > 0)).toBe(true);
+		expect(entries.some((entry) => entry.id === '2024-05' && entry.title === 'Kindness, King and Trivia.')).toBe(true);
 		expect(entries.some((entry) => entry.id === '2026-10' && entry.title === 'Shoes, Stablecoins and Schools.')).toBe(true);
 	});
 
