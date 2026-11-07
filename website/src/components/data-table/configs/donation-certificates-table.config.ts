@@ -13,12 +13,11 @@ export const donationCertificatesTableConfig: DataTableConfig<DonationCertificat
 	id: 'donation-certificates',
 	title: 'Donation Certificates',
 	emptyMessage: 'No donation certificates found',
-	searchKeys: ['id', 'contributorFirstName', 'contributorLastName', 'email', 'storagePath', 'year'],
+	searchKeys: ['id', 'contributorFirstName', 'contributorLastName', 'email', 'year'],
 	sortOptions: [
 		{ id: 'year', label: 'Year' },
 		{ id: 'contributor', label: 'Contributor' },
 		{ id: 'email', label: 'Email' },
-		{ id: 'storagePath', label: 'Storage path' },
 		{ id: 'createdAt', label: 'Created' },
 	],
 	makeColumns: () => makeDonationCertificateColumns(),
@@ -28,7 +27,7 @@ export const donationCertificatesTableConfig: DataTableConfig<DonationCertificat
 export const contributorDonationCertificatesTableConfig: DataTableConfig<DonationCertificateTableViewRow> = {
 	...donationCertificatesTableConfig,
 	id: 'contributor-donation-certificates',
-	searchKeys: ['id', 'storagePath', 'year'],
+	searchKeys: ['id', 'year'],
 	sortOptions: donationCertificatesTableConfig.sortOptions?.filter(({ id }) => id !== 'contributor' && id !== 'email'),
 	makeColumns: () => makeDonationCertificateColumns({ hideContributor: true }),
 };

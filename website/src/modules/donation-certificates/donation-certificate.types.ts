@@ -4,7 +4,6 @@ export type DonationCertificateTableViewRow = {
 	contributorFirstName: string;
 	contributorLastName: string;
 	email: string;
-	storagePath: string;
 	createdAt: Date;
 };
 
