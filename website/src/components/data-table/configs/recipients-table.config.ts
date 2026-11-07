@@ -23,17 +23,6 @@ export const recipientsTableConfig: DataTableConfig<RecipientTableViewRow> = {
 	title: 'Recipients',
 	emptyMessage: 'No recipients found',
 	searchKeys: ['id', 'firstName', 'lastName', 'paymentCode', 'firebaseAuthUserId', 'localPartnerName', 'programName'],
-	sortOptions: [
-		{ id: 'recipient', label: 'Recipient' },
-		{ id: 'country', label: 'Country' },
-		{ id: 'paymentCode', label: 'Payment code' },
-		{ id: 'dateOfBirth', label: 'Age' },
-		{ id: 'localPartnerName', label: 'Local partner' },
-		{ id: 'programName', label: 'Program' },
-		{ id: 'startDate', label: 'Start date' },
-		{ id: 'status', label: 'Status' },
-		{ id: 'createdAt', label: 'Created' },
-	],
 	makeColumns: makeRecipientColumns,
 	showColumnVisibilitySelector: true,
 };
@@ -42,7 +31,6 @@ export const localPartnerRecipientsTableConfig: DataTableConfig<RecipientTableVi
 	...recipientsTableConfig,
 	id: 'local-partner-recipients',
 	searchKeys: ['id', 'firstName', 'lastName', 'paymentCode', 'programName'],
-	sortOptions: recipientsTableConfig.sortOptions?.filter(({ id }) => id !== 'localPartnerName'),
 	makeColumns: () => makeRecipientColumns(false, true),
 };
 
