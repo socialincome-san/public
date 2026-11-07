@@ -139,6 +139,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboardUp2Date => 'You are up to date.\nNo news today.';
 
   @override
+  String get dashboardWelcomeMessage => 'Welcome to the Social Income app!';
+
+  @override
   String get edit => 'Edit';
 
   @override
