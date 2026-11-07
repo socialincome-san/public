@@ -173,7 +173,7 @@ class _App extends StatelessWidget {
       home: AppUpdateCheckWidget(
         appVersionInfo: appVersionInfo,
         child: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state.status == AuthStatus.authenticatedWithoutRecipient) {
               // Sign out the user to clean up auth state
               context.read<AuthService>().signOut();
@@ -189,7 +189,9 @@ class _App extends StatelessWidget {
               final selectedLanguage = state.recipient?.contact.language;
 
               if (selectedLanguage != null) {
-                context.read<SettingsCubit>().changeLanguage(selectedLanguage);
+                await context.read<SettingsCubit>().changeLanguage(
+                  selectedLanguage,
+                );
               }
             }
           },
