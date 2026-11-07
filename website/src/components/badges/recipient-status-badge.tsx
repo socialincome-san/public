@@ -2,7 +2,8 @@
 
 import type { RecipientLifecycleStatus } from '@/modules/recipients/recipient.types';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
-import { CheckCircle2Icon, Clock3Icon, PauseCircleIcon, PlayCircleIcon } from 'lucide-react';
+import { CheckCircle2Icon, CircleAlertIcon, Clock3Icon, PauseCircleIcon, PlayCircleIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { ComponentType } from 'react';
 
 type RecipientStatusBadgeProps = {
@@ -20,16 +21,18 @@ const RECIPIENT_STATUS_UI: Record<
 	future: { variant: 'outline', label: 'Future', Icon: Clock3Icon },
 	active: { variant: 'verified', label: 'Active', Icon: PlayCircleIcon },
 	suspended: { variant: 'destructive', label: 'Suspended', Icon: PauseCircleIcon },
+	interrupted: { variant: 'destructive', label: 'Interrupted', Icon: CircleAlertIcon },
 	completed: { variant: 'default', label: 'Completed', Icon: CheckCircle2Icon },
 };
 
 export const RecipientStatusBadge = ({ status }: RecipientStatusBadgeProps) => {
+	const t = useTranslations('website-common');
 	const { variant, label, Icon } = RECIPIENT_STATUS_UI[status];
 
 	return (
 		<Badge variant={variant}>
 			<Icon className="mr-1 h-4 w-4" />
-			{label}
+			{status === 'interrupted' ? t('recipient-status-interrupted') : label}
 		</Badge>
 	);
 };

@@ -18,6 +18,8 @@ export type RecipientPayload = {
 	startDate: Date | null;
 	suspendedAt: Date | null;
 	suspensionReason: string | null;
+	interruptedAt: Date | null;
+	interruptionComment: string | null;
 	successorName: string | null;
 	termsAccepted: boolean;
 	localPartner: {
@@ -54,6 +56,7 @@ export type RecipientMonthlySummarySource = {
 		programId: string | null;
 		startDate: Date | null;
 		suspendedAt: Date | null;
+		interruptedAt: Date | null;
 		program: {
 			programDurationInMonths: number;
 			payoutInterval: PayoutInterval;
@@ -68,6 +71,7 @@ export type PayoutProcessRecipient = {
 	id: string;
 	startDate: Date | null;
 	suspendedAt: Date | null;
+	interruptedAt: Date | null;
 	contact: {
 		firstName: string;
 		lastName: string;
@@ -118,11 +122,12 @@ export type SurveyRecipientOption = {
 	} | null;
 };
 
-export type RecipientLifecycleStatus = 'future' | 'active' | 'suspended' | 'completed';
+export type RecipientLifecycleStatus = 'future' | 'active' | 'suspended' | 'interrupted' | 'completed';
 
 export type RecipientLifecycleStatusInput = {
 	startDate: Date | null;
 	suspendedAt: Date | null;
+	interruptedAt: Date | null;
 	paidOrConfirmedCount: number;
 	programDurationInMonths: number;
 	payoutInterval: PayoutInterval;
@@ -132,6 +137,7 @@ export type RecipientLifecycleStatusInput = {
 export type RecipientLifecycleStatusFromExpectedIntervalsInput = {
 	startDate: Date | null;
 	suspendedAt: Date | null;
+	interruptedAt: Date | null;
 	paidOrConfirmedCount: number;
 	expectedIntervals: number;
 	nowDate: Date;
@@ -154,6 +160,7 @@ export type RecipientTableViewRow = {
 	localPartnerName: string | null;
 	suspendedAt: Date | null;
 	suspensionReason: string | null;
+	interruptedAt: Date | null;
 	programId: string | null;
 	programName: string | null;
 	payoutsReceived: number;
@@ -229,6 +236,8 @@ export type RecipientWithPaymentInfo = {
 	startDate: Date | null;
 	suspendedAt: Date | null;
 	suspensionReason: string | null;
+	interruptedAt: Date | null;
+	interruptionComment: string | null;
 	successorName: string | null;
 	termsAccepted: boolean;
 	paymentInformationId: string | null;

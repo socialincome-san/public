@@ -10,10 +10,12 @@ const mockWriteRepository = {
 const mockGetAccessiblePrograms = jest.fn();
 const mockCreateFirebaseUser = jest.fn();
 const mockDeleteFirebaseUser = jest.fn();
+const mockRemoveOutstandingSurveysForInterruptedRecipient = jest.fn();
 
 const updateContext = {
 	programId: 'program-1',
 	localPartnerId: 'partner-1',
+	interruptedAt: null,
 	contact: { id: 'contact-1', email: null, phone: null, address: null },
 	paymentInformation: null,
 };
@@ -49,6 +51,9 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 }));
 jest.mock('@/modules/local-partners/local-partner.service', () => ({ getLocalPartnerOptions: jest.fn() }));
 jest.mock('@/modules/programs/program-reference.service', () => ({ getProgramNameById: jest.fn() }));
+jest.mock('@/modules/surveys/survey-interruption.service', () => ({
+	removeOutstandingSurveysForInterruptedRecipient: mockRemoveOutstandingSurveysForInterruptedRecipient,
+}));
 
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import type { UserSession } from '@/modules/users/user.types';
@@ -103,6 +108,8 @@ const input: UpdateRecipientInput = {
 	startDate: null,
 	suspendedAt: null,
 	suspensionReason: null,
+	interrupted: false,
+	interruptionComment: null,
 	successorName: null,
 	termsAccepted: true,
 	contact: {
@@ -133,6 +140,7 @@ describe('recipient write attribution', () => {
 		});
 		mockCreateFirebaseUser.mockResolvedValue({ success: true, data: undefined });
 		mockDeleteFirebaseUser.mockResolvedValue({ success: true, data: undefined });
+		mockRemoveOutstandingSurveysForInterruptedRecipient.mockResolvedValue({ success: true, data: undefined });
 		Object.values(mockWriteRepository).forEach((write) => write.mockResolvedValue({ id: 'recipient-1', count: 1 }));
 	});
 
@@ -144,6 +152,19 @@ describe('recipient write attribution', () => {
 			portal,
 			{ actor: { type: 'local-partner', id: 'partner-1', name: 'Partner' }, source: 'partner-space' },
 		]);
+	});
+
+	test('preserves a committed interruption when survey cleanup fails and retries cleanup', async () => {
+		const updatedRecipient = { id: 'recipient-1', interruptedAt: new Date('2025-06-15T12:00:00.000Z') };
+		mockWriteRepository.updateRecipient.mockResolvedValue(updatedRecipient);
+		mockRemoveOutstandingSurveysForInterruptedRecipient
+			.mockResolvedValueOnce({ success: false, error: 'Survey cleanup failed' })
+			.mockResolvedValueOnce({ success: false, error: 'Survey cleanup failed' });
+
+		const result = await updateRecipient(operator, { ...input, interrupted: true });
+
+		expect(result).toEqual({ success: true, data: updatedRecipient });
+		expect(mockRemoveOutstandingSurveysForInterruptedRecipient).toHaveBeenCalledTimes(2);
 	});
 
 	test('attributes mobile app self-updates to the recipient', async () => {

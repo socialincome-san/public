@@ -11,6 +11,7 @@ const mockFindRecipientTableSource = jest.fn();
 const mockGetLocalPartnerOptions = jest.fn();
 const mockGetLocalPartnerFilterOption = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
+const mockRemoveOutstandingSurveysForInterruptedRecipient = jest.fn();
 
 jest.mock('./recipient.repository.read', () => ({
 	findPublicRecipientTableSource: mockFindPublicRecipientTableSource,
@@ -35,6 +36,9 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 jest.mock('@/modules/programs/program-reference.service', () => ({
 	getProgramNameById: mockGetProgramNameById,
 }));
+jest.mock('@/modules/surveys/survey-interruption.service', () => ({
+	removeOutstandingSurveysForInterruptedRecipient: mockRemoveOutstandingSurveysForInterruptedRecipient,
+}));
 jest.mock('@/lib/utils/now', () => ({
 	now: () => new Date('2025-06-15T12:00:00.000Z'),
 }));
@@ -45,6 +49,7 @@ import {
 	getPaginatedRecipientTableView,
 	getPublicRecipientsTableView,
 	getUnassignedRecipientCountries,
+	recipientStatusService,
 } from './recipient.service';
 
 const expectSuccess = <T>(result: Result<T>): T => {
@@ -212,5 +217,34 @@ describe('recipient statistics', () => {
 
 		expect(expectSuccess(await countRecipientsForProgramsAndLocalPartners(['program-1'], ['partner-1']))).toBe(7);
 		expect(expectSuccess(await countCandidatesForLocalPartners(['partner-1']))).toBe(3);
+	});
+});
+
+describe('recipient lifecycle status', () => {
+	test('interruptions take precedence over completed payout counts', () => {
+		const result = recipientStatusService.getRecipientLifecycleStatusFromExpectedIntervals({
+			startDate: new Date('2025-01-01T00:00:00.000Z'),
+			suspendedAt: null,
+			interruptedAt: new Date('2025-06-01T00:00:00.000Z'),
+			paidOrConfirmedCount: 12,
+			expectedIntervals: 12,
+			nowDate: new Date('2025-06-15T12:00:00.000Z'),
+		});
+
+		expect(result).toEqual({ success: true, data: 'interrupted' });
+	});
+
+	test('interrupted recipients are not eligible for payouts', () => {
+		const result = recipientStatusService.isRecipientEligibleForPayout({
+			startDate: new Date('2025-01-01T00:00:00.000Z'),
+			suspendedAt: null,
+			interruptedAt: new Date('2025-06-01T00:00:00.000Z'),
+			paidOrConfirmedCount: 0,
+			programDurationInMonths: 12,
+			payoutInterval: PayoutInterval.monthly,
+			nowDate: new Date('2025-06-15T12:00:00.000Z'),
+		});
+
+		expect(result).toEqual({ success: true, data: false });
 	});
 });

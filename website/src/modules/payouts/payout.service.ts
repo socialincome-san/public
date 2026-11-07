@@ -676,6 +676,7 @@ const buildPayoutForecastTableView = async (
 			const eligibilityResult = recipientStatusService.isRecipientEligibleForPayout({
 				startDate: recipient.startDate,
 				suspendedAt: recipient.suspendedAt,
+				interruptedAt: recipient.interruptedAt,
 				paidOrConfirmedCount: paid,
 				programDurationInMonths: program.programDurationInMonths,
 				payoutInterval: program.payoutInterval,
