@@ -5,6 +5,10 @@ export type AuditTableQuery = {
 	pageSize: number;
 	search: string;
 	entityType?: string;
+	paymentPhone?: string;
+	contactPhone?: string;
+	firstName?: string;
+	lastName?: string;
 };
 
 export type AuditTableViewRow = {
