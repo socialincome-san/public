@@ -22,8 +22,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class MessagingRepository {
   static const _androidNotificationChannelId = "social_income_notifications";
   static const _androidNotificationChannelName = "Social Income";
-  static const _androidNotificationChannelDescription =
-      "Updates from Social Income";
+  static const _androidNotificationChannelDescription = "Updates from Social Income";
   static const _androidNotificationChannel = AndroidNotificationChannel(
     _androidNotificationChannelId,
     _androidNotificationChannelName,
@@ -33,6 +32,7 @@ class MessagingRepository {
 
   final FirebaseMessaging messaging;
   final FlutterLocalNotificationsPlugin localNotifications;
+  int _nextNotificationId = DateTime.now().millisecondsSinceEpoch & 0x7fffffff;
 
   MessagingRepository({
     required this.messaging,
@@ -44,6 +44,17 @@ class MessagingRepository {
   }
 
   Future<void> initNotifications() async {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessage);
+    FirebaseMessaging.onMessage.listen(
+      (message) => unawaited(handleForegroundMessage(message)),
+    );
+
+    final initialMessage = await messaging.getInitialMessage();
+    if (initialMessage != null) {
+      _handleInitialMessage(initialMessage);
+    }
+
     await messaging.requestPermission(
       criticalAlert: true,
     );
@@ -67,24 +78,6 @@ class MessagingRepository {
     /// This is needed for testing and specific targeting of devices
     final token = await getToken();
     log("PUSHNOTIFICATION: Current FCM token: $token");
-
-    /// Get any messages which caused the application to open from a terminated state.
-    final initialMessage = await messaging.getInitialMessage();
-    if (initialMessage != null){
-      _handleInitialMessage(initialMessage);
-    }
-
-    // Set function which is called when the app is in the background or terminated.
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    // Set function which is called to handle any interaction when the app is in the background (not terminated) via a Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessage);
-
-    // Set a function which is called to handle any interaction when the app is in the foreground via a Stream listener
-    // For showing local notifications another package is needed: flutter_local_notifications => https://pub.dev/packages/flutter_local_notifications#-supported-platforms
-    FirebaseMessaging.onMessage.listen(
-      (message) => unawaited(handleForegroundMessage(message)),
-    );
   }
 
   @visibleForTesting
@@ -92,15 +85,15 @@ class MessagingRepository {
     log("PUSHNOTIFICATION: Foreground Message received");
     logRemoteMessage(message);
 
-    final title = message.notification?.title ?? _stringValue(message.data["title"]);
-    final body = message.notification?.body ?? _stringValue(message.data["body"]);
-    if ((title == null || title.isEmpty) && (body == null || body.isEmpty)) {
+    final title = _nonEmptyString(message.notification?.title) ?? _nonEmptyString(message.data["title"]);
+    final body = _nonEmptyString(message.notification?.body) ?? _nonEmptyString(message.data["body"]);
+    if (title == null && body == null) {
       return;
     }
 
     try {
       await localNotifications.show(
-        id: message.messageId?.hashCode ?? message.hashCode,
+        id: _nextNotificationId++,
         title: title,
         body: body,
         notificationDetails: const NotificationDetails(
@@ -163,7 +156,7 @@ class MessagingRepository {
     return null;
   }
 
-  String? _stringValue(Object? value) => value is String ? value : null;
+  String? _nonEmptyString(Object? value) => value is String && value.trim().isNotEmpty ? value : null;
 
   static void logRemoteMessage(RemoteMessage message) {
     if (message.notification != null) {

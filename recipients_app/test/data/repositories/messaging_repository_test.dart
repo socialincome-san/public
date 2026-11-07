@@ -15,7 +15,7 @@ void main() {
     registerFallbackValue(_FakeNotificationDetails());
   });
 
-  test("shows an incoming push as a local notification", () async {
+  test("shows incoming pushes as local notifications with unique IDs", () async {
     final messaging = _MockFirebaseMessaging();
     when(() => messaging.onTokenRefresh).thenAnswer((_) => const Stream.empty());
     final localNotifications = _MockLocalNotificationsPlugin();
@@ -43,14 +43,27 @@ void main() {
       ),
     );
 
-    verify(
+    await repository.handleForegroundMessage(
+      const RemoteMessage(
+        messageId: "push-2",
+        notification: RemoteNotification(
+          title: "Payment confirmed",
+          body: "Your next payment is scheduled",
+        ),
+      ),
+    );
+
+    final notificationIds = verify(
       () => localNotifications.show(
-        id: "push-1".hashCode,
-        title: "Payment received",
-        body: "Confirm your payment",
+        id: captureAny(named: "id"),
+        title: any(named: "title"),
+        body: any(named: "body"),
         notificationDetails: any(named: "notificationDetails"),
       ),
-    ).called(1);
+    ).captured;
+
+    expect(notificationIds, hasLength(2));
+    expect(notificationIds.toSet(), hasLength(2));
   });
 
   test("uses display text from a data-only push", () async {
@@ -73,6 +86,41 @@ void main() {
 
     await repository.handleForegroundMessage(
       const RemoteMessage(
+        data: {"title": "Payment received", "body": "Confirm your payment"},
+      ),
+    );
+
+    verify(
+      () => localNotifications.show(
+        id: any(named: "id"),
+        title: "Payment received",
+        body: "Confirm your payment",
+        notificationDetails: any(named: "notificationDetails"),
+      ),
+    ).called(1);
+  });
+
+  test("uses data text when notification fields are empty", () async {
+    final messaging = _MockFirebaseMessaging();
+    when(() => messaging.onTokenRefresh).thenAnswer((_) => const Stream.empty());
+    final localNotifications = _MockLocalNotificationsPlugin();
+    when(
+      () => localNotifications.show(
+        id: any(named: "id"),
+        title: any(named: "title"),
+        body: any(named: "body"),
+        notificationDetails: any(named: "notificationDetails"),
+      ),
+    ).thenAnswer((_) async {});
+
+    final repository = MessagingRepository(
+      messaging: messaging,
+      localNotifications: localNotifications,
+    );
+
+    await repository.handleForegroundMessage(
+      const RemoteMessage(
+        notification: RemoteNotification(title: "", body: ""),
         data: {"title": "Payment received", "body": "Confirm your payment"},
       ),
     );
