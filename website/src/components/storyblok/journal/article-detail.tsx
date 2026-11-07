@@ -39,13 +39,13 @@ export const ArticleDetail = async ({ story, slug, lang, currency, relatedArticl
 					<ArticleDetailHeader story={story} hasHero={hasHero} lang={lang} currency={currency} />
 				</div>
 			) : (
-				<div className="w-site-width max-w-content mx-auto space-y-8 px-4 pt-8 sm:px-0 sm:pt-10">
+				<div className="w-site-width max-w-content mx-auto space-y-8 pt-8 sm:pt-10">
 					<JournalBreadcrumb links={breadcrumbs} />
 					<ArticleDetailHeader story={story} hasHero={false} lang={lang} currency={currency} />
 				</div>
 			)}
 
-			<div className="w-site-width max-w-content mx-auto px-4 py-8 sm:px-0 sm:py-10">
+			<div className="w-site-width max-w-content mx-auto py-8 sm:py-10">
 				<div className="mx-auto max-w-2xl space-y-10">
 					{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} />}
 					<ArticleDetailBody story={story} slug={slug} lang={lang} currency={currency} />
@@ -53,7 +53,7 @@ export const ArticleDetail = async ({ story, slug, lang, currency, relatedArticl
 			</div>
 
 			{article.showRelativeArticles && relatedArticles.length > 0 && (
-				<section className="w-site-width max-w-content mx-auto px-4 pb-16 sm:px-0">
+				<section className="w-site-width max-w-content mx-auto pb-16">
 					<div className="mb-8 md:mb-10">
 						<SectionHeading size={4} bold>
 							{t('article.keep-reading')}
