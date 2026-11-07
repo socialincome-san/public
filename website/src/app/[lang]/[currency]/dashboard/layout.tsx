@@ -31,10 +31,10 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 
 	return (
 		<div className="w-site-width max-w-content mx-auto flex-1 pb-8">
-			<Breadcrumb links={breadcrumbLinks} />
-			<h1 data-testid="welcome-message-dashboard" className="py-8 text-5xl">
+			<h1 className="sr-only" data-testid="welcome-message-dashboard">
 				{t('title.dashboard')}
 			</h1>
+			<Breadcrumb links={breadcrumbLinks} />
 			<TabNavigation sections={sections} />
 			<Card>{children}</Card>
 		</div>

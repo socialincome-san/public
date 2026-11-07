@@ -61,14 +61,17 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 			className="bg-background flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-6"
 			data-testid="edit-subscription-row"
 		>
-			<p className="text-base">
-				<span className="font-semibold">
-					{formatCurrencyLocale(subscription.amount, subscription.currency, lang, fractionalCurrencyFormatOptions)}
-				</span>{' '}
-				<span className="text-muted-foreground">
-					{labels.perMonth} · {labels.since} {formatDateLocale(subscription.createdAt, lang)}
-				</span>
-			</p>
+			<div className="text-base">
+				<p>
+					<span className="font-semibold">
+						{formatCurrencyLocale(subscription.amount, subscription.currency, lang, fractionalCurrencyFormatOptions)}
+					</span>{' '}
+					<span className="text-muted-foreground">{labels.perMonth}</span>
+				</p>
+				<p className="text-muted-foreground text-sm">
+					{labels.since} {formatDateLocale(subscription.createdAt, lang)}
+				</p>
+			</div>
 			<div className="flex flex-wrap items-center justify-between gap-3 sm:justify-start">
 				<SubscriptionPaymentMethodDisplay
 					paymentDisplay={{

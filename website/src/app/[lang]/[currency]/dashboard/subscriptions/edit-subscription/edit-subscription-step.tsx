@@ -98,7 +98,8 @@ export const EditSubscriptionStep = ({
 	const coverChanged = coverTransactionCosts !== initialCoverTransactionCosts;
 	const canSubmit =
 		isSubscriptionAmountInRange(amount) && (amountChanged || coverChanged) && !isSubmitting && !isUpdatingCard;
-	const sliderMax = Math.min(SUBSCRIPTION_AMOUNT_MAX, Math.max(SUBSCRIPTION_AMOUNT_SLIDER_MAX, initialAmount));
+	const sliderMax = SUBSCRIPTION_AMOUNT_SLIDER_MAX;
+	const sliderValue = Math.min(amount, sliderMax);
 	const [amountDraft, setAmountDraft] = useState<string | null>(null);
 	const amountInput = amountDraft ?? String(amount);
 	const transactionCost = getOnlineTransactionCost(amount);
@@ -140,7 +141,8 @@ export const EditSubscriptionStep = ({
 							min={SUBSCRIPTION_AMOUNT_MIN}
 							max={sliderMax}
 							step={1}
-							value={[amount]}
+							value={[sliderValue]}
+							disabled={amount > sliderMax}
 							onValueChange={([value]) => {
 								setAmountDraft(null);
 								onAmountChange(clampSubscriptionAmount(value ?? amount));

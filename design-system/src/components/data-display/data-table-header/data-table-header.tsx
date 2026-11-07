@@ -12,11 +12,13 @@ type DataTableHeaderProps = {
 };
 
 export const DataTableHeader = ({ title, count, infoTooltip, toolbar }: DataTableHeaderProps) => (
-	<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+	<div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
 		<div className="flex items-center gap-2">
-			<h2 className="text-3xl">
-				{title} <span className="text-muted-foreground text-lg">({count})</span>
-			</h2>
+			{title ? (
+				<h2 className="text-3xl">
+					{title} <span className="text-muted-foreground text-lg">({count})</span>
+				</h2>
+			) : null}
 			{infoTooltip ? (
 				<Tooltip>
 					<TooltipTrigger asChild>
@@ -28,7 +30,7 @@ export const DataTableHeader = ({ title, count, infoTooltip, toolbar }: DataTabl
 							<InfoIcon className="size-4" />
 						</button>
 					</TooltipTrigger>
-					<TooltipContent side="right" sideOffset={8}>
+					<TooltipContent size="lg" side="bottom" sideOffset={8}>
 						{infoTooltip}
 					</TooltipContent>
 				</Tooltip>
