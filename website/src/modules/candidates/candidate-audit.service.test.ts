@@ -26,6 +26,9 @@ jest.mock('./candidate.repository.read', () => ({
 }));
 jest.mock('@/modules/auth/auth.service', () => ({}));
 jest.mock('@/modules/countries/country.service', () => ({ getCountryIsoCode: jest.fn() }));
+jest.mock('@/modules/program-access/program-access.service', () => ({
+	getOperatorProgramCountriesForUser: jest.fn(),
+}));
 jest.mock('@/modules/users/user.service', () => ({ isAdmin: mockIsAdmin }));
 jest.mock('@/modules/recipients/recipient.service', () => ({ recipientAuditedEntity: mockRecipientEntity }));
 

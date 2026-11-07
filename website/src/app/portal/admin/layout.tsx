@@ -23,7 +23,6 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 		{ href: `/portal/admin/organizations`, label: 'Organizations' },
 		{ href: `/portal/admin/users`, label: 'Users' },
 		{ href: `/portal/admin/local-partners`, label: 'Local Partners' },
-		{ href: `/portal/admin/candidates`, label: 'Candidate Pool' },
 		{ href: `/portal/admin/expenses`, label: 'Expenses' },
 		{ href: `/portal/admin/exchange-rates`, label: 'Exchange Rates' },
 		{ href: `/portal/admin/countries`, label: 'Countries' },

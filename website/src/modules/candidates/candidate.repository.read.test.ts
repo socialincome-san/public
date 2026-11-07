@@ -9,12 +9,14 @@ type CountQuery = {
 };
 
 const mockCount = jest.fn<Promise<number>, [CountQuery]>();
+const mockRecipientFindMany = jest.fn<Promise<unknown[]>, [unknown]>();
 const mockPartnerFindMany = jest.fn<Promise<{ id: string; name: string }[]>, [unknown]>();
 
 jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
 		recipient: {
 			count: mockCount,
+			findMany: mockRecipientFindMany,
 		},
 		localPartner: {
 			findMany: mockPartnerFindMany,
@@ -22,7 +24,7 @@ jest.mock('@/lib/database/prisma', () => ({
 	},
 }));
 
-import { countCandidates } from './candidate.repository.read';
+import { countCandidates, findPaginatedCandidates } from './candidate.repository.read';
 import type { UnassignedCandidateFilter } from './candidate.types';
 
 const countryFilter = {
@@ -42,6 +44,7 @@ describe('candidate pool filtering', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockCount.mockResolvedValue(0);
+		mockRecipientFindMany.mockResolvedValue([]);
 	});
 
 	test('counts every unassigned candidate in the country when no filters are selected', async () => {
@@ -65,6 +68,44 @@ describe('candidate pool filtering', () => {
 				],
 			},
 		});
+	});
+
+	test('limits candidate rows and filter options to the operator countries', async () => {
+		await findPaginatedCandidates({
+			query: { page: 1, pageSize: 10, search: '' },
+			country: CountryCode.GH,
+			allowedCountryCodes: [CountryCode.GH, CountryCode.SL],
+		});
+
+		const allowedLocalPartnerCountries = {
+			localPartner: { contact: { address: { country: { in: [CountryCode.GH, CountryCode.SL] } } } },
+		};
+		const selectedCountry = {
+			OR: [
+				{ contact: { address: { country: CountryCode.GH } } },
+				{
+					AND: [
+						{ OR: [{ contact: { address: null } }, { contact: { address: { country: null } } }] },
+						{ localPartner: { contact: { address: { country: CountryCode.GH } } } },
+					],
+				},
+			],
+		};
+
+		expect(mockRecipientFindMany).toHaveBeenNthCalledWith(
+			1,
+			expect.objectContaining({
+				where: {
+					AND: [{ programId: null }, allowedLocalPartnerCountries, selectedCountry],
+				},
+			}),
+		);
+		expect(mockRecipientFindMany).toHaveBeenNthCalledWith(
+			2,
+			expect.objectContaining({
+				where: { programId: null, AND: [allowedLocalPartnerCountries] },
+			}),
+		);
 	});
 
 	test('combines selected focuses with OR', async () => {
