@@ -17,6 +17,10 @@
 		{
 			"path": "/api/v1/monthly-summary",
 			"schedule": "0 8 1 * *"
+		},
+		{
+			"path": "/api/v1/donation-certificates/annual-email",
+			"schedule": "0 8 * 1 *"
 		}
 	]
 }

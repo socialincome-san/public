@@ -13,6 +13,7 @@ jest.mock('@/lib/database/prisma', () => ({
 }));
 
 import {
+	findDonationCertificatesForYear,
 	findPaginatedContributorDonationCertificates,
 	findPaginatedDonationCertificates,
 } from './donation-certificate.repository.read';
@@ -95,5 +96,27 @@ describe('donation certificate repository', () => {
 			}),
 		);
 		expect(mockCount).toHaveBeenCalledWith({ where });
+	});
+
+	test('finds certificates for a year with contributor contact details', async () => {
+		await findDonationCertificatesForYear(2025);
+
+		expect(mockFindMany).toHaveBeenCalledWith({
+			where: { year: 2025 },
+			select: {
+				contributorId: true,
+				contributor: {
+					select: {
+						contact: {
+							select: {
+								firstName: true,
+								email: true,
+							},
+						},
+					},
+				},
+			},
+			orderBy: { createdAt: 'desc' },
+		});
 	});
 });

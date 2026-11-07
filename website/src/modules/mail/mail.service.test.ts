@@ -2,6 +2,7 @@ const mockSendSendgridEmail = jest.fn();
 const mockIsAdmin = jest.fn();
 const mockFindContactIdByEmail = jest.fn();
 const mockFindPaginatedSentEmails = jest.fn();
+const mockFindSentEmailBySubjectAndToEmail = jest.fn();
 const mockCreateSentEmail = jest.fn();
 
 jest.mock('@/integrations/sendgrid/sendgrid-mail.integration', () => ({
@@ -15,10 +16,11 @@ jest.mock('@/modules/users/user.service', () => ({
 jest.mock('./mail.repository', () => ({
 	findContactIdByEmail: mockFindContactIdByEmail,
 	findPaginatedSentEmails: mockFindPaginatedSentEmails,
+	findSentEmailBySubjectAndToEmail: mockFindSentEmailBySubjectAndToEmail,
 	createSentEmail: mockCreateSentEmail,
 }));
 
-import { getPaginatedSentEmailTableView, sendMail } from './mail.service';
+import { getPaginatedSentEmailTableView, hasSentMailToWithSubject, sendMail } from './mail.service';
 import type { SentEmailTableQuery } from './mail.types';
 
 const tableQuery: SentEmailTableQuery = {
@@ -41,6 +43,7 @@ describe('mail service', () => {
 		mockIsAdmin.mockResolvedValue({ success: true, data: true });
 		mockFindContactIdByEmail.mockResolvedValue(null);
 		mockFindPaginatedSentEmails.mockResolvedValue({ sentEmails: [], totalCount: 0 });
+		mockFindSentEmailBySubjectAndToEmail.mockResolvedValue(null);
 		mockCreateSentEmail.mockResolvedValue({ id: 'email-1' });
 	});
 
@@ -116,6 +119,16 @@ describe('mail service', () => {
 			}),
 		).resolves.toEqual({ success: false, error: 'Could not send email' });
 		expect(mockCreateSentEmail).not.toHaveBeenCalled();
+	});
+
+	test('checks sent email by subject and recipient', async () => {
+		mockFindSentEmailBySubjectAndToEmail.mockResolvedValue({ id: 'email-1' });
+
+		await expect(hasSentMailToWithSubject('recipient@example.com', 'Subject')).resolves.toEqual({
+			success: true,
+			data: true,
+		});
+		expect(mockFindSentEmailBySubjectAndToEmail).toHaveBeenCalledWith('Subject', 'recipient@example.com');
 	});
 
 	test('returns paginated sent emails and formats the contact', async () => {
