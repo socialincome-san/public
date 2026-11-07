@@ -1,5 +1,6 @@
 // "unreachable_from_main" is ignored beacuse of the vm:entry-point function "_firebaseMessagingBackgroundHandler"
 // ignore_for_file: unreachable_from_main
+import "dart:async";
 import "dart:developer";
 import "dart:io";
 
@@ -19,19 +20,16 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 class MessagingRepository {
   final FirebaseMessaging messaging;
+  Future<void> _notificationTopicUpdateQueue = Future<void>.value();
 
-  MessagingRepository({
-    required this.messaging,
-  }) {
+  MessagingRepository({required this.messaging}) {
     messaging.onTokenRefresh.listen((event) {
       log("PUSHNOTIFICATION: FCM Token refreshed: $event");
     });
   }
 
   Future<void> initNotifications() async {
-    await messaging.requestPermission(
-      criticalAlert: true,
-    );
+    await messaging.requestPermission(criticalAlert: true);
 
     /// This is needed for testing and specific targeting of devices
     final token = await getToken();
@@ -65,17 +63,35 @@ class MessagingRepository {
     );
   }
 
-  Future<void> updateNotificationTopics(LanguageCode language) async {
+  Future<void> updateNotificationTopics(LanguageCode language) {
+    final completer = Completer<void>();
+    _notificationTopicUpdateQueue = _notificationTopicUpdateQueue.then((
+      _,
+    ) async {
+      try {
+        await _updateNotificationTopics(language);
+        completer.complete();
+      } on Object catch (error, stackTrace) {
+        completer.completeError(error, stackTrace);
+      }
+    });
+
+    return completer.future;
+  }
+
+  Future<void> _updateNotificationTopics(LanguageCode language) async {
     final languageSuffix = language == LanguageCode.kri ? "kri" : "en";
     final otherLanguageSuffix = languageSuffix == "en" ? "kri" : "en";
 
     await Future.wait([
-      messaging.subscribeToTopic("payments_$languageSuffix"),
-      messaging.subscribeToTopic("news_$languageSuffix"),
-    ]);
-    await Future.wait([
-      messaging.unsubscribeFromTopic("payments_$otherLanguageSuffix"),
-      messaging.unsubscribeFromTopic("news_$otherLanguageSuffix"),
+      Future.sync(() => messaging.subscribeToTopic("payments_$languageSuffix")),
+      Future.sync(() => messaging.subscribeToTopic("news_$languageSuffix")),
+      Future.sync(
+        () => messaging.unsubscribeFromTopic("payments_$otherLanguageSuffix"),
+      ),
+      Future.sync(
+        () => messaging.unsubscribeFromTopic("news_$otherLanguageSuffix"),
+      ),
     ]);
   }
 
@@ -110,10 +126,14 @@ class MessagingRepository {
       } on FirebaseException catch (e) {
         if (e.code != "apns-token-not-set") rethrow;
         if (attempt == maxRetries - 1) {
-          log("PUSHNOTIFICATION: Failed to get FCM token after $maxRetries retries: ${e.code}");
+          log(
+            "PUSHNOTIFICATION: Failed to get FCM token after $maxRetries retries: ${e.code}",
+          );
           break;
         }
-        log("PUSHNOTIFICATION: APNS token not yet set, retrying (${attempt + 1}/$maxRetries)");
+        log(
+          "PUSHNOTIFICATION: APNS token not yet set, retrying (${attempt + 1}/$maxRetries)",
+        );
       }
     }
     return null;
@@ -122,8 +142,12 @@ class MessagingRepository {
   static void logRemoteMessage(RemoteMessage message) {
     if (message.notification != null) {
       log("RemoteMessage message.notification: ${message.notification}");
-      log('RemoteMessage message.notification?.title: ${message.notification?.title ?? ''}');
-      log('RemoteMessage message.notification?.body: ${message.notification?.body ?? ''}');
+      log(
+        'RemoteMessage message.notification?.title: ${message.notification?.title ?? ''}',
+      );
+      log(
+        'RemoteMessage message.notification?.body: ${message.notification?.body ?? ''}',
+      );
     }
     log("RemoteMessage message.messageType: ${message.messageType}");
     log("RemoteMessage message.messageId: ${message.messageId}");

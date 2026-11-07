@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
@@ -23,9 +25,7 @@ import "package:package_info_plus/package_info_plus.dart";
 class AccountPage extends StatefulWidget {
   final Recipient recipient;
 
-  const AccountPage({
-    required this.recipient,
-  });
+  const AccountPage({required this.recipient});
 
   @override
   State<AccountPage> createState() => AccountPageState();
@@ -69,9 +69,7 @@ class AccountPageState extends State<AccountPage> {
     _emailController = TextEditingController(
       text: widget.recipient.contact.email,
     );
-    _birthDateController = TextEditingController(
-      text: "",
-    );
+    _birthDateController = TextEditingController(text: "");
     _paymentNumberController = TextEditingController(
       text: widget.recipient.paymentInformation?.phone.number ?? "",
     );
@@ -134,8 +132,7 @@ class AccountPageState extends State<AccountPage> {
             message: context.l10n.offlineMutationError,
             type: FlushbarType.error,
           );
-        } else if (state.status == AuthStatus.updateRecipientFailure &&
-            state.exception is! OfflineMutationException) {
+        } else if (state.status == AuthStatus.updateRecipientFailure && state.exception is! OfflineMutationException) {
           FlushbarHelper.showFlushbar(
             context,
             message: context.l10n.profileUpdateError,
@@ -270,7 +267,9 @@ class AccountPageState extends State<AccountPage> {
                           // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
                           if (context.mounted) {
                             context.read<AuthCubit>().updateRecipient(
-                              selfUpdate: RecipientSelfUpdate(dateOfBirth: value),
+                              selfUpdate: RecipientSelfUpdate(
+                                dateOfBirth: value,
+                              ),
                             );
                             _birthDateController.text = getFormattedDate(value, locale) ?? "";
                           }
@@ -309,16 +308,16 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onChanged: (value) async {
+                  onChanged: (value) {
                     if (value == null) return;
 
                     // change language accordingly
                     final settingsCubit = context.read<SettingsCubit>();
                     final authCubit = context.read<AuthCubit>();
-                    await settingsCubit.changeLanguage(value);
                     authCubit.updateRecipient(
                       selfUpdate: RecipientSelfUpdate(language: value),
                     );
+                    unawaited(settingsCubit.changeLanguage(value));
                   },
                   value: recipient.contact.language,
                 ),
@@ -543,10 +542,7 @@ class AccountPageState extends State<AccountPage> {
     );
   }
 
-  String? getFormattedDate(
-    DateTime? date,
-    String locale,
-  ) {
+  String? getFormattedDate(DateTime? date, String locale) {
     if (date == null) return null;
     return DateFormat.yMd(locale).format(date);
   }
