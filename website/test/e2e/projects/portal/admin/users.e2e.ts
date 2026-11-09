@@ -85,7 +85,7 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 		await page.getByTestId('form-item-firstName').locator('input').fill(firstName);
 		await page.getByTestId('form-item-lastName').locator('input').fill(lastName);
 		await page.getByTestId('form-item-email').locator('input').fill(email);
-		await selectOptionByTestId(page, 'role', 'user');
+		await selectOptionByTestId(page, 'role', 'User');
 		await selectMultiOptionsByTestId(page, 'organizations', organizationNames);
 		await page.getByRole('button', { name: 'Save' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
@@ -140,7 +140,7 @@ test('shows uniqueness error when user email already exists', async ({ page }) =
 	await page.getByTestId('form-item-firstName').locator('input').fill('Dup');
 	await page.getByTestId('form-item-lastName').locator('input').fill('User');
 	await page.getByTestId('form-item-email').locator('input').fill('power@portal.test');
-	await selectOptionByTestId(page, 'role', 'user');
+	await selectOptionByTestId(page, 'role', 'User');
 	await selectMultiOptionsByTestId(page, 'organizations', ['Social Income SL']);
 	await page.getByRole('button', { name: 'Save' }).click();
 
@@ -172,7 +172,7 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 		await page.getByTestId('form-item-firstName').locator('input').fill(initialFirstName);
 		await page.getByTestId('form-item-lastName').locator('input').fill(initialLastName);
 		await page.getByTestId('form-item-email').locator('input').fill(initialEmail);
-		await selectOptionByTestId(page, 'role', 'user');
+		await selectOptionByTestId(page, 'role', 'User');
 		await selectMultiOptionsByTestId(page, 'organizations', initialOrganizationNames);
 		await page.getByRole('button', { name: 'Save' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
@@ -249,7 +249,7 @@ test('delete user removes database and Firebase entries', async ({ page }) => {
 		await page.getByTestId('form-item-firstName').locator('input').fill(firstName);
 		await page.getByTestId('form-item-lastName').locator('input').fill(lastName);
 		await page.getByTestId('form-item-email').locator('input').fill(email);
-		await selectOptionByTestId(page, 'role', 'user');
+		await selectOptionByTestId(page, 'role', 'User');
 		await selectMultiOptionsByTestId(page, 'organizations', ['Social Income SL']);
 		await page.getByRole('button', { name: 'Save' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });

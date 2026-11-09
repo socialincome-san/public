@@ -10,6 +10,7 @@ import type {
 	SelectionState,
 	VariableAssignments,
 } from '@/modules/messaging/messaging.types';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { phoneChoiceLabels } from './phone-labels';
 import { renderTemplatePreview } from './render-template-preview';
@@ -40,6 +41,7 @@ export const Step4Summary = ({
 	phoneFallbackAllowed,
 	onPreviewLoaded,
 }: Props) => {
+	const t = useTranslations('portal-messaging');
 	const count = getSelectedCount(selection, totalCount);
 	const rendered = body ? renderTemplatePreview(body, variables, assignments) : '';
 
@@ -83,41 +85,41 @@ export const Step4Summary = ({
 	const preview = current && 'data' in current ? current.data : null;
 	const previewError = current && 'error' in current ? current.error : null;
 
-	const otherChannel = channel === 'whatsapp' ? 'SMS' : 'WhatsApp';
-	const labels = phoneChoiceLabels(type, phoneSource, phoneFallbackAllowed);
+	const otherChannel = channel === 'whatsapp' ? t('common.channels.sms') : t('common.channels.whatsapp');
+	const channelLabel =
+		channel === 'sms' ? t('common.channels.sms') : channel === 'whatsapp' ? t('common.channels.whatsapp') : '';
+	const labels = phoneChoiceLabels(type, phoneSource, phoneFallbackAllowed, {
+		contact: t('wizard.phone.contactShort'),
+		payment: t('wizard.phone.paymentShort'),
+		skipped: t('wizard.review.skippedNoPhone'),
+		skippedFor: (phone) => t('wizard.review.skippedNoPhoneFor', { phone }),
+		onPhone: (phone) => t('wizard.review.onPhone', { phone }),
+	});
 
 	return (
 		<div className="space-y-6">
 			<div className="space-y-4 rounded-lg border p-4">
 				<p className="text-sm">
-					Sending to{' '}
-					<span className="font-medium">
-						{count} recipient{count === 1 ? '' : 's'}
-					</span>
-					{channel && (
-						<>
-							{' '}
-							via <span className="font-medium">{channel.toUpperCase()}</span>
-						</>
-					)}
-					{labels.target !== null && ` ${labels.target}`}.
+					{t('wizard.review.sendingTo', { count })}{' '}
+					<span className="font-medium">{channel ? `${t('common.via')} ${channelLabel}` : ''}</span>
+					{channel && <>{labels.target && ` ${labels.target}`}</>}.
 				</p>
 
 				{channel && (
 					<div className="border-t pt-4 text-sm">
 						{!preview && !previewError && <div className="bg-muted h-4 w-48 animate-pulse rounded" />}
 						{previewError && (
-							<p className="text-destructive">Couldn&apos;t calculate the delivery breakdown: {previewError}</p>
+							<p className="text-destructive">{t('wizard.review.breakdownError', { error: previewError })}</p>
 						)}
 						{preview && (
 							<dl className="space-y-2">
 								<div className="flex items-center justify-between gap-4">
-									<dt className="text-muted-foreground">Delivered via {channel.toUpperCase()}</dt>
+									<dt className="text-muted-foreground">{t('wizard.review.deliveredVia', { channel: channelLabel })}</dt>
 									<dd className="font-medium tabular-nums">{preview.primary}</dd>
 								</div>
 								{preview.fallback > 0 && (
 									<div className="flex items-center justify-between gap-4">
-										<dt className="text-muted-foreground">Falling back to {otherChannel}</dt>
+										<dt className="text-muted-foreground">{t('wizard.review.fallingBackTo', { channel: otherChannel })}</dt>
 										<dd className="font-medium tabular-nums">{preview.fallback}</dd>
 									</div>
 								)}
@@ -134,11 +136,11 @@ export const Step4Summary = ({
 			</div>
 
 			<div className="space-y-2">
-				<h4 className="text-sm font-medium">Message preview</h4>
+				<h4 className="text-sm font-medium">{t('wizard.review.messagePreview')}</h4>
 				{body ? (
 					<pre className="bg-muted rounded-md p-4 text-sm whitespace-pre-wrap">{rendered}</pre>
 				) : (
-					<p className="text-muted-foreground text-sm">This template has no message body.</p>
+					<p className="text-muted-foreground text-sm">{t('common.noBody')}</p>
 				)}
 			</div>
 		</div>

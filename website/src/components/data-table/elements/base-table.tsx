@@ -6,6 +6,7 @@ import { DataTablePagination } from '@socialincome/design-system/data-display/da
 import { DataTable } from '@socialincome/design-system/data-display/data-table/data-table';
 import { flexRender, functionalUpdate, type RowData, type SortingState } from '@tanstack/react-table';
 import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useLegacyTable } from '@tanstack/react-table/legacy';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 type BaseTableProps<TData extends RowData> = {
@@ -46,6 +47,7 @@ export const BaseTable = <TData extends RowData>({
 	compact = false,
 	emptyMessage = 'No results.',
 }: BaseTableProps<TData>) => {
+	const t = useTranslations('portal-shared');
 	const [sorting, setSorting] = useState<SortingState>(initialSorting);
 	const [internalColumnVisibility, setInternalColumnVisibility] = useState<VisibilityState>({});
 	const activeServerPagination = serverPagination ?? null;
@@ -145,6 +147,12 @@ export const BaseTable = <TData extends RowData>({
 			pagination={
 				compact ? null : (
 					<DataTablePagination
+						labels={{
+							rowsPerPage: t('table.rowsPerPage'),
+							previous: t('table.previous'),
+							next: t('table.next'),
+							of: t('table.of'),
+						}}
 						startRow={startRow}
 						endRow={endRow}
 						totalRows={totalRows}

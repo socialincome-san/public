@@ -1,7 +1,10 @@
 'use client';
 
-import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
-import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
+import {
+	getFormSchema as getContactFormSchema,
+	type PortalSharedTranslator,
+} from '@/components/dynamic-form/contact-form-schemas';
+import DynamicForm, { type FormField, type FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { ContributorReferralSource } from '@/generated/prisma/enums';
 import { handleResult } from '@/lib/result-client';
@@ -11,6 +14,7 @@ import {
 	updateContributorAction,
 } from '@/modules/contributors/contributor.actions';
 import { ContributorPayload } from '@/modules/contributors/contributor.types';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateContributorInput, buildUpdateContributorsInput } from './contributors-form-helper';
@@ -25,30 +29,31 @@ export type ContributorFormSchema = {
 	};
 };
 
-const initialFormSchema: ContributorFormSchema = {
-	label: 'Contributor',
+const createInitialFormSchema = (
+	t: ReturnType<typeof useTranslations<'portal-management'>>,
+	sharedTranslate: PortalSharedTranslator,
+): ContributorFormSchema => ({
+	label: t('forms.contributor.section'),
 	fields: {
 		referral: {
-			placeholder: 'Referral',
-			label: 'Referral',
+			placeholder: t('forms.contributor.referral'),
+			label: t('forms.contributor.referral'),
 			zodSchema: z.nativeEnum(ContributorReferralSource),
 		},
 		paymentReferenceId: {
-			placeholder: 'Payment Reference ID',
-			label: 'Payment Reference ID',
+			placeholder: t('forms.contributor.paymentReferenceId'),
+			label: t('forms.contributor.paymentReferenceId'),
 			zodSchema: z.string().nullable(),
 		},
 		stripeCustomerId: {
-			placeholder: 'Stripe Customer ID',
-			label: 'Stripe Customer ID',
+			placeholder: t('forms.contributor.stripeCustomerId'),
+			label: t('forms.contributor.stripeCustomerId'),
 			zodSchema: z.string().nullable(),
 			disabled: true,
 		},
-		contact: {
-			...getContactFormSchema({ isEmailRequired: true }),
-		},
+		contact: getContactFormSchema(sharedTranslate, { isEmailRequired: true }),
 	},
-};
+});
 
 export default function ContributorsForm({
 	onSuccess,
@@ -61,14 +66,18 @@ export default function ContributorsForm({
 	onCancel?: () => void;
 	contributorId?: string;
 }) {
-	const [formSchema, setFormSchema] = useState<ContributorFormSchema>(() => cloneFormSchema(initialFormSchema));
+	const t = useTranslations('portal-management');
+	const sharedTranslate = useTranslations('portal-shared');
+	const [formSchema, setFormSchema] = useState<ContributorFormSchema>(() =>
+		cloneFormSchema(createInitialFormSchema(t, sharedTranslate)),
+	);
 	const [contributor, setContributor] = useState<ContributorPayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	const onSubmit = (schema: ContributorFormSchema) => {
 		startTransition(async () => {
 			if (contributorId && contributor?.id !== contributorId) {
-				return onError?.('Contributor is still loading. Please try again.');
+				return onError?.(t('validation.contributorLoading'));
 			}
 			const res =
 				contributorId && contributor

@@ -9,9 +9,11 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
+import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export const DonationSuccessDialog = () => {
+	const t = useTranslations('portal-operations');
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -28,13 +30,11 @@ export const DonationSuccessDialog = () => {
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogContent size="sm">
 				<DialogHeader>
-					<DialogTitle>Thank you for your donation</DialogTitle>
-					<DialogDescription>
-						Your payment was successful. The contribution will be reflected in the program overview shortly.
-					</DialogDescription>
+					<DialogTitle>{t('program.donation.success_title')}</DialogTitle>
+					<DialogDescription>{t('program.donation.success_description')}</DialogDescription>
 				</DialogHeader>
 				<DialogFooter>
-					<Button onClick={() => handleOpenChange(false)}>Close</Button>
+					<Button onClick={() => handleOpenChange(false)}>{t('common.close')}</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

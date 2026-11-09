@@ -6,6 +6,7 @@ import { getMessagingJobDetailAction } from '@/modules/messaging/messaging.actio
 import { getTwilioTemplate } from '@/modules/messaging/messaging.service';
 import { requireAdmin } from '@/server/session';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -26,6 +27,7 @@ export default function MessagingJobDetailPage(props: MessagingJobDetailPageProp
 
 const MessagingJobDetailDataLoader = async ({ params, searchParams }: MessagingJobDetailPageProps) => {
 	const user = await requireAdmin();
+	const t = await getTranslations('portal-messaging');
 
 	const { jobId } = await params;
 	const resolvedSearchParams = await searchParams;
@@ -37,7 +39,7 @@ const MessagingJobDetailDataLoader = async ({ params, searchParams }: MessagingJ
 	const result = await getMessagingJobDetailAction(jobId, { page: msgPage, pageSize: MESSAGES_PAGE_SIZE });
 
 	if (!result.success) {
-		return <p className="text-destructive text-sm">{result.error}</p>;
+		return <p className="text-destructive text-sm">{t('common.errorDetails', { error: result.error })}</p>;
 	}
 
 	const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID ?? null;
@@ -49,7 +51,7 @@ const MessagingJobDetailDataLoader = async ({ params, searchParams }: MessagingJ
 	return (
 		<div className="space-y-6">
 			<Link href="/portal/messaging/delivery-log" className="text-muted-foreground hover:text-foreground text-sm">
-				← Back to delivery log
+				← {t('deliveryLog.back')}
 			</Link>
 
 			<SummaryCard
@@ -60,7 +62,7 @@ const MessagingJobDetailDataLoader = async ({ params, searchParams }: MessagingJ
 			/>
 			<div className="space-y-3">
 				<div className="flex items-center justify-between gap-4">
-					<h3 className="text-sm font-medium">Message recipients</h3>
+					<h3 className="text-sm font-medium">{t('deliveryLog.messageRecipients')}</h3>
 					<SyncStatusButton jobId={jobId} />
 				</div>
 				<MessagesTable jobId={jobId} messages={result.data.messages} twilioAccountSid={twilioAccountSid} />

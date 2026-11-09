@@ -6,6 +6,7 @@ import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { CountryTableViewRow } from '@/modules/countries/country.types';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { CountryDialog } from './country-dialog';
 
@@ -18,6 +19,7 @@ export default function CountriesTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
+	const t = useTranslations('portal-admin');
 	const { recordId: countryId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('countryId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -34,14 +36,18 @@ export default function CountriesTable({
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={countriesTableConfig}
-				titleInfoTooltip="Shows countries and their operational readiness signals in admin scope."
+				config={{
+					...countriesTableConfig,
+					title: t('table.countries'),
+					emptyMessage: t('table.noCountries'),
+				}}
+				titleInfoTooltip={t('table.countriesTooltip')}
 				rows={rows}
 				error={error}
 				query={query}
 				actionMenuItems={[
 					{
-						label: 'Add country',
+						label: t('actions.addCountry'),
 						icon: <PlusIcon />,
 						onSelect: openEmptyForm,
 					},

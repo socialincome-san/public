@@ -6,6 +6,7 @@ import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { PayoutFormDialog } from './payout-form-dialog';
 
 export const PayoutsTableClient = ({
@@ -25,6 +26,7 @@ export const PayoutsTableClient = ({
 	mobileMoneyProviderFilterOptions: { id: string; name: string }[];
 	recipientFilterOptions: { id: string; name: string }[];
 }) => {
+	const t = useTranslations('portal-operations');
 	const { recordId: payoutId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('payoutId');
 	const toolbarFilters = getPayoutsTableFilters({
 		query,
@@ -43,14 +45,14 @@ export const PayoutsTableClient = ({
 		<>
 			<ConfiguredDataTableClient
 				config={payoutsTableConfig}
-				titleInfoTooltip="Shows all payouts across all payout statuses."
+				titleInfoTooltip={t('delivery.payouts.info')}
 				rows={rows}
 				error={error}
 				query={query}
 				toolbarFilters={toolbarFilters}
 				actionMenuItems={[
 					{
-						label: 'Add manually',
+						label: t('delivery.payouts.add_manually'),
 						icon: <PlusIcon />,
 						onSelect: openCreate,
 					},

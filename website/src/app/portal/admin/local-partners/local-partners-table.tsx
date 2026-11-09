@@ -7,6 +7,7 @@ import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { LocalPartnerTableViewRow } from '@/modules/local-partners/local-partner.types';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { LocalPartnerDialog } from './local-partner-dialog';
 
@@ -19,6 +20,7 @@ export default function LocalPartnersTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
+	const t = useTranslations('portal-admin');
 	const { recordId: partnerId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('localPartnerId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -34,21 +36,25 @@ export default function LocalPartnersTable({
 
 	const onError = (error: unknown) => {
 		const errorMessage = retrieveErrorMessage(error);
-		setErrorMessage(`Error saving local partner: ${errorMessage}`);
+		setErrorMessage(t('status.errorSavingLocalPartner', { error: errorMessage }));
 		console.error('Local Partner Form Error', { error });
 	};
 
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={localPartnersTableConfig}
-				titleInfoTooltip="Shows all local partners in admin scope."
+				config={{
+					...localPartnersTableConfig,
+					title: t('table.localPartners'),
+					emptyMessage: t('table.noLocalPartners'),
+				}}
+				titleInfoTooltip={t('table.localPartnersTooltip')}
 				rows={rows}
 				error={error}
 				query={query}
 				actionMenuItems={[
 					{
-						label: 'Add new local partner',
+						label: t('actions.addLocalPartner'),
 						icon: <PlusIcon />,
 						onSelect: openEmptyForm,
 					},

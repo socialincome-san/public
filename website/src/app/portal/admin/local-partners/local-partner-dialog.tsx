@@ -9,6 +9,7 @@ import { getRecipientTableViewAction } from '@/modules/recipients/recipient.acti
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
+import { useTranslations } from 'next-intl';
 import LocalPartnersForm from './local-partners-form';
 
 type Props = {
@@ -20,11 +21,12 @@ type Props = {
 };
 
 export const LocalPartnerDialog = ({ open, onOpenChange, localPartnerId, errorMessage, onError }: Props) => {
+	const t = useTranslations('portal-admin');
 	const form = (
 		<>
 			{errorMessage && (
 				<Alert variant="destructive">
-					<AlertTitle>Error</AlertTitle>
+					<AlertTitle>{t('common.error')}</AlertTitle>
 					<AlertDescription>{errorMessage}</AlertDescription>
 				</Alert>
 			)}
@@ -44,12 +46,12 @@ export const LocalPartnerDialog = ({ open, onOpenChange, localPartnerId, errorMe
 			<TabbedDialog
 				open={open}
 				onOpenChange={onOpenChange}
-				title="Edit local partner"
+				title={t('dialog.editLocalPartner')}
 				tabs={[
-					{ value: 'details', label: 'Details', content: form },
+					{ value: 'details', label: t('common.details'), content: form },
 					{
 						value: 'recipients',
-						label: 'Recipients',
+						label: t('common.recipients'),
 						content: (
 							<RecordTableTab
 								config={localPartnerRecipientsTableConfig}
@@ -60,7 +62,7 @@ export const LocalPartnerDialog = ({ open, onOpenChange, localPartnerId, errorMe
 					},
 					{
 						value: 'candidates',
-						label: 'Candidates',
+						label: t('common.candidates'),
 						content: (
 							<RecordTableTab
 								config={localPartnerCandidatesTableConfig}
@@ -79,7 +81,7 @@ export const LocalPartnerDialog = ({ open, onOpenChange, localPartnerId, errorMe
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent size="lg">
 				<DialogHeader>
-					<DialogTitle>Add local partner</DialogTitle>
+					<DialogTitle>{t('dialog.addLocalPartner')}</DialogTitle>
 				</DialogHeader>
 				{form}
 			</DialogContent>

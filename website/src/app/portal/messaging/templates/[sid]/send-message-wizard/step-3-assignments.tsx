@@ -16,6 +16,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@socialincome/design-system/forms/select/select';
+import { useTranslations } from 'next-intl';
 import { getFieldCatalog, type FieldEntry } from './field-catalog';
 import { clearAssignment, getAssignment, setConstantSource, setFieldSource } from './variable-assignments';
 
@@ -38,6 +39,7 @@ const VariableAssignmentRow = ({
 	onSetConstant,
 	onClear,
 }: VariableAssignmentRowProps) => {
+	const t = useTranslations('portal-messaging');
 	const source = assignment?.source ?? '';
 
 	const handleSourceChange = (next: string) => {
@@ -54,7 +56,7 @@ const VariableAssignmentRow = ({
 				<span className="font-mono text-sm">{`{{${variableKey}}}`}</span>
 				{assignment && (
 					<Button variant="link" size="sm" onClick={onClear} disabled={disabled}>
-						Clear
+						{t('wizard.actions.clear')}
 					</Button>
 				)}
 			</div>
@@ -62,18 +64,18 @@ const VariableAssignmentRow = ({
 			<RadioGroup value={source} onValueChange={handleSourceChange} disabled={disabled} layout="row">
 				<label className="flex items-center gap-2 text-sm">
 					<RadioGroupItem value="field" />
-					Field
+					{t('wizard.assignments.field')}
 				</label>
 				<label className="flex items-center gap-2 text-sm">
 					<RadioGroupItem value="constant" />
-					Constant
+					{t('wizard.assignments.constant')}
 				</label>
 			</RadioGroup>
 
 			{assignment?.source === 'field' && (
 				<Select value={assignment.path} onValueChange={onSetField} disabled={disabled}>
 					<SelectTrigger>
-						<SelectValue placeholder="Select field…" />
+						<SelectValue placeholder={t('wizard.assignments.selectField')} />
 					</SelectTrigger>
 					<SelectContent>
 						{catalog.map((entry) => (
@@ -89,7 +91,7 @@ const VariableAssignmentRow = ({
 				<Input
 					value={assignment.value}
 					onChange={(e) => onSetConstant(e.target.value)}
-					placeholder="Constant value"
+					placeholder={t('wizard.assignments.constantPlaceholder')}
 					disabled={disabled}
 				/>
 			)}
@@ -106,18 +108,29 @@ type Props = {
 };
 
 export const Step3Assignments = ({ body, variables, type, assignments, onChange }: Props) => {
+	const t = useTranslations('portal-messaging');
+
 	if (variables.length === 0) {
-		return <p className="text-muted-foreground text-sm">This template has no variables to personalize.</p>;
+		return <p className="text-muted-foreground text-sm">{t('wizard.assignments.noVariables')}</p>;
 	}
 
 	const disabled = type === null;
-	const catalog = getFieldCatalog();
+	const catalog = getFieldCatalog({
+		firstName: t('wizard.fields.firstName'),
+		lastName: t('wizard.fields.lastName'),
+		callingName: t('wizard.fields.callingName'),
+		email: t('wizard.fields.email'),
+		gender: t('wizard.fields.gender'),
+		language: t('wizard.fields.language'),
+		dateOfBirth: t('wizard.fields.dateOfBirth'),
+		profession: t('wizard.fields.profession'),
+	});
 
 	return (
 		<div className="space-y-4">
 			{body && (
 				<div className="space-y-2">
-					<h4 className="text-sm font-medium">Message template</h4>
+					<h4 className="text-sm font-medium">{t('templates.summary.messageBody')}</h4>
 					<pre className="bg-muted rounded-md p-4 text-sm whitespace-pre-wrap">{body}</pre>
 				</div>
 			)}

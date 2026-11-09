@@ -14,7 +14,8 @@ import {
 	updateOrganizationAction,
 } from '@/modules/organizations/organization.actions';
 import type { OrganizationPayload } from '@/modules/organizations/organization.types';
-import { useEffect, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateOrganizationInput, buildUpdateOrganizationInput } from './organizations-form-helper';
 
@@ -36,44 +37,46 @@ export type OrganizationFormSchema = {
 	};
 };
 
-const initialFormSchema: OrganizationFormSchema = {
-	label: 'Organization',
+const getInitialFormSchema = (t: ReturnType<typeof useTranslations<'portal-admin'>>): OrganizationFormSchema => ({
+	label: t('form.organization'),
 	fields: {
 		operatorFallbackCountryCode: {
-			label: 'Operator fallback country',
-			placeholder: 'No fallback country',
+			label: t('form.operatorFallbackCountry'),
+			placeholder: t('form.noFallbackCountry'),
 			// The add form starts without values, so an untouched select must still mean "no fallback"
 			zodSchema: z.union([z.nativeEnum(CountryCode), z.literal('none')]).default('none'),
 			value: 'none',
-			options: [{ id: 'none', label: 'None' }],
+			options: [{ id: 'none', label: t('form.none') }],
 		},
 		name: {
-			placeholder: 'Organization name',
-			label: 'Name',
-			zodSchema: z.string().trim().min(1, 'Organization name is required.'),
+			placeholder: t('form.organizationName'),
+			label: t('form.name'),
+			zodSchema: z.string().trim().min(1, t('validation.requiredOrganizationName')),
 		},
 		users: {
-			label: 'Users',
-			placeholder: 'Select users',
+			label: t('form.users'),
+			placeholder: t('form.selectUsers'),
 			zodSchema: z.array(z.string()).optional(),
 			options: [],
 		},
 		ownedPrograms: {
-			label: 'Owned programs',
-			placeholder: 'Select owned programs',
+			label: t('form.ownedPrograms'),
+			placeholder: t('form.selectOwnedPrograms'),
 			zodSchema: z.array(z.string()).optional(),
 			options: [],
 		},
 		operatedPrograms: {
-			label: 'Operated programs',
-			placeholder: 'Select operated programs',
+			label: t('form.operatedPrograms'),
+			placeholder: t('form.selectOperatedPrograms'),
 			zodSchema: z.array(z.string()).optional(),
 			options: [],
 		},
 	},
-};
+});
 
 export default function OrganizationsForm({ onSuccess, onError, onCancel, organizationId }: OrganizationFormProps) {
+	const t = useTranslations('portal-admin');
+	const initialFormSchema = useMemo(() => getInitialFormSchema(t), [t]);
 	const [formSchema, setFormSchema] = useState<OrganizationFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [organization, setOrganization] = useState<OrganizationPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -141,7 +144,7 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 					}
 					if (countriesResult.success) {
 						next.fields.operatorFallbackCountryCode.options = [
-							{ id: 'none', label: 'None' },
+							{ id: 'none', label: t('form.none') },
 							...countriesResult.data.map((country) => ({ id: country.id, label: country.name })),
 						];
 					}
@@ -167,7 +170,7 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 				onError?.(error);
 			}
 		});
-	}, [organizationId, onError]);
+	}, [initialFormSchema, onError, organizationId, t]);
 
 	return (
 		<DynamicForm

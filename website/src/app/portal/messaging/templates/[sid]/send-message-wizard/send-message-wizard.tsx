@@ -11,6 +11,7 @@ import type {
 } from '@/modules/messaging/messaging.types';
 import { cn } from '@socialincome/design-system/cn';
 import { DialogBody, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import type { RecipientsTableQuery } from './recipients-table';
 import { emptySelection } from './selection';
@@ -26,29 +27,6 @@ import { emptyAssignments } from './variable-assignments';
 import { WizardFooter } from './wizard-footer';
 import { WizardStepIndicator, type StepMeta } from './wizard-step-indicator';
 
-const STEP_META: Record<WizardStep, { label: string; title: string; description: string }> = {
-	1: {
-		label: 'Type',
-		title: 'Message recipients & channel',
-		description: 'Choose who receives this message and how it is delivered.',
-	},
-	2: {
-		label: 'Message recipients',
-		title: 'Select message recipients',
-		description: 'Search and pick who to include.',
-	},
-	3: {
-		label: 'Personalize',
-		title: 'Personalize',
-		description: 'Fill each template variable from a recipient field or a fixed value.',
-	},
-	4: {
-		label: 'Review',
-		title: 'Review & send',
-		description: 'Confirm the audience and message before it goes out.',
-	},
-};
-
 type SendMessageWizardProps = {
 	template: TwilioTemplateDetail;
 	onClose: () => void;
@@ -56,6 +34,7 @@ type SendMessageWizardProps = {
 };
 
 export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessageWizardProps) => {
+	const t = useTranslations('portal-messaging');
 	const [currentStep, setCurrentStep] = useState<WizardStep>(1);
 	const [type, setType] = useState<MessagingRecipientType | null>(null);
 	const [channel, setChannel] = useState<MessagingChannel | null>(null);
@@ -78,7 +57,13 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 	// Templates without variables skip the Personalize step entirely.
 	const hasVariables = template.variables.length > 0;
 	const sequence: WizardStep[] = hasVariables ? [1, 2, 3, 4] : [1, 2, 4];
-	const steps: StepMeta[] = sequence.map((step) => ({ step, label: STEP_META[step].label }));
+	const stepLabels: Record<WizardStep, string> = {
+		1: t('wizard.steps.recipientType.label'),
+		2: t('wizard.steps.recipients.label'),
+		3: t('wizard.steps.personalize.label'),
+		4: t('wizard.steps.review.label'),
+	};
+	const steps: StepMeta[] = sequence.map((step) => ({ step, label: stepLabels[step] }));
 
 	const currentIndex = sequence.indexOf(currentStep);
 	const isFirstStep = currentIndex === 0;
@@ -148,13 +133,19 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 		});
 	};
 
-	const meta = STEP_META[currentStep];
+	const stepContent: Record<WizardStep, { title: string; description: string }> = {
+		1: { title: t('wizard.steps.recipientType.title'), description: t('wizard.steps.recipientType.description') },
+		2: { title: t('wizard.steps.recipients.title'), description: t('wizard.steps.recipients.description') },
+		3: { title: t('wizard.steps.personalize.title'), description: t('wizard.steps.personalize.description') },
+		4: { title: t('wizard.steps.review.title'), description: t('wizard.steps.review.description') },
+	};
+	const meta = stepContent[currentStep];
 
 	return (
 		<>
 			<DialogHeader>
 				<DialogTitle>
-					Send <span className="text-muted-foreground">“{template.friendlyName}”</span>
+					{t('wizard.title')} <span className="text-muted-foreground">“{template.friendlyName}”</span>
 				</DialogTitle>
 				<WizardStepIndicator
 					steps={steps}

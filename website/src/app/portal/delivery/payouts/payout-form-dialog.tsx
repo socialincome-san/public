@@ -4,6 +4,7 @@ import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordDialog } from '@/components/data-table/clients/record-dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
 
@@ -14,11 +15,12 @@ type PayoutFormDialogProps = {
 };
 
 export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDialogProps) => {
+	const t = useTranslations('portal-operations');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {
 		const message = retrieveErrorMessage(error);
-		setErrorMessage(`Error saving payout: ${message}`);
+		setErrorMessage(t('delivery.payouts.error_saving', { message }));
 		console.error('Payout Form Error', { error });
 	};
 
@@ -33,12 +35,12 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDia
 		<RecordDialog
 			open={open}
 			onOpenChange={handleOpenChange}
-			title={payoutId ? 'Edit payout' : 'Add payout'}
+			title={payoutId ? t('delivery.payouts.edit_payout') : t('delivery.payouts.add_payout')}
 			tabs={payoutId ? [auditLogTab('payout', payoutId)] : []}
 		>
 			{errorMessage && (
 				<Alert variant="destructive">
-					<AlertTitle>Error</AlertTitle>
+					<AlertTitle>{t('common.error')}</AlertTitle>
 					<AlertDescription>{errorMessage}</AlertDescription>
 				</Alert>
 			)}

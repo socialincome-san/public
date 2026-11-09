@@ -3,6 +3,7 @@
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { WizardFooter as WizardFooterLayout } from '@socialincome/design-system/navigation/wizard-footer/wizard-footer';
 import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { SendPhase } from './use-messaging-send';
 
 type WizardFooterProps = {
@@ -28,6 +29,8 @@ export const WizardFooter = ({
 	onSend,
 	onClose,
 }: WizardFooterProps) => {
+	const t = useTranslations('portal-messaging');
+
 	if (sendPhase === 'running') {
 		return (
 			<WizardFooterLayout
@@ -35,7 +38,7 @@ export const WizardFooter = ({
 				primary={
 					<Button variant="outline" disabled>
 						<Loader2 className="animate-spin" />
-						Sending…
+						{t('wizard.progress.sending')}
 					</Button>
 				}
 			/>
@@ -43,7 +46,7 @@ export const WizardFooter = ({
 	}
 
 	if (sendPhase === 'results') {
-		return <WizardFooterLayout edge="bleed" primary={<Button onClick={onClose}>Done</Button>} />;
+		return <WizardFooterLayout edge="bleed" primary={<Button onClick={onClose}>{t('wizard.actions.done')}</Button>} />;
 	}
 
 	return (
@@ -51,17 +54,17 @@ export const WizardFooter = ({
 			edge="bleed"
 			back={
 				<Button variant="outline" onClick={onBack} disabled={isFirstStep}>
-					Back
+					{t('wizard.actions.back')}
 				</Button>
 			}
 			primary={
 				isFinalStep ? (
 					<Button variant="confirmed" onClick={onSend} disabled={!canSend}>
-						Send message
+						{t('wizard.actions.sendMessage')}
 					</Button>
 				) : (
 					<Button onClick={onNext} disabled={!canAdvance}>
-						Next
+						{t('wizard.actions.next')}
 					</Button>
 				)
 			}

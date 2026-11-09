@@ -9,9 +9,11 @@ export const viewport = rootViewport;
 
 export const generateMetadata = () => getMetadata(defaultLanguage, 'website-common', languageNeutralImages);
 
+// The portal language comes from a cookie, which cannot be read before the document renders without
+// blocking prerendering, so <html lang> stays the default language.
 export default function PortalLayout({ children }: { children: ReactNode }) {
 	return (
-		<RootDocument lang={defaultLanguage}>
+		<RootDocument lang={defaultLanguage} messageScope="portal">
 			<PortalShell>{children}</PortalShell>
 		</RootDocument>
 	);

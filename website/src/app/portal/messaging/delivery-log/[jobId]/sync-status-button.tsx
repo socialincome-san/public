@@ -3,6 +3,7 @@
 import { syncMessagingJobStatusesAction } from '@/modules/messaging/messaging.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Loader2, RefreshCw } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
@@ -11,6 +12,7 @@ type SyncStatusButtonProps = {
 };
 
 export const SyncStatusButton = ({ jobId }: SyncStatusButtonProps) => {
+	const t = useTranslations('portal-messaging');
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const [message, setMessage] = useState<string | null>(null);
@@ -23,15 +25,15 @@ export const SyncStatusButton = ({ jobId }: SyncStatusButtonProps) => {
 			try {
 				const result = await syncMessagingJobStatusesAction(jobId);
 				if (!result.success) {
-					setError(result.error);
+					setError(t('deliveryLog.sync.actionError', { error: result.error }));
 
 					return;
 				}
-				setMessage(`Updated ${result.data.updated} of ${result.data.checked}`);
+				setMessage(t('deliveryLog.sync.updated', { updated: result.data.updated, checked: result.data.checked }));
 				router.refresh();
 			} catch {
 				// A transport or unexpected server failure rejects the action rather than returning a result.
-				setError('Could not refresh status. Please try again.');
+				setError(t('deliveryLog.sync.error'));
 			}
 		});
 	};
@@ -45,7 +47,7 @@ export const SyncStatusButton = ({ jobId }: SyncStatusButtonProps) => {
 			)}
 			<Button variant="outline" size="sm" onClick={handleClick} disabled={isPending}>
 				{isPending ? <Loader2 className="animate-spin" /> : <RefreshCw />}
-				Refresh status from Twilio
+				{t('deliveryLog.sync.button')}
 			</Button>
 		</div>
 	);

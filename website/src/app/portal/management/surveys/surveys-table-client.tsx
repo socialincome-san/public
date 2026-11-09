@@ -6,7 +6,9 @@ import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { SurveyTableViewRow } from '@/modules/surveys/survey.types';
 import { ClipboardListIcon, PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { translateManagementFilters, translateManagementTableConfig } from '../management-table-config';
 import { GenerateSurveysDialog } from './generate-surveys-dialog';
 import { SurveyFormDialog } from './survey-form-dialog';
 
@@ -29,28 +31,52 @@ export const SurveysTableClient = ({
 	showProgramFilter = true,
 	hideProgramName = false,
 }: Props) => {
+	const t = useTranslations('portal-management');
 	const { recordId: surveyId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('surveyId');
 	const [isGenerationDialogOpen, setIsGenerationDialogOpen] = useState(false);
+	const config = translateManagementTableConfig(surveysTableConfig, {
+		title: t('tables.surveys.title'),
+		emptyMessage: t('tables.surveys.empty'),
+		columns: {
+			name: t('columns.name'),
+			recipientName: t('columns.recipientName'),
+			questionnaire: t('columns.questionnaire'),
+			language: t('columns.language'),
+			status: t('columns.status'),
+			dueAt: t('columns.dueAt'),
+			completedAt: t('columns.completedAt'),
+			createdAt: t('columns.createdAt'),
+			surveyUrl: t('columns.surveyUrl'),
+			programName: t('columns.programName'),
+		},
+	});
+	const filters = translateManagementFilters(
+		getSurveysTableFilters({ query, programFilterOptions, recipientFilterOptions, showProgramFilter }),
+		{
+			program: { label: t('filters.program.label'), placeholder: t('filters.program.all') },
+			recipient: { label: t('filters.recipient.label'), placeholder: t('filters.recipient.all') },
+		},
+	);
 
 	return (
 		<>
 			<ConfiguredDataTableClient
-				config={surveysTableConfig}
-				titleInfoTooltip="Shows surveys for programs you can access."
+				config={config}
+				titleInfoTooltip={t('tables.surveys.tooltip')}
 				rows={rows}
 				error={error}
 				query={query}
-				toolbarFilters={getSurveysTableFilters({ query, programFilterOptions, recipientFilterOptions, showProgramFilter })}
+				toolbarFilters={filters}
 				hideProgramName={hideProgramName}
 				onRowClick={(row) => openRecord(row.id)}
 				actionMenuItems={[
 					{
-						label: 'Add survey',
+						label: t('actions.addSurvey'),
 						icon: <PlusIcon />,
 						onSelect: openCreate,
 					},
 					{
-						label: 'Generate surveys',
+						label: t('actions.generateSurveys'),
 						icon: <ClipboardListIcon />,
 						onSelect: () => setIsGenerationDialogOpen(true),
 					},

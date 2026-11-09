@@ -6,6 +6,7 @@ const meta = {
 	component: DataTablePagination,
 	tags: ['autodocs'],
 	args: {
+		labels: { rowsPerPage: 'Rows per page', previous: 'Previous', next: 'Next', of: 'of' },
 		startRow: 11,
 		endRow: 20,
 		totalRows: 128,

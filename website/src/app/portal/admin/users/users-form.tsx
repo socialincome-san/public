@@ -12,6 +12,7 @@ import {
 	updateUserAction,
 } from '@/modules/users/user.actions';
 import type { UserPayload } from '@/modules/users/user.types';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateUserInput, buildUpdateUserInput } from './users-form-helper';
@@ -34,40 +35,46 @@ export type UserFormSchema = {
 	};
 };
 
-const initialFormSchema: UserFormSchema = {
-	label: 'User',
+const getInitialFormSchema = (t: ReturnType<typeof useTranslations<'portal-admin'>>): UserFormSchema => ({
+	label: t('form.user'),
 	fields: {
 		firstName: {
-			placeholder: 'First name',
-			label: 'First name',
-			zodSchema: z.string().trim().min(1, 'First name is required.'),
+			placeholder: t('form.firstName'),
+			label: t('form.firstName'),
+			zodSchema: z.string().trim().min(1, t('validation.requiredFirstName')),
 		},
 		lastName: {
-			placeholder: 'Last name',
-			label: 'Last name',
-			zodSchema: z.string().trim().min(1, 'Last name is required.'),
+			placeholder: t('form.lastName'),
+			label: t('form.lastName'),
+			zodSchema: z.string().trim().min(1, t('validation.requiredLastName')),
 		},
 		email: {
-			placeholder: 'Email',
-			label: 'Email',
-			zodSchema: z.string().trim().email('Please provide a valid email address.'),
+			placeholder: t('form.email'),
+			label: t('form.email'),
+			zodSchema: z.string().trim().email(t('validation.validEmail')),
 		},
 		role: {
-			placeholder: 'Role',
-			label: 'Role',
+			placeholder: t('form.role'),
+			label: t('form.role'),
 			zodSchema: z.nativeEnum(UserRole),
 			value: UserRole.user,
+			options: [
+				{ id: UserRole.admin, label: t('userRoles.admin') },
+				{ id: UserRole.user, label: t('userRoles.user') },
+			],
 		},
 		organizations: {
-			placeholder: 'Select organizations',
-			label: 'Organizations',
+			placeholder: t('form.selectOrganizations'),
+			label: t('form.organizations'),
 			zodSchema: z.array(z.string()).optional(),
 			options: [],
 		},
 	},
-};
+});
 
 export default function UsersForm({ onSuccess, onError, onCancel, userId }: UserFormProps) {
+	const t = useTranslations('portal-admin');
+	const initialFormSchema = getInitialFormSchema(t);
 	const [formSchema, setFormSchema] = useState(() => cloneFormSchema(initialFormSchema));
 	const [user, setUser] = useState<UserPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -114,7 +121,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 	const onSubmit = (schema: UserFormSchema) => {
 		startTransition(async () => {
 			if (userId && user?.id !== userId) {
-				return onError?.('User is still loading. Please try again.');
+				return onError?.(t('status.userLoading'));
 			}
 			const result =
 				userId && user

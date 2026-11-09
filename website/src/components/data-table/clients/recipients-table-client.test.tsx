@@ -117,7 +117,7 @@ describe('RecipientsTableClient pool assignment menu', () => {
 	test('opens the existing manual dialog from the renamed menu item', () => {
 		mounted = renderTable({ programId: 'program-1' });
 
-		clickButton(mounted.container, 'Add new recipient manually');
+		clickButton(mounted.container, 'table.addRecipientManually');
 
 		expect(mounted.container.textContent).toContain('Manual recipient dialog');
 	});
@@ -125,7 +125,7 @@ describe('RecipientsTableClient pool assignment menu', () => {
 	test('offers pool assignment only on an editable program recipients table and refreshes after success', () => {
 		mounted = renderTable({ programId: 'program-1' });
 
-		clickButton(mounted.container, 'Add recipients from pool');
+		clickButton(mounted.container, 'table.addRecipientsFromPool');
 		clickButton(mounted.container, 'Confirm pool assignment');
 
 		expect(mockRefresh).toHaveBeenCalledTimes(1);
@@ -136,25 +136,25 @@ describe('RecipientsTableClient pool assignment menu', () => {
 	test('hides pool assignment on the global recipients page', () => {
 		mounted = renderTable({});
 
-		expect(mounted.container.textContent).toContain('Add new recipient manually');
-		expect(mounted.container.textContent).not.toContain('Add recipients from pool');
+		expect(mounted.container.textContent).toContain('table.addRecipientManually');
+		expect(mounted.container.textContent).not.toContain('table.addRecipientsFromPool');
 	});
 
 	test('hides pool assignment and disables manual creation when the program is read-only', () => {
 		mounted = renderTable({ programId: 'program-1', readOnly: true });
 
 		const manual = Array.from(mounted.container.querySelectorAll('button')).find(
-			(element) => element.textContent === 'Add new recipient manually',
+			(element) => element.textContent === 'table.addRecipientManually',
 		);
 
 		expect(manual?.disabled).toBe(true);
-		expect(mounted.container.textContent).not.toContain('Add recipients from pool');
+		expect(mounted.container.textContent).not.toContain('table.addRecipientsFromPool');
 	});
 
 	test('hides recipient creation for a local partner session', () => {
 		mounted = renderTable({ programId: 'program-1', sessionType: 'local-partner' });
 
-		expect(mounted.container.textContent).not.toContain('Add new recipient manually');
-		expect(mounted.container.textContent).not.toContain('Add recipients from pool');
+		expect(mounted.container.textContent).not.toContain('table.addRecipientManually');
+		expect(mounted.container.textContent).not.toContain('table.addRecipientsFromPool');
 	});
 });

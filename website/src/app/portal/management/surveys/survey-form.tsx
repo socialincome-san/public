@@ -13,6 +13,7 @@ import {
 	updateSurveyAction,
 } from '@/modules/surveys/survey.actions';
 import type { SurveyPayload } from '@/modules/surveys/survey.types';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';
@@ -38,54 +39,59 @@ export type SurveyFormSchema = {
 	};
 };
 
-const initialFormSchema: SurveyFormSchema = {
-	label: 'Survey',
+const createInitialFormSchema = (t: ReturnType<typeof useTranslations<'portal-management'>>): SurveyFormSchema => ({
+	label: t('forms.survey.section'),
 	fields: {
 		name: {
-			placeholder: 'Survey name',
-			label: 'Name',
-			zodSchema: z.string().min(1, 'Name is required'),
+			placeholder: t('forms.survey.namePlaceholder'),
+			label: t('forms.survey.name'),
+			zodSchema: z.string().min(1, t('validation.nameRequired')),
 		},
 		recipientId: {
-			placeholder: 'Recipient',
-			label: 'Recipient',
+			placeholder: t('forms.survey.recipient'),
+			label: t('forms.survey.recipient'),
 			useCombobox: true,
 		},
 		questionnaire: {
-			placeholder: 'Questionnaire',
-			label: 'Questionnaire',
+			placeholder: t('forms.survey.questionnaire'),
+			label: t('forms.survey.questionnaire'),
 			zodSchema: z.nativeEnum(SurveyQuestionnaire),
 		},
 		language: {
-			placeholder: 'Language',
-			label: 'Language',
+			placeholder: t('forms.survey.language'),
+			label: t('forms.survey.language'),
 			zodSchema: z.nativeEnum(getZodEnum(allWebsiteLanguages.map((l) => ({ id: l, label: l })))),
 		},
 		dueAt: {
-			placeholder: 'Due date',
-			label: 'Due date',
-			zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
+			placeholder: t('forms.survey.dueDate'),
+			label: t('forms.survey.dueDate'),
+			zodSchema: z
+				.date()
+				.min(new Date('2020-01-01'), t('validation.dateOutOfRange'))
+				.max(new Date('2050-12-31'), t('validation.dateOutOfRange'))
+				.optional(),
 		},
 		status: {
-			placeholder: 'Status',
-			label: 'Status',
+			placeholder: t('forms.survey.status'),
+			label: t('forms.survey.status'),
 			zodSchema: z.nativeEnum(SurveyStatus),
 		},
 		accessEmail: {
-			placeholder: 'Access email',
-			label: 'Access email',
-			zodSchema: z.string().email(),
+			placeholder: t('forms.survey.accessEmail'),
+			label: t('forms.survey.accessEmail'),
+			zodSchema: z.string().email(t('validation.emailInvalid')),
 		},
 		accessPw: {
-			placeholder: 'Access password',
-			label: 'Access password',
+			placeholder: t('forms.survey.accessPassword'),
+			label: t('forms.survey.accessPassword'),
 			zodSchema: z.string().optional(),
 		},
 	},
-};
+});
 
 export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId }: SurveyFormProps) => {
-	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(() => cloneFormSchema(initialFormSchema));
+	const t = useTranslations('portal-management');
+	const [formSchema, setFormSchema] = useState<SurveyFormSchema>(() => cloneFormSchema(createInitialFormSchema(t)));
 	const [survey, setSurvey] = useState<SurveyPayload | null>(null);
 	const [isLoading, startTransition] = useTransition();
 
@@ -147,7 +153,7 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId }: SurveyFor
 	const onSubmit = (schema: SurveyFormSchema) => {
 		startTransition(async () => {
 			if (surveyId && survey?.id !== surveyId) {
-				return onError?.('Survey is still loading. Please try again.');
+				return onError?.(t('validation.surveyLoading'));
 			}
 			const result =
 				surveyId && survey

@@ -16,6 +16,7 @@ import { getProgramTableViewAction } from '@/modules/programs/program.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import OrganizationsForm from './organizations-form';
 
@@ -26,11 +27,12 @@ type Props = {
 };
 
 export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props) => {
+	const t = useTranslations('portal-admin');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const handleError = (error: unknown) => {
 		const message = retrieveErrorMessage(error);
-		setErrorMessage(`Error saving organization: ${message}`);
+		setErrorMessage(t('status.errorSavingOrganization', { error: message }));
 		console.error('Organization Form Error', { error });
 	};
 
@@ -38,7 +40,7 @@ export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props
 		<>
 			{errorMessage && (
 				<Alert variant="destructive">
-					<AlertTitle>Error</AlertTitle>
+					<AlertTitle>{t('common.error')}</AlertTitle>
 					<AlertDescription>{errorMessage}</AlertDescription>
 				</Alert>
 			)}
@@ -56,12 +58,12 @@ export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props
 			<TabbedDialog
 				open={open}
 				onOpenChange={onOpenChange}
-				title="Edit organization"
+				title={t('dialog.editOrganization')}
 				tabs={[
-					{ value: 'details', label: 'Details', content: form },
+					{ value: 'details', label: t('common.details'), content: form },
 					{
 						value: 'members',
-						label: 'Members',
+						label: t('common.members'),
 						content: (
 							<RecordTableTab
 								config={organizationAdminMembersTableConfig}
@@ -72,7 +74,7 @@ export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props
 					},
 					{
 						value: 'owned-programs',
-						label: 'Owned programs',
+						label: t('common.ownedPrograms'),
 						content: (
 							<RecordTableTab
 								config={organizationOwnedProgramsTableConfig}
@@ -89,7 +91,7 @@ export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props
 					},
 					{
 						value: 'operated-programs',
-						label: 'Operated programs',
+						label: t('common.operatedPrograms'),
 						content: (
 							<RecordTableTab
 								config={organizationOperatedProgramsTableConfig}
@@ -106,7 +108,7 @@ export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props
 					},
 					{
 						value: 'expenses',
-						label: 'Expenses',
+						label: t('common.expenses'),
 						content: (
 							<RecordTableTab
 								config={organizationExpensesTableConfig}
@@ -125,7 +127,7 @@ export const OrganizationDialog = ({ open, onOpenChange, organizationId }: Props
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent size="lg">
 				<DialogHeader>
-					<DialogTitle>Add organization</DialogTitle>
+					<DialogTitle>{t('dialog.addOrganization')}</DialogTitle>
 				</DialogHeader>
 				{form}
 			</DialogContent>

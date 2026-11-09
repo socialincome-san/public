@@ -1,6 +1,7 @@
 'use client';
 
 import { StepIndicator } from '@socialincome/design-system/navigation/step-indicator/step-indicator';
+import { useTranslations } from 'next-intl';
 import type { WizardStep } from './validity';
 
 export type StepMeta = { step: WizardStep; label: string };
@@ -13,13 +14,14 @@ type WizardStepIndicatorProps = {
 };
 
 export const WizardStepIndicator = ({ steps, currentStep, allComplete = false, onStepSelect }: WizardStepIndicatorProps) => {
+	const t = useTranslations('portal-messaging');
 	const currentIndex = steps.findIndex((s) => s.step === currentStep);
 	const activeIndex = allComplete ? steps.length : currentIndex === -1 ? 0 : currentIndex;
 
 	return (
 		<StepIndicator
 			variant="labelled"
-			ariaLabel="Progress"
+			ariaLabel={t('wizard.progress.label')}
 			steps={steps.map(({ label }) => ({ label }))}
 			activeIndex={activeIndex}
 			onStepSelect={onStepSelect ? (index) => onStepSelect(steps[index].step) : undefined}

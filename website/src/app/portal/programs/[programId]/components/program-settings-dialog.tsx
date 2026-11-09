@@ -6,6 +6,7 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
 import { Settings } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { ProgramSettingsForm } from './program-settings-form';
 
@@ -15,12 +16,13 @@ type ProgramSettingsDialogProps = {
 };
 
 export const ProgramSettingsDialog = ({ programId, readOnly }: ProgramSettingsDialogProps) => {
+	const t = useTranslations('portal-operations');
 	const [isOpen, setIsOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const handleError = (error: unknown) => {
 		const message = retrieveErrorMessage(error);
-		setErrorMessage(`Error updating program settings: ${message}`);
+		setErrorMessage(t('program.settings.error_updating', { message }));
 		console.error('Program Settings Form Error', { error });
 	};
 
@@ -35,22 +37,22 @@ export const ProgramSettingsDialog = ({ programId, readOnly }: ProgramSettingsDi
 		<>
 			<Button variant="outline" onClick={() => setIsOpen(true)}>
 				<Settings className="size-4" />
-				Program settings
+				{t('program.settings.title')}
 			</Button>
 
 			<TabbedDialog
 				open={isOpen}
 				onOpenChange={closeDialog}
-				title={readOnly ? 'View program settings' : 'Program settings'}
+				title={readOnly ? t('program.settings.view_title') : t('program.settings.title')}
 				tabs={[
 					{
 						value: 'details',
-						label: 'Details',
+						label: t('program.settings.details'),
 						content: (
 							<>
 								{errorMessage && (
 									<Alert variant="destructive">
-										<AlertTitle>Error</AlertTitle>
+										<AlertTitle>{t('common.error')}</AlertTitle>
 										<AlertDescription>{errorMessage}</AlertDescription>
 									</Alert>
 								)}

@@ -10,6 +10,7 @@ import { getProgramTableViewAction } from '@/modules/programs/program.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
+import { useTranslations } from 'next-intl';
 import CountriesForm from './countries-form';
 
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onError }: Props) => {
+	const t = useTranslations('portal-admin');
 	const handleError = (error: unknown) => {
 		const action = countryId ? 'updating/deleting' : 'creating';
 		const errorMessage = retrieveErrorMessage(error);
@@ -32,7 +34,7 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 		<>
 			{errorMessage && (
 				<Alert variant="destructive">
-					<AlertTitle>Error</AlertTitle>
+					<AlertTitle>{t('common.error')}</AlertTitle>
 					<AlertDescription>{errorMessage}</AlertDescription>
 				</Alert>
 			)}
@@ -51,12 +53,12 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 			<TabbedDialog
 				open={open}
 				onOpenChange={onOpenChange}
-				title="Edit country"
+				title={t('dialog.editCountry')}
 				tabs={[
-					{ value: 'details', label: 'Details', content: form },
+					{ value: 'details', label: t('common.details'), content: form },
 					{
 						value: 'programs',
-						label: 'Programs',
+						label: t('common.programs'),
 						content: (
 							<RecordTableTab
 								config={countryProgramsTableConfig}
@@ -67,7 +69,7 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 					},
 					{
 						value: 'mobile-money-providers',
-						label: 'Mobile money providers',
+						label: t('common.mobileMoneyProviders'),
 						content: (
 							<RecordTableTab
 								config={countryMobileMoneyProvidersTableConfig}
@@ -88,7 +90,7 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent size="lg">
 				<DialogHeader>
-					<DialogTitle>Add country</DialogTitle>
+					<DialogTitle>{t('dialog.addCountry')}</DialogTitle>
 				</DialogHeader>
 				{form}
 			</DialogContent>

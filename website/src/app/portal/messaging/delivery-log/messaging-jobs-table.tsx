@@ -9,6 +9,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@socialincome/design-system/data-display/table/table';
+import { getLocale, getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 type MessagingJobsTableProps = {
@@ -19,16 +20,35 @@ type MessagingJobsTableProps = {
 	totalCount: number;
 };
 
-const formatStartedAt = (d: Date) =>
-	d.toLocaleString(undefined, { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+const formatStartedAt = (d: Date, locale: string) =>
+	d.toLocaleString(locale, { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
 
-export const MessagingJobsTable = ({ rows, error, page, pageSize, totalCount }: MessagingJobsTableProps) => {
+const jobStatusLabel = (
+	status: MessagingJobListRow['status'],
+	t: Awaited<ReturnType<typeof import('next-intl/server').getTranslations>>,
+) => {
+	switch (status) {
+		case 'completed':
+			return t('status.jobs.completed');
+		case 'running':
+			return t('status.jobs.running');
+		case 'failed':
+			return t('status.jobs.failed');
+		case 'interrupted':
+			return t('status.jobs.interrupted');
+	}
+};
+
+export const MessagingJobsTable = async ({ rows, error, page, pageSize, totalCount }: MessagingJobsTableProps) => {
+	const t = await getTranslations('portal-messaging');
+	const locale = await getLocale();
+
 	if (error) {
-		return <p className="text-destructive text-sm">{error}</p>;
+		return <p className="text-destructive text-sm">{t('common.errorDetails', { error })}</p>;
 	}
 
 	if (totalCount === 0) {
-		return <p className="text-muted-foreground text-sm">No messaging jobs yet.</p>;
+		return <p className="text-muted-foreground text-sm">{t('deliveryLog.noJobs')}</p>;
 	}
 
 	const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
@@ -39,17 +59,17 @@ export const MessagingJobsTable = ({ rows, error, page, pageSize, totalCount }: 
 	return (
 		<div className="space-y-3">
 			{rows.length === 0 ? (
-				<p className="text-muted-foreground text-sm">No jobs on this page.</p>
+				<p className="text-muted-foreground text-sm">{t('deliveryLog.noJobsOnPage')}</p>
 			) : (
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead>Template</TableHead>
-							<TableHead>Channel</TableHead>
-							<TableHead>Sent</TableHead>
-							<TableHead>Status</TableHead>
-							<TableHead>Started</TableHead>
-							<TableHead>By</TableHead>
+							<TableHead>{t('deliveryLog.columns.template')}</TableHead>
+							<TableHead>{t('deliveryLog.columns.channel')}</TableHead>
+							<TableHead>{t('deliveryLog.columns.sent')}</TableHead>
+							<TableHead>{t('deliveryLog.columns.status')}</TableHead>
+							<TableHead>{t('deliveryLog.columns.started')}</TableHead>
+							<TableHead>{t('deliveryLog.columns.by')}</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -60,15 +80,17 @@ export const MessagingJobsTable = ({ rows, error, page, pageSize, totalCount }: 
 										{job.templateFriendlyName}
 									</Link>
 								</TableCell>
-								<TableCell>{job.channelRequested}</TableCell>
+								<TableCell>
+									{job.channelRequested === 'sms' ? t('common.channels.sms') : t('common.channels.whatsapp')}
+								</TableCell>
 								<TableCell>
 									{job.sentCount} / {job.totalSelected}
 								</TableCell>
 								<TableCell>
-									<Badge variant={jobStatusVariant(job.status)}>{job.status}</Badge>
+									<Badge variant={jobStatusVariant(job.status)}>{jobStatusLabel(job.status, t)}</Badge>
 								</TableCell>
 								<TableCell>
-									<span className="text-muted-foreground">{formatStartedAt(job.startedAt)}</span>
+									<span className="text-muted-foreground">{formatStartedAt(job.startedAt, locale)}</span>
 								</TableCell>
 								<TableCell>{job.createdByName}</TableCell>
 							</TableRow>
@@ -79,17 +101,17 @@ export const MessagingJobsTable = ({ rows, error, page, pageSize, totalCount }: 
 
 			<div className="text-muted-foreground flex items-center justify-between text-sm">
 				<p>
-					Page {page} of {totalPages} ({totalCount} job{totalCount === 1 ? '' : 's'})
+					{t('common.pageOf', { page, totalPages })} ({t('deliveryLog.jobCount', { count: totalCount })})
 				</p>
 				<div className="flex gap-2">
 					{prevPage >= 1 && (
 						<Link href={`/portal/messaging/delivery-log?page=${prevPage}`} className="hover:underline">
-							Prev
+							{t('common.previous')}
 						</Link>
 					)}
 					{page < totalPages && (
 						<Link href={`/portal/messaging/delivery-log?page=${page + 1}`} className="hover:underline">
-							Next
+							{t('common.next')}
 						</Link>
 					)}
 				</div>

@@ -15,6 +15,7 @@ import {
 	updateProgramSettingsAction,
 } from '@/modules/programs/program.actions';
 import type { ProgramSettingsPayload } from '@/modules/programs/program.types';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -47,90 +48,6 @@ type ProgramSettingsFormSchema = {
 	};
 };
 
-const initialFormSchema: ProgramSettingsFormSchema = {
-	label: 'Program settings',
-	fields: {
-		id: {
-			label: 'Id',
-			placeholder: '-',
-			zodSchema: z.string().optional(),
-			disabled: true,
-		},
-		name: {
-			label: 'Name',
-			placeholder: 'Program name',
-			zodSchema: z.string().trim().min(2, 'Program name must be at least 2 characters.'),
-		},
-		slug: {
-			label: 'Slug (URL Identifier)',
-			placeholder: 'program-slug',
-			zodSchema: z.string().trim().min(1, 'Slug is required.').regex(SLUG_REGEX, 'Invalid slug format.'),
-		},
-		country: {
-			label: 'Country (currency)',
-			placeholder: 'Select country',
-			useCombobox: true,
-			zodSchema: z.string().optional(),
-			options: [],
-		},
-		coveredByReserves: {
-			label: 'Covered by reserves',
-			zodSchema: z.boolean().optional(),
-		},
-		isConcluded: {
-			label: 'Concluded',
-			zodSchema: z.boolean().optional(),
-		},
-		programDurationInMonths: {
-			label: 'Program duration in months',
-			placeholder: '12',
-			zodSchema: z.coerce.number().int().min(1),
-		},
-		payoutPerInterval: {
-			label: 'Payout per interval',
-			placeholder: '50',
-			zodSchema: z.coerce.number().positive(),
-		},
-		payoutInterval: {
-			label: 'Payout interval',
-			placeholder: 'Select interval',
-			zodSchema: z.nativeEnum(PayoutInterval),
-			options: [
-				{ id: PayoutInterval.monthly, label: 'Monthly' },
-				{ id: PayoutInterval.quarterly, label: 'Quarterly' },
-				{ id: PayoutInterval.yearly, label: 'Yearly' },
-			],
-		},
-		targetFocuses: {
-			label: 'Target focuses',
-			placeholder: 'Select focuses',
-			zodSchema: z.array(z.string().trim().min(1)).optional(),
-			options: [],
-		},
-		targetProfiles: {
-			label: 'Target profiles',
-			placeholder: 'Select profiles',
-			zodSchema: z.array(z.nativeEnum(Profile)).optional(),
-			options: Object.values(Profile).map((profile) => ({
-				id: profile,
-				label: profile.replaceAll('_', ' '),
-			})),
-		},
-		ownerOrganizations: {
-			label: 'Owner organizations (readonly)',
-			placeholder: 'Select owner organizations',
-			zodSchema: z.array(z.string()).optional(),
-			options: [],
-		},
-		operatorOrganizations: {
-			label: 'Operator organizations (read/write)',
-			placeholder: 'Select operator organizations',
-			zodSchema: z.array(z.string()).min(1, 'At least one operator organization is required.'),
-			options: [],
-		},
-	},
-};
-
 type CountryOption = {
 	id: string;
 	label: string;
@@ -148,6 +65,8 @@ const fillFormSchema = (
 	organizationOptions: OrganizationOption[],
 	focusOptions: { id: string; label: string }[],
 	readOnly: boolean,
+	countryRequiredMessage: string,
+	countryInvalidMessage: string,
 ): ProgramSettingsFormSchema => {
 	const nextSchema: ProgramSettingsFormSchema = {
 		...formSchema,
@@ -179,7 +98,9 @@ const fillFormSchema = (
 	nextSchema.fields.isConcluded.value = settings.isConcluded;
 	nextSchema.fields.country.options = countryOptions;
 	nextSchema.fields.country.zodSchema =
-		countryOptions.length > 0 ? z.nativeEnum(countryEnum) : z.string().trim().min(1, 'Country is required.');
+		countryOptions.length > 0
+			? z.nativeEnum(countryEnum, { error: countryInvalidMessage })
+			: z.string().trim().min(1, countryRequiredMessage);
 	nextSchema.fields.programDurationInMonths.value = settings.programDurationInMonths;
 	nextSchema.fields.payoutPerInterval.value = settings.payoutPerInterval;
 	nextSchema.fields.payoutInterval.value = settings.payoutInterval;
@@ -208,14 +129,115 @@ const fillFormSchema = (
 };
 
 export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, onError }: ProgramSettingsFormProps) => {
+	const t = useTranslations('portal-operations');
 	const router = useRouter();
 	const [isLoading, startTransition] = useTransition();
+	const initialFormSchema: ProgramSettingsFormSchema = {
+		label: t('program.settings.title'),
+		fields: {
+			id: {
+				label: t('program.settings.id'),
+				placeholder: '-',
+				zodSchema: z.string().optional(),
+				disabled: true,
+			},
+			name: {
+				label: t('program.settings.name'),
+				placeholder: t('program.settings.program_name'),
+				zodSchema: z.string().trim().min(2, t('program.settings.name_minimum')),
+			},
+			slug: {
+				label: t('program.settings.slug'),
+				placeholder: 'program-slug',
+				zodSchema: z
+					.string()
+					.trim()
+					.min(1, t('program.settings.slug_required'))
+					.regex(SLUG_REGEX, t('program.settings.slug_invalid')),
+			},
+			country: {
+				label: t('program.settings.country'),
+				placeholder: t('program.settings.select_country'),
+				useCombobox: true,
+				zodSchema: z.string().optional(),
+				options: [],
+			},
+			coveredByReserves: {
+				label: t('program.settings.covered_by_reserves'),
+				zodSchema: z.boolean().optional(),
+			},
+			isConcluded: {
+				label: t('program.settings.concluded'),
+				zodSchema: z.boolean().optional(),
+			},
+			programDurationInMonths: {
+				label: t('program.settings.duration_months'),
+				placeholder: '12',
+				zodSchema: z.coerce
+					.number({ error: t('program.settings.invalid_number') })
+					.int(t('program.settings.duration_integer'))
+					.min(1, t('program.settings.duration_minimum')),
+			},
+			payoutPerInterval: {
+				label: t('program.settings.payout_per_interval'),
+				placeholder: '50',
+				zodSchema: z.coerce
+					.number({ error: t('program.settings.invalid_number') })
+					.positive(t('program.settings.payout_positive')),
+			},
+			payoutInterval: {
+				label: t('program.settings.payout_interval'),
+				placeholder: t('program.settings.select_interval'),
+				zodSchema: z.nativeEnum(PayoutInterval, {
+					error: t('program.settings.interval_invalid'),
+				}),
+				options: [
+					{ id: PayoutInterval.monthly, label: t('program.settings.monthly') },
+					{ id: PayoutInterval.quarterly, label: t('program.settings.quarterly') },
+					{ id: PayoutInterval.yearly, label: t('program.settings.yearly') },
+				],
+			},
+			targetFocuses: {
+				label: t('program.settings.target_focuses'),
+				placeholder: t('program.settings.select_focuses'),
+				zodSchema: z.array(z.string().trim().min(1, t('program.settings.focus_required'))).optional(),
+				options: [],
+			},
+			targetProfiles: {
+				label: t('program.settings.target_profiles'),
+				placeholder: t('program.settings.select_profiles'),
+				zodSchema: z
+					.array(
+						z.nativeEnum(Profile, {
+							error: t('program.settings.profile_invalid'),
+						}),
+					)
+					.optional(),
+				options: Object.values(Profile).map((profile) => ({
+					id: profile,
+					label: profile.replaceAll('_', ' '),
+				})),
+			},
+			ownerOrganizations: {
+				label: t('program.settings.owner_organizations'),
+				placeholder: t('program.settings.select_owner_organizations'),
+				zodSchema: z.array(z.string()).optional(),
+				options: [],
+			},
+			operatorOrganizations: {
+				label: t('program.settings.operator_organizations'),
+				placeholder: t('program.settings.select_operator_organizations'),
+				zodSchema: z.array(z.string()).min(1, t('program.settings.operator_organization_required')),
+				options: [],
+			},
+		},
+	};
 	const [formSchema, setFormSchema] = useState<ProgramSettingsFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [loadedSettings, setLoadedSettings] = useState<ProgramSettingsPayload | null>(null);
 
 	const onSubmit = (schema: ProgramSettingsFormSchema) => {
 		if (loadedSettings?.id !== programId) {
-			onError?.('Program is still loading. Please try again.');
+			onError?.(t('program.settings.still_loading'));
 
 			return;
 		}
@@ -287,13 +309,22 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 								}))
 							: [];
 
-						return fillFormSchema(previousSchema, settings, options, organizationOptions, focusOptions, readOnly);
+						return fillFormSchema(
+							previousSchema,
+							settings,
+							options,
+							organizationOptions,
+							focusOptions,
+							readOnly,
+							t('program.settings.country_required'),
+							t('program.settings.country_invalid'),
+						);
 					});
 				},
 				onError: (error) => onError?.(error),
 			});
 		});
-	}, [programId, readOnly, onError]);
+	}, [programId, readOnly, onError, t]);
 
 	return (
 		<DynamicForm

@@ -14,6 +14,7 @@ import {
 } from '@/modules/payouts/payout.actions';
 import type { PayoutPayload } from '@/modules/payouts/payout.types';
 import type { RecipientOption } from '@/modules/recipients/recipient.types';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreatePayoutInput, buildUpdatePayoutInput } from './payout-form-helpers';
@@ -38,47 +39,56 @@ export type PayoutFormSchema = {
 	};
 };
 
-const initialFormSchema: PayoutFormSchema = {
-	label: 'Payout',
-	fields: {
-		recipientId: {
-			placeholder: 'Recipient',
-			label: 'Recipient',
-			useCombobox: true,
-		},
-		amount: {
-			placeholder: 'Amount',
-			label: 'Amount',
-			zodSchema: z.coerce.number().nonnegative(),
-		},
-		currency: {
-			placeholder: 'Select currency',
-			label: 'Currency Code',
-			useCombobox: true,
-			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c })))),
-		},
-		amountChf: {
-			placeholder: 'Amount in CHF',
-			label: 'Amount (CHF)',
-			zodSchema: z.coerce.number().nonnegative('CHF amount must be non-negative.').optional(),
-		},
-		phoneNumber: {
-			placeholder: '+223...',
-			label: 'Phone Number',
-			zodSchema: z.string().optional(),
-		},
-		paymentAt: {
-			label: 'Payment Date',
-			zodSchema: z.date(),
-		},
-		status: {
-			label: 'Status',
-			zodSchema: z.nativeEnum(PayoutStatus),
-		},
-	},
-};
-
 export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFormProps) => {
+	const t = useTranslations('portal-operations');
+	const initialFormSchema: PayoutFormSchema = {
+		label: t('delivery.payout_form.title'),
+		fields: {
+			recipientId: {
+				placeholder: t('delivery.payout_form.recipient'),
+				label: t('delivery.payout_form.recipient'),
+				useCombobox: true,
+			},
+			amount: {
+				placeholder: t('delivery.payout_form.amount'),
+				label: t('delivery.payout_form.amount'),
+				zodSchema: z.coerce
+					.number({ error: t('delivery.payout_form.invalid_number') })
+					.nonnegative(t('delivery.payout_form.amount_nonnegative')),
+			},
+			currency: {
+				placeholder: t('delivery.payout_form.select_currency'),
+				label: t('delivery.payout_form.currency_code'),
+				useCombobox: true,
+				zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c }))), {
+					error: t('delivery.payout_form.currency_invalid'),
+				}),
+			},
+			amountChf: {
+				placeholder: t('delivery.payout_form.amount_chf'),
+				label: t('delivery.payout_form.amount_chf'),
+				zodSchema: z.coerce
+					.number({ error: t('delivery.payout_form.invalid_number') })
+					.nonnegative(t('delivery.payout_form.chf_amount_nonnegative'))
+					.optional(),
+			},
+			phoneNumber: {
+				placeholder: '+223...',
+				label: t('delivery.payout_form.phone_number'),
+				zodSchema: z.string().optional(),
+			},
+			paymentAt: {
+				label: t('delivery.payout_form.payment_date'),
+				zodSchema: z.date({ error: t('delivery.payout_form.payment_date_invalid') }),
+			},
+			status: {
+				label: t('delivery.payout_form.status'),
+				zodSchema: z.nativeEnum(PayoutStatus, {
+					error: t('delivery.payout_form.status_invalid'),
+				}),
+			},
+		},
+	};
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [payout, setPayout] = useState<PayoutPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -129,7 +139,9 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 							...prev.fields,
 							recipientId: {
 								...prev.fields.recipientId,
-								zodSchema: z.nativeEnum(recipientEnum),
+								zodSchema: z.nativeEnum(recipientEnum, {
+									error: t('delivery.payout_form.recipient_invalid'),
+								}),
 							},
 						},
 					}));
@@ -137,7 +149,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 				onError: (error) => onError?.(error),
 			});
 		});
-	}, [onError]);
+	}, [onError, t]);
 
 	const onSubmit = (schema: PayoutFormSchema) => {
 		startTransition(async () => {

@@ -10,6 +10,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
+import { useTranslations } from 'next-intl';
 import { OrangeMoneyCsvPayoutProcessDialog } from './orange-money-csv-payout-process-dialog';
 import type { PayoutProcessDialogBaseProps } from './payout-process-dialog-props';
 import { TelecelCsvPayoutProcessDialog } from './telecel-csv-payout-process-dialog';
@@ -18,23 +19,25 @@ const UnsupportedPayoutProcessDialog = ({
 	option,
 	open,
 	onClose,
-}: PayoutProcessDialogBaseProps & { option: PayoutProcessOverviewOption }) => (
-	<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-		<DialogContent size="sm">
-			<DialogHeader>
-				<DialogTitle>Unsupported payout process</DialogTitle>
-				<DialogDescription>
-					The payout process &quot;{option.name}&quot; is not supported in the portal yet.
-				</DialogDescription>
-			</DialogHeader>
-			<DialogFooter>
-				<Button variant="outline" onClick={onClose}>
-					Close
-				</Button>
-			</DialogFooter>
-		</DialogContent>
-	</Dialog>
-);
+}: PayoutProcessDialogBaseProps & { option: PayoutProcessOverviewOption }) => {
+	const t = useTranslations('portal-operations');
+
+	return (
+		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+			<DialogContent size="sm">
+				<DialogHeader>
+					<DialogTitle>{t('delivery.process.unsupported_title')}</DialogTitle>
+					<DialogDescription>{t('delivery.process.unsupported_description', { name: option.name })}</DialogDescription>
+				</DialogHeader>
+				<DialogFooter>
+					<Button variant="outline" onClick={onClose}>
+						{t('common.close')}
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	);
+};
 
 export const StartPayoutProcessDialog = ({
 	option,

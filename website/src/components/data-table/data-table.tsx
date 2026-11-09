@@ -49,20 +49,25 @@ type DataTableProps<Row extends RowData> = {
 	toolbarFilters?: TableFilterConfig[];
 };
 
-const formatTableError = (error: string): string => {
+const formatTableError = (error: string, translate: (key: 'table.invalidQuery' | 'table.loadError') => string): string => {
 	const raw = error.replace(DATA_TABLE_FETCH_PREFIX_REGEX, '').trim();
 	if (raw.startsWith('{') && raw.endsWith('}')) {
 		try {
-			const parsed = JSON.parse(raw) as { name?: string };
-			if (parsed.name === 'PrismaClientValidationError') {
-				return 'The current search or filter is invalid. Please adjust your query and try again.';
+			const parsed: unknown = JSON.parse(raw);
+			if (
+				typeof parsed === 'object' &&
+				parsed !== null &&
+				'name' in parsed &&
+				parsed.name === 'PrismaClientValidationError'
+			) {
+				return translate('table.invalidQuery');
 			}
 		} catch {
 			// Keep fallback below.
 		}
 	}
 
-	return raw.length > 0 ? raw : 'Something went wrong while loading this table.';
+	return raw.length > 0 ? raw : translate('table.loadError');
 };
 
 export default function DataTable<Row extends RowData>({
@@ -89,6 +94,7 @@ export default function DataTable<Row extends RowData>({
 	toolbarFilters = [],
 }: DataTableProps<Row>) {
 	const t = useTranslations('website-me');
+	const translateShared = useTranslations('portal-shared');
 	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, t);
 	const columns = showEntityIdColumn
 		? ([
@@ -221,6 +227,25 @@ export default function DataTable<Row extends RowData>({
 				infoTooltip={titleInfoTooltip}
 				toolbar={
 					<DataTableToolbar
+						labels={{
+							search: translateShared('table.search'),
+							searchPlaceholder: translateShared('table.searchPlaceholder'),
+							searchFields: translateShared('table.searchFields'),
+							clear: translateShared('table.clear'),
+							columns: translateShared('table.columns'),
+							visibleColumns: translateShared('table.visibleColumns'),
+							sort: translateShared('table.sort'),
+							sortBy: translateShared('table.sortBy'),
+							field: translateShared('table.field'),
+							chooseField: translateShared('table.chooseField'),
+							direction: translateShared('table.direction'),
+							chooseDirection: translateShared('table.chooseDirection'),
+							ascending: translateShared('table.ascending'),
+							descending: translateShared('table.descending'),
+							filters: translateShared('table.filters'),
+							filterResults: translateShared('table.filterResults'),
+							noOptionsAvailable: translateShared('table.noOptionsAvailable'),
+						}}
 						showControls={showControls}
 						searchKeys={onQueryChange ? resolvedSearchKeys : []}
 						searchValue={activeQuery?.search ?? ''}
@@ -238,9 +263,9 @@ export default function DataTable<Row extends RowData>({
 			/>
 
 			{error ? (
-				<DataTableErrorState message={formatTableError(error)} />
+				<DataTableErrorState message={formatTableError(error, translateShared)} />
 			) : isLoading ? (
-				<AppLoadingSkeleton message="Loading..." />
+				<AppLoadingSkeleton message={translateShared('table.loading')} />
 			) : isDatasetEmpty ? (
 				<DataTableEmptyState message={emptyMessage} />
 			) : isEmpty ? (

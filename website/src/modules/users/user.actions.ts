@@ -1,8 +1,10 @@
 'use server';
 
+import { getPortalLanguage, PORTAL_LANGUAGE_COOKIE_NAME } from '@/lib/i18n/utils';
 import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 import { userCreateSchema, userIdSchema, userSelfUpdateSchema, userUpdateSchema } from './user.schemas';
 import { createUser, deleteUser, getUser, getUserOptions, updateUser, updateUserSelf } from './user.service';
 import type { UserPayload } from './user.types';
@@ -79,6 +81,16 @@ export const updateUserSelfAction = async (input: unknown): Promise<Result<UserP
 	if (result.success) {
 		revalidatePath('/portal/profile/account');
 		revalidatePath('/portal/profile/organization');
+		if (parsedInput.data.language !== undefined) {
+			(await cookies()).set({
+				name: PORTAL_LANGUAGE_COOKIE_NAME,
+				value: getPortalLanguage(parsedInput.data.language),
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+				sameSite: 'lax',
+				path: '/',
+			});
+		}
 	}
 
 	return result;

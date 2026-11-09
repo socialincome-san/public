@@ -9,6 +9,7 @@ import type {
 	SelectionState,
 	VariableAssignments,
 } from '@/modules/messaging/messaging.types';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type SendPhase = 'idle' | 'running' | 'results';
@@ -41,6 +42,7 @@ type MessagingSend = {
  * against state updates after the component unmounts.
  */
 export const useMessagingSend = (): MessagingSend => {
+	const t = useTranslations('portal-messaging');
 	const [phase, setPhase] = useState<SendPhase>('idle');
 	const [status, setStatus] = useState<MessagingJobStatusView | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -58,50 +60,53 @@ export const useMessagingSend = (): MessagingSend => {
 		};
 	}, []);
 
-	const start = useCallback((input: StartInput) => {
-		if (startedRef.current) {
-			return;
-		}
-		startedRef.current = true;
-		setPhase('running');
-		setError(null);
-		setStatus(null);
-		setResultsUnavailable(false);
-
-		void (async () => {
-			try {
-				const result = await startMessagingSendAction(input);
-				if (!activeRef.current) {
-					return;
-				}
-				if (!result.success) {
-					setError(result.error);
-					setPhase('results');
-
-					return;
-				}
-
-				const statusResult = await getMessagingJobAction(result.data.jobId);
-				if (!activeRef.current) {
-					return;
-				}
-				if (statusResult.success) {
-					setStatus(statusResult.data);
-				} else {
-					// Dispatch already succeeded; only the result summary is missing. Surface this as a
-					// results-unavailable warning rather than a failed send, so nobody re-sends the batch.
-					setResultsUnavailable(true);
-				}
-				setPhase('results');
-			} catch (err) {
-				if (!activeRef.current) {
-					return;
-				}
-				setError(err instanceof Error ? err.message : 'The send could not be completed.');
-				setPhase('results');
+	const start = useCallback(
+		(input: StartInput) => {
+			if (startedRef.current) {
+				return;
 			}
-		})();
-	}, []);
+			startedRef.current = true;
+			setPhase('running');
+			setError(null);
+			setStatus(null);
+			setResultsUnavailable(false);
+
+			void (async () => {
+				try {
+					const result = await startMessagingSendAction(input);
+					if (!activeRef.current) {
+						return;
+					}
+					if (!result.success) {
+						setError(result.error);
+						setPhase('results');
+
+						return;
+					}
+
+					const statusResult = await getMessagingJobAction(result.data.jobId);
+					if (!activeRef.current) {
+						return;
+					}
+					if (statusResult.success) {
+						setStatus(statusResult.data);
+					} else {
+						// Dispatch already succeeded; only the result summary is missing. Surface this as a
+						// results-unavailable warning rather than a failed send, so nobody re-sends the batch.
+						setResultsUnavailable(true);
+					}
+					setPhase('results');
+				} catch (err) {
+					if (!activeRef.current) {
+						return;
+					}
+					setError(err instanceof Error ? err.message : t('wizard.progress.unexpectedError'));
+					setPhase('results');
+				}
+			})();
+		},
+		[t],
+	);
 
 	return { phase, status, error, resultsUnavailable, start };
 };

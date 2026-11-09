@@ -1,0 +1,229 @@
+{
+	"common": {
+		"loading": "Caricamento…",
+		"errorDetails": "Errore: {error}",
+		"noBody": "Nessun testo del messaggio",
+		"viewInTwilio": "Visualizza in Twilio",
+		"openInTwilio": "Apri nella console Twilio",
+		"via": "tramite",
+		"search": "Cerca…",
+		"pageOf": "Pagina {page} di {totalPages}",
+		"previous": "Precedente",
+		"next": "Successiva",
+		"previousPage": "Pagina precedente",
+		"nextPage": "Pagina successiva",
+		"channels": {
+			"sms": "SMS",
+			"whatsapp": "WhatsApp"
+		}
+	},
+	"layout": {
+		"title": "Messaggistica",
+		"website": "Sito web",
+		"portal": "Portale",
+		"templates": "Modelli",
+		"deliveryLog": "Registro degli invii"
+	},
+	"templates": {
+		"empty": "Nessun modello di messaggio trovato.",
+		"back": "Torna ai modelli",
+		"columns": {
+			"name": "Nome",
+			"sid": "SID",
+			"language": "Lingua",
+			"type": "Tipo",
+			"whatsapp": "WhatsApp"
+		},
+		"summary": {
+			"contentType": "Tipo di contenuto",
+			"variables": "Variabili",
+			"supportedChannels": "Canali supportati",
+			"messageBody": "Testo del messaggio"
+		}
+	},
+	"wizard": {
+		"title": "Invia",
+		"actions": {
+			"sendMessage": "Invia messaggio",
+			"done": "Fine",
+			"back": "Indietro",
+			"next": "Avanti",
+			"clear": "Cancella"
+		},
+		"steps": {
+			"recipientType": {
+				"label": "Tipo",
+				"title": "Destinatari e canale del messaggio",
+				"description": "Scegli chi riceverà il messaggio e come verrà consegnato."
+			},
+			"recipients": {
+				"label": "Destinatari",
+				"title": "Seleziona i destinatari",
+				"description": "Cerca e seleziona le persone da includere."
+			},
+			"personalize": {
+				"label": "Personalizza",
+				"title": "Personalizza",
+				"description": "Compila ogni variabile del modello usando un campo del destinatario o un valore fisso."
+			},
+			"review": {
+				"label": "Rivedi",
+				"title": "Rivedi e invia",
+				"description": "Conferma i destinatari e il messaggio prima dell’invio."
+			}
+		},
+		"progress": {
+			"label": "Avanzamento",
+			"sending": "Invio in corso…",
+			"sendingMessage": "Invio del messaggio in corso…",
+			"keepOpen": "Potrebbe volerci un momento. Lascia aperta questa finestra.",
+			"sendFailed": "Invio non riuscito",
+			"sent": "Inviati",
+			"viaFallback": "{count, plural, one {# tramite il numero alternativo} other {# tramite il numero alternativo}}",
+			"failed": "Non riusciti",
+			"skipped": "Saltati",
+			"noPhone": "nessun numero di telefono",
+			"deliveredSoFar": "Consegnati finora",
+			"deliveryUpdatesDelayed": "aggiornamenti da Twilio disponibili dopo un breve ritardo",
+			"sendComplete": "Invio completato",
+			"dispatchedVia": "Il messaggio è stato inviato tramite {channel}.",
+			"resultsUnavailable": "Il messaggio è stato inviato, ma non è stato possibile caricare il riepilogo dei risultati. Controlla il registro degli invii e non inviare di nuovo.",
+			"unexpectedError": "Non è stato possibile completare l’invio."
+		},
+		"recipientType": "Tipo di destinatario",
+		"recipientTypes": {
+			"contributor": "Sostenitore",
+			"recipient": "Beneficiario",
+			"localPartner": "Partner locale"
+		},
+		"channel": "Canale",
+		"channelNotAvailable": "Non disponibile per questo modello",
+		"phone": {
+			"title": "Numero di telefono",
+			"contact": "Telefono di contatto",
+			"contactShort": "telefono di contatto",
+			"contactHint": "Numero usato per le comunicazioni",
+			"payment": "Telefono per i pagamenti",
+			"paymentShort": "telefono per i pagamenti",
+			"paymentHint": "Numero mobile money usato per i pagamenti",
+			"fallbackAllowed": "Usa l’altro numero se quello scelto non è disponibile"
+		},
+		"recipients": {
+			"searchChanged": "La selezione è stata cancellata perché la ricerca è cambiata.",
+			"filtersChanged": "La selezione è stata cancellata perché i filtri sono cambiati.",
+			"filters": "Filtri",
+			"filterResults": "Filtra i risultati",
+			"program": "Programma",
+			"allPrograms": "Tutti i programmi",
+			"status": "Stato",
+			"allStatuses": "Tutti gli stati",
+			"country": "Paese",
+			"allCountries": "Tutti i paesi",
+			"noOptions": "Nessuna opzione disponibile",
+			"noEntries": "Nessun risultato.",
+			"selectPage": "Seleziona tutte le righe di questa pagina",
+			"name": "Nome",
+			"details": "Dettagli",
+			"selectRow": "Seleziona {name}",
+			"allSelected": "Tutti i {count} selezionati",
+			"selected": "{count} selezionati",
+			"selectAll": "Seleziona tutti i {count}",
+			"count": "{count, plural, one {# beneficiario} other {# beneficiari}}"
+		},
+		"assignments": {
+			"field": "Campo",
+			"constant": "Valore fisso",
+			"selectField": "Seleziona un campo…",
+			"constantPlaceholder": "Valore fisso",
+			"noVariables": "Questo modello non contiene variabili da personalizzare."
+		},
+		"fields": {
+			"firstName": "Nome",
+			"lastName": "Cognome",
+			"callingName": "Nome preferito",
+			"email": "E-mail",
+			"gender": "Genere",
+			"language": "Lingua",
+			"dateOfBirth": "Data di nascita",
+			"profession": "Professione"
+		},
+		"review": {
+			"sendingTo": "{count, plural, one {Invio a # destinatario} other {Invio a # destinatari}}",
+			"onPhone": "sul loro {phone}",
+			"skippedNoPhone": "Saltati — nessun numero di telefono",
+			"skippedNoPhoneFor": "Saltati — nessun {phone}",
+			"breakdownError": "Impossibile calcolare il riepilogo della consegna: {error}",
+			"deliveredVia": "Consegnato tramite {channel}",
+			"fallingBackTo": "Passaggio al canale {channel}",
+			"messagePreview": "Anteprima del messaggio"
+		}
+	},
+	"deliveryLog": {
+		"noJobs": "Non ci sono ancora invii.",
+		"noJobsOnPage": "Nessun invio in questa pagina.",
+		"back": "Torna al registro degli invii",
+		"messageRecipients": "Destinatari del messaggio",
+		"columns": {
+			"template": "Modello",
+			"channel": "Canale",
+			"sent": "Inviati",
+			"status": "Stato",
+			"started": "Avviato",
+			"by": "Da",
+			"contact": "Contatto",
+			"error": "Errore"
+		},
+		"jobCount": "{count, plural, one {# invio} other {# invii}}",
+		"noMessages": "Nessun messaggio per questo invio.",
+		"noMessagesOnPage": "Nessun messaggio in questa pagina.",
+		"messageStatus": {
+			"skipped": "Saltato ({reason})",
+			"noPhone": "nessun numero di telefono",
+			"noChannelAvailable": "nessun canale disponibile"
+		},
+		"messageCount": "{count, plural, one {# messaggio} other {# messaggi}}",
+		"fallback": "alternativo",
+		"summary": {
+			"recipientType": "Tipo di destinatario",
+			"totalSelected": "Totale selezionati",
+			"delivered": "Consegnati",
+			"started": "Avviato",
+			"finished": "Terminato"
+		},
+		"templateBodyError": "Impossibile caricare il testo del modello: {error}",
+		"sync": {
+			"updated": "Aggiornati {updated} su {checked}",
+			"actionError": "Impossibile aggiornare lo stato: {error}",
+			"error": "Impossibile aggiornare lo stato. Riprova.",
+			"button": "Aggiorna lo stato da Twilio"
+		}
+	},
+	"status": {
+		"jobs": {
+			"completed": "Completato",
+			"running": "In corso",
+			"failed": "Non riuscito",
+			"interrupted": "Interrotto"
+		},
+		"messages": {
+			"delivered": "Consegnato",
+			"sent": "Inviato",
+			"queued": "In coda",
+			"accepted": "Accettato",
+			"scheduled": "Programmato",
+			"sending": "In invio",
+			"receiving": "In ricezione",
+			"received": "Ricevuto",
+			"read": "Letto",
+			"canceled": "Annullato",
+			"failed": "Non riuscito",
+			"undelivered": "Non consegnato",
+			"skipped": "Saltato"
+		},
+		"templates": {
+			"approved": "Approvato",
+			"rejected": "Rifiutato",
+			"pending": "In attesa"
+		}
+	}
+}

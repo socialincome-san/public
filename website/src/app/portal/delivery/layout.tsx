@@ -3,6 +3,7 @@ import { TabNavigation } from '@/components/tab-navigation';
 import { requireSession } from '@/server/session';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -16,23 +17,24 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 	if (!user.hasAnyOperatorProgramAccess) {
 		redirect('/portal/programs');
 	}
+	const t = await getTranslations('portal-operations');
 
 	const breadcrumbLinks = [
-		{ href: '/', label: 'Website' },
-		{ href: '/portal', label: 'Portal' },
-		{ href: '/portal/delivery', label: 'Delivery' },
+		{ href: '/', label: t('navigation.website') },
+		{ href: '/portal', label: t('navigation.portal') },
+		{ href: '/portal/delivery', label: t('delivery.title') },
 	];
 
 	const sections = [
-		{ href: '/portal/delivery/overview', label: 'Overview' },
-		{ href: '/portal/delivery/payouts', label: 'Payouts' },
+		{ href: '/portal/delivery/overview', label: t('navigation.overview') },
+		{ href: '/portal/delivery/payouts', label: t('delivery.payouts.label') },
 	];
 
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
 			<BlockWrapper marginTop="none" marginBottom="none">
-				<h1 className="py-8 text-5xl">Delivery</h1>
+				<h1 className="py-8 text-5xl">{t('delivery.title')}</h1>
 
 				<TabNavigation sections={sections} />
 

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import {
 	findBestLocale,
 	getCurrencyForCountry,
+	getPortalLanguage,
 	getWebsiteBasePath,
 	parseCurrencySegment,
 	toCurrencySegment,
@@ -68,5 +69,16 @@ describe('getCurrencyForCountry', () => {
 		expect(getCurrencyForCountry('GB')).toBeUndefined();
 		expect(getCurrencyForCountry('AQ')).toBeUndefined();
 		expect(getCurrencyForCountry(undefined)).toBeUndefined();
+	});
+});
+
+describe('getPortalLanguage', () => {
+	test('accepts the four portal languages and falls back for unsupported preferences', () => {
+		expect(getPortalLanguage('de')).toBe('de');
+		expect(getPortalLanguage('fr')).toBe('fr');
+		expect(getPortalLanguage('it')).toBe('it');
+		expect(getPortalLanguage('en')).toBe('en');
+		expect(getPortalLanguage('kri')).toBe('en');
+		expect(getPortalLanguage(null)).toBe('en');
 	});
 });

@@ -3,6 +3,7 @@ import type { ProgramDashboardStats } from '@/modules/programs/program.types';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { StatPanel } from '@socialincome/design-system/data-display/stat-panel/stat-panel';
 import { StatProgress } from '@socialincome/design-system/data-display/stat-progress/stat-progress';
+import { getTranslations } from 'next-intl/server';
 import { DonationForm } from './donation-form';
 import { SectionTitle } from './section-title';
 
@@ -11,26 +12,27 @@ type FirstIntervalFundingSectionProps = {
 	stats: ProgramDashboardStats;
 };
 
-export const FirstIntervalFundingSection = ({ programId, stats }: FirstIntervalFundingSectionProps) => {
+export const FirstIntervalFundingSection = async ({ programId, stats }: FirstIntervalFundingSectionProps) => {
+	const t = await getTranslations('portal-operations');
 	const percent =
 		stats.costPerIntervalChf > 0 ? Math.min(100, (stats.contributedToProgramSoFarChf / stats.costPerIntervalChf) * 100) : 0;
 
 	return (
 		<div className="space-y-4">
-			<SectionTitle>First Interval Funding</SectionTitle>
+			<SectionTitle>{t('program.funding.title')}</SectionTitle>
 			<Card>
 				<div className="space-y-6">
 					<StatPanel>
 						<StatProgress
-							title="You need to cover the first interval to start the program"
+							title={t('program.funding.progress_title')}
 							start={{
-								label: 'Current Contributions',
+								label: t('program.funding.current_contributions'),
 								value: formatCurrencyLocale(stats.contributedToProgramSoFarChf, 'CHF', 'de-CH', {
 									compactThreshold: 1_000_000,
 								}),
 							}}
 							end={{
-								label: 'Minimum Required',
+								label: t('program.funding.minimum_required'),
 								value: formatCurrencyLocale(stats.costPerIntervalChf, 'CHF', 'de-CH', { compactThreshold: 1_000_000 }),
 							}}
 							percent={percent}

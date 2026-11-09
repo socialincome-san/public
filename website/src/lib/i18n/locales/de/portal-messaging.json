@@ -1,0 +1,229 @@
+{
+	"common": {
+		"loading": "Wird geladen…",
+		"errorDetails": "Fehler: {error}",
+		"noBody": "Kein Nachrichtentext",
+		"viewInTwilio": "In Twilio ansehen",
+		"openInTwilio": "In der Twilio-Konsole öffnen",
+		"via": "über",
+		"search": "Suchen…",
+		"pageOf": "Seite {page} von {totalPages}",
+		"previous": "Zurück",
+		"next": "Weiter",
+		"previousPage": "Vorherige Seite",
+		"nextPage": "Nächste Seite",
+		"channels": {
+			"sms": "SMS",
+			"whatsapp": "WhatsApp"
+		}
+	},
+	"layout": {
+		"title": "Nachrichten",
+		"website": "Website",
+		"portal": "Portal",
+		"templates": "Vorlagen",
+		"deliveryLog": "Versandprotokoll"
+	},
+	"templates": {
+		"empty": "Keine Nachrichtenvorlagen gefunden.",
+		"back": "Zurück zu den Vorlagen",
+		"columns": {
+			"name": "Name",
+			"sid": "SID",
+			"language": "Sprache",
+			"type": "Typ",
+			"whatsapp": "WhatsApp"
+		},
+		"summary": {
+			"contentType": "Inhaltstyp",
+			"variables": "Variablen",
+			"supportedChannels": "Unterstützte Kanäle",
+			"messageBody": "Nachrichtentext"
+		}
+	},
+	"wizard": {
+		"title": "Senden",
+		"actions": {
+			"sendMessage": "Nachricht senden",
+			"done": "Fertig",
+			"back": "Zurück",
+			"next": "Weiter",
+			"clear": "Leeren"
+		},
+		"steps": {
+			"recipientType": {
+				"label": "Typ",
+				"title": "Nachrichtenempfänger und Kanal",
+				"description": "Wählen Sie aus, wer diese Nachricht erhält und wie sie zugestellt wird."
+			},
+			"recipients": {
+				"label": "Nachrichtenempfänger",
+				"title": "Nachrichtenempfänger auswählen",
+				"description": "Suchen Sie nach Personen und wählen Sie aus, wen Sie einbeziehen möchten."
+			},
+			"personalize": {
+				"label": "Personalisieren",
+				"title": "Personalisieren",
+				"description": "Füllen Sie jede Vorlagenvariable mit einem Empfängerfeld oder einem festen Wert."
+			},
+			"review": {
+				"label": "Prüfen",
+				"title": "Prüfen und senden",
+				"description": "Prüfen Sie Zielgruppe und Nachricht, bevor sie versendet wird."
+			}
+		},
+		"progress": {
+			"label": "Fortschritt",
+			"sending": "Wird gesendet…",
+			"sendingMessage": "Ihre Nachricht wird gesendet…",
+			"keepOpen": "Das kann einen Moment dauern. Bitte lassen Sie dieses Fenster geöffnet.",
+			"sendFailed": "Senden fehlgeschlagen",
+			"sent": "Gesendet",
+			"viaFallback": "{count, plural, one {# über Ersatznummer} other {# über Ersatznummer}}",
+			"failed": "Fehlgeschlagen",
+			"skipped": "Übersprungen",
+			"noPhone": "keine Telefonnummer",
+			"deliveredSoFar": "Bisher zugestellt",
+			"deliveryUpdatesDelayed": "Aktualisierungen von Twilio folgen mit kurzer Verzögerung",
+			"sendComplete": "Versand abgeschlossen",
+			"dispatchedVia": "Ihre Nachricht wurde über {channel} versendet.",
+			"resultsUnavailable": "Die Nachricht wurde versendet, aber die Ergebnisübersicht konnte nicht geladen werden. Prüfen Sie das Versandprotokoll und senden Sie die Nachricht nicht erneut.",
+			"unexpectedError": "Die Nachricht konnte nicht gesendet werden."
+		},
+		"recipientType": "Empfängertyp",
+		"recipientTypes": {
+			"contributor": "Unterstützer:in",
+			"recipient": "Empfänger:in",
+			"localPartner": "Lokale:r Partner:in"
+		},
+		"channel": "Kanal",
+		"channelNotAvailable": "Für diese Vorlage nicht verfügbar",
+		"phone": {
+			"title": "Telefonnummer",
+			"contact": "Kontakttelefon",
+			"contactShort": "Kontakttelefon",
+			"contactHint": "Für die Kommunikation verwendete Nummer",
+			"payment": "Auszahlungstelefon",
+			"paymentShort": "Auszahlungstelefon",
+			"paymentHint": "Für Auszahlungen verwendete Mobile-Money-Nummer",
+			"fallbackAllowed": "Wenn die gewählte Nummer fehlt, die andere Nummer verwenden"
+		},
+		"recipients": {
+			"searchChanged": "Auswahl gelöscht, da sich die Suche geändert hat.",
+			"filtersChanged": "Auswahl gelöscht, da sich die Filter geändert haben.",
+			"filters": "Filter",
+			"filterResults": "Ergebnisse filtern",
+			"program": "Programm",
+			"allPrograms": "Alle Programme",
+			"status": "Status",
+			"allStatuses": "Alle Status",
+			"country": "Land",
+			"allCountries": "Alle Länder",
+			"noOptions": "Keine Optionen verfügbar",
+			"noEntries": "Keine Einträge.",
+			"selectPage": "Alle Zeilen auf dieser Seite auswählen",
+			"name": "Name",
+			"details": "Details",
+			"selectRow": "{name} auswählen",
+			"allSelected": "Alle {count} ausgewählt",
+			"selected": "{count} ausgewählt",
+			"selectAll": "Alle {count} auswählen",
+			"count": "{count, plural, one {# Empfänger:in} other {# Empfänger:innen}}"
+		},
+		"assignments": {
+			"field": "Feld",
+			"constant": "Konstanter Wert",
+			"selectField": "Feld auswählen…",
+			"constantPlaceholder": "Konstanter Wert",
+			"noVariables": "Diese Vorlage enthält keine Variablen zur Personalisierung."
+		},
+		"fields": {
+			"firstName": "Vorname",
+			"lastName": "Nachname",
+			"callingName": "Rufname",
+			"email": "E-Mail",
+			"gender": "Geschlecht",
+			"language": "Sprache",
+			"dateOfBirth": "Geburtsdatum",
+			"profession": "Beruf"
+		},
+		"review": {
+			"sendingTo": "{count, plural, one {Wird an # Empfänger:in gesendet} other {Wird an # Empfänger:innen gesendet}}",
+			"onPhone": "über das {phone}",
+			"skippedNoPhone": "Übersprungen — keine Telefonnummer",
+			"skippedNoPhoneFor": "Übersprungen — keine Nummer für {phone}",
+			"breakdownError": "Die Versandübersicht konnte nicht berechnet werden: {error}",
+			"deliveredVia": "Zugestellt über {channel}",
+			"fallingBackTo": "Ersatzweise über {channel}",
+			"messagePreview": "Nachrichtenvorschau"
+		}
+	},
+	"deliveryLog": {
+		"noJobs": "Noch keine Nachrichtenaufträge vorhanden.",
+		"noJobsOnPage": "Keine Aufträge auf dieser Seite.",
+		"back": "Zurück zum Versandprotokoll",
+		"messageRecipients": "Nachrichtenempfänger",
+		"columns": {
+			"template": "Vorlage",
+			"channel": "Kanal",
+			"sent": "Gesendet",
+			"status": "Status",
+			"started": "Gestartet",
+			"by": "Von",
+			"contact": "Kontakt",
+			"error": "Fehler"
+		},
+		"jobCount": "{count, plural, one {# Auftrag} other {# Aufträge}}",
+		"noMessages": "Für diesen Auftrag gibt es keine Nachrichten.",
+		"noMessagesOnPage": "Keine Nachrichten auf dieser Seite.",
+		"messageStatus": {
+			"skipped": "Übersprungen ({reason})",
+			"noPhone": "keine Telefonnummer",
+			"noChannelAvailable": "kein Kanal verfügbar"
+		},
+		"messageCount": "{count, plural, one {# Nachricht} other {# Nachrichten}}",
+		"fallback": "Ersatznummer",
+		"summary": {
+			"recipientType": "Empfängertyp",
+			"totalSelected": "Insgesamt ausgewählt",
+			"delivered": "Zugestellt",
+			"started": "Gestartet",
+			"finished": "Abgeschlossen"
+		},
+		"templateBodyError": "Nachrichtentext der Vorlage konnte nicht geladen werden: {error}",
+		"sync": {
+			"updated": "{updated} von {checked} aktualisiert",
+			"actionError": "Status konnte nicht aktualisiert werden: {error}",
+			"error": "Status konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+			"button": "Status von Twilio aktualisieren"
+		}
+	},
+	"status": {
+		"jobs": {
+			"completed": "Abgeschlossen",
+			"running": "Läuft",
+			"failed": "Fehlgeschlagen",
+			"interrupted": "Unterbrochen"
+		},
+		"messages": {
+			"delivered": "Zugestellt",
+			"sent": "Gesendet",
+			"queued": "In Warteschlange",
+			"accepted": "Angenommen",
+			"scheduled": "Geplant",
+			"sending": "Wird gesendet",
+			"receiving": "Wird empfangen",
+			"received": "Empfangen",
+			"read": "Gelesen",
+			"canceled": "Abgebrochen",
+			"failed": "Fehlgeschlagen",
+			"undelivered": "Nicht zugestellt",
+			"skipped": "Übersprungen"
+		},
+		"templates": {
+			"approved": "Genehmigt",
+			"rejected": "Abgelehnt",
+			"pending": "Ausstehend"
+		}
+	}
+}

@@ -8,6 +8,7 @@ import { tableQueryFromSearchParams } from '@/components/data-table/query-state'
 import { getPaginatedUpcomingSurveyTableView } from '@/modules/surveys/survey.service';
 import { requireSession } from '@/server/session';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 export default function UpcomingSurveysPage({ searchParams }: SearchParamsPageProps) {
@@ -22,6 +23,7 @@ const UpcomingSurveysDataLoader = async ({ searchParams }: SearchParamsPageProps
 	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
+	const t = await getTranslations('portal-operations');
 
 	const result = await getPaginatedUpcomingSurveyTableView(user.id, tableQuery);
 
@@ -33,7 +35,7 @@ const UpcomingSurveysDataLoader = async ({ searchParams }: SearchParamsPageProps
 	return (
 		<ConfiguredDataTableClient
 			config={upcomingSurveysTableConfig}
-			titleInfoTooltip="Shows upcoming surveys for accessible programs that are due around the current period."
+			titleInfoTooltip={t('monitoring.upcoming_surveys_info')}
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

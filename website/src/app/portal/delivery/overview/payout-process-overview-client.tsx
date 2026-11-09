@@ -9,6 +9,7 @@ import { cn } from '@socialincome/design-system/cn';
 import { DatePicker, normalizeToNoon } from '@socialincome/design-system/forms/date-picker/date-picker';
 import { format } from 'date-fns';
 import { CalendarIcon, CircleDollarSignIcon, FileSpreadsheet } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { StartPayoutProcessDialog } from './start-payout-process-dialog';
 
@@ -37,6 +38,7 @@ const PayoutProcessGrid = ({
 	selectedMonthLabel: string;
 	onStartOption: (option: PayoutProcessOverviewOption) => void;
 }) => {
+	const t = useTranslations('portal-operations');
 	const [recipientCounts, setRecipientCounts] = useState<Record<string, number>>({});
 	const [countsError, setCountsError] = useState<string | null>(null);
 	const requestKey = `${format(selectedDate, 'yyyy-MM')}-${options.map((option) => option.id).join(',')}`;
@@ -73,7 +75,7 @@ const PayoutProcessGrid = ({
 	}, [options, selectedDate, requestKey]);
 
 	if (options.length === 0) {
-		return <p className="text-muted-foreground text-sm">No payout processes available.</p>;
+		return <p className="text-muted-foreground text-sm">{t('delivery.process.no_processes')}</p>;
 	}
 
 	return (
@@ -104,8 +106,8 @@ const PayoutProcessGrid = ({
 												</h3>
 												<p className="text-muted-foreground text-sm" data-testid={`payout-recipient-count-${option.id}`}>
 													{loading
-														? 'Loading recipient count…'
-														: `${recipientCount} recipient${recipientCount === 1 ? '' : 's'} would receive a payout in ${selectedMonthLabel}`}
+														? t('delivery.process.loading_recipient_count')
+														: t('delivery.process.recipient_count', { count: recipientCount, month: selectedMonthLabel })}
 												</p>
 											</div>
 											<Button
@@ -114,7 +116,7 @@ const PayoutProcessGrid = ({
 												onClick={() => onStartOption(option)}
 											>
 												<CircleDollarSignIcon className="h-4 w-4" aria-hidden />
-												Start process
+												{t('delivery.process.start')}
 											</Button>
 										</article>
 									</li>
@@ -135,11 +137,13 @@ export const PayoutProcessOverviewClient = ({
 	options: PayoutProcessOverviewOption[];
 	error: string | null;
 }) => {
+	const t = useTranslations('portal-operations');
+	const locale = useLocale();
 	const [selectedDate, setSelectedDate] = useState(() => normalizeToNoon(now()));
 	const [activeOption, setActiveOption] = useState<PayoutProcessOverviewOption | null>(null);
 	const [gridKey, setGridKey] = useState(0);
 
-	const selectedMonthLabel = format(selectedDate, 'MMMM yyyy');
+	const selectedMonthLabel = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(selectedDate);
 	const monthKey = format(selectedDate, 'yyyy-MM');
 
 	if (error) {
@@ -153,11 +157,10 @@ export const PayoutProcessOverviewClient = ({
 					<div className="min-w-0 space-y-1">
 						<p className="flex items-center gap-2 text-sm font-medium">
 							<CalendarIcon className="h-4 w-4 shrink-0" aria-hidden />
-							Payout month
+							{t('delivery.process.payout_month')}
 						</p>
 						<p className="text-muted-foreground text-sm">
-							Select the month first, then start a process below. Using{' '}
-							<span className="text-foreground font-medium">{selectedMonthLabel}</span>.
+							{t('delivery.process.select_month', { month: selectedMonthLabel })}
 						</p>
 					</div>
 					<div className="w-full shrink-0 lg:max-w-xs">

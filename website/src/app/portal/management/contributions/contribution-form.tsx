@@ -18,6 +18,7 @@ import {
 } from '@/modules/contributions/contribution.actions';
 import { ContributionPayload } from '@/modules/contributions/contribution.types';
 import { ContributorOption } from '@/modules/contributors/contributor.types';
+import { useTranslations } from 'next-intl';
 import { buildCreateContributionInput, buildUpdateContributionInput } from './contribution-form-helpers';
 
 type ContributionFormProps = {
@@ -40,49 +41,50 @@ export type ContributionFormSchema = {
 	};
 };
 
-const initialFormSchema: ContributionFormSchema = {
-	label: 'Contribution',
+const createInitialFormSchema = (t: ReturnType<typeof useTranslations<'portal-management'>>): ContributionFormSchema => ({
+	label: t('forms.contribution.section'),
 	fields: {
 		amount: {
-			placeholder: 'Contribution Amount',
-			label: 'Amount',
-			zodSchema: z.number().positive('Amount must be positive'),
+			placeholder: t('forms.contribution.amountPlaceholder'),
+			label: t('forms.contribution.amount'),
+			zodSchema: z.number().positive(t('validation.amountPositive')),
 		},
 		currency: {
-			placeholder: 'Select currency',
-			label: 'Currency Code',
+			placeholder: t('forms.contribution.selectCurrency'),
+			label: t('forms.contribution.currency'),
 			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c })))),
 			useCombobox: true,
 		},
 		amountChf: {
-			placeholder: 'Contribution Amount in CHF',
-			label: 'Amount CHF',
-			zodSchema: z.number().positive('Amount must be positive'),
+			placeholder: t('forms.contribution.amountChfPlaceholder'),
+			label: t('forms.contribution.amountChf'),
+			zodSchema: z.number().positive(t('validation.amountPositive')),
 		},
 		feesChf: {
-			placeholder: 'Contribution Fees in CHF',
-			label: 'Fees CHF',
-			zodSchema: z.number().positive('Fees must be positive'),
+			placeholder: t('forms.contribution.feesChfPlaceholder'),
+			label: t('forms.contribution.feesChf'),
+			zodSchema: z.number().positive(t('validation.feesPositive')),
 		},
 		contributor: {
-			placeholder: 'Select Contributor',
-			label: 'Contributor',
+			placeholder: t('forms.contribution.selectContributor'),
+			label: t('forms.contribution.contributor'),
 			useCombobox: true,
 		},
 		status: {
-			placeholder: 'Contribution Status',
-			label: 'Status',
+			placeholder: t('forms.contribution.statusPlaceholder'),
+			label: t('forms.contribution.status'),
 			zodSchema: z.nativeEnum(ContributionStatus),
 		},
 		campaign: {
-			placeholder: 'Select Campaign',
-			label: 'Campaign',
+			placeholder: t('forms.contribution.selectCampaign'),
+			label: t('forms.contribution.campaign'),
 		},
 	},
-};
+});
 
 export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId }: ContributionFormProps) => {
-	const [formSchema, setFormSchema] = useState(() => cloneFormSchema(initialFormSchema));
+	const t = useTranslations('portal-management');
+	const [formSchema, setFormSchema] = useState(() => cloneFormSchema(createInitialFormSchema(t)));
 	const [contribution, setContribution] = useState<ContributionPayload>();
 	const [optionsLoaded, setOptionsLoaded] = useState(false);
 	const [isLoading, startTransition] = useTransition();
@@ -164,7 +166,7 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId 
 	const onSubmit = (schema: ContributionFormSchema) => {
 		startTransition(async () => {
 			if (contributionId && contribution?.id !== contributionId) {
-				return onError?.('Contribution is still loading. Please try again.');
+				return onError?.(t('validation.contributionLoading'));
 			}
 			const response =
 				contributionId && contribution

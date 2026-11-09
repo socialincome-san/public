@@ -30,7 +30,7 @@ const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 	const user = await requireSession('user');
-	const t = await getTranslations('website-common');
+	const t = await getTranslations('portal-operations');
 
 	const result = await getPaginatedPayoutForecastTableView(user.id, programId, PAYOUT_FORECAST_MONTHS_AHEAD, tableQuery);
 
@@ -41,7 +41,7 @@ const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) 
 	return (
 		<ConfiguredDataTableClient
 			config={payoutForecastTableConfig}
-			titleInfoTooltip={t('program-detail-page.payout-forecast-info')}
+			titleInfoTooltip={t('program.payout_forecast_info')}
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

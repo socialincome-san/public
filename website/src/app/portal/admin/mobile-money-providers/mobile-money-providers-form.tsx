@@ -12,7 +12,8 @@ import {
 	updateMobileMoneyProviderAction,
 } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
 import type { MobileMoneyProviderPayload } from '@/modules/mobile-money-providers/mobile-money-provider.types';
-import { useEffect, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import z from 'zod';
 import {
 	buildCreateMobileMoneyProviderInput,
@@ -35,32 +36,33 @@ export type MobileMoneyProviderFormSchema = {
 	};
 };
 
-const payoutProcessFormOptions = [{ id: '', label: 'None' }, ...PAYOUT_PROCESS_OPTIONS];
-
-const initialFormSchema: MobileMoneyProviderFormSchema = {
-	label: 'Mobile Money Provider',
+const getInitialFormSchema = (
+	t: ReturnType<typeof useTranslations<'portal-admin'>>,
+	payoutProcessFormOptions: { id: string; label: string }[],
+): MobileMoneyProviderFormSchema => ({
+	label: t('form.mobileMoneyProvider'),
 	fields: {
 		name: {
 			placeholder: 'e.g. Orange Money',
-			label: 'Name',
-			zodSchema: z.string().trim().min(1, 'Name is required.'),
+			label: t('form.name'),
+			zodSchema: z.string().trim().min(1, t('validation.requiredName')),
 		},
 		parentId: {
-			placeholder: 'None',
-			label: 'Parent provider',
-			zodSchema: z.nativeEnum(getZodEnum([{ id: '', label: 'None' }])).optional(),
+			placeholder: t('form.none'),
+			label: t('form.parentProvider'),
+			zodSchema: z.nativeEnum(getZodEnum([{ id: '', label: t('form.none') }])).optional(),
 			useCombobox: true,
-			options: [{ id: '', label: 'None' }],
+			options: [{ id: '', label: t('form.none') }],
 		},
 		payoutProcess: {
-			placeholder: 'None',
-			label: 'Payout process',
+			placeholder: t('form.none'),
+			label: t('form.payoutProcess'),
 			zodSchema: z.nativeEnum(getZodEnum(payoutProcessFormOptions)).optional(),
 			useCombobox: true,
 			options: payoutProcessFormOptions,
 		},
 	},
-};
+});
 
 export default function MobileMoneyProvidersForm({
 	onSuccess,
@@ -68,6 +70,18 @@ export default function MobileMoneyProvidersForm({
 	onCancel,
 	providerId,
 }: MobileMoneyProviderFormProps) {
+	const t = useTranslations('portal-admin');
+	const initialFormSchema = useMemo(
+		() =>
+			getInitialFormSchema(t, [
+				{ id: '', label: t('form.none') },
+				...PAYOUT_PROCESS_OPTIONS.map((option) => ({
+					...option,
+					label: option.id === 'orange_money_csv' ? t('payoutProcess.orangeMoneyCsv') : t('payoutProcess.telecelCsv'),
+				})),
+			]),
+		[t],
+	);
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [provider, setProvider] = useState<MobileMoneyProviderPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -118,10 +132,10 @@ export default function MobileMoneyProvidersForm({
 						.filter((o) => o.id !== providerId)
 						.map((o) => ({ id: o.id, label: o.name }));
 
-					const parentEnum = getZodEnum([{ id: '', label: 'None' }, ...filteredOptions]);
+					const parentEnum = getZodEnum([{ id: '', label: t('form.none') }, ...filteredOptions]);
 					next.fields.parentId = {
 						...next.fields.parentId,
-						options: [{ id: '', label: 'None' }, ...filteredOptions],
+						options: [{ id: '', label: t('form.none') }, ...filteredOptions],
 						zodSchema: z.nativeEnum(parentEnum).optional(),
 					};
 
@@ -144,7 +158,7 @@ export default function MobileMoneyProvidersForm({
 				onError?.(e);
 			}
 		});
-	}, [providerId, onError]);
+	}, [initialFormSchema, onError, providerId, t]);
 
 	return (
 		<DynamicForm

@@ -4,6 +4,7 @@ import type { MessagingChannel } from '@/generated/prisma/client';
 import type { MessagingJobStatusView } from '@/modules/messaging/messaging.types';
 import { cn } from '@socialincome/design-system/cn';
 import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { SendPhase } from './use-messaging-send';
 
 type SendProgressProps = {
@@ -28,13 +29,15 @@ const toneDot: Record<ResultRow['tone'], string> = {
 };
 
 export const SendProgress = ({ phase, status, error, resultsUnavailable, channel }: SendProgressProps) => {
+	const t = useTranslations('portal-messaging');
+
 	if (phase === 'running') {
 		return (
 			<div className="flex flex-col items-center gap-4 py-12 text-center">
 				<Loader2 className="text-muted-foreground h-8 w-8 animate-spin" aria-hidden />
 				<div className="space-y-1">
-					<h3 className="text-base font-medium">Sending your message…</h3>
-					<p className="text-muted-foreground text-sm">This can take a moment. Please keep this open.</p>
+					<h3 className="text-base font-medium">{t('wizard.progress.sendingMessage')}</h3>
+					<p className="text-muted-foreground text-sm">{t('wizard.progress.keepOpen')}</p>
 				</div>
 			</div>
 		);
@@ -43,7 +46,7 @@ export const SendProgress = ({ phase, status, error, resultsUnavailable, channel
 	if (error) {
 		return (
 			<div className="space-y-2 py-4">
-				<h3 className="text-base font-medium">Send failed</h3>
+				<h3 className="text-base font-medium">{t('wizard.progress.sendFailed')}</h3>
 				<p className="text-destructive text-sm">{error}</p>
 			</div>
 		);
@@ -52,18 +55,23 @@ export const SendProgress = ({ phase, status, error, resultsUnavailable, channel
 	const rows: ResultRow[] = status
 		? [
 				{
-					label: 'Sent',
+					label: t('wizard.progress.sent'),
 					value: status.sentCount,
 					tone: 'confirm',
-					note: status.fallbackCount > 0 ? `${status.fallbackCount} via fallback` : undefined,
+					note: status.fallbackCount > 0 ? t('wizard.progress.viaFallback', { count: status.fallbackCount }) : undefined,
 				},
-				{ label: 'Failed', value: status.failedCount, tone: 'destructive' },
-				{ label: 'Skipped', value: status.skippedCount, tone: 'muted', note: 'no phone number' },
+				{ label: t('wizard.progress.failed'), value: status.failedCount, tone: 'destructive' },
 				{
-					label: 'Delivered so far',
+					label: t('wizard.progress.skipped'),
+					value: status.skippedCount,
+					tone: 'muted',
+					note: t('wizard.progress.noPhone'),
+				},
+				{
+					label: t('wizard.progress.deliveredSoFar'),
 					value: status.deliveredCount,
 					tone: 'muted',
-					note: 'updates from Twilio after a short delay',
+					note: t('wizard.progress.deliveryUpdatesDelayed'),
 				},
 			]
 		: [];
@@ -71,15 +79,14 @@ export const SendProgress = ({ phase, status, error, resultsUnavailable, channel
 	return (
 		<div className="space-y-4 py-2">
 			<div className="space-y-1">
-				<h3 className="text-base font-medium">Send complete</h3>
-				<p className="text-muted-foreground text-sm">Your message was dispatched via {channel.toUpperCase()}.</p>
-			</div>
-			{resultsUnavailable && (
+				<h3 className="text-base font-medium">{t('wizard.progress.sendComplete')}</h3>
 				<p className="text-muted-foreground text-sm">
-					The send went out, but its result summary couldn’t be loaded. Check the delivery log for the outcome — don’t
-					re-send.
+					{t('wizard.progress.dispatchedVia', {
+						channel: channel === 'sms' ? t('common.channels.sms') : t('common.channels.whatsapp'),
+					})}
 				</p>
-			)}
+			</div>
+			{resultsUnavailable && <p className="text-muted-foreground text-sm">{t('wizard.progress.resultsUnavailable')}</p>}
 			{status && (
 				<dl className="divide-border divide-y overflow-hidden rounded-lg border">
 					{rows.map((row) => (

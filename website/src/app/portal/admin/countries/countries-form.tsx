@@ -14,9 +14,12 @@ import {
 } from '@/modules/countries/country.actions';
 import { type CountryPayload, NETWORK_TECH_LABELS } from '@/modules/countries/country.types';
 import { getRootMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
-import { useEffect, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCountryInput, buildUpdateCountryInput } from './countries-form-helper';
+
+type PortalAdminTranslator = ReturnType<typeof useTranslations<'portal-admin'>>;
 
 type CountryFormProps = {
 	onSuccess?: () => void;
@@ -72,14 +75,14 @@ export type CountryFormSchema = {
 	};
 };
 
-const initialFormSchema: CountryFormSchema = {
-	label: 'Country',
+const getInitialFormSchema = (t: PortalAdminTranslator): CountryFormSchema => ({
+	label: t('form.country'),
 	fields: {
 		countrySettings: {
-			label: 'Country setup',
+			label: t('form.countrySetup'),
 			fields: {
 				isoCode: {
-					label: 'Country',
+					label: t('form.country'),
 					zodSchema: z.enum(COUNTRY_OPTIONS.map((c) => c.code) as [string, ...string[]]),
 					useCombobox: true,
 					options: COUNTRY_OPTIONS.map((c) => ({
@@ -97,77 +100,77 @@ const initialFormSchema: CountryFormSchema = {
 					},
 				},
 				isActive: {
-					placeholder: 'Active',
-					label: 'Is Active',
+					placeholder: t('form.active'),
+					label: t('form.isActive'),
 					zodSchema: z.boolean().optional(),
 				},
 				currency: {
-					label: 'Currency',
-					placeholder: 'Select currency',
+					label: t('form.currency'),
+					placeholder: t('form.selectCurrency'),
 					useCombobox: true,
 					zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((currency) => ({ id: currency, label: currency })))),
 				},
 				defaultPayoutAmount: {
 					placeholder: '100',
-					label: 'Default payout amount',
-					zodSchema: z.coerce.number().positive('Default payout amount must be greater than 0.'),
+					label: t('form.defaultPayoutAmount'),
+					zodSchema: z.coerce.number().positive(t('validation.defaultPayoutPositive')),
 				},
 			},
 		},
 		suitabilityOfCash: {
-			label: 'Suitability of cash',
+			label: t('form.suitabilityOfCash'),
 			fields: {
 				cashConditionOverride: {
-					label: 'Override automated result (set as met)',
+					label: t('form.overrideAutomatedResult'),
 					zodSchema: z.boolean().optional(),
 				},
 				microfinanceIndex: {
 					placeholder: '4.92',
-					label: 'MFI',
+					label: t('form.mfi'),
 					zodSchema: z.coerce.number().min(0).max(10).optional(),
 				},
 				latestSurveyDate: {
-					label: 'Most recent survey date',
+					label: t('form.mostRecentSurveyDate'),
 					zodSchema: z.coerce.date().optional(),
 				},
 				microfinanceSourceText: {
 					placeholder: 'WFP',
-					label: 'MFI source text',
+					label: t('form.mfiSourceText'),
 					zodSchema: z.string().optional(),
 				},
 				microfinanceSourceHref: {
 					placeholder: 'https://www.wfp.org',
-					label: 'MFI source URL',
+					label: t('form.mfiSourceUrl'),
 					zodSchema: z.string().optional(),
 				},
 			},
 		},
 		mobileMoney: {
-			label: 'Mobile money',
+			label: t('form.mobileMoney'),
 			fields: {
 				mobileMoneyConditionOverride: {
-					label: 'Override automated result (set as met)',
+					label: t('form.overrideAutomatedResult'),
 					zodSchema: z.boolean().optional(),
 				},
 				mobileMoneyProviders: {
-					label: 'Mobile money providers',
-					placeholder: 'Select mobile money providers',
+					label: t('form.mobileMoneyProviders'),
+					placeholder: t('form.selectMobileMoneyProviders'),
 					zodSchema: z.array(z.string()).optional(),
 					options: [],
 				},
 			},
 		},
 		mobileNetwork: {
-			label: 'Mobile network',
+			label: t('form.mobileNetwork'),
 			fields: {
 				populationCoverage: {
 					placeholder: '85',
-					label: 'Population coverage %',
+					label: t('form.populationCoverage'),
 					zodSchema: z.coerce.number().min(0).max(100).optional(),
 				},
 				networkTechnology: {
 					placeholder: '3G',
-					label: 'Technology',
+					label: t('form.technology'),
 					zodSchema: z.nativeEnum(NetworkTechnology).optional(),
 					options: Object.entries(NETWORK_TECH_LABELS).map(([value, label]) => ({
 						id: value,
@@ -176,30 +179,38 @@ const initialFormSchema: CountryFormSchema = {
 				},
 				networkSourceText: {
 					placeholder: 'ITU',
-					label: 'Technology source text',
+					label: t('form.technologySourceText'),
 					zodSchema: z.string().optional(),
 				},
 				networkSourceHref: {
 					placeholder: 'https://www.itu.int',
-					label: 'Technology source URL',
+					label: t('form.technologySourceUrl'),
 					zodSchema: z.string().optional(),
 				},
 			},
 		},
 		noSanctions: {
-			label: 'Sanctions',
+			label: t('form.sanctions'),
 			fields: {
 				sanctions: {
-					label: 'Sanctions',
-					placeholder: 'Select sanctions',
+					label: t('form.sanctions'),
+					placeholder: t('form.selectSanctions'),
 					zodSchema: z.array(z.nativeEnum(SanctionRegime)).optional(),
+					options: [
+						{ id: SanctionRegime.eu, label: t('sanctionRegimes.eu') },
+						{ id: SanctionRegime.us, label: t('sanctionRegimes.us') },
+						{ id: SanctionRegime.un, label: t('sanctionRegimes.un') },
+						{ id: SanctionRegime.other, label: t('sanctionRegimes.other') },
+					],
 				},
 			},
 		},
 	},
-};
+});
 
 export default function CountriesForm({ onSuccess, onError, onCancel, countryId }: CountryFormProps) {
+	const t = useTranslations('portal-admin');
+	const initialFormSchema = useMemo(() => getInitialFormSchema(t), [t]);
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [country, setCountry] = useState<CountryPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -287,7 +298,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 				onError?.(e);
 			}
 		});
-	}, [countryId, onError]);
+	}, [countryId, initialFormSchema, onError]);
 
 	return (
 		<DynamicForm

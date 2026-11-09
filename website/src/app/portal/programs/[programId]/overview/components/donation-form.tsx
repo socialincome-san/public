@@ -4,6 +4,7 @@ import { createPortalProgramDonationCheckoutAction } from '@/modules/stripe-paym
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { SegmentedToggle } from '@socialincome/design-system/actions/segmented-toggle/segmented-toggle';
 import { Input } from '@socialincome/design-system/forms/input/input';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -13,6 +14,7 @@ type DonationFormProps = {
 };
 
 export const DonationForm = ({ costPerIntervalChf, programId }: DonationFormProps) => {
+	const t = useTranslations('portal-operations');
 	const router = useRouter();
 	const [method, setMethod] = useState<'credit' | 'bank'>('credit');
 	const [submitting, setSubmitting] = useState(false);
@@ -45,34 +47,32 @@ export const DonationForm = ({ costPerIntervalChf, programId }: DonationFormProp
 	return (
 		<form action={handleSubmit} className="space-y-4">
 			<div className="space-y-1">
-				<h3 className="text-base font-medium">Pay directly</h3>
-				<p className="text-muted-foreground text-sm">
-					The fastest way to launch. Cover the starting balance to activate transfers immediately.
-				</p>
+				<h3 className="text-base font-medium">{t('program.donation.title')}</h3>
+				<p className="text-muted-foreground text-sm">{t('program.donation.description')}</p>
 			</div>
 			<SegmentedToggle
 				value={method}
 				onValueChange={(v) => setMethod(v as 'credit' | 'bank')}
 				options={[
-					{ value: 'bank', label: 'Bank Transfer' },
-					{ value: 'credit', label: 'Credit Card' },
+					{ value: 'bank', label: t('program.donation.bank_transfer') },
+					{ value: 'credit', label: t('program.donation.credit_card') },
 				]}
 			/>
 
 			{method === 'credit' ? (
 				<div className="space-y-3">
-					<div className="text-muted-foreground text-xs">Enter an amount to donate (CHF)</div>
+					<div className="text-muted-foreground text-xs">{t('program.donation.amount_label')}</div>
 					<div className="flex items-center gap-3">
 						<div className="w-40 md:w-48">
 							<Input name="amount" type="number" min={1} step={1} defaultValue={Math.round(costPerIntervalChf)} required />
 						</div>
 						<Button type="submit" disabled={submitting}>
-							{submitting ? 'Redirecting…' : 'Donate now'}
+							{submitting ? t('program.donation.redirecting') : t('program.donation.donate_now')}
 						</Button>
 					</div>
 				</div>
 			) : (
-				<div className="text-muted-foreground text-sm">Bank transfer — coming soon</div>
+				<div className="text-muted-foreground text-sm">{t('program.donation.bank_transfer_coming_soon')}</div>
 			)}
 		</form>
 	);

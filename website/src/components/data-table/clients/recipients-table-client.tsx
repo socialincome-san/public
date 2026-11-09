@@ -20,6 +20,21 @@ import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
 import { recipientsCsvTemplate } from './recipients-csv-template';
 
+const recipientSortTranslationKeys = {
+	recipient: 'table.recipientColumnRecipient',
+	country: 'table.recipientColumnCountry',
+	paymentCode: 'table.recipientColumnPaymentCode',
+	dateOfBirth: 'table.recipientColumnAge',
+	localPartnerName: 'table.recipientColumnLocalPartner',
+	programName: 'table.recipientColumnProgram',
+	startDate: 'table.recipientColumnStartDate',
+	status: 'table.recipientColumnStatus',
+	createdAt: 'table.recipientColumnCreated',
+} as const;
+
+const isRecipientSortId = (id: string): id is keyof typeof recipientSortTranslationKeys =>
+	Object.hasOwn(recipientSortTranslationKeys, id);
+
 type Props = {
 	rows: RecipientTableViewRow[];
 	error: string | null;
@@ -46,6 +61,7 @@ export const RecipientsTableClient = ({
 	hideProgramName = false,
 }: Props) => {
 	const tPool = useTranslations('add-recipients-from-pool');
+	const t = useTranslations('portal-shared');
 	const router = useRouter();
 	const canManageRecipients = sessionType === 'user';
 	const isReadOnly = readOnly ?? false;
@@ -53,9 +69,14 @@ export const RecipientsTableClient = ({
 	const canDownloadCsv = sessionType === 'local-partner' || !isReadOnly;
 	const tableConfig = {
 		...recipientsTableConfig,
-		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean) => {
-			return makeRecipientColumns(hideProgramName, hideLocalPartner, undefined, isReadOnly);
-		},
+		title: t('table.recipientsTitle'),
+		emptyMessage: t('table.recipientsEmpty'),
+		sortOptions: recipientsTableConfig.sortOptions?.map((option) => ({
+			...option,
+			label: isRecipientSortId(option.id) ? t(recipientSortTranslationKeys[option.id]) : option.label,
+		})),
+		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean) =>
+			makeRecipientColumns(hideProgramName, hideLocalPartner, undefined, isReadOnly, t),
 	};
 	const recipientDialog = useRecordDialog('recipientId');
 	const [recipientError, setRecipientError] = useState<string | null>(null);
@@ -103,7 +124,7 @@ export const RecipientsTableClient = ({
 
 	const actionMenuItems: ActionMenuItem[] = [
 		{
-			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
+			label: isCsvDownloading ? t('csv.downloading') : t('csv.download'),
 			icon: <DownloadIcon />,
 			disabled: isCsvDownloading || !canDownloadCsv,
 			onSelect: () => {
@@ -113,7 +134,7 @@ export const RecipientsTableClient = ({
 		...(canManageRecipients
 			? [
 					{
-						label: 'Add new recipient manually',
+						label: t('table.addRecipientManually'),
 						icon: <PlusIcon />,
 						disabled: isReadOnly,
 						onSelect: openCreateRecipientDialog,
@@ -121,7 +142,7 @@ export const RecipientsTableClient = ({
 					...(canAddFromPool && programId
 						? [
 								{
-									label: 'Add recipients from pool',
+									label: t('table.addRecipientsFromPool'),
 									icon: <UsersIcon />,
 									onSelect: () => {
 										setPoolDialogKey((key) => key + 1);
@@ -131,7 +152,7 @@ export const RecipientsTableClient = ({
 							]
 						: []),
 					{
-						label: 'Upload CSV',
+						label: t('csv.upload'),
 						icon: <UploadIcon />,
 						disabled: isReadOnly,
 						onSelect: () => setIsCsvUploadDialogOpen(true),
@@ -144,12 +165,13 @@ export const RecipientsTableClient = ({
 		<>
 			<ConfiguredDataTableClient
 				config={tableConfig}
-				titleInfoTooltip="Shows recipients in programs you can access."
+				titleInfoTooltip={t('table.recipientsTooltip')}
 				rows={rows}
 				error={error}
 				actionMenuItems={actionMenuItems}
 				query={query}
 				toolbarFilters={getRecipientsTableFilters({
+					t,
 					query,
 					programFilterOptions,
 					localPartnerFilterOptions,
@@ -190,7 +212,7 @@ export const RecipientsTableClient = ({
 			<CsvUploadDialog
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
-				title="Upload recipients CSV"
+				title={t('csv.uploadRecipients')}
 				template={recipientsCsvTemplate}
 				onImport={(file) => importRecipientsCsvAction(file, sessionType)}
 			/>

@@ -7,7 +7,10 @@ import { getCountryCurrency } from '../types/currency';
 import { LanguageCode } from '../types/language';
 
 export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 'kri'>;
-export const defaultLanguage: WebsiteLanguage = 'en';
+export type MainWebsiteLanguage = Extract<WebsiteLanguage, 'en' | 'de' | 'fr' | 'it'>;
+export const defaultLanguage: MainWebsiteLanguage = 'en';
+export const PORTAL_LANGUAGE_COOKIE_NAME = 'portal-language';
+export const PORTAL_ROUTE_HEADER = 'x-socialincome-portal';
 export const TIME_ZONE = 'Europe/Zurich';
 export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
 export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
@@ -47,8 +50,14 @@ export const toWebsiteCurrency = (segment: string): WebsiteCurrency => parseCurr
 
 export const getWebsiteBasePath = (lang: string, currency: WebsiteCurrency) => `/${lang}/${toCurrencySegment(currency)}`;
 
-const isMainWebsiteLanguage = (value: string): value is WebsiteLanguage =>
-	mainWebsiteLanguages.some((language) => language === value);
+const isMainWebsiteLanguage = (value: string | undefined): value is MainWebsiteLanguage =>
+	value !== undefined && mainWebsiteLanguages.some((language) => language === value);
+
+export const getPortalLanguage = (value: string | null | undefined): MainWebsiteLanguage => {
+	const language = value ?? undefined;
+
+	return isMainWebsiteLanguage(language) ? language : defaultLanguage;
+};
 
 /** The country's own currency, if the website supports it. */
 export const getCurrencyForCountry = (country: string | undefined): WebsiteCurrency | undefined => {

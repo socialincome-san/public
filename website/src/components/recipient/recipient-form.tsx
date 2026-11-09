@@ -1,6 +1,9 @@
 'use client';
 
-import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
+import {
+	getFormSchema as getContactFormSchema,
+	type PortalSharedTranslator,
+} from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import {
 	clearFormSchemaValues,
@@ -23,6 +26,7 @@ import {
 	updateRecipientAction,
 } from '@/modules/recipients/recipient.actions';
 import type { RecipientPayload } from '@/modules/recipients/recipient.types';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateRecipientInput, buildUpdateRecipientInput } from './recipient-form-helpers';
@@ -58,65 +62,60 @@ export type RecipientFormSchema = {
 	};
 };
 
-const getInitialFormSchema = (sessionType: Session['type'] = 'user'): RecipientFormSchema => {
+const getInitialFormSchema = (t: PortalSharedTranslator, sessionType: Session['type'] = 'user'): RecipientFormSchema => {
 	const base: RecipientFormSchema = {
-		label: 'Recipients',
+		label: t('form.recipientsSection'),
 		fields: {
 			startDate: {
-				label: 'Start Date',
+				label: t('form.startDate'),
 				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).nullable().optional(),
 			},
 			suspendedAt: {
-				label: 'Suspended At',
+				label: t('form.suspendedAt'),
 				zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).nullable().optional(),
 			},
 			suspensionReason: {
-				label: 'Suspension Reason',
+				label: t('form.suspensionReason'),
 				zodSchema: z.string().nullable().optional(),
 			},
 			successorName: {
-				placeholder: 'Successor',
-				label: 'Successor',
+				placeholder: t('form.successor'),
+				label: t('form.successor'),
 				zodSchema: z.string().nullable(),
 			},
 			termsAccepted: {
-				label: 'Terms Accepted',
+				label: t('form.termsAccepted'),
 				zodSchema: z.boolean().optional(),
 			},
 			program: {
-				placeholder: 'Program',
-				label: 'Program',
+				placeholder: t('form.program'),
+				label: t('form.program'),
 			},
 			localPartner: {
-				placeholder: 'Local Partner',
-				label: 'Local Partner',
+				placeholder: t('form.localPartner'),
+				label: t('form.localPartner'),
 			},
 			paymentInformation: {
-				label: 'Payment Information',
+				label: t('form.paymentInformation'),
 				fields: {
 					provider: {
-						placeholder: 'Provider',
-						label: 'Provider',
+						placeholder: t('form.provider'),
+						label: t('form.provider'),
 						zodSchema: z.string().optional(),
 					},
 					code: {
-						placeholder: 'Code',
-						label: 'Code',
+						placeholder: t('form.code'),
+						label: t('form.code'),
 						zodSchema: z.string().nullable(),
 					},
 					phone: {
-						placeholder: 'Phone Number',
-						label: 'Phone Number',
-						zodSchema: z
-							.string()
-							.regex(E164_OPTIONAL_PHONE_REGEX, 'Phone number must be empty or in valid E.164 format (e.g., +12345678901)')
-							.optional(),
+						placeholder: t('form.phoneNumber'),
+						label: t('form.phoneNumber'),
+						zodSchema: z.string().regex(E164_OPTIONAL_PHONE_REGEX, t('validation.phoneFormat')).optional(),
 					},
 				},
 			},
-			contact: {
-				...getContactFormSchema(),
-			},
+			contact: getContactFormSchema(t),
 		},
 	};
 
@@ -136,14 +135,15 @@ export const RecipientForm = ({
 	programId,
 	sessionType = 'user',
 }: RecipientFormProps) => {
-	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(sessionType));
+	const t = useTranslations('portal-shared');
+	const [formSchema, setFormSchema] = useState(() => getInitialFormSchema(t, sessionType));
 	const [recipient, setRecipient] = useState<RecipientPayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	const onSubmit = (schema: RecipientFormSchema) => {
 		startTransition(async () => {
 			if (recipientId && recipient?.id !== recipientId) {
-				return onError?.('Recipient is still loading. Please try again.');
+				return onError?.(t('validation.recipientLoading'));
 			}
 			const contactFields = schema.fields.contact.fields as Record<string, FormField>;
 			const result =
@@ -315,10 +315,9 @@ export const RecipientForm = ({
 	const extraAction =
 		recipient?.program && sessionType === 'user'
 			? {
-					label: 'Remove from program',
-					confirmTitle: 'Remove from program?',
-					confirmDescription:
-						'The recipient stays in the pool and can be reassigned to a program later. This is only possible for recipients without payouts.',
+					label: t('form.removeFromProgram'),
+					confirmTitle: t('form.removeFromProgramTitle'),
+					confirmDescription: t('form.removeFromProgramDescription'),
 					onConfirm: onRemoveFromProgram,
 				}
 			: undefined;

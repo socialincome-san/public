@@ -6,7 +6,8 @@ import { handleResult } from '@/lib/result-client';
 import { SLUG_REGEX } from '@/lib/utils/regex';
 import { createFocusAction, deleteFocusAction, getFocusAction, updateFocusAction } from '@/modules/focuses/focus.actions';
 import type { FocusPayload } from '@/modules/focuses/focus.types';
-import { useEffect, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateFocusInput, buildUpdateFocusInput } from './focuses-form-helper';
 
@@ -25,23 +26,25 @@ export type FocusFormSchema = {
 	};
 };
 
-const initialFormSchema: FocusFormSchema = {
-	label: 'Focus',
+const getInitialFormSchema = (t: ReturnType<typeof useTranslations<'portal-admin'>>): FocusFormSchema => ({
+	label: t('form.focus'),
 	fields: {
 		name: {
-			placeholder: 'e.g. poverty',
-			label: 'Name',
-			zodSchema: z.string().trim().min(1, 'Name is required.'),
+			placeholder: t('form.focusExample'),
+			label: t('form.name'),
+			zodSchema: z.string().trim().min(1, t('validation.requiredName')),
 		},
 		slug: {
 			placeholder: 'unique-readable-id',
-			label: 'Slug (URL Identifier)',
-			zodSchema: z.string().trim().min(1, 'Slug is required.').regex(SLUG_REGEX, 'Invalid slug format.'),
+			label: t('form.slug'),
+			zodSchema: z.string().trim().min(1, t('validation.requiredSlug')).regex(SLUG_REGEX, t('validation.invalidSlug')),
 		},
 	},
-};
+});
 
 export default function FocusesForm({ onSuccess, onError, onCancel, focusId }: FocusFormProps) {
+	const t = useTranslations('portal-admin');
+	const initialFormSchema = useMemo(() => getInitialFormSchema(t), [t]);
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [focus, setFocus] = useState<FocusPayload>();
 	const [isLoading, startTransition] = useTransition();
