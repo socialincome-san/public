@@ -1,5 +1,6 @@
 'use client';
 
+import { useVisitorCountry } from '@/lib/geo/visitor-country';
 import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { useState } from 'react';
 import {
@@ -12,11 +13,12 @@ import { selectStep1FormView } from '../wizard/donation-machine-selectors';
 
 export const useDonationFormState = (
 	initial?: Partial<Pick<DonationAmountContext, 'monthlyIncome' | 'selectedAmount' | 'customAmount' | 'cadence'>>,
-	visitorCountryCode: string | null = null,
 ) => {
 	const currency = useWebsiteCurrency();
-	const defaults = getInitialDonationContext(currency, visitorCountryCode);
-	const [monthlyIncome, setMonthlyIncome] = useState(initial?.monthlyIncome ?? defaults.monthlyIncome);
+	const defaults = getInitialDonationContext(currency, useVisitorCountry());
+	// Undefined until the visitor enters an income, so the country example still applies once the country arrives.
+	const [enteredMonthlyIncome, setMonthlyIncome] = useState(initial?.monthlyIncome);
+	const monthlyIncome = enteredMonthlyIncome === undefined ? defaults.monthlyIncome : enteredMonthlyIncome;
 	const [selectedAmount, setSelectedAmount] = useState<DonationAmountContext['selectedAmount']>(
 		initial?.selectedAmount ?? defaults.selectedAmount,
 	);

@@ -1,4 +1,5 @@
 import { getIndirectBeneficiaryCount } from '@/components/program/indirect-beneficiaries';
+import { type CountryCode } from '@/generated/prisma/enums';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { ONLINE_TRANSACTION_FEE_RATE } from '@/modules/subscriptions/subscription.types';
 import { getExampleIncome } from './donation-example-income';
@@ -39,10 +40,10 @@ export type DonationAmountContext = {
 
 export const getInitialDonationContext = (
 	currency: WebsiteCurrency,
-	countryCode: string | null = null,
+	country: CountryCode | null = null,
 ): DonationAmountContext => ({
 	currency,
-	monthlyIncome: getExampleIncome(countryCode, currency) ?? 5000,
+	monthlyIncome: getExampleIncome(country, currency) ?? 5000,
 	selectedAmount: null,
 	customAmount: null,
 	cadence: 'monthly',

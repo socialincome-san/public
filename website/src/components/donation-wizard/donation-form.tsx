@@ -14,8 +14,8 @@ type Props = {
 
 export const DonationForm = ({ campaignId, onBeforeOpen }: Props) => {
 	const currency = useWebsiteCurrency();
-	const { openWizardWithFormAmount, visitorCountryCode } = useDonationModal();
-	const form = useDonationFormState(undefined, visitorCountryCode);
+	const { openWizardWithFormAmount } = useDonationModal();
+	const form = useDonationFormState();
 
 	return (
 		<div data-testid="donation-wizard-hero-form" data-clarity-mask="true" ref={observeDonationForm} className="w-full">

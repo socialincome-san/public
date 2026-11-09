@@ -7,7 +7,7 @@ jest.mock('@/modules/contributors/contributor.actions', () => ({
 
 const startAtAmountStep = async () => {
 	const actor = createActor(donationWizardMachine).start();
-	actor.send({ type: 'OPEN', currency: 'EUR' });
+	actor.send({ type: 'OPEN', currency: 'EUR', country: null });
 	await waitFor(actor, (snapshot) => snapshot.matches('stepAmount'));
 
 	return actor;

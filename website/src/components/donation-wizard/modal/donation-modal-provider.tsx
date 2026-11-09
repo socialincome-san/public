@@ -1,6 +1,7 @@
 'use client';
 
 import { trackEvent } from '@/lib/analytics/analytics';
+import { useVisitorCountry } from '@/lib/geo/visitor-country';
 import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { getPaidStripeCheckoutDonationAction } from '@/modules/stripe-payments/stripe-payment.actions';
 import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
@@ -33,7 +34,6 @@ import type { DonationWizardSend } from '../wizard/types';
 
 type Props = {
 	children: ReactNode;
-	visitorCountryCode: string | null;
 };
 
 // A Stripe return URL can be opened without a payment, so that case clears only once Stripe confirms it was paid.
@@ -42,9 +42,10 @@ const completionEvents = new Set<Parameters<DonationWizardSend>[0]['type']>([
 	'QR_PAYMENT_CONFIRMED',
 ]);
 
-export const DonationModalProvider = ({ children, visitorCountryCode }: Props) => {
+export const DonationModalProvider = ({ children }: Props) => {
 	const [state, , actorRef] = useMachine(donationWizardMachine);
 	const websiteCurrency = useWebsiteCurrency();
+	const visitorCountry = useVisitorCountry();
 
 	// Every step sends through here, so the funnel is tracked in one place with the context after the transition.
 	const send = useCallback<DonationWizardSend>(
@@ -120,20 +121,14 @@ export const DonationModalProvider = ({ children, visitorCountryCode }: Props) =
 
 		const context = readStoredStripeCheckoutContext(sessionId, websiteCurrency);
 
-		send({
-			type: 'OPEN_FROM_STRIPE_RETURN',
-			context,
-			sessionId,
-			currency: websiteCurrency,
-			countryCode: visitorCountryCode,
-		});
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: websiteCurrency });
 		clearStoredStripeCheckoutContext(sessionId);
 		url.searchParams.delete(STRIPE_CHECKOUT_SESSION_ID_PARAM);
 		window.history.replaceState(null, '', url);
-	}, [send, visitorCountryCode, websiteCurrency]);
+	}, [send, websiteCurrency]);
 
 	const openWizardAtAmountStep = () => {
-		send({ type: 'OPEN', currency: websiteCurrency, countryCode: visitorCountryCode });
+		send({ type: 'OPEN', currency: websiteCurrency, country: visitorCountry });
 	};
 
 	const openWizardWithFormAmount = (context: DonationAmountContext) => {
@@ -153,25 +148,12 @@ export const DonationModalProvider = ({ children, visitorCountryCode }: Props) =
 		if (!actorRef.getSnapshot().matches('closed')) {
 			send({ type: 'CLOSE' });
 		}
-		send({
-			type: 'OPEN_FROM_STRIPE_RETURN',
-			context,
-			sessionId,
-			currency: context.currency,
-			countryCode: visitorCountryCode,
-		});
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: context.currency });
 	};
 
 	return (
 		<DonationModalContext.Provider
-			value={{
-				isOpen,
-				visitorCountryCode,
-				openWizardAtAmountStep,
-				openWizardWithFormAmount,
-				resumeDonation,
-				openWizardAfterPayment,
-			}}
+			value={{ isOpen, openWizardAtAmountStep, openWizardWithFormAmount, resumeDonation, openWizardAfterPayment }}
 		>
 			{children}
 			<DonationResumeBar />

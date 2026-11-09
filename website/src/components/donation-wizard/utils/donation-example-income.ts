@@ -1,6 +1,5 @@
-import type { CountryCode } from '@/generated/prisma/enums';
+import { type CountryCode } from '@/generated/prisma/enums';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { toCountryCode } from '@/lib/types/country';
 
 const monthlyIncomeChf: Partial<Record<CountryCode, number>> = {
 	AL: 732,
@@ -63,9 +62,8 @@ const roundToFriendlyIncome = (amount: number): number => {
 	return Math.round(amount / step) * step;
 };
 
-export const getExampleIncome = (country: string | null, currency: WebsiteCurrency): number | null => {
-	const countryCode = toCountryCode(country);
-	const income = countryCode ? monthlyIncomeChf[countryCode] : undefined;
+export const getExampleIncome = (country: CountryCode | null, currency: WebsiteCurrency): number | null => {
+	const income = country ? monthlyIncomeChf[country] : undefined;
 	if (income === undefined) {
 		return null;
 	}

@@ -35,9 +35,9 @@ type Props = {
 export const CampaignDonationForm = ({ campaignId, quote, profilePictureSrc, profilePictureAlt }: Props) => {
 	const currency = useWebsiteCurrency();
 	const t = useTranslations('donation-wizard');
-	const { openWizardWithFormAmount, visitorCountryCode } = useDonationModal();
+	const { openWizardWithFormAmount } = useDonationModal();
 	const isSwissVisitor = useIsSwissVisitor();
-	const form = useDonationFormState({ selectedAmount: 25 }, visitorCountryCode);
+	const form = useDonationFormState({ selectedAmount: 25 });
 	const values = selectStep1FormView(form.context);
 	const trimmedQuote = quote.trim();
 
