@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../overlays/tool-tip/tool-tip';
 
 type DataTableHeaderProps = {
-	title: ReactNode;
+	title?: ReactNode;
 	count: number;
 	infoTooltip?: string;
 	toolbar?: ReactNode;

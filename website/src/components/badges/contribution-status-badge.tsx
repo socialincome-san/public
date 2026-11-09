@@ -22,12 +22,6 @@ const RECIPIENT_STATUS_UI: Record<
 	succeeded: { variant: 'verified', Icon: CheckIcon },
 };
 
-const STATUS_LABEL_KEYS = {
-	failed: 'contributions.status.failed',
-	pending: 'contributions.status.pending',
-	succeeded: 'contributions.status.succeeded',
-} as const satisfies Record<ContributionStatus, string>;
-
 export const ContributionStatusBadge = ({ status }: ContributionStatusBadgeProps) => {
 	const t = useTranslations('website-me');
 	const { variant, Icon } = RECIPIENT_STATUS_UI[status];
@@ -35,7 +29,7 @@ export const ContributionStatusBadge = ({ status }: ContributionStatusBadgeProps
 	return (
 		<Badge variant={variant}>
 			<Icon className="mr-1 h-4 w-4" />
-			{t(STATUS_LABEL_KEYS[status])}
+			{t(`contributions.status.${status}`)}
 		</Badge>
 	);
 };

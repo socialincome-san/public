@@ -26,7 +26,7 @@ import { useTranslations } from 'next-intl';
 import { ReactNode, useState } from 'react';
 
 type DataTableProps<Row extends RowData> = {
-	title: ReactNode;
+	title?: ReactNode;
 	titleInfoTooltip?: string;
 	error?: string | null;
 	emptyMessage: ReactNode;

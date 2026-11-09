@@ -21,7 +21,6 @@ export const YourDonationCertificateTable = ({
 	const [open, setOpen] = useState<boolean>(false);
 	const t = useTranslations('website-me');
 	const config = getYourDonationCertificatesTableConfig({
-		title: '',
 		emptyMessage: t.rich('donation-certificates.no-certificates-yet', {
 			br: () => <br />,
 			contact: (chunks) => (

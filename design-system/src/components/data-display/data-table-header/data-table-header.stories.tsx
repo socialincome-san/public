@@ -36,6 +36,6 @@ export const TitleOnly: Story = {
 
 export const WithoutTitle: Story = {
 	args: {
-		title: '',
+		title: undefined,
 	},
 };

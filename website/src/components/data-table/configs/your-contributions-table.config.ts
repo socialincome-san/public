@@ -3,14 +3,11 @@ import type { DataTableConfig } from '@/components/data-table/table-config.types
 import type { YourContributionsTableViewRow } from '@/modules/contributions/contribution.types';
 
 export const getYourContributionsTableConfig = ({
-	title,
 	emptyMessage,
 }: {
-	title: string;
 	emptyMessage: string;
 }): DataTableConfig<YourContributionsTableViewRow> => ({
 	id: 'your-contributions',
-	title,
 	emptyMessage,
 	searchKeys: [],
 	sortOptions: [

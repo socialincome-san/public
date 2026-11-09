@@ -22,7 +22,6 @@ export const ContributionsTable = async ({
 
 	const t = await getTranslations('website-me');
 	const config = getYourContributionsTableConfig({
-		title: '',
 		emptyMessage: t('contributions.no-contributions'),
 	});
 
