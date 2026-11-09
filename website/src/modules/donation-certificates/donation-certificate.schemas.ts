@@ -9,8 +9,6 @@ export const donationCertificateTableQuerySchema = tableQuerySchema.extend({
 	contributorId: tableQueryFilterSchema,
 });
 
-export const donationCertificateIdSchema = z.string().trim().min(1).max(128);
-
 export const donationCertificateBatchCreateSchema = z.object({
 	year: yearSchema,
 	contributorIds: z.array(z.string().trim().min(1)),

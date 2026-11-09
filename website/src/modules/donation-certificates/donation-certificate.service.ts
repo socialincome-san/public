@@ -92,7 +92,7 @@ export const downloadDonationCertificateForUser = async (
 			return resultFail(accessibleProgramsResult.error);
 		}
 		if (accessibleProgramsResult.data.length === 0) {
-			return resultFail('Donation certificate not found');
+			return resultFail('Donation certificate not found', 404);
 		}
 
 		const certificate = await donationCertificateRepository.findDonationCertificateForPrograms(
@@ -100,7 +100,7 @@ export const downloadDonationCertificateForUser = async (
 			accessibleProgramsResult.data,
 		);
 		if (!certificate) {
-			return resultFail('Donation certificate not found');
+			return resultFail('Donation certificate not found', 404);
 		}
 
 		const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;

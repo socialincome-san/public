@@ -1,8 +1,8 @@
-const mockGetSessionByType = jest.fn();
+const mockRequireSession = jest.fn();
 const mockDownloadDonationCertificateForUser = jest.fn();
 
-jest.mock('@/modules/auth/session.service', () => ({
-	getSessionByType: mockGetSessionByType,
+jest.mock('@/server/session', () => ({
+	requireSession: mockRequireSession,
 }));
 
 jest.mock('@/modules/donation-certificates/donation-certificate.service', () => ({
@@ -14,21 +14,20 @@ import { GET } from './route';
 describe('donation certificate download route', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
+		mockRequireSession.mockResolvedValue({ id: 'user-1' });
 	});
 
-	test('requires an authenticated portal user', async () => {
-		mockGetSessionByType.mockResolvedValue({ success: false, error: 'Not authenticated' });
+	test('requires a portal user session', async () => {
+		mockRequireSession.mockRejectedValue(new Error('NEXT_REDIRECT'));
 
-		const response = await GET(new Request('https://example.org'), {
-			params: Promise.resolve({ certificateId: 'certificate-1' }),
-		});
-
-		expect(response.status).toBe(401);
+		await expect(
+			GET(new Request('https://example.org'), { params: Promise.resolve({ certificateId: 'certificate-1' }) }),
+		).rejects.toThrow('NEXT_REDIRECT');
+		expect(mockRequireSession).toHaveBeenCalledWith('user');
 		expect(mockDownloadDonationCertificateForUser).not.toHaveBeenCalled();
 	});
 
 	test('returns the PDF only after the service authorizes the certificate', async () => {
-		mockGetSessionByType.mockResolvedValue({ success: true, data: { id: 'user-1' } });
 		mockDownloadDonationCertificateForUser.mockResolvedValue({
 			success: true,
 			data: { contents: Buffer.from('%PDF-1.7'), filename: 'donation-certificate-2025.pdf' },
@@ -46,10 +45,10 @@ describe('donation certificate download route', () => {
 	});
 
 	test("does not reveal certificates outside the user's operated programs", async () => {
-		mockGetSessionByType.mockResolvedValue({ success: true, data: { id: 'user-1' } });
 		mockDownloadDonationCertificateForUser.mockResolvedValue({
 			success: false,
 			error: 'Donation certificate not found',
+			status: 404,
 		});
 
 		const response = await GET(new Request('https://example.org'), {
@@ -58,16 +57,5 @@ describe('donation certificate download route', () => {
 
 		expect(response.status).toBe(404);
 		expect(await response.json()).toEqual({ error: 'Donation certificate not found' });
-	});
-
-	test('rejects malformed certificate ids before querying storage', async () => {
-		mockGetSessionByType.mockResolvedValue({ success: true, data: { id: 'user-1' } });
-
-		const response = await GET(new Request('https://example.org'), {
-			params: Promise.resolve({ certificateId: 'x'.repeat(129) }),
-		});
-
-		expect(response.status).toBe(404);
-		expect(mockDownloadDonationCertificateForUser).not.toHaveBeenCalled();
 	});
 });
