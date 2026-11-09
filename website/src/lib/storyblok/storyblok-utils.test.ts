@@ -1,8 +1,10 @@
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import {
+	formatArticleAuthorNames,
 	formatStoryblokDateMedium,
 	formatStoryblokResizeUrl,
 	formatStoryblokUrl,
+	getArticleAuthors,
 	getPersonCircles,
 	getScaledAssetDimensions,
 	getVolunteerDurationParts,
@@ -95,6 +97,52 @@ describe('isResolvedArticle', () => {
 		expect(isResolvedArticle(article('person-id', type))).toBe(false);
 		expect(isResolvedArticle(article(person, 'type-id'))).toBe(false);
 		expect(isResolvedArticle(article(person, type, [tag, 'tag-id']))).toBe(false);
+	});
+});
+
+describe('article authors', () => {
+	const person = (uuid: string, firstName: string, lastName: string) => ({
+		uuid,
+		content: { firstName, lastName, fullName: `${firstName} ${lastName}` },
+	});
+	const resolvedArticle = (coAuthors?: unknown[]) => {
+		const story = { content: { author: person('ada', 'Ada', 'Lovelace'), type: { content: {} }, coAuthors } };
+		if (!isResolvedArticle(story)) {
+			throw new Error('Article fixture must be resolved');
+		}
+
+		return story.content;
+	};
+
+	it('lists the lead author first and skips unresolved co-authors', () => {
+		const authors = getArticleAuthors(resolvedArticle([person('grace', 'Grace', 'Hopper'), 'unpublished-uuid']));
+
+		expect(authors.map(({ uuid }) => uuid)).toEqual(['ada', 'grace']);
+	});
+
+	it('lists an author picked twice once', () => {
+		const authors = getArticleAuthors(
+			resolvedArticle([person('ada', 'Ada', 'Lovelace'), person('grace', 'Grace', 'Hopper')]),
+		);
+
+		expect(authors.map(({ uuid }) => uuid)).toEqual(['ada', 'grace']);
+	});
+
+	it('uses the full name for a single author and first names for several', () => {
+		const single = getArticleAuthors(resolvedArticle());
+		const several = getArticleAuthors(
+			resolvedArticle([person('grace', 'Grace', 'Hopper'), person('alan', 'Alan', 'Turing')]),
+		);
+
+		expect(formatArticleAuthorNames(single, 'en')).toBe('Ada Lovelace');
+		expect(formatArticleAuthorNames(several, 'en')).toBe('Ada, Grace, and Alan');
+		expect(formatArticleAuthorNames(several, 'de')).toBe('Ada, Grace und Alan');
+	});
+
+	it('uses full names when co-authors share a first name', () => {
+		const authors = getArticleAuthors(resolvedArticle([person('ada-byron', 'Ada', 'Byron')]));
+
+		expect(formatArticleAuthorNames(authors, 'en')).toBe('Ada Lovelace and Ada Byron');
 	});
 });
 

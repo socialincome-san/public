@@ -18,11 +18,11 @@ type StatProgressProps = {
 const EndLabel = ({ label, info }: StatProgressEnd) => (
 	<div className="flex items-center gap-1">
 		<span>{label}</span>
-		{info && (
+		{info ? (
 			<InfoTooltip label={`Show ${label} calculation`} size="sm">
 				{info}
 			</InfoTooltip>
-		)}
+		) : null}
 	</div>
 );
 

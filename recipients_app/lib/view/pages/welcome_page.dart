@@ -33,6 +33,7 @@ class WelcomePage extends StatelessWidget {
       create: (context) => SignupCubit(
         authService: context.read<AuthService>(),
         crashReportingRepository: context.read<CrashReportingRepository>(),
+        localUserSettingsRepository: context.read<LocalUserSettingsRepository>(),
       ),
       child: const _WelcomeView(),
     );

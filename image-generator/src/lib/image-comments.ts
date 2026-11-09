@@ -1,5 +1,3 @@
-// Imports nothing, so `node --test` can run its tests without a bundler.
-
 export const MAX_IMAGE_COMMENTS = 20;
 export const MAX_COMMENT_LENGTH = 2000;
 

@@ -52,7 +52,7 @@ export const SiteHeader = ({
 		<div className="hidden lg:block">{desktopMenu}</div>
 
 		<div className="flex items-center gap-4">
-			{localeSwitcher && <div className="hidden sm:block">{localeSwitcher}</div>}
+			{localeSwitcher ? <div className="hidden sm:block">{localeSwitcher}</div> : null}
 			<div className="hidden lg:block">{account}</div>
 			{donateAction}
 			{mobileMenu}

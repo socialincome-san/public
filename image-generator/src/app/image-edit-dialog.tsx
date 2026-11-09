@@ -2,7 +2,7 @@
 
 import { MAX_COMMENT_LENGTH, MAX_IMAGE_COMMENTS } from '@/lib/image-comments';
 import { formatImageCost } from '@/lib/image-cost';
-import { type GalleryImage, imageUrl, type SavedImage } from '@/lib/images';
+import { type GalleryImage, type SavedImage } from '@/lib/images';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	type ImageComment,
@@ -34,7 +34,7 @@ export const ImageEditDialog = ({ image, size, fullWidth, onEdited }: ImageEditD
 	const [open, setOpen] = useState(false);
 	const [versions, setVersions] = useState<GalleryImage[]>([image]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
-	const currentId = versions[selectedIndex].id;
+	const currentImage = versions[selectedIndex];
 	const [comments, setComments] = useState<ImageComment[]>([]);
 	const [error, setError] = useState<string | null>(null);
 	const [hasNewVersion, setHasNewVersion] = useState(false);
@@ -45,7 +45,7 @@ export const ImageEditDialog = ({ image, size, fullWidth, onEdited }: ImageEditD
 		startTransition(async () => {
 			const result = await requestImage(
 				'/api/edit-image',
-				JSON.stringify({ imageId: String(currentId), comments: comments.map(({ x, y, text }) => ({ x, y, text })) }),
+				JSON.stringify({ imageId: String(currentImage.id), comments: comments.map(({ x, y, text }) => ({ x, y, text })) }),
 			);
 			if ('error' in result) {
 				setError(result.error);
@@ -74,7 +74,7 @@ export const ImageEditDialog = ({ image, size, fullWidth, onEdited }: ImageEditD
 						<ImageHistory
 							label="Version history"
 							items={versions.map((version, index) => ({
-								src: imageUrl(version.id, 'preview'),
+								src: version.previewUrl,
 								label: `Version ${index + 1}`,
 								badge: `V${index + 1}`,
 								tooltip: version.cost_usd === null ? 'Price unavailable' : formatImageCost(version.cost_usd),
@@ -90,7 +90,7 @@ export const ImageEditDialog = ({ image, size, fullWidth, onEdited }: ImageEditD
 							}}
 						>
 							<ImageCommentEditor
-								src={imageUrl(currentId, 'original')}
+								src={currentImage.imageUrl}
 								alt="Image to edit"
 								comments={comments}
 								onCommentsChange={setComments}
