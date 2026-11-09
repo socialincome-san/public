@@ -2,7 +2,7 @@
 
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import * as React from 'react';
-import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
+import { type CustomComponents, DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 import { cn } from '../../../cn';
 import { type Button, buttonVariants } from '../../actions/button/button';
 
@@ -11,6 +11,40 @@ type WithoutStyling<T> = T extends unknown ? Omit<T, 'className' | 'classNames'>
 
 type CalendarProps = WithoutStyling<React.ComponentProps<typeof DayPicker>> & {
 	buttonVariant?: React.ComponentProps<typeof Button>['variant'];
+};
+
+// react-day-picker passes its slot classes to these adapters, so they have to accept className.
+// eslint-disable-next-line class-name/no-class-name-prop
+const CalendarRoot = ({ className, rootRef, ...props }: React.ComponentProps<NonNullable<CustomComponents['Root']>>) => {
+	return <div data-slot="calendar" ref={rootRef} className={cn(className)} {...props} />;
+};
+
+// react-day-picker passes its slot classes to these adapters, so they have to accept className.
+// eslint-disable-next-line class-name/no-class-name-prop
+const CalendarChevron = ({
+	className,
+	orientation,
+	...props
+}: React.ComponentProps<NonNullable<CustomComponents['Chevron']>>) => {
+	if (orientation === 'left') {
+		return <ChevronLeftIcon className={cn('size-4', className)} {...props} />;
+	}
+
+	if (orientation === 'right') {
+		return <ChevronRightIcon className={cn('size-4', className)} {...props} />;
+	}
+
+	return <ChevronDownIcon className={cn('size-4', className)} {...props} />;
+};
+
+// react-day-picker passes its slot classes to these adapters, so they have to accept className.
+// eslint-disable-next-line class-name/no-class-name-prop
+const CalendarWeekNumber = ({ children, ...props }: React.ComponentProps<NonNullable<CustomComponents['WeekNumber']>>) => {
+	return (
+		<td {...props}>
+			<div className="flex size-(--cell-size) items-center justify-center text-center">{children}</div>
+		</td>
+	);
 };
 
 const Calendar = ({
@@ -93,29 +127,10 @@ const Calendar = ({
 				hidden: cn('invisible', defaultClassNames.hidden),
 			}}
 			components={{
-				Root: ({ className, rootRef, ...props }) => {
-					return <div data-slot="calendar" ref={rootRef} className={cn(className)} {...props} />;
-				},
-
-				Chevron: ({ className, orientation, ...props }) => {
-					if (orientation === 'left') {
-						return <ChevronLeftIcon className={cn('size-4', className)} {...props} />;
-					}
-
-					if (orientation === 'right') {
-						return <ChevronRightIcon className={cn('size-4', className)} {...props} />;
-					}
-
-					return <ChevronDownIcon className={cn('size-4', className)} {...props} />;
-				},
+				Root: CalendarRoot,
+				Chevron: CalendarChevron,
 				DayButton: CalendarDayButton,
-				WeekNumber: ({ children, ...props }) => {
-					return (
-						<td {...props}>
-							<div className="flex size-(--cell-size) items-center justify-center text-center">{children}</div>
-						</td>
-					);
-				},
+				WeekNumber: CalendarWeekNumber,
 				...components,
 			}}
 			{...props}

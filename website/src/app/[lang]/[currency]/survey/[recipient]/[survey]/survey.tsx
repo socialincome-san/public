@@ -22,7 +22,7 @@ export const Survey = ({ surveyId, recipientId }: SurveyProps) => {
 
 	useEffect(() => {
 		void loadSurvey(surveyId, recipientId);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line @eslint-react/exhaustive-deps
 	}, [surveyId, recipientId]);
 
 	const t = useTranslations('website-survey');
