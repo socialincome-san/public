@@ -12,24 +12,18 @@ export const sendDonationCertificateReadyEmails = async (
 	}
 
 	try {
-		const certificates = await donationCertificateRepository.findDonationCertificatesForYear(year);
+		const contributors = await donationCertificateRepository.findDonationCertificateContributorsForYear(year);
 		const subject = `Your ${year} Social Income donation certificate is ready`;
 		const certificateUrl = new URL(
 			`${getWebsiteBasePath(defaultLanguage, defaultCurrency)}/dashboard/donation-certificates?search=${year}`,
 			baseUrl,
 		).toString();
-		const emailedContributors = new Set<string>();
 		let sentCount = 0;
 		let skippedCount = 0;
 		let failedCount = 0;
 
-		for (const certificate of certificates) {
-			if (emailedContributors.has(certificate.contributorId)) {
-				continue;
-			}
-			emailedContributors.add(certificate.contributorId);
-
-			const email = certificate.contributor.contact.email?.trim();
+		for (const { contributor } of contributors) {
+			const email = contributor.contact.email?.trim();
 			if (!email) {
 				skippedCount++;
 				continue;
@@ -44,7 +38,7 @@ export const sendDonationCertificateReadyEmails = async (
 				continue;
 			}
 
-			const firstName = certificate.contributor.contact.firstName?.trim();
+			const firstName = contributor.contact.firstName?.trim();
 			const greeting = firstName ? `Hello ${firstName},` : 'Hello,';
 			const emailResult = await sendMail({
 				to: email,

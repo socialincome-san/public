@@ -13,7 +13,7 @@ jest.mock('@/lib/database/prisma', () => ({
 }));
 
 import {
-	findDonationCertificatesForYear,
+	findDonationCertificateContributorsForYear,
 	findPaginatedContributorDonationCertificates,
 	findPaginatedDonationCertificates,
 } from './donation-certificate.repository.read';
@@ -99,12 +99,12 @@ describe('donation certificate repository', () => {
 	});
 
 	test('finds certificates for a year with contributor contact details', async () => {
-		await findDonationCertificatesForYear(2025);
+		await findDonationCertificateContributorsForYear(2025);
 
 		expect(mockFindMany).toHaveBeenCalledWith({
 			where: { year: 2025 },
+			distinct: ['contributorId'],
 			select: {
-				contributorId: true,
 				contributor: {
 					select: {
 						contact: {
@@ -116,7 +116,6 @@ describe('donation certificate repository', () => {
 					},
 				},
 			},
-			orderBy: { createdAt: 'desc' },
 		});
 	});
 });

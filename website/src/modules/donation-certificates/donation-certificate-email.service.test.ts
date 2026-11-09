@@ -1,9 +1,9 @@
-const mockFindDonationCertificatesForYear = jest.fn();
+const mockFindDonationCertificateContributorsForYear = jest.fn();
 const mockHasSentMailToWithSubject = jest.fn();
 const mockSendMail = jest.fn();
 
 jest.mock('./donation-certificate.repository.read', () => ({
-	findDonationCertificatesForYear: mockFindDonationCertificatesForYear,
+	findDonationCertificateContributorsForYear: mockFindDonationCertificateContributorsForYear,
 }));
 
 jest.mock('@/modules/mail/mail.service', () => ({
@@ -25,9 +25,8 @@ describe('donation certificate email service', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		process.env.BASE_URL = 'https://socialincome.org';
-		mockFindDonationCertificatesForYear.mockResolvedValue([
+		mockFindDonationCertificateContributorsForYear.mockResolvedValue([
 			{
-				contributorId: 'contributor-1',
 				contributor: { contact: { firstName: 'Ada', email: 'ada@example.com' } },
 			},
 		]);
@@ -40,22 +39,11 @@ describe('donation certificate email service', () => {
 	});
 
 	test('emails each donor a link to their private certificate list', async () => {
-		mockFindDonationCertificatesForYear.mockResolvedValue([
-			{
-				contributorId: 'contributor-1',
-				contributor: { contact: { firstName: 'Ada', email: 'ada@example.com' } },
-			},
-			{
-				contributorId: 'contributor-1',
-				contributor: { contact: { firstName: 'Ada', email: 'ada@example.com' } },
-			},
-		]);
-
 		await expect(sendDonationCertificateReadyEmails(2025)).resolves.toEqual({
 			success: true,
 			data: { sentCount: 1, skippedCount: 0 },
 		});
-		expect(mockFindDonationCertificatesForYear).toHaveBeenCalledWith(2025);
+		expect(mockFindDonationCertificateContributorsForYear).toHaveBeenCalledWith(2025);
 		expect(mockHasSentMailToWithSubject).toHaveBeenCalledWith(
 			'ada@example.com',
 			'Your 2025 Social Income donation certificate is ready',
@@ -79,9 +67,8 @@ describe('donation certificate email service', () => {
 	});
 
 	test('skips contributors without an email address', async () => {
-		mockFindDonationCertificatesForYear.mockResolvedValue([
+		mockFindDonationCertificateContributorsForYear.mockResolvedValue([
 			{
-				contributorId: 'contributor-1',
 				contributor: { contact: { firstName: 'Ada', email: null } },
 			},
 		]);
@@ -100,7 +87,7 @@ describe('donation certificate email service', () => {
 			success: false,
 			error: 'Missing BASE_URL',
 		});
-		expect(mockFindDonationCertificatesForYear).not.toHaveBeenCalled();
+		expect(mockFindDonationCertificateContributorsForYear).not.toHaveBeenCalled();
 	});
 
 	test('returns a failure so the scheduled job retries unsent certificates', async () => {
