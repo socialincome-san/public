@@ -6,7 +6,9 @@ import { getWebsitePathTailFromStoryblokSlug, getWebsitePublicPath } from '@/lib
 import {
 	createWebsiteJournalArticleLink,
 	createWebsitePersonLink,
+	formatArticleAuthorNames,
 	formatStoryblokUrl,
+	getArticleAuthors,
 	getArticleTitle,
 	getPersonAvatarSrc,
 	getPersonDisplayName,
@@ -144,7 +146,7 @@ export const getCommunityPanelData = async (
 		readingTitle: blankToUndefined(globals.readingTitle),
 		articles: (articlesResult.success ? articlesResult.data : []).map((article) => ({
 			title: getArticleTitle(article),
-			author: getPersonDisplayName(article.content.author),
+			author: formatArticleAuthorNames(getArticleAuthors(article.content), language),
 			href: createWebsiteJournalArticleLink(article.slug, language, currency),
 			imageSrc: article.content.image?.filename
 				? formatStoryblokUrl(

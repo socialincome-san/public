@@ -11,6 +11,7 @@ import websiteCommunity from './locales/en/website-community.json';
 import websiteDonate from './locales/en/website-donate.json';
 import websiteFaq from './locales/en/website-faq.json';
 import websiteHome from './locales/en/website-home.json';
+import websiteImageGallery from './locales/en/website-image-gallery.json';
 import websiteJournal from './locales/en/website-journal.json';
 import websiteLogin from './locales/en/website-login.json';
 import websiteMe from './locales/en/website-me.json';
@@ -31,6 +32,7 @@ const englishMessages = {
 	'website-donate': websiteDonate,
 	'website-faq': websiteFaq,
 	'website-home': websiteHome,
+	'website-image-gallery': websiteImageGallery,
 	'website-journal': websiteJournal,
 	'website-login': websiteLogin,
 	'website-me': websiteMe,
