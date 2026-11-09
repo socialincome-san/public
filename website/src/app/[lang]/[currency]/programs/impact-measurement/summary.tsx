@@ -1,10 +1,13 @@
+import { CountryFlag } from '@/components/country-flag';
 import { isMessageKey } from '@/lib/i18n/message-keys';
+import { isValidCountryCode } from '@/lib/types/country';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getSurveyImpactStudyDetails } from '@/modules/surveys/survey.cache';
 import type { SurveyImpactStudyDetailItem } from '@/modules/surveys/survey.types';
 import { Progress } from '@socialincome/design-system/feedback/progress/progress';
 import { ChevronDown } from 'lucide-react';
 import { getMessages, getTranslations } from 'next-intl/server';
+import { type ReactNode } from 'react';
 import { toImpactServiceFilters } from './filters.server';
 
 type ImpactMeasurementSummaryProps = {
@@ -42,7 +45,12 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 			? t('survey.impactMeasurement.notAvailable')
 			: `${formatNumberLocale(details.timeFrameDays, 'de-CH')} ${t('survey.impactMeasurement.days')}`;
 	const translateSurveyKey = (key: string) => (isMessageKey(messages, 'website-survey', key) ? t(key) : key);
-	const renderBreakdown = (label: string, items: SurveyImpactStudyDetailItem[], formatter: (value: string) => string) => {
+	const renderBreakdown = (
+		label: string,
+		items: SurveyImpactStudyDetailItem[],
+		formatter: (value: string) => string,
+		renderIcon?: (value: string) => ReactNode,
+	) => {
 		const topBreakdownItems = topItems(items);
 		if (topBreakdownItems.length === 0) {
 			return null;
@@ -54,7 +62,10 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 				<div className="space-y-2">
 					{topBreakdownItems.map((item) => (
 						<div key={`${label}-${item.value}`} className="grid grid-cols-[minmax(120px,1fr)_100px_auto] items-center gap-3">
-							<p className="text-foreground truncate text-sm">{formatter(item.value)}</p>
+							<div className="flex min-w-0 items-center gap-2">
+								{renderIcon?.(item.value)}
+								<p className="text-foreground truncate text-sm">{formatter(item.value)}</p>
+							</div>
 							<Progress value={item.percentage} size="sm" />
 							<p className="text-foreground text-xs font-bold">{item.count}</p>
 						</div>
@@ -92,8 +103,11 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 					<p className="text-muted-foreground text-sm">{timeFrameDaysLabel}</p>
 				</div>
 				<div className="grid gap-5 md:grid-cols-3">
-					{renderBreakdown(t('survey.impactMeasurement.countryHeading'), details.countryBreakdown, (value) =>
-						isMessageKey(messages, 'countries', value) ? tCountries(value) : value,
+					{renderBreakdown(
+						t('survey.impactMeasurement.countryHeading'),
+						details.countryBreakdown,
+						(value) => (isMessageKey(messages, 'countries', value) ? tCountries(value) : value),
+						(value) => (isValidCountryCode(value) ? <CountryFlag country={value} size="sm" decorative /> : null),
 					)}
 					{renderBreakdown(t('survey.impactMeasurement.ageHeading'), details.ageBreakdown, (value) =>
 						translateSurveyKey(`survey.impactMeasurement.recipientsFilter.age.${value}`),
