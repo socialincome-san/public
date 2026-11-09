@@ -1,9 +1,8 @@
 import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[currency]';
-import { ContentPage } from '@/app/[lang]/[currency]/content-page';
+import { ContentPage, getContentPageMetadata } from '@/app/[lang]/[currency]/content-page';
 import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCircleStoryPath, WEBSITE_CIRCLE_PATH_SEGMENT } from '@/lib/storyblok/storyblok-paths';
-import { getWebsiteAlternates } from '@/lib/utils/metadata';
 import { getTranslations } from 'next-intl/server';
 
 export const generateStaticParams = () => getPublishedSlugParams(WEBSITE_CIRCLE_PATH_SEGMENT);
@@ -11,7 +10,7 @@ export const generateStaticParams = () => getPublishedSlugParams(WEBSITE_CIRCLE_
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;
 
-	return getWebsiteAlternates(lang as WebsiteLanguage, `${WEBSITE_CIRCLE_PATH_SEGMENT}/${slug}`);
+	return getContentPageMetadata(getCircleStoryPath(slug), lang as WebsiteLanguage, `${WEBSITE_CIRCLE_PATH_SEGMENT}/${slug}`);
 };
 
 export default async function CirclePage({ params, searchParams }: DefaultLayoutPropsWithSlug & DefaultPageProps) {

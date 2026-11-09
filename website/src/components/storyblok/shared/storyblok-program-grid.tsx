@@ -3,6 +3,7 @@ import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import type { PublicProgramStatsMap } from '@/modules/programs/program.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable } from '@storyblok/react';
@@ -10,12 +11,13 @@ import { storyblokEditable } from '@storyblok/react';
 type Props = {
 	blok: ProgramGrid;
 	programs: ProgramStory[];
+	statsByPortalSlug: PublicProgramStatsMap;
 	allProgramsCount?: number;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 };
 
-export const StoryblokProgramGrid = ({ blok, programs, allProgramsCount = 0, lang, currency }: Props) => {
+export const StoryblokProgramGrid = ({ blok, programs, statsByPortalSlug, allProgramsCount = 0, lang, currency }: Props) => {
 	if (programs.length === 0) {
 		return null;
 	}
@@ -34,7 +36,14 @@ export const StoryblokProgramGrid = ({ blok, programs, allProgramsCount = 0, lan
 					<StoryblokMarkdown>{blok.description}</StoryblokMarkdown>
 				</div>
 			)}
-			<ProgramGridView programs={programs} allProgramsCount={allProgramsCount} blok={blok} lang={lang} currency={currency} />
+			<ProgramGridView
+				programs={programs}
+				statsByPortalSlug={statsByPortalSlug}
+				allProgramsCount={allProgramsCount}
+				blok={blok}
+				lang={lang}
+				currency={currency}
+			/>
 		</BlockWrapper>
 	);
 };

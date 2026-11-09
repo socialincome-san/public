@@ -25,6 +25,7 @@ export const LocalPartnersOverviewPage = async ({ overview, lang, currency, sear
 	const localPartners = (localPartnersResult.success ? localPartnersResult.data : []) as LocalPartnerStory[];
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
+	const showFilters = overview.content.showFilters !== false;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: title,
@@ -44,7 +45,8 @@ export const LocalPartnersOverviewPage = async ({ overview, lang, currency, sear
 							localPartners={localPartners}
 							lang={lang}
 							currency={currency}
-							searchParams={searchParams}
+							searchParams={showFilters ? searchParams : Promise.resolve({})}
+							showFilters={showFilters}
 						/>
 					</Suspense>
 				</div>

@@ -104,6 +104,7 @@ type PublicProgramFilterData = {
 	programId: string;
 	countryIsoCode: CountryCode;
 	focuses: PublicProgramFilterFocus[];
+	localPartnerSlugs: string[];
 };
 
 export type PublicProgramFilterDataMap = Record<string, PublicProgramFilterData>;
