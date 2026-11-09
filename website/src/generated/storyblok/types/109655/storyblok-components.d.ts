@@ -497,6 +497,7 @@ export interface Layout {
   supportedByLogo?: StoryblokAsset;
   supportedByUrl?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   mainMenu?: (MenuItem | DropdownItem)[];
+  donateLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "layout";
   _uid: string;
   _editable?: string | undefined;

@@ -82,11 +82,6 @@ const STORYBLOK_JOURNAL_FOLDER = `${STORYBLOK_PAGES_FOLDER}/journal`;
 
 export const WEBSITE_JOURNAL_PATH_SEGMENT = 'journal';
 
-const WEBSITE_GET_INVOLVED_PATH_SEGMENT = 'get-involved';
-
-export const getGetInvolvedPathTail = (folder = '', slug = '') =>
-	[WEBSITE_GET_INVOLVED_PATH_SEGMENT, folder, slug].filter(Boolean).join('/');
-
 const STORYBLOK_GLOBALS_JOURNAL_FOLDER = `${STORYBLOK_GLOBALS_FOLDER}/journal`;
 
 const STORYBLOK_JOURNAL_TAGS_FOLDER = `${STORYBLOK_GLOBALS_JOURNAL_FOLDER}/tags`;
@@ -287,6 +282,24 @@ export const isRoutableWebsiteStoryblokSlug = (storyblokSlug: string) => {
 	const slug = normalizeStoryblokSlug(storyblokSlug);
 
 	return slug.startsWith(pagesPrefix);
+};
+
+const DEDICATED_ROUTE_FOLDERS = [
+	STORYBLOK_PROGRAMS_FOLDER,
+	STORYBLOK_LOCAL_PARTNERS_FOLDER,
+	STORYBLOK_FOCUSES_FOLDER,
+	STORYBLOK_COUNTRIES_FOLDER,
+	STORYBLOK_CAMPAIGNS_FOLDER,
+	STORYBLOK_CIRCLES_FOLDER,
+	STORYBLOK_PERSONS_FOLDER,
+	STORYBLOK_JOURNAL_FOLDER,
+];
+
+/** A page rendered by the generic content page route, in any folder that has no route of its own. */
+export const isContentPageStoryblokSlug = (storyblokSlug: string) => {
+	const slug = normalizeStoryblokSlug(storyblokSlug);
+
+	return slug.startsWith(pagesPrefix) && !DEDICATED_ROUTE_FOLDERS.some((folder) => slug.startsWith(`${folder}/`));
 };
 
 export const isAllowedStoryblokPreviewSlug = (rawSlug: string) => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { DonatePageLink } from '@/components/app-shells/website/navbar/donate-page-link';
+import { DonateNavButton } from '@/components/app-shells/website/navbar/donate-nav-button';
 import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
 import { type Scope } from '@/components/app-shells/website/navbar/utils';
 import { getWebsiteBasePath, WebsiteLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
@@ -15,6 +15,7 @@ type Props = {
 	sessions: Promise<Session[]>;
 	scope: Scope;
 	menuEntries: SiteMenuEntry[];
+	donateHref?: string;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 	localeSwitcher: ReactNode;
@@ -22,7 +23,7 @@ type Props = {
 
 const KeyedByPathname = ({ children }: { children: ReactNode }) => <Fragment key={usePathname()}>{children}</Fragment>;
 
-export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency, localeSwitcher }: Props) => {
+export const MenuMobile = ({ sessions, scope, menuEntries, donateHref, lang, currency, localeSwitcher }: Props) => {
 	const t = useTranslations('website-common');
 	const tDonate = useTranslations('website-donate');
 	const menu = (
@@ -38,7 +39,7 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency, local
 			}}
 			renderDonateAction={(closeMenu) => (
 				<SignedOutSlot sessions={sessions} scope={scope}>
-					<DonatePageLink label={tDonate('donation-form.donate-now')} onClick={closeMenu} />
+					<DonateNavButton label={tDonate('donation-form.donate-now')} href={donateHref} onClick={closeMenu} />
 				</SignedOutSlot>
 			)}
 			footerControls={

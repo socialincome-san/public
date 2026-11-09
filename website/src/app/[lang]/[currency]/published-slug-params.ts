@@ -1,5 +1,9 @@
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
-import { getWebsitePathTailFromStoryblokSlug, isRoutableWebsiteStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
+import {
+	getWebsitePathTailFromStoryblokSlug,
+	isContentPageStoryblokSlug,
+	isRoutableWebsiteStoryblokSlug,
+} from '@/lib/storyblok/storyblok-paths';
 import { getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.cache';
 
 const EMPTY_PARAMS_PLACEHOLDER_SLUG = '__no-published-slugs__';
@@ -9,7 +13,7 @@ const EMPTY_PARAMS_PLACEHOLDER_SLUG = '__no-published-slugs__';
  * where Google ignores rel=canonical and hreflang. Every slug is listed for every language because an
  * untranslated language still renders the fallback content, and its canonical must point to a translation.
  */
-const getPublishedSubPaths = async (parentPathTail: string) => {
+const getPublishedSubPaths = async (parentPathTail: string, isIncluded = isRoutableWebsiteStoryblokSlug) => {
 	const result = await getPublishedPageLinks();
 	if (!result.success) {
 		throw new Error(result.error ?? 'Failed to fetch Storyblok page links');
@@ -24,7 +28,7 @@ const getPublishedSubPaths = async (parentPathTail: string) => {
 		}
 
 		for (const storyblokSlug of [link.slug, ...(link.alternates ?? []).map((alternate) => alternate.translated_slug)]) {
-			if (!isRoutableWebsiteStoryblokSlug(storyblokSlug)) {
+			if (!isIncluded(storyblokSlug)) {
 				continue;
 			}
 
@@ -46,13 +50,13 @@ export const getPublishedSlugParams = async (parentPathTail = '') => {
 	return (slugs.length > 0 ? slugs : [EMPTY_PARAMS_PLACEHOLDER_SLUG]).map((slug) => ({ slug }));
 };
 
-/** Pages one folder below the parent, e.g. get-involved/individuals/donate. */
-export const getPublishedFolderSlugParams = async (parentPathTail: string) => {
-	const params = (await getPublishedSubPaths(parentPathTail)).flatMap((subPath) => {
-		const [folder, slug, ...rest] = subPath.split('/');
+/** Content pages in folders, e.g. get-involved/individuals/donate as { slug: 'get-involved', path: ['individuals', 'donate'] }. */
+export const getPublishedNestedSlugParams = async () => {
+	const params = (await getPublishedSubPaths('', isContentPageStoryblokSlug)).flatMap((subPath) => {
+		const [slug, ...path] = subPath.split('/');
 
-		return folder && slug && rest.length === 0 ? [{ folder, slug }] : [];
+		return slug && path.length > 0 ? [{ slug, path }] : [];
 	});
 
-	return params.length > 0 ? params : [{ folder: EMPTY_PARAMS_PLACEHOLDER_SLUG, slug: EMPTY_PARAMS_PLACEHOLDER_SLUG }];
+	return params.length > 0 ? params : [{ slug: EMPTY_PARAMS_PLACEHOLDER_SLUG, path: [EMPTY_PARAMS_PLACEHOLDER_SLUG] }];
 };
