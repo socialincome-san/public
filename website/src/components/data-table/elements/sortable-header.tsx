@@ -1,8 +1,7 @@
 'use client';
 
-import { Button } from '@socialincome/design-system/actions/button/button';
+import { DataTableSortHeader } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 import type { RowData } from '@tanstack/react-table';
-import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from 'lucide-react';
 import { HeaderType } from './types';
 
 type Props<TData extends RowData, TValue> = HeaderType<TData, TValue> & {
@@ -14,21 +13,9 @@ export const SortableHeader = <TData extends RowData, TValue>({ ctx, children, s
 		return <span>{children}</span>;
 	}
 
-	const sorted = ctx.column.getIsSorted();
-	const SortIcon = sorted === 'asc' ? ArrowUpIcon : sorted === 'desc' ? ArrowDownIcon : ArrowUpDownIcon;
-
 	return (
-		<Button
-			type="button"
-			variant="ghost"
-			size="inline"
-			onClick={ctx.column.getToggleSortingHandler()}
-			aria-pressed={Boolean(sorted)}
-			title="Sort"
-			data-testid={`data-table-sort-header-${ctx.column.id}`}
-		>
+		<DataTableSortHeader direction={ctx.column.getIsSorted() || undefined} onToggle={() => ctx.column.toggleSorting()}>
 			{children}
-			<SortIcon aria-hidden="true" />
-		</Button>
+		</DataTableSortHeader>
 	);
 };

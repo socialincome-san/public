@@ -120,10 +120,11 @@ const buildRecipientProgramColumn = (translator?: ColumnLabelTranslator): Column
 	cell: (ctx) => <TextCell ctx={ctx} />,
 });
 
-export const makePublicRecipientColumns = (translator?: ColumnLabelTranslator): ColumnDef<PublicRecipientTableViewRow>[] => [
-	...buildRecipientLeadColumns<PublicRecipientTableViewRow>(translator),
-	...buildRecipientTailColumns<PublicRecipientTableViewRow>(false, translator),
-];
+export const makePublicRecipientColumns = (translator?: ColumnLabelTranslator): ColumnDef<PublicRecipientTableViewRow>[] =>
+	[
+		...buildRecipientLeadColumns<PublicRecipientTableViewRow>(translator),
+		...buildRecipientTailColumns<PublicRecipientTableViewRow>(false, translator),
+	].map((column) => ({ ...column, enableSorting: false }));
 
 // Portal and partner space tables are English; the third parameter matches `DataTableConfig.makeColumns`.
 export const makeRecipientColumns = (

@@ -16,7 +16,7 @@ test('recipient column headers sort the table directly', async ({ page }) => {
 	await page.goto('/portal/management/recipients');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
-	const recipientHeader = page.getByTestId('data-table-sort-header-recipient');
+	const recipientHeader = page.getByRole('columnheader').getByRole('button', { name: 'Recipient', exact: true });
 	await recipientHeader.click();
 	await expect(page).toHaveURL(/sortBy=recipient&sortDirection=asc/);
 

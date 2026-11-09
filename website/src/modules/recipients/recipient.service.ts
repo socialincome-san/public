@@ -926,19 +926,19 @@ export const getPaginatedRecipientTableViewByLocalPartnerId = async (
 ): Promise<Result<RecipientPaginatedTableView>> => {
 	try {
 		const selectedStatus = parseRecipientStatusFilter(query.recipientStatus);
-		const shouldProcessStatus =
+		const shouldProcessRows =
 			query.sortBy === 'status' || query.sortBy === 'payoutsProgressPercent' || Boolean(selectedStatus);
 		const [{ recipients, totalCount }, filterSource] = await Promise.all([
 			recipientRepository.findLocalPartnerRecipientTableSource({
 				localPartnerId,
 				query,
-				paginate: !shouldProcessStatus,
+				paginate: !shouldProcessRows,
 			}),
 			recipientRepository.findLocalPartnerRecipientProgramFilterSource(localPartnerId),
 		]);
 
 		let tableRows = mapRecipientTableRows(recipients, [], false, now(), ProgramPermission.operator, false);
-		tableRows = processStatusRows(tableRows, query, selectedStatus);
+		tableRows = processRecipientRows(tableRows, query, selectedStatus);
 
 		const skip = (query.page - 1) * query.pageSize;
 		const programFilterOptions = Array.from(
@@ -952,8 +952,8 @@ export const getPaginatedRecipientTableViewByLocalPartnerId = async (
 			.sort((left, right) => left.name.localeCompare(right.name));
 
 		return resultOk({
-			tableRows: shouldProcessStatus ? tableRows.slice(skip, skip + query.pageSize) : tableRows,
-			totalCount: shouldProcessStatus ? tableRows.length : totalCount,
+			tableRows: shouldProcessRows ? tableRows.slice(skip, skip + query.pageSize) : tableRows,
+			totalCount: shouldProcessRows ? tableRows.length : totalCount,
 			permission: ProgramPermission.operator,
 			programFilterOptions,
 			localPartnerFilterOptions: [],
@@ -1254,23 +1254,23 @@ const getPaginatedTableViewForPrograms = async (
 	}
 
 	const selectedStatus = parseRecipientStatusFilter(query.recipientStatus);
-	const shouldProcessStatus =
+	const shouldProcessRows =
 		query.sortBy === 'status' || query.sortBy === 'payoutsProgressPercent' || Boolean(selectedStatus);
 	const { recipients, totalCount } = await recipientRepository.findRecipientTableSource({
 		programIds,
 		localPartnerId: localPartnerOption?.id,
 		query,
 		canSearchRecipientNames: permission === ProgramPermission.operator,
-		paginate: !shouldProcessStatus,
+		paginate: !shouldProcessRows,
 	});
 
 	let tableRows = mapRecipientTableRows(recipients, programs, true, now());
-	tableRows = processStatusRows(tableRows, query, selectedStatus);
+	tableRows = processRecipientRows(tableRows, query, selectedStatus);
 	const skip = (query.page - 1) * query.pageSize;
 
 	return resultOk({
-		tableRows: shouldProcessStatus ? tableRows.slice(skip, skip + query.pageSize) : tableRows,
-		totalCount: shouldProcessStatus ? tableRows.length : totalCount,
+		tableRows: shouldProcessRows ? tableRows.slice(skip, skip + query.pageSize) : tableRows,
+		totalCount: shouldProcessRows ? tableRows.length : totalCount,
 		permission,
 		programFilterOptions,
 		localPartnerFilterOptions,
@@ -1355,23 +1355,21 @@ const mapPublicRecipientTableRows = (recipients: PublicRecipientTableSource, now
 		};
 	});
 
-const processStatusRows = (
+const processRecipientRows = (
 	rows: RecipientTableViewRow[],
 	query: RecipientTableQuery,
 	status: RecipientLifecycleStatus | undefined,
 ): RecipientTableViewRow[] => {
 	const filteredRows = status ? rows.filter((row) => row.status === status) : rows;
-	if (query.sortBy !== 'status') {
-		if (query.sortBy !== 'payoutsProgressPercent') {
-			return filteredRows;
-		}
+	const direction = query.sortDirection === 'asc' ? 1 : -1;
 
-		const direction = query.sortDirection === 'asc' ? 1 : -1;
-
+	if (query.sortBy === 'payoutsProgressPercent') {
 		return [...filteredRows].sort((left, right) => (left.payoutsProgressPercent - right.payoutsProgressPercent) * direction);
 	}
 
-	const direction = query.sortDirection === 'asc' ? 1 : -1;
+	if (query.sortBy !== 'status') {
+		return filteredRows;
+	}
 
 	return [...filteredRows].sort((left, right) => {
 		const statusDifference = (getRecipientStatusRank(left.status) - getRecipientStatusRank(right.status)) * direction;
