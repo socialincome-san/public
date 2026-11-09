@@ -23,7 +23,7 @@ const countries = [
 const countryCurrencies: Record<string, string> = { CH: 'CHF', DE: 'EUR' };
 
 type InteractiveSwitcherProps = {
-	variant?: 'ghost' | 'outline';
+	variant?: 'nav' | 'outline';
 	withCountry?: boolean;
 	hideCountryCurrency?: boolean;
 };
@@ -71,7 +71,7 @@ const InteractiveSwitcher = ({ variant, withCountry, hideCountryCurrency }: Inte
 	);
 };
 
-export const Ghost: Story = {
+export const Nav: Story = {
 	render: () => <InteractiveSwitcher />,
 };
 

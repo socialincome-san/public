@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 type Props = {
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
-	variant?: 'ghost' | 'outline';
+	variant?: 'nav' | 'outline';
 };
 
 const globe = <LocaleCurrencySwitcherGlobe />;

@@ -42,13 +42,9 @@ const siteMenuEntries: SiteMenuEntry[] = [
 	{ type: 'link', id: 'faq', label: 'FAQ', href: '/en/usd/faq' },
 ];
 
-const DonationFormPlaceholder = () => (
-	<div className="bg-card text-muted-foreground rounded-3xl p-6 text-sm">Donation form</div>
-);
-
 const DonateButton = () => <Button size="md">Donate now</Button>;
 
-const localeSwitcher = (variant: 'ghost' | 'outline') => (
+const localeSwitcher = (variant: 'nav' | 'outline') => (
 	<LocaleCurrencySwitcher
 		ariaLabel="Change language and currency"
 		variant={variant}
@@ -122,8 +118,8 @@ export const LoggedOut: Story = {
 	args: {
 		homeHref: '/en/usd',
 		homeLinkLabel: 'Social Income home',
-		desktopMenu: <SiteMenuDesktop entries={siteMenuEntries} dropdownAside={<DonationFormPlaceholder />} />,
-		localeSwitcher: localeSwitcher('ghost'),
+		desktopMenu: <SiteMenuDesktop entries={siteMenuEntries} />,
+		localeSwitcher: localeSwitcher('nav'),
 		account: loginLink,
 		donateAction: <DonateButton />,
 		mobileMenu,

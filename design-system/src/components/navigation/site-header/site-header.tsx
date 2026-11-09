@@ -7,13 +7,25 @@ export type SiteMenuLink = {
 	label: string;
 	href: string;
 	newTab?: boolean;
+	// The desktop menu runs this instead of following `href`, e.g. to open a dialog
+	onSelect?: () => void;
 };
+
+type SiteMenuOverview = { label: string; href: string };
 
 export type SiteMenuGroup = {
 	id: string;
 	label: string;
 	links: SiteMenuLink[];
-	overview?: { label: string; href: string };
+	overview?: SiteMenuOverview;
+	badge?: string;
+	illustrationSrc?: string;
+};
+
+export type SiteMenuFooter = {
+	label?: string;
+	countries?: (SiteMenuLink & { country: string })[];
+	overview?: SiteMenuOverview;
 };
 
 export type SiteMenuEntry =
@@ -23,6 +35,7 @@ export type SiteMenuEntry =
 			id: string;
 			label: string;
 			groups: SiteMenuGroup[];
+			footer?: SiteMenuFooter;
 	  };
 
 type SiteHeaderProps = {
@@ -51,9 +64,11 @@ export const SiteHeader = ({
 
 		<div className="hidden lg:block">{desktopMenu}</div>
 
-		<div className="flex items-center gap-4">
-			{localeSwitcher && <div className="hidden sm:block">{localeSwitcher}</div>}
-			<div className="hidden lg:block">{account}</div>
+		<div className="flex items-center gap-2 lg:gap-4">
+			<div className="hidden items-center gap-1 sm:flex">
+				{localeSwitcher}
+				<div className="hidden lg:block">{account}</div>
+			</div>
 			{donateAction}
 			{mobileMenu}
 		</div>

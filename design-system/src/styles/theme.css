@@ -30,6 +30,7 @@
 	--color-card: hsl(var(--card));
 	--color-card-foreground: hsl(var(--card-foreground));
 	--color-banner-blue: hsl(var(--banner-blue));
+	--color-banner-yellow: hsl(var(--banner-yellow));
 	--color-backstage: hsl(var(--backstage));
 	--color-highlight: hsl(var(--highlight));
 
