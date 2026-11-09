@@ -1,9 +1,12 @@
 import { ArrowUpRight } from 'lucide-react';
 import NextLink from 'next/link';
+import { type ReactNode } from 'react';
 import { Badge } from '../badge/badge';
 
 export type TagListItem = {
 	label: string;
+	// Shown before the label, e.g. an AnimatedCircleIcon
+	icon?: ReactNode;
 	count?: number;
 	// `solid` and `light` set tags apart from the default ones, e.g. circles someone is active or only interested in
 	variant?: 'default' | 'solid' | 'light';
@@ -19,13 +22,16 @@ const badgeVariants = {
 type TagListProps = {
 	items: TagListItem[];
 	ariaLabel?: string;
+	// `xl` fits icons such as a 22px AnimatedCircleIcon
+	size?: 'lg' | 'xl';
 };
 
-export const TagList = ({ items, ariaLabel }: TagListProps) => (
+export const TagList = ({ items, ariaLabel, size = 'lg' }: TagListProps) => (
 	<ul className="flex flex-wrap gap-2" aria-label={ariaLabel}>
 		{items.map((item) => {
 			const badge = (
-				<Badge size="lg" variant={badgeVariants[item.variant ?? 'default']}>
+				<Badge size={size} variant={badgeVariants[item.variant ?? 'default']}>
+					{item.icon}
 					{item.label}
 					{item.count !== undefined ? <span className="text-muted-foreground tabular-nums">{item.count}</span> : null}
 					{item.href ? <ArrowUpRight className="size-3" aria-hidden /> : null}

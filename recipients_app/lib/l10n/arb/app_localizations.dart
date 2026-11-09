@@ -350,6 +350,12 @@ abstract class AppLocalizations {
   /// **'You are up to date.\nNo news today.'**
   String get dashboardUp2Date;
 
+  /// No description provided for @dashboardWelcomeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to the Social Income app!'**
+  String get dashboardWelcomeMessage;
+
   /// No description provided for @edit.
   ///
   /// In en, this message translates to:
@@ -1585,6 +1591,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Firebase AppCheck: App attestation failed.'**
   String get appAttestationFailedError;
+
+  /// No description provided for @countrySearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by country name or dial code'**
+  String get countrySearchHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

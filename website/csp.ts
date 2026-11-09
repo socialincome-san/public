@@ -32,6 +32,7 @@ const IMG_SRC = [
 	'blob:',
 	'https://a.storyblok.com',
 	'https://avatars.githubusercontent.com',
+	'https://jjjjivv3brvymvql.public.blob.vercel-storage.com',
 	'https://image.mux.com',
 	'https://*.stripe.com',
 ] as const;
