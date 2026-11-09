@@ -72,7 +72,7 @@ describe('CountryOfficeSection', () => {
 		jest.mocked(getPrimaryRoleLabelsAction).mockResolvedValue(resultOk({ coordinator: 'Coordinator' }));
 	});
 
-	it.each([1, 2])('renders %i employees as a static list without carousel controls', async (count) => {
+	it.each([1, 2])('renders %i employees as a desktop list and a mobile carousel', async (count) => {
 		jest
 			.mocked(getPersonsByCountryOfficeAction)
 			.mockResolvedValue(resultOk(Array.from({ length: count }, (_, i) => person(i + 1))));
@@ -80,9 +80,16 @@ describe('CountryOfficeSection', () => {
 		expect(markup).toContain('<ul');
 		expect(markup.match(/<li>/g)).toHaveLength(count);
 		expect(markup).toContain('Coordinator');
-		expect(markup).not.toContain('data-carousel');
-		expect(markup).not.toContain('<button');
-		expect(getTranslations).not.toHaveBeenCalled();
+		expect(markup).toContain('hidden w-full gap-6 lg:mx-auto lg:grid');
+		expect(markup).toContain('class="lg:hidden"');
+		expect(markup).toContain('data-carousel');
+		if (count === 1) {
+			expect(markup).not.toContain('<button');
+			expect(getTranslations).not.toHaveBeenCalled();
+		} else {
+			expect(markup).toContain('aria-label="Show next person"');
+			expect(getTranslations).toHaveBeenCalledWith({ locale: 'en', namespace: 'website-common' });
+		}
 	});
 
 	it('renders larger teams in the existing carousel', async () => {
@@ -118,6 +125,21 @@ describe('CountryOfficeSection', () => {
 		expect(getPersonsByCountryOfficeAction).toHaveBeenCalledWith({ language: 'en', values: ['lr'] });
 		expect(markup).toContain('mt-0');
 		expect(markup).toContain('aria-label="office"');
+		expect(markup).not.toContain('-my-');
+		expect(markup).not.toContain('translate-');
+	});
+
+	it.each([1, 2, 3])('keeps %i employees inside the section without offsets', async (count) => {
+		jest
+			.mocked(getPersonsByCountryOfficeAction)
+			.mockResolvedValue(resultOk(Array.from({ length: count }, (_, i) => person(i + 1))));
+		const markup = renderToStaticMarkup(await CountryOfficeSection(props));
+		expect(markup).not.toContain('-my-');
+		expect(markup).not.toContain('translate-');
+		if (count === 1) {
+			expect(markup).toContain('lg:grid-cols-2');
+			expect(markup).toContain('lg:max-w-72');
+		}
 	});
 
 	it('maps standalone CMS fields to the shared section', () => {

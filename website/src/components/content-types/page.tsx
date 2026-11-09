@@ -67,12 +67,11 @@ const renderPageBlock = (
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ): ReactNode => {
 	switch (block.component) {
-  case 'circleGrid':
-    return <CircleGridBlock blok={block} lang={lang} currency={currency} />;
-  case 'countryOffice':
-      
-    return <CountryOfficeBlock blok={block} lang={lang} />;
-    case 'donationGlobe':
+		case 'circleGrid':
+			return <CircleGridBlock blok={block} lang={lang} currency={currency} />;
+		case 'countryOffice':
+			return <CountryOfficeBlock blok={block} lang={lang} />;
+		case 'donationGlobe':
 			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':
 			return <DonationsTotalBlockServer blok={block} lang={lang} currency={currency} />;

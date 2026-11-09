@@ -43,45 +43,51 @@ export const CountryOfficeSection = async ({ isoCode, title, heading, descriptio
 
 	const isSinglePerson = persons.length === 1;
 	const isSmallTeam = persons.length <= 2;
-	const t = isSmallTeam ? null : await getTranslations({ locale: lang, namespace: 'website-common' });
+	const t = isSinglePerson ? null : await getTranslations({ locale: lang, namespace: 'website-common' });
+	const carousel = (
+		<Carousel opts={{ align: 'start' }} gap="lg">
+			<CarouselContent>
+				{persons.map((person) => (
+					<CarouselItem key={person.uuid} size="card">
+						<PersonCard person={person} roleLabels={roleLabels} />
+					</CarouselItem>
+				))}
+			</CarouselContent>
+			{t ? <CarouselScrollNextButton aria-label={t('countries-page.person-carousel-next-button-aria')} /> : null}
+		</Carousel>
+	);
 
 	return (
 		<BlockWrapper {...wrapperProps}>
 			<section
 				className={cn(
-					'-my-6 grid gap-8 md:-my-12 lg:-my-16 lg:grid-cols-3 lg:items-center lg:gap-6',
-					isSinglePerson && 'mx-auto max-w-3xl lg:max-w-5xl',
-					persons.length === 2 && 'mx-auto max-w-5xl',
+					'grid gap-8 lg:grid-cols-3 lg:items-center lg:gap-6',
+					isSmallTeam && 'lg:mx-auto lg:max-w-5xl',
+					isSinglePerson && 'lg:grid-cols-2',
 				)}
 			>
-				<PageIntro variant="section" eyebrow={title} title={heading} description={description} />
-				<div className="relative min-w-0 lg:col-span-2">
+				<div className="pr-8 lg:pr-0">
+					<PageIntro variant="section" eyebrow={title} title={heading} description={description} />
+				</div>
+				<div className={cn('relative min-w-0', !isSinglePerson && 'lg:col-span-2')}>
 					{isSmallTeam ? (
-						<ul
-							className={cn(
-								'mx-auto grid w-full max-w-72 gap-6',
-								isSinglePerson
-									? 'lg:max-w-xl lg:translate-x-60 lg:-translate-y-24 lg:grid-cols-2'
-									: 'sm:max-w-xl sm:grid-cols-2 lg:-translate-y-20 xl:translate-x-40',
-							)}
-						>
-							{persons.map((person) => (
-								<li key={person.uuid}>
-									<PersonCard person={person} roleLabels={roleLabels} />
-								</li>
-							))}
-						</ul>
-					) : (
-						<Carousel opts={{ align: 'start' }} gap="lg">
-							<CarouselContent>
+						<>
+							<ul
+								className={cn(
+									'hidden w-full gap-6 lg:mx-auto lg:grid',
+									isSinglePerson ? 'lg:max-w-72' : 'lg:max-w-xl lg:grid-cols-2',
+								)}
+							>
 								{persons.map((person) => (
-									<CarouselItem key={person.uuid} size="card">
+									<li key={person.uuid}>
 										<PersonCard person={person} roleLabels={roleLabels} />
-									</CarouselItem>
+									</li>
 								))}
-							</CarouselContent>
-							{t ? <CarouselScrollNextButton aria-label={t('countries-page.person-carousel-next-button-aria')} /> : null}
-						</Carousel>
+							</ul>
+							<div className="lg:hidden">{carousel}</div>
+						</>
+					) : (
+						carousel
 					)}
 				</div>
 			</section>

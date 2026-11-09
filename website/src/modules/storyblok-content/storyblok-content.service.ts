@@ -176,7 +176,9 @@ export const getPersonsByCountryOffice = async (
 	language: string,
 	isoCodes: string[],
 ): Promise<Result<ISbStoryData<Person>[]>> => {
-	const countryOfficeCodes = isoCodes.map((code) => code.trim()).filter(Boolean);
+	const countryOfficeCodes = Array.from(
+		new Set(isoCodes.flatMap((code) => [code.trim().toLowerCase(), code.trim().toUpperCase()]).filter(Boolean)),
+	);
 	if (countryOfficeCodes.length === 0) {
 		return resultOk([]);
 	}
