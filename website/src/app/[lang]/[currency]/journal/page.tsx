@@ -1,7 +1,7 @@
 import type { DefaultLayoutProps } from '@/app/[lang]/[currency]';
+import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
 import { JournalOverview } from '@/components/storyblok/journal/journal-overview';
 import { toWebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { getWebsiteAlternates } from '@/lib/utils/metadata';
 import { getJournalOverviewPageData } from '@/modules/journal/journal.cache';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -11,8 +11,15 @@ type JournalOverviewPageProps = {
 	searchParams: Promise<Record<string, string>>;
 };
 
-export const generateMetadata = async ({ params }: DefaultLayoutProps) =>
-	getWebsiteAlternates((await params).lang as WebsiteLanguage, 'journal');
+export const generateMetadata = async ({ params }: DefaultLayoutProps) => {
+	const lang = (await params).lang as WebsiteLanguage;
+	const t = await getTranslations({ locale: lang, namespace: 'website-journal' });
+
+	return getPageMetadata(lang, 'journal', {
+		title: t('overview.title'),
+		description: t('overview.description'),
+	});
+};
 
 export default async function Page({ params, searchParams }: JournalOverviewPageProps) {
 	const { lang, currency: currencySegment } = await params;

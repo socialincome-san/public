@@ -42,6 +42,7 @@ const initialFormSchema: OrganizationFormSchema = {
 		operatorFallbackCountryCode: {
 			label: 'Operator fallback country',
 			placeholder: 'No fallback country',
+			// The add form starts without values, so an untouched select must still mean "no fallback"
 			zodSchema: z.union([z.nativeEnum(CountryCode), z.literal('none')]).default('none'),
 			value: 'none',
 			options: [{ id: 'none', label: 'None' }],

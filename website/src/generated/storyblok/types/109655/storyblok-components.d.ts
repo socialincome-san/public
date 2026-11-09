@@ -119,6 +119,7 @@ export interface CampaignGlobals {
 export interface CampaignOverview {
   title?: string;
   text?: string;
+  showFilters?: boolean;
   component: "Campaign Overview";
   _uid: string;
   _editable?: string | undefined;
@@ -230,9 +231,26 @@ export interface CountryOverview {
 
 export interface Document {
   title?: string;
-  file: StoryblokAsset;
+  category: "annual-report" | "financial-statement" | "audit-report" | "certification";
+  year?: string;
+  publishedAt?: string;
+  note?: string;
+  files?: DocumentFile[];
+  authors?: (ISbStoryData<Person> | string)[];
+  boardApproved?: boolean;
+  thumbnail?: StoryblokAsset;
+  file?: StoryblokAsset;
   language?: string;
   component: "document";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface DocumentFile {
+  file: StoryblokAsset;
+  language: "en" | "de" | "en+de";
+  component: "documentFile";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -261,11 +279,13 @@ export interface DonationsTotal {
 }
 
 export interface Downloads {
-  heading?: string;
   tableHeaderLabelFilename: string;
   tableHeaderLabelInfo: string;
   tableHeaderLabelLink: string;
   documents: (ISbStoryData<Document> | string)[];
+  year?: string;
+  showFilters?: boolean;
+  boardLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "downloads";
   _uid: string;
   _editable?: string | undefined;
@@ -352,6 +372,7 @@ export interface Focus {
 export interface FocusOverview {
   title?: string;
   text?: string;
+  showFilters?: boolean;
   component: "focus overview";
   _uid: string;
   _editable?: string | undefined;
@@ -491,6 +512,7 @@ export interface LocalPartner {
 export interface LocalPartnersOverview {
   title?: string;
   text?: string;
+  showFilters?: boolean;
   component: "local partners overview";
   _uid: string;
   _editable?: string | undefined;
@@ -654,6 +676,9 @@ export interface Page {
   communityContributors?: CommunityContributorGroup[];
   communityContactEmail?: string;
   communityArticles?: (ISbStoryData<Article> | string)[];
+  metaTitle?: string;
+  metaDescription?: string;
+  metaImage?: StoryblokAsset;
   component: "page";
   _uid: string;
   _editable?: string | undefined;
@@ -770,9 +795,15 @@ export interface Program {
 export interface ProgramGrid {
   heading?: string;
   description?: string;
+  filterBy?: "" | "country" | "focus" | "localPartner";
+  filterCountry?: ISbStoryData<Country> | string;
+  filterFocus?: ISbStoryData<Focus> | string;
+  filterLocalPartner?: ISbStoryData<LocalPartner> | string;
   showAllPrograms?: boolean;
-  hideConcludedPrograms?: boolean;
   programs?: (ISbStoryData<Program> | string)[];
+  hideConcludedPrograms?: boolean;
+  sortBy?: "" | "newest" | "recipients" | "alphabetical";
+  maxPrograms?: "" | "3" | "6" | "9";
   button?: Button[];
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
@@ -788,6 +819,7 @@ export interface ProgramOverview {
   title?: string;
   text?: string;
   programDefaultImage: StoryblokAsset;
+  showFilters?: boolean;
   component: "programOverview";
   _uid: string;
   _editable?: string | undefined;

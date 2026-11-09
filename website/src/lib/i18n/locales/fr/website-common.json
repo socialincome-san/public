@@ -1,10 +1,11 @@
 {
 	"metadata": {
 		"title": "Social Income",
+		"home-title": "Social Income : transferts d'argent aux personnes pauvres",
 		"description": "Social Income est une organisation à but non lucratif qui effectue des transferts monétaires inconditionnels aux personnes dans le besoin.",
 		"keywords": "Social Income, revenu de base, transferts monétaires inconditionnels, sans but lucratif, ONG",
-		"og-image": "/assets/metadata/og/default.jpg",
-		"twitter-image": "/assets/metadata/twitter/default.jpg"
+		"og-image": "/assets/metadata/og/default-2026-fr.jpg",
+		"twitter-image": "/assets/metadata/twitter/default-2026-fr.jpg"
 	},
 	"navigation": {
 		"finances": "Finances",
@@ -60,6 +61,8 @@
 		"no-results": "Aucun partenaire local ne correspond aux filtres sélectionnés.",
 		"search-label": "Rechercher des partenaires locaux",
 		"search-placeholder": "Rechercher",
+		"search-placeholder-count": "Rechercher parmi {count, plural, one {# partenaire} other {# partenaires}}",
+		"local-partner-count": "{count, plural, one {# partenaire} other {# partenaires}}",
 		"all-countries": "Tous les pays ({count})",
 		"recipient-singular": "bénéficiaire",
 		"recipient-plural": "bénéficiaires",
@@ -94,12 +97,45 @@
 		"opens-in-new-tab": "(s'ouvre dans un nouvel onglet)",
 		"website": "Site web"
 	},
+	"downloads": {
+		"all-years": "Toutes les années ({count})",
+		"all-documents": "Tous les documents ({count})",
+		"document-count": "{count, plural, one {# document} other {# documents}}",
+		"categories": {
+			"annual-report": "Rapport annuel",
+			"financial-statement": "Comptes annuels",
+			"audit-report": "Rapport de révision",
+			"certification": "Certification"
+		},
+		"search-label": "Rechercher des documents",
+		"search-placeholder": "Rechercher",
+		"search-placeholder-count": "Rechercher parmi {count, plural, one {# document} other {# documents}}",
+		"no-results": "Aucun document ne correspond à votre recherche.",
+		"download-label": "Télécharger {title} en {language}",
+		"languages": {
+			"en": "Anglais",
+			"de": "Allemand",
+			"en+de": "Anglais & allemand"
+		},
+		"languages-short": {
+			"en": "EN",
+			"de": "DE",
+			"en+de": "EN/DE"
+		},
+		"board-approval": {
+			"message": "{count, plural, one {Ce document a été examiné et approuvé} other {Ces documents ont été examinés et approuvés}} par notre Conseil.",
+			"approved": "Approuvé par le Conseil",
+			"link": "Découvrir notre Conseil"
+		}
+	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",
 		"no-results": "Aucun axe ne correspond aux filtres sélectionnés.",
 		"load-stats-error": "Impossible de charger les statistiques des axes.",
 		"search-label": "Rechercher des axes",
 		"search-placeholder": "Rechercher",
+		"search-placeholder-count": "Rechercher parmi {count, plural, one {# axe} other {# axes}}",
+		"focus-count": "{count, plural, one {# axe} other {# axes}}",
 		"all-countries": "Tous les pays ({count})",
 		"all-sdgs": "Tous les ODD ({count})",
 		"recipients": "Bénéficiaires",
@@ -121,6 +157,8 @@
 		"empty": "Aucun programme trouvé.",
 		"search-label": "Rechercher des programmes",
 		"search-placeholder": "Rechercher",
+		"search-placeholder-count": "Rechercher parmi {count, plural, one {# programme} other {# programmes}}",
+		"program-count": "{count, plural, one {# programme} other {# programmes}}",
 		"all-countries": "Tous les pays ({count})",
 		"all-focuses": "Tous les axes ({count})",
 		"view-all": "Voir les {count} programmes",
@@ -243,6 +281,7 @@
 		"month-singular": "mois",
 		"month-plural": "mois",
 		"start-date": "Date de début",
+		"program-status": "Statut du programme",
 		"view-demographics": "Voir les données démographiques",
 		"program-recipients-title": "Bénéficiaires du programme",
 		"completed-surveys": "Enquêtes complétées",
@@ -281,15 +320,16 @@
 	},
 	"campaigns-page": {
 		"empty": "Aucune campagne trouvée.",
+		"search-label": "Rechercher des campagnes",
+		"search-placeholder": "Rechercher",
+		"search-placeholder-count": "Rechercher parmi {count, plural, one {# campagne} other {# campagnes}}",
+		"campaign-count": "{count, plural, one {# campagne} other {# campagnes}}",
 		"contribution-singular": "contribution",
 		"contribution-plural": "contributions",
 		"day-left-singular": "jour restant",
 		"day-left-plural": "jours restants",
 		"raised-percentage": "{percentage}% collectés ({currency})",
 		"about": "À propos de",
-		"all-states": "Toutes",
-		"state-active": "Active",
-		"state-inactive": "Inactive",
 		"create-campaign": "Créer une campagne",
 		"submission": {
 			"program-step-title": "Pour quel programme souhaitez-vous créer une campagne ?",
@@ -420,6 +460,11 @@
 	"task-cards": {
 		"show-all": "Afficher les {count} tâches",
 		"show-fewer": "Afficher moins de tâches"
+	},
+	"status-filter": {
+		"all": "Tous les statuts ({count})",
+		"active": "Actif",
+		"concluded": "Terminé"
 	},
 	"breadcrumb": {
 		"home": "Accueil"
