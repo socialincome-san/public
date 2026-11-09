@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Button } from '../../actions/button/button';
 import { DurationBadge } from '../../data-display/duration-badge/duration-badge';
+import { AnimatedCircleIcon } from '../../icons/animated-circle-icon/animated-circle-icon';
 import { GithubIcon, LinkedinIcon } from '../../icons/social-icons/social-icons';
 import { ProfileHeader } from './profile-header';
 
@@ -55,11 +56,14 @@ export const Complete: Story = {
 			{
 				label: 'Active member of',
 				items: [
-					{ label: 'Technology Circle', href: '#', variant: 'solid' },
-					{ label: 'Partnership Circle', href: '#', variant: 'solid' },
+					{ label: 'Technology Circle', href: '#', variant: 'solid', icon: <AnimatedCircleIcon /> },
+					{ label: 'Partnership Circle', href: '#', variant: 'solid', icon: <AnimatedCircleIcon /> },
 				],
 			},
-			{ label: 'Interested in', items: [{ label: 'Community Circle', href: '#', variant: 'light' }] },
+			{
+				label: 'Interested in',
+				items: [{ label: 'Community Circle', href: '#', variant: 'light', icon: <AnimatedCircleIcon /> }],
+			},
 		],
 		actionsLabel: 'Links',
 		actions: (

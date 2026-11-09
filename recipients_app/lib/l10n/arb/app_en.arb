@@ -43,6 +43,7 @@
     "accountInfo": "In case you want to delete your account, please contact us.",
     "signOut": "Sign Out",
     "dashboardUp2Date": "You are up to date.\nNo news today.",
+    "dashboardWelcomeMessage": "Welcome to the Social Income app!",
     "edit": "Edit",
     "underInvestigation": "Currently under investigation",
     "didYouGetSocialIncome": "Did you get your Social Income?",
@@ -313,5 +314,6 @@
     "offlineMutationError": "This action requires an internet connection",
     "offlineBannerMessage": "You are offline. Showing cached data.",
     "openGoogleSupportPageUpdatePlayStore" : "Open Support Page",
-    "appAttestationFailedError" : "Firebase AppCheck: App attestation failed."
+    "appAttestationFailedError" : "Firebase AppCheck: App attestation failed.",
+    "countrySearchHint": "Search by country name or dial code"
 }
