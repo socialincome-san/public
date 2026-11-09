@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, ChevronsUpDown } from 'lucide-react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { cn } from '../../../cn';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../../overlays/command/command';
 import { Popover, PopoverContent, PopoverTrigger } from '../../overlays/popover/popover';
@@ -32,6 +32,7 @@ export const Combobox = ({
 	disabled?: boolean;
 }) => {
 	const [open, setOpen] = useState(false);
+	const listId = useId();
 	const selected = options.find((o) => o.id === value);
 
 	return (
@@ -41,6 +42,7 @@ export const Combobox = ({
 					type="button"
 					role="combobox"
 					aria-expanded={open}
+					aria-controls={listId}
 					aria-label={ariaLabel}
 					className={selectTriggerVariants()}
 					data-placeholder={selected ? undefined : ''}
@@ -54,7 +56,7 @@ export const Combobox = ({
 			<PopoverContent variant="picker" align="start">
 				<Command>
 					<CommandInput placeholder={searchPlaceholder} />
-					<CommandList>
+					<CommandList id={listId}>
 						<CommandEmpty>{emptyLabel}</CommandEmpty>
 
 						<CommandGroup>

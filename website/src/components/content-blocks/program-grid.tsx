@@ -1,10 +1,8 @@
 import { blockMargins } from '@/components/content-blocks/block-margins';
-import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
-import { getVisiblePrograms, ProgramGridView } from '@/components/content-blocks/program-grid-view';
+import { getProgramGridPrograms, ProgramGridView } from '@/components/content-blocks/program-grid-view';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable } from '@storyblok/react';
@@ -16,13 +14,8 @@ type Props = {
 };
 
 export const ProgramGridBlock = async ({ blok, lang, currency }: Props) => {
-	const programsResult = await getProgramsAction(lang);
-	const allPrograms = programsResult.success ? programsResult.data : [];
-	const programs = await getVisiblePrograms(
-		blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms),
-		blok,
-	);
-	if (blok.hideConcludedPrograms && programs.length === 0) {
+	const { programs, statsByPortalSlug, allProgramsCount } = await getProgramGridPrograms(blok, lang);
+	if ((blok.hideConcludedPrograms || blok.filterBy) && programs.length === 0) {
 		return null;
 	}
 
@@ -42,7 +35,8 @@ export const ProgramGridBlock = async ({ blok, lang, currency }: Props) => {
 			)}
 			<ProgramGridView
 				programs={programs}
-				allProgramsCount={allPrograms.length}
+				statsByPortalSlug={statsByPortalSlug}
+				allProgramsCount={allProgramsCount}
 				blok={blok}
 				lang={lang}
 				currency={currency}

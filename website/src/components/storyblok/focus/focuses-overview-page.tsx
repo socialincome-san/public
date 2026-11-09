@@ -24,6 +24,7 @@ export const FocusesOverviewPage = async ({ overview, lang, currency, searchPara
 	const focuses = (focusesResult.success ? focusesResult.data : []) as FocusStory[];
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
+	const showFilters = overview.content.showFilters !== false;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: title,
@@ -39,7 +40,13 @@ export const FocusesOverviewPage = async ({ overview, lang, currency, searchPara
 				<div className="flex w-full flex-col gap-8">
 					<PageIntro title={title} description={text} />
 					<Suspense fallback={<AppLoadingSkeleton />}>
-						<FocusesOverview focuses={focuses} lang={lang} currency={currency} searchParams={searchParams} />
+						<FocusesOverview
+							focuses={focuses}
+							lang={lang}
+							currency={currency}
+							searchParams={showFilters ? searchParams : Promise.resolve({})}
+							showFilters={showFilters}
+						/>
 					</Suspense>
 				</div>
 			</BlockWrapper>

@@ -1,10 +1,13 @@
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import {
+	formatArticleAuthorNames,
 	formatStoryblokDateMedium,
 	formatStoryblokResizeUrl,
 	formatStoryblokUrl,
+	getArticleAuthors,
 	getPersonCircles,
 	getScaledAssetDimensions,
+	getStoryblokMetadataImage,
 	getVolunteerDurationParts,
 	isResolvedArticle,
 	resolveStoryblokLink,
@@ -98,6 +101,52 @@ describe('isResolvedArticle', () => {
 	});
 });
 
+describe('article authors', () => {
+	const person = (uuid: string, firstName: string, lastName: string) => ({
+		uuid,
+		content: { firstName, lastName, fullName: `${firstName} ${lastName}` },
+	});
+	const resolvedArticle = (coAuthors?: unknown[]) => {
+		const story = { content: { author: person('ada', 'Ada', 'Lovelace'), type: { content: {} }, coAuthors } };
+		if (!isResolvedArticle(story)) {
+			throw new Error('Article fixture must be resolved');
+		}
+
+		return story.content;
+	};
+
+	it('lists the lead author first and skips unresolved co-authors', () => {
+		const authors = getArticleAuthors(resolvedArticle([person('grace', 'Grace', 'Hopper'), 'unpublished-uuid']));
+
+		expect(authors.map(({ uuid }) => uuid)).toEqual(['ada', 'grace']);
+	});
+
+	it('lists an author picked twice once', () => {
+		const authors = getArticleAuthors(
+			resolvedArticle([person('ada', 'Ada', 'Lovelace'), person('grace', 'Grace', 'Hopper')]),
+		);
+
+		expect(authors.map(({ uuid }) => uuid)).toEqual(['ada', 'grace']);
+	});
+
+	it('uses the full name for a single author and first names for several', () => {
+		const single = getArticleAuthors(resolvedArticle());
+		const several = getArticleAuthors(
+			resolvedArticle([person('grace', 'Grace', 'Hopper'), person('alan', 'Alan', 'Turing')]),
+		);
+
+		expect(formatArticleAuthorNames(single, 'en')).toBe('Ada Lovelace');
+		expect(formatArticleAuthorNames(several, 'en')).toBe('Ada, Grace, and Alan');
+		expect(formatArticleAuthorNames(several, 'de')).toBe('Ada, Grace und Alan');
+	});
+
+	it('uses full names when co-authors share a first name', () => {
+		const authors = getArticleAuthors(resolvedArticle([person('ada-byron', 'Ada', 'Byron')]));
+
+		expect(formatArticleAuthorNames(authors, 'en')).toBe('Ada Lovelace and Ada Byron');
+	});
+});
+
 describe('getPersonCircles', () => {
 	it('lists active circles first and keeps a circle that is both active and interested once', () => {
 		expect(
@@ -115,5 +164,29 @@ describe('getPersonCircles', () => {
 		expect(getPersonCircles({ activeCircleMember: ['lead-team'] }, { 'lead-team': 'Lead-Team' })).toEqual([
 			{ code: 'lead-team', label: 'Lead-Team', status: 'active' },
 		]);
+	});
+});
+
+describe('getStoryblokMetadataImage', () => {
+	it('crops Storyblok assets to 1200×630', () => {
+		expect(
+			getStoryblokMetadataImage({ filename: 'https://a.storyblok.com/f/1/3000x2000/abc/hero.jpg', alt: 'Hero' }),
+		).toEqual({
+			url: 'https://a.storyblok.com/f/1/3000x2000/abc/hero.jpg/m/1200x630/smart',
+			width: 1200,
+			height: 630,
+			alt: 'Hero',
+		});
+	});
+
+	it('uses external images as they are', () => {
+		expect(getStoryblokMetadataImage({ filename: 'https://images.example.org/hero.jpg' }, 'Title')).toEqual({
+			url: 'https://images.example.org/hero.jpg',
+			alt: 'Title',
+		});
+	});
+
+	it('returns nothing without an image, so the default of the language applies', () => {
+		expect(getStoryblokMetadataImage({ filename: '' })).toBeUndefined();
 	});
 });

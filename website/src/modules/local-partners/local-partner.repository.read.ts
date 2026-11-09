@@ -26,6 +26,13 @@ export const groupRecipientCountsByLocalPartner = async (localPartnerIds: string
 		_count: { _all: true },
 	});
 
+export const findLocalPartnerIdsInRunningPrograms = async (localPartnerIds: string[]) =>
+	prisma.recipient.findMany({
+		where: { localPartnerId: { in: localPartnerIds }, program: { isConcluded: false } },
+		distinct: ['localPartnerId'],
+		select: { localPartnerId: true },
+	});
+
 export const findLocalPartnersBySlugs = async (slugs: string[]) =>
 	prisma.localPartner.findMany({
 		where: { slug: { in: slugs } },

@@ -1,9 +1,12 @@
 import { cva, type VariantProps } from 'class-variance-authority';
+import NextLink from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '../avatar/avatar';
 
 export type AvatarStackPerson = {
 	name: string;
 	imageSrc?: string;
+	// Links the avatar, e.g. to a profile. Kept out of the tab order: the name next to the stack should carry the link.
+	href?: string;
 };
 
 const ringVariants = cva('ring-card rounded-full', {
@@ -11,6 +14,7 @@ const ringVariants = cva('ring-card rounded-full', {
 		size: {
 			xs: 'ring-2',
 			sm: 'ring-2',
+			default: 'ring-2',
 			lg: 'ring-2',
 			xl: 'ring-3',
 		},
@@ -30,15 +34,30 @@ const initialsOf = (name: string) =>
 		.join('')
 		.toUpperCase();
 
-export const AvatarStack = ({ people, size = 'lg' }: AvatarStackProps) => (
-	<span className="flex -space-x-2" aria-hidden="true">
-		{people.map((person) => (
-			<span key={person.name} className={ringVariants({ size })}>
-				<Avatar size={size}>
-					{person.imageSrc ? <AvatarImage src={person.imageSrc} alt="" /> : null}
-					<AvatarFallback>{initialsOf(person.name)}</AvatarFallback>
-				</Avatar>
-			</span>
-		))}
-	</span>
-);
+export const AvatarStack = ({ people, size = 'lg' }: AvatarStackProps) => {
+	// The ring only separates overlapping faces
+	const ringClassName = people.length > 1 ? ringVariants({ size }) : undefined;
+
+	return (
+		<span className="flex -space-x-2" aria-hidden="true">
+			{people.map((person) => {
+				const avatar = (
+					<Avatar size={size}>
+						{person.imageSrc ? <AvatarImage src={person.imageSrc} alt="" /> : null}
+						<AvatarFallback>{initialsOf(person.name)}</AvatarFallback>
+					</Avatar>
+				);
+
+				return person.href ? (
+					<NextLink key={person.name} href={person.href} tabIndex={-1} className={ringClassName}>
+						{avatar}
+					</NextLink>
+				) : (
+					<span key={person.name} className={ringClassName}>
+						{avatar}
+					</span>
+				);
+			})}
+		</span>
+	);
+};

@@ -142,7 +142,10 @@ export default [
 			'design-tokens': designTokensPlugin,
 		},
 		rules: {
-			'react/forbid-component-props': ['error', { forbid: ['style'] }],
+			'@smartive-eslint/forbid-component-props': [
+				'error',
+				{ forbid: [{ propName: 'style', allowedForPatterns: ['motion.*'] }] },
+			],
 			'class-name/no-class-name-prop': 'error',
 			'design-tokens/no-arbitrary-design-values': 'error',
 		},
