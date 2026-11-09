@@ -237,7 +237,6 @@ export type RecipientWithPaymentInfo = {
 	suspendedAt: Date | null;
 	suspensionReason: string | null;
 	interruptedAt: Date | null;
-	interruptionComment: string | null;
 	successorName: string | null;
 	termsAccepted: boolean;
 	paymentInformationId: string | null;

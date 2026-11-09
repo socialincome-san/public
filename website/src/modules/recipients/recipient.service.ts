@@ -297,22 +297,17 @@ export const updateRecipient = async (
 				interruptedAt: existing.interruptedAt,
 			},
 		);
+		// Runs on every save of an interrupted recipient, so saving again retries a failed cleanup.
 		if (updatedRecipient.interruptedAt) {
 			const cleanupResult = await removeOutstandingSurveysForInterruptedRecipient(
 				getSessionAuditContext(session),
 				updatedRecipient.id,
 			);
 			if (!cleanupResult.success) {
-				const retryResult = await removeOutstandingSurveysForInterruptedRecipient(
-					getSessionAuditContext(session),
-					updatedRecipient.id,
-				);
-				if (!retryResult.success) {
-					console.error('Recipient update succeeded but survey cleanup remains incomplete', {
-						recipientId: updatedRecipient.id,
-						error: retryResult.error,
-					});
-				}
+				console.error('Could not remove outstanding surveys of interrupted recipient', {
+					recipientId: updatedRecipient.id,
+					error: cleanupResult.error,
+				});
 			}
 		}
 
@@ -791,7 +786,7 @@ export const exportRecipientsCsv = async (session: Session): Promise<Result<stri
 			startDate: formatCsvDate(recipient.startDate),
 			suspendedAt: formatCsvDate(recipient.suspendedAt),
 			suspensionReason: recipient.suspensionReason ?? '',
-			interrupted: recipient.interruptedAt ? 'true' : 'false',
+			interruptedAt: formatCsvDate(recipient.interruptedAt),
 			interruptionComment: recipient.interruptionComment ?? '',
 			successorName: recipient.successorName ?? '',
 			termsAccepted: recipient.termsAccepted ? 'true' : 'false',
@@ -1475,7 +1470,6 @@ const createAppReviewRecipient = (phone: string): RecipientWithPaymentInfo => {
 		suspendedAt: null,
 		suspensionReason: null,
 		interruptedAt: null,
-		interruptionComment: null,
 		successorName: 'Pepper Potts',
 		termsAccepted: true,
 		paymentInformationId: 'stark-payment-info',
@@ -1650,7 +1644,7 @@ const CSV_HEADERS = [
 	'startDate',
 	'suspendedAt',
 	'suspensionReason',
-	'interrupted',
+	'interruptedAt',
 	'interruptionComment',
 	'successorName',
 	'termsAccepted',

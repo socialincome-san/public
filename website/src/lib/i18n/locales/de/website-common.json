@@ -10,11 +10,6 @@
 		"finances": "Finanzen",
 		"recipients": "Empfänger:innen"
 	},
-	"recipient-status-interrupted": "Unterbrochen",
-	"audit": {
-		"interrupted-at": "Unterbrochen am",
-		"interruption-comment": "Begründung der Unterbrechung"
-	},
 	"menu": {
 		"open": "Menü öffnen",
 		"close": "Menü schließen",

@@ -744,7 +744,6 @@ export const recipientWithPaymentInformationSelect = {
 	suspendedAt: true,
 	suspensionReason: true,
 	interruptedAt: true,
-	interruptionComment: true,
 	successorName: true,
 	termsAccepted: true,
 	paymentInformationId: true,

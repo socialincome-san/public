@@ -28,7 +28,6 @@ type AuditedWriteOptions<Snapshot extends Prisma.InputJsonObject> = {
 export const auditedWrite = async <T, Snapshot extends Prisma.InputJsonObject>(
 	options: AuditedWriteOptions<Snapshot>,
 	write: (transaction: Prisma.TransactionClient) => Promise<T>,
-	transactionOptions?: { isolationLevel?: Prisma.TransactionIsolationLevel },
 ): Promise<T> =>
 	prisma.$transaction(async (transaction) => {
 		// A deleted entity has no state afterwards, so its name is read before the write.
@@ -69,7 +68,7 @@ export const auditedWrite = async <T, Snapshot extends Prisma.InputJsonObject>(
 		}
 
 		return result;
-	}, transactionOptions);
+	});
 
 const hasChanged = async (
 	transaction: Prisma.TransactionClient,

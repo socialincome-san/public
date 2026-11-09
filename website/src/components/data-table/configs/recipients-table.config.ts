@@ -9,14 +9,13 @@ type RecipientsFilterArgs = {
 	programFilterOptions: RecipientProgramFilterOption[];
 	localPartnerFilterOptions: { id: string; name: string }[];
 	showProgramFilter: boolean;
-	interruptedLabel: string;
 };
 
-const recipientStatusOptions = (interruptedLabel: string) => [
+const recipientStatusOptions = [
 	{ value: 'future', label: 'Future' },
 	{ value: 'active', label: 'Active' },
 	{ value: 'suspended', label: 'Suspended' },
-	{ value: 'interrupted', label: interruptedLabel },
+	{ value: 'interrupted', label: 'Interrupted' },
 	{ value: 'completed', label: 'Completed' },
 ];
 
@@ -53,7 +52,6 @@ export const getRecipientsTableFilters = ({
 	programFilterOptions,
 	localPartnerFilterOptions,
 	showProgramFilter,
-	interruptedLabel,
 }: RecipientsFilterArgs): TableFilterConfig[] => {
 	if (!query) {
 		return [];
@@ -66,7 +64,7 @@ export const getRecipientsTableFilters = ({
 			label: 'Status',
 			placeholder: 'All statuses',
 			value: query.recipientStatus,
-			options: recipientStatusOptions(interruptedLabel),
+			options: recipientStatusOptions,
 		},
 	];
 

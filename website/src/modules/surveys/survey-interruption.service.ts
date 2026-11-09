@@ -10,34 +10,12 @@ export const removeOutstandingSurveysForInterruptedRecipient = async (
 ): Promise<Result<void>> => {
 	try {
 		const surveys = await surveyRepository.findOutstandingSurveysForRecipient(recipientId);
-		let cleanupFailed = false;
 		for (const survey of surveys) {
-			try {
-				const firebaseResult = await deleteFirebaseUserByEmailIfExists(survey.accessEmail);
-				if (!firebaseResult.success) {
-					cleanupFailed = true;
-					console.error('Could not delete Firebase user for interrupted recipient survey', {
-						recipientId,
-						surveyId: survey.id,
-						error: firebaseResult.error,
-					});
-
-					continue;
-				}
-
-				await surveyWriteRepository.deleteSurvey(audit, survey.id);
-			} catch (error) {
-				cleanupFailed = true;
-				console.error('Could not remove interrupted recipient survey', {
-					recipientId,
-					surveyId: survey.id,
-					error,
-				});
+			const firebaseResult = await deleteFirebaseUserByEmailIfExists(survey.accessEmail);
+			if (!firebaseResult.success) {
+				return resultFail(firebaseResult.error);
 			}
-		}
-
-		if (cleanupFailed) {
-			return resultFail('Could not remove outstanding surveys for interrupted recipient');
+			await surveyWriteRepository.deleteSurvey(audit, survey.id);
 		}
 
 		return resultOk(undefined);

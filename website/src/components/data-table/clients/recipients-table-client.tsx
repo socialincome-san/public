@@ -46,7 +46,6 @@ export const RecipientsTableClient = ({
 	hideProgramName = false,
 }: Props) => {
 	const tPool = useTranslations('add-recipients-from-pool');
-	const tCommon = useTranslations('website-common');
 	const router = useRouter();
 	const canManageRecipients = sessionType === 'user';
 	const isReadOnly = readOnly ?? false;
@@ -155,7 +154,6 @@ export const RecipientsTableClient = ({
 					programFilterOptions,
 					localPartnerFilterOptions,
 					showProgramFilter,
-					interruptedLabel: tCommon('recipient-status-interrupted'),
 				})}
 				hideProgramName={hideProgramName}
 				hideLocalPartner={sessionType === 'local-partner'}

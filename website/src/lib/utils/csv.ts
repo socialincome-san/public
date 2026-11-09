@@ -110,8 +110,7 @@ export const parseCsvOptionalFields = (rowNumber: number, row: Record<string, st
 };
 
 const escapeCsvValue = (value: string): string => {
-	const safeValue = /^[=+\-@]/.test(value) ? `'${value}` : value;
-	const escaped = safeValue.replace(CSV_DOUBLE_QUOTES_REGEX, '""');
+	const escaped = value.replace(CSV_DOUBLE_QUOTES_REGEX, '""');
 
 	return CSV_NEEDS_QUOTES_REGEX.test(escaped) ? `"${escaped}"` : escaped;
 };

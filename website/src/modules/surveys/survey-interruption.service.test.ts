@@ -42,7 +42,7 @@ describe('removeOutstandingSurveysForInterruptedRecipient', () => {
 		expect(mockDeleteSurvey).toHaveBeenNthCalledWith(2, audit, 'survey-2');
 	});
 
-	test('continues cleanup for other surveys when a login cannot be revoked', async () => {
+	test('stops before deleting a survey whose login cannot be revoked', async () => {
 		mockDeleteFirebaseUserByEmailIfExists.mockResolvedValueOnce({
 			success: false,
 			error: 'Firebase unavailable',
@@ -50,15 +50,11 @@ describe('removeOutstandingSurveysForInterruptedRecipient', () => {
 
 		const result = await removeOutstandingSurveysForInterruptedRecipient(audit, 'recipient-1');
 
-		expect(result).toEqual({
-			success: false,
-			error: 'Could not remove outstanding surveys for interrupted recipient',
-		});
-		expect(mockDeleteSurvey).toHaveBeenCalledTimes(1);
-		expect(mockDeleteSurvey).toHaveBeenCalledWith(audit, 'survey-2');
+		expect(result).toEqual({ success: false, error: 'Firebase unavailable' });
+		expect(mockDeleteSurvey).not.toHaveBeenCalled();
 	});
 
-	test('continues deleting surveys after an individual record deletion fails', async () => {
+	test('fails when a survey cannot be deleted', async () => {
 		mockDeleteSurvey.mockRejectedValueOnce(new Error('Database unavailable'));
 
 		const result = await removeOutstandingSurveysForInterruptedRecipient(audit, 'recipient-1');
@@ -67,6 +63,5 @@ describe('removeOutstandingSurveysForInterruptedRecipient', () => {
 			success: false,
 			error: 'Could not remove outstanding surveys for interrupted recipient',
 		});
-		expect(mockDeleteSurvey).toHaveBeenCalledTimes(2);
 	});
 });

@@ -154,17 +154,18 @@ describe('recipient write attribution', () => {
 		]);
 	});
 
-	test('preserves a committed interruption when survey cleanup fails and retries cleanup', async () => {
+	test('keeps a committed interruption when survey cleanup fails', async () => {
 		const updatedRecipient = { id: 'recipient-1', interruptedAt: new Date('2025-06-15T12:00:00.000Z') };
 		mockWriteRepository.updateRecipient.mockResolvedValue(updatedRecipient);
-		mockRemoveOutstandingSurveysForInterruptedRecipient
-			.mockResolvedValueOnce({ success: false, error: 'Survey cleanup failed' })
-			.mockResolvedValueOnce({ success: false, error: 'Survey cleanup failed' });
+		mockRemoveOutstandingSurveysForInterruptedRecipient.mockResolvedValue({
+			success: false,
+			error: 'Survey cleanup failed',
+		});
 
 		const result = await updateRecipient(operator, { ...input, interrupted: true });
 
 		expect(result).toEqual({ success: true, data: updatedRecipient });
-		expect(mockRemoveOutstandingSurveysForInterruptedRecipient).toHaveBeenCalledTimes(2);
+		expect(mockRemoveOutstandingSurveysForInterruptedRecipient).toHaveBeenCalledWith(portal, 'recipient-1');
 	});
 
 	test('attributes mobile app self-updates to the recipient', async () => {

@@ -9,7 +9,6 @@ import { StatProgress } from '@socialincome/design-system/data-display/stat-prog
 import { Stat } from '@socialincome/design-system/data-display/stat/stat';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { AlertCircle, CheckCircle, TriangleAlert } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
 import { SectionTitle } from './section-title';
 
 type StatsSectionProps = {
@@ -17,8 +16,7 @@ type StatsSectionProps = {
 	stats: ProgramDashboardStats;
 };
 
-export const StatsSection = async ({ programId, stats }: StatsSectionProps) => {
-	const t = await getTranslations('website-common');
+export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const getCreditStatusLabel = (creditsInIntervals: number, totalExpected: number) => {
 		if (creditsInIntervals < 1) {
 			return 'Not secured';
@@ -123,6 +121,7 @@ export const StatsSection = async ({ programId, stats }: StatsSectionProps) => {
 	const activeRecipientsExplanation = 'Active recipients are started, not suspended, and not completed.';
 	const suspendedRecipientsExplanation =
 		'Suspended recipients have a suspension date at or before now and are not counted as active.';
+	const interruptedRecipientsExplanation = 'Interrupted recipients (e.g. deceased) receive no further payouts or surveys.';
 	const completedRecipientsExplanation =
 		'Completed recipients have paid or confirmed payout count at least equal to expected intervals for the current program setup.';
 	const completedSurveysExplanation = 'Completed surveys counts surveys with completed status.';
@@ -273,7 +272,11 @@ export const StatsSection = async ({ programId, stats }: StatsSectionProps) => {
 									value={formatNumber(stats.suspendedRecipientsCount)}
 									info={suspendedRecipientsExplanation}
 								/>
-								<Stat label={t('recipient-status-interrupted')} value={formatNumber(stats.interruptedRecipientsCount)} />
+								<Stat
+									label="Interrupted"
+									value={formatNumber(stats.interruptedRecipientsCount)}
+									info={interruptedRecipientsExplanation}
+								/>
 								<Stat
 									label="Completed"
 									value={formatNumber(stats.completedRecipientsCount)}

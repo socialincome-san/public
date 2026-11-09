@@ -1,5 +1,5 @@
 import { Gender } from '@/generated/prisma/enums';
-import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from './csv';
+import { parseCsvOptionalFields, parseCsvText } from './csv';
 
 type TestCase = {
 	name: string;
@@ -133,22 +133,5 @@ describe('parseCsvOptionalFields', () => {
 			error: 'Row 1: dateOfBirth must be a valid date in YYYY-MM-DD format',
 			status: undefined,
 		});
-	});
-});
-
-describe('stringifyCsv', () => {
-	test('neutralizes formula-leading cell values', () => {
-		const csv = stringifyCsv(
-			[
-				{ comment: '=1+1' },
-				{ comment: '+SUM(A1:A2)' },
-				{ comment: '-1' },
-				{ comment: '@SUM(A1:A2)' },
-				{ comment: 'Ordinary comment' },
-			],
-			['comment'],
-		);
-
-		expect(csv).toBe("comment\n'=1+1\n'+SUM(A1:A2)\n'-1\n'@SUM(A1:A2)\nOrdinary comment");
 	});
 });
