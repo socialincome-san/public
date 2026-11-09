@@ -3,11 +3,8 @@ import type { CircleGrid } from '@/generated/storyblok/types/109655/storyblok-co
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { createWebsiteCirclePath } from '@/lib/storyblok/storyblok-utils';
 import { getCircleSummariesAction } from '@/modules/circles/circle.actions';
-import {
-	CircleCard,
-	CircleCardLegend,
-	CircleCardList,
-} from '@socialincome/design-system/data-display/circle-card/circle-card';
+import { CircleCard, CircleCardLegend } from '@socialincome/design-system/data-display/circle-card/circle-card';
+import { CircleCardList } from '@socialincome/design-system/data-display/circle-card/circle-card-list';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable } from '@storyblok/react';

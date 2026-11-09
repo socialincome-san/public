@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { CircleCard, CircleCardLegend, CircleCardList } from './circle-card';
+import { CircleCard, CircleCardLegend } from './circle-card';
+import { CircleCardList } from './circle-card-list';
 
 const meta = {
 	title: 'Data Display/Circle Card',

@@ -8,6 +8,8 @@ export const CIRCLE_CONFIG = {
 	dotRadius: { regular: 8.5, compact: 10 },
 	// Above this many active members the dots shrink so they still fit inside the ring
 	comfortableDotCount: 12,
+	// Contacts are checked pair by pair, so very large circles draw only this many members (the count label stays exact)
+	maxDotCount: 40,
 	// Free space between a dot's edge and the ring's inner edge; keeps centres within 38 at the regular size
 	wallGap: 7.5,
 	// Free space kept between two dots; a centre distance of 20.5 at the regular size
@@ -151,8 +153,9 @@ const resolveContacts = (dots: Dot[], minDistance: number, wall: number) => {
 };
 
 // An evenly spread, non-overlapping arrangement turned by a per-card angle: the still state and where motion starts
-const getCircleLayout = (count: number, seed: string, compact: boolean): CircleLayout => {
+const getCircleLayout = (activeCount: number, seed: string, compact: boolean): CircleLayout => {
 	const config = CIRCLE_CONFIG;
+	const count = Math.min(activeCount, config.maxDotCount);
 	const scale = Math.min(1, Math.sqrt(config.comfortableDotCount / Math.max(count, 1)));
 	const dotRadius = (compact ? config.dotRadius.compact : config.dotRadius.regular) * scale;
 	const ringStroke = compact ? config.ringStroke.compact : config.ringStroke.regular;
@@ -327,18 +330,20 @@ export const useCircleSimulation = ({ activeCount, seed, compact, animated }: Ci
 		const svg = svgRef.current;
 		const pulseElement = pulseRef.current;
 		const dotElements = dotElementsRef.current;
-		if (!animated || activeCount === 0 || !svg) {
-			return;
-		}
-
 		const config = CIRCLE_CONFIG;
-		const simulation = createSimulation(layout, createRandom(hashSeed(`${seed}:motion`)));
 		const writePositions = (positions: Point[]) => {
 			positions.forEach(({ x, y }, index) => {
 				dotElements[index]?.setAttribute('cx', (config.center + x).toFixed(2));
 				dotElements[index]?.setAttribute('cy', (config.center + y).toFixed(2));
 			});
 		};
+		// The previous run's cleanup writes its own, older layout over what React just rendered
+		writePositions(layout.positions);
+		if (!animated || activeCount === 0 || !svg) {
+			return;
+		}
+
+		const simulation = createSimulation(layout, createRandom(hashSeed(`${seed}:motion`)));
 		const writePulse = () => {
 			const pulse = simulation.getPulse();
 			pulseElement?.setAttribute('opacity', pulse ? pulse.opacity.toFixed(3) : '0');
