@@ -25,13 +25,13 @@ export const getVisiblePrograms = async (programs: ProgramStory[], blok: Program
 
 type Props = {
 	programs: ProgramStory[];
-	allProgramsCount?: number;
+	allProgramsCount: number;
 	blok: ProgramGrid;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 };
 
-export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok, lang, currency }: Props) => {
+export const ProgramGridView = async ({ programs, allProgramsCount, blok, lang, currency }: Props) => {
 	const [statsResult, t] = await Promise.all([
 		getPublicProgramStatsByPortalSlugsAction(getPortalSlugs(programs)),
 		getTranslations('website-common'),
