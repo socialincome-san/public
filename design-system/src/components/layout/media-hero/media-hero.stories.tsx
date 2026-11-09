@@ -84,6 +84,7 @@ export const Statement: Story = {
 		children: (
 			<MediaHeroIntro
 				variant="light"
+				glow
 				title={
 					<>
 						Fighting poverty <strong>with 1% of your salary</strong>

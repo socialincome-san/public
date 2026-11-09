@@ -1,5 +1,6 @@
 'use client';
 
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { useState } from 'react';
 import {
 	type Cadence,
@@ -9,8 +10,11 @@ import {
 } from '../utils/donation-amount';
 import { selectStep1FormView } from '../wizard/donation-machine-selectors';
 
-export const useDonationFormState = (initial?: Partial<DonationAmountContext>) => {
-	const defaults = getInitialDonationContext();
+export const useDonationFormState = (
+	initial?: Partial<Pick<DonationAmountContext, 'monthlyIncome' | 'selectedAmount' | 'customAmount' | 'cadence'>>,
+) => {
+	const currency = useWebsiteCurrency();
+	const defaults = getInitialDonationContext(currency);
 	const [monthlyIncome, setMonthlyIncome] = useState(initial?.monthlyIncome ?? defaults.monthlyIncome);
 	const [selectedAmount, setSelectedAmount] = useState<DonationAmountContext['selectedAmount']>(
 		initial?.selectedAmount ?? defaults.selectedAmount,
@@ -19,6 +23,7 @@ export const useDonationFormState = (initial?: Partial<DonationAmountContext>) =
 	const [cadence, setCadence] = useState<Cadence>(initial?.cadence ?? defaults.cadence);
 
 	const context: DonationAmountContext = {
+		currency,
 		monthlyIncome,
 		selectedAmount,
 		customAmount,

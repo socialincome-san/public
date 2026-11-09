@@ -18,7 +18,8 @@ import type {
 	PublicProgramStatsMap,
 	PublicProgramTargetFocus,
 } from '@/modules/programs/program.types';
-import { revalidatePath } from 'next/cache';
+import { PROGRAM_CACHE_TAG } from '@/modules/programs/program.types';
+import { revalidatePath, updateTag } from 'next/cache';
 import {
 	assignProgramRecipientsFromPool,
 	getProgramRecipientPoolSetup,
@@ -136,6 +137,7 @@ export const updateProgramSettingsAction = async (input: unknown): Promise<Resul
 	const result = await updateProgramSettings(sessionResult.data, parsedInput.data);
 	if (result.success) {
 		revalidatePath('/portal/programs/[programId]', 'layout');
+		updateTag(PROGRAM_CACHE_TAG);
 	}
 
 	return result;

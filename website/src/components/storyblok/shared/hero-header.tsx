@@ -1,6 +1,7 @@
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
+import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
 import {
 	MediaHero,
 	MediaHeroChips,
@@ -15,6 +16,8 @@ const HERO_HEADER_IMAGE_HEIGHT = 1080;
 type HeroHeaderStat = {
 	value?: number;
 	label: string;
+	href?: string;
+	icon?: ReactNode;
 };
 
 export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>;
@@ -65,12 +68,22 @@ export const HeroHeader = ({
 			>
 				{stats.length > 0 ? (
 					<MediaHeroChips>
-						{stats.map((stat) => (
-							<MediaHeroPill key={stat.label}>
-								{stat.value !== undefined ? `${stat.value} ` : ''}
-								{stat.label}
-							</MediaHeroPill>
-						))}
+						{stats.map((stat) =>
+							stat.href ? (
+								<LinkPill
+									key={stat.label}
+									label={`${stat.value !== undefined ? `${stat.value} ` : ''}${stat.label}`}
+									href={stat.href}
+									icon={stat.icon}
+								/>
+							) : (
+								<MediaHeroPill key={stat.label}>
+									{stat.icon}
+									{stat.value !== undefined ? `${stat.value} ` : ''}
+									{stat.label}
+								</MediaHeroPill>
+							),
+						)}
 					</MediaHeroChips>
 				) : null}
 				{badges ? <MediaHeroChips>{badges}</MediaHeroChips> : null}
