@@ -32,9 +32,7 @@ export default function GenerateDonationCertificateDialog({
 	years: number[];
 }) {
 	// Certificates are usually needed for the last completed year
-	const [year, setYear] = useState<number | undefined>(
-		() => years.find((value) => value < now().getFullYear()) ?? years[0],
-	);
+	const [year, setYear] = useState<number | undefined>(() => years.find((value) => value < now().getFullYear()) ?? years[0]);
 	const [language, setLanguage] = useState<LanguageCode | undefined>(DEFAULT_LANGUAGE);
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<boolean>();
