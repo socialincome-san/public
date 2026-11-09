@@ -92,6 +92,8 @@ export type PublicLocalPartnerStatsMap = Record<string, PublicLocalPartnerStats>
 type PublicLocalPartnerOverviewStats = {
 	recipientsCount: number;
 	candidatesCount: number;
+	/** Had recipients in programs, and all of those programs are concluded */
+	isConcluded: boolean;
 };
 
 export type PublicLocalPartnerOverviewStatsMap = Record<string, PublicLocalPartnerOverviewStats>;

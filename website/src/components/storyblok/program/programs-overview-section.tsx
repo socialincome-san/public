@@ -1,19 +1,20 @@
 import type { AnySearchParams } from '@/app/page-props';
+import { FilterDropdown } from '@/components/filters/filter-dropdown';
+import { getSearchQuery } from '@/components/filters/filter-query';
+import { OverviewFilterBar } from '@/components/filters/overview-filter-bar';
+import { getStatusQuery, StatusFilter } from '@/components/filters/status-filter';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	getPublicProgramFilterDataByPortalSlugsAction,
 	getPublicProgramStatsByPortalSlugsAction,
 } from '@/modules/programs/program.actions';
 import { getFocusesAction, getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
-import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
 import { getTranslations } from 'next-intl/server';
 import type { FocusStory } from '../focus/focus.types';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug } from './program.utils';
 import { ProgramsOverview } from './programs-overview';
-import { ProgramsOverviewFilters } from './programs-overview-filters';
-import { FOCUS_QUERY_KEY } from './programs-overview-query';
-import { ProgramsOverviewSearch } from './programs-overview-search';
+import { COUNTRY_QUERY_KEY, FOCUS_QUERY_KEY } from './programs-overview-query';
 import {
 	getCountryFilterOptions,
 	getCountryQuery,
@@ -22,10 +23,11 @@ import {
 	getFocusIdBySlug,
 	getFocusQuery,
 	getFocusTitleBySlug,
-	getSearchQuery,
+	getProgramStatus,
 	programMatchesCountryQuery,
 	programMatchesFocusQuery,
 	programMatchesSearchQuery,
+	programMatchesStatusQuery,
 } from './programs-overview.server';
 
 type Props = {
@@ -33,9 +35,10 @@ type Props = {
 	currency: WebsiteCurrency;
 	searchParams: Promise<AnySearchParams>;
 	fixedFocusSlug?: string;
+	showFilters?: boolean;
 };
 
-export const ProgramsOverviewSection = async ({ lang, currency, searchParams, fixedFocusSlug }: Props) => {
+export const ProgramsOverviewSection = async ({ lang, currency, searchParams, fixedFocusSlug, showFilters }: Props) => {
 	const hasFixedFocus = fixedFocusSlug !== undefined;
 	const [programsResult, storyblokFocusesResult] = await Promise.all([
 		getProgramsAction(lang),
@@ -67,6 +70,9 @@ export const ProgramsOverviewSection = async ({ lang, currency, searchParams, fi
 	const searchQuery = getSearchQuery(resolvedSearchParams);
 	const countryQuery = getCountryQuery(resolvedSearchParams);
 	const focusQuery = getFocusQuery(resolvedSearchParams);
+	const statuses = focusScopedPrograms.map((program) => getProgramStatus(program, statsByPortalSlug));
+	const statusQuery = getStatusQuery(resolvedSearchParams);
+	const selectedStatus = statusQuery && statuses.includes(statusQuery) ? statusQuery : undefined;
 	const selectedCountryIsoCode = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
 	const selectedFocusId = hasFixedFocus
 		? fixedFocusId
@@ -81,36 +87,49 @@ export const ProgramsOverviewSection = async ({ lang, currency, searchParams, fi
 		: countryFilteredPrograms.filter((program) =>
 				programMatchesFocusQuery(program, filterDataByPortalSlug, selectedFocusId),
 			);
+	const statusFilteredPrograms = focusFilteredPrograms.filter((program) =>
+		programMatchesStatusQuery(program, statsByPortalSlug, selectedStatus),
+	);
 	const filteredPrograms = searchQuery
-		? focusFilteredPrograms.filter((program) => programMatchesSearchQuery(program, searchQuery))
-		: focusFilteredPrograms;
+		? statusFilteredPrograms.filter((program) => programMatchesSearchQuery(program, searchQuery))
+		: statusFilteredPrograms;
 	const fixedQueryParams = hasFixedFocus ? [{ key: FOCUS_QUERY_KEY, value: fixedFocusId }] : [];
 
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<FilterBar
-				filters={
-					<ProgramsOverviewFilters
-						allCountriesLabel={t('programs-page.all-countries', { count: countryOptions.length })}
-						allFocusesLabel={t('programs-page.all-focuses', { count: focusFilterOptions.length })}
-						countryOptions={countryOptions}
-						selectedCountryIsoCode={selectedCountryIsoCode}
-						focusOptions={focusFilterOptions}
-						selectedFocusId={selectedFocusId}
-						showFocusFilter={!hasFixedFocus}
+		<OverviewFilterBar
+			filters={
+				<>
+					<FilterDropdown
+						allLabel={t('programs-page.all-countries', { count: countryOptions.length })}
+						options={countryOptions}
+						queryKey={COUNTRY_QUERY_KEY}
+						selectedValue={selectedCountryIsoCode}
 						queryParamOverrides={fixedQueryParams}
 					/>
-				}
-				search={
-					<ProgramsOverviewSearch
-						defaultValue={searchQuery}
-						label={t('programs-page.search-label')}
-						placeholder={t('programs-page.search-placeholder')}
-						queryParamOverrides={fixedQueryParams}
-					/>
-				}
-			/>
+					{hasFixedFocus ? null : (
+						<FilterDropdown
+							allLabel={t('programs-page.all-focuses', { count: focusFilterOptions.length })}
+							options={focusFilterOptions}
+							queryKey={FOCUS_QUERY_KEY}
+							selectedValue={selectedFocusId}
+							queryParamOverrides={fixedQueryParams}
+						/>
+					)}
+					<StatusFilter statuses={statuses} selectedStatus={selectedStatus} queryParamOverrides={fixedQueryParams} />
+				</>
+			}
+			totalCount={focusScopedPrograms.length}
+			showFilters={showFilters}
+			countLabel={t('programs-page.program-count', { count: filteredPrograms.length })}
+			search={{
+				label: t('programs-page.search-label'),
+				placeholder: t('programs-page.search-placeholder'),
+				compactPlaceholder: t('programs-page.search-placeholder-count', { count: filteredPrograms.length }),
+				query: searchQuery,
+			}}
+			queryParamOverrides={fixedQueryParams}
+		>
 			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} currency={currency} />
-		</div>
+		</OverviewFilterBar>
 	);
 };

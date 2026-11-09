@@ -51,7 +51,12 @@ export const getPublicLocalPartnerOverviewStatsBySlugs = async (
 
 	try {
 		const partners = await localPartnerRepository.findLocalPartnersBySlugs(normalizedSlugs);
-		const statsResult = await getPublicLocalPartnerStatsByIds(partners.map(({ id }) => id));
+		const partnerIds = partners.map(({ id }) => id);
+		const [statsResult, runningPartners] = await Promise.all([
+			getPublicLocalPartnerStatsByIds(partnerIds),
+			localPartnerRepository.findLocalPartnerIdsInRunningPrograms(partnerIds),
+		]);
+		const runningPartnerIds = new Set(runningPartners.map(({ localPartnerId }) => localPartnerId));
 		if (!statsResult.success) {
 			return resultFail(statsResult.error);
 		}
@@ -66,6 +71,7 @@ export const getPublicLocalPartnerOverviewStatsBySlugs = async (
 						{
 							recipientsCount: stats?.assignedRecipientsCount ?? 0,
 							candidatesCount: stats?.waitingRecipientsCount ?? 0,
+							isConcluded: (stats?.assignedRecipientsCount ?? 0) > 0 && !runningPartnerIds.has(id),
 						},
 					];
 				}),
