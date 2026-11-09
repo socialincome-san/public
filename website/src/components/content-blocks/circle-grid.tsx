@@ -3,9 +3,12 @@ import type { CircleGrid } from '@/generated/storyblok/types/109655/storyblok-co
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { createWebsiteCirclePath } from '@/lib/storyblok/storyblok-utils';
 import { getCircleSummariesAction } from '@/modules/circles/circle.actions';
-import { DotCircleCard } from '@socialincome/design-system/data-display/dot-circle-card/dot-circle-card';
+import {
+	CircleCard,
+	CircleCardLegend,
+	CircleCardList,
+} from '@socialincome/design-system/data-display/circle-card/circle-card';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable } from '@storyblok/react';
 import { getTranslations } from 'next-intl/server';
@@ -24,29 +27,38 @@ export const CircleGridBlock = async ({ blok, lang, currency }: Props) => {
 
 	return (
 		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
-			<div className="space-y-8">
-				{blok.title ? (
-					<SectionHeading align="left" size={4} bold>
-						{blok.title}
-					</SectionHeading>
-				) : null}
-				<CardGrid emptyMessage={t('circles.empty')}>
-					{circlesResult.data.map((circle) => (
-						<CardGridItem key={circle.slug}>
-							<DotCircleCard
-								title={circle.label}
-								description={
-									circle.activeCount + circle.interestedCount === 0
-										? t('circles.members-empty')
-										: t('circles.member-summary', { active: circle.activeCount, interested: circle.interestedCount })
-								}
-								solidCount={circle.activeCount}
-								outlinedCount={circle.interestedCount}
-								href={createWebsiteCirclePath(circle.slug, lang, currency)}
-							/>
-						</CardGridItem>
-					))}
-				</CardGrid>
+			<div className="mx-auto flex max-w-6xl flex-col gap-8">
+				<div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+					{blok.title ? (
+						<SectionHeading align="left" size={2}>
+							{blok.title}
+						</SectionHeading>
+					) : null}
+					{/* Stays on the right, also when it wraps below the heading */}
+					<div className="ml-auto">
+						<CircleCardLegend
+							activeLabel={t('circles.legend-active')}
+							activeDescription={t('circles.legend-active-info')}
+							interestedLabel={t('circles.legend-interested')}
+							interestedDescription={t('circles.legend-interested-info')}
+						/>
+					</div>
+				</div>
+				<CircleCardList
+					items={circlesResult.data}
+					getKey={(circle) => circle.slug}
+					emptyMessage={t('circles.empty')}
+					renderItem={(circle) => (
+						<CircleCard
+							title={circle.label}
+							href={createWebsiteCirclePath(circle.slug, lang, currency)}
+							activeCount={circle.activeCount}
+							interestedCount={circle.interestedCount}
+							activeLabel={t('circles.active-count', { count: circle.activeCount })}
+							interestedLabel={t('circles.interested-count', { count: circle.interestedCount })}
+						/>
+					)}
+				/>
 			</div>
 		</BlockWrapper>
 	);

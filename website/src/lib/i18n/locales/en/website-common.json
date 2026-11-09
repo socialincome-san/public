@@ -451,9 +451,13 @@
 	},
 	"circles": {
 		"title": "Circles",
-		"member-summary": "{active} active · {interested, plural, one {# interested member} other {# interested members}}",
-		"members-empty": "No members yet",
-		"empty": "No circles yet."
+		"empty": "No circles yet.",
+		"active-count": "{count, plural, one {# Member} other {# Members}}",
+		"interested-count": "{count, plural, one {# Follower} other {# Followers}}",
+		"legend-active": "Circle Members",
+		"legend-active-info": "Members carry the circle's work and are responsible for getting it done.",
+		"legend-interested": "Followers",
+		"legend-interested-info": "Followers are invited to the circle's meetings and are the first we ask when a task needs more hands."
 	},
 	"task-cards": {
 		"show-all": "Show all {count} tasks",

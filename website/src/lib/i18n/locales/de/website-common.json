@@ -451,9 +451,13 @@
 	},
 	"circles": {
 		"title": "Kreise",
-		"member-summary": "{active} aktiv · {interested, plural, one {# interessiertes Mitglied} other {# interessierte Mitglieder}}",
-		"members-empty": "Noch keine Mitglieder",
-		"empty": "Noch keine Kreise."
+		"empty": "Noch keine Kreise.",
+		"active-count": "{count, plural, one {# Mitglied} other {# Mitglieder}}",
+		"interested-count": "{count} Follower",
+		"legend-active": "Kreismitglieder",
+		"legend-active-info": "Mitglieder tragen die Arbeit des Kreises und sind dafür verantwortlich.",
+		"legend-interested": "Follower",
+		"legend-interested-info": "Follower werden zu den Treffen des Kreises eingeladen und als Erste gefragt, wenn eine Aufgabe mehr Hände braucht."
 	},
 	"task-cards": {
 		"show-all": "Alle {count} Aufgaben anzeigen",

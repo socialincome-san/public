@@ -451,9 +451,13 @@
 	},
 	"circles": {
 		"title": "Cercles",
-		"member-summary": "{active, plural, one {# actif} other {# actifs}} · {interested, plural, one {# membre intéressé} other {# membres intéressés}}",
-		"members-empty": "Pas encore de membres",
-		"empty": "Pas encore de cercles."
+		"empty": "Pas encore de cercles.",
+		"active-count": "{count, plural, one {# Membre} other {# Membres}}",
+		"interested-count": "{count, plural, one {# Abonné} other {# Abonnés}}",
+		"legend-active": "Membres du cercle",
+		"legend-active-info": "Les membres portent le travail du cercle et en sont responsables.",
+		"legend-interested": "Abonnés",
+		"legend-interested-info": "Les abonnés sont invités aux réunions du cercle et sont les premiers sollicités quand une tâche demande plus de bras."
 	},
 	"task-cards": {
 		"show-all": "Afficher les {count} tâches",
