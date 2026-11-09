@@ -1,4 +1,4 @@
-import { ContributionStatus, Currency } from '@/generated/prisma/enums';
+import { ContributionSourceType, ContributionStatus, Currency } from '@/generated/prisma/enums';
 import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 
@@ -11,6 +11,7 @@ export const contributionCreateSchema = z.object({
 	amountChf: positiveNumber,
 	feesChf: positiveNumber,
 	status: z.nativeEnum(ContributionStatus),
+	sourceType: z.nativeEnum(ContributionSourceType),
 	contributorId: requiredId,
 	campaignId: requiredId,
 });

@@ -1,4 +1,10 @@
-import type { ContributionStatus, CountryCode, Currency, PaymentEventType } from '@/generated/prisma/enums';
+import type {
+	ContributionSourceType,
+	ContributionStatus,
+	CountryCode,
+	Currency,
+	PaymentEventType,
+} from '@/generated/prisma/enums';
 
 export type ContributionDateRange = {
 	gte: Date;
@@ -71,6 +77,7 @@ export type ContributionPayload = {
 	amountChf: number;
 	feesChf: number;
 	status: ContributionStatus;
+	sourceType: ContributionSourceType;
 	contributor: {
 		id: string;
 	};
@@ -137,11 +144,14 @@ export type ContributionRecord = {
 	amountChf: number;
 	feesChf: number;
 	status: ContributionStatus;
+	sourceType: ContributionSourceType;
 	contributorId: string;
 	campaignId: string;
 	createdAt: Date;
 	updatedAt: Date | null;
 };
+
+export type ContributionSourceTotals = Record<ContributionSourceType, number>;
 
 export type YourContributionsTableViewRow = {
 	createdAt: Date;

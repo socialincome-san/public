@@ -1,3 +1,5 @@
+import type { ContributionSourceType } from '@/generated/prisma/enums';
+
 export type InflowSegmentKey = 'individuals' | 'foundations' | 'corporate';
 
 export type InflowSegmentAmounts = Record<InflowSegmentKey, number>;
@@ -17,31 +19,13 @@ const INFLOW_SEGMENT_COLORS: Record<InflowSegmentKey, string> = {
 
 const SEGMENT_ORDER: InflowSegmentKey[] = ['individuals', 'foundations', 'corporate'];
 
-export const parseChfAmount = (raw: string | undefined): number => {
-	if (raw === undefined || raw.trim() === '') {
-		return 0;
-	}
-
-	const parsed = Number(raw);
-
-	return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
-};
-
-/**
- * Splits the donation total into segment amounts that always sum to that total: the CMS foundation and
- * corporate amounts are capped by the remaining total, and individuals take whatever is left.
- */
-export const resolveInflowSegmentAmountsChf = (
-	totalInflowsChf: number,
-	foundationsChf: number,
-	corporateChf: number,
-): InflowSegmentAmounts => {
-	const total = Math.max(0, totalInflowsChf);
-	const foundations = Math.min(Math.max(0, foundationsChf), total);
-	const corporate = Math.min(Math.max(0, corporateChf), total - foundations);
-
-	return { individuals: total - foundations - corporate, foundations, corporate };
-};
+export const mapContributionSourcesToInflowSegments = (
+	totals: Record<ContributionSourceType, number>,
+): InflowSegmentAmounts => ({
+	individuals: totals.individual,
+	foundations: totals.foundation_grant,
+	corporate: totals.corporate_partner,
+});
 
 /** Largest-remainder allocation so integer percents always sum to 100 (or all 0). */
 export const allocatePercents = (amounts: readonly number[]): number[] => {

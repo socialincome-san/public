@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { CreateContributionInput, UpdateContributionInput } from '@/modules/contributions/contribution.schemas';
-import { ContributionPayload } from '@/modules/contributions/contribution.types';
-import { ContributionFormSchema } from './contribution-form';
+import { type CreateContributionInput, type UpdateContributionInput } from '@/modules/contributions/contribution.schemas';
+import { type ContributionPayload } from '@/modules/contributions/contribution.types';
+import { type ContributionFormSchema } from './contribution-form';
 
 export const buildCreateContributionInput = (schema: ContributionFormSchema): CreateContributionInput => {
 	return {
@@ -10,6 +10,7 @@ export const buildCreateContributionInput = (schema: ContributionFormSchema): Cr
 		amountChf: schema.fields.amountChf.value,
 		feesChf: schema.fields.feesChf.value,
 		status: schema.fields.status.value,
+		sourceType: schema.fields.sourceType.value,
 		contributorId: schema.fields.contributor.value,
 		campaignId: schema.fields.campaign.value,
 	};
@@ -26,6 +27,7 @@ export const buildUpdateContributionInput = (
 		amountChf: schema.fields.amountChf.value ?? existing.amountChf,
 		feesChf: schema.fields.feesChf.value ?? existing.feesChf,
 		status: schema.fields.status.value ?? existing.status,
+		sourceType: schema.fields.sourceType.value ?? existing.sourceType,
 		contributorId: schema.fields.contributor.value ?? existing.contributor.id,
 		campaignId: schema.fields.campaign.value ?? existing.campaign.id,
 	};

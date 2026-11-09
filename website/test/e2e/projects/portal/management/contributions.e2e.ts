@@ -48,6 +48,7 @@ test('add new contribution', async ({ page }) => {
 	await page.getByTestId('form-item-amountChf').locator('input').fill(`${amountChf}`);
 	await page.getByTestId('form-item-feesChf').locator('input').fill(`${feesChf}`);
 	await selectOptionByTestId(page, 'status', 'succeeded');
+	await selectOptionByTestId(page, 'sourceType', 'Foundation / Grant');
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
@@ -61,9 +62,10 @@ test('add new contribution', async ({ page }) => {
 			currency: 'USD',
 			status: 'succeeded',
 		},
-		select: { id: true },
+		select: { id: true, sourceType: true },
 	});
 	expect(created).toBeDefined();
+	expect(created?.sourceType).toBe('foundation_grant');
 });
 
 test('edit contribution', async ({ page }) => {

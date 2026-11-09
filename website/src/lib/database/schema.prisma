@@ -29,6 +29,12 @@ enum ContributionStatus {
   succeeded
 }
 
+enum ContributionSourceType {
+  individual
+  foundation_grant
+  corporate_partner
+}
+
 enum PayoutStatus {
   paid
   confirmed
@@ -660,17 +666,18 @@ model Subscription {
 }
 
 model Contribution {
-  id                String             @id @default(cuid()) @map("id")
-  legacyFirestoreId String?            @unique @map("legacy_firestore_id")
-  amount            Decimal            @map("amount") @db.Decimal(12, 4)
-  currency          Currency           @map("currency")
-  amountChf         Decimal            @map("amount_chf") @db.Decimal(12, 4)
-  feesChf           Decimal            @map("fees_chf") @db.Decimal(12, 4)
-  contributorId     String             @map("contributor_id")
-  contributor       Contributor        @relation(fields: [contributorId], references: [id])
-  status            ContributionStatus @map("status")
-  campaignId        String             @map("campaign_id")
-  campaign          Campaign           @relation(fields: [campaignId], references: [id])
+  id                String                 @id @default(cuid()) @map("id")
+  legacyFirestoreId String?                @unique @map("legacy_firestore_id")
+  amount            Decimal                @map("amount") @db.Decimal(12, 4)
+  currency          Currency               @map("currency")
+  amountChf         Decimal                @map("amount_chf") @db.Decimal(12, 4)
+  feesChf           Decimal                @map("fees_chf") @db.Decimal(12, 4)
+  contributorId     String                 @map("contributor_id")
+  contributor       Contributor            @relation(fields: [contributorId], references: [id])
+  status            ContributionStatus     @map("status")
+  sourceType        ContributionSourceType @default(individual) @map("source_type")
+  campaignId        String                 @map("campaign_id")
+  campaign          Campaign               @relation(fields: [campaignId], references: [id])
   paymentEvent      PaymentEvent?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)

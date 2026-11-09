@@ -3,6 +3,7 @@ import { assignFlagColors } from '@/lib/utils/country-flag-color';
 import { getCountryFlagColors } from '@/lib/utils/country-flag-colors';
 import {
 	getSucceededContributionsByContributorCountry,
+	getSucceededContributionSourceTotals,
 	getSucceededContributionTotal,
 } from '@/modules/contributions/contribution.service';
 import { getPaidOrConfirmedPayoutTotal } from '@/modules/payouts/payout.service';
@@ -42,13 +43,17 @@ export const getTransparencySummary = async (
 ): Promise<Result<TransparencySummaryData>> => {
 	try {
 		const dateRange = getFinancialPeriodDateRange(financialPeriod);
-		const [inflowsResult, outflowsResult, latestReservesResult] = await Promise.all([
+		const [inflowsResult, inflowsBySourceResult, outflowsResult, latestReservesResult] = await Promise.all([
 			getSucceededContributionTotal(dateRange),
+			getSucceededContributionSourceTotals(dateRange),
 			getPaidOrConfirmedPayoutTotal(dateRange),
 			getLatestReserves(),
 		]);
 		if (!inflowsResult.success) {
 			return resultFail(inflowsResult.error);
+		}
+		if (!inflowsBySourceResult.success) {
+			return resultFail(inflowsBySourceResult.error);
 		}
 		if (!outflowsResult.success) {
 			return resultFail(outflowsResult.error);
@@ -60,6 +65,7 @@ export const getTransparencySummary = async (
 		return resultOk({
 			financialSummary: {
 				inflowsChf: inflowsResult.data,
+				inflowsBySourceChf: inflowsBySourceResult.data,
 				outflowsChf: outflowsResult.data,
 				reservesChf: latestReservesResult.data.total,
 			},
