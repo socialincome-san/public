@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Button } from '../../actions/button/button';
 import { Input } from '../../forms/input/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../forms/select/select';
@@ -80,7 +80,10 @@ export const DataTableToolbar = ({
 		columns.forEach((column) => column.onToggle(true));
 	};
 	const clearSearch = () => onSearchChange('');
+	// Text filters reach `filter.value` debounced, so their inputs are remounted only to reset them on Clear
+	const [filterResetCount, setFilterResetCount] = useState(0);
 	const clearAllFilters = () => {
+		setFilterResetCount((count) => count + 1);
 		if (onClearFilters) {
 			onClearFilters();
 
@@ -277,7 +280,7 @@ export const DataTableToolbar = ({
 													</label>
 													<Input
 														id={`data-table-filter-${filter.id}`}
-														key={`${filter.id}-${filter.value ?? ''}`}
+														key={`${filter.id}-${filterResetCount}`}
 														placeholder={filter.placeholder}
 														defaultValue={filter.value}
 														onChange={(event) => filter.onChange(event.target.value || undefined)}

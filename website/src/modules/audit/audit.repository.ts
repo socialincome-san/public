@@ -29,44 +29,29 @@ export const findAuditEventPage = async ({
 				select: { entityType: true, entityId: true },
 			})
 		: [];
-	const recipientFilters: Prisma.AuditEventWhereInput[] = [];
-	if (paymentPhone) {
-		recipientFilters.push({
-			entityType: 'recipient',
-			snapshot: {
-				path: ['paymentInformation', 'phone', 'number'],
-				string_contains: paymentPhone,
-				mode: 'insensitive',
-			},
-		});
-	}
-	if (contactPhone) {
-		recipientFilters.push({
-			entityType: 'recipient',
-			snapshot: {
-				path: ['contact', 'phone', 'number'],
-				string_contains: contactPhone,
-				mode: 'insensitive',
-			},
-		});
-	}
-	if (firstName) {
-		recipientFilters.push({
-			entityType: 'recipient',
-			snapshot: { path: ['contact', 'firstName'], string_contains: firstName, mode: 'insensitive' },
-		});
-	}
-	if (lastName) {
-		recipientFilters.push({
-			entityType: 'recipient',
-			snapshot: { path: ['contact', 'lastName'], string_contains: lastName, mode: 'insensitive' },
-		});
-	}
+	const recipientSnapshotFilters = [
+		{ path: ['paymentInformation', 'phone', 'number'], value: paymentPhone },
+		{ path: ['contact', 'phone', 'number'], value: contactPhone },
+		{ path: ['contact', 'firstName'], value: firstName },
+		{ path: ['contact', 'lastName'], value: lastName },
+	].flatMap(({ path, value }): Prisma.AuditEventWhereInput[] =>
+		value ? [{ snapshot: { path, string_contains: value, mode: 'insensitive' } }] : [],
+	);
+	// Like the name search, the recipient filters list every event of a matching
+	// recipient, also those from before a change of the field and deletes.
+	const filteredRecipients =
+		recipientSnapshotFilters.length > 0
+			? await prisma.auditEvent.findMany({
+					where: { entityType: 'recipient', AND: recipientSnapshotFilters },
+					distinct: ['entityType', 'entityId'],
+					select: { entityType: true, entityId: true },
+				})
+			: undefined;
 	const where: Prisma.AuditEventWhereInput = {
 		entityType,
 		// Baselines are only the starting point for diffs, not changes.
 		action: { not: 'baseline' },
-		...(recipientFilters.length > 0 ? { AND: recipientFilters } : {}),
+		AND: filteredRecipients ? { OR: filteredRecipients } : undefined,
 		OR: search
 			? [
 					{ entityId: { contains: search, mode: 'insensitive' } },
