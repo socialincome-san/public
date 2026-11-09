@@ -20,6 +20,7 @@ type Props = {
 export const ProgramsOverviewPage = async ({ overview, lang, currency, searchParams }: Props) => {
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
+	const showFilters = overview.content.showFilters !== false;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: title,
@@ -35,7 +36,12 @@ export const ProgramsOverviewPage = async ({ overview, lang, currency, searchPar
 				<PageIntro title={title} description={text} />
 				<section className="mt-8 flex flex-col gap-6">
 					<Suspense fallback={<AppLoadingSkeleton />}>
-						<ProgramsOverviewSection lang={lang} currency={currency} searchParams={searchParams} />
+						<ProgramsOverviewSection
+							lang={lang}
+							currency={currency}
+							searchParams={showFilters ? searchParams : Promise.resolve({})}
+							showFilters={showFilters}
+						/>
 					</Suspense>
 				</section>
 			</BlockWrapper>

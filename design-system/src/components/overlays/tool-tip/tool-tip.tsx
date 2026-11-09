@@ -78,6 +78,11 @@ const TooltipTrigger = ({
 			}}
 			onClick={(event) => {
 				onClick?.(event);
+
+				// Radix closes the tooltip on click unless it was prevented, which would undo the tap that opened it
+				if (isCoarsePointer()) {
+					event.preventDefault();
+				}
 			}}
 			{...props}
 		/>

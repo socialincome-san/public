@@ -1,16 +1,16 @@
 import type { AnySearchParams } from '@/app/page-props';
+import { FilterDropdown } from '@/components/filters/filter-dropdown';
+import { getSearchQuery } from '@/components/filters/filter-query';
+import { OverviewFilterBar } from '@/components/filters/overview-filter-bar';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { getPublicFocusStatsBySlugsAction } from '@/modules/focuses/focus.actions';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
-import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
 import { getTranslations } from 'next-intl/server';
 import { FocusDetailCard } from './focus-detail-card';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusTitle } from './focus.utils';
-import { FocusesOverviewCountryFilter } from './focuses-overview-country-filter';
-import { FocusesOverviewSdgFilter } from './focuses-overview-sdg-filter';
-import { FocusesOverviewSearch } from './focuses-overview-search';
+import { COUNTRY_QUERY_KEY, SDG_QUERY_KEY } from './focuses-overview-query';
 import {
 	focusMatchesCountryQuery,
 	focusMatchesSdgQuery,
@@ -19,7 +19,6 @@ import {
 	getCountryQuery,
 	getSdgFilterOptions,
 	getSdgQuery,
-	getSearchQuery,
 	sortFocusesByCandidatesCountDesc,
 } from './focuses-overview.server';
 
@@ -28,9 +27,10 @@ type Props = {
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 	searchParams: Promise<AnySearchParams>;
+	showFilters?: boolean;
 };
 
-export const FocusesOverview = async ({ focuses, lang, currency, searchParams }: Props) => {
+export const FocusesOverview = async ({ focuses, lang, currency, searchParams, showFilters }: Props) => {
 	const focusSlugs = focuses.map((focus) => getFocusSlug(focus));
 	const [t, statsResult, resolvedSearchParams] = await Promise.all([
 		getTranslations('website-common'),
@@ -57,30 +57,33 @@ export const FocusesOverview = async ({ focuses, lang, currency, searchParams }:
 	const sortedFocuses = sortFocusesByCandidatesCountDesc(filteredFocuses, statsBySlug);
 
 	return (
-		<>
-			<FilterBar
-				filters={
-					<>
-						<FocusesOverviewCountryFilter
-							allCountriesLabel={t('focuses-page.all-countries', { count: countryOptions.length })}
-							countryOptions={countryOptions}
-							selectedCountryIsoCode={selectedCountryIsoCode}
-						/>
-						<FocusesOverviewSdgFilter
-							allSdgsLabel={t('focuses-page.all-sdgs', { count: sdgOptions.length })}
-							sdgOptions={sdgOptions}
-							selectedSdg={selectedSdg}
-						/>
-					</>
-				}
-				search={
-					<FocusesOverviewSearch
-						defaultValue={searchQuery}
-						label={t('focuses-page.search-label')}
-						placeholder={t('focuses-page.search-placeholder')}
+		<OverviewFilterBar
+			filters={
+				<>
+					<FilterDropdown
+						allLabel={t('focuses-page.all-countries', { count: countryOptions.length })}
+						options={countryOptions}
+						queryKey={COUNTRY_QUERY_KEY}
+						selectedValue={selectedCountryIsoCode}
 					/>
-				}
-			/>
+					<FilterDropdown
+						allLabel={t('focuses-page.all-sdgs', { count: sdgOptions.length })}
+						options={sdgOptions}
+						queryKey={SDG_QUERY_KEY}
+						selectedValue={selectedSdg}
+					/>
+				</>
+			}
+			totalCount={focuses.length}
+			showFilters={showFilters}
+			countLabel={t('focuses-page.focus-count', { count: sortedFocuses.length })}
+			search={{
+				label: t('focuses-page.search-label'),
+				placeholder: t('focuses-page.search-placeholder'),
+				compactPlaceholder: t('focuses-page.search-placeholder-count', { count: sortedFocuses.length }),
+				query: searchQuery,
+			}}
+		>
 			{hasStatsError ? <p className="text-destructive">{t('focuses-page.load-stats-error')}</p> : null}
 			<CardGrid emptyMessage={t(hasActiveFilters ? 'focuses-page.no-results' : 'focuses-page.empty')}>
 				{sortedFocuses.map((focus) => {
@@ -116,6 +119,6 @@ export const FocusesOverview = async ({ focuses, lang, currency, searchParams }:
 					);
 				})}
 			</CardGrid>
-		</>
+		</OverviewFilterBar>
 	);
 };

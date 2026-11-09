@@ -1,10 +1,12 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[currency]';
+import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
 import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { pickCommunityPage } from '@/components/community/pick-community-page';
 import { LocalPartnerDetail } from '@/components/storyblok/local-partner/local-partner-detail';
+import { getLocalPartnerDescription, getLocalPartnerTitle } from '@/components/storyblok/local-partner/local-partner.utils';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { toWebsiteCurrency } from '@/lib/i18n/utils';
-import { getWebsiteAlternates } from '@/lib/utils/metadata';
+import { getStoryblokMetadataImage } from '@/lib/storyblok/storyblok-utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
 import { getLocalPartnerDashboardStats } from '@/modules/local-partners/local-partner.cache';
 import { getLocalPartnerBySlug } from '@/modules/storyblok-content/storyblok-content.cache';
@@ -15,7 +17,20 @@ export const generateStaticParams = () => getPublishedSlugParams('local-partners
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;
 
-	return getWebsiteAlternates(lang as WebsiteLanguage, `local-partners/${slug}`);
+	const localPartnerResult = await getLocalPartnerBySlug(slug, lang);
+	const localPartner = localPartnerResult.success ? localPartnerResult.data.content : undefined;
+
+	return getPageMetadata(
+		lang as WebsiteLanguage,
+		`local-partners/${slug}`,
+		localPartner
+			? {
+					title: getLocalPartnerTitle(localPartner),
+					description: getLocalPartnerDescription(localPartner),
+					image: getStoryblokMetadataImage(localPartner.heroImage),
+				}
+			: {},
+	);
 };
 
 export default async function LocalPartnerPage({ params }: DefaultLayoutPropsWithSlug) {
