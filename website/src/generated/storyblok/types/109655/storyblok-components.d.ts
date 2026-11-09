@@ -22,6 +22,7 @@ export interface Article {
   leadText?: string;
   content: StoryblokRichTextDoc;
   author: ISbStoryData<Author> | ISbStoryData<Person> | string;
+  coAuthors?: (ISbStoryData<Person> | string)[];
   displayInOverviewPage?: boolean;
   originalLanguage?: "" | "en" | "fr" | "de" | "it";
   type: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
@@ -47,8 +48,10 @@ export interface ArticleType {
 
 export interface BannerSection {
   text: StoryblokRichTextDoc;
-  color: "darkBlue" | "blue" | "white";
+  color: "darkBlue" | "blue" | "white" | "gradient" | "highlight";
   smallText?: boolean;
+  collapsible?: boolean;
+  collapsedByDefault?: boolean;
   component: "bannerSection";
   _uid: string;
   _editable?: string | undefined;
@@ -376,6 +379,13 @@ export interface IframeEmbed {
   [k: string]: unknown;
 }
 
+export interface ImageGeneratorGallery {
+  component: "imageGeneratorGallery";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface ImageText {
   content?: StoryblokRichTextDoc;
   image: StoryblokAsset;
@@ -638,6 +648,7 @@ export interface Page {
     | CircleGrid
     | TaskCards
     | IframeEmbed
+    | ImageGeneratorGallery
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];

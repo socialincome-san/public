@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 import { type WithoutClassName } from '../../../without-class-name';
 
-const blockWrapperVariants = cva('storyblok__outline w-site-width max-w-content relative mx-auto px-6', {
+const blockWrapperVariants = cva('storyblok__outline w-site-width max-w-content relative mx-auto lg:px-6', {
 	variants: {
 		marginTop: {
 			none: 'mt-0',

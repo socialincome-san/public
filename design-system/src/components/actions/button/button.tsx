@@ -7,9 +7,10 @@ const buttonVariants = cva(
 	'relative inline-flex items-center justify-center gap-2 rounded-full text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 z-10',
 	{
 		variants: {
+			// Dark variants set scheme-dark, so content such as AnimatedCircleIcon switches to its light colors
 			variant: {
 				default: [
-					'text-primary-foreground shadow-sm bg-primary/90',
+					'text-primary-foreground shadow-sm bg-primary/90 scheme-dark',
 					// Gradients can't be transitioned, so the gradient fades out on a pseudo element instead
 					'after:bg-linear-to-r after:from-[hsl(var(--gradient-button-from))] after:to-[hsl(var(--gradient-button-to))] after:inset-0 after:-z-10 after:rounded-full after:absolute after:opacity-100 hover:after:opacity-0 focus:after:opacity-0 after:transition-opacity',
 				].join(' '),
@@ -18,10 +19,10 @@ const buttonVariants = cva(
 					'border border-destructive/30 bg-card text-destructive hover:bg-destructive-foreground hover:text-destructive',
 				outline: 'border border-input text-primary hover:bg-accent hover:text-accent-foreground bg-background',
 				'outline-inverse':
-					'border border-input text-primary-foreground hover:bg-accent hover:text-accent-foreground bg-background/5',
-				overlay: 'text-primary-foreground bg-foreground/45 hover:bg-foreground/60',
+					'border border-input text-primary-foreground hover:bg-accent hover:text-accent-foreground bg-background/5 scheme-dark hover:scheme-light',
+				overlay: 'text-primary-foreground bg-foreground/45 hover:bg-foreground/60 scheme-dark',
 				secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
-				foreground: 'bg-foreground text-primary-foreground shadow-xs hover:bg-foreground/90',
+				foreground: 'bg-foreground text-primary-foreground shadow-xs hover:bg-foreground/90 scheme-dark',
 				ghost: 'hover:bg-accent hover:text-accent-foreground',
 				link: 'text-primary underline-offset-4 hover:underline',
 				confirmed: 'bg-confirm text-confirm-foreground shadow-xs hover:bg-confirm/90',

@@ -53,6 +53,25 @@ export const getArticleTypeLabel = (articleType: ISbStoryData<ArticleType>) => {
 export const getPersonDisplayName = (person: ISbStoryData<Person>) =>
 	`${person.content.firstName} ${person.content.lastName}`.trim() || person.content.fullName;
 
+const getPersonFirstName = (person: ISbStoryData<Person>) => person.content.firstName.trim() || getPersonDisplayName(person);
+
+export const getArticleAuthors = (article: ResolvedArticle): ISbStoryData<Person>[] =>
+	[
+		article.author,
+		// Unpublished co-authors stay unresolved uuids
+		...(article.coAuthors ?? []).filter((coAuthor): coAuthor is ISbStoryData<Person> => typeof coAuthor !== 'string'),
+	].filter((person, index, all) => all.findIndex((other) => other.uuid === person.uuid) === index);
+
+// Several full names don't fit next to an avatar stack, so co-authored articles name authors by first name
+// unless two of them share one
+export const formatArticleAuthorNames = (authors: ISbStoryData<Person>[], language: string) => {
+	const firstNames = authors.map(getPersonFirstName);
+	const names =
+		authors.length > 1 && new Set(firstNames).size === firstNames.length ? firstNames : authors.map(getPersonDisplayName);
+
+	return new Intl.ListFormat(language, { type: 'conjunction' }).format(names);
+};
+
 export const getPersonAvatarSrc = (person: ISbStoryData<Person>) => {
 	const filename = person.content.avatar?.filename;
 
@@ -328,14 +347,12 @@ export const getStoryblokMetadataImage = (
 	return toProductionMetadataImage({ ...image, ...(alt ? { alt } : {}) }, DEFAULT_OPEN_GRAPH_IMAGE_URL);
 };
 
-const getArticleAuthorName = (article: ResolvedArticle) =>
-	`${article.author.content.firstName} ${article.author.content.lastName}`;
-
-const getArticleAuthorUrl = (story: ISbStoryData<ResolvedArticle>, language: string) =>
-	`${WEBSITE_ORIGIN}${createWebsitePersonLink(story.content.author.slug, language, defaultCurrency)}`;
+const getArticleAuthorUrl = (author: ISbStoryData<Person>, language: string) =>
+	`${WEBSITE_ORIGIN}${createWebsitePersonLink(author.slug, language, defaultCurrency)}`;
 
 export const getArticlePageMetadata = (story: ISbStoryData<ResolvedArticle>, language: string) => {
 	const article = story.content;
+	const authors = getArticleAuthors(article);
 	const tags = article.tags?.map((tag) => tag.content.value) ?? [];
 
 	return {
@@ -343,11 +360,11 @@ export const getArticlePageMetadata = (story: ISbStoryData<ResolvedArticle>, lan
 		description: article.leadText,
 		image: getStoryblokMetadataImage(article.image, article.title),
 		keywords: tags,
-		authors: { name: getArticleAuthorName(article) },
+		authors: authors.map((author) => ({ name: getPersonDisplayName(author) })),
 		article: {
 			publishedTime: formatStoryblokDateToIso(story.first_published_at) || undefined,
 			modifiedTime: formatStoryblokDateToIso(story.updated_at) || undefined,
-			authors: [getArticleAuthorUrl(story, language)],
+			authors: authors.map((author) => getArticleAuthorUrl(author, language)),
 			section: 'Journal',
 			tags,
 		},
@@ -368,7 +385,10 @@ export const getArticlePageStructuredData = (
 		image: image === undefined ? DEFAULT_OPEN_GRAPH_IMAGE_URL : typeof image === 'string' ? image : image.url,
 		datePublished: formatStoryblokDateToIso(story.first_published_at),
 		dateModified: formatStoryblokDateToIso(story.updated_at),
-		author: { name: getArticleAuthorName(story.content), url: getArticleAuthorUrl(story, language) },
+		authors: getArticleAuthors(story.content).map((author) => ({
+			name: getPersonDisplayName(author),
+			url: getArticleAuthorUrl(author, language),
+		})),
 	});
 };
 

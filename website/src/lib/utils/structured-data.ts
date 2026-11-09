@@ -21,7 +21,7 @@ export const getArticleStructuredData = (article: {
 	image: string;
 	datePublished: string;
 	dateModified: string;
-	author: { name: string; url: string };
+	authors: { name: string; url: string }[];
 }) => ({
 	'@context': 'https://schema.org',
 	'@type': 'Article',
@@ -31,6 +31,6 @@ export const getArticleStructuredData = (article: {
 	image: [article.image],
 	...(article.datePublished ? { datePublished: article.datePublished } : {}),
 	...(article.dateModified ? { dateModified: article.dateModified } : {}),
-	author: { '@type': 'Person', ...article.author },
+	author: article.authors.map((author) => ({ '@type': 'Person', ...author })),
 	publisher: organization,
 });
