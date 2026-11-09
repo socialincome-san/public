@@ -55,7 +55,7 @@ const CONTENT_TYPE = {
 	person: 'person',
 	tag: 'tag',
 } as const;
-const STANDARD_ARTICLE_RELATIONS = ['article.author', 'article.tags', 'article.type'];
+const STANDARD_ARTICLE_RELATIONS = ['article.author', 'article.coAuthors', 'article.tags', 'article.type'];
 const STANDARD_STORY_RELATIONS = [
 	'faqSelection.questions',
 	'Campaign.faq',
@@ -508,7 +508,7 @@ export const getArticle = async (language: string, slug: string): Promise<Result
 };
 
 export const getRelativeArticles = async (
-	authorId: string,
+	authorIds: string[],
 	articleId: number,
 	tags: string[],
 	language: string,
@@ -522,7 +522,7 @@ export const getRelativeArticles = async (
 		sort_by: 'first_published_at:desc',
 		excluding_ids: articleId.toString(),
 		content_type: CONTENT_TYPE.article,
-		filter_query: createRelativeArticlesFilter(tags, authorId),
+		filter_query: createRelativeArticlesFilter(tags, authorIds),
 	});
 	let articles = related.success ? related.data.stories.filter(isResolvedArticle) : [];
 	if (articles.length < numberOfArticles) {
@@ -723,9 +723,13 @@ const articleByTagsFilter = (tagId: string) => ({ tags: { any_in_array: tagId } 
 
 const articlesByArticleTypeFilter = (articleTypeId: string) => ({ type: { in: articleTypeId } });
 
-const articlesByAuthorFilter = (authorId: string) => ({ author: { in: authorId } });
+const authorFilters = (authorIds: string[]) => [
+	{ author: { in: authorIds.join(',') } },
+	{ coAuthors: { any_in_array: authorIds.join(',') } },
+];
 
-const createRelativeArticlesFilter = (tags: string[], authorId: string) =>
-	tags.length > 0
-		? { __or: [{ author: { in: authorId } }, { tags: { in_array: tags.join(',') } }] }
-		: { author: { in: authorId } };
+const articlesByAuthorFilter = (authorId: string) => ({ __or: authorFilters([authorId]) });
+
+const createRelativeArticlesFilter = (tags: string[], authorIds: string[]) => ({
+	__or: [...authorFilters(authorIds), ...(tags.length > 0 ? [{ tags: { in_array: tags.join(',') } }] : [])],
+});

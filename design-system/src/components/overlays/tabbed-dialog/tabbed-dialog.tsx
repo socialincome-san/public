@@ -35,7 +35,7 @@ const TabbedDialogTabs = ({ title, description, tabs, defaultTab }: TabbedDialog
 		>
 			<DialogHeader>
 				<DialogTitle>{title}</DialogTitle>
-				{description && <DialogDescription>{description}</DialogDescription>}
+				{description ? <DialogDescription>{description}</DialogDescription> : null}
 				<div className="pt-3">
 					<TabsList>
 						{tabs.map((tab) => (
