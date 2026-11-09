@@ -940,7 +940,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 						aria-multiselectable="true"
 						aria-label="Available options"
 						variant="picker"
-						// eslint-disable-next-line react/forbid-component-props
+						// eslint-disable-next-line @smartive-eslint/forbid-component-props
 						style={{
 							animationDuration: `${animationConfig?.duration ?? animation}s`,
 							animationDelay: `${animationConfig?.delay ?? 0}s`,

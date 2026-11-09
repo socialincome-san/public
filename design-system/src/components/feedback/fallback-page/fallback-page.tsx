@@ -19,8 +19,8 @@ export const FallbackPage = ({ eyebrow, title, description, detail, children }: 
 						<h1 className="text-primary text-3xl leading-tight font-semibold tracking-tight md:text-4xl">{title}</h1>
 						<p className="text-muted-foreground mx-auto max-w-xl text-base leading-7 md:text-lg">{description}</p>
 					</div>
-					{children && <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">{children}</div>}
-					{detail && <div className="text-muted-foreground text-sm">{detail}</div>}
+					{children ? <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">{children}</div> : null}
+					{detail ? <div className="text-muted-foreground text-sm">{detail}</div> : null}
 				</div>
 			</div>
 		</section>
