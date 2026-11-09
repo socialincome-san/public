@@ -1,6 +1,7 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
+import { CountryOfficeBlock } from '@/components/content-blocks/country-office';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
@@ -9,6 +10,7 @@ import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
 import { IframeEmbedBlock } from '@/components/content-blocks/iframe-embed';
+import { ImageGeneratorGalleryBlock } from '@/components/content-blocks/image-generator-gallery';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
@@ -38,17 +40,19 @@ import { TwoColumnBlock } from '@/components/content-blocks/two-column';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/newsletter/newsletter-signup';
+import type { CountryOffice } from '@/generated/storyblok/types/109655/country-office-components';
 import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Fragment, type ReactNode } from 'react';
 
-type PageBlock = Page['content'][number];
+// The office block is generated separately until the unrelated CMS schema changes are pulled in.
+type PageBlock = Page['content'][number] | CountryOffice;
 type NestedPageBlock = TwoColumn['leftColumn'][number];
 type RichtextButtonHeaderAction = 'createProgram';
 
 type PageContentTypeProps = {
-	blok: Page;
+	blok: Omit<Page, 'content'> & { content: PageBlock[] };
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 	searchParams?: Promise<AnySearchParams>;
@@ -66,12 +70,14 @@ const renderPageBlock = (
 	switch (block.component) {
 		case 'circleGrid':
 			return <CircleGridBlock blok={block} lang={lang} currency={currency} />;
+		case 'countryOffice':
+			return <CountryOfficeBlock blok={block} lang={lang} />;
 		case 'donationGlobe':
 			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':
 			return <DonationsTotalBlockServer blok={block} lang={lang} currency={currency} />;
 		case 'downloads':
-			return <DownloadsBlock blok={block} />;
+			return <DownloadsBlock blok={block} lang={lang} currency={currency} searchParams={searchParams} />;
 		case 'explainerVideoHeader':
 			return <ExplainerVideoHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'faqSelection':
@@ -86,6 +92,8 @@ const renderPageBlock = (
 			);
 		case 'imageText':
 			return <ImageTextBlock blok={block} />;
+		case 'imageGeneratorGallery':
+			return <ImageGeneratorGalleryBlock blok={block} lang={lang} />;
 		case 'impactMeasurement':
 			return <ImpactMeasurementBlock blok={block} lang={lang} searchParams={searchParams} />;
 		case 'inflows':
