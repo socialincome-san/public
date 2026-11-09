@@ -1,8 +1,9 @@
 import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
 import { Currency } from '../../generated/prisma/enums';
+import { getVisitorCountry } from '../geo/visitor-geo';
 import { isValidCountryCode } from '../types/country';
-import { bestGuessCurrency } from '../types/currency';
+import { getCountryCurrency } from '../types/currency';
 import { LanguageCode } from '../types/language';
 
 export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 'kri'>;
@@ -13,8 +14,6 @@ export const PORTAL_ROUTE_HEADER = 'x-socialincome-portal';
 export const TIME_ZONE = 'Europe/Zurich';
 export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
 export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
-// https://vercel.com/docs/headers/request-headers#x-vercel-ip-country
-export const VISITOR_COUNTRY_HEADER = 'x-vercel-ip-country';
 
 export const isWebsiteLanguage = (value: string | undefined): value is WebsiteLanguage =>
 	allWebsiteLanguages.includes(value as WebsiteLanguage);
@@ -60,12 +59,14 @@ export const getPortalLanguage = (value: string | null | undefined): MainWebsite
 	return isMainWebsiteLanguage(language) ? language : defaultLanguage;
 };
 
-const getCurrencyForCountry = (country: string | undefined): WebsiteCurrency | undefined => {
+/** The country's own currency, if the website supports it. */
+export const getCurrencyForCountry = (country: string | undefined): WebsiteCurrency | undefined => {
 	const countryCode = country?.toUpperCase();
 	if (!countryCode || !isValidCountryCode(countryCode)) {
 		return undefined;
 	}
-	const currency = bestGuessCurrency(countryCode);
+	// Not bestGuessCurrency: its USD fallback would count USD as the own currency of every country missing from the list.
+	const currency = getCountryCurrency(countryCode);
 
 	return isWebsiteCurrency(currency) ? currency : undefined;
 };
@@ -77,7 +78,7 @@ const getCurrencyForCountry = (country: string | undefined): WebsiteCurrency | u
 export const findBestLocale = (request: NextRequest): { language: WebsiteLanguage; currency: WebsiteCurrency } => {
 	const options = langParser.parse(request.headers.get('Accept-Language') ?? '');
 	const language = options.map((option) => option.code).find(isMainWebsiteLanguage) ?? defaultLanguage;
-	const country = request.headers.get(VISITOR_COUNTRY_HEADER) ?? options.find((option) => option.region)?.region;
+	const country = getVisitorCountry(request) ?? options.find((option) => option.region)?.region;
 
 	return { language, currency: getCurrencyForCountry(country) ?? defaultCurrency };
 };

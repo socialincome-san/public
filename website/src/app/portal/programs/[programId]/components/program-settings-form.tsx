@@ -37,6 +37,7 @@ type ProgramSettingsFormSchema = {
 		slug: FormField;
 		country: FormField;
 		coveredByReserves: FormField;
+		isConcluded: FormField;
 		programDurationInMonths: FormField;
 		payoutPerInterval: FormField;
 		payoutInterval: FormField;
@@ -75,6 +76,7 @@ const fillFormSchema = (
 			slug: { ...formSchema.fields.slug },
 			country: { ...formSchema.fields.country },
 			coveredByReserves: { ...formSchema.fields.coveredByReserves },
+			isConcluded: { ...formSchema.fields.isConcluded },
 			programDurationInMonths: { ...formSchema.fields.programDurationInMonths },
 			payoutPerInterval: { ...formSchema.fields.payoutPerInterval },
 			payoutInterval: { ...formSchema.fields.payoutInterval },
@@ -93,10 +95,11 @@ const fillFormSchema = (
 	nextSchema.fields.slug.value = settings.slug;
 	nextSchema.fields.country.value = settings.countryId;
 	nextSchema.fields.coveredByReserves.value = settings.coveredByReserves;
+	nextSchema.fields.isConcluded.value = settings.isConcluded;
 	nextSchema.fields.country.options = countryOptions;
 	nextSchema.fields.country.zodSchema =
 		countryOptions.length > 0
-			? z.nativeEnum(countryEnum, { errorMap: () => ({ message: countryInvalidMessage }) })
+			? z.nativeEnum(countryEnum, { error: countryInvalidMessage })
 			: z.string().trim().min(1, countryRequiredMessage);
 	nextSchema.fields.programDurationInMonths.value = settings.programDurationInMonths;
 	nextSchema.fields.payoutPerInterval.value = settings.payoutPerInterval;
@@ -113,6 +116,7 @@ const fillFormSchema = (
 	nextSchema.fields.slug.disabled = readOnlyFields;
 	nextSchema.fields.country.disabled = readOnlyFields;
 	nextSchema.fields.coveredByReserves.disabled = readOnlyFields;
+	nextSchema.fields.isConcluded.disabled = readOnlyFields;
 	nextSchema.fields.programDurationInMonths.disabled = readOnlyFields;
 	nextSchema.fields.payoutPerInterval.disabled = readOnlyFields;
 	nextSchema.fields.payoutInterval.disabled = readOnlyFields;
@@ -162,11 +166,15 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 				label: t('program.settings.covered_by_reserves'),
 				zodSchema: z.boolean().optional(),
 			},
+			isConcluded: {
+				label: t('program.settings.concluded'),
+				zodSchema: z.boolean().optional(),
+			},
 			programDurationInMonths: {
 				label: t('program.settings.duration_months'),
 				placeholder: '12',
 				zodSchema: z.coerce
-					.number({ invalid_type_error: t('program.settings.invalid_number') })
+					.number({ error: t('program.settings.invalid_number') })
 					.int(t('program.settings.duration_integer'))
 					.min(1, t('program.settings.duration_minimum')),
 			},
@@ -174,14 +182,14 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 				label: t('program.settings.payout_per_interval'),
 				placeholder: '50',
 				zodSchema: z.coerce
-					.number({ invalid_type_error: t('program.settings.invalid_number') })
+					.number({ error: t('program.settings.invalid_number') })
 					.positive(t('program.settings.payout_positive')),
 			},
 			payoutInterval: {
 				label: t('program.settings.payout_interval'),
 				placeholder: t('program.settings.select_interval'),
 				zodSchema: z.nativeEnum(PayoutInterval, {
-					errorMap: () => ({ message: t('program.settings.interval_invalid') }),
+					error: t('program.settings.interval_invalid'),
 				}),
 				options: [
 					{ id: PayoutInterval.monthly, label: t('program.settings.monthly') },
@@ -201,7 +209,7 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 				zodSchema: z
 					.array(
 						z.nativeEnum(Profile, {
-							errorMap: () => ({ message: t('program.settings.profile_invalid') }),
+							error: t('program.settings.profile_invalid'),
 						}),
 					)
 					.optional(),

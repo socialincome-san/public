@@ -39,7 +39,20 @@ export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 							<span className="bg-confirm animation-duration-[2s] absolute inline-flex size-full animate-ping rounded-full opacity-75 motion-reduce:animate-none" />
 							<span className="bg-confirm relative inline-flex size-2 rounded-full"></span>
 						</span>
-						<span>{t('transparency-page.runway.zewo-hint')}</span>
+						<span>
+							{t.rich('transparency-page.runway.zewo-hint', {
+								zewo: (chunks) => (
+									<a
+										href="https://zewo.ch"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="underline underline-offset-2"
+									>
+										{chunks}
+									</a>
+								),
+							})}
+						</span>
 					</div>
 				)}
 			</div>

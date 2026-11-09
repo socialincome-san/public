@@ -128,6 +128,7 @@
 			"focus_required": "L’area tematica non può essere vuota.",
 			"profile_invalid": "Seleziona un profilo target valido.",
 			"covered_by_reserves": "Coperto dalle riserve",
+			"concluded": "Concluso",
 			"duration_months": "Durata del programma in mesi",
 			"payout_per_interval": "Erogazione per intervallo",
 			"payout_interval": "Intervallo di erogazione",

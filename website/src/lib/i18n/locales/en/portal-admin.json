@@ -136,6 +136,8 @@
 		"parentProvider": "Parent provider",
 		"payoutProcess": "Payout process",
 		"organizationName": "Organization name",
+		"operatorFallbackCountry": "Operator fallback country",
+		"noFallbackCountry": "No fallback country",
 		"users": "Users",
 		"organizations": "Organizations",
 		"selectUsers": "Select users",

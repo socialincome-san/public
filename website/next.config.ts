@@ -3,8 +3,7 @@ import createNextIntlPlugin from 'next-intl/plugin';
 import path from 'path';
 import { getSecurityHeaders } from './csp';
 import { getRedirects } from './redirects';
-
-const isProduction = (process.env.NEXT_PUBLIC_APP_ENVIRONMENT ?? process.env.VERCEL_TARGET_ENV) === 'production';
+import { getRobotsHeaders } from './src/lib/utils/robots';
 
 const nextConfig: NextConfig = {
 	transpilePackages: ['@socialincome/design-system', 'storyblok-rich-text-react-renderer'],
@@ -18,11 +17,7 @@ const nextConfig: NextConfig = {
 		Promise.resolve([
 			{
 				source: '/:path*',
-				headers: [
-					...getSecurityHeaders(),
-					// Staging is publicly reachable and would otherwise be indexed as a duplicate of production.
-					...(isProduction ? [] : [{ key: 'X-Robots-Tag', value: 'noindex' }]),
-				],
+				headers: [...getSecurityHeaders(), ...getRobotsHeaders()],
 			},
 		]),
 	turbopack: {

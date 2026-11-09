@@ -112,7 +112,7 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 					}
 				}}
 			>
-				<DialogContent size="alert">
+				<DialogContent size="sm">
 					<DialogHeader>
 						<DialogTitle>{confirm?.title}</DialogTitle>
 						<DialogDescription>{confirm?.description}</DialogDescription>

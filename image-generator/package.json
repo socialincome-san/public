@@ -1,30 +1,47 @@
 {
-  "name": "image-generator",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@socialincome/design-system": "*",
-    "ai": "7.0.137",
-    "next": "16.4.0",
-    "pg": "^8.23.1",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
-  },
-  "devDependencies": {
-    "@tailwindcss/turbopack": "4.3.3",
-    "@types/node": "24.19.2",
-    "@types/pg": "8.23.1",
-    "@types/react": "19.3.0",
-    "@types/react-dom": "19.3.0",
-    "eslint": "9.39.5",
-    "eslint-config-next": "16.4.0",
-    "tailwindcss": "4.3.3",
-    "typescript": "5.9.3"
-  }
+	"name": "image-generator",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "eslint",
+		"typecheck": "next typegen && tsc --noEmit",
+		"test:unit": "jest --runInBand",
+		"format:check": "prettier --check . --config prettier.config.mjs",
+		"format:fix": "prettier --write . --config prettier.config.mjs",
+		"check:unused": "knip --config knip.config.ts"
+	},
+	"dependencies": {
+		"@socialincome/design-system": "*",
+		"@vercel/blob": "2.8.2",
+		"ai": "7.0.163",
+		"lucide-react": "1.69.0",
+		"next": "16.4.5",
+		"pg": "^8.23.1",
+		"react": "19.3.1",
+		"react-dom": "19.3.1",
+		"server-only": "0.0.1",
+		"sharp": "0.35.5"
+	},
+	"devDependencies": {
+		"@smartive/prettier-config": "3.1.2",
+		"@tailwindcss/turbopack": "4.3.4",
+		"@types/jest": "30.0.0",
+		"@types/node": "26.6.6",
+		"@types/pg": "8.23.1",
+		"@types/react": "19.3.0",
+		"@types/react-dom": "19.3.0",
+		"eslint": "9.39.5",
+		"jest": "30.5.2",
+		"eslint-config-next": "16.4.5",
+		"knip": "6.44.1",
+		"prettier": "3.9.10",
+		"prettier-plugin-organize-imports": "4.3.0",
+		"prettier-plugin-tailwindcss": "0.8.1",
+		"tailwindcss": "4.3.4",
+		"typescript": "5.9.3"
+	}
 }

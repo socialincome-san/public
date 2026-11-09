@@ -24,7 +24,7 @@ const UnsupportedPayoutProcessDialog = ({
 
 	return (
 		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-			<DialogContent size="alert">
+			<DialogContent size="sm">
 				<DialogHeader>
 					<DialogTitle>{t('delivery.process.unsupported_title')}</DialogTitle>
 					<DialogDescription>{t('delivery.process.unsupported_description', { name: option.name })}</DialogDescription>

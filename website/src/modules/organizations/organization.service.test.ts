@@ -1,4 +1,4 @@
-import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
+import { CountryCode, ProgramPermission, UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
 
 const mockIsAdmin = jest.fn();
@@ -13,10 +13,13 @@ const mockValidateProgramIds = jest.fn();
 const mockCreateOrganization = jest.fn();
 const mockFindOperatorProgramAccess = jest.fn();
 const mockUpdateOrganizationName = jest.fn();
+const mockUpdateOrganization = jest.fn();
 const mockFindOrganizationIdentity = jest.fn();
 const mockFindOrganizationUsageCounts = jest.fn();
 const mockDeleteOrganization = jest.fn();
 const mockFindPaginatedOrganizationMembers = jest.fn();
+const mockFindOrganizationByOperatorFallbackCountry = jest.fn();
+const mockFindOperatorFallbackOrganization = jest.fn();
 
 const mockUpdateOrganizationMembers = jest.fn();
 const mockUpdateOrganizationProgramAccesses = jest.fn();
@@ -39,6 +42,7 @@ jest.mock('@/modules/programs/program-reference.service', () => ({
 jest.mock('./organization.repository.write', () => ({
 	createOrganization: mockCreateOrganization,
 	updateOrganizationName: mockUpdateOrganizationName,
+	updateOrganization: mockUpdateOrganization,
 	deleteOrganization: mockDeleteOrganization,
 }));
 
@@ -50,6 +54,8 @@ jest.mock('./organization.repository.read', () => ({
 	findUsersByIds: mockFindUsersByIds,
 	findOperatorProgramAccess: mockFindOperatorProgramAccess,
 	findOrganizationIdentity: mockFindOrganizationIdentity,
+	findOrganizationByOperatorFallbackCountry: mockFindOrganizationByOperatorFallbackCountry,
+	findOperatorFallbackOrganization: mockFindOperatorFallbackOrganization,
 	findOrganizationUsageCounts: mockFindOrganizationUsageCounts,
 	findPaginatedOrganizationMembers: mockFindPaginatedOrganizationMembers,
 }));
@@ -59,6 +65,7 @@ import {
 	createOrganization,
 	deleteOrganization,
 	getActiveOrganizationSummary,
+	getOperatorFallbackOrganizationId,
 	getPaginatedOrganizationAdminMembersTableView,
 	getPaginatedOrganizationAdminTableView,
 	renameActiveOrganization,
@@ -195,6 +202,31 @@ describe('organization service', () => {
 		expect(mockUpdateOrganizationName).not.toHaveBeenCalled();
 	});
 
+	test('gets the fallback operator configured for the requested country', async () => {
+		mockFindOperatorFallbackOrganization.mockResolvedValue({ id: 'fallback-lr' });
+
+		const result = await getOperatorFallbackOrganizationId(CountryCode.LR);
+
+		expect(expectSuccess(result)).toBe('fallback-lr');
+		expect(mockFindOperatorFallbackOrganization).toHaveBeenCalledWith(CountryCode.LR);
+	});
+
+	test('does not allow two fallback operators for the same country', async () => {
+		mockFindOrganizationByName.mockResolvedValue(null);
+		mockFindOrganizationByOperatorFallbackCountry.mockResolvedValue({ id: 'existing-organization' });
+
+		const result = await createOrganization(admin, {
+			name: 'Another organization',
+			userIds: [],
+			ownedProgramIds: [],
+			operatedProgramIds: [],
+			operatorFallbackCountryCode: CountryCode.SL,
+		});
+
+		expectFailure(result, 'An operator fallback organization is already configured for this country.');
+		expect(mockCreateOrganization).not.toHaveBeenCalled();
+	});
+
 	test('validates selected users before creating an organization', async () => {
 		mockFindOrganizationByName.mockResolvedValue(null);
 		mockFindUsersByIds.mockResolvedValue([]);
@@ -204,6 +236,7 @@ describe('organization service', () => {
 			userIds: ['missing-user'],
 			ownedProgramIds: [],
 			operatedProgramIds: [],
+			operatorFallbackCountryCode: 'none',
 		});
 
 		expectFailure(result, 'One or more selected users do not exist.');
@@ -238,9 +271,10 @@ describe('organization service', () => {
 			userIds: ['user-1'],
 			ownedProgramIds: ['program-1'],
 			operatedProgramIds: [],
+			operatorFallbackCountryCode: 'none',
 		});
 
-		expect(mockCreateOrganization).toHaveBeenCalledWith(portal, 'Organization');
+		expect(mockCreateOrganization).toHaveBeenCalledWith(portal, 'Organization', null);
 		expect(mockUpdateOrganizationProgramAccesses).toHaveBeenCalledWith(portal, {
 			organizationId: 'organization-1',
 			ownedProgramIds: ['program-1'],
@@ -265,6 +299,7 @@ describe('organization service', () => {
 			userIds: [],
 			ownedProgramIds: ['program-1'],
 			operatedProgramIds: [],
+			operatorFallbackCountryCode: 'none',
 		});
 
 		expectFailure(result, 'The organization was created, but its programs or members could not be saved. Edit it to retry.');

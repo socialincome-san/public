@@ -136,6 +136,8 @@
 		"parentProvider": "Fornitore principale",
 		"payoutProcess": "Procedura di pagamento",
 		"organizationName": "Nome dell’organizzazione",
+		"operatorFallbackCountry": "Paese di riserva dell’operatore",
+		"noFallbackCountry": "Nessun paese di riserva",
 		"users": "Utenti",
 		"organizations": "Organizzazioni",
 		"selectUsers": "Seleziona utenti",

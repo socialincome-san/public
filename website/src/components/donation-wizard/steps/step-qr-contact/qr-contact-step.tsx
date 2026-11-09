@@ -1,7 +1,6 @@
 'use client';
 
 import { useContributorSession } from '@/components/contributor/use-contributor-session';
-import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { cn } from '@socialincome/design-system/cn';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome/design-system/forms/form/form';
 import { Input } from '@socialincome/design-system/forms/input/input';
@@ -18,7 +17,6 @@ import { requestQrBillGeneration } from './request-qr-bill-generation';
 export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
 	const language = useLocale();
-	const currency = useWebsiteCurrency();
 	const { contributorSession } = useContributorSession();
 	const isLoading = state.context.qrBillStatus === 'loading';
 	const canGoBack = state.context.qrContributorReferenceId === null;
@@ -61,7 +59,6 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 				language,
 			},
 			send,
-			currency,
 		});
 	};
 

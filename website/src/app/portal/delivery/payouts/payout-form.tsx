@@ -53,7 +53,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 				placeholder: t('delivery.payout_form.amount'),
 				label: t('delivery.payout_form.amount'),
 				zodSchema: z.coerce
-					.number({ invalid_type_error: t('delivery.payout_form.invalid_number') })
+					.number({ error: t('delivery.payout_form.invalid_number') })
 					.nonnegative(t('delivery.payout_form.amount_nonnegative')),
 			},
 			currency: {
@@ -61,14 +61,14 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 				label: t('delivery.payout_form.currency_code'),
 				useCombobox: true,
 				zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c }))), {
-					errorMap: () => ({ message: t('delivery.payout_form.currency_invalid') }),
+					error: t('delivery.payout_form.currency_invalid'),
 				}),
 			},
 			amountChf: {
 				placeholder: t('delivery.payout_form.amount_chf'),
 				label: t('delivery.payout_form.amount_chf'),
 				zodSchema: z.coerce
-					.number({ invalid_type_error: t('delivery.payout_form.invalid_number') })
+					.number({ error: t('delivery.payout_form.invalid_number') })
 					.nonnegative(t('delivery.payout_form.chf_amount_nonnegative'))
 					.optional(),
 			},
@@ -79,12 +79,12 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 			},
 			paymentAt: {
 				label: t('delivery.payout_form.payment_date'),
-				zodSchema: z.date({ invalid_type_error: t('delivery.payout_form.payment_date_invalid') }),
+				zodSchema: z.date({ error: t('delivery.payout_form.payment_date_invalid') }),
 			},
 			status: {
 				label: t('delivery.payout_form.status'),
 				zodSchema: z.nativeEnum(PayoutStatus, {
-					errorMap: () => ({ message: t('delivery.payout_form.status_invalid') }),
+					error: t('delivery.payout_form.status_invalid'),
 				}),
 			},
 		},
@@ -140,7 +140,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 							recipientId: {
 								...prev.fields.recipientId,
 								zodSchema: z.nativeEnum(recipientEnum, {
-									errorMap: () => ({ message: t('delivery.payout_form.recipient_invalid') }),
+									error: t('delivery.payout_form.recipient_invalid'),
 								}),
 							},
 						},

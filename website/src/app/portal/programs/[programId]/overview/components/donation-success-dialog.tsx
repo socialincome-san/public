@@ -28,7 +28,7 @@ export const DonationSuccessDialog = () => {
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent size="alert">
+			<DialogContent size="sm">
 				<DialogHeader>
 					<DialogTitle>{t('program.donation.success_title')}</DialogTitle>
 					<DialogDescription>{t('program.donation.success_description')}</DialogDescription>

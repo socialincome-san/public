@@ -17,12 +17,6 @@ export const SendMessageDialog = ({ template }: SendMessageDialogProps) => {
 	const [open, setOpen] = useState(false);
 	const [locked, setLocked] = useState(false);
 
-	const requestClose = () => {
-		if (!locked) {
-			setOpen(false);
-		}
-	};
-
 	return (
 		<>
 			<Button onClick={() => setOpen(true)}>
@@ -30,14 +24,8 @@ export const SendMessageDialog = ({ template }: SendMessageDialogProps) => {
 				{t('wizard.actions.sendMessage')}
 			</Button>
 
-			<Dialog open={open} onOpenChange={(next) => (next ? setOpen(true) : requestClose())}>
-				<DialogContent
-					size="lg"
-					height="fixed"
-					closeOnClickOutside={!locked}
-					closeOnEscape={!locked}
-					hideCloseButton={locked}
-				>
+			<Dialog dismissible={!locked} open={open} onOpenChange={setOpen}>
+				<DialogContent size="lg" height="fixed">
 					<SendMessageWizard template={template} onClose={() => setOpen(false)} onLockChange={setLocked} />
 				</DialogContent>
 			</Dialog>

@@ -136,6 +136,8 @@
 		"parentProvider": "Übergeordneter Anbieter",
 		"payoutProcess": "Auszahlungsprozess",
 		"organizationName": "Organisationsname",
+		"operatorFallbackCountry": "Fallback-Land für Betreiber",
+		"noFallbackCountry": "Kein Fallback-Land",
 		"users": "Benutzer",
 		"organizations": "Organisationen",
 		"selectUsers": "Benutzer auswählen",

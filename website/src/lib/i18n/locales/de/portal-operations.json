@@ -128,6 +128,7 @@
 			"focus_required": "Der Schwerpunkt darf nicht leer sein.",
 			"profile_invalid": "Wähle ein gültiges Zielprofil aus.",
 			"covered_by_reserves": "Durch Rücklagen gedeckt",
+			"concluded": "Abgeschlossen",
 			"duration_months": "Programmdauer in Monaten",
 			"payout_per_interval": "Auszahlung pro Intervall",
 			"payout_interval": "Auszahlungsintervall",

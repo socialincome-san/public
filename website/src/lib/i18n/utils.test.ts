@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import {
 	findBestLocale,
+	getCurrencyForCountry,
 	getPortalLanguage,
 	getWebsiteBasePath,
 	parseCurrencySegment,
@@ -37,12 +38,37 @@ describe('findBestLocale', () => {
 		expect(findBestLocale(request({ 'accept-language': 'de-CH' }))).toEqual({ language: 'de', currency: 'CHF' });
 	});
 
+	test('falls back to the Accept-Language region when the geo header is not a country', () => {
+		expect(findBestLocale(request({ 'accept-language': 'de-CH', 'x-vercel-ip-country': 'XX' }))).toEqual({
+			language: 'de',
+			currency: 'CHF',
+		});
+	});
+
+	test('prefers the chosen country over the geo-IP country', () => {
+		expect(findBestLocale(request({ cookie: 'si_country=CH', 'x-vercel-ip-country': 'US' })).currency).toBe('CHF');
+	});
+
 	test('falls back to English and USD for countries without a website currency', () => {
 		expect(findBestLocale(request({ 'accept-language': 'kri', 'x-vercel-ip-country': 'SL' }))).toEqual({
 			language: 'en',
 			currency: 'USD',
 		});
 		expect(findBestLocale(request({}))).toEqual({ language: 'en', currency: 'USD' });
+	});
+});
+
+describe('getCurrencyForCountry', () => {
+	test("returns the country's own currency when the website supports it", () => {
+		expect(getCurrencyForCountry('CH')).toBe('CHF');
+		expect(getCurrencyForCountry('DE')).toBe('EUR');
+		expect(getCurrencyForCountry('US')).toBe('USD');
+	});
+
+	test('returns nothing for unsupported currencies and countries without a known currency', () => {
+		expect(getCurrencyForCountry('GB')).toBeUndefined();
+		expect(getCurrencyForCountry('AQ')).toBeUndefined();
+		expect(getCurrencyForCountry(undefined)).toBeUndefined();
 	});
 });
 

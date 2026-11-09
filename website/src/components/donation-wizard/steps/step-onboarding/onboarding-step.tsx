@@ -7,6 +7,7 @@ import {
 	getStripeCheckoutOnboardingPrefillAction,
 	updateContributorAfterWizardCheckoutAction,
 } from '@/modules/stripe-payments/stripe-payment.actions';
+import { getVisitorCountryAction } from '@/modules/visitor-country/visitor-country.actions';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -80,13 +81,21 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 				return;
 			}
 
+			const visitorCountryResult = result.data.country ? null : await getVisitorCountryAction();
+			if (visitorCountryResult && !visitorCountryResult.success) {
+				console.error('Could not prefill the donor country', { error: visitorCountryResult.error });
+			}
+			if (cancelled) {
+				return;
+			}
+
 			const lockedEmail = hasQrOnboardingContext ? (qrDonor?.email ?? result.data.email) : result.data.email;
 			setEmailLocked(lockedEmail);
 			form.reset({
 				firstname: result.data.firstname ?? qrDonor?.firstName ?? '',
 				lastname: result.data.lastname ?? qrDonor?.lastName ?? '',
 				email: lockedEmail ?? '',
-				country: result.data.country ?? 'CH',
+				country: result.data.country ?? (visitorCountryResult?.success ? visitorCountryResult.data : null) ?? 'CH',
 			});
 			setPrefillStatus('ready');
 		};

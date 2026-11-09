@@ -18,7 +18,8 @@ type Props = {
 };
 
 export const RichtextButtonHeaderBlock = ({ blok, lang, currency, buttonAction }: Props) => {
-	const { heading, button } = blok;
+	const { heading, button, buttonStyle } = blok;
+	const buttonVariant = buttonStyle === 'primary' ? 'default' : 'outline';
 	const firstButton = button?.[0];
 	const buttonLabel = firstButton?.label?.trim();
 	const buttonHref = firstButton?.link ? resolveStoryblokLink(firstButton.link, lang, currency) : null;
@@ -38,12 +39,12 @@ export const RichtextButtonHeaderBlock = ({ blok, lang, currency, buttonAction }
 					</div>
 				)}
 				{buttonLabel && buttonHref && !buttonAction && (
-					<Button variant="outline" asChild>
+					<Button variant={buttonVariant} asChild>
 						<NextLink href={buttonHref}>{buttonLabel}</NextLink>
 					</Button>
 				)}
 				{buttonLabel && buttonAction && (
-					<Button type="button" variant="outline" onClick={buttonAction}>
+					<Button type="button" variant={buttonVariant} onClick={buttonAction}>
 						{buttonLabel}
 					</Button>
 				)}

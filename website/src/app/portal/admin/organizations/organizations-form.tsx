@@ -2,11 +2,13 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema } from '@/components/dynamic-form/helper';
+import { CountryCode } from '@/generated/prisma/enums';
 import { handleResult } from '@/lib/result-client';
 import {
 	createOrganizationAction,
 	deleteOrganizationAction,
 	getOrganizationAction,
+	getOrganizationCountryOptionsAction,
 	getOrganizationProgramOptionsAction,
 	getOrganizationUserOptionsAction,
 	updateOrganizationAction,
@@ -28,6 +30,7 @@ export type OrganizationFormSchema = {
 	label: string;
 	fields: {
 		name: FormField;
+		operatorFallbackCountryCode: FormField;
 		users: FormField;
 		ownedPrograms: FormField;
 		operatedPrograms: FormField;
@@ -37,6 +40,13 @@ export type OrganizationFormSchema = {
 const getInitialFormSchema = (t: ReturnType<typeof useTranslations<'portal-admin'>>): OrganizationFormSchema => ({
 	label: t('form.organization'),
 	fields: {
+		operatorFallbackCountryCode: {
+			label: t('form.operatorFallbackCountry'),
+			placeholder: t('form.noFallbackCountry'),
+			zodSchema: z.union([z.nativeEnum(CountryCode), z.literal('none')]).default('none'),
+			value: 'none',
+			options: [{ id: 'none', label: t('form.none') }],
+		},
 		name: {
 			placeholder: t('form.organizationName'),
 			label: t('form.name'),
@@ -100,10 +110,11 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 	useEffect(() => {
 		startTransition(async () => {
 			try {
-				const [organizationResult, usersResult, programsResult] = await Promise.all([
+				const [organizationResult, usersResult, programsResult, countriesResult] = await Promise.all([
 					organizationId ? getOrganizationAction(organizationId) : Promise.resolve(null),
 					getOrganizationUserOptionsAction(),
 					getOrganizationProgramOptionsAction(),
+					getOrganizationCountryOptionsAction(),
 				]);
 
 				if (organizationId && organizationResult?.success) {
@@ -130,9 +141,16 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 							options: programOptions,
 						};
 					}
+					if (countriesResult.success) {
+						next.fields.operatorFallbackCountryCode.options = [
+							{ id: 'none', label: t('form.none') },
+							...countriesResult.data.map((country) => ({ id: country.id, label: country.name })),
+						];
+					}
 
 					if (organizationId && organizationResult?.success) {
 						next.fields.name.value = organizationResult.data.name;
+						next.fields.operatorFallbackCountryCode.value = organizationResult.data.operatorFallbackCountryCode ?? 'none';
 						next.fields.users.value = organizationResult.data.userIds;
 						next.fields.ownedPrograms.value = organizationResult.data.ownedProgramIds;
 						next.fields.operatedPrograms.value = organizationResult.data.operatedProgramIds;
@@ -143,6 +161,9 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 
 				if (organizationId && organizationResult && !organizationResult.success) {
 					onError?.(organizationResult.error);
+				}
+				if (!countriesResult.success) {
+					onError?.(countriesResult.error);
 				}
 			} catch (error) {
 				onError?.(error);

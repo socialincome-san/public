@@ -9,6 +9,16 @@ import { createRoot } from 'react-dom/client';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+window.matchMedia = (): MediaQueryList => ({
+	matches: false,
+	media: '',
+	onchange: null,
+	addListener: () => undefined,
+	removeListener: () => undefined,
+	addEventListener: () => undefined,
+	removeEventListener: () => undefined,
+	dispatchEvent: () => true,
+});
 
 jest.mock('next/image', () => ({
 	__esModule: true,
