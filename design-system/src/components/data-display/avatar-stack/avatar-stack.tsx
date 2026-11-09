@@ -11,6 +11,7 @@ const ringVariants = cva('ring-card rounded-full', {
 		size: {
 			xs: 'ring-2',
 			sm: 'ring-2',
+			default: 'ring-2',
 			lg: 'ring-2',
 			xl: 'ring-3',
 		},
@@ -33,7 +34,8 @@ const initialsOf = (name: string) =>
 export const AvatarStack = ({ people, size = 'lg' }: AvatarStackProps) => (
 	<span className="flex -space-x-2" aria-hidden="true">
 		{people.map((person) => (
-			<span key={person.name} className={ringVariants({ size })}>
+			// The ring only separates overlapping faces
+			<span key={person.name} className={people.length > 1 ? ringVariants({ size }) : undefined}>
 				<Avatar size={size}>
 					{person.imageSrc ? <AvatarImage src={person.imageSrc} alt="" /> : null}
 					<AvatarFallback>{initialsOf(person.name)}</AvatarFallback>

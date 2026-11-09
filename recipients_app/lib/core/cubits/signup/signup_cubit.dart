@@ -21,10 +21,12 @@ part "signup_state.dart";
 class SignupCubit extends Cubit<SignupState> {
   final AuthService authService;
   final CrashReportingRepository crashReportingRepository;
+  final LocalUserSettingsRepository localUserSettingsRepository;
 
   SignupCubit({
     required this.crashReportingRepository,
     required this.authService,
+    required this.localUserSettingsRepository,
   }) : super(const SignupState());
 
   Future<void> signupWithPhoneNumber({required String phoneNumber}) async {
@@ -60,6 +62,16 @@ class SignupCubit extends Cubit<SignupState> {
     if (phoneNumber.isEmpty) {
       emit(state.copyWith(status: SignupStatus.phoneNumberFailure, exception: AuthException(code: "invalid-phone-number", message: "Empty phone number")));
       return;
+    }
+
+    try {
+      // Set before signing in: a successful sign-in immediately triggers the
+      // dashboard, which would otherwise race this write. A stale flag after a
+      // failed sign-in is harmless, since the next successful login sets it anyway.
+      await localUserSettingsRepository.setWelcomeMessagePending(pending: true);
+    } on Exception catch (ex, stackTrace) {
+      // Not worth blocking login over; the welcome message just won't show.
+      crashReportingRepository.logError(ex, stackTrace);
     }
 
     try {
