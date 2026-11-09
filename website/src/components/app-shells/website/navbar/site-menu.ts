@@ -33,7 +33,7 @@ type Stat = NonNullable<MenuItemGroup['stat']>;
 type Figures = {
 	stats: Partial<Record<Stat, string>>;
 	// Keyed by the uuid of the country story, which menu links point to
-	countries: Map<string, { isoCode: string; recipients: string }>;
+	countries: Map<string, { isoCode: string; recipients?: string }>;
 };
 
 const countOf = (result: Result<unknown[]>) => (result.success ? result.data.length : 0);
@@ -83,7 +83,7 @@ const getFigures = async (lang: WebsiteLanguage, currency: WebsiteCurrency): Pro
 		countries: new Map(
 			countryStories.map((country) => [
 				country.uuid,
-				{ isoCode: country.isoCode, recipients: format(recipientsOf(country.isoCode)) },
+				{ isoCode: country.isoCode, recipients: countryStats.success ? format(recipientsOf(country.isoCode)) : undefined },
 			]),
 		),
 	};
@@ -115,10 +115,10 @@ export const getSiteMenuEntries = async (
 
 	const toOverview = (label: string | undefined, link: MenuItem['link'], value: string | undefined) => {
 		const filledLabel = fillValue(label, value);
+		// Unset links resolve to '#'
+		const href = resolveStoryblokLink(link, lang, currency);
 
-		return filledLabel && link?.cached_url
-			? { label: filledLabel, href: resolveStoryblokLink(link, lang, currency) }
-			: undefined;
+		return filledLabel && href !== '#' ? { label: filledLabel, href } : undefined;
 	};
 
 	const toGroup = (group: MenuItemGroup): SiteMenuGroup => {
@@ -138,9 +138,12 @@ export const getSiteMenuEntries = async (
 	const toFooterLink = (item: MenuItem) => {
 		const country = item.link?.id ? figures.countries.get(item.link.id) : undefined;
 
-		return country
-			? { ...toLink(item), label: `${item.label ?? ''} (${country.recipients})`, country: country.isoCode }
-			: toLink(item);
+		if (!country) {
+			return toLink(item);
+		}
+		const label = country.recipients ? `${item.label ?? ''} (${country.recipients})` : (item.label ?? '');
+
+		return { ...toLink(item), label, country: country.isoCode };
 	};
 
 	const toFooter = (footer: MenuFooter): SiteMenuFooter => {
@@ -160,17 +163,12 @@ export const getSiteMenuEntries = async (
 		if (item.component === 'menuItem') {
 			return [{ type: 'link', ...toLink(item) }];
 		}
+		const groups = item.menuItemGroups.map(toGroup).filter((group) => group.links.length > 0 || group.overview);
 		const footer = item.footer?.[0];
 
-		return [
-			{
-				type: 'dropdown',
-				id: item._uid,
-				label: item.label,
-				groups: item.menuItemGroups.map(toGroup),
-				footer: footer && toFooter(footer),
-			},
-		];
+		return groups.length > 0
+			? [{ type: 'dropdown', id: item._uid, label: item.label, groups, footer: footer && toFooter(footer) }]
+			: [];
 	};
 
 	return (layout?.mainMenu ?? []).flatMap(toEntry);
