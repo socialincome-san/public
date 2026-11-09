@@ -34,7 +34,7 @@ type Translate = ReturnType<typeof useTranslations<'donation-wizard'>>;
 export type PlanBenefitDescriptor =
 	| { id: string; type: 'beneficiaries'; directCount: number; indirectCount: number }
 	| { id: string; type: 'double-impact' }
-	| { id: string; type: 'community'; supporterCount: number }
+	| { id: string; type: 'community'; supporterCount: number | null }
 	| { id: string; type: 'upsell-subtitle' }
 	| { id: string; type: 'upsell-cancel' };
 
@@ -58,10 +58,11 @@ export const resolvePlanBenefit = (
 			return {
 				id: descriptor.id,
 				label: t('stepPlan.benefit-community', {
-					count: formatCommunityCount(descriptor.supporterCount, language),
+					count: descriptor.supporterCount === null ? '' : formatCommunityCount(descriptor.supporterCount, language),
 				}),
 				icon: 'heart',
 				emphasis: true,
+				placeholder: descriptor.supporterCount === null,
 			};
 		case 'upsell-subtitle':
 			return { id: descriptor.id, label: t('stepPlan.upsell-subtitle') };
@@ -89,14 +90,22 @@ export const createStep1Actions = (send: DonationWizardSend) => ({
 	setCadence: (value: Cadence) => send({ type: 'SET_CADENCE', value }),
 });
 
-export const selectMonthlyPlanView = (context: DonationWizardContext) => {
+// While the stats load, a placeholder row keeps the card from growing once they arrive.
+const getCommunityBenefit = (context: DonationWizardContext, communityStatsLoading: boolean): PlanBenefitDescriptor[] => {
+	if (communityStatsLoading) {
+		return [{ id: 'community', type: 'community', supporterCount: null }];
+	}
+	const supporterCount = context.communityStats?.supporterCount ?? 0;
+
+	return supporterCount > 0 ? [{ id: 'community', type: 'community', supporterCount }] : [];
+};
+
+export const selectMonthlyPlanView = (context: DonationWizardContext, communityStatsLoading: boolean) => {
 	const baseAmount = getMonthlyPlanBaseAmount(context);
 	const { tier1x, tier2x } = getTierAmounts(baseAmount);
 	const tier1Impact = getBeneficiaryImpact(tier1x);
 	const tier2Impact = getBeneficiaryImpact(tier2x);
-	const supporterCount = context.communityStats?.supporterCount ?? 0;
-	const communityBenefit: PlanBenefitDescriptor[] =
-		supporterCount > 0 ? [{ id: 'community', type: 'community', supporterCount }] : [];
+	const communityBenefit = getCommunityBenefit(context, communityStatsLoading);
 	const usesMonthlyIncomeAmount = context.selectedAmount === null;
 
 	return {
@@ -113,12 +122,10 @@ export const selectMonthlyPlanView = (context: DonationWizardContext) => {
 	};
 };
 
-export const selectOneTimePlanView = (context: DonationWizardContext) => {
+export const selectOneTimePlanView = (context: DonationWizardContext, communityStatsLoading: boolean) => {
 	const oneTimeAmount = resolveAmount(context) ?? 0;
 	const oneTimeImpact = getBeneficiaryImpact(oneTimeAmount);
-	const supporterCount = context.communityStats?.supporterCount ?? 0;
-	const communityBenefit: PlanBenefitDescriptor[] =
-		supporterCount > 0 ? [{ id: 'community', type: 'community', supporterCount }] : [];
+	const communityBenefit = getCommunityBenefit(context, communityStatsLoading);
 
 	return {
 		oneTimePlanChoice: context.oneTimePlanChoice,
