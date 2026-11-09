@@ -76,6 +76,27 @@ Auth accepts any username and checks the configured password.
   gallery's edit dialog are added at the top without a reload. The
   gallery shows only the user's part of each saved prompt
   (`extractUserInput`).
+- `GET /api/gallery` returns all active images, newest first, as
+  `{ images: [{ id, prompt, previewUrl, imageUrl, costUsd, createdAt }] }`.
+  Prompts contain only the user's input, as in the gallery. The endpoint
+  is protected by the same Basic Auth as the app and sends
+  `Cache-Control: private, no-store`; the website caches the list on its
+  server. Preview URLs point to the public Blob CDN and do not require
+  authentication.
+- The website and Image Generator use the same design-system
+  `ImageGallery`. Optional image metadata and action/overlay slots
+  determine what it shows. The generator supplies its existing edit,
+  download and delete controls; the public website shows creation time,
+  costs and prompts with original downloads only, but no edit or delete
+  controls. The website initially displays 24 images. Its optional
+  gallery pagination reveals another 24 per click from the server-cached
+  list without API requests.
+- Website downloads use the public Blob URL directly and do not trigger
+  background removal. Visitors never enter a password. Configure
+  `IMAGE_GENERATOR_URL` and `IMAGE_GENERATOR_PASSWORD` in the website's
+  server environment, never as `NEXT_PUBLIC_*` variables. Deploy the
+  generator's gallery API with `imageUrl` before the website so original
+  downloads are available.
 - Enter submits the prompt; Shift+Enter inserts a newline. Navigation
   preserves page state through Next.js Cache Components.
 - The format select defaults to square and offers 1:1, 4:5, 9:16, 16:9,
