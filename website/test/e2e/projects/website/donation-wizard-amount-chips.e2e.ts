@@ -12,7 +12,7 @@ const openHeroCustomAmount = async (page: Page) => {
 test('a custom amount chip fills the custom amount', async ({ page }) => {
 	const heroForm = await openHeroCustomAmount(page);
 
-	await heroForm.getByRole('button', { name: 'CHF 60' }).click();
+	await heroForm.getByRole('button', { name: 'CHF 60', exact: true }).click();
 
 	await expect(heroForm.getByTestId('donation-wizard-custom-amount')).toHaveValue('60');
 	await expect(heroForm.getByTestId('donation-wizard-amount-continue')).toHaveText('Donate CHF 60 monthly');
@@ -20,7 +20,7 @@ test('a custom amount chip fills the custom amount', async ({ page }) => {
 
 test('custom amount chips are reachable with the keyboard', async ({ page }) => {
 	const heroForm = await openHeroCustomAmount(page);
-	const chip = heroForm.getByRole('button', { name: 'CHF 40' });
+	const chip = heroForm.getByRole('button', { name: 'CHF 40', exact: true });
 
 	await page.keyboard.press('Tab');
 	await expect(chip).toBeFocused();
