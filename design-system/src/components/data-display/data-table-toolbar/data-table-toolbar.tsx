@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Button } from '../../actions/button/button';
 import { Input } from '../../forms/input/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../forms/select/select';
@@ -18,6 +18,7 @@ export type DataTableToolbarFilter = {
 	label: string;
 	placeholder: string;
 	value?: string;
+	type?: 'select' | 'text';
 	options: DataTableToolbarFilterOption[];
 	onChange: (value: string | undefined) => void;
 };
@@ -79,7 +80,10 @@ export const DataTableToolbar = ({
 		columns.forEach((column) => column.onToggle(true));
 	};
 	const clearSearch = () => onSearchChange('');
+	// Text filters reach `filter.value` debounced, so their inputs are remounted only to reset them on Clear
+	const [filterResetCount, setFilterResetCount] = useState(0);
 	const clearAllFilters = () => {
+		setFilterResetCount((count) => count + 1);
 		if (onClearFilters) {
 			onClearFilters();
 
@@ -268,6 +272,24 @@ export const DataTableToolbar = ({
 								</div>
 								<div className="space-y-2">
 									{filters.map((filter) => {
+										if (filter.type === 'text') {
+											return (
+												<div key={filter.id} className="space-y-1">
+													<label className="text-muted-foreground text-xs" htmlFor={`data-table-filter-${filter.id}`}>
+														{filter.label}
+													</label>
+													<Input
+														id={`data-table-filter-${filter.id}`}
+														key={`${filter.id}-${filterResetCount}`}
+														placeholder={filter.placeholder}
+														defaultValue={filter.value}
+														onChange={(event) => filter.onChange(event.target.value || undefined)}
+														data-testid={`data-table-filter-${filter.id}-input`}
+													/>
+												</div>
+											);
+										}
+
 										const hasOptions = filter.options.length > 0;
 
 										return (

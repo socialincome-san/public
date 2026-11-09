@@ -35,6 +35,10 @@ export const getAuditTableView = async (userId: string, query: AuditTableQuery):
 		const { events, totalCount } = await auditRepository.findAuditEventPage({
 			entityType: query.entityType,
 			search: query.search.trim(),
+			paymentPhone: query.paymentPhone,
+			contactPhone: query.contactPhone,
+			firstName: query.firstName,
+			lastName: query.lastName,
 			skip: (query.page - 1) * query.pageSize,
 			take: query.pageSize,
 		});

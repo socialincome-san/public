@@ -161,11 +161,12 @@ export default function DataTable<Row extends RowData>({
 					label: filter.label,
 					placeholder: filter.placeholder,
 					value: filter.value,
+					type: filter.type,
 					options: filter.options,
 					onChange: (value) => {
 						const patch: Partial<TableQueryState> = { page: 1 };
 						patch[filter.queryKey] = value as never;
-						onQueryChange(patch);
+						onQueryChange(patch, filter.type === 'text' ? { debounceMs: 300 } : undefined);
 					},
 				}))
 			: [];
