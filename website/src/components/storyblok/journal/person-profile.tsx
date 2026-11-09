@@ -8,6 +8,7 @@ import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import {
+	createWebsiteCirclePath,
 	formatStoryblokDateMedium,
 	formatStoryblokUrl,
 	getOptionCode,
@@ -16,6 +17,7 @@ import {
 	getPersonGitHubUrl,
 	getPersonLinkedInUrl,
 	getRoleLabel,
+	type PersonCircle,
 } from '@/lib/storyblok/storyblok-utils';
 import { HOURS_RANGE_REGEX } from '@/lib/utils/regex';
 import type { PersonContribution } from '@/modules/community/community.types';
@@ -25,13 +27,12 @@ import { ShowMoreToggle } from '@socialincome/design-system/actions/show-more-to
 import { DurationBadge } from '@socialincome/design-system/data-display/duration-badge/duration-badge';
 import { LinkList } from '@socialincome/design-system/data-display/link-list/link-list';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
-import { TagList } from '@socialincome/design-system/data-display/tag-list/tag-list';
 import { GithubIcon, LinkedinIcon } from '@socialincome/design-system/icons/social-icons/social-icons';
 import { AsideSection } from '@socialincome/design-system/layout/aside-section/aside-section';
 import { ProfileHeader } from '@socialincome/design-system/layout/profile-header/profile-header';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
-import { ExternalLinkIcon } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -53,6 +54,7 @@ type Props = {
 	roleLabels: Record<string, string>;
 	circleLabels: Record<string, string>;
 	timeCommitmentLabels: Record<string, string>;
+	workStyleLabels: Record<string, string>;
 	todayMs: number;
 };
 
@@ -78,12 +80,14 @@ export const PersonProfile = ({
 	roleLabels,
 	circleLabels,
 	timeCommitmentLabels,
+	workStyleLabels,
 	todayMs,
 }: Props) => {
 	const t = useTranslations('website-journal');
 	const tCommon = useTranslations('website-common');
 	const locale = useLocale();
-	const { avatar, bio, firstName, githubName, linkedinName, primaryRole, volunteerSince, volunteerStatus } = person.content;
+	const { avatar, bio, firstName, githubName, likesDeadline, linkedinName, primaryRole, volunteerSince, volunteerStatus } =
+		person.content;
 	const name = getPersonDisplayName(person);
 	const shortName = firstName?.trim() || name;
 	const duration = volunteerStatus === 'active' ? getDurationLabels(volunteerSince, locale, todayMs, tCommon) : null;
@@ -96,6 +100,18 @@ export const PersonProfile = ({
 	// The `time-commitment` datasource stores the English display text as the entry value
 	const timeCommitment = getOptionCode(person.content.timeCommitment);
 	const timeCommitmentLabel = timeCommitmentLabels[timeCommitment] ?? timeCommitment;
+	const workStyle = getOptionCode(person.content.workStyle);
+	const workStyleLabel = workStyleLabels[workStyle] ?? workStyle;
+	// An unchecked box can also mean nobody filled it in, so "no deadlines" only shows next to a work style
+	const deadlineInfo =
+		likesDeadline === undefined ? undefined : likesDeadline ? t('person.likes-deadlines') : t('person.prefers-no-deadlines');
+	const workStyleInfo =
+		workStyle || likesDeadline ? (
+			<>
+				{workStyle && <p>{t('person.work-style', { style: workStyleLabel })}</p>}
+				{deadlineInfo && <p>{deadlineInfo}</p>}
+			</>
+		) : undefined;
 	const facts = [
 		...(roleLabel ? [{ label: t('person.role'), value: roleLabel }] : []),
 		...(since ? [{ label: t('person.volunteering-since'), value: since }] : []),
@@ -106,21 +122,25 @@ export const PersonProfile = ({
 						value: HOURS_RANGE_REGEX.test(timeCommitment)
 							? `${timeCommitmentLabel} ${t('person.time-commitment-unit')}`
 							: timeCommitmentLabel,
+						info: workStyleInfo,
 					},
 				]
-			: []),
+			: workStyle
+				? [{ label: t('person.work-style-title'), value: workStyleLabel, info: deadlineInfo }]
+				: likesDeadline
+					? [{ label: t('person.deadline-preference'), value: t('person.likes-deadlines') }]
+					: []),
 	];
-	const circles = getPersonCircles(person.content, circleLabels)
-		.filter((circle) => circle.status === 'active')
-		.map((circle) => circle.label);
-
-	const roleCounts = contributions
-		.flatMap((contribution) => contribution.roles)
-		.reduce((counts, role) => counts.set(role, (counts.get(role) ?? 0) + 1), new Map<string, number>());
+	const circles = getPersonCircles(person.content, circleLabels);
+	const toCircleTag = (circle: PersonCircle) => ({
+		label: circle.label,
+		href: createWebsiteCirclePath(circle.code, lang, currency),
+		variant: circle.status === 'interested' ? ('light' as const) : ('solid' as const),
+	});
 
 	const externalLinkCue = (
 		<>
-			<ExternalLinkIcon aria-hidden />
+			<ArrowUpRight aria-hidden />
 			<span className="sr-only">{t('person.opens-in-new-tab')}</span>
 		</>
 	);
@@ -135,7 +155,17 @@ export const PersonProfile = ({
 				image={portraitSrc ? { src: portraitSrc, alt: avatar?.alt ?? name } : null}
 				imageBadge={duration && <DurationBadge label={duration.label} since={duration.since} />}
 				facts={facts}
-				tags={{ label: t('person.circles'), items: circles }}
+				tagGroups={[
+					{
+						label: t('person.circles-active'),
+						items: circles.filter((circle) => circle.status === 'active').map(toCircleTag),
+					},
+					{
+						label: t('person.circles-interested'),
+						items: circles.filter((circle) => circle.status === 'interested').map(toCircleTag),
+					},
+				]}
+				actionsLabel={t('person.links')}
 				actions={
 					linkedinName || githubName ? (
 						<>
@@ -168,7 +198,6 @@ export const PersonProfile = ({
 					<AsideSection
 						title={t('person.contributions-title')}
 						description={t('person.contributions-description', { name: shortName, count: contributions.length })}
-						aside={<TagList items={[...roleCounts].map(([label, count]) => ({ label, count }))} />}
 					>
 						<LinkList
 							items={contributions.map((contribution) => ({
@@ -176,8 +205,13 @@ export const PersonProfile = ({
 								href: contribution.href,
 								tags: contribution.roles,
 							}))}
-							showMoreLabel={t('person.contributions-show-all', { count: contributions.length })}
+							// The list fills in the count of the current filter
+							showMoreLabel={t('person.contributions-show-all', { count: '{count}' })}
 							showLessLabel={t('person.contributions-show-fewer')}
+							tagFilter={{
+								allLabel: t('person.contributions-all'),
+								ariaLabel: t('person.contributions-filter'),
+							}}
 						/>
 					</AsideSection>
 				</>

@@ -1,7 +1,7 @@
 import NextImage from 'next/image';
 import { type ReactNode } from 'react';
 import { Stat } from '../../data-display/stat/stat';
-import { TagList } from '../../data-display/tag-list/tag-list';
+import { TagList, type TagListItem } from '../../data-display/tag-list/tag-list';
 import { SectionHeading } from '../section-heading/section-heading';
 
 type ProfileHeaderImage = {
@@ -12,6 +12,8 @@ type ProfileHeaderImage = {
 type ProfileHeaderFact = {
 	label: string;
 	value: string;
+	// Shown in a tooltip next to the label
+	info?: ReactNode;
 };
 
 type ProfileHeaderProps = {
@@ -21,12 +23,23 @@ type ProfileHeaderProps = {
 	// Shown on the top left of the portrait, e.g. a duration badge
 	imageBadge?: ReactNode;
 	facts?: ProfileHeaderFact[];
-	tags?: { label: string; items: string[] };
+	// Each group gets its own label, e.g. circles someone is active in and circles they are interested in
+	tagGroups?: { label: string; items: TagListItem[] }[];
 	// Shown last, e.g. links to social profiles
 	actions?: ReactNode;
+	actionsLabel?: string;
 };
 
-export const ProfileHeader = ({ name, description, image, imageBadge, facts, tags, actions }: ProfileHeaderProps) => (
+export const ProfileHeader = ({
+	name,
+	description,
+	image,
+	imageBadge,
+	facts,
+	tagGroups,
+	actions,
+	actionsLabel,
+}: ProfileHeaderProps) => (
 	<header className="grid items-start gap-10 md:grid-cols-[minmax(0,1fr)_18rem] lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
 		<div className="flex flex-col gap-8 max-md:order-2">
 			<div className="flex flex-col gap-6">
@@ -41,19 +54,26 @@ export const ProfileHeader = ({ name, description, image, imageBadge, facts, tag
 			{facts && facts.length > 0 ? (
 				<div className="flex flex-wrap gap-x-12 gap-y-4">
 					{facts.map((fact) => (
-						<Stat key={fact.label} label={fact.label} value={fact.value} size="lg" />
+						<Stat key={fact.label} label={fact.label} value={fact.value} info={fact.info} size="lg" />
 					))}
 				</div>
 			) : null}
 
-			{tags && tags.items.length > 0 ? (
+			{tagGroups
+				?.filter((group) => group.items.length > 0)
+				.map((group) => (
+					<div key={group.label} className="flex flex-col gap-2">
+						<p className="text-muted-foreground text-xs">{group.label}</p>
+						<TagList items={group.items} ariaLabel={group.label} />
+					</div>
+				))}
+
+			{actions ? (
 				<div className="flex flex-col gap-2">
-					<p className="text-muted-foreground text-xs">{tags.label}</p>
-					<TagList items={tags.items.map((label) => ({ label }))} ariaLabel={tags.label} />
+					{actionsLabel ? <p className="text-muted-foreground text-xs">{actionsLabel}</p> : null}
+					<div className="flex flex-wrap gap-2">{actions}</div>
 				</div>
 			) : null}
-
-			{actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
 		</div>
 
 		{image ? (
