@@ -41,7 +41,7 @@ test('add new expense', async ({ page }) => {
 
 	await page.goto('/portal/admin/expenses');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-expense');
-	await selectOptionByTestId(page, 'type', ExpenseType.staff);
+	await selectOptionByTestId(page, 'type', 'Staff');
 	await page.getByTestId('form-item-year').locator('input').fill(`${year}`);
 	await page.getByTestId('form-item-amountChf').locator('input').fill(`${amountChf}`);
 	await selectOptionByTestId(page, 'organization', organization.name);
@@ -77,7 +77,7 @@ test('shows validation error when amount is negative', async ({ page }) => {
 
 	await page.goto('/portal/admin/expenses');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-expense');
-	await selectOptionByTestId(page, 'type', ExpenseType.staff);
+	await selectOptionByTestId(page, 'type', 'Staff');
 	await page.getByTestId('form-item-year').locator('input').fill('2099');
 	await page.getByTestId('form-item-amountChf').locator('input').fill('-1');
 	await selectOptionByTestId(page, 'organization', organization.name);
@@ -135,7 +135,7 @@ test('update expense', async ({ page }) => {
 	};
 
 	await openExpenseByYear(initialYear);
-	await selectOptionByTestId(page, 'type', ExpenseType.administrative);
+	await selectOptionByTestId(page, 'type', 'Administrative');
 	await page.getByTestId('form-item-year').locator('input').fill(`${updatedYear}`);
 	await page.getByTestId('form-item-amountChf').locator('input').fill(`${updatedAmount}`);
 	await selectOptionByTestId(page, 'organization', updatedOrganization.name);
