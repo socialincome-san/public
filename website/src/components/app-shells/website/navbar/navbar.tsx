@@ -1,8 +1,8 @@
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
 import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
-import { toSiteMenuEntries, type Scope } from '@/components/app-shells/website/navbar/utils';
+import { getSiteMenuEntries } from '@/components/app-shells/website/navbar/site-menu';
+import { type Scope } from '@/components/app-shells/website/navbar/utils';
 import { VisitorLocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/visitor-locale-currency-switcher';
-import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteBasePath, WebsiteLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
@@ -30,13 +30,13 @@ export const Navbar = async ({ sessions, lang, currency, scope }: Props) => {
 			language: lang,
 		}),
 	]);
-	const menuEntries = toSiteMenuEntries(result?.success ? result.data.content.menu : [], lang, currency);
+	const menuEntries = await getSiteMenuEntries(result?.success ? result.data.content : undefined, lang, currency);
 
 	return (
 		<SiteHeader
 			homeHref={getWebsiteBasePath(lang, currency)}
 			homeLinkLabel={t('logo.home-link-aria')}
-			desktopMenu={<SiteMenuDesktop entries={menuEntries} dropdownAside={<DonationForm />} />}
+			desktopMenu={<SiteMenuDesktop entries={menuEntries} />}
 			localeSwitcher={scope === 'website' && <VisitorLocaleCurrencySwitcher lang={lang} currency={currency} />}
 			account={<AccountSlot sessions={sessions} scope={scope} />}
 			donateAction={

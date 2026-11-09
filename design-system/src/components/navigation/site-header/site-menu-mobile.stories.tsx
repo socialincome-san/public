@@ -41,6 +41,11 @@ export const Default: Story = {
 						overview: { label: 'All about us', href: '/en/usd/about-us' },
 					},
 				],
+				footer: {
+					label: '102 recipients in:',
+					links: [{ id: 'sl', country: 'SL', label: 'Sierra Leone (70)', href: '/en/usd/countries/sierra-leone' }],
+					overview: { label: 'All countries', href: '/en/usd/countries' },
+				},
 			},
 			{ type: 'link', id: 'journal', label: 'Journal', href: '/en/usd/journal' },
 			{ type: 'link', id: 'faq', label: 'FAQ', href: '/en/usd/faq' },

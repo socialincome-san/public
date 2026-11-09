@@ -6,6 +6,7 @@ import NextLink from 'next/link';
 import { type ReactNode, useState } from 'react';
 import { cn } from '../../../cn';
 import { SocialIncomeLogo } from '../../brand/logo/logo';
+import { CountryFlag } from '../../data-display/country-flag/country-flag';
 import { type SiteMenuEntry } from './site-header';
 
 type DropdownEntry = Extract<SiteMenuEntry, { type: 'dropdown' }>;
@@ -146,6 +147,38 @@ export const SiteMenuMobile = ({ entries, homeHref, labels, footerControls, rend
 												)}
 											</div>
 										))}
+
+										{activeDropdown.footer && (
+											<div className="mb-6">
+												{activeDropdown.footer.label && <h3 className="mb-2 font-bold">{activeDropdown.footer.label}</h3>}
+												<ul className="flex flex-col gap-2">
+													{activeDropdown.footer.links?.map((link) => (
+														<li key={link.id}>
+															<NextLink
+																href={link.href}
+																target={link.newTab ? '_blank' : undefined}
+																rel={link.newTab ? 'noopener noreferrer' : undefined}
+																className="text-muted-foreground flex items-center gap-2 text-sm font-medium"
+																onClick={closeMenu}
+															>
+																{link.country && <CountryFlag country={link.country} size="sm" decorative />}
+																{link.label}
+															</NextLink>
+														</li>
+													))}
+												</ul>
+												{activeDropdown.footer.overview && (
+													<NextLink
+														href={activeDropdown.footer.overview.href}
+														className="text-muted-foreground hover:text-foreground group mt-4 inline-flex items-center gap-1.5 text-sm font-bold transition-colors"
+														onClick={closeMenu}
+													>
+														<span>{activeDropdown.footer.overview.label}</span>
+														<ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
+													</NextLink>
+												)}
+											</div>
+										)}
 									</>
 								)}
 							</div>
