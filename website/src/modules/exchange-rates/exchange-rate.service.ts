@@ -100,6 +100,8 @@ export const triggerExchangeRateImportAsAdmin = async (userId: string): Promise<
 };
 
 export const importExchangeRates = async (): Promise<Result<void>> => {
+	// Leave time for the cron route to report failures before its 60-second limit.
+	const deadline = Date.now() + 45_000;
 	try {
 		const oneMonthAgo = now();
 		oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
@@ -113,6 +115,11 @@ export const importExchangeRates = async (): Promise<Result<void>> => {
 		});
 
 		for (let timestamp = oneMonthAgo.getTime(); timestamp <= nowMs(); timestamp += DAY_IN_MILLISECONDS) {
+			if (Date.now() >= deadline) {
+				console.error('Exchange rate import time budget exceeded');
+
+				return resultFail('Exchange rate import time budget exceeded');
+			}
 			const currentDate = new Date(timestamp);
 			const hasRatesForTimestamp = existingExchangeRates.some(
 				(rate) =>
@@ -127,7 +134,7 @@ export const importExchangeRates = async (): Promise<Result<void>> => {
 			});
 
 			if (!hasRatesForTimestamp) {
-				const storedRatesResult = await fetchAndStoreFiatExchangeRates(DateTime.fromMillis(timestamp));
+				const storedRatesResult = await fetchAndStoreFiatExchangeRates(DateTime.fromMillis(timestamp), deadline);
 				if (!storedRatesResult.success) {
 					console.error('Could not store imported exchange rates', { error: storedRatesResult.error });
 
@@ -136,9 +143,15 @@ export const importExchangeRates = async (): Promise<Result<void>> => {
 			}
 		}
 
-		const ethImportResult = await importTodayEthExchangeRate();
+		if (Date.now() >= deadline) {
+			return resultFail('Exchange rate import time budget exceeded');
+		}
+		const ethImportResult = await importTodayEthExchangeRate(deadline);
 		if (!ethImportResult.success) {
 			console.error('Could not import ETH exchange rate', { error: ethImportResult.error });
+		}
+		if (Date.now() >= deadline) {
+			return resultFail('Exchange rate import time budget exceeded');
 		}
 
 		return resultOk(undefined);
@@ -149,10 +162,13 @@ export const importExchangeRates = async (): Promise<Result<void>> => {
 	}
 };
 
-const fetchAndStoreFiatExchangeRates = async (date: DateTime): Promise<Result<FiatExchangeRateResponse>> => {
+const fetchAndStoreFiatExchangeRates = async (
+	date: DateTime,
+	deadline: number,
+): Promise<Result<FiatExchangeRateResponse>> => {
 	const day = date.toFormat('yyyy-MM-dd');
 	console.info('Fetching exchange rates for day', { day });
-	const ratesResult = await fetchFiatExchangeRates(day);
+	const ratesResult = await fetchFiatExchangeRates(day, deadline);
 	if (!ratesResult.success) {
 		return ratesResult;
 	}
@@ -190,7 +206,7 @@ const storeFiatExchangeRates = async (response: FiatExchangeRateResponse): Promi
 	}
 };
 
-const importTodayEthExchangeRate = async (): Promise<Result<void>> => {
+const importTodayEthExchangeRate = async (deadline: number): Promise<Result<void>> => {
 	try {
 		const today = DateTime.utc().startOf('day');
 		const tomorrow = today.plus({ days: 1 });
@@ -204,7 +220,7 @@ const importTodayEthExchangeRate = async (): Promise<Result<void>> => {
 
 		let usdRate = existingRates.find(({ currency }) => currency === Currency.USD)?.rate.toNumber();
 		if (usdRate === undefined) {
-			const ratesResult = await fetchAndStoreFiatExchangeRates(today);
+			const ratesResult = await fetchAndStoreFiatExchangeRates(today, deadline);
 			if (!ratesResult.success) {
 				console.error('Could not load USD exchange rate for ETH import', { error: ratesResult.error });
 
@@ -216,7 +232,7 @@ const importTodayEthExchangeRate = async (): Promise<Result<void>> => {
 			return resultFail('Could not import ETH exchange rate: USD exchange rate for today is missing');
 		}
 
-		const ethUsdPriceResult = await fetchEthUsdPrice();
+		const ethUsdPriceResult = await fetchEthUsdPrice(deadline);
 		if (!ethUsdPriceResult.success) {
 			console.error('Could not load ETH price for exchange rate import', { error: ethUsdPriceResult.error });
 

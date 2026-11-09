@@ -4,7 +4,11 @@ import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
 import type { CompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
 import { type DonationAmountContext, getInitialDonationContext } from '../utils/donation-amount';
 
-export type DonationWizardEntry = 'stepAmount' | 'stepPlanMonthly' | 'stepPlanOneTime';
+export type DonationWizardEntry =
+	'stepAmount' | 'stepPlanMonthly' | 'stepPlanOneTime' | 'stepPayment' | 'stepStripeCheckout' | 'stepQrContact';
+
+// Steps after the amount is chosen and before anything is paid or a QR bill exists, which the donation bar can reopen.
+export type ResumableWizardStep = Exclude<DonationWizardEntry, 'stepAmount'>;
 
 type StripeCheckoutStatus = 'idle' | 'loading' | 'ready' | 'error';
 

@@ -5,11 +5,13 @@ import { Button } from '../button/button';
 
 type Props = {
 	children: ReactNode;
+	// `label` fits an icon with text, at the same height as the round icon button
+	size?: 'icon' | 'label';
 } & Pick<ComponentProps<typeof Button>, 'aria-label' | 'title' | 'onClick' | 'type'>;
 
-export const VideoControlButton = ({ children, type = 'button', ...props }: Props) => {
+export const VideoControlButton = ({ children, size = 'icon', type = 'button', ...props }: Props) => {
 	return (
-		<Button type={type} variant="overlay" size="icon-lg" {...props}>
+		<Button type={type} variant="overlay" size={size === 'label' ? 'md' : 'icon-lg'} {...props}>
 			{children}
 		</Button>
 	);

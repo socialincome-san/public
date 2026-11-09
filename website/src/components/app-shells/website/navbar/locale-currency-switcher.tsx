@@ -3,6 +3,7 @@
 import { type CountryCode } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/use-is-page';
 import {
+	getCurrencyForCountry,
 	isWebsiteCurrency,
 	isWebsiteLanguage,
 	mainWebsiteLanguages,
@@ -36,6 +37,8 @@ type Props = {
 	variant?: 'ghost' | 'outline';
 	icon?: ReactNode;
 	chosenCountry: CountryCode | null;
+	// The chosen or detected country, whose own currency the button leaves out
+	visitorCountry: CountryCode | null;
 };
 
 const Switcher = ({
@@ -44,6 +47,7 @@ const Switcher = ({
 	variant = 'ghost',
 	icon,
 	chosenCountry,
+	visitorCountry,
 	isSurveyPage,
 }: Props & { isSurveyPage: boolean }) => {
 	const [open, setOpen] = useState(false);
@@ -53,6 +57,11 @@ const Switcher = ({
 
 	const languageOptions = isSurveyPage ? surveyLanguages : mainWebsiteLanguages;
 	const currentSwitcherLanguage = languageOptions.includes(lang) ? lang : (languageOptions[0] ?? 'en');
+	// "EN" in Switzerland on CHF, but "EN · EUR" there on EUR: only a currency that differs from the country's is shown.
+	const isCountryCurrency = visitorCountry !== null && getCurrencyForCountry(visitorCountry) === currency;
+	const triggerLabel = isCountryCurrency
+		? currentSwitcherLanguage.toUpperCase()
+		: `${currentSwitcherLanguage.toUpperCase()} · ${currency}`;
 
 	const navigateToLocale = (nextLanguage: WebsiteLanguage, nextCurrency: WebsiteCurrency) => {
 		setOpen(false);
@@ -85,6 +94,7 @@ const Switcher = ({
 			ariaLabel={t('locale-currency-switcher.aria-label')}
 			variant={variant}
 			icon={icon}
+			triggerLabel={triggerLabel}
 			open={open}
 			onOpenChange={setOpen}
 			language={{

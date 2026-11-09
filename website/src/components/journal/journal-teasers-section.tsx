@@ -41,8 +41,9 @@ export const JournalTeasersSection = ({ articles, lang, currency, heading, journ
 					variant="featured"
 					videoLabel={videoLabel}
 				/>
+				{/* Always two rows, so a single secondary article keeps the size it has next to another one. */}
 				{hasSecondaryArticles && (
-					<div className={cn('grid h-full grid-cols-1 gap-4 lg:gap-8', secondaryArticles.length > 1 && 'lg:grid-rows-2')}>
+					<div className="grid h-full grid-cols-1 gap-4 lg:grid-rows-2 lg:gap-8">
 						{secondaryArticles.map((article) => (
 							<JournalArticleCard
 								key={article.uuid}

@@ -1,11 +1,22 @@
 'use server';
 
-import { VISITOR_COUNTRY_COOKIE } from '@/lib/geo/visitor-geo';
+import { type CountryCode } from '@/generated/prisma/enums';
+import { getVisitorCountry, VISITOR_COUNTRY_COOKIE } from '@/lib/geo/visitor-geo';
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { chosenCountrySchema } from './visitor-country.schemas';
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
+
+export const getVisitorCountryAction = async (): Promise<Result<CountryCode | null>> => {
+	try {
+		return resultOk(getVisitorCountry({ headers: await headers(), cookies: await cookies() }));
+	} catch (error) {
+		console.error('Could not read the visitor country', { error });
+
+		return resultFail('Could not read the visitor country');
+	}
+};
 
 // Setting a cookie in a server action re-renders the current page, so the new country shows right away.
 export const setChosenCountryAction = async (input: unknown): Promise<Result<boolean>> => {

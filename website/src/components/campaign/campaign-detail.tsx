@@ -131,6 +131,7 @@ export const CampaignDetail = async ({
 			<NewsletterSignup
 				lang={lang}
 				currency={currency}
+				campaignId={campaign.id}
 				title={newsletter.title}
 				senderName={newsletter.senderName}
 				imageSrc={newsletter.imageSrc}

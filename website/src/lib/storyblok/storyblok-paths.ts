@@ -60,6 +60,14 @@ export const getCampaignsOverviewStoryPath = () => `${STORYBLOK_CAMPAIGNS_FOLDER
 
 export const getCampaignStoryPath = (campaignSlug: string) => `${STORYBLOK_CAMPAIGNS_FOLDER}/${campaignSlug}`;
 
+const STORYBLOK_CIRCLES_FOLDER = `${STORYBLOK_PAGES_FOLDER}/circle`;
+
+export const WEBSITE_CIRCLE_PATH_SEGMENT = 'circle';
+
+export const getCirclesOverviewStoryPath = () => `${STORYBLOK_CIRCLES_FOLDER}/${WEBSITE_CIRCLE_PATH_SEGMENT}`;
+
+export const getCircleStoryPath = (circleSlug: string) => `${STORYBLOK_CIRCLES_FOLDER}/${circleSlug}`;
+
 export const STORYBLOK_FAQ_FOLDER = `${STORYBLOK_GLOBALS_FOLDER}/faqs`;
 
 const STORYBLOK_PERSONS_FOLDER = `${STORYBLOK_PAGES_FOLDER}/persons`;
@@ -233,6 +241,10 @@ export const getWebsitePathTailFromStoryblokSlug = (storyblokSlug: string): stri
 
 	if (slug === getCampaignsOverviewStoryPath()) {
 		return 'campaigns';
+	}
+
+	if (slug === getCirclesOverviewStoryPath()) {
+		return WEBSITE_CIRCLE_PATH_SEGMENT;
 	}
 
 	if (slug.startsWith(`${STORYBLOK_PERSONS_FOLDER}/`)) {
