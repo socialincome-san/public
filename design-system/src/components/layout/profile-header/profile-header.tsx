@@ -64,7 +64,7 @@ export const ProfileHeader = ({
 				.map((group) => (
 					<div key={group.label} className="flex flex-col gap-2">
 						<p className="text-muted-foreground text-xs">{group.label}</p>
-						<TagList items={group.items} ariaLabel={group.label} />
+						<TagList items={group.items} ariaLabel={group.label} size="xl" />
 					</div>
 				))}
 

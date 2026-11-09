@@ -108,6 +108,7 @@ class MyApp extends StatelessWidget {
             cacheDatabase: cacheDatabase,
           ),
         ),
+        RepositoryProvider(create: (context) => LocalUserSettingsRepository()),
         RepositoryProvider<AuthService>.value(value: authService),
         RepositoryProvider<FirebaseRemoteConfigService>.value(
           value: firebaseRemoteConfigService,
