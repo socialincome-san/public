@@ -1,20 +1,6 @@
 import type { LocalPartner } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
+import { storyblokRichtextToPlainText } from '@/lib/storyblok/storyblok-richtext';
 import type { LocalPartnerStory } from './local-partner.types';
-
-type StoryblokRichtextNode = StoryblokRichtext | StoryblokRichtext['content'][number];
-
-const storyblokRichtextToPlainText = (node: StoryblokRichtextNode): string => {
-	if (node.type === 'text') {
-		return node.text;
-	}
-
-	if ('content' in node && node.content) {
-		return node.content.map(storyblokRichtextToPlainText).join(' ');
-	}
-
-	return '';
-};
 
 export const getLocalPartnerIsoCode = (localPartner: LocalPartner) => {
 	const isoCode = localPartner.countryIsoCode?.toString().trim();
@@ -33,7 +19,7 @@ const getLocalPartnerId = (localPartner: LocalPartner) => {
 };
 
 export const getLocalPartnerDescription = (localPartner: LocalPartner) =>
-	storyblokRichtextToPlainText(localPartner.description).replaceAll(/\s+/g, ' ').trim();
+	storyblokRichtextToPlainText(localPartner.description);
 
 export const getLocalPartnerPortalSlug = (localPartner: LocalPartner) => localPartner.portalSlug?.trim() ?? '';
 
