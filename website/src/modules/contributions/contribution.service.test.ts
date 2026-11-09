@@ -111,6 +111,7 @@ let getPaginatedTableView: (
 	query: ContributionTableQuery,
 ) => Promise<Result<ContributionPaginatedTableView>>;
 let hasSucceededContributionsBefore: (contributorId: string, before: Date) => Promise<Result<boolean>>;
+let getSucceededContributionYears: (contributorId: string) => Promise<Result<number[]>>;
 
 beforeAll(async () => {
 	({
@@ -118,6 +119,7 @@ beforeAll(async () => {
 		getSucceededContributionSourceTotals,
 		getPaginatedTableView,
 		hasSucceededContributionsBefore,
+		getSucceededContributionYears,
 	} = await import('./contribution.service'));
 });
 
@@ -156,6 +158,33 @@ describe('hasSucceededContributionsBefore', () => {
 		mockCount.mockResolvedValueOnce(0);
 
 		expect(expectSuccess(await hasSucceededContributionsBefore('contributor-1', before))).toBe(false);
+	});
+});
+
+describe('getSucceededContributionYears', () => {
+	beforeEach(() => {
+		mockFindMany.mockReset();
+	});
+
+	it('lists every year with a succeeded contribution once, newest first', async () => {
+		mockFindMany.mockResolvedValueOnce([
+			makeRow({ createdAt: new Date(2026, 7, 10) }),
+			makeRow({ createdAt: new Date(2026, 1, 3) }),
+			makeRow({ createdAt: new Date(2023, 5, 1) }),
+		]);
+
+		expect(expectSuccess(await getSucceededContributionYears('contributor-1'))).toEqual([2026, 2023]);
+		expect(mockFindMany).toHaveBeenLastCalledWith({
+			where: { contributorId: 'contributor-1', status: 'succeeded' },
+			select: { createdAt: true },
+			orderBy: { createdAt: 'desc' },
+		});
+	});
+
+	it('is empty without succeeded contributions', async () => {
+		mockFindMany.mockResolvedValueOnce([]);
+
+		expect(expectSuccess(await getSucceededContributionYears('contributor-1'))).toEqual([]);
 	});
 });
 

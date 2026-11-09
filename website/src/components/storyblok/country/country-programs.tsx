@@ -1,8 +1,6 @@
-import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
-import { getVisiblePrograms } from '@/components/content-blocks/program-grid-view';
+import { getProgramGridPrograms } from '@/components/content-blocks/program-grid-view';
 import { StoryblokProgramGrid } from '@/components/storyblok/shared/storyblok-program-grid';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { CountryStory } from './country.types';
 
 type Props = {
@@ -17,18 +15,14 @@ export const CountryPrograms = async ({ country, lang, currency }: Props) => {
 		return null;
 	}
 
-	const programsResult = await getProgramsAction(lang);
-	const allPrograms = programsResult.success ? programsResult.data : [];
-	const programs = await getVisiblePrograms(
-		blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms),
-		blok,
-	);
+	const { programs, statsByPortalSlug, allProgramsCount } = await getProgramGridPrograms(blok, lang);
 
 	return (
 		<StoryblokProgramGrid
 			blok={blok}
 			programs={programs}
-			allProgramsCount={allPrograms.length}
+			statsByPortalSlug={statsByPortalSlug}
+			allProgramsCount={allProgramsCount}
 			lang={lang}
 			currency={currency}
 		/>
