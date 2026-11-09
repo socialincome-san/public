@@ -155,7 +155,7 @@ export default function LocalPartnersForm({
 		startTransition(async () => {
 			await loadData(localPartnerId);
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line @eslint-react/exhaustive-deps
 	}, [localPartnerId]);
 
 	return (

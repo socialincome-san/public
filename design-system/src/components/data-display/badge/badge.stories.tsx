@@ -41,7 +41,7 @@ const meta = {
 		},
 		size: {
 			control: 'select',
-			options: ['sm', 'default', 'lg'],
+			options: ['sm', 'default', 'lg', 'xl'],
 		},
 		children: {
 			control: 'text',
@@ -87,6 +87,7 @@ export const Sizes: Story = {
 			<Badge size="sm">Small</Badge>
 			<Badge>Default</Badge>
 			<Badge size="lg">Large</Badge>
+			<Badge size="xl">Extra large</Badge>
 		</div>
 	),
 };
