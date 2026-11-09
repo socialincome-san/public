@@ -20,7 +20,7 @@ export const SuccessBanner = ({ title, description, action }: Props) => {
 				</div>
 			</div>
 
-			{action && <div>{action}</div>}
+			{action ? <div>{action}</div> : null}
 		</div>
 	);
 };
