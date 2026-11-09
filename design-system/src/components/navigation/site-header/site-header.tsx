@@ -7,8 +7,6 @@ export type SiteMenuLink = {
 	label: string;
 	href: string;
 	newTab?: boolean;
-	// The desktop menu runs this instead of following `href`, e.g. to open a dialog
-	onSelect?: () => void;
 };
 
 type SiteMenuOverview = { label: string; href: string };
@@ -24,7 +22,8 @@ export type SiteMenuGroup = {
 
 export type SiteMenuFooter = {
 	label?: string;
-	countries?: (SiteMenuLink & { country: string })[];
+	// A country code shows the country's flag before the label
+	links?: (SiteMenuLink & { country?: string })[];
 	overview?: SiteMenuOverview;
 };
 

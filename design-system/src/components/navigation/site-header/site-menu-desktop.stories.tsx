@@ -63,7 +63,7 @@ export const Default: Story = {
 				],
 				footer: {
 					label: '102 recipients in:',
-					countries: [
+					links: [
 						{ id: 'sl', country: 'SL', label: 'Sierra Leone (70)', href: '/en/usd/countries/sierra-leone' },
 						{ id: 'lr', country: 'LR', label: 'Liberia (32)', href: '/en/usd/countries/liberia' },
 					],
@@ -81,7 +81,7 @@ export const Default: Story = {
 						badge: '7,148 donors',
 						illustrationSrc,
 						links: [
-							{ id: 'donate', label: 'Donate', href: '/en/usd', onSelect: () => undefined },
+							{ id: 'campaigns', label: 'Current campaigns', href: '/en/usd/campaigns' },
 							{ id: 'volunteer', label: 'Volunteer', href: '/en/usd/open-source' },
 						],
 					},

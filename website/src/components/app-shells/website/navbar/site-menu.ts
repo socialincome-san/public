@@ -1,7 +1,12 @@
-import { DONATE_LINK_ID, toSiteMenuEntries } from '@/components/app-shells/website/navbar/utils';
-import { getCountryIsoCode, getCountrySlug, getCountryTitle } from '@/components/storyblok/country/country.utils';
-import type { Layout, MenuItem } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getSafeNumberFormatLocale, getWebsiteBasePath, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getCountryIsoCode } from '@/components/storyblok/country/country.utils';
+import type {
+	DropdownItem,
+	Layout,
+	MenuFooter,
+	MenuItem,
+	MenuItemGroup,
+} from '@/generated/storyblok/types/109655/storyblok-components';
+import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { type Result } from '@/lib/result';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
@@ -18,39 +23,23 @@ import {
 import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
 import {
 	type SiteMenuEntry,
+	type SiteMenuFooter,
 	type SiteMenuGroup,
 	type SiteMenuLink,
 } from '@socialincome/design-system/navigation/site-header/site-header';
-import { getTranslations } from 'next-intl/server';
 
-// Keeps all dropdowns the same height
-const MAX_LINKS_PER_GROUP = 4;
+type Stat = NonNullable<MenuItemGroup['stat']>;
 
-const ORGANISATION_PATHS = ['about-us', 'people', 'our-work', 'why-cash-transfers'];
-const TRANSPARENCY_PATHS = ['impact-measurement', 'transparency', 'open-source', 'downloads', 'faq'];
-
-type CountKey =
-	| 'programs-count'
-	| 'focuses-count'
-	| 'partners-count'
-	| 'donors-count'
-	| 'ngos-count'
-	| 'volunteers-count'
-	| 'recipients-count';
+type Figures = {
+	stats: Partial<Record<Stat, string>>;
+	// Keyed by the uuid of the country story, which menu links point to
+	countries: Map<string, { isoCode: string; recipients: string }>;
+};
 
 const countOf = (result: Result<unknown[]>) => (result.success ? result.data.length : 0);
 
-/**
- * Who we support · Get involved · About · Journal. Built in code until the structure moves into the Storyblok layout;
- * the Storyblok menu still provides the program, focus, partner and about links.
- */
-export const getSiteMenuEntries = async (
-	layout: Layout | undefined,
-	lang: WebsiteLanguage,
-	currency: WebsiteCurrency,
-): Promise<SiteMenuEntry[]> => {
-	const [t, programs, focuses, localPartners, persons, countries, communityStats, transparency] = await Promise.all([
-		getTranslations('website-common'),
+const getFigures = async (lang: WebsiteLanguage, currency: WebsiteCurrency): Promise<Figures> => {
+	const [programs, focuses, localPartners, persons, countries, communityStats, transparency] = await Promise.all([
 		getProgramsAction(lang),
 		getFocusesAction(lang),
 		getLocalPartnersAction(lang),
@@ -59,26 +48,63 @@ export const getSiteMenuEntries = async (
 		getContributorCommunityStatsAction(),
 		getTransparencySummaryAction(),
 	]);
-	const countryStories = countries.success ? countries.data : [];
+	const countryStories = (countries.success ? countries.data : []).map((story) => ({
+		uuid: story.uuid,
+		isoCode: getCountryIsoCode(story.content).toUpperCase(),
+	}));
 	const [countryStats, paidOut] = await Promise.all([
-		getPublicCountryStatsByIsoCodesAction(countryStories.map((country) => getCountryIsoCode(country.content))),
+		getPublicCountryStatsByIsoCodesAction(countryStories.map((country) => country.isoCode)),
 		transparency.success
 			? resolveChfAmountsAction({ amounts: [transparency.data.financialSummary.outflowsChf], displayCurrency: currency })
 			: undefined,
 	]);
+	const recipientsOf = (isoCode: string) => (countryStats.success ? countryStats.data[isoCode]?.recipientsCount : 0) ?? 0;
 
 	const locale = getSafeNumberFormatLocale(lang);
-	const count = (value: number) => formatNumberLocale(value, locale);
-	const badge = (key: CountKey, value: number) => (value > 0 ? t(`site-menu.${key}`, { count: count(value) }) : undefined);
-	const basePath = getWebsiteBasePath(lang, currency);
-	const link = (id: string, label: string, path: string): SiteMenuLink => ({ id, label, href: `${basePath}/${path}` });
-
-	const recipientsByCountry = countryStats.success ? countryStats.data : {};
-	const recipientsCount = Object.values(recipientsByCountry).reduce((total, stats) => total + stats.recipientsCount, 0);
+	const format = (value: number) => formatNumberLocale(value, locale);
+	const count = (value: number) => (value > 0 ? format(value) : undefined);
 	const paidOutAmount = paidOut?.success ? paidOut.data[0] : undefined;
 
-	const menu = layout?.menu ?? [];
-	const storyblokGroups = menu.flatMap((item) => (item.component === 'dropdownItem' ? item.menuItemGroups : []));
+	return {
+		stats: {
+			programs: count(countOf(programs)),
+			focuses: count(countOf(focuses)),
+			localPartners: count(countOf(localPartners)),
+			volunteers: count(countOf(persons)),
+			donors: count(communityStats.success ? communityStats.data.supporterCount : 0),
+			recipients: count(countryStories.reduce((total, country) => total + recipientsOf(country.isoCode), 0)),
+			paidOut:
+				paidOutAmount &&
+				formatCurrencyLocale(paidOutAmount.amount, paidOutAmount.currency, locale, {
+					compactThreshold: 1_000_000,
+					compactLocale: locale,
+				}),
+		},
+		countries: new Map(
+			countryStories.map((country) => [
+				country.uuid,
+				{ isoCode: country.isoCode, recipients: format(recipientsOf(country.isoCode)) },
+			]),
+		),
+	};
+};
+
+// Texts may contain {value}; without a figure for it, the text is left out
+const fillValue = (text: string | undefined, value: string | undefined) => {
+	if (!text) {
+		return undefined;
+	}
+
+	return text.includes('{value}') ? value && text.replaceAll('{value}', value) : text;
+};
+
+/** The header menu, edited in Storyblok as the layout's `mainMenu`. */
+export const getSiteMenuEntries = async (
+	layout: Layout | undefined,
+	lang: WebsiteLanguage,
+	currency: WebsiteCurrency,
+): Promise<SiteMenuEntry[]> => {
+	const figures = await getFigures(lang, currency);
 
 	const toLink = (item: MenuItem): SiteMenuLink => ({
 		id: item._uid,
@@ -86,151 +112,66 @@ export const getSiteMenuEntries = async (
 		href: resolveStoryblokLink(item.link, lang, currency),
 		newTab: item.newTab,
 	});
-	// The footer menu also holds pages the header menu lacks, e.g. policies
-	const allStoryblokLinks = [...storyblokGroups, ...(layout?.footerMenu ?? [])].flatMap((group) =>
-		(group.items ?? []).map(toLink),
-	);
-	const storyblokLinks = (paths: string[]) =>
-		paths.flatMap((path) => allStoryblokLinks.find((candidate) => candidate.href === `${basePath}/${path}`) ?? []);
-	// Storyblok groups are identified by the page their overview link points to
-	const listGroup = (overviewPath: string, total: number, badgeKey: CountKey, label?: string): SiteMenuGroup[] => {
-		const group = storyblokGroups.find(
-			(candidate) => resolveStoryblokLink(candidate.overviewLink, lang, currency) === `${basePath}/${overviewPath}`,
-		);
 
-		return group?.items?.length
-			? [
-					{
-						id: group._uid,
-						label: label ?? group.label,
-						badge: badge(badgeKey, total),
-						links: group.items.slice(0, MAX_LINKS_PER_GROUP).map(toLink),
-						overview: {
-							label: total > 0 ? t('site-menu.show-all', { count: count(total) }) : (group.overviewLabel ?? ''),
-							href: `${basePath}/${overviewPath}`,
-						},
-					},
-				]
-			: [];
+	const toOverview = (label: string | undefined, link: MenuItem['link'], value: string | undefined) => {
+		const filledLabel = fillValue(label, value);
+
+		return filledLabel && link?.cached_url
+			? { label: filledLabel, href: resolveStoryblokLink(link, lang, currency) }
+			: undefined;
 	};
 
-	const whoWeSupport: SiteMenuEntry = {
-		type: 'dropdown',
-		id: 'who-we-support',
-		label: t('site-menu.who-we-support'),
-		groups: [
-			...listGroup('programs', countOf(programs), 'programs-count', t('site-menu.programs')),
-			...listGroup('focuses', countOf(focuses), 'focuses-count'),
-			...listGroup('local-partners', countOf(localPartners), 'partners-count'),
-		],
-		footer: {
-			label: recipientsCount > 0 ? t('site-menu.recipients-in', { count: count(recipientsCount) }) : undefined,
-			countries: countryStories
-				.map((country) => {
-					const isoCode = getCountryIsoCode(country.content).toUpperCase();
+	const toGroup = (group: MenuItemGroup): SiteMenuGroup => {
+		const value = group.stat ? figures.stats[group.stat] : undefined;
 
-					return { country, isoCode, recipients: recipientsByCountry[isoCode]?.recipientsCount ?? 0 };
-				})
-				.sort((a, b) => b.recipients - a.recipients)
-				.map(({ country, isoCode, recipients }) => ({
-					id: country.uuid,
-					country: isoCode,
-					label: `${getCountryTitle(country.content)} (${count(recipients)})`,
-					href: `${basePath}/countries/${getCountrySlug(country)}`,
-				})),
-			overview: { label: t('site-menu.all-countries'), href: `${basePath}/countries` },
-		},
+		return {
+			id: group._uid,
+			label: group.label,
+			badge: fillValue(group.badge, value),
+			illustrationSrc: group.illustration?.filename ?? undefined,
+			links: (group.items ?? []).map(toLink),
+			overview: toOverview(group.overviewLabel, group.overviewLink, value),
+		};
 	};
 
-	const getInvolved: SiteMenuEntry = {
-		type: 'dropdown',
-		id: 'get-involved',
-		label: t('site-menu.get-involved'),
-		groups: [
-			{
-				id: 'individual',
-				label: t('site-menu.individual'),
-				badge: badge('donors-count', communityStats.success ? communityStats.data.supporterCount : 0),
-				illustrationSrc: '/assets/get-involved/role-individual-bike.png',
-				links: [
-					// Without the donation dialog (mobile), the home page with its donation form is the fallback
-					link(DONATE_LINK_ID, t('site-menu.items.donate'), ''),
-					link('fundraise', t('site-menu.items.fundraise'), 'fundraise'),
-					link('start-program', t('site-menu.items.start-program'), 'start-program?for=individual'),
-					link('volunteer', t('site-menu.items.volunteer'), 'open-source'),
-					link('campaigns', t('site-menu.items.campaigns'), 'campaigns'),
-				],
-			},
-			{
-				id: 'company',
-				label: t('site-menu.company'),
-				illustrationSrc: '/assets/get-involved/role-company-yellow-screen.png',
-				links: [
-					link(DONATE_LINK_ID, t('site-menu.items.company-donate'), ''),
-					link('fundraise', t('site-menu.items.company-fundraise'), 'fundraise'),
-					link('start-program', t('site-menu.items.start-program'), 'start-program?for=company'),
-					link('presentation', t('site-menu.items.presentation'), 'contact'),
-				],
-			},
-			{
-				id: 'ngo',
-				label: t('site-menu.ngo'),
-				// The NGOs we work with are our local partners
-				badge: badge('ngos-count', countOf(localPartners)),
-				illustrationSrc: '/assets/get-involved/role-ngo-tailoring.png',
-				links: [
-					link('start-program', t('site-menu.items.start-program'), 'start-program?for=ngo'),
-					link('local-partner', t('site-menu.items.local-partner'), 'local-partners'),
-				],
-			},
-		],
-		footer: { overview: { label: t('site-menu.all-ways'), href: `${basePath}/get-involved` } },
+	// Links to a country page show its flag and number of recipients
+	const toFooterLink = (item: MenuItem) => {
+		const country = item.link?.id ? figures.countries.get(item.link.id) : undefined;
+
+		return country
+			? { ...toLink(item), label: `${item.label ?? ''} (${country.recipients})`, country: country.isoCode }
+			: toLink(item);
 	};
 
-	const about: SiteMenuEntry = {
-		type: 'dropdown',
-		id: 'about',
-		label: t('site-menu.about'),
-		groups: [
-			{
-				id: 'organisation',
-				label: 'Social Income',
-				badge: badge('volunteers-count', countOf(persons)),
-				links: [...storyblokLinks(ORGANISATION_PATHS), link('contact', t('site-menu.contact'), 'contact')],
-			},
-			{
-				id: 'how-we-work',
-				label: t('site-menu.how-we-work'),
-				badge: badge('recipients-count', recipientsCount),
-				links: [
-					...storyblokLinks(['recipient-selection']),
-					link('do-no-harm', t('site-menu.do-no-harm'), 'do-no-harm'),
-					link('mobile-money', t('site-menu.mobile-money'), 'mobile-money'),
-					link('recipient-app', t('site-menu.recipient-app'), 'mobile-app'),
-					...storyblokLinks(['policies']),
-				],
-			},
-			{
-				id: 'transparency',
-				label: t('site-menu.transparency-impact'),
-				badge:
-					paidOutAmount &&
-					t('site-menu.paid-out', {
-						amount: formatCurrencyLocale(paidOutAmount.amount, paidOutAmount.currency, locale, {
-							compactThreshold: 1_000_000,
-							compactLocale: locale,
-						}),
-					}),
-				links: storyblokLinks(TRANSPARENCY_PATHS),
-			},
-		].filter((group) => group.links.length > 0),
-		footer: {
-			label: t('site-menu.newsletter-teaser'),
-			overview: { label: t('site-menu.newsletter-cta'), href: `${basePath}/newsletter` },
-		},
+	const toFooter = (footer: MenuFooter): SiteMenuFooter => {
+		const value = footer.stat ? figures.stats[footer.stat] : undefined;
+
+		return {
+			label: fillValue(footer.text, value),
+			links: (footer.links ?? []).map(toFooterLink),
+			overview: toOverview(footer.overviewLabel, footer.overviewLink, value),
+		};
 	};
 
-	const links = toSiteMenuEntries(menu, lang, currency).filter((entry) => entry.type === 'link');
+	const toEntry = (item: MenuItem | DropdownItem): SiteMenuEntry[] => {
+		if (!item.label) {
+			return [];
+		}
+		if (item.component === 'menuItem') {
+			return [{ type: 'link', ...toLink(item) }];
+		}
+		const footer = item.footer?.[0];
 
-	return [whoWeSupport, getInvolved, about, ...links];
+		return [
+			{
+				type: 'dropdown',
+				id: item._uid,
+				label: item.label,
+				groups: item.menuItemGroups.map(toGroup),
+				footer: footer && toFooter(footer),
+			},
+		];
+	};
+
+	return (layout?.mainMenu ?? []).flatMap(toEntry);
 };

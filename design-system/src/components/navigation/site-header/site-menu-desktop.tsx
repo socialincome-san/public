@@ -38,29 +38,18 @@ const ArrowLink = ({ label, href, muted = false }: { label: string; href: string
 	</NavigationMenu.Link>
 );
 
-const RowLink = ({ link }: { link: SiteMenuLink }) => {
-	const className = 'group flex w-full items-center justify-between gap-2 py-2 text-left text-sm font-bold';
-	const content = (
-		<>
+const RowLink = ({ link }: { link: SiteMenuLink }) => (
+	<NavigationMenu.Link asChild>
+		<NextLink
+			href={link.href}
+			{...linkTarget(link)}
+			className="group flex items-center justify-between gap-2 py-2 text-sm font-bold"
+		>
 			{link.label}
 			<ArrowRight className="size-3.5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
-		</>
-	);
-
-	return (
-		<NavigationMenu.Link asChild>
-			{link.onSelect ? (
-				<button type="button" aria-haspopup="dialog" className={className} onClick={link.onSelect}>
-					{content}
-				</button>
-			) : (
-				<NextLink href={link.href} {...linkTarget(link)} className={className}>
-					{content}
-				</NextLink>
-			)}
-		</NavigationMenu.Link>
-	);
-};
+		</NextLink>
+	</NavigationMenu.Link>
+);
 
 const GroupColumn = ({ group, surface }: { group: SiteMenuGroup; surface?: string }) => (
 	<section className={cn('flex flex-col gap-4 p-8', surface)}>
@@ -91,17 +80,18 @@ const GroupColumn = ({ group, surface }: { group: SiteMenuGroup; surface?: strin
 const DropdownFooter = ({ footer }: { footer: SiteMenuFooter }) => (
 	<div className="flex items-center gap-3 px-8 py-4">
 		{footer.label && <span className="text-sm font-bold">{footer.label}</span>}
-		{footer.countries && (
+		{footer.links && footer.links.length > 0 && (
 			<ul className="flex flex-1 items-center gap-6">
-				{footer.countries.map((country) => (
-					<li key={country.id}>
+				{footer.links.map((link) => (
+					<li key={link.id}>
 						<NavigationMenu.Link asChild>
 							<NextLink
-								href={country.href}
+								href={link.href}
+								{...linkTarget(link)}
 								className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-bold transition-colors"
 							>
-								<CountryFlag country={country.country} size="sm" decorative />
-								{country.label}
+								{link.country && <CountryFlag country={link.country} size="sm" decorative />}
+								{link.label}
 							</NextLink>
 						</NavigationMenu.Link>
 					</li>

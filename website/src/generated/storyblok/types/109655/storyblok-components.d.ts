@@ -275,6 +275,7 @@ export interface Downloads {
 export interface DropdownItem {
   label?: string;
   menuItemGroups: MenuItemGroup[];
+  footer?: MenuFooter[];
   component: "dropdownItem";
   _uid: string;
   _editable?: string | undefined;
@@ -445,6 +446,7 @@ export interface Layout {
   supportedByLabel?: string;
   supportedByLogo?: StoryblokAsset;
   supportedByUrl?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  mainMenu?: (MenuItem | DropdownItem)[];
   component: "layout";
   _uid: string;
   _editable?: string | undefined;
@@ -498,6 +500,18 @@ export interface Lottie {
   [k: string]: unknown;
 }
 
+export interface MenuFooter {
+  text?: string;
+  stat?: "" | "programs" | "focuses" | "localPartners" | "donors" | "volunteers" | "recipients" | "paidOut";
+  links?: MenuItem[];
+  overviewLabel?: string;
+  overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  component: "menuFooter";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface MenuItem {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
@@ -525,6 +539,9 @@ export interface MenuItemGroup {
   overviewLabel?: string;
   overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   items?: MenuItem[];
+  stat?: "" | "programs" | "focuses" | "localPartners" | "donors" | "volunteers" | "recipients" | "paidOut";
+  badge?: string;
+  illustration?: StoryblokAsset;
   component: "menuItemGroup";
   _uid: string;
   _editable?: string | undefined;

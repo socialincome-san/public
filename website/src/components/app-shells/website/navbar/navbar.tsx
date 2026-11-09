@@ -1,4 +1,3 @@
-import { MenuDesktop } from '@/components/app-shells/website/navbar/menu-desktop';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
 import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
 import { getSiteMenuEntries } from '@/components/app-shells/website/navbar/site-menu';
@@ -11,6 +10,7 @@ import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import type { Session } from '@/modules/auth/auth.types';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { SiteHeader } from '@socialincome/design-system/navigation/site-header/site-header';
+import { SiteMenuDesktop } from '@socialincome/design-system/navigation/site-header/site-menu-desktop';
 import { ISbStoryData } from '@storyblok/js';
 import { getTranslations } from 'next-intl/server';
 
@@ -36,7 +36,7 @@ export const Navbar = async ({ sessions, lang, currency, scope }: Props) => {
 		<SiteHeader
 			homeHref={getWebsiteBasePath(lang, currency)}
 			homeLinkLabel={t('logo.home-link-aria')}
-			desktopMenu={<MenuDesktop entries={menuEntries} />}
+			desktopMenu={<SiteMenuDesktop entries={menuEntries} />}
 			localeSwitcher={scope === 'website' && <VisitorLocaleCurrencySwitcher lang={lang} currency={currency} />}
 			account={<AccountSlot sessions={sessions} scope={scope} />}
 			donateAction={
