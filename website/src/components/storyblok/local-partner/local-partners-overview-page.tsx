@@ -1,7 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
-import { showsFilterBar } from '@/components/filters/filter-query';
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
 import { LocalPartnersOverview } from '@/components/storyblok/local-partner/local-partners-overview';
 import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
@@ -26,7 +25,7 @@ export const LocalPartnersOverviewPage = async ({ overview, lang, currency, sear
 	const localPartners = (localPartnersResult.success ? localPartnersResult.data : []) as LocalPartnerStory[];
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
-	const showFilters = showsFilterBar(overview.content);
+	const showFilters = overview.content.showFilters !== false;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: title,

@@ -1,5 +1,4 @@
 import type { Prisma } from '@/generated/prisma/client';
-import { PayoutStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { LocalPartnerTableQuery } from './local-partner.types';
@@ -27,16 +26,11 @@ export const groupRecipientCountsByLocalPartner = async (localPartnerIds: string
 		_count: { _all: true },
 	});
 
-export const findAssignedRecipientLifecycleSourcesByLocalPartner = async (localPartnerIds: string[]) =>
+export const findLocalPartnerIdsInRunningPrograms = async (localPartnerIds: string[]) =>
 	prisma.recipient.findMany({
-		where: { localPartnerId: { in: localPartnerIds }, programId: { not: null } },
-		select: {
-			localPartnerId: true,
-			startDate: true,
-			suspendedAt: true,
-			program: { select: { programDurationInMonths: true, payoutInterval: true } },
-			_count: { select: { payouts: { where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } } } } },
-		},
+		where: { localPartnerId: { in: localPartnerIds }, program: { isConcluded: false } },
+		distinct: ['localPartnerId'],
+		select: { localPartnerId: true },
 	});
 
 export const findLocalPartnersBySlugs = async (slugs: string[]) =>

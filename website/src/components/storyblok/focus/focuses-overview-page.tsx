@@ -1,7 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
-import { showsFilterBar } from '@/components/filters/filter-query';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { FocusesOverview } from '@/components/storyblok/focus/focuses-overview';
 import type { FocusOverview } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -25,7 +24,7 @@ export const FocusesOverviewPage = async ({ overview, lang, currency, searchPara
 	const focuses = (focusesResult.success ? focusesResult.data : []) as FocusStory[];
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
-	const showFilters = showsFilterBar(overview.content);
+	const showFilters = overview.content.showFilters !== false;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: title,

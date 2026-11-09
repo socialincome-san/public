@@ -3,7 +3,6 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CampaignsOverview } from '@/components/campaign/campaigns-overview';
 import { resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
-import { showsFilterBar } from '@/components/filters/filter-query';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -75,7 +74,7 @@ export const CampaignsOverviewPage = async ({ overview, lang, currency, searchPa
 							lang={lang}
 							currency={currency}
 							searchParams={searchParams}
-							showFilters={showsFilterBar(overview.content)}
+							showFilters={overview.content.showFilters !== false}
 						/>
 					</Suspense>
 				</div>

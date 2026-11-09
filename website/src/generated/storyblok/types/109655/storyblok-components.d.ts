@@ -119,6 +119,7 @@ export interface CampaignGlobals {
 export interface CampaignOverview {
   title?: string;
   text?: string;
+  showFilters?: boolean;
   component: "Campaign Overview";
   _uid: string;
   _editable?: string | undefined;
@@ -352,6 +353,7 @@ export interface Focus {
 export interface FocusOverview {
   title?: string;
   text?: string;
+  showFilters?: boolean;
   component: "focus overview";
   _uid: string;
   _editable?: string | undefined;
@@ -491,6 +493,7 @@ export interface LocalPartner {
 export interface LocalPartnersOverview {
   title?: string;
   text?: string;
+  showFilters?: boolean;
   component: "local partners overview";
   _uid: string;
   _editable?: string | undefined;
@@ -788,6 +791,7 @@ export interface ProgramOverview {
   title?: string;
   text?: string;
   programDefaultImage: StoryblokAsset;
+  showFilters?: boolean;
   component: "programOverview";
   _uid: string;
   _editable?: string | undefined;

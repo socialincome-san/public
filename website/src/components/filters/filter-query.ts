@@ -25,7 +25,3 @@ export const getQueryValue = (searchParams: AnySearchParams | undefined, key: st
 };
 
 export const getSearchQuery = (searchParams?: AnySearchParams) => getQueryValue(searchParams, SEARCH_QUERY_KEY);
-
-// The overview content types' "Show filter bar" option; on unless an editor switched it off. Read through the
-// generated types' index signature until they are regenerated with the field.
-export const showsFilterBar = (content: Record<string, unknown>) => content.showFilters !== false;

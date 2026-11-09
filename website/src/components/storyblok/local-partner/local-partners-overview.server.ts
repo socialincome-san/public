@@ -54,7 +54,7 @@ export const localPartnerMatchesCountryQuery = (
 	return getNormalizedIsoCode(localPartner) === selectedCountryIsoCode;
 };
 
-// A partnership is concluded once none of its recipients is active or still to start; partners without stats count as active
+// A partnership is concluded once every program with its recipients is; partners without stats count as active
 export const getLocalPartnerStatus = (
 	localPartner: LocalPartnerStory,
 	statsByPortalSlug: PublicLocalPartnerOverviewStatsMap,

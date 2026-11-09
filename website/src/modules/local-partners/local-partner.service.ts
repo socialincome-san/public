@@ -1,6 +1,5 @@
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { now } from '@/lib/utils/now';
 import {
 	createFirebaseUserByEmail,
 	deleteFirebaseUserByUidIfExists,
@@ -8,7 +7,6 @@ import {
 	updateFirebaseUserByUid,
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
-import { recipientStatusService } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import * as localPartnerRepository from './local-partner.repository.read';
@@ -54,10 +52,11 @@ export const getPublicLocalPartnerOverviewStatsBySlugs = async (
 	try {
 		const partners = await localPartnerRepository.findLocalPartnersBySlugs(normalizedSlugs);
 		const partnerIds = partners.map(({ id }) => id);
-		const [statsResult, runningPartnerIds] = await Promise.all([
+		const [statsResult, runningPartners] = await Promise.all([
 			getPublicLocalPartnerStatsByIds(partnerIds),
-			findLocalPartnerIdsWithRunningRecipients(partnerIds),
+			localPartnerRepository.findLocalPartnerIdsInRunningPrograms(partnerIds),
 		]);
+		const runningPartnerIds = new Set(runningPartners.map(({ localPartnerId }) => localPartnerId));
 		if (!statsResult.success) {
 			return resultFail(statsResult.error);
 		}
@@ -418,33 +417,6 @@ export const deleteLocalPartner = async (session: UserSession, localPartnerId: s
 
 		return resultFail('Could not delete local partner. Please try again later.');
 	}
-};
-
-// Partners with at least one recipient who is active or still to start; the rest of their recipients completed or were
-// suspended
-const findLocalPartnerIdsWithRunningRecipients = async (localPartnerIds: string[]) => {
-	const nowDate = now();
-	const recipients = await localPartnerRepository.findAssignedRecipientLifecycleSourcesByLocalPartner(localPartnerIds);
-
-	return new Set(
-		recipients
-			.filter(({ startDate, suspendedAt, program, _count }) => {
-				if (!program) {
-					return false;
-				}
-				const statusResult = recipientStatusService.getRecipientLifecycleStatus({
-					startDate,
-					suspendedAt,
-					paidOrConfirmedCount: _count.payouts,
-					programDurationInMonths: program.programDurationInMonths,
-					payoutInterval: program.payoutInterval,
-					nowDate,
-				});
-
-				return !statusResult.success || statusResult.data === 'active' || statusResult.data === 'future';
-			})
-			.map(({ localPartnerId }) => localPartnerId),
-	);
 };
 
 const getPublicLocalPartnerStatsByIds = async (localPartnerIds: string[]): Promise<Result<PublicLocalPartnerStatsMap>> => {

@@ -1,7 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
-import { showsFilterBar } from '@/components/filters/filter-query';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
@@ -21,7 +20,7 @@ type Props = {
 export const ProgramsOverviewPage = async ({ overview, lang, currency, searchParams }: Props) => {
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
-	const showFilters = showsFilterBar(overview.content);
+	const showFilters = overview.content.showFilters !== false;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: title,

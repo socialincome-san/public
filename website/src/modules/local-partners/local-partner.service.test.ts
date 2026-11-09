@@ -17,8 +17,6 @@ jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
 }));
 
-jest.mock('@/modules/recipients/recipient.service', () => ({ recipientStatusService: {} }));
-
 import { getPaginatedLocalPartnerTableView, getPublicLocalPartnersByProgramId } from './local-partner.service';
 import type { PublicProgramLocalPartner } from './local-partner.types';
 
