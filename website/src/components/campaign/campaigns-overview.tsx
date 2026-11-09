@@ -36,8 +36,8 @@ export const CampaignsOverview = async ({ campaigns, statsById, lang, currency, 
 		return { campaign, status };
 	});
 	const statuses = campaignsWithStatus.map(({ status }) => status);
-	const statusQuery = getStatusQuery(searchParams);
-	const selectedStatus = searchParams ? (statusQuery && statuses.includes(statusQuery) ? statusQuery : undefined) : 'active';
+	const statusQuery = getStatusQuery(searchParams, 'active');
+	const selectedStatus = statusQuery && statuses.includes(statusQuery) ? statusQuery : undefined;
 	const searchQuery = getSearchQuery(searchParams);
 	const filteredCampaigns = campaignsWithStatus
 		.filter(({ status }) => !selectedStatus || status === selectedStatus)
@@ -68,7 +68,7 @@ export const CampaignsOverview = async ({ campaigns, statsById, lang, currency, 
 				/>
 			</div>
 			<OverviewFilterBar
-				filters={<StatusFilter statuses={statuses} selectedStatus={selectedStatus} />}
+				filters={<StatusFilter statuses={statuses} selectedStatus={selectedStatus} defaultStatus="active" />}
 				totalCount={campaigns.length}
 				showFilters={showFilters}
 				countLabel={t('campaigns-page.campaign-count', { count: filteredCampaigns.length })}
