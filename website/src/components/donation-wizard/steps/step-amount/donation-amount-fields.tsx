@@ -5,6 +5,7 @@ import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
+import { AmountField } from '@socialincome/design-system/forms/amount-field/amount-field';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { useLocale, useTranslations } from 'next-intl';
 import NextImage from 'next/image';
@@ -20,9 +21,7 @@ import {
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 
 const amountFieldBorder = 'border-input/60';
-const amountFieldFocusRing = 'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]';
 const amountTextClass = 'text-lg leading-none font-medium';
-const hintClass = 'text-destructive text-2xs -mt-2 mb-4 font-medium';
 
 const customAmountChips = [40, 60, 100];
 
@@ -182,8 +181,7 @@ export const DonationAmountFields = ({
 			<div
 				className={cn(
 					amountFieldBorder,
-					amountFieldFocusRing,
-					'mb-4 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border transition-[opacity,border-color,box-shadow]',
+					'focus-within:border-ring focus-within:ring-ring/50 mb-4 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border transition-[opacity,border-color,box-shadow] focus-within:ring-[3px]',
 					isCustomAmount && 'opacity-60',
 				)}
 			>
@@ -230,7 +228,7 @@ export const DonationAmountFields = ({
 				</button>
 			</div>
 			{monthlyIncome.error !== null && (
-				<p id={`${id}-monthly-income-hint`} className={hintClass}>
+				<p id={`${id}-monthly-income-hint`} className="text-destructive text-2xs -mt-2 mb-4 font-medium">
 					{getHint(monthlyIncome.error, DONATION_MONTHLY_INCOME_MIN, DONATION_MONTHLY_INCOME_MAX)}
 				</p>
 			)}
@@ -240,77 +238,31 @@ export const DonationAmountFields = ({
 				<div className="text-2xs text-center font-medium">{t('stepAmount.choose-own-amount')}</div>
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
 			</div>
-			{/* Chips and the floating label react to focus anywhere in the field, so tabbing to a chip keeps them */}
-			<div
-				className={cn(
-					amountFieldBorder,
-					amountFieldFocusRing,
-					'group bg-card relative mb-4 rounded-md border px-4 py-3 transition-[border-color,box-shadow,background-color,color]',
-					isCustomAmount ? 'text-foreground' : 'text-muted-foreground opacity-60',
-				)}
-			>
-				<label
-					htmlFor={`${id}-custom-amount`}
-					className={cn(
-						'absolute left-4 cursor-text font-medium transition-all',
-						customAmount.text === ''
-							? 'group-focus-within:text-2xs top-1/2 -translate-y-1/2 text-sm group-focus-within:top-3 group-focus-within:translate-y-0'
-							: 'text-2xs top-3',
-					)}
-				>
-					{t('stepAmount.custom-amount-label')} ({currency})
-				</label>
-				<div className="h-3.5" aria-hidden />
-				<div className={cn(amountTextClass, 'flex items-baseline gap-2')}>
-					<Input
-						variant="bare"
-						id={`${id}-custom-amount`}
-						data-testid="donation-wizard-custom-amount"
-						inputMode="numeric"
-						value={customAmount.text}
-						aria-invalid={customAmount.error !== null}
-						aria-describedby={customAmount.error === null ? undefined : `${id}-custom-amount-hint`}
-						onFocus={() => {
-							if (!isCustomAmount) {
-								actions.setPresetAmount('other');
-							}
-						}}
-						onChange={customAmount.onChange}
-					/>
-					{/* The shift puts the chips' bottom edge on the bottom of the digits */}
-					<div className="-my-1 hidden shrink-0 -translate-y-2 gap-1.5 group-focus-within:flex">
-						{customAmountChips.map((chip) => (
-							<button
-								key={chip}
-								type="button"
-								data-testid={`donation-wizard-custom-amount-chip-${chip}`}
-								aria-pressed={values.customAmount === chip}
-								aria-label={`${currency} ${chip}`}
-								// Safari does not focus buttons on click, so the field would lose focus and hide the chips first
-								onMouseDown={(e) => e.preventDefault()}
-								onClick={() => {
-									customAmount.reset();
-									actions.setCustomAmount(chip);
-								}}
-								className={cn(
-									amountFieldBorder,
-									'text-2xs cursor-pointer rounded-full border px-2.5 py-1 font-medium whitespace-nowrap transition-colors',
-									values.customAmount === chip
-										? 'bg-muted text-foreground'
-										: 'bg-card text-muted-foreground hover:bg-muted/50 hover:text-foreground',
-								)}
-							>
-								{chip}
-							</button>
-						))}
-					</div>
-				</div>
+			<div className="mb-4">
+				<AmountField
+					label={`${t('stepAmount.custom-amount-label')} (${currency})`}
+					data-testid="donation-wizard-custom-amount"
+					value={customAmount.text}
+					error={
+						customAmount.error === null
+							? undefined
+							: getHint(customAmount.error, DONATION_CUSTOM_AMOUNT_MIN, DONATION_CUSTOM_AMOUNT_MAX)
+					}
+					inactive={!isCustomAmount}
+					onFocus={() => {
+						if (!isCustomAmount) {
+							actions.setPresetAmount('other');
+						}
+					}}
+					onChange={customAmount.onChange}
+					quickPicks={customAmountChips.map((chip) => ({ value: chip, ariaLabel: `${currency} ${chip}` }))}
+					selectedQuickPick={values.customAmount}
+					onQuickPickSelect={(chip) => {
+						customAmount.reset();
+						actions.setCustomAmount(chip);
+					}}
+				/>
 			</div>
-			{customAmount.error !== null && (
-				<p id={`${id}-custom-amount-hint`} className={hintClass}>
-					{getHint(customAmount.error, DONATION_CUSTOM_AMOUNT_MIN, DONATION_CUSTOM_AMOUNT_MAX)}
-				</p>
-			)}
 
 			<Button
 				type="button"
