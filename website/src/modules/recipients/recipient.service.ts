@@ -1155,11 +1155,11 @@ export const countCandidatesForLocalPartners = async (localPartnerIds: string[])
 	}
 };
 
-export const countCandidatesForLocalPartnerCountry = async (countryCode: CountryCode): Promise<Result<number>> => {
+export const countCandidatesForCountry = async (countryCode: CountryCode): Promise<Result<number>> => {
 	try {
-		return resultOk(await recipientRepository.countCandidatesForLocalPartnerCountry(countryCode));
+		return resultOk(await recipientRepository.countCandidatesForCountry(countryCode));
 	} catch (error) {
-		console.error('Could not count candidates for local partner country', { countryCode, error });
+		console.error('Could not count candidates for country', { countryCode, error });
 
 		return resultFail('Could not count candidates');
 	}

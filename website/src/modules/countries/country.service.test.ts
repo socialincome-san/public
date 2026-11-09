@@ -21,7 +21,7 @@ jest.mock('@/modules/users/user.service', () => ({
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
 	getUnassignedRecipientCountries: mockFindUnassignedRecipientCountries,
-	countCandidatesForLocalPartnerCountry: mockCountCandidatesForLocalPartnerCountry,
+	countCandidatesForCountry: mockCountCandidatesForLocalPartnerCountry,
 }));
 
 jest.mock('@/integrations/world-bank/world-bank.integration', () => ({
@@ -150,7 +150,7 @@ describe('country service', () => {
 		expect(mockCountCandidatesForLocalPartnerCountry).toHaveBeenCalledWith('SL');
 	});
 
-	test('fails the country page stats when the candidate count fails', async () => {
+	test('keeps the other country page stats when the candidate count fails', async () => {
 		mockFindPublicCountryStats.mockResolvedValue([
 			{ ...createCountry('country-sl', 'SL'), programs: [{ _count: { recipients: 4 } }], _count: { programs: 1 } },
 		]);
@@ -159,9 +159,9 @@ describe('country service', () => {
 			error: 'Could not count candidates',
 		});
 
-		const result = await getCountryPageStats('SL');
+		const data = expectSuccess(await getCountryPageStats('SL'));
 
-		expect(result.success).toBe(false);
+		expect(data).toEqual({ activeProgramsCount: 1, recipientsCount: 4, candidatesCount: 0 });
 	});
 });
 

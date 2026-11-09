@@ -4,7 +4,7 @@ import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode, isValidCountryCode, toCountryCode } from '@/lib/types/country';
 import {
-	countCandidatesForLocalPartnerCountry,
+	countCandidatesForCountry,
 	getUnassignedRecipientCountries,
 } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
@@ -282,19 +282,13 @@ export const getCountryPageStats = async (isoCode: string): Promise<Result<Count
 
 	const [statsResult, candidatesCountResult] = await Promise.all([
 		getPublicCountryStatsByIsoCode(countryCode),
-		countCandidatesForLocalPartnerCountry(countryCode),
+		countCandidatesForCountry(countryCode),
 	]);
-	if (!statsResult.success) {
-		return resultOk(emptyCountryPageStats);
-	}
-	if (!candidatesCountResult.success) {
-		return resultFail(candidatesCountResult.error);
-	}
 
 	return resultOk({
-		activeProgramsCount: statsResult.data.programsCount,
-		recipientsCount: statsResult.data.recipientsCount,
-		candidatesCount: candidatesCountResult.data,
+		activeProgramsCount: statsResult.success ? statsResult.data.programsCount : 0,
+		recipientsCount: statsResult.success ? statsResult.data.recipientsCount : 0,
+		candidatesCount: candidatesCountResult.success ? candidatesCountResult.data : 0,
 	});
 };
 

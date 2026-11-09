@@ -465,11 +465,18 @@ export const countCandidatesForLocalPartners = async (localPartnerIds: string[])
 		},
 	});
 
-export const countCandidatesForLocalPartnerCountry = async (countryCode: CountryCode) =>
+// A candidate's country is their own, else their local partner's (as in getProgramCountryFeasibility)
+export const countCandidatesForCountry = async (countryCode: CountryCode) =>
 	prisma.recipient.count({
 		where: {
 			programId: null,
-			localPartner: { contact: { address: { country: countryCode } } },
+			OR: [
+				{ contact: { address: { country: countryCode } } },
+				{
+					contact: { OR: [{ address: null }, { address: { country: null } }] },
+					localPartner: { contact: { address: { country: countryCode } } },
+				},
+			],
 		},
 	});
 
