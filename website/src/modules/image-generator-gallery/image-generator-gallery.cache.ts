@@ -8,5 +8,5 @@ export const getImageGeneratorGallery = async (): Promise<Result<ImageGeneratorG
 	'use cache';
 	cacheTag(IMAGE_GENERATOR_GALLERY_CACHE_TAG);
 
-	return cacheResult(service.getImageGeneratorGallery(), 'days');
+	return cacheResult(service.getImageGeneratorGallery());
 };

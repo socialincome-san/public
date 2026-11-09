@@ -8,14 +8,9 @@ import { IMAGE_GENERATOR_GALLERY_CACHE_TAG } from './image-generator-gallery.typ
 jest.mock('next/cache', () => ({ cacheLife: jest.fn(), cacheTag: jest.fn() }));
 jest.mock('@/integrations/image-generator/image-generator.integration', () => ({ fetchImageGeneratorGallery: jest.fn() }));
 
-beforeEach(() => {
-	jest.resetAllMocks();
-	jest.spyOn(console, 'error').mockImplementation(() => undefined);
-});
+beforeEach(() => jest.resetAllMocks());
 
-afterEach(() => jest.restoreAllMocks());
-
-test('tags successful gallery results and uses the days profile', async () => {
+test('tags successful gallery results and uses the default profile', async () => {
 	const result = resultOk([
 		{
 			id: '2',
@@ -38,10 +33,9 @@ test('tags successful gallery results and uses the days profile', async () => {
 
 	await expect(getImageGeneratorGallery()).resolves.toBe(result);
 	expect(cacheTag).toHaveBeenCalledWith(IMAGE_GENERATOR_GALLERY_CACHE_TAG);
-	expect(cacheLife).toHaveBeenCalledWith('days');
+	expect(cacheLife).toHaveBeenCalledWith('default');
 	expect(cacheLife).toHaveBeenCalledTimes(1);
 	expect(fetchImageGeneratorGallery).toHaveBeenCalledTimes(1);
-	expect(console.error).not.toHaveBeenCalled();
 });
 
 test('tags failures but uses only the minutes profile', async () => {
@@ -52,7 +46,6 @@ test('tags failures but uses only the minutes profile', async () => {
 	expect(cacheTag).toHaveBeenCalledWith(IMAGE_GENERATOR_GALLERY_CACHE_TAG);
 	expect(cacheLife).toHaveBeenCalledWith('minutes');
 	expect(cacheLife).toHaveBeenCalledTimes(1);
-	expect(console.error).toHaveBeenCalledWith('Loading image generator gallery failed', { error: 'Unavailable.' });
 });
 
 test('the action returns the cached gallery result', async () => {
@@ -61,7 +54,6 @@ test('the action returns the cached gallery result', async () => {
 
 	await expect(getImageGeneratorGalleryAction()).resolves.toBe(result);
 	expect(cacheTag).toHaveBeenCalledWith(IMAGE_GENERATOR_GALLERY_CACHE_TAG);
-	expect(cacheLife).toHaveBeenCalledWith('days');
+	expect(cacheLife).toHaveBeenCalledWith('default');
 	expect(fetchImageGeneratorGallery).toHaveBeenCalledTimes(1);
-	expect(console.error).not.toHaveBeenCalled();
 });

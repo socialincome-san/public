@@ -140,8 +140,7 @@ export const ImageGallery = ({
 							image.actions !== undefined) && (
 							<div
 								className={cn(
-									'mt-auto flex items-center justify-between gap-3',
-									infoPlacement === 'actions' && 'flex-wrap',
+									'mt-auto flex flex-wrap items-center justify-between gap-3',
 									density === 'compact' ? 'p-2 sm:p-3' : 'p-4',
 								)}
 							>

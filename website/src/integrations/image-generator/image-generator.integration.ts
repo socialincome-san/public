@@ -33,7 +33,7 @@ const galleryImageSchema = z.object({
 	createdAt: z.iso.datetime().nullable().default(null),
 });
 
-const galleryResponseSchema = z.object({ images: z.array(galleryImageSchema) });
+const galleryResponseSchema = z.object({ images: z.array(z.unknown()) });
 type GalleryImage = z.infer<typeof galleryImageSchema>;
 
 export const fetchImageGeneratorGallery = async (): Promise<Result<GalleryImage[]>> => {
@@ -73,7 +73,18 @@ export const fetchImageGeneratorGallery = async (): Promise<Result<GalleryImage[
 			return resultFail('Image generator gallery response is invalid.');
 		}
 
-		return resultOk(parsed.data.images);
+		const images = parsed.data.images.flatMap((image) => {
+			const parsedImage = galleryImageSchema.safeParse(image);
+
+			return parsedImage.success ? [parsedImage.data] : [];
+		});
+		if (images.length < parsed.data.images.length) {
+			console.error('Image generator gallery skipped invalid images', {
+				count: parsed.data.images.length - images.length,
+			});
+		}
+
+		return resultOk(images);
 	} catch (error) {
 		console.error('Could not fetch image generator gallery', error);
 

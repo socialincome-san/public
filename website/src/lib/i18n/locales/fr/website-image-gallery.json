@@ -3,7 +3,7 @@
 	"loadMore": "Afficher plus",
 	"download": "Télécharger",
 	"imageError": "L’image n’a pas pu être chargée.",
-	"generatedFor": "Généré pour {amount} USD",
+	"generatedFor": "Généré pour {amount}",
 	"priceUnavailable": "Coût inconnu",
 	"promptTitle": "Description de l’image",
 	"showPrompt": "Afficher la description de l’image"

@@ -1,11 +1,17 @@
-import type { ImageGeneratorGallery } from '@/generated/storyblok/types/109655/image-generator-gallery';
 import { getSafeNumberFormatLocale, TIME_ZONE, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { getImageGeneratorGalleryAction } from '@/modules/image-generator-gallery/image-generator-gallery.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { ImageGallery } from '@socialincome/design-system/data-display/image-gallery/image-gallery';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable } from '@storyblok/react';
 import { getTranslations } from 'next-intl/server';
+
+export type ImageGeneratorGallery = {
+	component: 'imageGeneratorGallery';
+	_uid: string;
+	_editable?: string;
+};
 
 type Props = {
 	blok: ImageGeneratorGallery;
@@ -20,10 +26,6 @@ export const ImageGeneratorGalleryBlock = async ({ blok, lang }: Props) => {
 
 	const t = await getTranslations({ locale: lang, namespace: 'website-image-gallery' });
 	const locale = getSafeNumberFormatLocale(lang);
-	const priceFormatter = new Intl.NumberFormat(locale, {
-		minimumFractionDigits: 2,
-		maximumFractionDigits: 2,
-	});
 	const dateFormatter = new Intl.DateTimeFormat(locale, {
 		dateStyle: 'medium',
 		timeStyle: 'short',
@@ -33,15 +35,18 @@ export const ImageGeneratorGalleryBlock = async ({ blok, lang }: Props) => {
 	const images = result.data.map((image) => {
 		const downloadUrl = image.imageUrl ? new URL(image.imageUrl) : null;
 		downloadUrl?.searchParams.set('download', '1');
-		const cost =
-			image.costUsd === null ? t('priceUnavailable') : t('generatedFor', { amount: priceFormatter.format(image.costUsd) });
+		const price =
+			image.costUsd === null
+				? t('priceUnavailable')
+				: formatCurrencyLocale(image.costUsd, 'USD', locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+		const cost = image.costUsd === null ? price : t('generatedFor', { amount: price });
 
 		return {
 			id: String(image.id),
 			src: image.previewUrl,
 			alt: image.prompt ?? '',
 			date: image.createdAt ? { value: image.createdAt, label: dateFormatter.format(new Date(image.createdAt)) } : undefined,
-			price: image.costUsd === null ? t('priceUnavailable') : `${priceFormatter.format(image.costUsd)} USD`,
+			price,
 			prompt: image.prompt
 				? { text: `${cost}\n\n${image.prompt}`, title: t('promptTitle'), triggerLabel: t('showPrompt') }
 				: undefined,

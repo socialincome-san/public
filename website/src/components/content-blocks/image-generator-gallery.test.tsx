@@ -1,9 +1,8 @@
-import type { ImageGeneratorGallery } from '@/generated/storyblok/types/109655/image-generator-gallery';
 import { resultFail, resultOk } from '@/lib/result';
 import { getImageGeneratorGalleryAction } from '@/modules/image-generator-gallery/image-generator-gallery.actions';
 import { storyblokEditable } from '@storyblok/react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { ImageGeneratorGalleryBlock } from './image-generator-gallery';
+import { ImageGeneratorGalleryBlock, type ImageGeneratorGallery } from './image-generator-gallery';
 
 jest.mock('@/modules/image-generator-gallery/image-generator-gallery.actions', () => ({
 	getImageGeneratorGalleryAction: jest.fn(),
@@ -71,7 +70,7 @@ test('renders editable gallery images in their supplied order with user prompts 
 	expect(markup).toContain(`${blobHost}/previews/scene.webp`);
 	expect(markup.indexOf('/previews/bicycle.webp')).toBeLessThan(markup.indexOf('/previews/scene.webp'));
 	expect(markup).not.toContain('/_next/image');
-	expect(markup).toContain('0.06 USD');
+	expect(markup).toContain('$0.06');
 	expect(markup).toContain('dateTime="2026-11-02T12:00:00Z"');
 	expect(markup).toContain('13:00');
 	expect(markup).toContain('Cost unknown');

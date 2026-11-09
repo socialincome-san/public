@@ -26,9 +26,9 @@ afterEach(() => jest.restoreAllMocks());
 test.each([
 	'https://evil.example/images/original.png',
 	'https://jjjjivv3brvymvql.public.blob.vercel-storage.com/previews/original.webp',
-])('rejects untrusted original image URL %s', async (imageUrl) => {
+])('skips images with an untrusted original image URL %s', async (imageUrl) => {
 	jest.mocked(fetch).mockResolvedValueOnce(Response.json({ images: [{ ...image, imageUrl }] }));
-	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: false });
+	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: true, data: [] });
 });
 
 test('fetches validated images with server-side Basic Auth and no fetch cache or redirects', async () => {
@@ -81,9 +81,9 @@ test('accepts older gallery responses without creation time', async () => {
 	});
 });
 
-test.each(['not a date', 42])('rejects invalid creation time %s', async (createdAt) => {
+test.each(['not a date', 42])('skips images with an invalid creation time %s', async (createdAt) => {
 	jest.mocked(fetch).mockResolvedValueOnce(Response.json({ images: [{ ...image, createdAt }] }));
-	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: false });
+	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: true, data: [] });
 });
 
 test('accepts numeric IDs and missing prompts and strips unexpected fields', async () => {
@@ -102,9 +102,9 @@ test.each([0, null])('accepts zero and unavailable generation costs: %s', async 
 	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: true, data: [{ ...image, costUsd }] });
 });
 
-test.each([-1, '0.06'])('rejects invalid generation cost %s', async (costUsd) => {
+test.each([-1, '0.06'])('skips images with an invalid generation cost %s', async (costUsd) => {
 	jest.mocked(fetch).mockResolvedValueOnce(Response.json({ images: [{ ...image, costUsd }] }));
-	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: false });
+	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: true, data: [] });
 });
 
 test.each(['IMAGE_GENERATOR_URL', 'IMAGE_GENERATOR_PASSWORD'])('does not fetch when %s is missing', async (key) => {
@@ -145,26 +145,24 @@ test.each([
 	'https://jjjjivv3brvymvql.public.blob.vercel-storage.com/images/original.png',
 	'/previews/bicycle.webp',
 	'not a URL',
-])('rejects untrusted preview URL %s', async (previewUrl) => {
+])('skips an image with untrusted preview URL %s and keeps the valid ones', async (previewUrl) => {
 	jest.mocked(fetch).mockResolvedValueOnce(Response.json({ images: [image, { ...image, previewUrl }] }));
-	await expect(fetchImageGeneratorGallery()).resolves.toEqual({
-		success: false,
-		error: 'Image generator gallery response is invalid.',
-		status: undefined,
-	});
+	await expect(fetchImageGeneratorGallery()).resolves.toEqual({ success: true, data: [image], status: undefined });
+	expect(console.error).toHaveBeenCalledWith('Image generator gallery skipped invalid images', { count: 1 });
 });
 
 test.each([
 	null,
-	{},
-	{ images: null },
-	{ images: {} },
-	{ images: [null] },
-	{ images: [{ ...image, id: '' }] },
-	{ images: [{ ...image, id: -1 }] },
-	{ images: [{ ...image, prompt: 42 }] },
-	{ images: [{ id: '1', previewUrl: image.previewUrl }] },
-])('rejects malformed payload %j', async (payload) => {
+	{ ...image, id: '' },
+	{ ...image, id: -1 },
+	{ ...image, prompt: 42 },
+	{ id: '1', previewUrl: image.previewUrl },
+])('skips malformed image %j', async (malformedImage) => {
+	jest.mocked(fetch).mockResolvedValueOnce(Response.json({ images: [malformedImage] }));
+	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: true, data: [] });
+});
+
+test.each([null, {}, { images: null }, { images: {} }])('rejects malformed payload %j', async (payload) => {
 	jest.mocked(fetch).mockResolvedValueOnce(Response.json(payload));
 	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({
 		success: false,
