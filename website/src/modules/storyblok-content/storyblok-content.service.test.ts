@@ -6,7 +6,7 @@ jest.mock('@/integrations/storyblok/storyblok-content.integration', () => ({ fet
 jest.mock('@/integrations/storyblok/storyblok-campaign.integration', () => ({}));
 jest.mock('@/integrations/storyblok/storyblok-program.integration', () => ({}));
 jest.mock('@/integrations/storyblok/storyblok-webhook.integration', () => ({}));
-jest.mock('next/headers', () => ({ draftMode: jest.fn(async () => ({ isEnabled: false })) }));
+jest.mock('next/headers', () => ({ draftMode: jest.fn(() => Promise.resolve({ isEnabled: false })) }));
 
 describe('getPersonsByCountryOffice', () => {
 	beforeEach(() => {
