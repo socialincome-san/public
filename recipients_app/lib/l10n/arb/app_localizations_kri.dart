@@ -139,6 +139,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get dashboardUp2Date => 'Ɔltin de fayn fayn wan. Nɔ gɛt yus tide.';
 
   @override
+  String get dashboardWelcomeMessage => 'Wɛlkɔm to di Social Income app!';
+
+  @override
   String get edit => 'Chenj am';
 
   @override
@@ -777,4 +780,7 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get appAttestationFailedError => 'Firebase AppCheck: App attestation failed.';
+
+  @override
+  String get countrySearchHint => 'Luk fɔ di kɔntri nem ɔ di kɔntri kod';
 }

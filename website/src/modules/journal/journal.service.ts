@@ -10,6 +10,7 @@ import {
 	createWebsiteJournalTagLink,
 	createWebsitePeoplePath,
 	createWebsitePersonLink,
+	getArticleAuthors,
 	getArticleTitle,
 	getArticleTypeLabel,
 	getPersonAvatarSrc,
@@ -157,18 +158,28 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 			return resultFail('Journal article not found', articleResult.status);
 		}
 		const story = articleResult.data;
-		const relatedResult = await storyblokContent.getRelativeArticles(
-			story.content.author.uuid,
-			story.id,
-			story.content.tags?.map((tag) => tag.uuid) ?? [],
-			lang,
-			JOURNAL_RELATED_ARTICLES_COUNT,
-		);
+		const authors = getArticleAuthors(story.content);
+		const [relatedResult, roleLabelsResult, circleLabelsResult, articleCountsResult] = await Promise.all([
+			storyblokContent.getRelativeArticles(
+				authors.map((author) => author.uuid),
+				story.id,
+				story.content.tags?.map((tag) => tag.uuid) ?? [],
+				lang,
+				JOURNAL_RELATED_ARTICLES_COUNT,
+			),
+			storyblokContent.getPrimaryRoleLabels(lang),
+			storyblokContent.getCircleLabels(lang),
+			getJournalAuthorArticleCounts(authors.map((author) => author.uuid)),
+		]);
+		const articleCounts = articleCountsResult.success ? articleCountsResult.data : {};
 		const journalPath = createWebsiteJournalPath(lang, currency);
 
 		return resultOk({
 			story,
+			authors: authors.map((person) => ({ person, articleCount: articleCounts[person.uuid] ?? 0 })),
 			relatedArticles: relatedResult.success ? relatedResult.data : [],
+			roleLabels: roleLabelsResult.success ? roleLabelsResult.data : {},
+			circleLabels: circleLabelsResult.success ? circleLabelsResult.data : {},
 			breadcrumbs: buildJournalArticleBreadcrumbs(
 				homeLabel,
 				parentLabel,
@@ -186,6 +197,24 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 	}
 };
 
+export const getJournalAuthorArticleCounts = async (authorIds: string[]): Promise<Result<Record<string, number>>> => {
+	const results = await Promise.all(
+		authorIds.map(async (authorId) => ({
+			authorId,
+			result: await storyblokContent.getArticleCountByAuthorForDefaultLang(authorId),
+		})),
+	);
+	const counts: Record<string, number> = {};
+	for (const { authorId, result } of results) {
+		if (!result.success) {
+			return resultFail('Could not load author article counts');
+		}
+		counts[authorId] = result.data;
+	}
+
+	return resultOk(counts);
+};
+
 export const getJournalPersonPageData = async (request: JournalPageRequest): Promise<Result<JournalPersonPageData>> => {
 	try {
 		const { lang, currency, slug, parentLabel, homeLabel } = request;
@@ -199,6 +228,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			roleLabelsResult,
 			circleLabelsResult,
 			timeCommitmentLabelsResult,
+			workStyleLabelsResult,
 			personsResult,
 			contributionsResult,
 		] = await Promise.all([
@@ -206,6 +236,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			storyblokContent.getPrimaryRoleLabels(lang),
 			storyblokContent.getCircleLabels(lang),
 			storyblokContent.getTimeCommitmentLabels(lang),
+			storyblokContent.getWorkStyleLabels(lang),
 			storyblokContent.getAllPersons(lang),
 			community.getPersonContributions(person.uuid, lang, currency),
 		]);
@@ -213,6 +244,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 		const circleLabels = circleLabelsResult.success ? circleLabelsResult.data : {};
 		const timeCommitmentLabels = timeCommitmentLabelsResult.success ? timeCommitmentLabelsResult.data : {};
+		const workStyleLabels = workStyleLabelsResult.success ? workStyleLabelsResult.data : {};
 		const totalInDefault = await getDefaultLanguageCount(lang, articles.length, () =>
 			storyblokContent.getArticleCountByAuthorForDefaultLang(person.uuid),
 		);
@@ -236,6 +268,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			roleLabels,
 			circleLabels,
 			timeCommitmentLabels,
+			workStyleLabels,
 			contributions: contributionsResult.success ? contributionsResult.data : [],
 			otherPersons: personsResult.success ? pickOtherPersons(person, personsResult.data) : [],
 		});
@@ -314,7 +347,7 @@ export const getJournalArticlesByTag = async (
 	tagUuid: string,
 ): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
 	try {
-		const result = await storyblokContent.getArticlesByTag(tagUuid, language);
+		const result = await storyblokContent.getLatestArticlesByTag(tagUuid, language);
 
 		return result.success ? result : resultFail('Could not load journal articles', result.status);
 	} catch (error) {
@@ -329,7 +362,7 @@ export const getJournalArticlesByArticleType = async (
 	articleTypeUuid: string,
 ): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
 	try {
-		const result = await storyblokContent.getArticlesByArticleType(articleTypeUuid, language);
+		const result = await storyblokContent.getLatestArticlesByArticleType(articleTypeUuid, language);
 
 		return result.success ? result : resultFail('Could not load journal articles', result.status);
 	} catch (error) {

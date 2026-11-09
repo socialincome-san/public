@@ -3,6 +3,7 @@ import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-l
 import { Community } from '@/components/community/community';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { DonationForm } from '@/components/donation-wizard/donation-form';
+import { CountryOfficeSection } from '@/components/storyblok/shared/country-office-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
@@ -11,7 +12,6 @@ import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 import { CountryMap } from './country-map';
 import { CountryPayoutsTotal } from './country-payouts-total';
-import { CountryPersonCarousel } from './country-person-carousel';
 import { CountryPrograms } from './country-programs';
 import { CountryStatistics } from './country-statistics';
 import { CountryStatisticsSkeleton } from './country-statistics-skeleton';
@@ -84,7 +84,13 @@ export const CountryDetail = async ({
 				</BlockWrapper>
 			</div>
 			<CountryMap country={country} />
-			<CountryPersonCarousel country={country} lang={lang} />
+			<CountryOfficeSection
+				isoCode={isoCode}
+				title={country.content.countryOfficeTitle}
+				heading={countryTitle}
+				description={country.content.countryOfficeDescription}
+				lang={lang}
+			/>
 			<CountryPayoutsTotal country={country} lang={lang} currency={currency} />
 			{isoCode !== '-' && (
 				<Suspense fallback={<CountryStatisticsSkeleton />}>

@@ -164,7 +164,13 @@ export const DonationModalProvider = ({ children }: Props) => {
 					}
 				}}
 			>
-				<DialogContent size={isThankYou ? 'sm' : 'lg'} surface="gradient" padding="none" data-testid="donation-wizard-modal">
+				<DialogContent
+					size={isThankYou ? 'sm' : 'lg'}
+					surface="gradient"
+					padding="none"
+					data-testid="donation-wizard-modal"
+					data-clarity-mask="true"
+				>
 					{isPostCheckoutStep ? (
 						<>
 							<DialogTitle visuallyHidden>{t('thankYou.message')}</DialogTitle>
