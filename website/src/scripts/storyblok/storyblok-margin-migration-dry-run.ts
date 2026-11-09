@@ -10,10 +10,14 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 
 const managementEndpoint = 'https://mapi.storyblok.com/v1';
-const cdnEndpoint = process.env.STORYBLOK_CDN_ENDPOINT?.trim() ?? 'https://api.storyblok.com/v2';
+const getOptionalEnvironment = (name: string): string | undefined => {
+	const value = process.env[name]?.trim();
+
+	return value ? value : undefined;
+};
 
 const getRequiredEnvironment = (name: string): string => {
-	const value = process.env[name]?.trim();
+	const value = getOptionalEnvironment(name);
 	if (!value) {
 		throw new Error(`Missing ${name}.`);
 	}
@@ -21,30 +25,18 @@ const getRequiredEnvironment = (name: string): string => {
 	return value;
 };
 
-const requestManagement = async (path: string): Promise<unknown> => {
+const cdnEndpoint = getOptionalEnvironment('STORYBLOK_CDN_ENDPOINT') ?? 'https://api.storyblok.com/v2';
+
+const requestManagement = async (path: string): Promise<{ body: unknown; headers: Headers }> => {
 	const response = await fetchStoryblokReadOnly(`${managementEndpoint}${path}`, {
 		headers: { Authorization: getRequiredEnvironment('STORYBLOK_MANAGEMENT_TOKEN') },
 		signal: AbortSignal.timeout(30_000),
 	});
-	const body: unknown = await response.json();
 	if (!response.ok) {
 		throw new Error(`Storyblok read request failed with status ${response.status}.`);
 	}
 
-	return body;
-};
-
-const requestManagementWithHeaders = async (path: string): Promise<{ body: unknown; headers: Headers }> => {
-	const response = await fetchStoryblokReadOnly(`${managementEndpoint}${path}`, {
-		headers: { Authorization: getRequiredEnvironment('STORYBLOK_MANAGEMENT_TOKEN') },
-		signal: AbortSignal.timeout(30_000),
-	});
-	const body: unknown = await response.json();
-	if (!response.ok) {
-		throw new Error(`Storyblok read request failed with status ${response.status}.`);
-	}
-
-	return { body, headers: response.headers };
+	return { body: await response.json(), headers: response.headers };
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
@@ -81,7 +73,7 @@ const toSummary = (story: Record<string, unknown>): StoryblokStorySummary => {
 
 const createClient = (spaceId: string): StoryblokReadOnlyClient => ({
 	getEnabledLanguages: async () => {
-		const body = await requestManagement(`/spaces/${spaceId}`);
+		const { body } = await requestManagement(`/spaces/${spaceId}`);
 		if (!isRecord(body) || !isRecord(body.space) || !Array.isArray(body.space.languages)) {
 			throw new Error('Storyblok space response did not contain a valid languages list.');
 		}
@@ -95,12 +87,11 @@ const createClient = (spaceId: string): StoryblokReadOnlyClient => ({
 		return languages;
 	},
 	listStories: async (page, perPage) => {
-		const response = await requestManagementWithHeaders(
+		const { body, headers } = await requestManagement(
 			`/spaces/${spaceId}/stories/?page=${page}&per_page=${perPage}&sort_by=id:asc`,
 		);
-		const body = response.body;
-		const headerTotal = Number(response.headers.get('total'));
-		const headerPerPage = Number(response.headers.get('per_page'));
+		const headerTotal = Number(headers.get('total'));
+		const headerPerPage = Number(headers.get('per_page'));
 		if (!Number.isInteger(headerTotal) || !Number.isInteger(headerPerPage)) {
 			throw new Error('Storyblok pagination headers did not contain valid total and per_page values.');
 		}
@@ -115,7 +106,7 @@ const createClient = (spaceId: string): StoryblokReadOnlyClient => ({
 		};
 	},
 	getStoryDraft: async (summary) => {
-		const body = await requestManagement(`/spaces/${spaceId}/stories/${summary.id}`);
+		const { body } = await requestManagement(`/spaces/${spaceId}/stories/${summary.id}`);
 		if (!isRecord(body) || !isRecord(body.story)) {
 			throw new Error(`Storyblok did not return a valid story object for story ${summary.id}.`);
 		}
@@ -134,7 +125,7 @@ const createClient = (spaceId: string): StoryblokReadOnlyClient => ({
 		};
 	},
 	getPublishedStory: async (summary) => {
-		const cdnToken = process.env.STORYBLOK_PREVIEW_TOKEN?.trim() ?? process.env.STORYBLOK_PUBLIC_TOKEN?.trim();
+		const cdnToken = getOptionalEnvironment('STORYBLOK_PREVIEW_TOKEN') ?? getOptionalEnvironment('STORYBLOK_PUBLIC_TOKEN');
 		if (!cdnToken) {
 			return null;
 		}
@@ -146,9 +137,12 @@ const createClient = (spaceId: string): StoryblokReadOnlyClient => ({
 		if (response.status === 404) {
 			return null;
 		}
-		const body: unknown = await response.json();
-		if (!response.ok || !isRecord(body) || !isRecord(body.story)) {
+		if (!response.ok) {
 			throw new Error(`Storyblok CDN read request failed with status ${response.status}.`);
+		}
+		const body: unknown = await response.json();
+		if (!isRecord(body) || !isRecord(body.story)) {
+			throw new Error(`Storyblok CDN returned an invalid story for story ${summary.id}.`);
 		}
 		const story = body.story;
 
@@ -165,7 +159,7 @@ const createClient = (spaceId: string): StoryblokReadOnlyClient => ({
 });
 
 const parseLanguages = (): string[] | undefined => {
-	const raw = process.env.STORYBLOK_MARGIN_MIGRATION_LANGUAGES?.trim();
+	const raw = getOptionalEnvironment('STORYBLOK_MARGIN_MIGRATION_LANGUAGES');
 	if (!raw) {
 		return undefined;
 	}
@@ -191,7 +185,7 @@ const main = async (): Promise<void> => {
 	}
 
 	const outputDirectory =
-		process.env.STORYBLOK_MARGIN_MIGRATION_OUTPUT_DIR?.trim() ??
+		getOptionalEnvironment('STORYBLOK_MARGIN_MIGRATION_OUTPUT_DIR') ??
 		join(tmpdir(), `storyblok-margin-migration-${new Date().toISOString().replaceAll(':', '-')}`);
 	const safeOutputDirectory = resolveSafeOutputDirectory(outputDirectory, process.cwd());
 	const runId = safeOutputDirectory.split('/').at(-1) ?? 'storyblok-margin-migration';
