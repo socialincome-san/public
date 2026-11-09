@@ -42,7 +42,7 @@ const AmountField = ({
 			<div
 				className={cn(
 					fieldBorder,
-					'group bg-card focus-within:border-ring focus-within:ring-ring/50 relative rounded-md border px-4 py-3 transition-[border-color,box-shadow,background-color,color] focus-within:ring-[3px]',
+					'group bg-card focus-within:border-ring focus-within:ring-ring/50 @container relative rounded-md border px-4 py-3 transition-[border-color,box-shadow,background-color,color] focus-within:ring-[3px]',
 					inactive ? 'text-muted-foreground opacity-60' : 'text-foreground',
 				)}
 			>
@@ -58,7 +58,8 @@ const AmountField = ({
 					{label}
 				</label>
 				<div className="h-3.5" aria-hidden />
-				<div className="flex items-baseline gap-2 text-lg leading-none font-medium">
+				{/* Below 10rem the chips no longer fit next to the digits and move to their own line */}
+				<div className="flex items-baseline gap-2 text-lg leading-none font-medium @max-[10rem]:flex-wrap">
 					<Input
 						variant="bare"
 						id={inputId}
@@ -70,7 +71,7 @@ const AmountField = ({
 					/>
 					{quickPicks.length > 0 && (
 						// The shift puts the chips' bottom edge on the bottom of the digits
-						<div className="-my-1 hidden shrink-0 -translate-y-2 gap-1.5 group-focus-within:flex">
+						<div className="-my-1 hidden shrink-0 -translate-y-2 gap-1.5 group-focus-within:flex @max-[10rem]:my-0 @max-[10rem]:shrink @max-[10rem]:translate-y-0 @max-[10rem]:flex-wrap">
 							{quickPicks.map((quickPick) => (
 								<button
 									key={quickPick.value}

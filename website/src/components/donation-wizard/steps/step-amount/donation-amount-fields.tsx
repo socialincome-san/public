@@ -121,14 +121,16 @@ export const DonationAmountFields = ({
 		DONATION_MONTHLY_INCOME_MIN,
 		DONATION_MONTHLY_INCOME_MAX,
 	);
+	// The campaign form preselects a preset amount; this step has no presets, so it shows it as a custom amount
+	const customAmountValue = typeof values.selectedAmount === 'number' ? values.selectedAmount : values.customAmount;
 	const customAmount = useAmountInput(
-		values.customAmount,
+		customAmountValue,
 		actions.setCustomAmount,
 		DONATION_CUSTOM_AMOUNT_MIN,
 		DONATION_CUSTOM_AMOUNT_MAX,
 	);
 
-	const isCustomAmount = values.selectedAmount === 'other';
+	const isCustomAmount = !values.onePercentSelected;
 	const otherCadence: Cadence = values.cadence === 'monthly' ? 'one-time' : 'monthly';
 	const amount = values.resolvedAmount === null ? null : `${currency} ${values.resolvedAmount}`;
 
@@ -256,7 +258,7 @@ export const DonationAmountFields = ({
 					}}
 					onChange={customAmount.onChange}
 					quickPicks={customAmountChips.map((chip) => ({ value: chip, ariaLabel: `${currency} ${chip}` }))}
-					selectedQuickPick={values.customAmount}
+					selectedQuickPick={customAmountValue}
 					onQuickPickSelect={(chip) => {
 						customAmount.reset();
 						actions.setCustomAmount(chip);
