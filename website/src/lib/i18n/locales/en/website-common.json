@@ -40,6 +40,8 @@
 		"active-program-plural": "active programs",
 		"recipient-singular": "recipient",
 		"recipient-plural": "recipients",
+		"candidate-singular": "candidate",
+		"candidate-plural": "candidates",
 		"donate-now": "Donate now",
 		"about": "About",
 		"person-carousel-next-button-aria": "Show next person",

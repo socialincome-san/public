@@ -1,4 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
+import type { CountryCode } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import type { RecipientTableQuery } from './recipient.types';
 
@@ -461,6 +462,21 @@ export const countCandidatesForLocalPartners = async (localPartnerIds: string[])
 		where: {
 			programId: null,
 			localPartnerId: { in: localPartnerIds },
+		},
+	});
+
+// A candidate's country is their own, else their local partner's (as in getProgramCountryFeasibility)
+export const countCandidatesForCountry = async (countryCode: CountryCode) =>
+	prisma.recipient.count({
+		where: {
+			programId: null,
+			OR: [
+				{ contact: { address: { country: countryCode } } },
+				{
+					contact: { OR: [{ address: null }, { address: { country: null } }] },
+					localPartner: { contact: { address: { country: countryCode } } },
+				},
+			],
 		},
 	});
 
