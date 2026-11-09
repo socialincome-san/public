@@ -1,6 +1,4 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
-import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
-import { ongoingPayoutsTableConfig } from '@/components/data-table/configs/ongoing-payouts-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import type { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { getPaginatedOngoingPayoutTableView } from '@/modules/payouts/payout.service';
@@ -8,7 +6,7 @@ import { requireSession } from '@/server/session';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
-import { translateManagementTableConfig } from '../management-table-config';
+import { OngoingPayoutsTable } from './ongoing-payouts-table';
 
 export default function OngoingPayoutsPage({ searchParams }: SearchParamsPageProps) {
 	return (
@@ -40,24 +38,8 @@ const OngoingPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps)
 			options: programFilterOptions.map((program) => ({ value: program.id, label: program.name })),
 		},
 	];
-	const config = translateManagementTableConfig(ongoingPayoutsTableConfig, {
-		title: t('tables.ongoingPayouts.title'),
-		emptyMessage: t('tables.ongoingPayouts.empty'),
-		columns: {
-			recipient: t('columns.recipient'),
-			programName: t('columns.programName'),
-			payoutsProgressPercent: t('columns.payoutsProgressPercent'),
-		},
-	});
 
 	return (
-		<ConfiguredDataTableClient
-			config={config}
-			titleInfoTooltip={t('tables.ongoingPayouts.tooltip')}
-			rows={rows}
-			error={error}
-			query={{ ...tableQuery, totalRows }}
-			toolbarFilters={toolbarFilters}
-		/>
+		<OngoingPayoutsTable rows={rows} error={error} query={{ ...tableQuery, totalRows }} toolbarFilters={toolbarFilters} />
 	);
 };
