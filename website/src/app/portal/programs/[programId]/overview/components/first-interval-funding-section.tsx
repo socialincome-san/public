@@ -1,9 +1,9 @@
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { StatPanel } from '@socialincome/design-system/data-display/stat-panel/stat-panel';
 import { StatProgress } from '@socialincome/design-system/data-display/stat-progress/stat-progress';
+import { getTranslations } from 'next-intl/server';
 import { DonationForm } from './donation-form';
 import { SectionTitle } from './section-title';
 
@@ -13,7 +13,7 @@ type FirstIntervalFundingSectionProps = {
 };
 
 export const FirstIntervalFundingSection = async ({ programId, stats }: FirstIntervalFundingSectionProps) => {
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 	const percent =
 		stats.costPerIntervalChf > 0 ? Math.min(100, (stats.contributedToProgramSoFarChf / stats.costPerIntervalChf) * 100) : 0;
 

@@ -7,9 +7,9 @@ import { tableQueryFromSearchParams } from '@/components/data-table/query-state'
 import { getPaginatedPayoutConfirmationTableView } from '@/modules/payouts/payout.service';
 import { requireSession } from '@/server/session';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
+import { getTranslations } from 'next-intl/server';
 
 import type { SearchParamsPageProps } from '@/app/page-props';
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { Suspense } from 'react';
 
 export default function ConfirmPayoutsPage({ searchParams }: SearchParamsPageProps) {
@@ -22,7 +22,7 @@ export default function ConfirmPayoutsPage({ searchParams }: SearchParamsPagePro
 
 const ConfirmPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await requireSession('user');
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

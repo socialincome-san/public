@@ -1,8 +1,8 @@
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { getProgramNameById } from '@/modules/programs/program-reference.service';
 import { getProgramDashboardStats, isReadyForFirstPayoutInterval } from '@/modules/programs/program-stats.service';
 import { getProgramSlugById } from '@/modules/programs/program.service';
 import { ExternalLink } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { FirstIntervalFundingSection } from './components/first-interval-funding-section';
 import { ProgramSetupSection } from './components/program-setup-section';
@@ -15,7 +15,7 @@ type Props = {
 
 export default async function OverviewProgramScopedDataLoader({ params }: Props) {
 	const { programId } = await params;
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 
 	const programNameResult = await getProgramNameById(programId);
 	const programSlugResult = await getProgramSlugById(programId);

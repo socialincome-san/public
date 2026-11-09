@@ -1,6 +1,5 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import type { PayoutProcessOverviewOption } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
@@ -11,6 +10,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
+import { useTranslations } from 'next-intl';
 import { OrangeMoneyCsvPayoutProcessDialog } from './orange-money-csv-payout-process-dialog';
 import type { PayoutProcessDialogBaseProps } from './payout-process-dialog-props';
 import { TelecelCsvPayoutProcessDialog } from './telecel-csv-payout-process-dialog';
@@ -20,7 +20,7 @@ const UnsupportedPayoutProcessDialog = ({
 	open,
 	onClose,
 }: PayoutProcessDialogBaseProps & { option: PayoutProcessOverviewOption }) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 
 	return (
 		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>

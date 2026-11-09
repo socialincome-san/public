@@ -1,6 +1,5 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	Dialog,
@@ -10,10 +9,11 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
+import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export const DonationSuccessDialog = () => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();

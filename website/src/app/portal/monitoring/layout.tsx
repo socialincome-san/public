@@ -3,8 +3,8 @@ import { TabNavigation } from '@/components/tab-navigation';
 import { requireSession } from '@/server/session';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -17,7 +17,7 @@ export default async function MonitoringLayout({ children }: MonitoringLayoutPro
 	if (!user.hasAnyOperatorProgramAccess) {
 		redirect('/portal/programs');
 	}
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 
 	const breadcrumbLinks = [
 		{ href: '/', label: t('navigation.website') },

@@ -1,4 +1,3 @@
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
 import { cn } from '@socialincome/design-system/cn';
@@ -10,6 +9,7 @@ import { StatProgress } from '@socialincome/design-system/data-display/stat-prog
 import { Stat } from '@socialincome/design-system/data-display/stat/stat';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { AlertCircle, CheckCircle, TriangleAlert } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { SectionTitle } from './section-title';
 
 type StatsSectionProps = {
@@ -18,7 +18,7 @@ type StatsSectionProps = {
 };
 
 export const StatsSection = async ({ programId, stats }: StatsSectionProps) => {
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 	const getCreditStatusLabel = (creditsInIntervals: number, totalExpected: number) => {
 		if (creditsInIntervals < 1) {
 			return t('program.stats.not_secured');

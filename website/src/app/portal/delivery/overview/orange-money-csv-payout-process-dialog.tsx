@@ -1,6 +1,5 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { slugify } from '@/lib/utils/string-utils';
 import {
 	generateOrangeCurrentMonthPayoutsAction,
@@ -20,6 +19,7 @@ import {
 } from '@socialincome/design-system/overlays/dialog/dialog';
 import { format } from 'date-fns';
 import { EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import type { OrangeMoneyCsvPayoutProcessDialogProps } from './payout-process-dialog-props';
 
@@ -34,7 +34,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 	open,
 	onClose,
 }: OrangeMoneyCsvPayoutProcessDialogProps) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const [results, setResults] = useState<Record<number, StepResult>>({});
 	const monthKey = format(selectedDate, 'yyyy-MM');
 	const providerSlug = slugify(providerName);

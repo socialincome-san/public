@@ -1,5 +1,4 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import {
 	getActiveOrganizationSummary,
@@ -8,6 +7,7 @@ import {
 import type { OrganizationMemberTableViewRow } from '@/modules/organizations/organization.types';
 import { requireSession } from '@/server/session';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 import MembersTable from './members-table';
 
@@ -21,7 +21,7 @@ export default function ProfileOrganizationPage({ searchParams }: SearchParamsPa
 
 const ProfileOrganizationDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await requireSession('user');
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);

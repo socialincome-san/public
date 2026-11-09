@@ -1,4 +1,4 @@
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
+import { getTranslations } from 'next-intl/server';
 import { ProgramSetupSuccess } from './program-setup-success';
 import { SectionTitle } from './section-title';
 
@@ -8,7 +8,7 @@ type ProgramSetupSectionProps = {
 };
 
 export const ProgramSetupSection = async ({ programId, publicUrl }: ProgramSetupSectionProps) => {
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 
 	return (
 		<div className="space-y-4">

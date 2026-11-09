@@ -1,10 +1,10 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordDialog } from '@/components/data-table/clients/record-dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
 
@@ -15,7 +15,7 @@ type PayoutFormDialogProps = {
 };
 
 export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDialogProps) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const onError = (error?: unknown) => {

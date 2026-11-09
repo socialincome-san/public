@@ -1,6 +1,5 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { formatPayoutProcessLabel } from '@/lib/payout-process-options';
 import { now } from '@/lib/utils/now';
 import type { PayoutProcessOverviewOption } from '@/modules/mobile-money-providers/mobile-money-provider.types';
@@ -10,7 +9,7 @@ import { cn } from '@socialincome/design-system/cn';
 import { DatePicker, normalizeToNoon } from '@socialincome/design-system/forms/date-picker/date-picker';
 import { format } from 'date-fns';
 import { CalendarIcon, CircleDollarSignIcon, FileSpreadsheet } from 'lucide-react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { StartPayoutProcessDialog } from './start-payout-process-dialog';
 
@@ -39,7 +38,7 @@ const PayoutProcessGrid = ({
 	selectedMonthLabel: string;
 	onStartOption: (option: PayoutProcessOverviewOption) => void;
 }) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const [recipientCounts, setRecipientCounts] = useState<Record<string, number>>({});
 	const [countsError, setCountsError] = useState<string | null>(null);
 	const requestKey = `${format(selectedDate, 'yyyy-MM')}-${options.map((option) => option.id).join(',')}`;
@@ -138,7 +137,7 @@ export const PayoutProcessOverviewClient = ({
 	options: PayoutProcessOverviewOption[];
 	error: string | null;
 }) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const locale = useLocale();
 	const [selectedDate, setSelectedDate] = useState(() => normalizeToNoon(now()));
 	const [activeOption, setActiveOption] = useState<PayoutProcessOverviewOption | null>(null);

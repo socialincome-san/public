@@ -1,12 +1,12 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
 import { Settings } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { ProgramSettingsForm } from './program-settings-form';
 
@@ -16,7 +16,7 @@ type ProgramSettingsDialogProps = {
 };
 
 export const ProgramSettingsDialog = ({ programId, readOnly }: ProgramSettingsDialogProps) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const [isOpen, setIsOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

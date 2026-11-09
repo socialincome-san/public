@@ -1,6 +1,5 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutInterval, Profile } from '@/generated/prisma/enums';
@@ -16,6 +15,7 @@ import {
 	updateProgramSettingsAction,
 } from '@/modules/programs/program.actions';
 import type { ProgramSettingsPayload } from '@/modules/programs/program.types';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -129,7 +129,7 @@ const fillFormSchema = (
 };
 
 export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, onError }: ProgramSettingsFormProps) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const router = useRouter();
 	const [isLoading, startTransition] = useTransition();
 	const initialFormSchema: ProgramSettingsFormSchema = {

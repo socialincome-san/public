@@ -1,6 +1,5 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import {
 	generateTelecelCurrentMonthPayoutsAction,
 	generateTelecelPayoutCsvAction,
@@ -18,6 +17,7 @@ import {
 } from '@socialincome/design-system/overlays/dialog/dialog';
 import { format } from 'date-fns';
 import { EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import type { TelecelCsvPayoutProcessDialogProps } from './payout-process-dialog-props';
 
@@ -30,7 +30,7 @@ export const TelecelCsvPayoutProcessDialog = ({
 	open,
 	onClose,
 }: TelecelCsvPayoutProcessDialogProps) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const [results, setResults] = useState<Record<number, StepResult>>({});
 	const monthKey = format(selectedDate, 'yyyy-MM');
 

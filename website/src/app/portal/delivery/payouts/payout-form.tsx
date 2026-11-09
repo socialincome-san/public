@@ -1,6 +1,5 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutStatus } from '@/generated/prisma/enums';
@@ -15,6 +14,7 @@ import {
 } from '@/modules/payouts/payout.actions';
 import type { PayoutPayload } from '@/modules/payouts/payout.types';
 import type { RecipientOption } from '@/modules/recipients/recipient.types';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreatePayoutInput, buildUpdatePayoutInput } from './payout-form-helpers';
@@ -40,7 +40,7 @@ export type PayoutFormSchema = {
 };
 
 export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFormProps) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const initialFormSchema: PayoutFormSchema = {
 		label: t('delivery.payout_form.title'),
 		fields: {

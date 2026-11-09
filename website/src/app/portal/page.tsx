@@ -2,8 +2,8 @@ import { UserPrograms } from '@/app/portal/user-programs';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { requireSession } from '@/server/session';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
-import { getPortalOperationsTranslations } from './portal-operations-server-translations';
 
 export default function PortalPage() {
 	return (
@@ -15,7 +15,7 @@ export default function PortalPage() {
 
 const PortalDataLoader = async () => {
 	const user = await requireSession('user');
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 
 	const breadcrumbLinks = [
 		{ href: '/', label: t('navigation.website') },

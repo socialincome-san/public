@@ -2,8 +2,8 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { ReactNode } from 'react';
 
 type ProfileLayoutProps = {
@@ -11,7 +11,7 @@ type ProfileLayoutProps = {
 };
 
 export default async function ProfileLayout({ children }: ProfileLayoutProps) {
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 	const breadcrumbLinks = [
 		{ href: '/', label: t('navigation.website') },
 		{ href: '/portal', label: t('navigation.portal') },

@@ -1,8 +1,8 @@
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { SuccessBanner } from '@socialincome/design-system/feedback/success-banner/success-banner';
 import { ChevronRightIcon, ExternalLinkIcon } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 type ProgramSetupSuccessProps = {
@@ -11,7 +11,7 @@ type ProgramSetupSuccessProps = {
 };
 
 export const ProgramSetupSuccess = async ({ programId, publicUrl }: ProgramSetupSuccessProps) => {
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 
 	return (
 		<Card>

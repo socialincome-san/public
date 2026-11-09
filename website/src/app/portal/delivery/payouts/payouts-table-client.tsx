@@ -1,12 +1,12 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getPayoutsTableFilters, payoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
 import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
 import { PlusIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { PayoutFormDialog } from './payout-form-dialog';
 
 export const PayoutsTableClient = ({
@@ -26,7 +26,7 @@ export const PayoutsTableClient = ({
 	mobileMoneyProviderFilterOptions: { id: string; name: string }[];
 	recipientFilterOptions: { id: string; name: string }[];
 }) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const { recordId: payoutId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('payoutId');
 	const toolbarFilters = getPayoutsTableFilters({
 		query,

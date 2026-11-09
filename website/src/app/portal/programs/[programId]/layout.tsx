@@ -1,4 +1,3 @@
-import { getPortalOperationsTranslations } from '@/app/portal/portal-operations-server-translations';
 import { CountryBadge } from '@/components/badges/country-badge';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
@@ -6,6 +5,7 @@ import { ProgramPermission } from '@/generated/prisma/enums';
 import { getProgramWallet } from '@/modules/programs/program.service';
 import { requireSession } from '@/server/session';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
 import { ProgramSettingsDialog } from './components/program-settings-dialog';
 
@@ -17,7 +17,7 @@ type ProgramLayoutProps = {
 export default async function ProgramLayout({ children, params }: ProgramLayoutProps) {
 	const { programId } = await params;
 	const user = await requireSession('user');
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 
 	const result = await getProgramWallet(user.id, programId);
 

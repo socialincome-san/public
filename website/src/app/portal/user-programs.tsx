@@ -5,11 +5,11 @@ import { getCountryNameByCode } from '@/lib/types/country';
 import { getCurrentProgramWalletsAction } from '@/modules/programs/program.actions';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { Wallet } from '@socialincome/design-system/data-display/wallet/wallet';
-import { getPortalOperationsTranslations } from './portal-operations-server-translations';
+import { getTranslations } from 'next-intl/server';
 
 export const UserPrograms = async () => {
 	const result = await getCurrentProgramWalletsAction();
-	const t = await getPortalOperationsTranslations();
+	const t = await getTranslations('portal-operations');
 
 	if (!result.success) {
 		return <div>{result.error}</div>;

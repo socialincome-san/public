@@ -1,10 +1,10 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { createPortalProgramDonationCheckoutAction } from '@/modules/stripe-payments/stripe-payment.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { SegmentedToggle } from '@socialincome/design-system/actions/segmented-toggle/segmented-toggle';
 import { Input } from '@socialincome/design-system/forms/input/input';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -14,7 +14,7 @@ type DonationFormProps = {
 };
 
 export const DonationForm = ({ costPerIntervalChf, programId }: DonationFormProps) => {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const router = useRouter();
 	const [method, setMethod] = useState<'credit' | 'bank'>('credit');
 	const [submitting, setSubmitting] = useState(false);

@@ -1,6 +1,5 @@
 'use client';
 
-import { usePortalOperationsTranslations } from '@/app/portal/portal-operations-translations';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationMembersTableConfig } from '@/components/data-table/configs/organization-members-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
@@ -15,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PencilIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -27,7 +27,7 @@ type MembersTableProps = {
 };
 
 export default function MembersTable({ rows, error, organizationName, query }: MembersTableProps) {
-	const t = usePortalOperationsTranslations();
+	const t = useTranslations('portal-operations');
 	const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [isPending, startTransition] = useTransition();
