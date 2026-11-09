@@ -5,6 +5,7 @@ const mockGetOverviewArticleTypes = jest.fn();
 const mockGetPrimaryRoleLabels = jest.fn();
 const mockGetCircleLabels = jest.fn();
 const mockGetTimeCommitmentLabels = jest.fn();
+const mockGetWorkStyleLabels = jest.fn();
 const mockGetTag = jest.fn();
 const mockGetArticleType = jest.fn();
 const mockGetArticlesByTag = jest.fn();
@@ -29,6 +30,7 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getPrimaryRoleLabels: mockGetPrimaryRoleLabels,
 	getCircleLabels: mockGetCircleLabels,
 	getTimeCommitmentLabels: mockGetTimeCommitmentLabels,
+	getWorkStyleLabels: mockGetWorkStyleLabels,
 	getTag: mockGetTag,
 	getArticleType: mockGetArticleType,
 	getArticlesByTag: mockGetArticlesByTag,
@@ -106,6 +108,7 @@ beforeEach(() => {
 	mockGetPrimaryRoleLabels.mockResolvedValue({ success: true, data: { editor: 'Editor' } });
 	mockGetCircleLabels.mockResolvedValue({ success: true, data: { 'tech-circle': 'tech-circle' } });
 	mockGetTimeCommitmentLabels.mockResolvedValue({ success: true, data: { 'On a break': 'Pause' } });
+	mockGetWorkStyleLabels.mockResolvedValue({ success: true, data: { 'Ad Hoc': 'Spontan' } });
 	mockGetArticlesByTag.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByArticleType.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByAuthor.mockResolvedValue({ success: true, data: [article] });
@@ -267,6 +270,7 @@ describe('getJournalPersonPageData', () => {
 			roleLabels: { editor: 'Editor' },
 			circleLabels: { 'tech-circle': 'tech-circle' },
 			timeCommitmentLabels: { 'On a break': 'Pause' },
+			workStyleLabels: { 'Ad Hoc': 'Spontan' },
 			showMoreArticlesLink: true,
 			pathname: '/de/chf/person/ada',
 			breadcrumbs: [

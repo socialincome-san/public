@@ -2,7 +2,7 @@ import type { ArticleType, Person } from '@/generated/storyblok/types/109655/sto
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultCurrency, defaultLanguage, getWebsiteBasePath, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataImage, WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
-import { humanizeIdentifier } from '@/lib/utils/string-utils';
+import { humanizeIdentifier, slugify } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import type { Metadata } from 'next';
@@ -11,6 +11,7 @@ import { normalizeStoryblokFocusForImageService } from './storyblok-image-focus'
 import {
 	getWebsitePathTailFromStoryblokSlug,
 	getWebsitePublicPath,
+	WEBSITE_CIRCLE_PATH_SEGMENT,
 	WEBSITE_PEOPLE_PATH_SEGMENT,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from './storyblok-paths';
@@ -262,6 +263,10 @@ export const createWebsiteJournalArticleTypeLink = (articleTypeSlug: string, lan
 
 export const createWebsitePersonLink = (slug: string, language: string, currency: WebsiteCurrency) =>
 	createWebsitePath(language, currency, WEBSITE_PERSON_PATH_SEGMENT, slug);
+
+// Circle pages are named after the datasource value, e.g. "Communication" lives at /circle/communication
+export const createWebsiteCirclePath = (circleCode: string, language: string, currency: WebsiteCurrency) =>
+	createWebsitePath(language, currency, WEBSITE_CIRCLE_PATH_SEGMENT, slugify(circleCode));
 
 export const createWebsitePeoplePath = (language: string, currency: WebsiteCurrency) =>
 	createWebsitePath(language, currency, WEBSITE_PEOPLE_PATH_SEGMENT);

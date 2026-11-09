@@ -122,6 +122,16 @@ export interface CampaignOverview {
   [k: string]: unknown;
 }
 
+export interface CircleGrid {
+  title?: string;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "circleGrid";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface CommunityContributorGroup {
   label: number | string;
   people: (ISbStoryData<Person> | string)[];
@@ -625,6 +635,8 @@ export interface Page {
     | TwoColumn
     | Inflows
     | Outflows
+    | CircleGrid
+    | TaskCards
     | IframeEmbed
   )[];
   communityEnabled?: boolean;
@@ -697,14 +709,19 @@ export interface Person {
 }
 
 export interface PersonGrid {
+  title?: string;
   persons?: (ISbStoryData<Person> | string)[];
   statusFilter?: "" | "all" | "active" | "inactive";
   roleFilter?: (number | string)[];
+  circleFilter?: (number | string)[];
+  circleMembership?: "" | "all" | "active" | "interested";
   countryOffice?: (number | string)[];
   roleExcludeFilter?: (number | string)[];
   excludeCountryOfficeMembers?: boolean;
   linkToPersonPage?: boolean;
   smallCards?: boolean;
+  displayAsCarousel?: boolean;
+  sortBy?: "" | "default" | "startDate";
   showFilterPills?: boolean;
   showSort?: boolean;
   showSearch?: boolean;
@@ -808,6 +825,7 @@ export interface ReservesBlock {
 export interface RichtextButtonHeader {
   heading?: StoryblokRichTextDoc;
   button?: Button[];
+  buttonStyle?: "" | "outline" | "primary";
   disableMarginBottom?: boolean;
   disableMarginTop?: boolean;
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
@@ -852,6 +870,24 @@ export interface Tag {
   description?: string;
   displayInOverviewPage?: boolean;
   component: "tag";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface TaskCard {
+  title: string;
+  description?: string;
+  component: "taskCard";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface TaskCards {
+  title?: string;
+  tasks?: TaskCard[];
+  component: "taskCards";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;

@@ -9,12 +9,10 @@ import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
-	type CarouselApi,
+	CarouselScrollNextButton,
 } from '@socialincome/design-system/data-display/carousel/carousel';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
-import { ChevronRightIcon } from 'lucide-react';
-import { useState } from 'react';
 
 type PersonCarouselSidebar = {
 	title?: string;
@@ -29,10 +27,18 @@ type Props = {
 	personLink?: { lang: string; currency: WebsiteCurrency };
 	size?: 'default' | 'small';
 	roleLabels?: Record<string, string>;
+	// Shows the "volunteering since" pill on the cards, counted up to this day.
+	volunteerDurationUntil?: number;
 };
 
-export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default', roleLabels }: Props) => {
-	const [api, setApi] = useState<CarouselApi>();
+export const PersonCarousel = ({
+	persons,
+	sidebar,
+	personLink,
+	size = 'default',
+	roleLabels,
+	volunteerDurationUntil,
+}: Props) => {
 	const hasSidebar = Boolean(sidebar?.title ?? sidebar?.heading ?? sidebar?.description);
 	const isSmall = size === 'small';
 
@@ -49,8 +55,8 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default',
 					{sidebar?.description && <p className="text-muted-foreground text-lg leading-7">{sidebar.description}</p>}
 				</div>
 			)}
-			<div className={cn('relative min-w-0', hasSidebar ? 'lg:col-span-2' : 'w-full')}>
-				<Carousel setApi={setApi} opts={{ align: 'start', loop: persons.length > 1 }} gap="lg">
+			<div className={cn('min-w-0', hasSidebar ? 'lg:col-span-2' : 'w-full')}>
+				<Carousel opts={{ align: 'start', loop: persons.length > 1 }} gap="lg">
 					<CarouselContent>
 						{persons.map((person) => (
 							<CarouselItem key={person.uuid} size={isSmall ? 'card-sm' : 'card'}>
@@ -59,21 +65,13 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default',
 									size={size}
 									href={personLink ? createWebsitePersonLink(person.slug, personLink.lang, personLink.currency) : undefined}
 									roleLabels={roleLabels}
+									volunteerDurationUntil={volunteerDurationUntil}
 								/>
 							</CarouselItem>
 						))}
 					</CarouselContent>
+					<CarouselScrollNextButton aria-label="Show next person" />
 				</Carousel>
-				{persons.length > 1 && (
-					<button
-						type="button"
-						onClick={() => api?.scrollNext()}
-						aria-label="Show next person"
-						className="bg-primary-foreground shadow-raised absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full"
-					>
-						<ChevronRightIcon className="size-5" aria-hidden="true" />
-					</button>
-				)}
 			</div>
 		</div>
 	);
