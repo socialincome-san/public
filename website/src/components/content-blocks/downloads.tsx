@@ -1,5 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { FilterDropdown } from '@/components/filters/filter-dropdown';
+import { getQueryValue, getSearchQuery, SEARCH_QUERY_KEY } from '@/components/filters/filter-query';
 import { FilterSearch } from '@/components/filters/filter-search';
 import type { Document, Downloads, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
@@ -27,7 +28,6 @@ type Props = {
 
 const YEAR_QUERY_KEY = 'year';
 const DOCUMENT_QUERY_KEY = 'document';
-const SEARCH_QUERY_KEY = 'search';
 
 // Storyblok doesn't resolve relations nested inside resolved relations, so authors arrive as uuids and the people are
 // loaded separately
@@ -67,13 +67,6 @@ const toDownloadDocument = (document: ISbStoryData<Document>, authors: DocumentA
 		file.filename ? [{ language, url: file.filename }] : [],
 	),
 });
-
-const getQueryValue = (searchParams: AnySearchParams, key: string) => {
-	const value = searchParams[key];
-	const firstValue = Array.isArray(value) ? value.at(0) : value;
-
-	return typeof firstValue === 'string' ? firstValue.trim() : '';
-};
 
 export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Props) => {
 	const storyDocuments = blok.documents.filter((document) => typeof document !== 'string');
@@ -115,7 +108,7 @@ export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Pro
 	).map((category) => ({ value: category, label: t(`downloads.categories.${category}`) }));
 	const yearQuery = getQueryValue(query, YEAR_QUERY_KEY);
 	const categoryQuery = getQueryValue(query, DOCUMENT_QUERY_KEY);
-	const searchQuery = getQueryValue(query, SEARCH_QUERY_KEY).toLowerCase();
+	const searchQuery = getSearchQuery(query).toLowerCase();
 	const selectedYear = yearOptions.some((option) => option.value === yearQuery) ? yearQuery : undefined;
 	const selectedCategory = categoryOptions.some((option) => option.value === categoryQuery) ? categoryQuery : undefined;
 	const boardHref = resolveStoryblokLink(blok.boardLink, lang, currency);
@@ -155,6 +148,7 @@ export const DownloadsBlock = async ({ blok, lang, currency, searchParams }: Pro
 								queryKey={SEARCH_QUERY_KEY}
 								label={t('downloads.search-label')}
 								placeholder={t('downloads.search-placeholder')}
+								compactPlaceholder={t('downloads.search-placeholder-count', { count: visibleDocuments.length })}
 							/>
 						}
 					/>

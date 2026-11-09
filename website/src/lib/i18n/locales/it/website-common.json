@@ -104,6 +104,7 @@
 		},
 		"search-label": "Cerca documenti",
 		"search-placeholder": "Cerca",
+		"search-placeholder-count": "Cerca tra {count, plural, one {# documento} other {# documenti}}",
 		"no-results": "Nessun documento corrisponde alla tua ricerca.",
 		"download-label": "Scarica {title} in {language}",
 		"languages": {
