@@ -379,6 +379,13 @@ export interface IframeEmbed {
   [k: string]: unknown;
 }
 
+export interface ImageGeneratorGallery {
+  component: "imageGeneratorGallery";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface ImageText {
   content?: StoryblokRichTextDoc;
   image: StoryblokAsset;
@@ -641,6 +648,7 @@ export interface Page {
     | CircleGrid
     | TaskCards
     | IframeEmbed
+    | ImageGeneratorGallery
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
