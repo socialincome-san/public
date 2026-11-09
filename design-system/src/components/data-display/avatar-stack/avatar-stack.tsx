@@ -14,6 +14,7 @@ const ringVariants = cva('ring-card rounded-full', {
 		size: {
 			xs: 'ring-2',
 			sm: 'ring-2',
+			default: 'ring-2',
 			lg: 'ring-2',
 			xl: 'ring-3',
 		},
@@ -33,25 +34,30 @@ const initialsOf = (name: string) =>
 		.join('')
 		.toUpperCase();
 
-export const AvatarStack = ({ people, size = 'lg' }: AvatarStackProps) => (
-	<span className="flex -space-x-2" aria-hidden="true">
-		{people.map((person) => {
-			const avatar = (
-				<Avatar size={size}>
-					{person.imageSrc ? <AvatarImage src={person.imageSrc} alt="" /> : null}
-					<AvatarFallback>{initialsOf(person.name)}</AvatarFallback>
-				</Avatar>
-			);
+export const AvatarStack = ({ people, size = 'lg' }: AvatarStackProps) => {
+	// The ring only separates overlapping faces
+	const ringClassName = people.length > 1 ? ringVariants({ size }) : undefined;
 
-			return person.href ? (
-				<NextLink key={person.name} href={person.href} tabIndex={-1} className={ringVariants({ size })}>
-					{avatar}
-				</NextLink>
-			) : (
-				<span key={person.name} className={ringVariants({ size })}>
-					{avatar}
-				</span>
-			);
-		})}
-	</span>
-);
+	return (
+		<span className="flex -space-x-2" aria-hidden="true">
+			{people.map((person) => {
+				const avatar = (
+					<Avatar size={size}>
+						{person.imageSrc ? <AvatarImage src={person.imageSrc} alt="" /> : null}
+						<AvatarFallback>{initialsOf(person.name)}</AvatarFallback>
+					</Avatar>
+				);
+
+				return person.href ? (
+					<NextLink key={person.name} href={person.href} tabIndex={-1} className={ringClassName}>
+						{avatar}
+					</NextLink>
+				) : (
+					<span key={person.name} className={ringClassName}>
+						{avatar}
+					</span>
+				);
+			})}
+		</span>
+	);
+};

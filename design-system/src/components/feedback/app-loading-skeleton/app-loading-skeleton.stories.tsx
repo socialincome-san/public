@@ -17,3 +17,14 @@ export const Card: Story = {};
 export const Page: Story = {
 	args: { variant: 'page', message: 'Loading your dashboard…' },
 };
+
+export const Content: Story = {
+	args: { variant: 'content', message: 'Loading Social Income…' },
+	decorators: [
+		(Story) => (
+			<div className="bg-website-gradient">
+				<Story />
+			</div>
+		),
+	],
+};

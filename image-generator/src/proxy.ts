@@ -13,7 +13,7 @@ const isAuthenticated = (request: NextRequest) => {
 	const password = process.env.APP_PASSWORD;
 	if (!header?.startsWith('Basic ') || !password) return false;
 	try {
-		const decoded = atob(header.slice(6));
+		const decoded = Buffer.from(header.slice(6), 'base64').toString('utf8');
 		const separator = decoded.indexOf(':');
 		return separator >= 0 && isPassword(decoded.slice(separator + 1), password);
 	} catch {

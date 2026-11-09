@@ -22,6 +22,7 @@ export interface Article {
   leadText?: string;
   content: StoryblokRichTextDoc;
   author: ISbStoryData<Author> | ISbStoryData<Person> | string;
+  coAuthors?: (ISbStoryData<Person> | string)[];
   displayInOverviewPage?: boolean;
   originalLanguage?: "" | "en" | "fr" | "de" | "it";
   type: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
@@ -47,8 +48,10 @@ export interface ArticleType {
 
 export interface BannerSection {
   text: StoryblokRichTextDoc;
-  color: "darkBlue" | "blue" | "white";
+  color: "darkBlue" | "blue" | "white" | "gradient" | "highlight";
   smallText?: boolean;
+  collapsible?: boolean;
+  collapsedByDefault?: boolean;
   component: "bannerSection";
   _uid: string;
   _editable?: string | undefined;
@@ -211,19 +214,6 @@ export interface Country {
   communityContactEmail?: string;
   communityArticles?: (ISbStoryData<Article> | string)[];
   component: "Country";
-  _uid: string;
-  _editable?: string | undefined;
-  [k: string]: unknown;
-}
-
-export interface CountryOffice {
-  countryOffice: number | string;
-  title?: string;
-  heading: string;
-  description?: string;
-  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
-  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
-  component: "countryOffice";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -403,6 +393,13 @@ export interface IframeEmbed {
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
   marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "iframeEmbed";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface ImageGeneratorGallery {
+  component: "imageGeneratorGallery";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -670,7 +667,7 @@ export interface Page {
     | CircleGrid
     | TaskCards
     | IframeEmbed
-    | CountryOffice
+    | ImageGeneratorGallery
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];

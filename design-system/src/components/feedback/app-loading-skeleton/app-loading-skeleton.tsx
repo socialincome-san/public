@@ -4,7 +4,8 @@ import { dataTableStableMinHeight } from '../../data-display/data-table/data-tab
 
 type AppLoadingSkeletonProps = {
 	message?: string;
-	variant?: 'card' | 'page';
+	// `content` fills the page body inside a layout that already paints the page background
+	variant?: 'card' | 'page' | 'content';
 };
 
 const LOADING_MESSAGES = [
@@ -27,9 +28,9 @@ export const AppLoadingSkeleton = ({ message, variant = 'card' }: AppLoadingSkel
 		<div
 			className={cn(
 				'flex w-full items-center justify-center',
-				variant === 'page'
-					? 'bg-website-gradient min-h-screen rounded-none'
-					: ['bg-card rounded-xl', dataTableStableMinHeight],
+				variant === 'card' && ['bg-card rounded-xl', dataTableStableMinHeight],
+				variant === 'page' && 'bg-website-gradient min-h-screen',
+				variant === 'content' && 'min-h-screen',
 			)}
 			data-testid="app-loading-skeleton"
 		>

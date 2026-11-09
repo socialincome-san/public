@@ -62,6 +62,8 @@ in Storybook › Foundations (`src/foundations/*.stories.tsx`).
   semantic tokens in `src/styles/theme.css` (`foreground`,
   `muted-foreground`, `primary`, `destructive`, `confirm`, `warning`,
   `border`, …). `white`/`black` only for content on media.
+- Dark surfaces (dark fill, light text) add `scheme-dark`, so content
+  colored with `light-dark()`, such as `AnimatedCircleIcon`, adapts.
 - Font sizes: Tailwind's scale plus `text-2xs`, `text-display`,
   `text-display-lg`.
 - Radii and shadows: Tailwind's scales plus `rounded-5xl`,
