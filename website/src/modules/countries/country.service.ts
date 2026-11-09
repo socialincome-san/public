@@ -3,10 +3,7 @@ import { fetchWorldBankIndicator } from '@/integrations/world-bank/world-bank.in
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode, isValidCountryCode, toCountryCode } from '@/lib/types/country';
-import {
-	countCandidatesForCountry,
-	getUnassignedRecipientCountries,
-} from '@/modules/recipients/recipient.service';
+import { countCandidatesForCountry, getUnassignedRecipientCountries } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import * as countryRepository from './country.repository.read';
