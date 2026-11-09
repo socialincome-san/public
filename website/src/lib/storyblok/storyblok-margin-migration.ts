@@ -17,7 +17,7 @@ export const STORYBLOK_MARGIN_COMPONENTS = [
 type AffectedComponent = (typeof STORYBLOK_MARGIN_COMPONENTS)[number];
 type MarginField = 'marginTop' | 'marginBottom';
 
-export type StoryblokMarginAuditChange = {
+type StoryblokMarginAuditChange = {
 	storyIdentifier?: string | number;
 	slug?: string;
 	language?: string;
@@ -30,7 +30,7 @@ export type StoryblokMarginAuditChange = {
 	reason: string;
 };
 
-export type StoryblokMarginSkippedBlock = {
+type StoryblokMarginSkippedBlock = {
 	storyIdentifier?: string | number;
 	slug?: string;
 	language?: string;
@@ -40,13 +40,13 @@ export type StoryblokMarginSkippedBlock = {
 	reason: string;
 };
 
-export type StoryblokMarginMigrationError = {
+type StoryblokMarginMigrationError = {
 	storyIndex?: number;
 	path?: string;
 	message: string;
 };
 
-export type StoryblokMarginStoryResult = StoryMetadata & {
+type StoryblokMarginStoryResult = StoryMetadata & {
 	storyIndex: number;
 	status: 'success' | 'failed';
 	changes: StoryblokMarginAuditChange[];
@@ -70,7 +70,7 @@ export type StoryblokMarginMigrationReport = {
 	};
 };
 
-export type SerializedStoryblokMarginMigrationReport = {
+type SerializedStoryblokMarginMigrationReport = {
 	schemaVersion: 1;
 	runId: string;
 	summary: StoryblokMarginMigrationReport['summary'];

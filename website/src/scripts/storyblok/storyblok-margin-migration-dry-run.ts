@@ -10,10 +10,14 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 
 const managementEndpoint = 'https://mapi.storyblok.com/v1';
+
 const getOptionalEnvironment = (name: string): string | undefined => {
 	const value = process.env[name]?.trim();
+	if (!value) {
+		return undefined;
+	}
 
-	return value ? value : undefined;
+	return value;
 };
 
 const getRequiredEnvironment = (name: string): string => {
