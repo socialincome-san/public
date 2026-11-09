@@ -11,3 +11,15 @@ test('management recipients page matches screenshot', async ({ page }) => {
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expectToHaveScreenshot(page);
 });
+
+test('recipient column headers sort the table directly', async ({ page }) => {
+	await page.goto('/portal/management/recipients');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+
+	const recipientHeader = page.getByRole('columnheader').getByRole('button', { name: 'Recipient', exact: true });
+	await recipientHeader.click();
+	await expect(page).toHaveURL(/sortBy=recipient&sortDirection=asc/);
+
+	await recipientHeader.click();
+	await expect(page).toHaveURL(/sortBy=recipient&sortDirection=desc/);
+});

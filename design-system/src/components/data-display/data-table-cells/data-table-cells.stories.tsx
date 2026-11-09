@@ -9,6 +9,7 @@ import {
 	DataTableIdCell,
 	DataTableProgressCell,
 	DataTableRowChevronCell,
+	DataTableSortHeader,
 	DataTableTextCell,
 	DataTableValueCell,
 } from './data-table-cells';
@@ -52,6 +53,32 @@ const cells = [
 	{ name: 'Download (unavailable)', cell: <DataTableDownloadCell unavailable /> },
 	{ name: 'Row chevron', cell: <DataTableRowChevronCell /> },
 ];
+
+const noop = () => undefined;
+
+export const SortHeaders: Story = {
+	render: () => (
+		<Table size="lg">
+			<TableHeader>
+				<TableRow>
+					<TableHead>
+						<DataTableSortHeader onToggle={noop}>Unsorted</DataTableSortHeader>
+					</TableHead>
+					<TableHead>
+						<DataTableSortHeader direction="asc" onToggle={noop}>
+							Ascending
+						</DataTableSortHeader>
+					</TableHead>
+					<TableHead>
+						<DataTableSortHeader direction="desc" onToggle={noop}>
+							Descending
+						</DataTableSortHeader>
+					</TableHead>
+				</TableRow>
+			</TableHeader>
+		</Table>
+	),
+};
 
 export const AllCells: Story = {
 	render: () => (

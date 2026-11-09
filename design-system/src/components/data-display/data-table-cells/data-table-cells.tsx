@@ -1,6 +1,15 @@
 'use client';
 
-import { Check, ChevronRightIcon, Clock3Icon, Copy, Download } from 'lucide-react';
+import {
+	ArrowDownIcon,
+	ArrowUpDownIcon,
+	ArrowUpIcon,
+	Check,
+	ChevronRightIcon,
+	Clock3Icon,
+	Copy,
+	Download,
+} from 'lucide-react';
 import Link from 'next/link';
 import { type MouseEvent, type ReactNode } from 'react';
 import { useCopyToClipboard } from '../../../use-copy-to-clipboard';
@@ -208,6 +217,29 @@ export const DataTableDownloadCell = ({ href, unavailable = false }: DataTableDo
 			<Download className="mr-2 h-4 w-4" />
 			Download
 		</Link>
+	);
+};
+
+type DataTableSortHeaderProps = {
+	children: ReactNode;
+	direction?: 'asc' | 'desc';
+	onToggle: () => void;
+};
+
+/** Column header label that toggles the column's sort order */
+export const DataTableSortHeader = ({ children, direction, onToggle }: DataTableSortHeaderProps) => {
+	const SortIcon = direction === 'asc' ? ArrowUpIcon : direction === 'desc' ? ArrowDownIcon : ArrowUpDownIcon;
+
+	// Labels wrap so the icons don't push wide tables past their container
+	return (
+		<button
+			type="button"
+			onClick={onToggle}
+			className="hover:text-foreground focus-visible:ring-ring inline-flex items-center gap-1 rounded-sm text-left font-medium whitespace-normal focus-visible:ring-1 focus-visible:outline-hidden"
+		>
+			{children}
+			<SortIcon className="size-3.5 shrink-0" aria-hidden="true" />
+		</button>
 	);
 };
 
