@@ -68,6 +68,7 @@ export const Footer = async ({ lang, currency }: Props) => {
 			copyright={layoutContent?.copyrightNotice?.replace('%YEAR%', currentYear.toString())}
 			supportedBy={supportedBy}
 			legal={<CookieSettingsButton />}
+			logoAnimationSrc="https://a.storyblok.com/f/109655/x/880b0018b3/social_income_logo_animation_white.json"
 		/>
 	);
 };
