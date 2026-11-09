@@ -27,6 +27,7 @@ import { ShowMoreToggle } from '@socialincome/design-system/actions/show-more-to
 import { DurationBadge } from '@socialincome/design-system/data-display/duration-badge/duration-badge';
 import { LinkList } from '@socialincome/design-system/data-display/link-list/link-list';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
+import { AnimatedCircleIcon } from '@socialincome/design-system/icons/animated-circle-icon/animated-circle-icon';
 import { GithubIcon, LinkedinIcon } from '@socialincome/design-system/icons/social-icons/social-icons';
 import { AsideSection } from '@socialincome/design-system/layout/aside-section/aside-section';
 import { ProfileHeader } from '@socialincome/design-system/layout/profile-header/profile-header';
@@ -135,6 +136,7 @@ export const PersonProfile = ({
 	const toCircleTag = (circle: PersonCircle) => ({
 		label: circle.label,
 		href: createWebsiteCirclePath(circle.code, lang, currency),
+		icon: <AnimatedCircleIcon size={22} />,
 		variant: circle.status === 'interested' ? ('light' as const) : ('solid' as const),
 	});
 
