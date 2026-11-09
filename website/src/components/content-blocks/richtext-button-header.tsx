@@ -1,4 +1,4 @@
-import { BlockButton } from '@/components/content-blocks/block-button';
+import { BlockButton, hasBlockButton } from '@/components/content-blocks/block-button';
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { RichtextButtonHeader } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -15,7 +15,7 @@ type Props = {
 export const RichtextButtonHeaderBlock = ({ blok, lang, currency }: Props) => {
 	const { heading, button, buttonAction, buttonStyle } = blok;
 
-	if (!heading && !button?.[0]?.label?.trim()) {
+	if (!heading && !hasBlockButton(button?.[0], buttonAction, lang, currency)) {
 		return null;
 	}
 

@@ -17,10 +17,22 @@ type Props = {
 	currency: WebsiteCurrency;
 };
 
-/** A Storyblok button that follows its link or, depending on the action, opens a form on the page. */
+export const hasBlockButton = (
+	button: ButtonBlok | undefined,
+	action: LandingHero['buttonAction'],
+	lang: WebsiteLanguage,
+	currency: WebsiteCurrency,
+) => {
+	if (!button?.label?.trim()) {
+		return false;
+	}
+
+	return action ? true : resolveStoryblokLink(button.link, lang, currency) !== '#';
+};
+
 export const BlockButton = async ({ button, action, variant, lang, currency }: Props) => {
 	const label = button?.label?.trim();
-	if (!label) {
+	if (!label || !hasBlockButton(button, action, lang, currency)) {
 		return null;
 	}
 
@@ -42,14 +54,11 @@ export const BlockButton = async ({ button, action, variant, lang, currency }: P
 				/>
 			);
 		}
-		default: {
-			const href = resolveStoryblokLink(button?.link, lang, currency);
-
-			return href === '#' ? null : (
+		default:
+			return (
 				<Button variant={variant} asChild>
-					<NextLink href={href}>{label}</NextLink>
+					<NextLink href={resolveStoryblokLink(button?.link, lang, currency)}>{label}</NextLink>
 				</Button>
 			);
-		}
 	}
 };

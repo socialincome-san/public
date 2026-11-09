@@ -36,9 +36,9 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency, local
 				back: t('menu.back'),
 				homeLink: t('logo.home-link-aria'),
 			}}
-			renderDonateAction={() => (
+			renderDonateAction={(closeMenu) => (
 				<SignedOutSlot sessions={sessions} scope={scope}>
-					<DonatePageLink label={tDonate('donation-form.donate-now')} />
+					<DonatePageLink label={tDonate('donation-form.donate-now')} onClick={closeMenu} />
 				</SignedOutSlot>
 			)}
 			footerControls={

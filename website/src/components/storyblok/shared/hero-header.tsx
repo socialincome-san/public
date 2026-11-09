@@ -39,7 +39,6 @@ type Props = {
 	heroCard?: ReactNode;
 	showDonationForm?: boolean;
 	showDonationsFormMobile?: boolean;
-	// Buttons below the title, e.g. a call to action of a landing page
 	actions?: ReactNode;
 };
 
@@ -82,16 +81,16 @@ export const HeroHeader = ({
 			>
 				{stats.length > 0 ? (
 					<MediaHeroChips>
-						{stats.map((stat) =>
+						{stats.map((stat, index) =>
 							stat.href ? (
 								<LinkPill
-									key={stat.label}
+									key={`${index}-${stat.label}`}
 									label={`${stat.value !== undefined ? `${stat.value} ` : ''}${stat.label}`}
 									href={stat.href}
 									icon={stat.icon}
 								/>
 							) : (
-								<MediaHeroPill key={stat.label}>
+								<MediaHeroPill key={`${index}-${stat.label}`}>
 									{stat.icon}
 									{stat.value !== undefined ? `${stat.value} ` : ''}
 									{stat.label}

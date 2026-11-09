@@ -82,6 +82,11 @@ const STORYBLOK_JOURNAL_FOLDER = `${STORYBLOK_PAGES_FOLDER}/journal`;
 
 export const WEBSITE_JOURNAL_PATH_SEGMENT = 'journal';
 
+const WEBSITE_GET_INVOLVED_PATH_SEGMENT = 'get-involved';
+
+export const getGetInvolvedPathTail = (folder = '', slug = '') =>
+	[WEBSITE_GET_INVOLVED_PATH_SEGMENT, folder, slug].filter(Boolean).join('/');
+
 const STORYBLOK_GLOBALS_JOURNAL_FOLDER = `${STORYBLOK_GLOBALS_FOLDER}/journal`;
 
 const STORYBLOK_JOURNAL_TAGS_FOLDER = `${STORYBLOK_GLOBALS_JOURNAL_FOLDER}/tags`;

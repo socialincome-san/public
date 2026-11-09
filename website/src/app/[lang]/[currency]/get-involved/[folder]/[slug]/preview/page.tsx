@@ -1,7 +1,7 @@
 import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[currency]';
 import { StoryblokPreviewPage } from '@/components/storyblok/storyblok-preview-page';
 import { getWebsiteBasePath, toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getPageStoryPath } from '@/lib/storyblok/storyblok-paths';
+import { getGetInvolvedPathTail, getPageStoryPath } from '@/lib/storyblok/storyblok-paths';
 
 type PreviewPageProps = DefaultLayoutProps<DefaultParams & { folder: string; slug: string }> & {
 	searchParams: Promise<Record<string, string | undefined>>;
@@ -9,7 +9,7 @@ type PreviewPageProps = DefaultLayoutProps<DefaultParams & { folder: string; slu
 
 export default async function PreviewGetInvolvedPage({ params, searchParams }: PreviewPageProps) {
 	const { folder, slug, lang, currency } = await params;
-	const pathTail = `get-involved/${folder}/${slug}`;
+	const pathTail = getGetInvolvedPathTail(folder, slug);
 
 	return (
 		<StoryblokPreviewPage

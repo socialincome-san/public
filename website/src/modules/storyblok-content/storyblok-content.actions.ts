@@ -22,7 +22,7 @@ import {
 	getFocusBySlug,
 	getFocuses,
 	getLocalPartners,
-	getPageFolderName,
+	getPagelessFolderName,
 	getPersonsByCountryOffice,
 	getPersonsByUuids,
 	getPrimaryRoleLabels,
@@ -56,11 +56,11 @@ export const getStoryTitleAction = async (input: unknown): Promise<Result<StoryT
 		: resultFail('Invalid Storyblok story request');
 };
 
-export const getPageFolderNameAction = async (input: unknown): Promise<Result<string>> => {
+export const getPagelessFolderNameAction = async (input: unknown): Promise<Result<string>> => {
 	const parsed = storyblokStoryInputSchema.safeParse(input);
 
 	return parsed.success
-		? getPageFolderName(parsed.data.storyPath, parsed.data.language)
+		? getPagelessFolderName(parsed.data.storyPath, parsed.data.language)
 		: resultFail('Invalid Storyblok folder request');
 };
 

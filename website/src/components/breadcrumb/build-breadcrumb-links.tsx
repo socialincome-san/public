@@ -8,7 +8,7 @@ import {
 	normalizeStoryblokSlug,
 	STORYBLOK_PAGES_FOLDER,
 } from '@/lib/storyblok/storyblok-paths';
-import { getPageFolderNameAction, getStoryTitleAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { getPagelessFolderNameAction, getStoryTitleAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { StoryTitleData } from '@/modules/storyblok-content/storyblok-content.types';
 import type { BreadcrumbLinkItem } from '@socialincome/design-system/navigation/breadcrumb/breadcrumb';
 import { getTranslations } from 'next-intl/server';
@@ -52,7 +52,7 @@ const fetchAncestor = async (slugPath: string, lang: WebsiteLanguage, fallbackSe
 	if (result.success) {
 		return { label: getStoryLabel(result.data, fallbackSegment), linked: true };
 	}
-	const folderName = await getPageFolderNameAction({ storyPath: slugPath, language: lang });
+	const folderName = await getPagelessFolderNameAction({ storyPath: slugPath, language: lang });
 
 	return folderName.success
 		? { label: folderName.data, linked: false }
