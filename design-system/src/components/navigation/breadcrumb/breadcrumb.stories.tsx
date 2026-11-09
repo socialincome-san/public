@@ -44,3 +44,14 @@ export const LongLabels: Story = {
 		],
 	},
 };
+
+export const UnlinkedLevel: Story = {
+	args: {
+		links: [
+			{ href: '/', label: 'Home' },
+			{ label: 'Get involved' },
+			{ label: 'Individuals' },
+			{ href: '/get-involved/individuals/donate', label: 'Donate' },
+		],
+	},
+};

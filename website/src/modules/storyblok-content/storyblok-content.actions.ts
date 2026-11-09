@@ -22,6 +22,7 @@ import {
 	getFocusBySlug,
 	getFocuses,
 	getLocalPartners,
+	getPageFolderName,
 	getPersonsByCountryOffice,
 	getPersonsByUuids,
 	getPrimaryRoleLabels,
@@ -53,6 +54,14 @@ export const getStoryTitleAction = async (input: unknown): Promise<Result<StoryT
 	return parsed.success
 		? getStoryTitle(parsed.data.storyPath, parsed.data.language)
 		: resultFail('Invalid Storyblok story request');
+};
+
+export const getPageFolderNameAction = async (input: unknown): Promise<Result<string>> => {
+	const parsed = storyblokStoryInputSchema.safeParse(input);
+
+	return parsed.success
+		? getPageFolderName(parsed.data.storyPath, parsed.data.language)
+		: resultFail('Invalid Storyblok folder request');
 };
 
 export const getProgramsAction = async (input: unknown): Promise<Result<ISbStoryData<Program>[]>> => {

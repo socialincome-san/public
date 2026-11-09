@@ -12,6 +12,7 @@ export type StoryTitleData = {
 export type StoryblokPublishedLink = {
 	uuid: string;
 	slug: string;
+	name?: string;
 	is_folder: boolean;
 	published: boolean;
 	alternates?: {

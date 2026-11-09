@@ -1,8 +1,8 @@
 'use client';
 
+import { DonatePageLink } from '@/components/app-shells/website/navbar/donate-page-link';
 import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
 import { type Scope } from '@/components/app-shells/website/navbar/utils';
-import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { getWebsiteBasePath, WebsiteLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
 import type { Session } from '@/modules/auth/auth.types';
 import { type SiteMenuEntry } from '@socialincome/design-system/navigation/site-header/site-header';
@@ -36,14 +36,9 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency, local
 				back: t('menu.back'),
 				homeLink: t('logo.home-link-aria'),
 			}}
-			renderDonateAction={(closeMenu) => (
+			renderDonateAction={() => (
 				<SignedOutSlot sessions={sessions} scope={scope}>
-					<OpenDonationWizardButton
-						label={tDonate('donation-form.donate-now')}
-						size="md"
-						onBeforeOpen={closeMenu}
-						analyticsEvent="donate_nav_click"
-					/>
+					<DonatePageLink label={tDonate('donation-form.donate-now')} />
 				</SignedOutSlot>
 			)}
 			footerControls={

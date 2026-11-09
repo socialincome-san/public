@@ -8,13 +8,13 @@ import { DownloadsBlock } from '@/components/content-blocks/downloads';
 import { ExplainerVideoHeaderBlock } from '@/components/content-blocks/explainer-video-header';
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
-import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
 import { IframeEmbedBlock } from '@/components/content-blocks/iframe-embed';
 import { ImageGeneratorGalleryBlock } from '@/components/content-blocks/image-generator-gallery';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
+import { LandingHeroBlock } from '@/components/content-blocks/landing-hero';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
@@ -49,14 +49,12 @@ import { Fragment, type ReactNode } from 'react';
 // The office block is generated separately until the unrelated CMS schema changes are pulled in.
 type PageBlock = Page['content'][number] | CountryOffice;
 type NestedPageBlock = TwoColumn['leftColumn'][number];
-type RichtextButtonHeaderAction = 'createProgram';
 
 type PageContentTypeProps = {
 	blok: Omit<Page, 'content'> & { content: PageBlock[] };
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 	searchParams?: Promise<AnySearchParams>;
-	richtextButtonHeaderAction?: RichtextButtonHeaderAction;
 	afterHero?: ReactNode;
 };
 
@@ -65,7 +63,6 @@ const renderPageBlock = (
 	lang: WebsiteLanguage,
 	currency: WebsiteCurrency,
 	searchParams?: Promise<AnySearchParams>,
-	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ): ReactNode => {
 	switch (block.component) {
 		case 'circleGrid':
@@ -100,6 +97,8 @@ const renderPageBlock = (
 			return <InflowsBlock blok={block} lang={lang} currency={currency} />;
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} currency={currency} />;
+		case 'landingHero':
+			return <LandingHeroBlock blok={block} lang={lang} currency={currency} />;
 		case 'lottie':
 			return <LottieBlock blok={block} />;
 		case 'modalCards':
@@ -127,10 +126,6 @@ const renderPageBlock = (
 		case 'reservesBlock':
 			return <ReservesBlock blok={block} lang={lang} currency={currency} />;
 		case 'richtextButtonHeader':
-			if (richtextButtonHeaderAction === 'createProgram') {
-				return <HomePageRichtextButtonHeaderBlock blok={block} lang={lang} currency={currency} />;
-			}
-
 			return <RichtextButtonHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'spacer':
 			return <SpacerBlock blok={block} />;
@@ -152,9 +147,7 @@ const renderPageBlock = (
 			const renderColumn = (column: typeof block.leftColumn) =>
 				column.length > 0
 					? column.map((columnBlock) => (
-							<Fragment key={columnBlock._uid}>
-								{renderPageBlock(columnBlock, lang, currency, searchParams, richtextButtonHeaderAction)}
-							</Fragment>
+							<Fragment key={columnBlock._uid}>{renderPageBlock(columnBlock, lang, currency, searchParams)}</Fragment>
 						))
 					: undefined;
 
@@ -179,21 +172,12 @@ const renderPageBlock = (
 	}
 };
 
-export default function PageContentType({
-	blok,
-	lang,
-	currency,
-	searchParams,
-	richtextButtonHeaderAction,
-	afterHero,
-}: PageContentTypeProps) {
+export default function PageContentType({ blok, lang, currency, searchParams, afterHero }: PageContentTypeProps) {
 	const blocks = blok.content ?? [];
-	const heroCount = blocks[0]?.component === 'heroVideo' ? 1 : 0;
+	const heroCount = blocks[0]?.component === 'heroVideo' || blocks[0]?.component === 'landingHero' ? 1 : 0;
 	const renderBlocks = (pageBlocks: PageBlock[]) =>
 		pageBlocks.map((currentBlock) => (
-			<Fragment key={currentBlock._uid}>
-				{renderPageBlock(currentBlock, lang, currency, searchParams, richtextButtonHeaderAction)}
-			</Fragment>
+			<Fragment key={currentBlock._uid}>{renderPageBlock(currentBlock, lang, currency, searchParams)}</Fragment>
 		));
 
 	return (

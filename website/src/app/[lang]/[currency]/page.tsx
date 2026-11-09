@@ -78,7 +78,6 @@ export default async function HomePage({ params, searchParams }: DefaultPageProp
 				lang={lang as WebsiteLanguage}
 				currency={toWebsiteCurrency(currency)}
 				searchParams={searchParams}
-				richtextButtonHeaderAction="createProgram"
 				afterHero={community ? <CommunityRow data={community} /> : null}
 			/>
 		</>

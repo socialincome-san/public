@@ -21,8 +21,8 @@ const clickWizardButton = async (scope: Locator, testId: string) => {
 	await button.click();
 };
 
-export const openDonationWizardFromNav = async (page: Page) => {
-	await page.goto('/en/chf');
+export const openDonationWizardFromDonatePage = async (page: Page) => {
+	await page.goto('/en/chf/get-involved/individuals/donate');
 	await page.getByTestId('donation-wizard-trigger').click();
 	await expect(wizard(page)).toBeVisible();
 	await waitForWizardStep(wizard(page), 'donation-wizard-step-amount');

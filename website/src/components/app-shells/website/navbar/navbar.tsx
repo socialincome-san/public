@@ -1,9 +1,9 @@
+import { DonatePageLink } from '@/components/app-shells/website/navbar/donate-page-link';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
 import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
 import { getSiteMenuEntries } from '@/components/app-shells/website/navbar/site-menu';
 import { type Scope } from '@/components/app-shells/website/navbar/utils';
 import { VisitorLocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/visitor-locale-currency-switcher';
-import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteBasePath, WebsiteLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
@@ -41,11 +41,7 @@ export const Navbar = async ({ sessions, lang, currency, scope }: Props) => {
 			account={<AccountSlot sessions={sessions} scope={scope} />}
 			donateAction={
 				<SignedOutSlot sessions={sessions} scope={scope}>
-					<OpenDonationWizardButton
-						label={tDonate('donation-form.donate-now')}
-						size="md"
-						analyticsEvent="donate_nav_click"
-					/>
+					<DonatePageLink label={tDonate('donation-form.donate-now')} />
 				</SignedOutSlot>
 			}
 			mobileMenu={

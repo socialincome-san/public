@@ -8,7 +8,7 @@ import {
 	normalizeStoryblokSlug,
 	STORYBLOK_PAGES_FOLDER,
 } from '@/lib/storyblok/storyblok-paths';
-import { getStoryTitleAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { getPageFolderNameAction, getStoryTitleAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { StoryTitleData } from '@/modules/storyblok-content/storyblok-content.types';
 import type { BreadcrumbLinkItem } from '@socialincome/design-system/navigation/breadcrumb/breadcrumb';
 import { getTranslations } from 'next-intl/server';
@@ -46,14 +46,17 @@ const getStoryLabel = (story: StoryTitleData, fallbackSegment: string) => {
 	return story.name?.trim() ?? humanizeSlugSegment(fallbackSegment);
 };
 
-const fetchStoryLabel = async (slugPath: string, lang: WebsiteLanguage, fallbackSegment: string) => {
+// A folder without a page of its own, such as get-involved/individuals, is named but not linked
+const fetchAncestor = async (slugPath: string, lang: WebsiteLanguage, fallbackSegment: string) => {
 	const result = await getStoryTitleAction({ storyPath: slugPath, language: lang });
-
-	if (!result.success) {
-		return humanizeSlugSegment(fallbackSegment);
+	if (result.success) {
+		return { label: getStoryLabel(result.data, fallbackSegment), linked: true };
 	}
+	const folderName = await getPageFolderNameAction({ storyPath: slugPath, language: lang });
 
-	return getStoryLabel(result.data, fallbackSegment);
+	return folderName.success
+		? { label: folderName.data, linked: false }
+		: { label: humanizeSlugSegment(fallbackSegment), linked: true };
 };
 
 const getAncestorStoryblokPaths = (fullSlug: string): string[] => {
@@ -96,10 +99,12 @@ export const buildBreadcrumbLinks = async ({
 		...(await Promise.all(
 			ancestorStoryblokPaths.map(async (storyblokPath) => {
 				const segment = storyblokPath.split('/').at(-1) ?? storyblokPath;
-				const label = await fetchStoryLabel(storyblokPath, lang, segment);
+				const { label, linked } = await fetchAncestor(storyblokPath, lang, segment);
 
 				return {
-					href: getWebsitePublicPath(lang, currency, getWebsitePathTailFromStoryblokSlug(storyblokPath)),
+					href: linked
+						? getWebsitePublicPath(lang, currency, getWebsitePathTailFromStoryblokSlug(storyblokPath))
+						: undefined,
 					label: capitalizeLabel(label),
 				};
 			}),

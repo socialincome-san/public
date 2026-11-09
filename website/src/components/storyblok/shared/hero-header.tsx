@@ -27,6 +27,7 @@ export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>
 
 type Props = {
 	title: string;
+	description?: string;
 	heroImage?: HeroHeaderImage | null;
 	stats: HeroHeaderStat[];
 	titleIcon?: string;
@@ -38,10 +39,13 @@ type Props = {
 	heroCard?: ReactNode;
 	showDonationForm?: boolean;
 	showDonationsFormMobile?: boolean;
+	// Buttons below the title, e.g. a call to action of a landing page
+	actions?: ReactNode;
 };
 
 export const HeroHeader = ({
 	title,
+	description,
 	heroImage,
 	stats,
 	titleIcon,
@@ -52,6 +56,7 @@ export const HeroHeader = ({
 	heroCard,
 	showDonationForm = true,
 	showDonationsFormMobile = true,
+	actions,
 }: Props) => {
 	const scaledDimensions = heroImage?.filename
 		? getScaledAssetDimensions({ filename: heroImage.filename }, HERO_HEADER_IMAGE_WIDTH)
@@ -71,6 +76,7 @@ export const HeroHeader = ({
 		>
 			<MediaHeroIntro
 				title={title}
+				description={description}
 				eyebrow={preTitle ? <MediaHeroChips>{preTitle}</MediaHeroChips> : null}
 				titleIcon={titleIcon ? { src: titleIcon, alt: titleIconAlt ?? title } : undefined}
 			>
@@ -95,6 +101,7 @@ export const HeroHeader = ({
 					</MediaHeroChips>
 				) : null}
 				{badges ? <MediaHeroChips>{badges}</MediaHeroChips> : null}
+				{actions}
 			</MediaHeroIntro>
 		</MediaHero>
 	);
