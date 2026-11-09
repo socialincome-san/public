@@ -9,7 +9,7 @@ import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
 import { IframeEmbedBlock } from '@/components/content-blocks/iframe-embed';
-import { ImageGeneratorGalleryBlock, type ImageGeneratorGallery } from '@/components/content-blocks/image-generator-gallery';
+import { ImageGeneratorGalleryBlock } from '@/components/content-blocks/image-generator-gallery';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
@@ -44,12 +44,12 @@ import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Fragment, type ReactNode } from 'react';
 
-type PageBlock = Page['content'][number] | ImageGeneratorGallery;
+type PageBlock = Page['content'][number];
 type NestedPageBlock = TwoColumn['leftColumn'][number];
 type RichtextButtonHeaderAction = 'createProgram';
 
 type PageContentTypeProps = {
-	blok: Omit<Page, 'content'> & { content: PageBlock[] };
+	blok: Page;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 	searchParams?: Promise<AnySearchParams>;

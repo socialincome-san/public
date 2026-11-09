@@ -1,3 +1,4 @@
+import type { ImageGeneratorGallery } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getSafeNumberFormatLocale, TIME_ZONE, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { getImageGeneratorGalleryAction } from '@/modules/image-generator-gallery/image-generator-gallery.actions';
@@ -6,12 +7,6 @@ import { ImageGallery } from '@socialincome/design-system/data-display/image-gal
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable } from '@storyblok/react';
 import { getTranslations } from 'next-intl/server';
-
-export type ImageGeneratorGallery = {
-	component: 'imageGeneratorGallery';
-	_uid: string;
-	_editable?: string;
-};
 
 type Props = {
 	blok: ImageGeneratorGallery;

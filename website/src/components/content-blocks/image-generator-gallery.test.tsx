@@ -1,8 +1,9 @@
+import type { ImageGeneratorGallery } from '@/generated/storyblok/types/109655/storyblok-components';
 import { resultFail, resultOk } from '@/lib/result';
 import { getImageGeneratorGalleryAction } from '@/modules/image-generator-gallery/image-generator-gallery.actions';
 import { storyblokEditable } from '@storyblok/react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { ImageGeneratorGalleryBlock, type ImageGeneratorGallery } from './image-generator-gallery';
+import { ImageGeneratorGalleryBlock } from './image-generator-gallery';
 
 jest.mock('@/modules/image-generator-gallery/image-generator-gallery.actions', () => ({
 	getImageGeneratorGalleryAction: jest.fn(),
