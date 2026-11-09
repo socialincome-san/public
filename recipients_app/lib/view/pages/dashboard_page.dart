@@ -3,6 +3,7 @@ import "dart:io";
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/core/cubits/survey/survey_cubit.dart";
+import "package:app/core/cubits/welcome_message/welcome_message_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/models/offline_exception.dart";
 import "package:app/data/repositories/repositories.dart";
@@ -10,6 +11,7 @@ import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard/dashboard_item.dart";
 import "package:app/view/widgets/dashboard/empty_item.dart";
+import "package:app/view/widgets/dashboard/welcome_message_card.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_container.dart";
 import "package:app/view/widgets/survey/survey_card_container.dart";
 import "package:app/view/widgets/survey/surveys_overview_card.dart";
@@ -39,6 +41,13 @@ class DashboardPage extends StatelessWidget {
             crashReportingRepository: context.read<CrashReportingRepository>(),
           )..getSurveys(),
         ),
+        BlocProvider(
+          create: (context) => WelcomeMessageCubit(
+            recipient: authCubit.state.recipient!,
+            localUserSettingsRepository: context.read<LocalUserSettingsRepository>(),
+            crashReportingRepository: context.read<CrashReportingRepository>(),
+          )..load(),
+        ),
       ],
       child: const _DashboardView(),
     );
@@ -58,6 +67,7 @@ class _DashboardViewState extends State<_DashboardView> {
   @override
   Widget build(BuildContext context) {
     final surveys = context.watch<SurveyCubit>().state.mappedSurveys;
+    final showWelcomeMessage = context.watch<WelcomeMessageCubit>().state;
 
     final List<DashboardItem> surveysItems = context
         .watch<SurveyCubit>()
@@ -69,6 +79,7 @@ class _DashboardViewState extends State<_DashboardView> {
         .toList();
 
     final List<DashboardItem> headerItems = [
+      if (showWelcomeMessage) WelcomeMessageCard(onDismiss: context.read<WelcomeMessageCubit>().dismiss),
       const BalanceCardContainer(),
       SurveysOverviewCard(mappedSurveys: surveys),
     ];

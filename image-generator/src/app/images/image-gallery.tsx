@@ -1,6 +1,6 @@
 'use client';
 
-import { type GalleryImage, imageUrl } from '@/lib/images';
+import { type GalleryImage } from '@/lib/images';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { DownloadMenu } from '../download-menu';
 import { ImageEditDialog } from '../image-edit-dialog';
+import { DeleteImageDialog } from './delete-image-dialog';
 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {
 	dateStyle: 'medium',
@@ -24,7 +25,7 @@ const GalleryPreview = ({ image, prompt }: { image: GalleryImage; prompt: string
 	return (
 		<div className="bg-muted/40 relative aspect-video w-full overflow-hidden" aria-busy={status === 'loading'}>
 			<Image
-				src={imageUrl(image.id, 'preview')}
+				src={image.previewUrl}
 				width={640}
 				height={360}
 				alt={prompt}
@@ -56,7 +57,9 @@ type ImageGalleryProps = {
 };
 
 export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
-	if (images.length === 0) {
+	const [deletedIds, setDeletedIds] = useState<string[]>([]);
+	const visibleImages = images.filter((image) => !deletedIds.includes(String(image.id)));
+	if (visibleImages.length === 0) {
 		return (
 			<div className="border-border bg-card flex flex-col items-center justify-center rounded-3xl border p-12 text-center sm:p-16">
 				<Badge variant="outline">Gallery empty</Badge>
@@ -75,11 +78,19 @@ export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 
 	return (
 		<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{images.map((image) => {
+			{visibleImages.map((image) => {
 				const prompt = image.prompt || 'No prompt saved.';
 				return (
 					<article key={image.id} className="border-border bg-card flex flex-col overflow-hidden rounded-2xl border">
-						<GalleryPreview image={image} prompt={prompt} />
+						<div className="relative">
+							<GalleryPreview image={image} prompt={prompt} />
+							<div className="bg-card absolute top-3 right-3 rounded-full">
+								<DeleteImageDialog
+									imageId={image.id}
+									onDeleted={() => setDeletedIds((previous) => [...previous, String(image.id)])}
+								/>
+							</div>
+						</div>
 						<div className="mt-auto flex flex-wrap items-center justify-between gap-3 p-4">
 							<div className="text-muted-foreground text-xs">
 								{image.created_at ? (
@@ -102,8 +113,8 @@ export const ImageGallery = ({ images, onImageAdded }: ImageGalleryProps) => {
 										</div>
 									</TooltipContent>
 								</Tooltip>
-								<ImageEditDialog imageId={image.id} size="sm" onEdited={onImageAdded} />
-								<DownloadMenu imageId={image.id} variant="outline" size="sm" />
+								<ImageEditDialog image={image} size="sm" onEdited={onImageAdded} />
+								<DownloadMenu image={image} variant="outline" size="sm" />
 							</div>
 						</div>
 					</article>

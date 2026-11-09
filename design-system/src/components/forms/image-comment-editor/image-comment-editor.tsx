@@ -1,9 +1,10 @@
 'use client';
 
-import { Trash2 } from 'lucide-react';
+import { Info, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { type KeyboardEvent, type MouseEvent, type PointerEvent, useId, useRef } from 'react';
 import { Button } from '../../actions/button/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../overlays/tool-tip/tool-tip';
 import { Textarea } from '../textarea/textarea';
 
 /** `x` and `y` are fractions of the image size (0–1), measured from the top-left corner. */
@@ -25,6 +26,8 @@ type ImageCommentEditorProps = {
 		remove: string;
 		placeholder: string;
 		empty: string;
+		helpLabel: string;
+		help: string;
 	};
 };
 
@@ -53,9 +56,16 @@ export const ImageCommentEditor = ({
 }: ImageCommentEditorProps) => {
 	const fieldIdPrefix = useId();
 	const frameRef = useRef<HTMLDivElement>(null);
-	// A drag ends with a click; it should not also focus the field, which opens the keyboard on phones.
-	// A tap with a slightly moving finger still counts as a click.
-	const pointerDownRef = useRef<{ x: number; y: number } | null>(null);
+	const dragRef = useRef<{
+		id: string;
+		pointerId: number;
+		startX: number;
+		startY: number;
+		offsetX: number;
+		offsetY: number;
+	} | null>(null);
+	// A drag ends with a click; it should not also open the keyboard on phones.
+	const didDragRef = useRef(false);
 	const canAdd = !disabled && comments.length < maxComments;
 
 	const pointerPosition = (event: { clientX: number; clientY: number }) => {
@@ -65,8 +75,8 @@ export const ImageCommentEditor = ({
 		}
 
 		return {
-			x: clamp((event.clientX - bounds.left) / bounds.width),
-			y: clamp((event.clientY - bounds.top) / bounds.height),
+			x: (event.clientX - bounds.left) / bounds.width,
+			y: (event.clientY - bounds.top) / bounds.height,
 		};
 	};
 
@@ -79,7 +89,7 @@ export const ImageCommentEditor = ({
 		if (!position) {
 			return;
 		}
-		onCommentsChange([...comments, { id: crypto.randomUUID(), ...position, text: '' }]);
+		onCommentsChange([...comments, { id: crypto.randomUUID(), x: clamp(position.x), y: clamp(position.y), text: '' }]);
 	};
 
 	const movePinWithKeyboard = (event: KeyboardEvent<HTMLButtonElement>, comment: ImageComment) => {
@@ -93,17 +103,22 @@ export const ImageCommentEditor = ({
 	};
 
 	const movePinWithPointer = (event: PointerEvent<HTMLButtonElement>, comment: ImageComment) => {
-		if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+		const drag = dragRef.current;
+		if (disabled || drag?.pointerId !== event.pointerId || drag.id !== comment.id) {
+			return;
+		}
+		if (!didDragRef.current && Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < DRAG_THRESHOLD_PX) {
 			return;
 		}
 		const position = pointerPosition(event);
 		if (position) {
-			updateComment(comment.id, position);
+			didDragRef.current = true;
+			updateComment(comment.id, { x: clamp(position.x - drag.offsetX), y: clamp(position.y - drag.offsetY) });
 		}
 	};
 
 	return (
-		<div className="grid min-h-0 flex-1 grid-rows-[minmax(12rem,3fr)_minmax(10rem,2fr)] gap-4 md:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)] md:grid-rows-1">
+		<div className="grid min-h-0 flex-1 grid-rows-[minmax(12rem,3fr)_minmax(10rem,2fr)] gap-4 md:grid-cols-[minmax(0,2.5fr)_minmax(14rem,1fr)] md:grid-rows-1">
 			<div className="bg-muted/30 [container-type:size] flex min-h-0 items-center justify-center rounded-2xl border p-2">
 				<div ref={frameRef} className="relative">
 					<Image
@@ -130,19 +145,47 @@ export const ImageCommentEditor = ({
 							style={{ left: `${comment.x * 100}%`, top: `${comment.y * 100}%` }}
 							className="bg-primary text-primary-foreground shadow-raised focus-visible:ring-ring absolute flex size-9 -translate-x-1/2 -translate-y-1/2 cursor-grab touch-none items-center justify-center rounded-full border-2 border-white text-sm font-bold select-none focus-visible:ring-2 focus-visible:outline-none active:cursor-grabbing disabled:cursor-default"
 							onPointerDown={(event) => {
-								pointerDownRef.current = { x: event.clientX, y: event.clientY };
+								const position = pointerPosition(event);
+								if (disabled || event.button !== 0 || dragRef.current || !position) {
+									return;
+								}
+								didDragRef.current = false;
+								dragRef.current = {
+									id: comment.id,
+									pointerId: event.pointerId,
+									startX: event.clientX,
+									startY: event.clientY,
+									offsetX: position.x - comment.x,
+									offsetY: position.y - comment.y,
+								};
 								event.currentTarget.setPointerCapture(event.pointerId);
 							}}
 							onPointerMove={(event) => movePinWithPointer(event, comment)}
-							onClick={(event) => {
-								const start = pointerDownRef.current;
-								const wasDragged =
-									event.detail !== 0 &&
-									start !== null &&
-									Math.hypot(event.clientX - start.x, event.clientY - start.y) > DRAG_THRESHOLD_PX;
-								if (wasDragged) {
+							onPointerUp={(event) => {
+								if (dragRef.current?.pointerId !== event.pointerId) {
 									return;
 								}
+								movePinWithPointer(event, comment);
+								dragRef.current = null;
+								event.currentTarget.releasePointerCapture(event.pointerId);
+							}}
+							onLostPointerCapture={(event) => {
+								if (dragRef.current?.pointerId === event.pointerId) {
+									dragRef.current = null;
+								}
+							}}
+							onPointerCancel={(event) => {
+								if (dragRef.current?.pointerId === event.pointerId) {
+									dragRef.current = null;
+								}
+							}}
+							onClick={(event) => {
+								if (event.detail !== 0 && didDragRef.current) {
+									didDragRef.current = false;
+
+									return;
+								}
+								didDragRef.current = false;
 								document.getElementById(`${fieldIdPrefix}-${comment.id}`)?.focus();
 							}}
 							onKeyDown={(event) => movePinWithKeyboard(event, comment)}
@@ -154,7 +197,21 @@ export const ImageCommentEditor = ({
 			</div>
 
 			<ol className="flex min-h-0 flex-col gap-3 overflow-y-auto overscroll-contain">
-				{comments.length === 0 && <li className="text-muted-foreground text-sm">{labels.empty}</li>}
+				{comments.length === 0 && (
+					<li className="text-muted-foreground flex items-center gap-1 text-sm">
+						<span>{labels.empty}</span>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Button type="button" variant="ghost" size="icon-sm" aria-label={labels.helpLabel}>
+									<Info aria-hidden="true" />
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent side="top" sideOffset={8}>
+								{labels.help}
+							</TooltipContent>
+						</Tooltip>
+					</li>
+				)}
 				{comments.map((comment, index) => (
 					<li key={comment.id} className="bg-card flex gap-3 rounded-2xl border p-3">
 						<span

@@ -3,6 +3,7 @@ import 'server-only';
 import { generateImage } from 'ai';
 import sharp from 'sharp';
 import { saveImage } from './database';
+import { getGenerationCost } from './image-cost';
 import { type ImageResponse } from './images';
 
 // Sunburst follows the style references and accent colors more closely than Flare.
@@ -33,7 +34,7 @@ export const generateAndSaveImage = async ({
 	width: number;
 	height: number;
 }): Promise<Response> => {
-	const { image } = await generateImage({
+	const { image, calls } = await generateImage({
 		model: IMAGE_MODEL,
 		prompt: { text: prompt, images },
 		// OpenAI accepts custom pixel sizes rather than the SDK's aspectRatio option.
@@ -44,7 +45,7 @@ export const generateAndSaveImage = async ({
 	if (metadata.width !== width || metadata.height !== height) {
 		return imageErrorResponse('The image provider did not return the selected format. Please try again.', 502);
 	}
-	const saved = await saveImage(prompt, image);
+	const saved = await saveImage(prompt, image, getGenerationCost(calls));
 
 	return Response.json({ image: { ...saved, width, height } } satisfies ImageResponse);
 };
