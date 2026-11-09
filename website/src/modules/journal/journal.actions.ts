@@ -11,6 +11,7 @@ import {
 	getJournalArticlesByArticleType,
 	getJournalArticlesByTag,
 	getJournalArticlesByUuids,
+	getJournalAuthorArticleCounts,
 	getJournalPerson,
 	getJournalPersonPageData,
 	getLatestJournalArticles,
@@ -20,6 +21,7 @@ import {
 	journalArticlesByArticleTypeRequestSchema,
 	journalArticlesByTagRequestSchema,
 	journalArticlesByUuidsRequestSchema,
+	journalAuthorArticleCountsRequestSchema,
 	journalLanguageRequestSchema,
 	journalPageRequestSchema,
 } from './journal.schemas';
@@ -28,6 +30,14 @@ export const getJournalArticlePageDataAction = async (input: unknown): Promise<R
 	const parsed = journalPageRequestSchema.safeParse(input);
 
 	return parsed.success ? getJournalArticlePageData(parsed.data) : resultFail('Invalid journal article request');
+};
+
+export const getJournalAuthorArticleCountsAction = async (input: unknown): Promise<Result<Record<string, number>>> => {
+	const parsed = journalAuthorArticleCountsRequestSchema.safeParse(input);
+
+	return parsed.success
+		? getJournalAuthorArticleCounts(parsed.data.authorIds)
+		: resultFail('Invalid journal author request');
 };
 
 export const getJournalPersonPageDataAction = async (input: unknown): Promise<Result<JournalPersonPageData>> => {
