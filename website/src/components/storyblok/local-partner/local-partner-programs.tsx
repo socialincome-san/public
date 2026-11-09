@@ -1,8 +1,6 @@
-import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
-import { getVisiblePrograms } from '@/components/content-blocks/program-grid-view';
+import { getProgramGridPrograms } from '@/components/content-blocks/program-grid-view';
 import { StoryblokProgramGrid } from '@/components/storyblok/shared/storyblok-program-grid';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { LocalPartnerStory } from './local-partner.types';
 
 type Props = {
@@ -17,12 +15,15 @@ export const LocalPartnerPrograms = async ({ localPartner, lang, currency }: Pro
 		return null;
 	}
 
-	const programsResult = await getProgramsAction(lang);
-	const allPrograms = programsResult.success ? programsResult.data : [];
-	const programs = await getVisiblePrograms(
-		blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms),
-		blok,
-	);
+	const { programs, statsByPortalSlug } = await getProgramGridPrograms(blok, lang);
 
-	return <StoryblokProgramGrid blok={blok} programs={programs} lang={lang} currency={currency} />;
+	return (
+		<StoryblokProgramGrid
+			blok={blok}
+			programs={programs}
+			statsByPortalSlug={statsByPortalSlug}
+			lang={lang}
+			currency={currency}
+		/>
+	);
 };

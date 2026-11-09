@@ -1,5 +1,7 @@
 export const WEBSITE_ORIGIN = 'https://www.socialincome.org';
-export const DEFAULT_OPEN_GRAPH_IMAGE_URL = `${WEBSITE_ORIGIN}/assets/metadata/og/default.jpg`;
+// Without text, so they fit pages in any language and pages that have none.
+export const DEFAULT_OPEN_GRAPH_IMAGE_URL = `${WEBSITE_ORIGIN}/assets/metadata/og/default-2026-fallback.jpg`;
+export const DEFAULT_TWITTER_IMAGE_URL = `${WEBSITE_ORIGIN}/assets/metadata/twitter/default-2026-fallback.jpg`;
 
 const BLOCKED_METADATA_HOST_PATTERNS = [/^localhost$/i, /\.localhost$/i, /^vercel\.app$/i, /\.vercel\.app$/i];
 
@@ -56,7 +58,7 @@ const getIpv4FromMappedIpv6 = (hostname: string) => {
 };
 
 const isBlockedIpv6Host = (hostname: string) => {
-	const ipv6Host = hostname.replace(/^\[|\]$/g, '').toLowerCase();
+	const ipv6Host = hostname.replace(/^\[|]$/g, '').toLowerCase();
 	if (!ipv6Host.includes(':')) {
 		return false;
 	}
