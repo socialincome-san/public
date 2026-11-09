@@ -7,7 +7,8 @@ import { getCurrentSessions, getCurrentUser, getSessionByType } from '@/modules/
 import type { UserSession } from '@/modules/users/user.types';
 import { cookies, headers } from 'next/headers';
 import { magicLoginRequestSchema, sessionIdTokenSchema, websiteLocaleSchema } from './auth.schemas';
-import { createSessionCookie, sendMagicLoginLink } from './auth.service';
+import { createSessionCookie } from './auth.service';
+import { sendMagicLoginLink } from './magic-link.service';
 
 export const sendMagicLoginLinkAction = async (input: unknown): Promise<Result<void>> => {
 	const inputResult = magicLoginRequestSchema.safeParse(input);

@@ -18,9 +18,12 @@ jest.mock('@/modules/auth/session.service', () => ({
 	getSessionByType: jest.fn(),
 }));
 
+jest.mock('./magic-link.service', () => ({
+	sendMagicLoginLink: (...args: unknown[]): unknown => mockSendMagicLoginLink(...args),
+}));
+
 jest.mock('./auth.service', () => ({
 	createSessionCookie: (...args: unknown[]): unknown => mockCreateSessionCookie(...args),
-	sendMagicLoginLink: (...args: unknown[]): unknown => mockSendMagicLoginLink(...args),
 }));
 
 beforeEach(() => {
