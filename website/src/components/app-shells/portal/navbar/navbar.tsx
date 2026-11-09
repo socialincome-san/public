@@ -3,10 +3,10 @@
 import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
 import { useLogout } from '@/components/app-shells/use-logout';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
-import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
 import { PortalNavbar } from '@socialincome/design-system/navigation/portal-navbar/portal-navbar';
+import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 
 type NavbarProps = {
@@ -16,7 +16,7 @@ type NavbarProps = {
 export const Navbar = ({ sessions }: NavbarProps) => {
 	const pathname = usePathname();
 	const { logout } = useLogout();
-	const { t } = usePortalSharedTranslations();
+	const t = useTranslations('portal-shared');
 	const { links, isProgramsActive, userMenuNavLinks } = useNavbarLinks(sessions, pathname);
 	const user = sessions.find((s): s is UserSession => s.type === 'user');
 
@@ -29,19 +29,19 @@ export const Navbar = ({ sessions }: NavbarProps) => {
 			homeHref="/portal"
 			links={links}
 			programMenu={{
-				label: t('navbar.programs', 'Programs'),
+				label: t('navbar.programs'),
 				active: isProgramsActive,
 				programs: user.programs.map(({ id, name }) => ({ href: `/portal/programs/${id}/overview`, label: name })),
-				emptyLabel: t('navbar.noPrograms', 'No programs'),
-				createProgramLabel: t('navbar.createProgram', 'Create new program'),
+				emptyLabel: t('navbar.noPrograms'),
+				createProgramLabel: t('navbar.createProgram'),
 				renderCreateProgram: (trigger) => <CreateProgramModal isAuthenticated trigger={trigger} />,
 			}}
 			userMenu={{
 				name: [user.firstName, user.lastName].join(' '),
 				initials: `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}`,
-				subtitle: user.activeOrganization?.name ?? t('navbar.noActiveOrganization', 'No active organization'),
+				subtitle: user.activeOrganization?.name ?? t('navbar.noActiveOrganization'),
 				links: userMenuNavLinks,
-				signOutLabel: t('navbar.signOut', 'Sign out'),
+				signOutLabel: t('navbar.signOut'),
 				onSignOut: () => void logout(),
 			}}
 		/>

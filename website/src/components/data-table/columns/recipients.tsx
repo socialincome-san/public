@@ -11,6 +11,7 @@ import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { DataTableTranslator } from '@/components/data-table/table-config.types';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
+import { type PortalSharedTranslator } from '@/components/dynamic-form/contact-form-schemas';
 import type { PublicRecipientTableViewRow, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
@@ -29,19 +30,17 @@ const portalColumnLabels = {
 } as const;
 
 type RecipientColumnKey = keyof typeof portalColumnLabels;
-type PortalColumnLabelKey = (typeof portalColumnLabels)[RecipientColumnKey];
-type PortalColumnTranslator = (key: PortalColumnLabelKey, fallback: string) => string;
 
 const recipientColumnLabel = (
 	translator: ColumnLabelTranslator | undefined,
-	portalTranslator: PortalColumnTranslator | undefined,
+	portalTranslator: PortalSharedTranslator | undefined,
 	key: RecipientColumnKey,
 	fallback: string,
-) => (portalTranslator ? portalTranslator(portalColumnLabels[key], fallback) : columnLabel(translator, key, fallback));
+) => (portalTranslator ? portalTranslator(portalColumnLabels[key]) : columnLabel(translator, key, fallback));
 
 const buildRecipientLeadColumns = <TRow extends PublicRecipientTableViewRow>(
 	translator?: ColumnLabelTranslator,
-	portalTranslator?: PortalColumnTranslator,
+	portalTranslator?: PortalSharedTranslator,
 ): ColumnDef<TRow>[] => [
 	{
 		id: 'recipient',
@@ -76,7 +75,7 @@ const buildRecipientLeadColumns = <TRow extends PublicRecipientTableViewRow>(
 const buildRecipientTailColumns = <TRow extends PublicRecipientTableViewRow>(
 	hideLocalPartner: boolean,
 	translator?: ColumnLabelTranslator,
-	portalTranslator?: PortalColumnTranslator,
+	portalTranslator?: PortalSharedTranslator,
 ): ColumnDef<TRow>[] => {
 	const columns: ColumnDef<TRow>[] = [
 		{
@@ -135,7 +134,7 @@ const buildRecipientTailColumns = <TRow extends PublicRecipientTableViewRow>(
 
 const buildRecipientProgramColumn = (
 	translator?: ColumnLabelTranslator,
-	portalTranslator?: PortalColumnTranslator,
+	portalTranslator?: PortalSharedTranslator,
 ): ColumnDef<RecipientTableViewRow> => ({
 	accessorKey: 'programName',
 	header: (ctx) => (
@@ -156,7 +155,7 @@ export const makeRecipientColumns = (
 	hideLocalPartner = false,
 	_t?: DataTableTranslator,
 	readOnly = false,
-	portalTranslator?: PortalColumnTranslator,
+	portalTranslator?: PortalSharedTranslator,
 ): ColumnDef<RecipientTableViewRow>[] => {
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{

@@ -6,7 +6,6 @@ import { makeRecipientColumns } from '@/components/data-table/columns/recipients
 import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
 import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import { TableQueryState } from '@/components/data-table/query-state';
-import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import type { Session } from '@/modules/auth/auth.types';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/modules/recipients/recipient.actions';
@@ -36,16 +35,6 @@ const recipientSortTranslationKeys = {
 const isRecipientSortId = (id: string): id is keyof typeof recipientSortTranslationKeys =>
 	Object.hasOwn(recipientSortTranslationKeys, id);
 
-const statusTranslationKeys = {
-	future: 'table.statusFuture',
-	active: 'table.statusActive',
-	suspended: 'table.statusSuspended',
-	completed: 'table.statusCompleted',
-} as const;
-
-const isRecipientStatus = (status: string): status is keyof typeof statusTranslationKeys =>
-	Object.hasOwn(statusTranslationKeys, status);
-
 type Props = {
 	rows: RecipientTableViewRow[];
 	error: string | null;
@@ -72,60 +61,22 @@ export const RecipientsTableClient = ({
 	hideProgramName = false,
 }: Props) => {
 	const tPool = useTranslations('add-recipients-from-pool');
-	const { isPortal, t } = usePortalSharedTranslations();
+	const t = useTranslations('portal-shared');
 	const router = useRouter();
 	const canManageRecipients = sessionType === 'user';
 	const isReadOnly = readOnly ?? false;
 	const canAddFromPool = Boolean(programId) && canManageRecipients && !isReadOnly;
 	const canDownloadCsv = sessionType === 'local-partner' || !isReadOnly;
-	const baseToolbarFilters = getRecipientsTableFilters({
-		query,
-		programFilterOptions,
-		localPartnerFilterOptions,
-		showProgramFilter,
-	});
-	const toolbarFilters = isPortal
-		? baseToolbarFilters.map((filter) => {
-				if (filter.id === 'recipientStatus') {
-					return {
-						...filter,
-						label: t('table.filterStatus', filter.label),
-						placeholder: t('table.filterAllStatuses', filter.placeholder),
-						options: filter.options.map((option) => ({
-							...option,
-							label: isRecipientStatus(option.value) ? t(statusTranslationKeys[option.value], option.label) : option.label,
-						})),
-					};
-				}
-				if (filter.id === 'program') {
-					return {
-						...filter,
-						label: t('table.filterProgram', filter.label),
-						placeholder: t('table.filterAllPrograms', filter.placeholder),
-					};
-				}
-				if (filter.id === 'localPartner') {
-					return {
-						...filter,
-						label: t('table.filterLocalPartner', filter.label),
-						placeholder: t('table.filterAllLocalPartners', filter.placeholder),
-					};
-				}
-
-				return filter;
-			})
-		: baseToolbarFilters;
 	const tableConfig = {
 		...recipientsTableConfig,
-		title: isPortal ? t('table.recipientsTitle', recipientsTableConfig.title) : recipientsTableConfig.title,
-		emptyMessage: isPortal ? t('table.recipientsEmpty', 'No recipients found') : recipientsTableConfig.emptyMessage,
+		title: t('table.recipientsTitle'),
+		emptyMessage: t('table.recipientsEmpty'),
 		sortOptions: recipientsTableConfig.sortOptions?.map((option) => ({
 			...option,
-			label:
-				isPortal && isRecipientSortId(option.id) ? t(recipientSortTranslationKeys[option.id], option.label) : option.label,
+			label: isRecipientSortId(option.id) ? t(recipientSortTranslationKeys[option.id]) : option.label,
 		})),
 		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean) =>
-			makeRecipientColumns(hideProgramName, hideLocalPartner, undefined, isReadOnly, isPortal ? t : undefined),
+			makeRecipientColumns(hideProgramName, hideLocalPartner, undefined, isReadOnly, t),
 	};
 	const recipientDialog = useRecordDialog('recipientId');
 	const [recipientError, setRecipientError] = useState<string | null>(null);
@@ -173,7 +124,7 @@ export const RecipientsTableClient = ({
 
 	const actionMenuItems: ActionMenuItem[] = [
 		{
-			label: isCsvDownloading ? t('csv.downloading', 'Downloading…') : t('csv.download', 'Download CSV'),
+			label: isCsvDownloading ? t('csv.downloading') : t('csv.download'),
 			icon: <DownloadIcon />,
 			disabled: isCsvDownloading || !canDownloadCsv,
 			onSelect: () => {
@@ -183,7 +134,7 @@ export const RecipientsTableClient = ({
 		...(canManageRecipients
 			? [
 					{
-						label: t('table.addRecipientManually', 'Add new recipient manually'),
+						label: t('table.addRecipientManually'),
 						icon: <PlusIcon />,
 						disabled: isReadOnly,
 						onSelect: openCreateRecipientDialog,
@@ -191,7 +142,7 @@ export const RecipientsTableClient = ({
 					...(canAddFromPool && programId
 						? [
 								{
-									label: t('table.addRecipientsFromPool', 'Add recipients from pool'),
+									label: t('table.addRecipientsFromPool'),
 									icon: <UsersIcon />,
 									onSelect: () => {
 										setPoolDialogKey((key) => key + 1);
@@ -201,7 +152,7 @@ export const RecipientsTableClient = ({
 							]
 						: []),
 					{
-						label: t('csv.upload', 'Upload CSV'),
+						label: t('csv.upload'),
 						icon: <UploadIcon />,
 						disabled: isReadOnly,
 						onSelect: () => setIsCsvUploadDialogOpen(true),
@@ -214,16 +165,18 @@ export const RecipientsTableClient = ({
 		<>
 			<ConfiguredDataTableClient
 				config={tableConfig}
-				titleInfoTooltip={
-					isPortal
-						? t('table.recipientsTooltip', 'Shows recipients in programs you can access.')
-						: 'Shows recipients in programs you can access.'
-				}
+				titleInfoTooltip={t('table.recipientsTooltip')}
 				rows={rows}
 				error={error}
 				actionMenuItems={actionMenuItems}
 				query={query}
-				toolbarFilters={toolbarFilters}
+				toolbarFilters={getRecipientsTableFilters({
+					t,
+					query,
+					programFilterOptions,
+					localPartnerFilterOptions,
+					showProgramFilter,
+				})}
 				hideProgramName={hideProgramName}
 				hideLocalPartner={sessionType === 'local-partner'}
 				showEntityIdColumn={sessionType !== 'local-partner'}
@@ -259,7 +212,7 @@ export const RecipientsTableClient = ({
 			<CsvUploadDialog
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
-				title={t('csv.uploadRecipients', 'Upload recipients CSV')}
+				title={t('csv.uploadRecipients')}
 				template={recipientsCsvTemplate}
 				onImport={(file) => importRecipientsCsvAction(file, sessionType)}
 			/>

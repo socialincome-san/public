@@ -113,25 +113,6 @@
 		"saveSurveyError": "Fehler beim Speichern der Umfrage: {message}"
 	},
 	"forms": {
-		"contact": {
-			"section": "Kontakt",
-			"firstName": "Vorname",
-			"lastName": "Nachname",
-			"callingName": "Rufname",
-			"email": "E-Mail",
-			"language": "Sprache",
-			"dateOfBirth": "Geburtsdatum",
-			"profession": "Beruf",
-			"gender": "Geschlecht",
-			"phone": "Telefonnummer",
-			"hasWhatsApp": "WhatsApp vorhanden",
-			"street": "Strasse",
-			"number": "Hausnummer",
-			"city": "Ort",
-			"zip": "Postleitzahl",
-			"country": "Land",
-			"chooseGender": "Geschlecht auswählen"
-		},
 		"contribution": {
 			"section": "Beitrag",
 			"amount": "Betrag",

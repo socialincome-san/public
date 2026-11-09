@@ -3,11 +3,9 @@
 import { ActionMenu, type ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import { BaseTable } from '@/components/data-table/elements/base-table';
 import { IdCell } from '@/components/data-table/elements/id-cell';
-import { PortalDataTableToolbar } from '@/components/data-table/elements/portal-data-table-toolbar';
 import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
 import { TableFilterConfig, type DataTableTranslator } from '@/components/data-table/table-config.types';
 import type { ColumnDef, VisibilityState } from '@/components/data-table/tanstack-table';
-import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import { DataTableHeader } from '@socialincome/design-system/data-display/data-table-header/data-table-header';
@@ -51,10 +49,7 @@ type DataTableProps<Row extends RowData> = {
 	toolbarFilters?: TableFilterConfig[];
 };
 
-const formatTableError = (
-	error: string,
-	translate: (key: 'table.invalidQuery' | 'table.loadError', fallback: string) => string,
-): string => {
+const formatTableError = (error: string, translate: (key: 'table.invalidQuery' | 'table.loadError') => string): string => {
 	const raw = error.replace(DATA_TABLE_FETCH_PREFIX_REGEX, '').trim();
 	if (raw.startsWith('{') && raw.endsWith('}')) {
 		try {
@@ -65,17 +60,14 @@ const formatTableError = (
 				'name' in parsed &&
 				parsed.name === 'PrismaClientValidationError'
 			) {
-				return translate(
-					'table.invalidQuery',
-					'The current search or filter is invalid. Please adjust your query and try again.',
-				);
+				return translate('table.invalidQuery');
 			}
 		} catch {
 			// Keep fallback below.
 		}
 	}
 
-	return raw.length > 0 ? raw : translate('table.loadError', 'Something went wrong while loading this table.');
+	return raw.length > 0 ? raw : translate('table.loadError');
 };
 
 export default function DataTable<Row extends RowData>({
@@ -102,7 +94,7 @@ export default function DataTable<Row extends RowData>({
 	toolbarFilters = [],
 }: DataTableProps<Row>) {
 	const t = useTranslations('website-me');
-	const { isPortal, t: translateShared } = usePortalSharedTranslations();
+	const translateShared = useTranslations('portal-shared');
 	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, t);
 	const columns = showEntityIdColumn
 		? ([
@@ -234,44 +226,46 @@ export default function DataTable<Row extends RowData>({
 				count={activeQuery ? activeQuery.totalRows : displayedData.length}
 				infoTooltip={titleInfoTooltip}
 				toolbar={
-					isPortal ? (
-						<PortalDataTableToolbar
-							showControls={showControls}
-							searchKeys={onQueryChange ? resolvedSearchKeys : []}
-							searchValue={activeQuery?.search ?? ''}
-							onSearchChange={onSearchChange}
-							sortOptions={onQueryChange ? sortOptions : []}
-							sortBy={activeQuery?.sortBy}
-							sortDirection={activeQuery?.sortDirection}
-							onSortChange={onSortToolbarChange}
-							filters={resolvedToolbarFilters}
-							columns={toolbarColumns}
-							onClearFilters={clearAllToolbarFilters}
-							actions={<ActionMenu items={actionMenuItems} />}
-						/>
-					) : (
-						<DataTableToolbar
-							showControls={showControls}
-							searchKeys={onQueryChange ? resolvedSearchKeys : []}
-							searchValue={activeQuery?.search ?? ''}
-							onSearchChange={onSearchChange}
-							sortOptions={onQueryChange ? sortOptions : []}
-							sortBy={activeQuery?.sortBy}
-							sortDirection={activeQuery?.sortDirection}
-							onSortChange={onSortToolbarChange}
-							filters={resolvedToolbarFilters}
-							columns={toolbarColumns}
-							onClearFilters={clearAllToolbarFilters}
-							actions={<ActionMenu items={actionMenuItems} />}
-						/>
-					)
+					<DataTableToolbar
+						labels={{
+							search: translateShared('table.search'),
+							searchPlaceholder: translateShared('table.searchPlaceholder'),
+							searchFields: translateShared('table.searchFields'),
+							clear: translateShared('table.clear'),
+							columns: translateShared('table.columns'),
+							visibleColumns: translateShared('table.visibleColumns'),
+							sort: translateShared('table.sort'),
+							sortBy: translateShared('table.sortBy'),
+							field: translateShared('table.field'),
+							chooseField: translateShared('table.chooseField'),
+							direction: translateShared('table.direction'),
+							chooseDirection: translateShared('table.chooseDirection'),
+							ascending: translateShared('table.ascending'),
+							descending: translateShared('table.descending'),
+							filters: translateShared('table.filters'),
+							filterResults: translateShared('table.filterResults'),
+							noOptionsAvailable: translateShared('table.noOptionsAvailable'),
+						}}
+						showControls={showControls}
+						searchKeys={onQueryChange ? resolvedSearchKeys : []}
+						searchValue={activeQuery?.search ?? ''}
+						onSearchChange={onSearchChange}
+						sortOptions={onQueryChange ? sortOptions : []}
+						sortBy={activeQuery?.sortBy}
+						sortDirection={activeQuery?.sortDirection}
+						onSortChange={onSortToolbarChange}
+						filters={resolvedToolbarFilters}
+						columns={toolbarColumns}
+						onClearFilters={clearAllToolbarFilters}
+						actions={<ActionMenu items={actionMenuItems} />}
+					/>
 				}
 			/>
 
 			{error ? (
 				<DataTableErrorState message={formatTableError(error, translateShared)} />
 			) : isLoading ? (
-				<AppLoadingSkeleton message={translateShared('table.loading', 'Loading...')} />
+				<AppLoadingSkeleton message={translateShared('table.loading')} />
 			) : isDatasetEmpty ? (
 				<DataTableEmptyState message={emptyMessage} />
 			) : isEmpty ? (

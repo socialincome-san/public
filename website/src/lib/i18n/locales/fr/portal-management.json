@@ -113,25 +113,6 @@
 		"saveSurveyError": "Erreur lors de l’enregistrement de l’enquête : {message}"
 	},
 	"forms": {
-		"contact": {
-			"section": "Contact",
-			"firstName": "Prénom",
-			"lastName": "Nom",
-			"callingName": "Nom usuel",
-			"email": "E-mail",
-			"language": "Langue",
-			"dateOfBirth": "Date de naissance",
-			"profession": "Profession",
-			"gender": "Genre",
-			"phone": "Numéro de téléphone",
-			"hasWhatsApp": "Utilise WhatsApp",
-			"street": "Rue",
-			"number": "Numéro",
-			"city": "Ville",
-			"zip": "Code postal",
-			"country": "Pays",
-			"chooseGender": "Choisir un genre"
-		},
 		"contribution": {
 			"section": "Contribution",
 			"amount": "Montant",

@@ -1,4 +1,3 @@
-import { PortalSharedTranslationsProvider } from '@/components/portal-shared-translations';
 import type { Session } from '@/modules/auth/auth.types';
 import { PortalAppShell as PortalAppShellLayout } from '@socialincome/design-system/layout/portal-app-shell/portal-app-shell';
 import { type ReactNode } from 'react';
@@ -10,7 +9,5 @@ type PortalAppShellProps = {
 };
 
 export const PortalAppShell = ({ children, sessions }: PortalAppShellProps) => (
-	<PortalSharedTranslationsProvider>
-		<PortalAppShellLayout navbar={<Navbar sessions={sessions} />}>{children}</PortalAppShellLayout>
-	</PortalSharedTranslationsProvider>
+	<PortalAppShellLayout navbar={<Navbar sessions={sessions} />}>{children}</PortalAppShellLayout>
 );

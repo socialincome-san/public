@@ -4,7 +4,6 @@ import { auditLogTab } from '@/components/audit/audit-log-tab';
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { recipientPayoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
 import { recipientSurveysTableConfig } from '@/components/data-table/configs/surveys-table.config';
-import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { RecipientForm } from '@/components/recipient/recipient-form';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { Session } from '@/modules/auth/auth.types';
@@ -13,6 +12,7 @@ import { getSurveyTableViewAction } from '@/modules/surveys/survey.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
+import { useTranslations } from 'next-intl';
 
 type Props = {
 	open: boolean;
@@ -33,7 +33,7 @@ export const RecipientDialog = ({
 	errorMessage,
 	onError,
 }: Props) => {
-	const { t } = usePortalSharedTranslations();
+	const t = useTranslations('portal-shared');
 	const handleError = (error: unknown) => {
 		const errorMessage = retrieveErrorMessage(error);
 		onError(errorMessage);
@@ -44,9 +44,9 @@ export const RecipientDialog = ({
 		<>
 			{errorMessage && (
 				<Alert variant="destructive">
-					<AlertTitle>{t('form.error', 'Error')}</AlertTitle>
+					<AlertTitle>{t('form.error')}</AlertTitle>
 					<AlertDescription>
-						{t('form.recipientSaveError', 'Error saving recipient:')} {errorMessage}
+						{t('form.recipientSaveError')} {errorMessage}
 					</AlertDescription>
 				</Alert>
 			)}
@@ -70,12 +70,12 @@ export const RecipientDialog = ({
 			<TabbedDialog
 				open={open}
 				onOpenChange={onOpenChange}
-				title={t('dialog.editRecipient', 'Edit Recipient')}
+				title={t('dialog.editRecipient')}
 				tabs={[
-					{ value: 'details', label: t('dialog.details', 'Details'), content: form },
+					{ value: 'details', label: t('dialog.details'), content: form },
 					{
 						value: 'payouts',
-						label: t('dialog.payouts', 'Payouts'),
+						label: t('dialog.payouts'),
 						content: (
 							<RecordTableTab
 								config={recipientPayoutsTableConfig}
@@ -86,7 +86,7 @@ export const RecipientDialog = ({
 					},
 					{
 						value: 'surveys',
-						label: t('dialog.surveys', 'Surveys'),
+						label: t('dialog.surveys'),
 						content: (
 							<RecordTableTab
 								config={recipientSurveysTableConfig}
@@ -95,7 +95,7 @@ export const RecipientDialog = ({
 							/>
 						),
 					},
-					{ ...auditLogTab('recipient', recipientId), label: t('tab.auditLog', 'Audit log') },
+					{ ...auditLogTab('recipient', recipientId), label: t('dialog.auditLog') },
 				]}
 			/>
 		);
@@ -105,9 +105,7 @@ export const RecipientDialog = ({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent size="lg">
 				<DialogHeader>
-					<DialogTitle>
-						{recipientId ? t('dialog.editRecipient', 'Edit Recipient') : t('dialog.newRecipient', 'New Recipient')}
-					</DialogTitle>
+					<DialogTitle>{recipientId ? t('dialog.editRecipient') : t('dialog.newRecipient')}</DialogTitle>
 				</DialogHeader>
 
 				{form}

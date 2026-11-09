@@ -1,9 +1,11 @@
 'use client';
 
-import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
+import {
+	getFormSchema as getContactFormSchema,
+	type PortalSharedTranslator,
+} from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
-import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import type { Result } from '@/lib/result';
 import { handleResult } from '@/lib/result-client';
 import { SLUG_REGEX } from '@/lib/utils/regex';
@@ -32,7 +34,7 @@ export type LocalPartnerFormSchema = {
 
 const getInitialFormSchema = (
 	t: ReturnType<typeof useTranslations<'portal-admin'>>,
-	sharedTranslate: ReturnType<typeof usePortalSharedTranslations>['t'],
+	sharedTranslate: PortalSharedTranslator,
 ): LocalPartnerFormSchema => ({
 	label: t('form.localPartner'),
 	fields: {
@@ -53,7 +55,7 @@ const getInitialFormSchema = (
 			options: [],
 		},
 		contact: {
-			...getContactFormSchema({ isEmailRequired: true, translate: sharedTranslate }),
+			...getContactFormSchema(sharedTranslate, { isEmailRequired: true }),
 		},
 	},
 });
@@ -70,7 +72,7 @@ export default function LocalPartnersForm({
 	localPartnerId?: string;
 }) {
 	const t = useTranslations('portal-admin');
-	const { t: sharedTranslate } = usePortalSharedTranslations();
+	const sharedTranslate = useTranslations('portal-shared');
 	const initialFormSchema = useMemo(() => getInitialFormSchema(t, sharedTranslate), [sharedTranslate, t]);
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(() => cloneFormSchema(initialFormSchema));
 	const [localPartner, setLocalPartner] = useState<LocalPartnerPayload>();

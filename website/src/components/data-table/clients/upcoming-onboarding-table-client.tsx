@@ -6,11 +6,11 @@ import {
 	upcomingOnboardingTableConfig,
 } from '@/components/data-table/configs/upcoming-onboarding-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/modules/recipients/recipient.actions';
 import type { RecipientProgramFilterOption, UpcomingOnboardingTableViewRow } from '@/modules/recipients/recipient.types';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
@@ -25,7 +25,7 @@ type Props = {
 };
 
 export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilterOptions = [] }: Props) => {
-	const { t } = usePortalSharedTranslations();
+	const t = useTranslations('portal-shared');
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
 	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
 	const [recipientError, setRecipientError] = useState<string | null>(null);
@@ -65,7 +65,7 @@ export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilte
 
 	const actionMenuItems: ActionMenuItem[] = [
 		{
-			label: isCsvDownloading ? t('csv.downloading', 'Downloading…') : t('csv.download', 'Download CSV'),
+			label: isCsvDownloading ? t('csv.downloading') : t('csv.download'),
 			icon: <DownloadIcon />,
 			disabled: isCsvDownloading,
 			onSelect: () => {
@@ -78,7 +78,7 @@ export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilte
 			onSelect: openCreateRecipientDialog,
 		},
 		{
-			label: t('csv.upload', 'Upload CSV'),
+			label: t('csv.upload'),
 			icon: <UploadIcon />,
 			onSelect: () => setIsCsvUploadDialogOpen(true),
 		},
@@ -109,7 +109,7 @@ export const UpcomingOnboardingTableClient = ({ rows, error, query, programFilte
 			<CsvUploadDialog
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
-				title={t('csv.uploadRecipients', 'Upload recipients CSV')}
+				title={t('csv.uploadRecipients')}
 				template={recipientsCsvTemplate}
 				onImport={(file) => importRecipientsCsvAction(file, 'user')}
 			/>

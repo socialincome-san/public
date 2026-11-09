@@ -113,25 +113,6 @@
 		"saveSurveyError": "Errore durante il salvataggio del sondaggio: {message}"
 	},
 	"forms": {
-		"contact": {
-			"section": "Contatto",
-			"firstName": "Nome",
-			"lastName": "Cognome",
-			"callingName": "Nome preferito",
-			"email": "E-mail",
-			"language": "Lingua",
-			"dateOfBirth": "Data di nascita",
-			"profession": "Professione",
-			"gender": "Genere",
-			"phone": "Numero di telefono",
-			"hasWhatsApp": "Ha WhatsApp",
-			"street": "Via",
-			"number": "Numero civico",
-			"city": "Città",
-			"zip": "CAP",
-			"country": "Paese",
-			"chooseGender": "Scegli il genere"
-		},
 		"contribution": {
 			"section": "Contributo",
 			"amount": "Importo",

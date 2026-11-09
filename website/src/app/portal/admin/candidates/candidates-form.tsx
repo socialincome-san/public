@@ -1,6 +1,9 @@
 'use client';
 
-import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
+import {
+	getFormSchema as getContactFormSchema,
+	type PortalSharedTranslator,
+} from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import {
 	clearFormSchemaValues,
@@ -8,7 +11,6 @@ import {
 	getOptionalDropdownFieldConfig,
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
-import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { handleResult } from '@/lib/result-client';
 import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import type { Session } from '@/modules/auth/auth.types';
@@ -57,7 +59,7 @@ export type CandidateFormSchema = {
 
 const getInitialFormSchema = (
 	t: ReturnType<typeof useTranslations<'portal-admin'>>,
-	sharedTranslate: ReturnType<typeof usePortalSharedTranslations>['t'],
+	sharedTranslate: PortalSharedTranslator,
 	sessionType: Session['type'] = 'user',
 ): CandidateFormSchema => {
 	const base: CandidateFormSchema = {
@@ -105,7 +107,7 @@ const getInitialFormSchema = (
 				},
 			},
 			contact: {
-				...getContactFormSchema({ translate: sharedTranslate }),
+				...getContactFormSchema(sharedTranslate),
 			},
 		},
 	};
@@ -119,7 +121,7 @@ const getInitialFormSchema = (
 
 export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessionType = 'user' }: CandidateFormProps) => {
 	const t = useTranslations('portal-admin');
-	const { t: sharedTranslate } = usePortalSharedTranslations();
+	const sharedTranslate = useTranslations('portal-shared');
 	const initialFormSchema = useMemo(
 		() => getInitialFormSchema(t, sharedTranslate, sessionType),
 		[sessionType, sharedTranslate, t],

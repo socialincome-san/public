@@ -60,7 +60,7 @@ export const pickClientMessages = (messages: Messages) => ({
 	countries: messages.countries,
 	'create-program-wizard': messages['create-program-wizard'],
 	'donation-wizard': messages['donation-wizard'],
-	'portal-messaging': messages['portal-messaging'],
+	'portal-shared': messages['portal-shared'],
 	'website-common': messages['website-common'],
 	'website-donate': messages['website-donate'],
 	'website-journal': messages['website-journal'],
@@ -72,16 +72,11 @@ export const pickClientMessages = (messages: Messages) => ({
 });
 
 export const pickPortalClientMessages = (messages: Messages) => ({
-	'add-recipients-from-pool': messages['add-recipients-from-pool'],
-	common: messages.common,
-	countries: messages.countries,
-	'create-program-wizard': messages['create-program-wizard'],
+	...pickClientMessages(messages),
 	'portal-admin': messages['portal-admin'],
 	'portal-management': messages['portal-management'],
 	'portal-messaging': messages['portal-messaging'],
 	'portal-operations': messages['portal-operations'],
-	'portal-shared': messages['portal-shared'],
-	'website-me': messages['website-me'],
 });
 
 const isMessageTree = (value: unknown): value is Record<string, unknown> =>

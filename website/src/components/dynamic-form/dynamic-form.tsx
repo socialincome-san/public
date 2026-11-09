@@ -1,6 +1,6 @@
+import { useTranslations } from 'next-intl';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Accordion,
@@ -169,7 +169,7 @@ type Props = {
 };
 
 const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, extraAction, mode }) => {
-	const { t } = usePortalSharedTranslations();
+	const t = useTranslations('portal-shared');
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -316,7 +316,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 			{/* TODO: add proper loading state */}
 			{isLoading && (
 				<div className="bg-card absolute top-0 right-0 flex h-full w-full items-center justify-center opacity-80">
-					<Loader2 className="h-6 w-6 animate-spin" aria-label={t('form.loading', 'Loading')} />
+					<Loader2 className="h-6 w-6 animate-spin" aria-label={t('form.loading')} />
 				</div>
 			)}
 		</Form>
@@ -340,7 +340,7 @@ const GenericFormField = ({
 	parentOption?: string;
 	readOnly: boolean;
 }) => {
-	const { t } = usePortalSharedTranslations();
+	const t = useTranslations('portal-shared');
 	const optionKey = parentOption ? `${parentOption}.${option}` : option;
 
 	const formFieldSchema = parentOption
@@ -458,7 +458,7 @@ const GenericFormField = ({
 												emitChange(undefined);
 											}}
 										>
-											{t('form.clear', 'Clear')}
+											{t('form.clear')}
 										</button>
 									) : null}
 								</div>

@@ -69,9 +69,7 @@ describe('pickClientMessages', () => {
 				file.startsWith('components/app-shells/portal/') ||
 				file.startsWith('components/data-table/') ||
 				file.startsWith('components/dynamic-form/') ||
-				file.startsWith('components/create-program-wizard/') ||
-				file === 'components/tab-navigation.tsx' ||
-				file === 'components/portal-shared-translations.tsx',
+				file.startsWith('components/create-program-wizard/'),
 		);
 		const portalNamespaces = [...usedNamespaces(portalClientFiles)];
 		const messages = await loadMessages('en');

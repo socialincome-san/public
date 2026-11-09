@@ -1,22 +1,17 @@
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
+import { type PortalSharedTranslator } from '@/components/dynamic-form/contact-form-schemas';
 import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { linkedRecordFilter } from './linked-record-filter';
 
 type RecipientsFilterArgs = {
+	t: PortalSharedTranslator;
 	query?: TableQueryState & { totalRows: number };
 	programFilterOptions: RecipientProgramFilterOption[];
 	localPartnerFilterOptions: { id: string; name: string }[];
 	showProgramFilter: boolean;
 };
-
-const recipientStatusOptions = [
-	{ value: 'future', label: 'Future' },
-	{ value: 'active', label: 'Active' },
-	{ value: 'suspended', label: 'Suspended' },
-	{ value: 'completed', label: 'Completed' },
-];
 
 export const recipientsTableConfig: DataTableConfig<RecipientTableViewRow> = {
 	id: 'recipients',
@@ -47,6 +42,7 @@ export const localPartnerRecipientsTableConfig: DataTableConfig<RecipientTableVi
 };
 
 export const getRecipientsTableFilters = ({
+	t,
 	query,
 	programFilterOptions,
 	localPartnerFilterOptions,
@@ -60,10 +56,15 @@ export const getRecipientsTableFilters = ({
 		{
 			id: 'recipientStatus',
 			queryKey: 'recipientStatus',
-			label: 'Status',
-			placeholder: 'All statuses',
+			label: t('table.filterStatus'),
+			placeholder: t('table.filterAllStatuses'),
 			value: query.recipientStatus,
-			options: recipientStatusOptions,
+			options: [
+				{ value: 'future', label: t('table.statusFuture') },
+				{ value: 'active', label: t('table.statusActive') },
+				{ value: 'suspended', label: t('table.statusSuspended') },
+				{ value: 'completed', label: t('table.statusCompleted') },
+			],
 		},
 	];
 
@@ -71,8 +72,8 @@ export const getRecipientsTableFilters = ({
 		filters.push({
 			id: 'program',
 			queryKey: 'programId',
-			label: 'Program',
-			placeholder: 'All programs',
+			label: t('table.filterProgram'),
+			placeholder: t('table.filterAllPrograms'),
 			value: query.programId,
 			options: programFilterOptions.map((program) => ({ value: program.id, label: program.name })),
 		});
@@ -83,8 +84,8 @@ export const getRecipientsTableFilters = ({
 		...linkedRecordFilter({
 			id: 'localPartner',
 			queryKey: 'localPartnerId',
-			label: 'Local partner',
-			placeholder: 'All local partners',
+			label: t('table.filterLocalPartner'),
+			placeholder: t('table.filterAllLocalPartners'),
 			value: query.localPartnerId,
 			options: localPartnerFilterOptions.map((localPartner) => ({ value: localPartner.id, label: localPartner.name })),
 		}),

@@ -113,25 +113,6 @@
 		"saveSurveyError": "Error saving survey: {message}"
 	},
 	"forms": {
-		"contact": {
-			"section": "Contact",
-			"firstName": "First name",
-			"lastName": "Last name",
-			"callingName": "Calling name",
-			"email": "Email",
-			"language": "Language",
-			"dateOfBirth": "Date of birth",
-			"profession": "Profession",
-			"gender": "Gender",
-			"phone": "Phone number",
-			"hasWhatsApp": "Has WhatsApp",
-			"street": "Street address",
-			"number": "Street number",
-			"city": "City",
-			"zip": "Postal code",
-			"country": "Country",
-			"chooseGender": "Choose gender"
-		},
 		"contribution": {
 			"section": "Contribution",
 			"amount": "Amount",

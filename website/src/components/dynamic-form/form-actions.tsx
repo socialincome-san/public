@@ -1,4 +1,3 @@
-import { usePortalSharedTranslations } from '@/components/portal-shared-translations';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	Dialog,
@@ -8,6 +7,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 export type ExtraAction = {
@@ -35,7 +35,7 @@ type ConfirmState = {
 };
 
 export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extraAction }: FormActionsProps) => {
-	const { t } = usePortalSharedTranslations();
+	const t = useTranslations('portal-shared');
 	const [confirm, setConfirm] = useState<ConfirmState | null>(null);
 	const showSave = mode !== 'readonly';
 	const showSecondaryActions = mode === 'edit' && (onDelete !== undefined || extraAction !== undefined);
@@ -54,15 +54,15 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 								disabled={isLoading}
 								onClick={() =>
 									setConfirm({
-										title: t('form.deleteConfirmTitle', 'Delete item?'),
-										description: t('form.deleteConfirmDescription', 'This action cannot be undone.'),
-										confirmLabel: t('form.deletePermanently', 'Delete permanently'),
+										title: t('form.deleteConfirmTitle'),
+										description: t('form.deleteConfirmDescription'),
+										confirmLabel: t('form.deletePermanently'),
 										variant: 'destructive',
 										onConfirm: onDelete,
 									})
 								}
 							>
-								{t('form.delete', 'Delete')}
+								{t('form.delete')}
 							</Button>
 						)}
 
@@ -91,13 +91,13 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 					<div className="flex items-center gap-3">
 						{onCancel && (
 							<Button type="button" variant="outline" disabled={isLoading} onClick={onCancel}>
-								{t('form.cancel', 'Cancel')}
+								{t('form.cancel')}
 							</Button>
 						)}
 
 						{showSave && (
 							<Button type="submit" disabled={isLoading}>
-								{t('form.save', 'Save')}
+								{t('form.save')}
 							</Button>
 						)}
 					</div>
@@ -119,7 +119,7 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 					</DialogHeader>
 					<DialogFooter>
 						<Button variant="outline" onClick={closeConfirm}>
-							{t('form.cancel', 'Cancel')}
+							{t('form.cancel')}
 						</Button>
 						<Button
 							variant={confirm?.variant}

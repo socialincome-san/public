@@ -169,7 +169,7 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 				onError?.(error);
 			}
 		});
-	}, [initialFormSchema, onError, organizationId]);
+	}, [initialFormSchema, onError, organizationId, t]);
 
 	return (
 		<DynamicForm
