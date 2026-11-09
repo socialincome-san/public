@@ -13,10 +13,12 @@ export const YourDonationCertificateTable = ({
 	rows,
 	error,
 	query,
+	years,
 }: {
 	rows: YourDonationCertificateTableViewRow[];
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
+	years: number[];
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const t = useTranslations('website-me');
@@ -34,7 +36,7 @@ export const YourDonationCertificateTable = ({
 
 	return (
 		<>
-			<GenerateDonationCertificateDialog open={open} setOpen={setOpen} />
+			<GenerateDonationCertificateDialog open={open} setOpen={setOpen} years={years} />
 			<ConfiguredDataTableClient
 				config={config}
 				titleInfoTooltip="Shows donation certificates available for your contributor account."

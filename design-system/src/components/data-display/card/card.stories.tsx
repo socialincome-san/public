@@ -29,7 +29,7 @@ const meta = {
 		},
 		elevation: {
 			control: 'select',
-			options: ['raised', 'flat'],
+			options: ['raised', 'flat', 'soft'],
 		},
 		surface: {
 			control: 'select',
@@ -57,6 +57,9 @@ export const Variants: Story = {
 			<Card>Default</Card>
 			<Card padding="compact" elevation="flat">
 				Compact and flat
+			</Card>
+			<Card padding="compact" elevation="soft">
+				Compact and soft
 			</Card>
 			<Card padding="compact" surface="gradient">
 				Gradient

@@ -1,59 +1,33 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[currency]';
+import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
 import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
-import { loadProgramDetailData, type ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
+import { loadProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import { toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { formatStoryblokUrlDirect } from '@/lib/storyblok/storyblok-utils';
-import { getMetadata, getWebsiteAlternates } from '@/lib/utils/metadata';
-import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataImage } from '@/lib/utils/metadata-image';
+import { getStoryblokMetadataImage } from '@/lib/storyblok/storyblok-utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
-import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
-const PROGRAM_METADATA_IMAGE_WIDTH = 1200;
-const PROGRAM_METADATA_IMAGE_HEIGHT = 630;
-
 const getProgramDetailData = cache(loadProgramDetailData);
-
-const getProgramMetadataImage = ({ heroImage, title }: ProgramDetailData) =>
-	toProductionMetadataImage(
-		heroImage?.filename
-			? {
-					url: formatStoryblokUrlDirect(
-						heroImage.filename,
-						PROGRAM_METADATA_IMAGE_WIDTH,
-						PROGRAM_METADATA_IMAGE_HEIGHT,
-						heroImage.focus,
-					),
-					width: PROGRAM_METADATA_IMAGE_WIDTH,
-					height: PROGRAM_METADATA_IMAGE_HEIGHT,
-					alt: heroImage.alt?.trim() ? heroImage.alt : title,
-				}
-			: undefined,
-		DEFAULT_OPEN_GRAPH_IMAGE_URL,
-	);
 
 export const generateStaticParams = () => getPublishedSlugParams('programs');
 
-export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug): Promise<Metadata> => {
+export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;
-	const alternates = getWebsiteAlternates(lang as WebsiteLanguage, `programs/${slug}`);
 	const programDetailData = await getProgramDetailData(slug, lang);
-	if (!programDetailData) {
-		return alternates;
-	}
 
-	const { title, description } = programDetailData;
-	const images = getProgramMetadataImage(programDetailData);
-	const metadata = await getMetadata(lang as WebsiteLanguage, 'website-common', {
-		title,
-		...(description ? { description } : {}),
-		openGraph: { title, ...(description ? { description } : {}), images },
-		twitter: { title, ...(description ? { description } : {}), images },
-	});
-
-	return { ...metadata, ...alternates };
+	return getPageMetadata(
+		lang as WebsiteLanguage,
+		`programs/${slug}`,
+		programDetailData
+			? {
+					title: programDetailData.title,
+					description: programDetailData.description,
+					image: getStoryblokMetadataImage(programDetailData.heroImage, programDetailData.title),
+				}
+			: {},
+	);
 };
 
 export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug) {

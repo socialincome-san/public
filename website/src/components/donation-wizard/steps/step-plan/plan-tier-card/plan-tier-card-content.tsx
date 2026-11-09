@@ -46,7 +46,11 @@ export const PlanTierCardContent = ({
 		</div>
 		<ul className="text-foreground flex flex-col gap-2">
 			{benefits.map((benefit) => (
-				<li key={benefit.id} className="flex gap-1.5 text-sm">
+				<li
+					key={benefit.id}
+					className={cn('flex gap-1.5 text-sm', benefit.placeholder && 'invisible')}
+					aria-hidden={benefit.placeholder}
+				>
 					{benefit.icon === 'heart' ? (
 						<Heart className="text-foreground mt-0.5 size-3.5 shrink-0" aria-hidden />
 					) : (

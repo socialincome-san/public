@@ -43,6 +43,7 @@ const getInitialFormSchema = (t: ReturnType<typeof useTranslations<'portal-admin
 		operatorFallbackCountryCode: {
 			label: t('form.operatorFallbackCountry'),
 			placeholder: t('form.noFallbackCountry'),
+			// The add form starts without values, so an untouched select must still mean "no fallback"
 			zodSchema: z.union([z.nativeEnum(CountryCode), z.literal('none')]).default('none'),
 			value: 'none',
 			options: [{ id: 'none', label: t('form.none') }],

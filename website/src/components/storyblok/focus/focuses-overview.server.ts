@@ -1,25 +1,16 @@
 import type { AnySearchParams } from '@/app/page-props';
+import { getQueryValue } from '@/components/filters/filter-query';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { PublicFocusStatsBySlugMap } from '@/modules/focuses/focus.types';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusText, getFocusTitle } from './focus.utils';
-import { COUNTRY_QUERY_KEY, SDG_QUERY_KEY, SEARCH_QUERY_KEY } from './focuses-overview-query';
+import { COUNTRY_QUERY_KEY, SDG_QUERY_KEY } from './focuses-overview-query';
 import { getSdg } from './sdgs';
 
 export type FilterOption = {
 	value: string;
 	label: string;
-};
-
-const getQueryValue = (searchParams: AnySearchParams | undefined, key: string) => {
-	const value = searchParams?.[key];
-	const firstValue = Array.isArray(value) ? value.at(0) : value;
-
-	return typeof firstValue === 'string' ? firstValue.trim() : '';
-};
-
-export const getSearchQuery = (searchParams?: AnySearchParams) => {
-	return getQueryValue(searchParams, SEARCH_QUERY_KEY);
+	shortLabel?: string;
 };
 
 export const getCountryQuery = (searchParams?: AnySearchParams) => {
@@ -102,6 +93,7 @@ export const getSdgFilterOptions = (focuses: FocusStory[]): FilterOption[] => {
 				optionsBySdgNumber.set(sdg.number, {
 					value: String(sdg.number),
 					label: `SDG ${sdg.number}: ${sdg.title}`,
+					shortLabel: `SDG ${sdg.number}`,
 				});
 			}
 		});

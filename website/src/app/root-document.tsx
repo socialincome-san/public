@@ -39,7 +39,6 @@ export const RootDocument = ({
 }: PropsWithChildren<{ lang: string; messageScope?: MessageScope }>) => (
 	<html lang={lang} suppressHydrationWarning={true}>
 		<head>
-			<title>Social Income</title>
 			<meta name="app-version" content={appVersion} />
 			<meta name="app-environment" content={appEnv} />
 			<meta name="app-build-timestamp" content={buildTime} />
