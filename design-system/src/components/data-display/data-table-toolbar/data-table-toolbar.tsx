@@ -1,9 +1,10 @@
 'use client';
 
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Button } from '../../actions/button/button';
 import { Input } from '../../forms/input/input';
+import { SearchInput } from '../../forms/search-input/search-input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../forms/select/select';
 import { Switch } from '../../forms/switch/switch';
 import { Popover, PopoverContent, PopoverTrigger } from '../../overlays/popover/popover';
@@ -72,6 +73,8 @@ export const DataTableToolbar = ({
 	const hasSearch = showControls && searchKeys.length > 0;
 	const hasSorting = showControls && sortOptions.length > 0 && Boolean(onSortChange);
 	const hasSearchValue = Boolean(searchValue?.trim());
+	// While typing, show the draft: searchValue arrives debounced and would overwrite keystrokes
+	const [searchDraft, setSearchDraft] = useState<string | null>(null);
 	const hasSortingValue = Boolean(sortBy && sortDirection);
 	const activeFilterCount = filters.filter((filter) => Boolean(filter.value)).length;
 	const hiddenColumnCount = columns.filter((column) => !column.visible).length;
@@ -94,11 +97,15 @@ export const DataTableToolbar = ({
 				{hasSearch ? (
 					<>
 						<div className="hidden md:block">
-							<Input
-								key={`table-search-desktop-${searchValue ?? ''}`}
+							<SearchInput
 								placeholder="Search..."
-								defaultValue={searchValue}
-								onChange={(event) => onSearchChange(event.target.value)}
+								value={searchDraft ?? searchValue ?? ''}
+								onFocus={() => setSearchDraft(searchValue ?? '')}
+								onChange={(event) => {
+									setSearchDraft(event.target.value);
+									onSearchChange(event.target.value);
+								}}
+								onBlur={() => setSearchDraft(null)}
 								aria-label="Search"
 								data-testid="data-table-search-input"
 							/>
