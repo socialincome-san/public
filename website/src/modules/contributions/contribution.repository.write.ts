@@ -145,7 +145,7 @@ const toContributionData = (input: ContributionInput) => ({
 	amountChf: input.amountChf,
 	feesChf: input.feesChf,
 	status: input.status,
-	...(input.sourceType ? { sourceType: input.sourceType } : {}),
+	sourceType: input.sourceType,
 	contributorId: input.contributorId,
 	campaignId: input.campaignId,
 });

@@ -1,4 +1,3 @@
-import { type Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
@@ -53,9 +52,7 @@ test('add new contribution', async ({ page }) => {
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-	const created: Prisma.ContributionGetPayload<{
-		select: { id: true; sourceType: true };
-	}> | null = await prisma.contribution.findFirst({
+	const created = await prisma.contribution.findFirst({
 		where: {
 			contributorId: source!.contributorId,
 			campaignId: source!.campaignId,
