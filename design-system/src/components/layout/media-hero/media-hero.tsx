@@ -1,14 +1,15 @@
 import { cva } from 'class-variance-authority';
 import NextImage from 'next/image';
-import { type HTMLAttributes, type ReactNode } from 'react';
+import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 import { Progress } from '../../feedback/progress/progress';
 import { BlockWrapper } from '../block-wrapper/block-wrapper';
 
-type MediaHeroImage = {
+export type MediaHeroImage = {
 	src: string;
 	alt: string;
+	objectPosition?: string;
 };
 
 const overlayClasses = {
@@ -68,10 +69,20 @@ export const MediaHero = ({
 				'bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden transition-[border-radius] duration-300 ease-out md:min-h-160',
 				expanded ? 'z-60' : 'md:rounded-b-5xl rounded-b-3xl',
 			)}
+			style={
+				image?.objectPosition ? ({ ['--media-hero-object-position']: image.objectPosition } as CSSProperties) : undefined
+			}
 		>
 			{media ??
 				(image ? (
-					<NextImage src={image.src} alt={image.alt} fill sizes="100vw" className="object-cover" priority />
+					<NextImage
+						src={image.src}
+						alt={image.alt}
+						fill
+						sizes="100vw"
+						className={cn('object-cover', image.objectPosition && '[object-position:var(--media-hero-object-position)]')}
+						priority
+					/>
 				) : (
 					<div className="bg-primary/20 absolute inset-0" />
 				))}

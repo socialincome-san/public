@@ -8,7 +8,7 @@ import { getArticleStructuredData } from '@/lib/utils/structured-data';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import type { ResolvedArticle } from './storyblok-article';
-import { normalizeStoryblokFocusForImageService } from './storyblok-image-focus';
+import { focusToObjectPosition, normalizeStoryblokFocusForImageService } from './storyblok-image-focus';
 import {
 	getWebsitePathTailFromStoryblokSlug,
 	getWebsitePublicPath,
@@ -174,6 +174,20 @@ export const formatStoryblokUrl = (url: string, width: number, height: number, f
 	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
 
 	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
+};
+
+export const getStoryblokImageObjectPosition = (
+	image?: { filename?: string | null; focus?: string | null } | null,
+): string | undefined => {
+	if (!image?.filename || !image.focus) {
+		return undefined;
+	}
+	const dimensions = getDimensionsFromStoryblokImageUrl(image.filename);
+	if (!dimensions.width || !dimensions.height) {
+		return undefined;
+	}
+
+	return focusToObjectPosition(image.focus, dimensions.width, dimensions.height);
 };
 
 export const formatStoryblokResizeUrl = (url: string, width: number, height: number) => {
