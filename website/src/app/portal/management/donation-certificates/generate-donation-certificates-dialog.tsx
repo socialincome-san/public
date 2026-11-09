@@ -96,7 +96,7 @@ export default function GenerateDonationCertificatesDialog({
 						</p>
 						<Select value={year.toString()} onValueChange={(e: string) => setYear(parseInt(e))}>
 							<SelectTrigger>
-								<SelectValue placeholder={'Select Year'} />
+								<SelectValue placeholder="Select Year" />
 							</SelectTrigger>
 							<SelectContent>
 								{CERTIFICATE_YEARS.map((year) => (
@@ -120,7 +120,7 @@ export default function GenerateDonationCertificatesDialog({
 							}
 						>
 							<SelectTrigger>
-								<SelectValue placeholder={'Select language'} />
+								<SelectValue placeholder="Select language" />
 							</SelectTrigger>
 							<SelectContent>
 								{LANGUAGES.map((language) => (
@@ -143,7 +143,7 @@ export default function GenerateDonationCertificatesDialog({
 						<MultiSelect
 							modalPopover
 							hideSelectAll
-							variant={'default'}
+							variant="default"
 							options={options}
 							onValueChange={setSelectedContributors}
 							placeholder="Select contributors"

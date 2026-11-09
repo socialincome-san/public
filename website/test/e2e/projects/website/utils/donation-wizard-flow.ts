@@ -37,10 +37,10 @@ const completeHeroAmountFields = async (scope: Locator, monthlyIncome: number, c
 	await incomeInput.blur();
 	await expect(scope.getByTestId('donation-wizard-one-percent')).toContainText(String(expectedOnePercent));
 	await scope.getByTestId('donation-wizard-one-percent').click();
+	// Monthly is the default; the link below the button donates one-time
 	await scope
-		.getByTestId(cadence === 'monthly' ? 'donation-wizard-cadence-monthly' : 'donation-wizard-cadence-one-time')
+		.getByTestId(cadence === 'monthly' ? 'donation-wizard-amount-continue' : 'donation-wizard-cadence-one-time')
 		.click();
-	await scope.getByTestId('donation-wizard-amount-continue').click();
 };
 
 export const openDonationWizardFromHero = async (
@@ -73,7 +73,6 @@ export const completeAmountStep = async (page: Page, monthlyIncome: number) => {
 	await incomeInput.blur();
 	await expect(modal.getByTestId('donation-wizard-one-percent')).toContainText(String(expectedOnePercent));
 	await modal.getByTestId('donation-wizard-one-percent').click();
-	await modal.getByTestId('donation-wizard-cadence-monthly').click();
 	await modal.getByTestId('donation-wizard-amount-continue').click();
 	await waitForWizardStep(modal, 'donation-wizard-step-monthly-plan');
 };

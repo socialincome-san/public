@@ -38,7 +38,11 @@
 	},
 	"article": {
 		"keep-reading": "Keep reading",
-		"from-original-language": "Translated from"
+		"from-original-language": "Translated from",
+		"author-cta": "More about {name}",
+		"author": "Author",
+		"author-circles": "Active in",
+		"author-article-count": "{count, plural, one {# article} other {# articles}}"
 	},
 	"teasers": {
 		"heading-prefix": "Stories & Updates from ",
@@ -54,5 +58,9 @@
 			"original": "Originally published as",
 			"related": "These sources provided background and insights"
 		}
+	},
+	"banner": {
+		"expand": "Show more",
+		"collapse": "Show less"
 	}
 }

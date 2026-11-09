@@ -1,5 +1,6 @@
 import { getStoredImage } from '@/lib/database';
 import { parseImageComments } from '@/lib/image-comments';
+import { createImageEditGuide } from '@/lib/image-edit-guide';
 import { generateAndSaveImage, handleImageRequest, imageErrorResponse } from '@/lib/image-generation';
 import { isImageId } from '@/lib/images';
 import { buildEditPrompt } from '@/lib/prompts';
@@ -18,16 +19,18 @@ export const POST = (request: Request) =>
 
 		const stored = await getStoredImage(body.imageId);
 		if (!stored) return imageErrorResponse('Image not found.', 404);
+		const response = await fetch(stored.imageUrl);
+		if (!response.ok) return imageErrorResponse('Image could not be loaded.', 502);
 
 		// Normalize to PNG with the orientation the browser showed when the comments were placed.
-		const original = await sharp(Buffer.from(stored.image_base64, 'base64'))
+		const original = await sharp(await response.arrayBuffer())
 			.autoOrient()
 			.png()
 			.toBuffer({ resolveWithObject: true });
 
 		return generateAndSaveImage({
-			prompt: buildEditPrompt(comments),
-			images: [original.data],
+			prompt: buildEditPrompt(comments, original.info),
+			images: [original.data, await createImageEditGuide(original.data, comments, original.info)],
 			width: original.info.width,
 			height: original.info.height,
 		});

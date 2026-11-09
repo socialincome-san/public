@@ -1,7 +1,12 @@
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getJournalArticleAction, getJournalArticlePageDataAction } from '@/modules/journal/journal.actions';
+import { getArticleAuthors } from '@/lib/storyblok/storyblok-utils';
+import {
+	getJournalArticleAction,
+	getJournalArticlePageDataAction,
+	getJournalAuthorArticleCountsAction,
+} from '@/modules/journal/journal.actions';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
 import { getTranslations } from 'next-intl/server';
@@ -37,17 +42,24 @@ export const StoryblokPreviewJournalArticlePage = async ({
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const pageResult = await getJournalArticlePageDataAction({
-				lang,
-				currency,
-				slug,
-				parentLabel: t('overview.title'),
-				homeLabel: tCommon('breadcrumb.home'),
-			});
+			// The visual editor sends unsaved author changes in `story`, so the cards follow it instead of the saved article
+			const authors = getArticleAuthors(story.content);
+			const [pageResult, articleCountsResult] = await Promise.all([
+				getJournalArticlePageDataAction({
+					lang,
+					currency,
+					slug,
+					parentLabel: t('overview.title'),
+					homeLabel: tCommon('breadcrumb.home'),
+				}),
+				getJournalAuthorArticleCountsAction({ authorIds: authors.map((author) => author.uuid) }),
+			]);
 
 			if (!pageResult.success) {
 				return notFound();
 			}
+
+			const articleCounts = articleCountsResult.success ? articleCountsResult.data : {};
 
 			return (
 				<ArticleDetail
@@ -55,6 +67,9 @@ export const StoryblokPreviewJournalArticlePage = async ({
 					slug={slug}
 					lang={lang}
 					currency={currency}
+					authors={authors.map((person) => ({ person, articleCount: articleCounts[person.uuid] ?? 0 }))}
+					roleLabels={pageResult.data.roleLabels}
+					circleLabels={pageResult.data.circleLabels}
 					relatedArticles={pageResult.data.relatedArticles}
 					breadcrumbs={pageResult.data.breadcrumbs}
 				/>

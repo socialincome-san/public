@@ -1,4 +1,5 @@
 import "package:app/core/helpers/flushbar_helper.dart";
+import "package:app/data/models/local_partner.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
@@ -6,10 +7,14 @@ import "package:flutter/material.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
 class SocialIncomeContactDialog extends StatelessWidget {
-  const SocialIncomeContactDialog({super.key});
+  final LocalPartner localPartner;
+
+  const SocialIncomeContactDialog({super.key, required this.localPartner});
 
   @override
   Widget build(BuildContext context) {
+    final localPartnerPhone = localPartner.contact?.phone;
+
     return FractionallySizedBox(
       widthFactor: 0.9,
       heightFactor: 0.8,
@@ -41,26 +46,50 @@ class SocialIncomeContactDialog extends StatelessWidget {
                     ),
                   ],
                 ),
-                Column(
-                  children: [
-                    _IconAndContact(
-                      contactMethod: "WhatsApp",
-                      contactDetails: "+232 75 588647",
-                      onOpen: (String value) => openWhatsapp(context, value),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _IconAndContact(
+                          contactMethod: "WhatsApp",
+                          contactDetails: "+232 75 588647",
+                          onOpen: (String value) =>
+                              openWhatsapp(context, value),
+                        ),
+                        const SizedBox(height: 16),
+                        _IconAndContact(
+                          contactMethod: context.l10n.phone,
+                          contactDetails: "+232 75 588647",
+                          onOpen: (String value) => makePhoneCall(value),
+                        ),
+                        const SizedBox(height: 16),
+                        _IconAndContact(
+                          contactMethod: context.l10n.email,
+                          contactDetails: "hello@socialincome.org",
+                          onOpen: (String value) => writeEmail(value),
+                        ),
+                        if (localPartnerPhone != null &&
+                            localPartnerPhone.number.trim().isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          _IconAndContact(
+                            contactMethod:
+                                "${context.l10n.phone} · ${localPartner.name}",
+                            contactDetails: localPartnerPhone.number,
+                            onOpen: (String value) => makePhoneCall(value),
+                          ),
+                          if (localPartnerPhone.hasWhatsApp) ...[
+                            const SizedBox(height: 16),
+                            _IconAndContact(
+                              contactMethod: "WhatsApp · ${localPartner.name}",
+                              contactDetails: localPartnerPhone.number,
+                              onOpen: (String value) =>
+                                  openWhatsapp(context, value),
+                            ),
+                          ],
+                        ],
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                    _IconAndContact(
-                      contactMethod: context.l10n.phone,
-                      contactDetails: "+232 75 588647",
-                      onOpen: (String value) => makePhoneCall(value),
-                    ),
-                    const SizedBox(height: 16),
-                    _IconAndContact(
-                      contactMethod: context.l10n.email,
-                      contactDetails: "hello@socialincome.org",
-                      onOpen: (String value) => writeEmail(value),
-                    ),
-                  ],
+                  ),
                 ),
                 ButtonBig(
                   onPressed: () => Navigator.of(context).pop(),
