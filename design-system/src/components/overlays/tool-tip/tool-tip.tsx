@@ -59,6 +59,7 @@ const Tooltip = ({
 const TooltipTrigger = ({
 	onClick,
 	onPointerDown,
+	onPointerCancel,
 	...props
 }: WithoutClassName<React.ComponentProps<typeof TooltipPrimitive.Trigger>>) => {
 	const tooltip = React.useContext(TooltipContext);
@@ -78,6 +79,10 @@ const TooltipTrigger = ({
 
 				event.preventDefault();
 				tooltip.setOpen(!tooltip.openRef.current);
+			}}
+			onPointerCancel={(event) => {
+				onPointerCancel?.(event);
+				tapRef.current = false;
 			}}
 			onClick={(event) => {
 				onClick?.(event);

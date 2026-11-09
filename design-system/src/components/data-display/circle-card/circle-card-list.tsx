@@ -15,7 +15,7 @@ export const CircleCardList = <T,>({ items, getKey, renderItem, emptyMessage }: 
 	items.length === 0 ? (
 		<p className="text-muted-foreground">{emptyMessage}</p>
 	) : (
-		<ul className="grid grid-cols-1 gap-3 md:grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] md:gap-6">
+		<ul className="grid grid-cols-1 gap-3 md:grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr))] md:gap-6">
 			{items.map((item) => (
 				<li key={getKey(item)} className="flex *:w-full">
 					{renderItem(item)}
