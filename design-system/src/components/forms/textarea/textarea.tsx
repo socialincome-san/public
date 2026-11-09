@@ -15,6 +15,10 @@ const textareaVariants = cva(
 				].join(' '),
 				bare: 'bg-transparent p-0 [font:inherit] [text-align:inherit]',
 			},
+			resize: {
+				vertical: 'resize-y',
+				none: 'resize-none',
+			},
 		},
 		defaultVariants: {
 			variant: 'default',
@@ -24,9 +28,10 @@ const textareaVariants = cva(
 
 const Textarea = ({
 	variant,
+	resize,
 	...props
 }: WithoutClassName<React.ComponentProps<'textarea'>> & VariantProps<typeof textareaVariants>) => {
-	return <textarea data-slot="textarea" className={textareaVariants({ variant })} {...props} />;
+	return <textarea data-slot="textarea" className={textareaVariants({ variant, resize })} {...props} />;
 };
 
 export { Textarea, textareaVariants };

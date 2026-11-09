@@ -14,6 +14,7 @@ import {
 	createOrganization,
 	deleteOrganization,
 	getOrganization,
+	getOrganizationCountryOptions,
 	getOrganizationProgramOptions,
 	getOrganizationUserOptions,
 	getPaginatedOrganizationAdminMembersTableView,
@@ -138,4 +139,13 @@ export const getOrganizationProgramOptionsAction = async (): Promise<Result<{ id
 	}
 
 	return getOrganizationProgramOptions(sessionResult.data.id);
+};
+
+export const getOrganizationCountryOptionsAction = async (): Promise<Result<{ id: string; name: string }[]>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	return getOrganizationCountryOptions(sessionResult.data.id);
 };

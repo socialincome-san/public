@@ -12,16 +12,16 @@ export default function Page() {
 							Image Generator
 						</SectionHeading>
 						<p className="text-muted-foreground mt-3 text-base font-normal sm:text-xl">
-							Beschreibe eine <strong className="text-primary font-bold">Szene</strong> im Social-Income-Aquarellstil.
+							Describe a <strong className="text-primary font-bold">scene</strong> in the Social Income watercolor style.
 						</p>
 					</div>
 					<div className="mt-10 w-full sm:mt-14">
 						<ImageShowcase
 							images={[
-								{ src: '/images/showcase/planting.png', alt: 'A family planting a seedling together' },
+								{ src: '/images/showcase/planting.png', alt: 'A father and his son planting a seedling together' },
 								{ src: '/images/showcase/children-running.png', alt: 'Children running through their village' },
 								{ src: '/images/showcase/family-reading.png', alt: 'A mother reading with two children' },
-								{ src: '/images/showcase/sunset.png', alt: 'A family watching the sunset by a lake' },
+								{ src: '/images/showcase/shop.png', alt: 'An older man checking a message on his phone outside his shop' },
 							]}
 						/>
 					</div>

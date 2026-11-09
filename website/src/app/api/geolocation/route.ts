@@ -1,19 +1,14 @@
-import { VISITOR_COUNTRY_HEADER } from '@/lib/i18n/utils';
+import { getVisitorLocation } from '@/lib/geo/visitor-geo';
 
-// https://vercel.com/docs/headers/request-headers
 export const GET = (request: Request) => {
 	try {
-		const country = request.headers.get(VISITOR_COUNTRY_HEADER) ?? 'Unknown';
-		const ip = request.headers.get('x-real-ip') ?? 'Unknown';
-		const region = request.headers.get('x-vercel-ip-country-region') ?? 'Unknown';
-		const encodedCity = request.headers.get('x-vercel-ip-city');
-		const city = encodedCity ? decodeURIComponent(encodedCity) : 'Unknown';
+		const { country, region, city, ip } = getVisitorLocation(request.headers);
 
 		return Response.json({
-			country,
-			region,
-			city,
-			ip,
+			country: country ?? 'Unknown',
+			region: region ?? 'Unknown',
+			city: city ?? 'Unknown',
+			ip: ip ?? 'Unknown',
 		});
 	} catch (error: unknown) {
 		return new Response(null, { status: 500, statusText: String(error) });

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Button } from '../../actions/button/button';
 import { DurationBadge } from '../../data-display/duration-badge/duration-badge';
+import { AnimatedCircleIcon } from '../../icons/animated-circle-icon/animated-circle-icon';
 import { GithubIcon, LinkedinIcon } from '../../icons/social-icons/social-icons';
 import { ProfileHeader } from './profile-header';
 
@@ -39,9 +40,32 @@ export const Complete: Story = {
 		facts: [
 			{ label: 'Role', value: 'Program Lead' },
 			{ label: 'Volunteering since', value: 'Mar 4, 2023' },
-			{ label: 'Time commitment', value: '4-8 hrs / week' },
+			{
+				label: 'Time commitment',
+				value: '4-8 hrs / week',
+				info: (
+					<>
+						Work style: Flexible / Self-Paced
+						<br />
+						Likes deadlines
+					</>
+				),
+			},
 		],
-		tags: { label: 'Circles', items: ['Technology', 'Partnerships', 'Community'] },
+		tagGroups: [
+			{
+				label: 'Active member of',
+				items: [
+					{ label: 'Technology Circle', href: '#', variant: 'solid', icon: <AnimatedCircleIcon /> },
+					{ label: 'Partnership Circle', href: '#', variant: 'solid', icon: <AnimatedCircleIcon /> },
+				],
+			},
+			{
+				label: 'Interested in',
+				items: [{ label: 'Community Circle', href: '#', variant: 'light', icon: <AnimatedCircleIcon /> }],
+			},
+		],
+		actionsLabel: 'Links',
 		actions: (
 			<>
 				<Button asChild size="sm" variant="outline">

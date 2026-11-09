@@ -1,12 +1,11 @@
 'use client';
 
-import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { createStep1Actions, selectStep1FormView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { DonationAmountFields } from './donation-amount-fields';
 
 export const AmountStep = ({ state, send }: DonationWizardStepProps) => {
-	const currency = useWebsiteCurrency();
+	const { currency } = state.context;
 
 	return (
 		<DonationAmountFields
@@ -14,7 +13,10 @@ export const AmountStep = ({ state, send }: DonationWizardStepProps) => {
 			values={selectStep1FormView(state.context)}
 			actions={createStep1Actions(send)}
 			showTitle={false}
-			onSubmit={() => send({ type: 'SUBMIT' })}
+			onSubmit={(cadence) => {
+				send({ type: 'SET_CADENCE', value: cadence });
+				send({ type: 'SUBMIT' });
+			}}
 		/>
 	);
 };

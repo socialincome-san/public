@@ -4,6 +4,7 @@ import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-te
 import { Community } from '@/components/community/community';
 import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-content';
 import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
+import { CountryFlag } from '@/components/country-flag';
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { resolveProgramCountry } from '@/components/storyblok/country/resolve-country-name';
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
@@ -16,7 +17,7 @@ import { ProgramRecipients } from '@/components/storyblok/program/program-recipi
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getCountryNameByCode } from '@/lib/types/country';
+import { getCountryNameFromIsoCode, isValidCountryCode } from '@/lib/types/country';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
@@ -29,7 +30,9 @@ type Props = {
 };
 
 export const ProgramDetail = async ({ programDetailData, lang, currency, community }: Props) => {
-	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
+	const programCountryIsoCode = programDetailData.programDetails?.countryIsoCode;
+	const countryIsoCode =
+		programCountryIsoCode && programCountryIsoCode !== '-' ? programCountryIsoCode : programDetailData.stats?.countryIsoCode;
 	const recipientsCount =
 		programDetailData.dashboardStats?.recipientsCount ??
 		programDetailData.programDetails?.recipientsCount ??
@@ -51,6 +54,16 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 	]);
 
 	const faqItems = resolveFaqItems(programDetailData.faq ?? []);
+	const countryStat =
+		countryIsoCode && countryIsoCode !== '-'
+			? {
+					label: resolvedCountry?.name ?? getCountryNameFromIsoCode(countryIsoCode),
+					href: resolvedCountry?.href,
+					icon: isValidCountryCode(countryIsoCode) ? (
+						<CountryFlag country={countryIsoCode} size="sm" decorative />
+					) : undefined,
+				}
+			: undefined;
 
 	return (
 		<>
@@ -59,12 +72,10 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 				campaignId={programDetailData.campaignId}
 				title={programDetailData.title}
 				heroImage={programDetailData.heroImage}
-				stats={
-					programDetailData.stats
+				stats={[
+					...(countryStat ? [countryStat] : []),
+					...(programDetailData.stats
 						? [
-								{
-									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
-								},
 								{
 									value: programDetailData.stats.recipientsCount,
 									label:
@@ -73,8 +84,8 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 											: t('programs-page.recipient-plural'),
 								},
 							]
-						: []
-				}
+						: []),
+				]}
 			/>
 			<div className="flex flex-col gap-8 py-8">
 				<Breadcrumb links={breadcrumbLinks} layout="section" aside={community ? <Community data={community} /> : null} />

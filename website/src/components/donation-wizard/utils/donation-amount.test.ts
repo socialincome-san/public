@@ -14,7 +14,7 @@ import {
 } from './donation-amount';
 
 const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountContext => ({
-	...getInitialDonationContext(),
+	...getInitialDonationContext('CHF'),
 	...overrides,
 });
 

@@ -21,7 +21,13 @@ const fillStripeHostedCheckoutForm = async (scope: Page | FrameLocator, donor: D
 	if (await zipField.count()) {
 		// Stripe form is rendered IP-dependently; CI may require ZIP (and would require phone if Link is enabled).
 		await zipField.fill('12345');
-		await scope.getByRole('checkbox', { name: /^Save my information/ }).uncheck();
+		const saveInformation = scope.getByRole('checkbox', { name: /^Save my information/ });
+
+		// Stripe re-renders the form after the email lookup and can reset the checkbox right after a click
+		await expect(async () => {
+			await saveInformation.uncheck({ timeout: 5_000 });
+			await expect(saveInformation).not.toBeChecked({ timeout: 2_000 });
+		}).toPass({ timeout: 30_000 });
 	}
 };
 

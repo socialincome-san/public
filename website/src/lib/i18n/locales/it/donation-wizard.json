@@ -2,15 +2,11 @@
 	"modal": {
 		"title": "Fai una donazione",
 		"campaign-for": "Per {title}",
-		"closeConfirm": {
-			"title": "Chiudere la donazione?",
-			"description": "Se chiudi ora, i progressi di questa donazione andranno persi.",
-			"cancel": "Continua a donare",
-			"confirm": "Chiudi"
-		}
+		"currency": "Valuta"
 	},
 	"stepAmount": {
-		"title": "Fai una donazione",
+		"title": "Dona il tuo 1 %",
+		"title-custom-amount": "La tua donazione",
 		"monthly-income-label": "Il tuo reddito mensile",
 		"choose-own-amount": "Oppure scegli un importo personalizzato",
 		"your-one-percent": "Il tuo 1 %",
@@ -19,7 +15,16 @@
 		"one-time": "Una tantum",
 		"donate-now": "Dona ora",
 		"donate-now-with-amount": "Dona {amount} ora",
-		"custom-amount-placeholder": "Importo"
+		"donate-monthly-with-amount": "Dona {amount} al mese",
+		"switch-to-one-time": "Dona una sola volta",
+		"switch-to-one-time-with-amount": "Dona {amount} una sola volta",
+		"switch-to-monthly": "Dona ogni mese",
+		"switch-to-monthly-with-amount": "Dona {amount} al mese",
+		"custom-amount-placeholder": "Importo",
+		"custom-amount-label": "Importo personalizzato",
+		"whole-amount-only": "Solo importi interi",
+		"below-minimum": "Almeno {amount}",
+		"above-maximum": "Al massimo {amount}"
 	},
 	"stepPlan": {
 		"monthly-title": "Donazione mensile",
@@ -52,7 +57,7 @@
 		"email": "E-mail",
 		"accountCreateHint": "Se non esiste ancora un account con questa e-mail, ne creeremo uno per te.",
 		"noBackAfterGenerateHint": "Dopo aver generato il codice QR, non potrai più modificare importo, metodo di pagamento o dati di contatto in questo flusso.",
-		"generateCta": "Genera codice QR per il pagamento",
+		"generateCta": "Genera codice QR",
 		"generating": "Generazione…",
 		"generateError": "Impossibile generare la QR-fattura. Riprova."
 	},
@@ -144,5 +149,10 @@
 		"zewo": "Certificato ZEWO",
 		"why-one-percent": "Perché donare l'1%?",
 		"pay-with": "Paga con"
+	},
+	"resumeBar": {
+		"label": "Donazione rapida",
+		"summary": "{cadence, select, monthly {Dona {amount} al mese, modifica l'importo} other {Dona {amount} una volta, modifica l'importo}}",
+		"continue": "Continua"
 	}
 }

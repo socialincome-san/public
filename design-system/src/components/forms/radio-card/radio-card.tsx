@@ -37,7 +37,7 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 
 				{description && <p className="text-muted-foreground text-sm">{description}</p>}
 
-				{children && (
+				{children ? (
 					<div
 						className={cn(
 							'grid transition-all duration-300 ease-in-out',
@@ -46,7 +46,7 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 					>
 						<div className="overflow-hidden">{children}</div>
 					</div>
-				)}
+				) : null}
 			</div>
 		</label>
 	);
