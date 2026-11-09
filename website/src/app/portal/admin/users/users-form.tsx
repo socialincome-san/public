@@ -153,7 +153,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 			return;
 		}
 		startTransition(async () => await loadUser(userId));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line @eslint-react/exhaustive-deps
 	}, [userId]);
 
 	useEffect(() => {

@@ -55,22 +55,22 @@ export const StatsSection = async ({ programId, stats }: StatsSectionProps) => {
 
 	const getCreditIcon = (creditsInIntervals: number, totalExpected: number) => {
 		if (creditsInIntervals < 1) {
-			return { Icon: TriangleAlert, color: 'text-destructive' };
+			return <TriangleAlert className={cn('text-destructive', 'h-4 w-4')} aria-hidden />;
 		}
 		if (creditsInIntervals >= totalExpected) {
-			return { Icon: CheckCircle, color: 'text-confirm' };
+			return <CheckCircle className={cn('text-confirm', 'h-4 w-4')} aria-hidden />;
 		}
 		if (creditsInIntervals > 3) {
-			return { Icon: CheckCircle, color: 'text-confirm' };
+			return <CheckCircle className={cn('text-confirm', 'h-4 w-4')} aria-hidden />;
 		}
 		if (creditsInIntervals >= 1) {
-			return { Icon: AlertCircle, color: 'text-warning' };
+			return <AlertCircle className={cn('text-warning', 'h-4 w-4')} aria-hidden />;
 		}
 
-		return { Icon: AlertCircle, color: 'text-muted-foreground' };
+		return <AlertCircle className={cn('text-muted-foreground', 'h-4 w-4')} aria-hidden />;
 	};
 
-	const { Icon, color } = getCreditIcon(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
+	const creditIcon = getCreditIcon(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
 	const creditStatus = getCreditStatusLabel(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
 	const creditExplanation = getCreditStatusExplanation(stats.availableCreditsInIntervals, stats.totalExpectedIntervals);
 	const projectedRemainingProgramCurrency = stats.totalProgramCostsProgramCurrency - stats.paidOutSoFarProgramCurrency;
@@ -232,7 +232,7 @@ export const StatsSection = async ({ programId, stats }: StatsSectionProps) => {
 										<Tooltip>
 											<TooltipTrigger asChild>
 												<span className="flex items-center gap-2">
-													<Icon className={cn(color, 'h-4 w-4')} aria-hidden />
+													{creditIcon}
 													<span>{creditStatus}</span>
 												</span>
 											</TooltipTrigger>

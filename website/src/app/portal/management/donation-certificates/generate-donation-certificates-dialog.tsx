@@ -141,7 +141,7 @@ export default function GenerateDonationCertificatesDialog({
 						<MultiSelect
 							modalPopover
 							hideSelectAll
-							variant={'default'}
+							variant="default"
 							options={options}
 							onValueChange={setSelectedContributors}
 							placeholder={t('certificateGeneration.selectContributors')}
