@@ -1,12 +1,11 @@
-import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
+import { ArticleAuthorLinks } from '@/components/storyblok/journal/article-authors';
 import { TagBadge } from '@/components/storyblok/journal/tag-badge';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { createWebsitePersonLink, formatStoryblokDate, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
+import { formatStoryblokDate, getArticleAuthors } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
-import Link from 'next/link';
 
 type Props = {
 	story: ISbStoryData<JournalArticle>;
@@ -20,7 +19,6 @@ const ARTICLE_HERO_IMAGE_HEIGHT = 960;
 
 export const ArticleDetailHeader = ({ story, hasHero, lang, currency }: Props) => {
 	const article = story.content;
-	const author = article.author;
 
 	return (
 		<header
@@ -54,13 +52,7 @@ export const ArticleDetailHeader = ({ story, hasHero, lang, currency }: Props) =
 				)}
 			</div>
 
-			<Link
-				href={createWebsitePersonLink(author.slug, lang, currency)}
-				className="flex w-fit items-center gap-3 transition-opacity hover:opacity-80"
-			>
-				<AuthorAvatar author={author} size="lg" />
-				<span className="text-lg font-medium">{getPersonDisplayName(author)}</span>
-			</Link>
+			<ArticleAuthorLinks authors={getArticleAuthors(article)} lang={lang} currency={currency} />
 
 			{article.tags && article.tags.length > 0 && (
 				<div className="flex flex-wrap gap-2">

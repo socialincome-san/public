@@ -3,7 +3,7 @@
 import { COUNTRIES, DEFAULT_COUNTRY } from '@/lib/countries';
 import { formatImageCost } from '@/lib/image-cost';
 import { DEFAULT_IMAGE_FORMAT, IMAGE_FORMATS } from '@/lib/image-formats';
-import { imageUrl, type SavedImage } from '@/lib/images';
+import { type SavedImage } from '@/lib/images';
 import { MAX_REFERENCE_IMAGE_BYTES, REFERENCE_IMAGE_TYPES } from '@/lib/reference-image';
 import { AddMenu } from '@socialincome/design-system/actions/add-menu/add-menu';
 import { Button } from '@socialincome/design-system/actions/button/button';
@@ -23,12 +23,14 @@ import { DropdownMenuItem } from '@socialincome/design-system/overlays/dropdown-
 import { Upload } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { type FormEvent, type KeyboardEvent, type ReactNode, useRef, useState, useTransition } from 'react';
 import { DownloadMenu } from './download-menu';
 import { ImageEditDialog } from './image-edit-dialog';
 import { requestImage } from './request-image';
 
 export const GeneratorForm = ({ children }: { children: ReactNode }) => {
+	const router = useRouter();
 	const referenceInputRef = useRef<HTMLInputElement>(null);
 	const [prompt, setPrompt] = useState('');
 	const [aspectRatio, setAspectRatio] = useState<string>(DEFAULT_IMAGE_FORMAT.value);
@@ -49,7 +51,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 		if (!canSubmit) return;
 		const formData = new FormData(event.currentTarget);
 		startTransition(async () => {
-			const result = await requestImage('/api/generate-image', formData);
+			const result = await requestImage('/api/generate-image', formData, router.refresh);
 			if ('error' in result) {
 				setError(result.error);
 				return;
@@ -73,7 +75,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 			<ImageHistory
 				label="Version history"
 				items={versions.map((version, index) => ({
-					src: imageUrl(version.id, 'preview'),
+					src: version.previewUrl,
 					label: `Version ${index + 1}`,
 					badge: `V${index + 1}`,
 					tooltip: version.cost_usd === null ? 'Price unavailable' : formatImageCost(version.cost_usd),
@@ -104,7 +106,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 						<div className="flex max-w-full flex-col items-center gap-6">
 							<p className="text-muted-foreground text-sm">Version {activeIndex + 1}</p>
 							<Image
-								src={imageUrl(image.id, 'original')}
+								src={image.imageUrl}
 								width={image.width}
 								height={image.height}
 								alt="Generated"
@@ -112,7 +114,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 								className="border-input shadow-card max-h-[55vh] w-auto max-w-full rounded-3xl border object-contain"
 							/>
 							<div className="grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
-								<DownloadMenu imageId={image.id} variant="default" size="md" fullWidth />
+								<DownloadMenu image={image} variant="default" size="md" fullWidth />
 								<ImageEditDialog
 									key={editSelection}
 									image={image}
@@ -121,6 +123,7 @@ export const GeneratorForm = ({ children }: { children: ReactNode }) => {
 									onEdited={(edited) => {
 										setVersions((previous) => [...previous, edited]);
 										setSelectedIndex(null);
+										router.refresh();
 									}}
 								/>
 								<Button asChild variant="outline" size="md" fullWidth>
