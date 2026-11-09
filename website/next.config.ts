@@ -41,7 +41,7 @@ const nextConfig: NextConfig = {
 	},
 	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
 	outputFileTracingIncludes: {
-		'/\\[lang\\]/\\[currency\\]/newsletter/archive/*/content': ['./emails/newsletter/*.html'],
+		'/\\[lang\\]/\\[currency\\]/newsletter/archive': ['./emails/newsletter/*.html'],
 	},
 	// Vercel's function request body limit.
 	experimental: {

@@ -4,9 +4,11 @@ import {
 	getNewsletterArchiveEntries,
 } from '@/app/[lang]/[currency]/newsletter/archive/newsletter-archive';
 import { getWebsiteBasePath, isWebsiteLanguage, parseCurrencySegment } from '@/lib/i18n/utils';
+import { getMetadata, getWebsiteAlternates } from '@/lib/utils/metadata';
+import { LinkList } from '@socialincome/design-system/data-display/link-list/link-list';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import { getTranslations } from 'next-intl/server';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export const generateMetadata = async ({ params }: DefaultLayoutProps) => {
@@ -18,8 +20,14 @@ export const generateMetadata = async ({ params }: DefaultLayoutProps) => {
 	const t = await getTranslations({ locale: lang, namespace: 'website-newsletter' });
 	const title = t('archive.title');
 	const description = t('archive.description');
+	const metadata = await getMetadata(lang, 'website-common', {
+		title,
+		description,
+		openGraph: { title, description },
+		twitter: { title, description },
+	});
 
-	return { title, description, openGraph: { title, description } };
+	return { ...metadata, ...getWebsiteAlternates(lang, 'newsletter/archive') };
 };
 
 export default async function NewsletterArchivePage({ params }: DefaultLayoutProps) {
@@ -37,23 +45,20 @@ export default async function NewsletterArchivePage({ params }: DefaultLayoutPro
 
 	return (
 		<BlockWrapper marginTop="lg" marginBottom="lg">
-			<section className="max-w-content mx-auto">
-				<h1 className="text-foreground mb-4 text-4xl font-medium">{t('archive.title')}</h1>
-				<p className="text-muted-foreground mb-8 text-lg">{t('archive.description')}</p>
-				<ul className="divide-border divide-y">
-					{entries.map((entry) => (
-						<li key={entry.id}>
-							<Link
-								href={`${basePath}/newsletter/archive/${entry.id}`}
-								className="text-foreground hover:text-primary flex flex-col gap-2 py-5 transition-colors sm:flex-row sm:items-center sm:justify-between"
-							>
-								<span className="text-lg font-medium">{entry.title}</span>
-								<span className="text-muted-foreground text-sm">{formatNewsletterDate(entry.id, lang)}</span>
-							</Link>
-						</li>
-					))}
-				</ul>
-			</section>
+			<div className="flex w-full flex-col gap-8">
+				<PageIntro title={t('archive.title')} description={t('archive.description')} />
+				<LinkList
+					items={entries.map((entry) => ({
+						label: entry.title,
+						href: `${basePath}/newsletter/archive/${entry.id}`,
+						tags: [formatNewsletterDate(entry.id, lang)],
+					}))}
+					initialCount={12}
+					// The list fills in the number of newsletters
+					showMoreLabel={t('archive.show-all', { count: '{count}' })}
+					showLessLabel={t('archive.show-fewer')}
+				/>
+			</div>
 		</BlockWrapper>
 	);
 }

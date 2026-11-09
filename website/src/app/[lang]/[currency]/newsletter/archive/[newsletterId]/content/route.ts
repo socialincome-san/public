@@ -20,6 +20,8 @@ const newsletterContentSecurityPolicy = [
 	"base-uri 'none'",
 	"form-action 'none'",
 	"frame-ancestors 'self'",
+	// Older newsletters reference some images over http.
+	'upgrade-insecure-requests',
 ].join('; ');
 
 export const GET = async (_request: Request, { params }: RouteContext) => {

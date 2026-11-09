@@ -115,9 +115,11 @@ export const NewsletterSignup = ({ lang, currency, title, senderName, imageSrc, 
 							</Button>
 						</form>
 					</Form>
-					<Link href={archiveHref} className="text-primary w-fit text-sm hover:underline">
-						{t('popup.archive-link')}
-					</Link>
+					<div>
+						<Button asChild variant="link" size="inline">
+							<Link href={archiveHref}>{t('popup.archive-link')}</Link>
+						</Button>
+					</div>
 
 					{displaySenderName || imageSrc ? (
 						<div className="flex items-center gap-3">

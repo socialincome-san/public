@@ -63,41 +63,14 @@ export const getNewsletterArchiveEntry = async (id: string): Promise<NewsletterA
 	return { id, title: extractNewsletterTitle(html, filename), html };
 };
 
-export const prepareNewsletterHtml = (html: string) => {
-	const withFallbackNames = html
-		.replace(
-			/\{\{\s*insert\s+first_name\s*'default=([^']*)'\s*\}\}/gi,
-			(_placeholder, fallback: string) => fallback.trim() || 'there',
+export const prepareNewsletterHtml = (html: string) =>
+	html
+		.replace(/\{\{\s*insert\s+first_name\s*'default=([^']*)'\s*\}\}/gi, (_placeholder, fallback: string) => fallback)
+		.replace(/<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi, (anchor, attributes: string, content: string) =>
+			/\bhref\s*=\s*(["'])\{\{\{\s*unsubscribe(?:_preferences)?\s*\}\}\}\1/i.test(attributes) ? content : anchor,
 		)
-		.replace(/\{\{\s*first_name\s*\}\}/gi, 'there')
-		.replace(/\{\{\s*firstName\s*\}\}/gi, 'there');
-
-	const withoutUnsubscribeLinks = withFallbackNames.replace(
-		/<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi,
-		(anchor, attributes: string, content: string) => {
-			const href = attributes.match(/\bhref\s*=\s*(["'])(.*?)\1/i)?.[2];
-			if (href && /^\{\{\{\s*unsubscribe(?:_preferences)?\s*\}\}\}$/i.test(href.trim())) {
-				return content;
-			}
-
-			return anchor;
-		},
-	);
-
-	return withoutUnsubscribeLinks.replace(/<a\b[^>]*>/gi, (anchor) => {
-		if (!/\bhref\s*=\s*(["'])https?:\/\/[^"']*\1/i.test(anchor)) {
-			return anchor;
-		}
-
-		const withBlankTarget = /\btarget\s*=/i.test(anchor)
-			? anchor.replace(/\btarget\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/i, 'target="_blank"')
-			: anchor.replace(/>$/, ' target="_blank">');
-
-		return /\brel\s*=/i.test(withBlankTarget)
-			? withBlankTarget.replace(/\brel\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/i, 'rel="noopener noreferrer"')
-			: withBlankTarget.replace(/>$/, ' rel="noopener noreferrer">');
-	});
-};
+		// Links would otherwise load inside the frame, where most sites refuse to be shown.
+		.replace(/<head\b[^>]*>/i, '$&<base target="_blank">');
 
 export const formatNewsletterDate = (id: string, locale: string) => {
 	const match = id.match(newsletterIdPattern);

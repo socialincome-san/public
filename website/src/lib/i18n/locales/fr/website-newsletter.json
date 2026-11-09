@@ -18,8 +18,9 @@
 	},
 	"archive": {
 		"title": "Archives de la newsletter",
-		"description": "Parcourez toutes les newsletters passées de Social Income.",
-		"back": "Retour aux archives de la newsletter",
-		"item-description": "Lisez la newsletter de Social Income publiée en {date}."
+		"description": "Parcours toutes les newsletters passées de Social Income.",
+		"show-all": "Afficher les {count} newsletters",
+		"show-fewer": "Afficher moins de newsletters",
+		"item-description": "Lis la newsletter de Social Income publiée en {date}."
 	}
 }

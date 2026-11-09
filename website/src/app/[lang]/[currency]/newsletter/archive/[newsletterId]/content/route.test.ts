@@ -12,7 +12,6 @@ describe('newsletter archive content route', () => {
 		expect(response.headers.get('content-security-policy')).toContain("script-src 'none'");
 		expect(html).toContain('Shoes, Stablecoins and Schools.');
 		expect(html).not.toMatch(/\{\{\s*insert\s+first_name/i);
-		expect(html).toMatch(/href="https:\/\/[^"]+" target="_blank" rel="noopener noreferrer"/i);
 	});
 
 	it('returns 404 for invalid locales, currencies, and newsletter IDs', async () => {

@@ -19,7 +19,8 @@
 	"archive": {
 		"title": "Newsletter archive",
 		"description": "Browse all past Social Income newsletters.",
-		"back": "Back to the newsletter archive",
+		"show-all": "Show all {count} newsletters",
+		"show-fewer": "Show fewer newsletters",
 		"item-description": "Read the Social Income newsletter published in {date}."
 	}
 }
