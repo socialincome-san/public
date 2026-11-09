@@ -19,7 +19,7 @@ export default [
 			'design-tokens': designTokensPlugin,
 		},
 		rules: {
-			'react/forbid-component-props': ['error', { forbid: ['style'] }],
+			'@smartive-eslint/forbid-component-props': ['error', { forbid: ['style'] }],
 			'design-system/no-package-escape': 'error',
 			'class-name/no-class-name-prop': 'error',
 			'design-tokens/no-arbitrary-design-values': 'error',
