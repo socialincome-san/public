@@ -230,11 +230,16 @@ type DataTableSortHeaderProps = {
 export const DataTableSortHeader = ({ children, direction, onToggle }: DataTableSortHeaderProps) => {
 	const SortIcon = direction === 'asc' ? ArrowUpIcon : direction === 'desc' ? ArrowDownIcon : ArrowUpDownIcon;
 
+	// Labels wrap so the icons don't push wide tables past their container
 	return (
-		<Button type="button" variant="ghost" size="inline" onClick={onToggle}>
+		<button
+			type="button"
+			onClick={onToggle}
+			className="hover:text-foreground focus-visible:ring-ring inline-flex items-center gap-1 rounded-sm text-left font-medium whitespace-normal focus-visible:ring-1 focus-visible:outline-hidden"
+		>
 			{children}
-			<SortIcon aria-hidden="true" />
-		</Button>
+			<SortIcon className="size-3.5 shrink-0" aria-hidden="true" />
+		</button>
 	);
 };
 
