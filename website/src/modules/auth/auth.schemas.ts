@@ -15,7 +15,6 @@ export const sessionIdTokenSchema = z.string().min(1, 'missing-id-token');
 export const magicLoginRequestSchema = z.object({
 	email: z.string().email().max(254),
 	continueUrl: z.string().url().max(2048),
-	emulator: z.boolean().optional(),
 });
 
 export const websiteLocaleSchema = z.object({

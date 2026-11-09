@@ -6,8 +6,6 @@ const mockHeaders = jest.fn();
 const mockSetCookie = jest.fn();
 const mockCreateSessionCookie = jest.fn();
 const mockSendMagicLoginLink = jest.fn();
-const mockArchiveEmulatorMagicLoginEmail = jest.fn();
-const mockValidateMagicLoginContinueUrl = jest.fn();
 
 jest.mock('next/headers', () => ({
 	cookies: (...args: unknown[]): unknown => mockCookies(...args),
@@ -21,19 +19,15 @@ jest.mock('@/modules/auth/session.service', () => ({
 }));
 
 jest.mock('./auth.service', () => ({
-	archiveEmulatorMagicLoginEmail: (...args: unknown[]): unknown => mockArchiveEmulatorMagicLoginEmail(...args),
 	createSessionCookie: (...args: unknown[]): unknown => mockCreateSessionCookie(...args),
 	sendMagicLoginLink: (...args: unknown[]): unknown => mockSendMagicLoginLink(...args),
-	validateMagicLoginContinueUrl: (...args: unknown[]): unknown => mockValidateMagicLoginContinueUrl(...args),
 }));
 
 beforeEach(() => {
 	jest.clearAllMocks();
 	mockCookies.mockResolvedValue({ set: mockSetCookie });
 	mockHeaders.mockResolvedValue(new Headers({ origin: 'https://socialincome.org', 'x-real-ip': '203.0.113.12' }));
-	mockValidateMagicLoginContinueUrl.mockReturnValue(resultOk({ language: 'en', origin: 'https://socialincome.org' }));
 	mockSendMagicLoginLink.mockResolvedValue(resultOk(undefined));
-	mockArchiveEmulatorMagicLoginEmail.mockResolvedValue(resultOk(undefined));
 });
 
 test('validates a public magic-link request and passes the trusted request headers to the service', async () => {
@@ -43,7 +37,6 @@ test('validates a public magic-link request and passes the trusted request heade
 	};
 
 	await expect(sendMagicLoginLinkAction(input)).resolves.toEqual(resultOk(undefined));
-	expect(mockValidateMagicLoginContinueUrl).toHaveBeenCalledWith(input.email, input.continueUrl, 'https://socialincome.org');
 	expect(mockSendMagicLoginLink).toHaveBeenCalledWith({
 		...input,
 		requestOrigin: 'https://socialincome.org',
@@ -71,22 +64,6 @@ test('returns a neutral retry result when a magic-link request is rate-limited',
 			continueUrl: 'https://socialincome.org/en/usd/auth/confirm-login?email=ada%40example.com',
 		}),
 	).resolves.toEqual(resultFail('magic-link-rate-limited'));
-});
-
-test('archives the safe login email after Firebase emulator delivery', async () => {
-	const input = {
-		email: 'ada@example.com',
-		continueUrl: 'https://socialincome.org/en/usd/auth/confirm-login?email=ada%40example.com',
-		emulator: true,
-	};
-
-	await expect(sendMagicLoginLinkAction(input)).resolves.toEqual(resultOk(undefined));
-	expect(mockArchiveEmulatorMagicLoginEmail).toHaveBeenCalledWith({
-		email: input.email,
-		continueUrl: input.continueUrl,
-		requestOrigin: 'https://socialincome.org',
-	});
-	expect(mockSendMagicLoginLink).not.toHaveBeenCalled();
 });
 
 test('rejects malformed requests before calling the magic-link service', async () => {

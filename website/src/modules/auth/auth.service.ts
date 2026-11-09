@@ -25,7 +25,7 @@ import { loadMessages } from '@/lib/i18n/messages';
 import { getWebsiteBasePath, parseCurrencySegment, TIME_ZONE, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { sendSlackAlert } from '@/lib/utils/slack-alert';
-import { archiveSentEmail, sendMail } from '@/modules/mail/mail.service';
+import { sendMail } from '@/modules/mail/mail.service';
 import { createTranslator } from 'next-intl';
 import { createHmac } from 'node:crypto';
 import { isIP } from 'node:net';
@@ -85,14 +85,10 @@ export const sendMagicLoginLink = async (input: {
 		const now = new Date();
 		await deleteExpiredMagicLinkRateLimits(new Date(now.getTime() - magicLinkRateLimitRetentionMs));
 
-		const requesterIp = input.requesterIp?.trim();
-		const ipVersion = requesterIp ? isIP(requesterIp) : 0;
-		const ipKey =
-			requesterIp && ipVersion === 4
-				? hashMagicLinkRateLimitKey(rateLimitSecret, `ip:${requesterIp}`)
-				: requesterIp && ipVersion === 6
-					? hashMagicLinkRateLimitKey(rateLimitSecret, `ip:${getIpv6RateLimitPrefix(requesterIp)}`)
-					: undefined;
+		const requesterIp = input.requesterIp?.trim() ?? '';
+		const ipVersion = isIP(requesterIp);
+		const ipBucket = ipVersion === 6 ? getIpv6RateLimitPrefix(requesterIp) : requesterIp;
+		const ipKey = ipVersion ? hashMagicLinkRateLimitKey(rateLimitSecret, `ip:${ipBucket}`) : undefined;
 		const emailKey = hashMagicLinkRateLimitKey(rateLimitSecret, `email:${input.email.toLowerCase()}:${ipKey ?? 'no-ip'}`);
 		const [emailRequestCount, ipRequestCount] = await Promise.all([
 			updateMagicLinkRateLimitCount(emailKey, now, magicLinkWindowMs),
@@ -149,73 +145,15 @@ export const sendMagicLoginLink = async (input: {
 	}
 };
 
-export const archiveEmulatorMagicLoginEmail = async (input: {
-	email: string;
-	continueUrl: string;
-	requestOrigin: string;
-}): Promise<Result<void>> => {
-	if (!process.env.FIREBASE_AUTH_EMULATOR_HOST || !process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL) {
-		return resultFail('Firebase Auth emulator is not enabled');
-	}
-
-	const continueUrlResult = validateMagicLoginContinueUrl(input.email, input.continueUrl, input.requestOrigin);
-	if (!continueUrlResult.success) {
-		return resultFail(continueUrlResult.error);
-	}
-
-	try {
-		const messages = await loadMessages(continueUrlResult.data.language);
-		const t = createTranslator({
-			locale: continueUrlResult.data.language,
-			messages,
-			namespace: 'website-login',
-			timeZone: TIME_ZONE,
-		});
-		const archiveResult = await archiveSentEmail({
-			to: input.email,
-			subject: t('magic-link-email.subject'),
-			text: t('magic-link-email.archive'),
-		});
-		if (!archiveResult.success) {
-			console.error('Could not archive Firebase emulator sign-in email');
-
-			return resultFail('Could not archive sign-in email');
-		}
-
-		return resultOk(undefined);
-	} catch {
-		console.error('Could not prepare Firebase emulator sign-in archive');
-
-		return resultFail('Could not archive sign-in email');
-	}
-};
-
-export const validateMagicLoginContinueUrl = (
+const validateMagicLoginContinueUrl = (
 	email: string,
 	continueUrl: string,
 	requestOrigin: string,
 ): Result<{ language: WebsiteLanguage; origin: string }> => {
 	try {
-		if (continueUrl.length > 2048) {
-			return resultFail('Invalid sign-in continue URL');
-		}
-
 		const url = new URL(continueUrl);
 		const origin = new URL(requestOrigin);
-		const isLocalAuthEmulatorOrigin =
-			Boolean(process.env.FIREBASE_AUTH_EMULATOR_HOST?.trim()) &&
-			Boolean(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL?.trim()) &&
-			(origin.hostname === 'localhost' ||
-				origin.hostname === '[::1]' ||
-				(isIP(origin.hostname) === 4 && origin.hostname.split('.')[0] === '127'));
-		if (
-			(url.protocol !== 'https:' && url.protocol !== 'http:') ||
-			url.origin !== origin.origin ||
-			url.username ||
-			url.password ||
-			url.hash ||
-			(process.env.NODE_ENV === 'production' && url.protocol !== 'https:' && !isLocalAuthEmulatorOrigin)
-		) {
+		if (url.origin !== origin.origin || url.username || url.password || url.hash) {
 			return resultFail('Invalid sign-in continue URL');
 		}
 

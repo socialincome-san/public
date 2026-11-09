@@ -57,4 +57,14 @@ describe('buildMagicLoginContinueUrl', () => {
 			'https://socialincome.org/de/chf/auth/confirm-login?email=ada%40example.com&campaigns=Ab12Cd34%2CXy98Zk76',
 		);
 	});
+
+	test('drops malformed and duplicate claim ids', () => {
+		mockReadPendingClaimIds.mockReturnValue(['Ab12Cd34', 'bad id', 'Ab12Cd34']);
+
+		const url = buildMagicLoginContinueUrl('https://socialincome.org', '/de/chf', 'ada@example.com', ' Xy98Zk76 ');
+
+		expect(url).toBe(
+			'https://socialincome.org/de/chf/auth/confirm-login?email=ada%40example.com&campaigns=Ab12Cd34%2CXy98Zk76',
+		);
+	});
 });

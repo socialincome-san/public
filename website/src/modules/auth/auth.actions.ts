@@ -7,12 +7,7 @@ import { getCurrentSessions, getCurrentUser, getSessionByType } from '@/modules/
 import type { UserSession } from '@/modules/users/user.types';
 import { cookies, headers } from 'next/headers';
 import { magicLoginRequestSchema, sessionIdTokenSchema, websiteLocaleSchema } from './auth.schemas';
-import {
-	archiveEmulatorMagicLoginEmail,
-	createSessionCookie,
-	sendMagicLoginLink,
-	validateMagicLoginContinueUrl,
-} from './auth.service';
+import { createSessionCookie, sendMagicLoginLink } from './auth.service';
 
 export const sendMagicLoginLinkAction = async (input: unknown): Promise<Result<void>> => {
 	const inputResult = magicLoginRequestSchema.safeParse(input);
@@ -26,29 +21,11 @@ export const sendMagicLoginLinkAction = async (input: unknown): Promise<Result<v
 		return resultFail('Invalid sign-in request');
 	}
 
-	const continueUrlResult = validateMagicLoginContinueUrl(
-		inputResult.data.email,
-		inputResult.data.continueUrl,
-		requestOrigin,
-	);
-	if (!continueUrlResult.success) {
-		return resultFail(continueUrlResult.error);
-	}
-
-	if (inputResult.data.emulator) {
-		return archiveEmulatorMagicLoginEmail({
-			email: inputResult.data.email,
-			continueUrl: inputResult.data.continueUrl,
-			requestOrigin,
-		});
-	}
-
 	// Keep delivery outcomes identical to avoid exposing account status through the public action.
 	const sendResult = await sendMagicLoginLink({
-		email: inputResult.data.email,
-		continueUrl: inputResult.data.continueUrl,
+		...inputResult.data,
 		requestOrigin,
-		requesterIp: requestHeaders.get('x-real-ip')?.trim() ?? undefined,
+		requesterIp: requestHeaders.get('x-real-ip') ?? undefined,
 	});
 	if (!sendResult.success && sendResult.error === 'magic-link-rate-limited') {
 		return sendResult;

@@ -17,7 +17,7 @@ export const sendMail = async (input: SendMailInput): Promise<Result<void>> => {
 			subject: input.subject,
 			text: input.text,
 			template: input.template,
-			...(input.sensitive ? { sensitive: true } : {}),
+			sensitive: input.sensitive,
 		});
 		if (!sendResult.success) {
 			return resultFail(sendResult.error);
@@ -27,27 +27,9 @@ export const sendMail = async (input: SendMailInput): Promise<Result<void>> => {
 
 		return resultOk(undefined);
 	} catch (error) {
-		if (input.sensitive) {
-			console.error('Could not complete sensitive email delivery');
-		} else {
-			console.error('Could not send email', { error });
-		}
+		console.error('Could not send email', { error });
 
 		return resultFail('Could not send email');
-	}
-};
-
-export const archiveSentEmail = async (input: { to: string; subject: string; text: string }): Promise<Result<void>> => {
-	try {
-		const configuredFromEmail = process.env.SENDGRID_FROM_EMAIL?.trim();
-		const fromEmail = configuredFromEmail?.length ? configuredFromEmail : 'firebase-auth-emulator@localhost';
-		await storeSentEmails(input, fromEmail);
-
-		return resultOk(undefined);
-	} catch {
-		console.error('Could not archive sent email');
-
-		return resultFail('Could not archive sent email');
 	}
 };
 

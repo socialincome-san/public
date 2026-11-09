@@ -18,7 +18,7 @@ jest.mock('./mail.repository', () => ({
 	createSentEmail: mockCreateSentEmail,
 }));
 
-import { archiveSentEmail, getPaginatedSentEmailTableView, sendMail } from './mail.service';
+import { getPaginatedSentEmailTableView, sendMail } from './mail.service';
 import type { SentEmailTableQuery } from './mail.types';
 
 const tableQuery: SentEmailTableQuery = {
@@ -82,41 +82,6 @@ describe('mail service', () => {
 			template: undefined,
 		});
 		expect(mockCreateSentEmail).toHaveBeenCalledTimes(2);
-	});
-
-	test('archives a locally delivered emulator email without sending it through SendGrid', async () => {
-		await expect(
-			archiveSentEmail({
-				to: 'recipient@example.com',
-				subject: 'Sign in',
-				text: 'The one-time link is [REDACTED] in this archive.',
-			}),
-		).resolves.toEqual({ success: true, data: undefined });
-
-		expect(mockSendSendgridEmail).not.toHaveBeenCalled();
-		expect(mockCreateSentEmail).toHaveBeenCalledWith({
-			toEmail: 'recipient@example.com',
-			fromEmail: 'sender@example.com',
-			subject: 'Sign in',
-			body: 'The one-time link is [REDACTED] in this archive.',
-			contactId: null,
-		});
-	});
-
-	test('uses the emulator sender address when the configured sender is empty', async () => {
-		process.env.SENDGRID_FROM_EMAIL = '';
-
-		await expect(
-			archiveSentEmail({
-				to: 'recipient@example.com',
-				subject: 'Sign in',
-				text: 'The one-time link is [REDACTED] in this archive.',
-			}),
-		).resolves.toEqual({ success: true, data: undefined });
-
-		expect(mockCreateSentEmail).toHaveBeenCalledWith(
-			expect.objectContaining({ fromEmail: 'firebase-auth-emulator@localhost' }),
-		);
 	});
 
 	test('passes the template to SendGrid and stores the text as the body', async () => {
