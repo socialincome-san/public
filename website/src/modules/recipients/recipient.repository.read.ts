@@ -1,7 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { CountryCode } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
-import type { RecipientTableQuery } from './recipient.types';
+import type { RecipientStatusBreakdownScope, RecipientTableQuery } from './recipient.types';
 
 export const findRecipientMonthlySummarySource = async (from: Date, to: Date) => {
 	const [newRecipientCount, recipients] = await Promise.all([
@@ -981,3 +981,19 @@ const normalizeOptionalFilter = (value: string | undefined): string | undefined 
 
 	return normalizedValue;
 };
+
+export const findRecipientsForStatusBreakdown = async (scope: RecipientStatusBreakdownScope) =>
+	prisma.recipient.findMany({
+		where:
+			'programId' in scope
+				? { programId: scope.programId }
+				: 'countryIsoCode' in scope
+					? { program: { country: { isoCode: scope.countryIsoCode } } }
+					: { localPartner: { slug: scope.localPartnerSlug }, programId: { not: null } },
+		select: {
+			startDate: true,
+			suspendedAt: true,
+			program: { select: { programDurationInMonths: true, payoutInterval: true } },
+			payouts: { select: { status: true, paymentAt: true } },
+		},
+	});

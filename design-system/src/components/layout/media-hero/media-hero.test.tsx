@@ -2,7 +2,7 @@
 
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MediaHero } from './media-hero';
+import { MediaHero, MediaHeroPill } from './media-hero';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -92,5 +92,44 @@ describe('MediaHero', () => {
 		expect(container.querySelector('[data-testid="media-hero-image"]')).toBeNull();
 
 		act(() => root.unmount());
+	});
+
+	describe('MediaHeroPill', () => {
+		const render = (pill: React.ReactElement) => {
+			const container = document.createElement('div');
+			const root = createRoot(container);
+			act(() => root.render(pill));
+
+			return { container, unmount: () => act(() => root.unmount()) };
+		};
+
+		test('renders a plain pill without a trigger when there is no breakdown', () => {
+			const { container, unmount } = render(<MediaHeroPill>162 recipients</MediaHeroPill>);
+
+			expect(container.textContent).toBe('162 recipients');
+			expect(container.querySelector('button')).toBeNull();
+
+			unmount();
+		});
+
+		test('renders a plain pill when the breakdown has no rows', () => {
+			const { container, unmount } = render(
+				<MediaHeroPill breakdown={{ rows: [], extraRows: [] }}>0 recipients</MediaHeroPill>,
+			);
+
+			expect(container.querySelector('button')).toBeNull();
+
+			unmount();
+		});
+
+		test('makes the pill a focusable tooltip trigger when the breakdown has rows', () => {
+			const { container, unmount } = render(
+				<MediaHeroPill breakdown={{ rows: [{ label: 'Active', value: 3 }] }}>3 recipients</MediaHeroPill>,
+			);
+
+			expect(container.querySelector('button')?.textContent).toBe('3 recipients');
+
+			unmount();
+		});
 	});
 });

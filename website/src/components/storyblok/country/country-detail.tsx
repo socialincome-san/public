@@ -5,8 +5,10 @@ import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { CountryOfficeSection } from '@/components/storyblok/shared/country-office-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
+import { buildRecipientStatusBreakdown } from '@/components/storyblok/shared/recipient-status-breakdown';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
+import { getRecipientStatusBreakdownAction } from '@/modules/recipients/recipient.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
@@ -40,7 +42,7 @@ export const CountryDetail = async ({
 	const isoCode = getCountryIsoCode(country.content);
 	const countryTitle = getCountryTitle(country.content);
 	const localPartners = getCountryLocalPartners(country.content);
-	const [t, breadcrumbLinks] = await Promise.all([
+	const [t, breadcrumbLinks, statusBreakdownResult] = await Promise.all([
 		getTranslations('website-common'),
 		buildBreadcrumbLinks({
 			fullSlug: country.full_slug,
@@ -48,7 +50,10 @@ export const CountryDetail = async ({
 			lang,
 			currency,
 		}),
+		getRecipientStatusBreakdownAction({ countryIsoCode: isoCode }),
 	]);
+	const statusBreakdown = buildRecipientStatusBreakdown(statusBreakdownResult, t);
+	const recipientsTotal = statusBreakdown.recipientsCount ?? recipientsCount;
 
 	return (
 		<>
@@ -67,8 +72,9 @@ export const CountryDetail = async ({
 								: t('countries-page.active-program-plural'),
 					},
 					{
-						value: recipientsCount,
-						label: recipientsCount === 1 ? t('countries-page.recipient-singular') : t('countries-page.recipient-plural'),
+						value: recipientsTotal,
+						label: recipientsTotal === 1 ? t('countries-page.recipient-singular') : t('countries-page.recipient-plural'),
+						breakdown: statusBreakdown.breakdown,
 					},
 					{
 						value: candidatesCount,

@@ -11,6 +11,7 @@ import {
 	MediaHeroChips,
 	MediaHeroIntro,
 	MediaHeroPill,
+	type MediaHeroPillProps,
 } from '@socialincome/design-system/layout/media-hero/media-hero';
 import type { ReactNode } from 'react';
 
@@ -21,6 +22,7 @@ type HeroHeaderStat = {
 	label: string;
 	href?: string;
 	icon?: ReactNode;
+	breakdown?: MediaHeroPillProps['breakdown'];
 };
 
 export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>;
@@ -88,7 +90,7 @@ export const HeroHeader = ({
 									icon={stat.icon}
 								/>
 							) : (
-								<MediaHeroPill key={`${index}-${stat.label}`}>
+								<MediaHeroPill key={`${index}-${stat.label}`} breakdown={stat.breakdown}>
 									{stat.icon}
 									{stat.value !== undefined ? `${stat.value} ` : ''}
 									{stat.label}

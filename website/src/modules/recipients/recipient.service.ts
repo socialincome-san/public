@@ -23,7 +23,7 @@ import { getLocalPartnerFilterOption, getLocalPartnerOptions } from '@/modules/l
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 import { getProgramNameById } from '@/modules/programs/program-reference.service';
-import { differenceInCalendarDays, startOfDay } from 'date-fns';
+import { differenceInCalendarDays, startOfDay, subDays } from 'date-fns';
 import {
 	canCreateRecipient,
 	canExportRecipients,
@@ -60,6 +60,8 @@ import {
 	RecipientPayload,
 	RecipientProgramAssignment,
 	RecipientProgramFilterOption,
+	RecipientStatusBreakdown,
+	RecipientStatusBreakdownScope,
 	RecipientTableQuery,
 	RecipientTableViewRow,
 	RecipientUpcomingOnboardingPaginatedTableView,
@@ -1162,6 +1164,69 @@ export const countCandidatesForCountry = async (countryCode: CountryCode): Promi
 		console.error('Could not count candidates for country', { countryCode, error });
 
 		return resultFail('Could not count candidates');
+	}
+};
+
+export const getRecipientStatusBreakdown = async (
+	scope: RecipientStatusBreakdownScope,
+): Promise<Result<RecipientStatusBreakdown>> => {
+	try {
+		const recipients = await recipientRepository.findRecipientsForStatusBreakdown(scope);
+		const nowDate = now();
+		const newSince = subDays(nowDate, 30);
+		const breakdown: RecipientStatusBreakdown = {
+			activeCount: 0,
+			formerCount: 0,
+			suspendedCount: 0,
+			newCount: 0,
+			waitlistedCount: 0,
+			totalCount: 0,
+		};
+
+		for (const recipient of recipients) {
+			if (!recipient.program) {
+				continue;
+			}
+			const paidOrConfirmedPayouts = recipient.payouts.filter(
+				({ status }) => status === PayoutStatus.paid || status === PayoutStatus.confirmed,
+			);
+			const statusResult = getRecipientLifecycleStatus({
+				startDate: recipient.startDate,
+				suspendedAt: recipient.suspendedAt,
+				paidOrConfirmedCount: paidOrConfirmedPayouts.length,
+				programDurationInMonths: recipient.program.programDurationInMonths,
+				payoutInterval: recipient.program.payoutInterval,
+				nowDate,
+			});
+			if (!statusResult.success) {
+				return resultFail(statusResult.error);
+			}
+
+			if (statusResult.data === 'active') {
+				breakdown.activeCount++;
+			} else if (statusResult.data === 'completed') {
+				breakdown.formerCount++;
+			} else if (statusResult.data === 'suspended') {
+				breakdown.suspendedCount++;
+			} else {
+				breakdown.waitlistedCount++;
+			}
+
+			const firstPayoutAt = paidOrConfirmedPayouts.reduce<Date | null>(
+				(earliest, { paymentAt }) => (earliest === null || paymentAt < earliest ? paymentAt : earliest),
+				null,
+			);
+			if (firstPayoutAt !== null && firstPayoutAt >= newSince && firstPayoutAt <= nowDate) {
+				breakdown.newCount++;
+			}
+		}
+		breakdown.totalCount = breakdown.activeCount + breakdown.formerCount + breakdown.suspendedCount;
+
+		return resultOk(breakdown);
+	} catch (error) {
+		console.error('Could not load recipient status breakdown', { scope, error });
+
+		return resultFail('Could not load recipient status breakdown');
 	}
 };
 
