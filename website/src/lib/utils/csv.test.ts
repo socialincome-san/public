@@ -103,6 +103,45 @@ describe('parseCsvOptionalFields', () => {
 		});
 	});
 
+	test('adds the missing "+" to phone numbers', () => {
+		const result = parseCsvOptionalFields(1, {
+			contactPhone: ' 23277000111 ',
+			paymentPhone: '23277000112',
+			dateOfBirth: '',
+			gender: '',
+			paymentInformationCode: '',
+		});
+
+		expect(result.success && result.data.contactPhone).toBe('+23277000111');
+		expect(result.success && result.data.paymentPhone).toBe('+23277000112');
+	});
+
+	test('leaves local phone numbers without a country code as they are', () => {
+		const result = parseCsvOptionalFields(1, {
+			contactPhone: '77000111',
+			paymentPhone: '077000112',
+			dateOfBirth: '',
+			gender: '',
+			paymentInformationCode: '',
+		});
+
+		expect(result.success && result.data.contactPhone).toBe('77000111');
+		expect(result.success && result.data.paymentPhone).toBe('077000112');
+	});
+
+	test('leaves empty phone numbers empty', () => {
+		const result = parseCsvOptionalFields(1, {
+			contactPhone: '',
+			paymentPhone: '',
+			dateOfBirth: '',
+			gender: '',
+			paymentInformationCode: '',
+		});
+
+		expect(result.success && result.data.contactPhone).toBe('');
+		expect(result.success && result.data.paymentPhone).toBe('');
+	});
+
 	test('returns an error for invalid gender', () => {
 		const result = parseCsvOptionalFields(1, {
 			contactPhone: '',
