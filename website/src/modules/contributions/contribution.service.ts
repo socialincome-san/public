@@ -315,6 +315,18 @@ export const getSucceededForContributorAndYear = async (
 	}
 };
 
+export const getSucceededContributionYears = async (contributorId: string): Promise<Result<number[]>> => {
+	try {
+		const contributions = await contributionRepository.findSucceededContributionDates(contributorId);
+
+		return resultOk([...new Set(contributions.map(({ createdAt }) => createdAt.getFullYear()))]);
+	} catch (error) {
+		console.error(error);
+
+		return resultFail('Could not fetch contribution years for contributor');
+	}
+};
+
 export const hasSucceededContributionsBefore = async (contributorId: string, before: Date): Promise<Result<boolean>> => {
 	try {
 		return resultOk((await contributionRepository.countSucceededContributionsBefore(contributorId, before)) > 0);
