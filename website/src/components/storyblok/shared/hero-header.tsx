@@ -39,7 +39,6 @@ type Props = {
 	heroCard?: ReactNode;
 	showDonationForm?: boolean;
 	showDonationsFormMobile?: boolean;
-	actions?: ReactNode;
 };
 
 export const HeroHeader = ({
@@ -55,7 +54,6 @@ export const HeroHeader = ({
 	heroCard,
 	showDonationForm = true,
 	showDonationsFormMobile = true,
-	actions,
 }: Props) => {
 	const scaledDimensions = heroImage?.filename
 		? getScaledAssetDimensions({ filename: heroImage.filename }, HERO_HEADER_IMAGE_WIDTH)
@@ -100,7 +98,6 @@ export const HeroHeader = ({
 					</MediaHeroChips>
 				) : null}
 				{badges ? <MediaHeroChips>{badges}</MediaHeroChips> : null}
-				{actions}
 			</MediaHeroIntro>
 		</MediaHero>
 	);

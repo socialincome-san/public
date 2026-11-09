@@ -472,6 +472,8 @@ export interface LandingHero {
   description?: string;
   image?: StoryblokAsset;
   facts?: LandingHeroFact[];
+  cardTitle?: string;
+  cardDescription?: string;
   button?: Button[];
   buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
   showDonationForm?: boolean;

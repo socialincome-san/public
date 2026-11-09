@@ -13,6 +13,7 @@ type Props = {
 	button: ButtonBlok | undefined;
 	action: LandingHero['buttonAction'];
 	variant: 'default' | 'outline';
+	fullWidth?: boolean;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 };
@@ -30,7 +31,7 @@ export const hasBlockButton = (
 	return action ? true : resolveStoryblokLink(button.link, lang, currency) !== '#';
 };
 
-export const BlockButton = async ({ button, action, variant, lang, currency }: Props) => {
+export const BlockButton = async ({ button, action, variant, fullWidth, lang, currency }: Props) => {
 	const label = button?.label?.trim();
 	if (!label || !hasBlockButton(button, action, lang, currency)) {
 		return null;
@@ -38,9 +39,9 @@ export const BlockButton = async ({ button, action, variant, lang, currency }: P
 
 	switch (action) {
 		case 'donate':
-			return <OpenDonationWizardButton label={label} variant={variant} />;
+			return <OpenDonationWizardButton label={label} variant={variant} fullWidth={fullWidth} />;
 		case 'createProgram':
-			return <CreateProgramButton label={label} variant={variant} />;
+			return <CreateProgramButton label={label} variant={variant} fullWidth={fullWidth} />;
 		case 'createCampaign': {
 			const t = await getTranslations('website-common');
 
@@ -51,12 +52,13 @@ export const BlockButton = async ({ button, action, variant, lang, currency }: P
 					lang={lang}
 					currency={currency}
 					variant={variant}
+					fullWidth={fullWidth}
 				/>
 			);
 		}
 		default:
 			return (
-				<Button variant={variant} asChild>
+				<Button variant={variant} fullWidth={fullWidth} asChild>
 					<NextLink href={resolveStoryblokLink(button?.link, lang, currency)}>{label}</NextLink>
 				</Button>
 			);

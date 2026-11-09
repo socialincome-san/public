@@ -6,12 +6,12 @@ import type { ComponentProps } from 'react';
 
 type Props = {
 	label: string;
-} & Pick<ComponentProps<typeof Button>, 'variant'>;
+} & Pick<ComponentProps<typeof Button>, 'variant' | 'fullWidth'>;
 
-export const CreateProgramButton = ({ label, variant }: Props) => (
+export const CreateProgramButton = ({ label, variant, fullWidth }: Props) => (
 	<CreateProgramModal
 		trigger={({ open }) => (
-			<Button type="button" variant={variant} onClick={open}>
+			<Button type="button" variant={variant} fullWidth={fullWidth} onClick={open}>
 				{label}
 			</Button>
 		)}

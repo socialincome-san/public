@@ -11,15 +11,15 @@ type Props = {
 	labels: SubmissionLabels;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
-} & Pick<ComponentProps<typeof Button>, 'variant'>;
+} & Pick<ComponentProps<typeof Button>, 'variant' | 'fullWidth'>;
 
-export const CreateCampaignButton = ({ label, labels, lang, currency, variant }: Props) => (
+export const CreateCampaignButton = ({ label, labels, lang, currency, variant, fullWidth }: Props) => (
 	<CreateCampaignDialog
 		labels={labels}
 		lang={lang}
 		currency={currency}
 		trigger={({ openDialog }) => (
-			<Button type="button" variant={variant} onClick={openDialog}>
+			<Button type="button" variant={variant} fullWidth={fullWidth} onClick={openDialog}>
 				{label}
 			</Button>
 		)}
