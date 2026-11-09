@@ -28,71 +28,237 @@
       }
     },
     "schemas": {
-      "RequestOtpRequest": {
-        "type": "object",
-        "properties": {
-          "phoneNumber": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "phoneNumber"
-        ]
-      },
-      "VerifyOtpRequest": {
-        "type": "object",
-        "properties": {
-          "phoneNumber": {
-            "type": "string"
-          },
-          "otp": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "phoneNumber",
-          "otp"
-        ]
-      },
-      "VerifyOtpResponse": {
-        "type": "object",
-        "properties": {
-          "customToken": {
-            "type": "string"
-          },
-          "isNewUser": {
-            "type": "boolean"
-          },
-          "uid": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "customToken",
-          "isNewUser",
-          "uid"
-        ]
-      },
-      "PayoutParams": {
-        "type": "object",
-        "properties": {
-          "payoutId": {
-            "type": "string",
-            "description": "Payout ID"
-          }
-        },
-        "required": [
-          "payoutId"
-        ]
-      },
       "ConfirmPayoutBody": {
         "type": "object",
         "properties": {
           "comments": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
+      },
+      "Contact": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "callingName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phoneId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Phone"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "gender": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "male",
+              "female",
+              "other",
+              "private"
+            ]
+          },
+          "language": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dateOfBirth": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "profession": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "isInstitution": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "callingName",
+          "phoneId",
+          "phone",
+          "email",
+          "gender",
+          "language",
+          "dateOfBirth",
+          "profession",
+          "isInstitution",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ContestPayoutBody": {
+        "type": "object",
+        "properties": {
+          "comments": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "Country": {
+        "type": "object",
+        "properties": {
+          "isoCode": {
+            "type": "string"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/currencyEnum"
+          }
+        },
+        "required": [
+          "isoCode",
+          "currency"
+        ]
+      },
+      "currencyEnum": {
+        "type": "string"
+      },
+      "LocalPartner": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/Contact"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "contact",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PaymentInformation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mobileMoneyProvider": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          },
+          "mobileMoneyProviderId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phoneId": {
+            "type": "string"
+          },
+          "phone": {
+            "$ref": "#/components/schemas/Phone"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "mobileMoneyProvider",
+          "code",
+          "phoneId",
+          "phone",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "Payout": {
         "type": "object",
@@ -101,7 +267,7 @@
             "type": "string"
           },
           "amount": {
-            "oneOf": [
+            "anyOf": [
               {
                 "type": "number"
               },
@@ -111,15 +277,21 @@
             ]
           },
           "amountChf": {
-            "oneOf": [
+            "anyOf": [
               {
-                "type": "number"
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
               },
               {
-                "type": "string"
+                "type": "null"
               }
-            ],
-            "nullable": true
+            ]
           },
           "currency": {
             "$ref": "#/components/schemas/currencyEnum"
@@ -137,12 +309,16 @@
             ]
           },
           "phoneNumber": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "comments": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "recipientId": {
             "type": "string"
@@ -151,8 +327,10 @@
             "type": "string"
           },
           "updatedAt": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
@@ -169,20 +347,115 @@
           "updatedAt"
         ]
       },
-      "ContestPayoutBody": {
-        "type": "object",
-        "properties": {
-          "comments": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
       "PayoutListResponse": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Payout"
         }
+      },
+      "PayoutParams": {
+        "type": "object",
+        "properties": {
+          "payoutId": {
+            "type": "string",
+            "description": "Payout ID"
+          }
+        },
+        "required": [
+          "payoutId"
+        ]
+      },
+      "Phone": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "hasWhatsApp": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "number",
+          "hasWhatsApp",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Program": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "countryId": {
+            "type": "string"
+          },
+          "country": {
+            "$ref": "#/components/schemas/Country"
+          },
+          "payoutPerInterval": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "payoutInterval": {
+            "type": "string",
+            "enum": [
+              "monthly",
+              "quarterly",
+              "yearly"
+            ]
+          },
+          "coveredByReserves": {
+            "type": "boolean"
+          },
+          "programDurationInMonths": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "countryId",
+          "country",
+          "payoutPerInterval",
+          "payoutInterval",
+          "coveredByReserves",
+          "programDurationInMonths",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "Recipient": {
         "type": "object",
@@ -194,20 +467,28 @@
             "type": "string"
           },
           "suspendedAt": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "suspensionReason": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "startDate": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "successorName": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "termsAccepted": {
             "type": "boolean"
@@ -237,8 +518,10 @@
             "type": "string"
           },
           "updatedAt": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
@@ -297,8 +580,10 @@
             "type": "boolean"
           },
           "contactPhone": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "paymentPhone": {
             "type": "string"
@@ -311,247 +596,15 @@
           }
         }
       },
-      "SurveyListResponse": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Survey"
-        }
-      },
-      "currencyEnum": {
-        "type": "string"
-      },
-      "PaymentInformation": {
+      "RequestOtpRequest": {
         "type": "object",
         "properties": {
-          "id": {
+          "phoneNumber": {
             "type": "string"
-          },
-          "mobileMoneyProvider": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "id",
-              "name"
-            ],
-            "nullable": true
-          },
-          "mobileMoneyProviderId": {
-            "type": "string",
-            "nullable": true
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "phoneId": {
-            "type": "string"
-          },
-          "phone": {
-            "$ref": "#/components/schemas/Phone"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string",
-            "nullable": true
           }
         },
         "required": [
-          "id",
-          "mobileMoneyProvider",
-          "code",
-          "phoneId",
-          "phone",
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "Contact": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "callingName": {
-            "type": "string",
-            "nullable": true
-          },
-          "phoneId": {
-            "type": "string",
-            "nullable": true
-          },
-          "phone": {
-            "type": "object"
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "gender": {
-            "type": "string",
-            "enum": [
-              "male",
-              "female",
-              "other",
-              "private"
-            ],
-            "nullable": true
-          },
-          "language": {
-            "type": "string",
-            "nullable": true
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "nullable": true
-          },
-          "profession": {
-            "type": "string",
-            "nullable": true
-          },
-          "isInstitution": {
-            "type": "boolean"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "id",
-          "firstName",
-          "lastName",
-          "callingName",
-          "phoneId",
-          "phone",
-          "email",
-          "gender",
-          "language",
-          "dateOfBirth",
-          "profession",
-          "isInstitution",
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "LocalPartner": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "contact": {
-            "$ref": "#/components/schemas/Contact"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "contact",
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "Country": {
-        "type": "object",
-        "properties": {
-          "isoCode": {
-            "type": "string"
-          },
-          "currency": {
-            "$ref": "#/components/schemas/currencyEnum"
-          }
-        },
-        "required": [
-          "isoCode",
-          "currency"
-        ]
-      },
-      "Program": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "countryId": {
-            "type": "string"
-          },
-          "country": {
-            "$ref": "#/components/schemas/Country"
-          },
-          "payoutPerInterval": {
-            "oneOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "string"
-              }
-            ]
-          },
-          "payoutInterval": {
-            "type": "string",
-            "enum": [
-              "monthly",
-              "quarterly",
-              "yearly"
-            ]
-          },
-          "coveredByReserves": {
-            "type": "boolean"
-          },
-          "programDurationInMonths": {
-            "type": "number"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "countryId",
-          "country",
-          "payoutPerInterval",
-          "payoutInterval",
-          "coveredByReserves",
-          "programDurationInMonths",
-          "createdAt",
-          "updatedAt"
+          "phoneNumber"
         ]
       },
       "Survey": {
@@ -582,8 +635,10 @@
             "type": "string"
           },
           "completedAt": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "status": {
             "type": "string",
@@ -604,15 +659,19 @@
             "type": "string"
           },
           "surveyScheduleId": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "createdAt": {
             "type": "string"
           },
           "updatedAt": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
@@ -632,32 +691,44 @@
           "updatedAt"
         ]
       },
-      "Phone": {
+      "SurveyListResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Survey"
+        }
+      },
+      "VerifyOtpRequest": {
         "type": "object",
         "properties": {
-          "id": {
+          "phoneNumber": {
             "type": "string"
           },
-          "number": {
+          "otp": {
             "type": "string"
-          },
-          "hasWhatsApp": {
-            "type": "boolean"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string",
-            "nullable": true
           }
         },
         "required": [
-          "id",
-          "number",
-          "hasWhatsApp",
-          "createdAt",
-          "updatedAt"
+          "phoneNumber",
+          "otp"
+        ]
+      },
+      "VerifyOtpResponse": {
+        "type": "object",
+        "properties": {
+          "customToken": {
+            "type": "string"
+          },
+          "isNewUser": {
+            "type": "boolean"
+          },
+          "uid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customToken",
+          "isNewUser",
+          "uid"
         ]
       }
     },
@@ -671,11 +742,15 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "example": "Invalid request parameters"
+                  "examples": [
+                    "Invalid request parameters"
+                  ]
                 },
                 "code": {
                   "type": "string",
-                  "example": "400"
+                  "examples": [
+                    "400"
+                  ]
                 }
               }
             }
@@ -691,11 +766,15 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "example": "Authentication required"
+                  "examples": [
+                    "Authentication required"
+                  ]
                 },
                 "code": {
                   "type": "string",
-                  "example": "401"
+                  "examples": [
+                    "401"
+                  ]
                 }
               }
             }
@@ -711,11 +790,15 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "example": "Access denied"
+                  "examples": [
+                    "Access denied"
+                  ]
                 },
                 "code": {
                   "type": "string",
-                  "example": "403"
+                  "examples": [
+                    "403"
+                  ]
                 }
               }
             }
@@ -731,11 +814,15 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "example": "Resource not found"
+                  "examples": [
+                    "Resource not found"
+                  ]
                 },
                 "code": {
                   "type": "string",
-                  "example": "404"
+                  "examples": [
+                    "404"
+                  ]
                 }
               }
             }
@@ -751,11 +838,15 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "example": "Resource already exists"
+                  "examples": [
+                    "Resource already exists"
+                  ]
                 },
                 "code": {
                   "type": "string",
-                  "example": "409"
+                  "examples": [
+                    "409"
+                  ]
                 }
               }
             }
@@ -771,11 +862,15 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "example": "An unexpected error occurred"
+                  "examples": [
+                    "An unexpected error occurred"
+                  ]
                 },
                 "code": {
                   "type": "string",
-                  "example": "500"
+                  "examples": [
+                    "500"
+                  ]
                 }
               }
             }
@@ -1058,11 +1153,11 @@
           {
             "in": "path",
             "name": "payoutId",
+            "required": true,
             "schema": {
               "type": "string",
               "description": "Payout ID"
             },
-            "required": true,
             "description": "Payout ID",
             "example": "123"
           }
@@ -1113,11 +1208,11 @@
           {
             "in": "path",
             "name": "payoutId",
+            "required": true,
             "schema": {
               "type": "string",
               "description": "Payout ID"
             },
-            "required": true,
             "description": "Payout ID",
             "example": "123"
           }
@@ -1177,11 +1272,11 @@
           {
             "in": "path",
             "name": "payoutId",
+            "required": true,
             "schema": {
               "type": "string",
               "description": "Payout ID"
             },
-            "required": true,
             "description": "Payout ID",
             "example": "123"
           }
@@ -1229,5 +1324,13 @@
         }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Recipients"
+    }
+  ]
 }
