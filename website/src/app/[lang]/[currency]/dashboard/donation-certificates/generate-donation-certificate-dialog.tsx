@@ -1,6 +1,7 @@
 'use client';
 
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, type LanguageCode } from '@/lib/types/language';
+import { now } from '@/lib/utils/now';
 import { createCurrentContributorDonationCertificateAction } from '@/modules/donation-certificates/donation-certificate.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
@@ -30,7 +31,10 @@ export default function GenerateDonationCertificateDialog({
 	setOpen: (open: boolean) => void;
 	years: number[];
 }) {
-	const [year, setYear] = useState<number | undefined>(years[0]);
+	// Certificates are usually needed for the last completed year
+	const [year, setYear] = useState<number | undefined>(
+		() => years.find((value) => value < now().getFullYear()) ?? years[0],
+	);
 	const [language, setLanguage] = useState<LanguageCode | undefined>(DEFAULT_LANGUAGE);
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<boolean>();
