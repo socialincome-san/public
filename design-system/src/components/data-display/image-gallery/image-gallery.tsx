@@ -132,7 +132,7 @@ export const ImageGallery = ({
 					<article key={image.id} className="border-border bg-card flex flex-col overflow-hidden rounded-2xl border">
 						<div className="relative">
 							<GalleryPreview image={image} loadingLabel={loadingLabel} errorLabel={errorLabel} density={density} />
-							{image.overlay && <div className="bg-card absolute top-3 right-3 rounded-full">{image.overlay}</div>}
+							{image.overlay ? <div className="bg-card absolute top-3 right-3 rounded-full">{image.overlay}</div> : null}
 						</div>
 						{(image.date !== undefined ||
 							image.price !== undefined ||
