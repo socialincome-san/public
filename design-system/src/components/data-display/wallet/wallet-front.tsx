@@ -39,7 +39,7 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 					<div className="w-full min-w-0">
 						<h2 className="mb-3 text-4xl leading-none font-normal wrap-break-word whitespace-normal">{title}</h2>
 						<p className="mb-3 line-clamp-1 w-full min-w-0 text-base leading-6 font-medium">{subtitle}</p>
-						{badge && <div className="mt-1">{badge}</div>}
+						{badge ? <div className="mt-1">{badge}</div> : null}
 					</div>
 
 					{footerLeft || footerRight ? (

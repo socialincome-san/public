@@ -1,14 +1,11 @@
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { ArticleRichText } from '@/components/storyblok/journal/article-rich-text';
-import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import { OriginalLanguageLink } from '@/components/storyblok/journal/original-language-link';
 import { TagBadge } from '@/components/storyblok/journal/tag-badge';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { createWebsitePersonLink, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
 import { getTranslations } from 'next-intl/server';
-import Link from 'next/link';
 import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 type Props = {
@@ -21,7 +18,6 @@ type Props = {
 export const ArticleDetailBody = async ({ story, slug, lang, currency }: Props) => {
 	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('common')]);
 	const article = story.content;
-	const author = article.author;
 
 	return (
 		<>
@@ -56,14 +52,6 @@ export const ArticleDetailBody = async ({ story, slug, lang, currency }: Props) 
 					))}
 				</div>
 			)}
-
-			<Link
-				href={createWebsitePersonLink(author.slug, lang, currency)}
-				className="flex w-fit items-center gap-3 transition-opacity hover:opacity-80"
-			>
-				<AuthorAvatar author={author} size="lg" />
-				<span className="text-lg font-medium">{getPersonDisplayName(author)}</span>
-			</Link>
 		</>
 	);
 };

@@ -53,7 +53,7 @@ export const useStorageDownloadURL = (storageRef: FirebaseClientStorageReference
 				setError(downloadError instanceof Error ? downloadError : new Error('Could not download file'));
 			})
 			.finally(() => setLoading(false));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line @eslint-react/exhaustive-deps
 	}, []);
 
 	return { data: url, loading, error };

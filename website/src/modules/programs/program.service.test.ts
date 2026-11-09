@@ -202,6 +202,7 @@ describe('program service', () => {
 		mockFindPublicProgramStatsBySlugs.mockResolvedValue([
 			{
 				slug: 'program',
+				isConcluded: true,
 				country: { isoCode: CountryCode.SL, currency: Currency.SLE },
 				_count: { campaigns: 2, recipients: 3 },
 				recipients: [{ payouts: [{ amount: 20, amountChf: 10 }] }],
@@ -220,6 +221,7 @@ describe('program service', () => {
 					payoutCurrency: Currency.SLE,
 					totalPayoutsSum: 20,
 					totalPayoutsSumChf: 10,
+					isConcluded: true,
 				},
 			}),
 		);
@@ -242,6 +244,7 @@ describe('program service', () => {
 			slug: 'program',
 			countryId: 'country-1',
 			coveredByReserves: false,
+			isConcluded: false,
 			programDurationInMonths: 12,
 			payoutPerInterval: 25,
 			payoutInterval: 'monthly',

@@ -1,3 +1,4 @@
+import { CountryCode } from '@/generated/prisma/enums';
 import { tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 
@@ -9,6 +10,7 @@ const organizationBaseSchema = z.object({
 	userIds: idsSchema,
 	ownedProgramIds: idsSchema,
 	operatedProgramIds: idsSchema,
+	operatorFallbackCountryCode: z.union([z.nativeEnum(CountryCode), z.literal('none')]).default('none'),
 });
 
 export const organizationCreateSchema = organizationBaseSchema;
