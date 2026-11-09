@@ -22,11 +22,11 @@ export const Stat = ({ label, value, info, size = 'default' }: StatProps) => (
 	<div>
 		<div className="text-muted-foreground flex items-center gap-1 text-xs">
 			<p>{label}</p>
-			{info && (
+			{info ? (
 				<InfoTooltip label={`Show ${label} explanation`} size="xs">
 					{info}
 				</InfoTooltip>
-			)}
+			) : null}
 		</div>
 		<div className={valueVariants({ size })}>{value}</div>
 	</div>
