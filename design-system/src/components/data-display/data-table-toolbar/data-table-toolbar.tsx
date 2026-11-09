@@ -1,9 +1,10 @@
 'use client';
 
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 import { Button } from '../../actions/button/button';
 import { Input } from '../../forms/input/input';
+import { SearchInput } from '../../forms/search-input/search-input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../forms/select/select';
 import { Switch } from '../../forms/switch/switch';
 import { Popover, PopoverContent, PopoverTrigger } from '../../overlays/popover/popover';
@@ -67,6 +68,17 @@ export const DataTableToolbar = ({
 	onSortChange,
 	onClearFilters,
 }: DataTableToolbarProps) => {
+	const desktopSearchRef = useRef<HTMLInputElement>(null);
+	const mobileSearchRef = useRef<HTMLInputElement>(null);
+	useEffect(() => {
+		// Debounced query updates must not overwrite ongoing typing.
+		for (const input of [desktopSearchRef.current, mobileSearchRef.current]) {
+			if (input && document.activeElement !== input) {
+				input.value = searchValue ?? '';
+			}
+		}
+	}, [searchValue]);
+
 	const hasFilters = showControls && filters.length > 0;
 	const hasColumns = showControls && columns.length > 0;
 	const hasSearch = showControls && searchKeys.length > 0;
@@ -92,35 +104,55 @@ export const DataTableToolbar = ({
 		<div className="flex flex-wrap items-center justify-end gap-2" data-testid="data-table-toolbar">
 			<div className="flex items-center gap-2">
 				{hasSearch ? (
-					<Popover>
-						<PopoverTrigger asChild>
-							<Button type="button" variant="outline" size="icon" aria-label="Search" data-testid="data-table-search-button">
-								<SearchIcon className="size-4" />
-								{hasSearchValue ? (
-									<span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" aria-hidden />
-								) : null}
-							</Button>
-						</PopoverTrigger>
-						<PopoverContent align="end">
-							<div className="space-y-3">
-								<div className="flex items-center justify-between">
-									<p className="text-sm font-medium">Search</p>
-									<Button type="button" variant="ghost" size="sm" onClick={clearSearch} disabled={!hasSearchValue}>
-										Clear
+					<>
+						<div className="hidden w-64 md:block" data-testid="data-table-desktop-search">
+							<SearchInput
+								ref={desktopSearchRef}
+								aria-label="Search"
+								placeholder="Search..."
+								defaultValue={searchValue}
+								onChange={(e) => onSearchChange(e.target.value)}
+								data-testid="data-table-desktop-search-input"
+							/>
+						</div>
+						<div className="md:hidden" data-testid="data-table-mobile-search">
+							<Popover>
+								<PopoverTrigger asChild>
+									<Button
+										type="button"
+										variant="outline"
+										size="icon"
+										aria-label="Search"
+										data-testid="data-table-search-button"
+									>
+										<SearchIcon className="size-4" />
+										{hasSearchValue ? (
+											<span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" aria-hidden />
+										) : null}
 									</Button>
-								</div>
-								<Input
-									key={`table-search-${searchValue ?? ''}`}
-									placeholder="Search..."
-									defaultValue={searchValue}
-									onChange={(e) => onSearchChange(e.target.value)}
-									autoFocus
-									data-testid="data-table-search-input"
-								/>
-								<p className="text-muted-foreground text-xs">Fields: {searchKeys.join(', ')}</p>
-							</div>
-						</PopoverContent>
-					</Popover>
+								</PopoverTrigger>
+								<PopoverContent align="end">
+									<div className="space-y-3">
+										<div className="flex items-center justify-between">
+											<p className="text-sm font-medium">Search</p>
+											<Button type="button" variant="ghost" size="sm" onClick={clearSearch} disabled={!hasSearchValue}>
+												Clear
+											</Button>
+										</div>
+										<Input
+											ref={mobileSearchRef}
+											placeholder="Search..."
+											defaultValue={searchValue}
+											onChange={(e) => onSearchChange(e.target.value)}
+											autoFocus
+											data-testid="data-table-search-input"
+										/>
+										<p className="text-muted-foreground text-xs">Fields: {searchKeys.join(', ')}</p>
+									</div>
+								</PopoverContent>
+							</Popover>
+						</div>
+					</>
 				) : null}
 				{hasColumns ? (
 					<Popover>

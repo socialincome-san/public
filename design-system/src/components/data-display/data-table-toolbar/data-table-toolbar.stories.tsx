@@ -7,6 +7,14 @@ const meta = {
 	title: 'Data Display/DataTableToolbar',
 	component: DataTableToolbar,
 	tags: ['autodocs'],
+	parameters: {
+		docs: {
+			description: {
+				component:
+					'Table controls with an always-visible search field from the medium breakpoint and an icon-triggered search popover on mobile.',
+			},
+		},
+	},
 	args: {
 		showControls: true,
 		searchKeys: ['firstName', 'lastName', 'phone'],
@@ -61,5 +69,11 @@ export const SearchOnly: Story = {
 		sortOptions: [],
 		filters: [],
 		actions: undefined,
+	},
+};
+
+export const Mobile: Story = {
+	parameters: {
+		viewport: { defaultViewport: 'mobile1' },
 	},
 };
