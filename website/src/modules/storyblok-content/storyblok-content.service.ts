@@ -39,6 +39,7 @@ import {
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
 	STORYBLOK_PAGES_FOLDER,
 } from '@/lib/storyblok/storyblok-paths';
+import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
 import { cache } from 'react';
@@ -54,7 +55,7 @@ const CONTENT_TYPE = {
 	person: 'person',
 	tag: 'tag',
 } as const;
-const STANDARD_ARTICLE_RELATIONS = ['article.author', 'article.tags', 'article.type'];
+const STANDARD_ARTICLE_RELATIONS = ['article.author', 'article.coAuthors', 'article.tags', 'article.type'];
 const STANDARD_STORY_RELATIONS = [
 	'faqSelection.questions',
 	'Campaign.faq',
@@ -82,6 +83,7 @@ const STORIES_PATH_PARAMS = {
 const PRIMARY_ROLES_DATASOURCE = 'primaryroles';
 const CIRCLES_DATASOURCE = 'circles';
 const TIME_COMMITMENTS_DATASOURCE = 'time-commitment';
+const WORK_STYLES_DATASOURCE = 'work-style';
 const CONTRIBUTION_AREAS_DATASOURCE = 'contribution-areas';
 
 const JOURNAL_TEASER_LIMIT = 3;
@@ -186,23 +188,36 @@ export const getPersonsByCountryOffice = async (
 	});
 };
 
-const getDatasourceEntries = async (datasourceSlug: string, language: string): Promise<Result<Record<string, string>>> => {
+const getDatasourceEntries = async (
+	datasourceSlug: string,
+	language: string,
+	getDefaultLabel: (entry: StoryblokDatasourceEntry) => string = (entry) => entry.name,
+): Promise<Result<Record<string, string>>> => {
 	const result = await fetchDatasourceEntriesCached(datasourceSlug, language);
 	if (!result.success) {
 		return resultFail('Could not fetch Storyblok datasource entries');
 	}
 
-	return resultOk(Object.fromEntries(result.data.map((entry) => [entry.value, entry.dimension_value ?? entry.name])));
+	return resultOk(
+		Object.fromEntries(result.data.map((entry) => [entry.value, entry.dimension_value ?? getDefaultLabel(entry)])),
+	);
 };
+
+// Circles, time commitments and work styles store a slug as the entry name and the English text as the value.
+// Circles show their slug ("Communication Circle") because the value alone ("Communication") reads like a role.
+const getEntryValue = (entry: StoryblokDatasourceEntry): string => entry.value;
 
 export const getPrimaryRoleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(PRIMARY_ROLES_DATASOURCE, language);
 
 export const getCircleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
-	getDatasourceEntries(CIRCLES_DATASOURCE, language);
+	getDatasourceEntries(CIRCLES_DATASOURCE, language, (entry) => humanizeIdentifier(entry.name));
 
 export const getTimeCommitmentLabels = async (language: string): Promise<Result<Record<string, string>>> =>
-	getDatasourceEntries(TIME_COMMITMENTS_DATASOURCE, language);
+	getDatasourceEntries(TIME_COMMITMENTS_DATASOURCE, language, getEntryValue);
+
+export const getWorkStyleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
+	getDatasourceEntries(WORK_STYLES_DATASOURCE, language, getEntryValue);
 
 export const getContributionAreaLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(CONTRIBUTION_AREAS_DATASOURCE, language);
@@ -493,7 +508,7 @@ export const getArticle = async (language: string, slug: string): Promise<Result
 };
 
 export const getRelativeArticles = async (
-	authorId: string,
+	authorIds: string[],
 	articleId: number,
 	tags: string[],
 	language: string,
@@ -507,7 +522,7 @@ export const getRelativeArticles = async (
 		sort_by: 'first_published_at:desc',
 		excluding_ids: articleId.toString(),
 		content_type: CONTENT_TYPE.article,
-		filter_query: createRelativeArticlesFilter(tags, authorId),
+		filter_query: createRelativeArticlesFilter(tags, authorIds),
 	});
 	let articles = related.success ? related.data.stories.filter(isResolvedArticle) : [];
 	if (articles.length < numberOfArticles) {
@@ -708,9 +723,13 @@ const articleByTagsFilter = (tagId: string) => ({ tags: { any_in_array: tagId } 
 
 const articlesByArticleTypeFilter = (articleTypeId: string) => ({ type: { in: articleTypeId } });
 
-const articlesByAuthorFilter = (authorId: string) => ({ author: { in: authorId } });
+const authorFilters = (authorIds: string[]) => [
+	{ author: { in: authorIds.join(',') } },
+	{ coAuthors: { any_in_array: authorIds.join(',') } },
+];
 
-const createRelativeArticlesFilter = (tags: string[], authorId: string) =>
-	tags.length > 0
-		? { __or: [{ author: { in: authorId } }, { tags: { in_array: tags.join(',') } }] }
-		: { author: { in: authorId } };
+const articlesByAuthorFilter = (authorId: string) => ({ __or: authorFilters([authorId]) });
+
+const createRelativeArticlesFilter = (tags: string[], authorIds: string[]) => ({
+	__or: [...authorFilters(authorIds), ...(tags.length > 0 ? [{ tags: { in_array: tags.join(',') } }] : [])],
+});

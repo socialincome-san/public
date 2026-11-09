@@ -17,6 +17,7 @@ export type SendgridNewsletterUpsertInput = {
 	country?: CountryCode;
 	status: 'subscribed' | 'unsubscribed';
 	isContributor?: boolean;
+	campaignId?: string;
 };
 
 export const searchSendgridNewsletterContact = async (email: string): Promise<Result<SendgridNewsletterContact | null>> => {
@@ -28,7 +29,7 @@ export const searchSendgridNewsletterContact = async (email: string): Promise<Re
 	try {
 		const contact = await findContact(configResult.data, email);
 
-		return resultOk(contact);
+		return resultOk(contact ? { email: contact.email, status: contact.status } : null);
 	} catch (error) {
 		console.error('Could not get SendGrid newsletter contact', { email, error });
 
@@ -46,6 +47,15 @@ export const upsertSendgridNewsletterSubscription = async (input: SendgridNewsle
 		const contact = await findContact(configResult.data, input.email);
 		if (!contact) {
 			await addContact(configResult.data, input);
+		} else if (input.campaignId) {
+			const campaignIds =
+				contact.campaignNews
+					?.split(',')
+					.map((id) => id.trim())
+					.filter(Boolean) ?? [];
+			if (!campaignIds.includes(input.campaignId)) {
+				await updateCampaignNews(configResult.data, input.email, [...campaignIds, input.campaignId].join(','));
+			}
 		}
 
 		if (input.status === 'subscribed') {
@@ -69,6 +79,10 @@ type SendgridConfig = {
 	suppressionListId: number;
 };
 
+type SendgridContact = SendgridNewsletterContact & {
+	campaignNews: string | null;
+};
+
 const getSendgridConfig = (): Result<SendgridConfig> => {
 	const apiKey = process.env.SENDGRID_API_KEY?.trim();
 	const listId = process.env.SENDGRID_LIST_ID?.trim();
@@ -88,7 +102,7 @@ const getSendgridConfig = (): Result<SendgridConfig> => {
 	return resultOk({ client, listId, suppressionListId });
 };
 
-const findContact = async (config: SendgridConfig, email: string): Promise<SendgridNewsletterContact | null> => {
+const findContact = async (config: SendgridConfig, email: string): Promise<SendgridContact | null> => {
 	try {
 		const response = await config.client.request({
 			method: 'POST',
@@ -102,7 +116,11 @@ const findContact = async (config: SendgridConfig, email: string): Promise<Sendg
 
 		const suppressed = await isSuppressed(config, email);
 
-		return { email: contact.email, status: suppressed ? 'unsubscribed' : 'subscribed' };
+		return {
+			email: contact.email,
+			status: suppressed ? 'unsubscribed' : 'subscribed',
+			campaignNews: contact.campaignNews,
+		};
 	} catch (error) {
 		if (isSendgridNotFoundError(error)) {
 			return null;
@@ -124,9 +142,23 @@ const addContact = async (config: SendgridConfig, input: SendgridNewsletterUpser
 					first_name: input.firstname,
 					last_name: input.lastname,
 					country: input.country,
-					custom_fields: { language: input.language, contributor: input.isContributor ? 'yes' : 'no' },
+					custom_fields: {
+						language: input.language,
+						contributor: input.isContributor ? 'yes' : 'no',
+						...(input.campaignId ? { campaign_news: input.campaignId } : {}),
+					},
 				},
 			],
+		},
+	});
+};
+
+const updateCampaignNews = async (config: SendgridConfig, email: string, campaignNews: string) => {
+	await config.client.request({
+		method: 'PUT',
+		url: '/v3/marketing/contacts',
+		body: {
+			contacts: [{ email, custom_fields: { campaign_news: campaignNews } }],
 		},
 	});
 };
@@ -164,7 +196,7 @@ const getRequestBody = (response: unknown): unknown => {
 	return response[1];
 };
 
-const readSearchContact = (body: unknown, email: string): { email: string } | null => {
+const readSearchContact = (body: unknown, email: string): { email: string; campaignNews: string | null } | null => {
 	if (!isRecord(body) || !isRecord(body.result)) {
 		return null;
 	}
@@ -173,8 +205,10 @@ const readSearchContact = (body: unknown, email: string): { email: string } | nu
 	if (!isRecord(entry) || !isRecord(entry.contact) || typeof entry.contact.email !== 'string') {
 		return null;
 	}
+	const customFields = isRecord(entry.contact.custom_fields) ? entry.contact.custom_fields : undefined;
+	const campaignNews = typeof customFields?.campaign_news === 'string' ? customFields.campaign_news : null;
 
-	return { email: entry.contact.email };
+	return { email: entry.contact.email, campaignNews };
 };
 
 const readSuppressions = (body: unknown): { id: number; suppressed: boolean }[] => {

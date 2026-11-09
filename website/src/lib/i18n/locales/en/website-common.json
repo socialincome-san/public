@@ -19,12 +19,14 @@
 	"site-menu": {
 		"get-involved": "Get Involved",
 		"who-we-support": "Who we support",
+		"about": "About",
 		"programs": "Programs",
 		"programs-count": "{count} active programs",
 		"focuses-count": "{count} focus areas",
 		"partners-count": "{count} partners",
 		"show-all": "Show all {count}",
 		"recipients-in": "{count} recipients in:",
+		"all-countries": "All countries",
 		"individual": "For individuals",
 		"company": "For companies",
 		"ngo": "For NGOs",
@@ -247,7 +249,7 @@
 		},
 		"runway": {
 			"description": "{count, plural, one {Even if every donor stopped giving today, we could keep paying recipients for {count} more month.} other {Even if every donor stopped giving today, we could keep paying recipients for {count} more months.}}",
-			"zewo-hint": "In line with ZEWO"
+			"zewo-hint": "In line with <zewo>ZEWO</zewo>"
 		},
 		"countries": {
 			"headline": "{count, plural, one {Donations totaling {amount} arrived from {countriesCount} country} other {Donations totaling {amount} arrived from {countriesCount} countries}}",
@@ -447,12 +449,23 @@
 			}
 		}
 	},
+	"circles": {
+		"title": "Circles",
+		"member-summary": "{active} active · {interested, plural, one {# interested member} other {# interested members}}",
+		"members-empty": "No members yet",
+		"empty": "No circles yet."
+	},
+	"task-cards": {
+		"show-all": "Show all {count} tasks",
+		"show-fewer": "Show fewer tasks"
+	},
 	"breadcrumb": {
 		"home": "Home"
 	},
 	"wallet": {
 		"paid-out": "Paid out",
-		"recipients": "Recipients"
+		"recipients": "Recipients",
+		"concluded": "Concluded"
 	},
 	"person-grid": {
 		"search-placeholder": "Search by name",

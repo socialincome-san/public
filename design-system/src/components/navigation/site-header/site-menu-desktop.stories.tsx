@@ -5,9 +5,17 @@ const meta = {
 	title: 'Navigation/SiteMenuDesktop',
 	component: SiteMenuDesktop,
 	tags: ['autodocs'],
+	parameters: {
+		docs: {
+			description: {
+				component:
+					'Desktop main navigation. Dropdowns open on click and show up to three coloured columns, each with an optional badge, illustration and overview link, above an optional footer bar.',
+			},
+		},
+	},
 	decorators: [
 		(Story) => (
-			<div className="relative min-h-96">
+			<div className="relative min-h-136">
 				<Story />
 			</div>
 		),
@@ -17,6 +25,8 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
+
+const illustrationSrc = '/assets/storybook/placeholder-portrait.svg';
 
 export const Default: Story = {
 	args: {
@@ -29,7 +39,7 @@ export const Default: Story = {
 					{
 						id: 'programs',
 						label: 'Programs',
-						subtitle: '19 active programs',
+						badge: '19 active programs',
 						links: [
 							{ id: 'mothers', label: 'Mothers and Newborns', href: '/en/usd/programs/mothers' },
 							{ id: 'skills', label: 'Skills for Sustainability', href: '/en/usd/programs/skills' },
@@ -39,14 +49,14 @@ export const Default: Story = {
 					{
 						id: 'focuses',
 						label: 'Our focus areas',
-						subtitle: '16 focus areas',
+						badge: '16 focus areas',
 						links: [{ id: 'poverty', label: 'Poverty', href: '/en/usd/focuses/poverty' }],
 						overview: { label: 'Show all 16', href: '/en/usd/focuses' },
 					},
 					{
 						id: 'local-partners',
 						label: 'Local Partners',
-						subtitle: '16 partners',
+						badge: '16 partners',
 						links: [{ id: 'aurora', label: 'Aurora Foundation', href: '/en/usd/local-partners/aurora' }],
 						overview: { label: 'Show all 16', href: '/en/usd/local-partners' },
 					},
@@ -54,7 +64,7 @@ export const Default: Story = {
 				footer: {
 					label: '102 recipients in:',
 					countries: [
-						{ id: 'sl', country: 'SL', label: 'Sierra Leone (47)', href: '/en/usd/countries/sierra-leone' },
+						{ id: 'sl', country: 'SL', label: 'Sierra Leone (70)', href: '/en/usd/countries/sierra-leone' },
 						{ id: 'lr', country: 'LR', label: 'Liberia (32)', href: '/en/usd/countries/liberia' },
 					],
 					overview: { label: 'All countries', href: '/en/usd/countries' },
@@ -62,23 +72,49 @@ export const Default: Story = {
 			},
 			{
 				type: 'dropdown',
+				id: 'get-involved',
+				label: 'Get involved',
+				groups: [
+					{
+						id: 'individual',
+						label: 'For individuals',
+						badge: '7,148 donors',
+						illustrationSrc,
+						links: [
+							{ id: 'donate', label: 'Donate', href: '/en/usd', onSelect: () => undefined },
+							{ id: 'volunteer', label: 'Volunteer', href: '/en/usd/open-source' },
+						],
+					},
+					{
+						id: 'company',
+						label: 'For companies',
+						illustrationSrc,
+						links: [{ id: 'talk', label: 'Invite us for a talk', href: '/en/usd/contact' }],
+					},
+					{
+						id: 'ngo',
+						label: 'For NGOs',
+						illustrationSrc,
+						links: [{ id: 'partner', label: 'Become a local partner', href: '/en/usd/local-partners' }],
+					},
+				],
+				footer: { overview: { label: 'All ways to get involved', href: '/en/usd/get-involved' } },
+			},
+			{
+				type: 'dropdown',
 				id: 'about',
-				label: 'About us',
+				label: 'About',
 				groups: [
 					{
 						id: 'organisation',
 						label: 'Social Income',
-						subtitle: '65 volunteers',
-						links: [
-							{ id: 'donate', label: 'Donate', href: '/en/usd', onSelect: () => undefined },
-							{ id: 'team', label: 'Our Team', href: '/en/usd/people' },
-						],
+						badge: '65 volunteers',
+						links: [{ id: 'team', label: 'Our Team', href: '/en/usd/people' }],
 					},
 				],
 				footer: {
 					label: 'News from Social Income by email.',
 					overview: { label: 'Subscribe to the newsletter', href: '/en/usd/newsletter' },
-					overviewInline: true,
 				},
 			},
 			{ type: 'link', id: 'journal', label: 'Journal', href: '/en/usd/journal' },

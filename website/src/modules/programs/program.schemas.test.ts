@@ -41,6 +41,21 @@ describe('program schemas', () => {
 		expect(result.success).toBe(false);
 	});
 
+	it('keeps the stored conclusion status when settings updates omit it', () => {
+		const result = programSettingsUpdateSchema.safeParse({
+			id: 'program-1',
+			name: 'Program',
+			slug: 'program',
+			countryId: 'country-1',
+			programDurationInMonths: 12,
+			payoutPerInterval: 25,
+			payoutInterval: PayoutInterval.monthly,
+			operatorOrganizationIds: ['organization-1'],
+		});
+
+		expect(result.success && result.data.isConcluded).toBeUndefined();
+	});
+
 	it('validates budget currencies and positive values', () => {
 		expect(
 			programBudgetCalculationSchema.safeParse({

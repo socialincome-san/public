@@ -8,40 +8,38 @@ import { type PointerEvent } from 'react';
 import { cn } from '../../../cn';
 import { Badge } from '../../data-display/badge/badge';
 import { CountryFlag } from '../../data-display/country-flag/country-flag';
-import { type SiteMenuDropdownFooter, type SiteMenuEntry, type SiteMenuGroup, type SiteMenuLink } from './site-header';
+import { type SiteMenuEntry, type SiteMenuFooter, type SiteMenuGroup, type SiteMenuLink } from './site-header';
 
 // Dropdowns open on click only, so pointer movement must not toggle them
 const preventHoverOpen = (event: PointerEvent) => {
 	event.preventDefault();
 };
 
-const triggerClassName =
+const itemClassName =
 	'hover:bg-muted data-[state=open]:bg-muted flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-bold transition-colors';
 
-// Applied to the columns left to right
 const columnSurfaces = ['bg-card', 'bg-backstage', 'bg-banner-yellow'];
 
-const rowClassName =
-	'group border-border flex w-full items-center justify-between gap-2 border-t py-2 text-left text-sm font-bold';
+const linkTarget = ({ newTab }: Pick<SiteMenuLink, 'newTab'>) =>
+	newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 
-const overviewClassName =
-	'text-muted-foreground hover:text-foreground group inline-flex w-fit items-center gap-1.5 text-sm font-bold transition-colors';
-
-const linkTarget = (link: Pick<SiteMenuLink, 'newTab'>) => ({
-	target: link.newTab ? '_blank' : '_self',
-	rel: link.newTab ? 'noopener noreferrer' : undefined,
-});
-
-const OverviewLink = ({ label, href, emphasized }: { label: string; href: string; emphasized?: boolean }) => (
+const ArrowLink = ({ label, href, muted = false }: { label: string; href: string; muted?: boolean }) => (
 	<NavigationMenu.Link asChild>
-		<NextLink href={href} className={cn(overviewClassName, emphasized && 'text-foreground')}>
-			<span>{label}</span>
+		<NextLink
+			href={href}
+			className={cn(
+				'hover:text-foreground group inline-flex items-center gap-1.5 text-sm font-bold transition-colors',
+				muted && 'text-muted-foreground',
+			)}
+		>
+			{label}
 			<ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
 		</NextLink>
 	</NavigationMenu.Link>
 );
 
 const RowLink = ({ link }: { link: SiteMenuLink }) => {
+	const className = 'group flex w-full items-center justify-between gap-2 py-2 text-left text-sm font-bold';
 	const content = (
 		<>
 			{link.label}
@@ -52,11 +50,11 @@ const RowLink = ({ link }: { link: SiteMenuLink }) => {
 	return (
 		<NavigationMenu.Link asChild>
 			{link.onSelect ? (
-				<button type="button" aria-haspopup="dialog" className={rowClassName} onClick={link.onSelect}>
+				<button type="button" aria-haspopup="dialog" className={className} onClick={link.onSelect}>
 					{content}
 				</button>
 			) : (
-				<NextLink href={link.href} {...linkTarget(link)} className={rowClassName}>
+				<NextLink href={link.href} {...linkTarget(link)} className={className}>
 					{content}
 				</NextLink>
 			)}
@@ -64,28 +62,18 @@ const RowLink = ({ link }: { link: SiteMenuLink }) => {
 	);
 };
 
-const GroupColumn = ({ group, surface }: { group: SiteMenuGroup; surface: string }) => (
-	<section
-		className={cn(
-			'grid content-start gap-x-4 p-8',
-			group.illustrationSrc ? 'grid-cols-[minmax(0,1fr)_7rem]' : 'grid-cols-1',
-			surface,
-		)}
-	>
-		<div className="col-start-1 row-start-1 flex flex-col items-start gap-4">
-			<span className="text-primary text-2xl">{group.label}</span>
-			{group.subtitle && <Badge variant="primary-outline">{group.subtitle}</Badge>}
+const GroupColumn = ({ group, surface }: { group: SiteMenuGroup; surface?: string }) => (
+	<section className={cn('flex flex-col gap-4 p-8', surface)}>
+		<div className="flex justify-between gap-4">
+			<div className="flex flex-col items-start gap-4">
+				<h3 className="text-primary text-2xl">{group.label}</h3>
+				{group.badge && <Badge variant="primary-outline">{group.badge}</Badge>}
+			</div>
+			{group.illustrationSrc && (
+				<Image src={group.illustrationSrc} alt="" width={112} height={112} className="size-28 object-contain" />
+			)}
 		</div>
-		{group.illustrationSrc && (
-			<Image
-				src={group.illustrationSrc}
-				alt=""
-				width={112}
-				height={112}
-				className="col-start-2 row-start-1 size-28 object-contain"
-			/>
-		)}
-		<ul className="col-span-full mt-4 flex flex-col [&>li:last-child>*]:border-b">
+		<ul className="divide-border border-border divide-y border-y">
 			{group.links.map((link) => (
 				<li key={link.id}>
 					<RowLink link={link} />
@@ -93,41 +81,34 @@ const GroupColumn = ({ group, surface }: { group: SiteMenuGroup; surface: string
 			))}
 		</ul>
 		{group.overview && (
-			<div className="col-span-full mt-6">
-				<OverviewLink label={group.overview.label} href={group.overview.href} emphasized />
+			<div className="mt-2">
+				<ArrowLink {...group.overview} />
 			</div>
 		)}
 	</section>
 );
 
-const DropdownFooter = ({ footer }: { footer: SiteMenuDropdownFooter }) => (
-	<div className="flex items-center gap-6 px-8 py-4">
-		{footer.href ? (
-			<OverviewLink label={footer.label} href={footer.href} />
-		) : (
-			<span className="text-sm font-bold">{footer.label}</span>
-		)}
-		{footer.countries && footer.countries.length > 0 && (
-			// Closer to the label than to each other, so the label reads as their introduction
-			<div className="-ml-3 flex items-center gap-6">
+const DropdownFooter = ({ footer }: { footer: SiteMenuFooter }) => (
+	<div className="flex items-center gap-3 px-8 py-4">
+		{footer.label && <span className="text-sm font-bold">{footer.label}</span>}
+		{footer.countries && (
+			<ul className="flex flex-1 items-center gap-6">
 				{footer.countries.map((country) => (
-					<NavigationMenu.Link key={country.id} asChild>
-						<NextLink
-							href={country.href}
-							className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 text-sm font-bold transition-colors"
-						>
-							<CountryFlag country={country.country} size="sm" decorative />
-							{country.label}
-						</NextLink>
-					</NavigationMenu.Link>
+					<li key={country.id}>
+						<NavigationMenu.Link asChild>
+							<NextLink
+								href={country.href}
+								className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-bold transition-colors"
+							>
+								<CountryFlag country={country.country} size="sm" decorative />
+								{country.label}
+							</NextLink>
+						</NavigationMenu.Link>
+					</li>
 				))}
-			</div>
+			</ul>
 		)}
-		{footer.overview && (
-			<div className={footer.overviewInline ? '-ml-3' : 'ml-auto'}>
-				<OverviewLink label={footer.overview.label} href={footer.overview.href} />
-			</div>
-		)}
+		{footer.overview && <ArrowLink {...footer.overview} muted />}
 	</div>
 );
 
@@ -142,7 +123,7 @@ export const SiteMenuDesktop = ({ entries }: SiteMenuDesktopProps) => (
 				entry.type === 'link' ? (
 					<NavigationMenu.Item key={entry.id}>
 						<NavigationMenu.Link asChild>
-							<NextLink href={entry.href} {...linkTarget(entry)} className={triggerClassName}>
+							<NextLink href={entry.href} {...linkTarget(entry)} className={itemClassName}>
 								{entry.label}
 							</NextLink>
 						</NavigationMenu.Link>
@@ -152,14 +133,14 @@ export const SiteMenuDesktop = ({ entries }: SiteMenuDesktopProps) => (
 						<NavigationMenu.Trigger
 							onPointerMove={preventHoverOpen}
 							onPointerLeave={preventHoverOpen}
-							className={cn('group', triggerClassName)}
+							className={cn('group', itemClassName)}
 						>
 							{entry.label}
 							<ChevronDown className="size-3.5 transition-transform duration-150 group-data-[state=open]:rotate-180" />
 						</NavigationMenu.Trigger>
 
 						<NavigationMenu.Content onPointerEnter={preventHoverOpen} onPointerLeave={preventHoverOpen}>
-							{/* The columns sit as one rounded card on the secondary base, which shows through as the footer */}
+							{/* The footer is the secondary base showing below the rounded columns */}
 							<div
 								className={cn(
 									'shadow-overlay flex min-h-112 flex-col overflow-hidden rounded-3xl',
@@ -173,11 +154,7 @@ export const SiteMenuDesktop = ({ entries }: SiteMenuDesktopProps) => (
 									)}
 								>
 									{entry.groups.map((group, index) => (
-										<GroupColumn
-											key={group.id}
-											group={group}
-											surface={columnSurfaces[index % columnSurfaces.length] ?? 'bg-card'}
-										/>
+										<GroupColumn key={group.id} group={group} surface={columnSurfaces[index % columnSurfaces.length]} />
 									))}
 								</div>
 								{entry.footer && <DropdownFooter footer={entry.footer} />}

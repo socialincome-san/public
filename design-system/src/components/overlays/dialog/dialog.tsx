@@ -25,16 +25,19 @@ type DialogProps = {
 	onOpenChange: (open: boolean) => void;
 	/** Turn off while work is in flight: no close button, outside click, Escape or swipe. */
 	dismissible?: boolean;
+	/** Turn off for content with its own drag gestures, which would fight the drawer's swipe to close. */
+	drawerOnMobile?: boolean;
 	children: React.ReactNode;
 };
 
 /** A centered dialog on desktop and a bottom drawer that swipes to close on mobile. */
-const Dialog = ({ open, onOpenChange, dismissible = true, children }: DialogProps) => {
-	const matchesDrawer = React.useSyncExternalStore(
+const Dialog = ({ open, onOpenChange, dismissible = true, drawerOnMobile = true, children }: DialogProps) => {
+	const matchesDrawerQuery = React.useSyncExternalStore(
 		subscribeToDrawerQuery,
 		() => window.matchMedia(DRAWER_QUERY).matches,
 		() => null,
 	);
+	const matchesDrawer = drawerOnMobile ? matchesDrawerQuery : false;
 	// Switching primitives while open remounts the content and loses its state, e.g. a form when a phone rotates
 	const [openedAsDrawer, setOpenedAsDrawer] = React.useState<boolean | null>(null);
 	// Wait for the client value, so a dialog open during hydration does not lock in the server guess
@@ -72,10 +75,12 @@ const dialogFrameVariants = cva(
 				sm: 'max-w-md',
 				md: 'max-w-2xl',
 				lg: 'max-w-4xl',
+				xl: 'max-w-7xl',
 			},
 			height: {
 				auto: '',
 				fixed: 'h-[min(46rem,90dvh)]',
+				full: 'h-[90dvh]',
 			},
 		},
 	},
@@ -88,6 +93,7 @@ const drawerFrameVariants = cva(
 			height: {
 				auto: '',
 				fixed: 'h-[90dvh]',
+				full: 'h-[90dvh]',
 			},
 		},
 	},
@@ -117,10 +123,10 @@ const closeButtonClassName =
 	'ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden focus-visible:ring-[3px] disabled:pointer-events-none sm:top-6 sm:right-6';
 
 type DialogContentProps = WithoutClassName<React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>> & {
-	size?: 'sm' | 'md' | 'lg';
+	size?: 'sm' | 'md' | 'lg' | 'xl';
 	surface?: 'default' | 'gradient';
 	padding?: 'default' | 'vertical' | 'none';
-	height?: 'auto' | 'fixed';
+	height?: 'auto' | 'fixed' | 'full';
 	/** For confirmations whose footer already offers a way out. */
 	hideCloseButton?: boolean;
 	closeLabel?: string;

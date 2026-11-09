@@ -108,14 +108,16 @@ describe('getPaginatedRecipientTableView local partner filter', () => {
 		expect(data.localPartnerFilterOptions).toEqual([{ id: 'partner-1', name: 'Partner A' }]);
 	});
 
-	test('ignores a local partner without recipients in the accessible programs', async () => {
+	test('returns no rows for a local partner without recipients in the accessible programs', async () => {
 		mockGetLocalPartnerFilterOption.mockResolvedValue({ success: true, data: null });
 
 		const data = expectSuccess(
 			await getPaginatedRecipientTableView('user-1', { ...query, localPartnerId: 'partner-unknown' }),
 		);
 
-		expect(mockFindRecipientTableSource).toHaveBeenCalledWith(expect.objectContaining({ localPartnerId: undefined }));
+		expect(data.tableRows).toEqual([]);
+		expect(data.totalCount).toBe(0);
+		expect(mockFindRecipientTableSource).not.toHaveBeenCalled();
 		expect(data.localPartnerFilterOptions).toEqual([]);
 	});
 

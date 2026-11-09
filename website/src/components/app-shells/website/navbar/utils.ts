@@ -4,8 +4,8 @@ import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import type { Session } from '@/modules/auth/auth.types';
 import { type SiteMenuEntry } from '@socialincome/design-system/navigation/site-header/site-header';
 
-/** Menu links the client turns into opening the donation dialog. */
-export const DONATE_LINK_IDS = ['get-involved-individual-donate', 'get-involved-company-donate'] as const;
+// The desktop menu opens the donation dialog for links with this id
+export const DONATE_LINK_ID = 'donate';
 
 export type Scope = 'website' | 'dashboard' | 'partner-space';
 

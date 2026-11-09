@@ -1,7 +1,7 @@
 import { MenuDesktop } from '@/components/app-shells/website/navbar/menu-desktop';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
 import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
-import { buildSiteMenuEntries } from '@/components/app-shells/website/navbar/site-menu';
+import { getSiteMenuEntries } from '@/components/app-shells/website/navbar/site-menu';
 import { type Scope } from '@/components/app-shells/website/navbar/utils';
 import { VisitorLocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/visitor-locale-currency-switcher';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
@@ -30,14 +30,14 @@ export const Navbar = async ({ sessions, lang, currency, scope }: Props) => {
 			language: lang,
 		}),
 	]);
-	const menuEntries = await buildSiteMenuEntries(result?.success ? result.data.content : undefined, lang, currency);
+	const menuEntries = await getSiteMenuEntries(result?.success ? result.data.content : undefined, lang, currency);
 
 	return (
 		<SiteHeader
 			homeHref={getWebsiteBasePath(lang, currency)}
 			homeLinkLabel={t('logo.home-link-aria')}
 			desktopMenu={<MenuDesktop entries={menuEntries} />}
-			localeSwitcher={scope === 'website' && <VisitorLocaleCurrencySwitcher lang={lang} currency={currency} variant="nav" />}
+			localeSwitcher={scope === 'website' && <VisitorLocaleCurrencySwitcher lang={lang} currency={currency} />}
 			account={<AccountSlot sessions={sessions} scope={scope} />}
 			donateAction={
 				<SignedOutSlot sessions={sessions} scope={scope}>

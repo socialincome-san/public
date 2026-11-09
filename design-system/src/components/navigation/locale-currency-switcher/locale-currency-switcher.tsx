@@ -31,8 +31,10 @@ type LocaleCurrencySwitcherProps = {
 	language: OptionGroup<LocaleCurrencyOption>;
 	currency: OptionGroup<LocaleCurrencyOption>;
 	country?: SearchableOptionGroup<LocaleCurrencyOption>;
-	variant?: 'ghost' | 'outline' | 'nav';
+	variant?: 'nav' | 'outline';
 	icon?: ReactNode;
+	// Text on the button. Defaults to the language and currency, e.g. "EN · CHF".
+	triggerLabel?: string;
 };
 
 export const LocaleCurrencySwitcherGlobe = () => <Globe className="size-4" />;
@@ -80,16 +82,15 @@ export const LocaleCurrencySwitcher = ({
 	language,
 	currency,
 	country,
-	variant = 'ghost',
+	variant = 'nav',
 	icon = <LocaleCurrencySwitcherGlobe />,
+	triggerLabel = `${language.value.toUpperCase()} · ${currency.value}`,
 }: LocaleCurrencySwitcherProps) => (
 	<Popover open={open} onOpenChange={onOpenChange}>
 		<PopoverTrigger asChild>
 			<Button type="button" variant={variant} size={variant === 'nav' ? 'nav' : 'md'} aria-label={ariaLabel}>
 				{icon}
-				<span>
-					{language.value.toUpperCase()} · {currency.value}
-				</span>
+				<span>{triggerLabel}</span>
 				<ChevronDown className="text-muted-foreground size-3.5" />
 			</Button>
 		</PopoverTrigger>

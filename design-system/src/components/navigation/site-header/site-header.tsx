@@ -7,7 +7,7 @@ export type SiteMenuLink = {
 	label: string;
 	href: string;
 	newTab?: boolean;
-	/** Replaces following the link on desktop, e.g. to open a dialog; `href` stays the fallback. */
+	// The desktop menu runs this instead of following `href`, e.g. to open a dialog
 	onSelect?: () => void;
 };
 
@@ -18,18 +18,14 @@ export type SiteMenuGroup = {
 	label: string;
 	links: SiteMenuLink[];
 	overview?: SiteMenuOverview;
-	/** Short fact under the label, e.g. "19 active programs". */
-	subtitle?: string;
+	badge?: string;
 	illustrationSrc?: string;
 };
 
-export type SiteMenuDropdownFooter = {
-	label: string;
-	href?: string;
+export type SiteMenuFooter = {
+	label?: string;
 	countries?: (SiteMenuLink & { country: string })[];
 	overview?: SiteMenuOverview;
-	/** Puts the overview right after the label instead of at the far end. */
-	overviewInline?: boolean;
 };
 
 export type SiteMenuEntry =
@@ -39,7 +35,7 @@ export type SiteMenuEntry =
 			id: string;
 			label: string;
 			groups: SiteMenuGroup[];
-			footer?: SiteMenuDropdownFooter;
+			footer?: SiteMenuFooter;
 	  };
 
 type SiteHeaderProps = {
@@ -68,11 +64,12 @@ export const SiteHeader = ({
 
 		<div className="hidden lg:block">{desktopMenu}</div>
 
-		{/* The ghost-style switcher and account bring their own padding; the margin gives the solid donate button the same visual gap */}
-		<div className="flex items-center gap-2 lg:gap-1">
-			{localeSwitcher && <div className="hidden sm:block">{localeSwitcher}</div>}
-			<div className="hidden lg:block">{account}</div>
-			{donateAction && <div className="lg:ml-3">{donateAction}</div>}
+		<div className="flex items-center gap-2 lg:gap-4">
+			<div className="hidden items-center gap-1 sm:flex">
+				{localeSwitcher}
+				<div className="hidden lg:block">{account}</div>
+			</div>
+			{donateAction}
 			{mobileMenu}
 		</div>
 	</nav>

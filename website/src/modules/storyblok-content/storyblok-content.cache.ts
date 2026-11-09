@@ -108,6 +108,12 @@ export const getTimeCommitmentLabels = async (language: string): Promise<Result<
 	return withStoryblokCache(service.getTimeCommitmentLabels(language));
 };
 
+export const getWorkStyleLabels = async (language: string): Promise<Result<Record<string, string>>> => {
+	'use cache';
+
+	return withStoryblokCache(service.getWorkStyleLabels(language));
+};
+
 export const getContributionAreaLabels = async (language: string): Promise<Result<Record<string, string>>> => {
 	'use cache';
 
@@ -304,7 +310,7 @@ export const getArticle = async (language: string, slug: string): Promise<Result
 };
 
 export const getRelativeArticles = async (
-	authorId: string,
+	authorIds: string[],
 	articleId: number,
 	tags: string[],
 	language: string,
@@ -312,5 +318,5 @@ export const getRelativeArticles = async (
 ): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
 	'use cache';
 
-	return withStoryblokCache(service.getRelativeArticles(authorId, articleId, tags, language, numberOfArticles));
+	return withStoryblokCache(service.getRelativeArticles(authorIds, articleId, tags, language, numberOfArticles));
 };

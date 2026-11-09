@@ -1,3 +1,4 @@
+import { Clarity } from '@/components/analytics/clarity';
 import { CookieConsent } from '@/components/analytics/cookie-consent';
 import { Footer } from '@/components/app-shells/website/footer';
 import { Navbar } from '@/components/app-shells/website/navbar/navbar';
@@ -35,6 +36,7 @@ export const WebsiteAppShell = ({ children, sessions, lang, currency, scope }: W
 				</main>
 				<Footer lang={lang} currency={currency} />
 				<CookieConsent privacyPolicyHref={`${getWebsiteBasePath(lang, currency)}/legal`} />
+				<Clarity />
 			</div>
 		</DonationModalProvider>
 	);

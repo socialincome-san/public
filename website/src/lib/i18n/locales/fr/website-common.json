@@ -19,12 +19,14 @@
 	"site-menu": {
 		"get-involved": "S'engager",
 		"who-we-support": "Qui nous soutenons",
+		"about": "À propos",
 		"programs": "Programmes",
 		"programs-count": "{count} programmes actifs",
 		"focuses-count": "{count} axes prioritaires",
 		"partners-count": "{count} partenaires",
 		"show-all": "Afficher les {count}",
 		"recipients-in": "{count} bénéficiaires en :",
+		"all-countries": "Tous les pays",
 		"individual": "Pour les particuliers",
 		"company": "Pour les entreprises",
 		"ngo": "Pour les ONG",
@@ -247,7 +249,7 @@
 		},
 		"runway": {
 			"description": "Même si tous les donateurs cessaient de donner aujourd’hui, nous pourrions continuer à verser les paiements aux bénéficiaires pendant {count} mois supplémentaires.",
-			"zewo-hint": "Conforme à ZEWO"
+			"zewo-hint": "Conforme à <zewo>ZEWO</zewo>"
 		},
 		"countries": {
 			"headline": "{count, plural, one {Des dons totalisant {amount} sont arrivés de {countriesCount} pays} other {Des dons totalisant {amount} sont arrivés de {countriesCount} pays}}",
@@ -447,12 +449,23 @@
 			}
 		}
 	},
+	"circles": {
+		"title": "Cercles",
+		"member-summary": "{active, plural, one {# actif} other {# actifs}} · {interested, plural, one {# membre intéressé} other {# membres intéressés}}",
+		"members-empty": "Pas encore de membres",
+		"empty": "Pas encore de cercles."
+	},
+	"task-cards": {
+		"show-all": "Afficher les {count} tâches",
+		"show-fewer": "Afficher moins de tâches"
+	},
 	"breadcrumb": {
 		"home": "Accueil"
 	},
 	"wallet": {
 		"paid-out": "Versé",
-		"recipients": "Bénéficiaires"
+		"recipients": "Bénéficiaires",
+		"concluded": "Terminé"
 	},
 	"person-grid": {
 		"search-placeholder": "Rechercher par nom",
