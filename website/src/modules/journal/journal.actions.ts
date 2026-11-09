@@ -8,14 +8,20 @@ import type { ISbStoryData } from '@storyblok/js';
 import {
 	getJournalArticle,
 	getJournalArticlePageData,
+	getJournalArticlesByArticleType,
+	getJournalArticlesByTag,
 	getJournalArticlesByUuids,
+	getJournalAuthorArticleCounts,
 	getJournalPerson,
 	getJournalPersonPageData,
 	getLatestJournalArticles,
 } from './journal.cache';
 import {
 	journalArticleRequestSchema,
+	journalArticlesByArticleTypeRequestSchema,
+	journalArticlesByTagRequestSchema,
 	journalArticlesByUuidsRequestSchema,
+	journalAuthorArticleCountsRequestSchema,
 	journalLanguageRequestSchema,
 	journalPageRequestSchema,
 } from './journal.schemas';
@@ -24,6 +30,14 @@ export const getJournalArticlePageDataAction = async (input: unknown): Promise<R
 	const parsed = journalPageRequestSchema.safeParse(input);
 
 	return parsed.success ? getJournalArticlePageData(parsed.data) : resultFail('Invalid journal article request');
+};
+
+export const getJournalAuthorArticleCountsAction = async (input: unknown): Promise<Result<Record<string, number>>> => {
+	const parsed = journalAuthorArticleCountsRequestSchema.safeParse(input);
+
+	return parsed.success
+		? getJournalAuthorArticleCounts(parsed.data.authorIds)
+		: resultFail('Invalid journal author request');
 };
 
 export const getJournalPersonPageDataAction = async (input: unknown): Promise<Result<JournalPersonPageData>> => {
@@ -59,5 +73,23 @@ export const getJournalArticlesByUuidsAction = async (input: unknown): Promise<R
 
 	return parsed.success
 		? getJournalArticlesByUuids(parsed.data.language, parsed.data.articleUuids)
+		: resultFail('Invalid journal articles request');
+};
+
+export const getJournalArticlesByTagAction = async (input: unknown): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	const parsed = journalArticlesByTagRequestSchema.safeParse(input);
+
+	return parsed.success
+		? getJournalArticlesByTag(parsed.data.language, parsed.data.tagUuid)
+		: resultFail('Invalid journal articles request');
+};
+
+export const getJournalArticlesByArticleTypeAction = async (
+	input: unknown,
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	const parsed = journalArticlesByArticleTypeRequestSchema.safeParse(input);
+
+	return parsed.success
+		? getJournalArticlesByArticleType(parsed.data.language, parsed.data.articleTypeUuid)
 		: resultFail('Invalid journal articles request');
 };

@@ -210,9 +210,7 @@ const detailsObjectSchema = (message: ErrorMessage) =>
 		description: z.string().transform(sanitizeText).pipe(descriptionRule(message)),
 		hasGoal: z.boolean(),
 		goal: z.union([z.string(), z.number(), z.undefined(), z.null()]).optional(),
-		currency: z.enum(campaignSubmissionConfig.allowedCurrencies, {
-			errorMap: () => ({ message: message('currency-unsupported') }),
-		}),
+		currency: z.enum(campaignSubmissionConfig.allowedCurrencies, { error: message('currency-unsupported') }),
 		durationPreset: z.enum(campaignSubmissionDurationPresets),
 		endDate: z.string(),
 		isPublic: z.boolean(),

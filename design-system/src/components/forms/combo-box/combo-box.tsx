@@ -17,12 +17,18 @@ export const Combobox = ({
 	value,
 	onChange,
 	placeholder = 'Select...',
+	searchPlaceholder = 'Search...',
+	emptyLabel = 'No results found.',
+	ariaLabel,
 	disabled = false,
 }: {
 	options?: ComboboxOption[];
 	value: string | undefined;
 	onChange: (value: string) => void;
 	placeholder?: string;
+	searchPlaceholder?: string;
+	emptyLabel?: string;
+	ariaLabel?: string;
 	disabled?: boolean;
 }) => {
 	const [open, setOpen] = useState(false);
@@ -35,6 +41,7 @@ export const Combobox = ({
 					type="button"
 					role="combobox"
 					aria-expanded={open}
+					aria-label={ariaLabel}
 					className={selectTriggerVariants()}
 					data-placeholder={selected ? undefined : ''}
 					disabled={disabled}
@@ -46,9 +53,9 @@ export const Combobox = ({
 
 			<PopoverContent variant="picker" align="start">
 				<Command>
-					<CommandInput placeholder="Search..." />
+					<CommandInput placeholder={searchPlaceholder} />
 					<CommandList>
-						<CommandEmpty>No results found.</CommandEmpty>
+						<CommandEmpty>{emptyLabel}</CommandEmpty>
 
 						<CommandGroup>
 							{options.map((opt) => (

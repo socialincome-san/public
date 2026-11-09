@@ -258,6 +258,25 @@ describe('payout forecasts', () => {
 		expect(data.tableRows[0]?.amountUsd).toBeCloseTo(33.33, 1);
 	});
 
+	test('converts public forecast amounts into the selected display currency', async () => {
+		mockGetLatestRates.mockResolvedValue({ success: true, data: { SLE: 24, USD: 1, EUR: 0.9 } });
+		mockGetProgramPayoutForecastSource.mockResolvedValue({
+			success: true,
+			data: {
+				...baseProgram,
+				recipients: [{ startDate: new Date('2025-01-01T00:00:00.000Z'), suspendedAt: null, payouts: [] }],
+			},
+		});
+
+		const data = expectSuccess(
+			await getPublicPayoutForecastTableView('program-1', PAYOUT_FORECAST_MONTHS_AHEAD, Currency.EUR),
+		);
+
+		expect(data.tableRows[0]?.amountInProgramCurrency).toBe(800);
+		expect(data.tableRows[0]?.amountUsd).toBeCloseTo(33.33, 1);
+		expect(data.tableRows[0]?.amountInDisplayCurrency).toBe(30);
+	});
+
 	test('denies the private forecast without program access', async () => {
 		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: [] });
 

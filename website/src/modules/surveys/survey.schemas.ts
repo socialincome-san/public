@@ -31,10 +31,17 @@ const surveyDateSchema = z.preprocess(
 );
 
 const surveyJsonValueSchema: z.ZodType<SurveyJsonValue> = z.lazy(() =>
-	z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(surveyJsonValueSchema), z.record(surveyJsonValueSchema)]),
+	z.union([
+		z.string(),
+		z.number(),
+		z.boolean(),
+		z.null(),
+		z.array(surveyJsonValueSchema),
+		z.record(z.string(), surveyJsonValueSchema),
+	]),
 );
 
-const surveyJsonObjectSchema = z.record(surveyJsonValueSchema);
+const surveyJsonObjectSchema = z.record(z.string(), surveyJsonValueSchema);
 
 export const surveyCreateSchema = z.object({
 	name: requiredTrimmedString,

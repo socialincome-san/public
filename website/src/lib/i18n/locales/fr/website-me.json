@@ -45,7 +45,11 @@
 			"city": "Localité",
 			"zip": "Code postal",
 			"name": "Nom",
-			"focuses": "Axes"
+			"focuses": "Axes",
+			"validation": {
+				"required": "Ce champ est obligatoire.",
+				"invalid-email": "Veuillez saisir une adresse e-mail valide."
+			}
 		}
 	},
 	"sections": {
@@ -185,7 +189,6 @@
 		"generate-certificate": "Générer une attestation de don",
 		"no-certificates-yet": "Tu n’as pas reçu d’attestation de don? Crée-en une en cliquant sur \"Générer une attestation de don\". <br></br> Pour toute question, prends <contact> contact avec nous</contact>.",
 		"no-contributions": "Aucune contribution trouvée, donc pas de certificat. Si tu penses que c’est une erreur, écris à contributors@socialincome.org.",
-		"already-exists": "Le certificat pour l'année et la langue sélectionnées existe déjà. Si tu penses que c’est une erreur, écris à contributors@socialincome.org.",
 		"technical-error": "Une erreur technique est survenue, veuillez réessayer. Si cela persiste, veuillez contacter contributors@socialincome.org.",
 		"generate-dialog": {
 			"dialog_title": "Générer une attestation de don",

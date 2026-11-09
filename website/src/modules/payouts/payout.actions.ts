@@ -1,6 +1,7 @@
 'use server';
 
 import { PayoutStatus } from '@/generated/prisma/enums';
+import { isWebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import type {
@@ -164,13 +165,19 @@ export const contestPayoutAction = async (payoutId: unknown): Promise<Result<str
 	return result;
 };
 
-export const getPublicPayoutForecastTableAction = async (programId: unknown): Promise<Result<PayoutForecastTableView>> => {
+export const getPublicPayoutForecastTableAction = async (
+	programId: unknown,
+	displayCurrency: unknown,
+): Promise<Result<PayoutForecastTableView>> => {
 	const programIdResult = payoutProgramIdSchema.safeParse(programId);
 	if (!programIdResult.success) {
 		return resultFail('Invalid program id');
 	}
+	if (typeof displayCurrency !== 'string' || !isWebsiteCurrency(displayCurrency)) {
+		return resultFail('Invalid display currency');
+	}
 
-	return getPublicPayoutForecastTableView(programIdResult.data, PAYOUT_FORECAST_MONTHS_AHEAD);
+	return getPublicPayoutForecastTableView(programIdResult.data, PAYOUT_FORECAST_MONTHS_AHEAD, displayCurrency);
 };
 
 export const getPublicCountryPayoutTotalsAction = async (isoCode: unknown): Promise<Result<CountryPayoutTotals>> => {

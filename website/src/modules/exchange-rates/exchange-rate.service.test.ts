@@ -113,6 +113,53 @@ describe('exchange rate service', () => {
 		expect(mockFetchFiatExchangeRates).not.toHaveBeenCalled();
 	});
 
+	test('shares one deadline across missing days and stops when the budget is exhausted', async () => {
+		jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		mockFindExchangeRatesSince.mockResolvedValue([]);
+		const deadline = Date.now() + 45_000;
+		mockFetchFiatExchangeRates
+			.mockImplementationOnce((day: string) => {
+				jest.setSystemTime(deadline - 25_000);
+
+				return Promise.resolve({ success: true, data: { base: 'CHF', date: day, rates: { CHF: 1 } } });
+			})
+			.mockImplementationOnce((day: string) => {
+				jest.setSystemTime(deadline);
+
+				return Promise.resolve({ success: true, data: { base: 'CHF', date: day, rates: { CHF: 1 } } });
+			});
+
+		await expect(importExchangeRates()).resolves.toEqual({
+			success: false,
+			error: 'Exchange rate import time budget exceeded',
+			status: undefined,
+		});
+		expect(mockFetchFiatExchangeRates).toHaveBeenCalledTimes(2);
+		expect(mockFetchFiatExchangeRates).toHaveBeenNthCalledWith(1, expect.any(String), deadline);
+		expect(mockFetchFiatExchangeRates).toHaveBeenNthCalledWith(2, expect.any(String), deadline);
+		expect(mockCreateExchangeRates).toHaveBeenCalledTimes(2);
+		expect(mockFetchEthUsdPrice).not.toHaveBeenCalled();
+	});
+
+	test('reports budget exhaustion during the ETH import', async () => {
+		jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		mockFindExchangeRatesSince.mockResolvedValue(createDailyRates());
+		mockFindDailyUsdAndEthRates.mockResolvedValue([{ currency: Currency.USD, rate: { toNumber: () => 1.12 } }]);
+		const deadline = Date.now() + 45_000;
+		mockFetchEthUsdPrice.mockImplementationOnce(() => {
+			jest.setSystemTime(deadline);
+
+			return Promise.resolve({ success: false, error: 'Could not fetch ETH price' });
+		});
+
+		await expect(importExchangeRates()).resolves.toEqual({
+			success: false,
+			error: 'Exchange rate import time budget exceeded',
+			status: undefined,
+		});
+		expect(mockFetchEthUsdPrice).toHaveBeenCalledWith(deadline);
+	});
+
 	test('keeps the fiat import successful when the ETH provider fails', async () => {
 		jest.spyOn(console, 'error').mockImplementation(() => undefined);
 		mockFindExchangeRatesSince.mockResolvedValue(createDailyRates());

@@ -47,6 +47,13 @@ export const Default: Story = {
 						newTab: true,
 						icon: 'github',
 					},
+					{
+						id: 'stripe',
+						label: 'Stripe',
+						href: 'https://profile.stripe.com/@socialincome',
+						newTab: true,
+						icon: 'stripe',
+					},
 				],
 			},
 			{

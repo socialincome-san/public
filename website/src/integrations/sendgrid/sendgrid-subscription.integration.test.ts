@@ -63,4 +63,93 @@ describe('sendgrid subscription integration', () => {
 		).resolves.toEqual(resultOk(undefined));
 		expect(mockRequest).toHaveBeenCalledTimes(3);
 	});
+
+	test('adds a campaign ID to an existing contact without overwriting previous campaigns', async () => {
+		mockRequest
+			.mockResolvedValueOnce([
+				{},
+				{
+					result: {
+						'ada@example.com': {
+							contact: { email: 'ada@example.com', custom_fields: { campaign_news: 'campaign-old' } },
+						},
+					},
+				},
+			])
+			.mockResolvedValueOnce([{}, { suppressions: [] }])
+			.mockResolvedValueOnce([{}, {}])
+			.mockResolvedValueOnce([{}, {}]);
+
+		await expect(
+			upsertSendgridNewsletterSubscription({
+				email: 'ada@example.com',
+				language: 'en',
+				status: 'subscribed',
+				campaignId: 'campaign-new',
+			}),
+		).resolves.toEqual(resultOk(undefined));
+
+		expect(mockRequest).toHaveBeenNthCalledWith(3, {
+			method: 'PUT',
+			url: '/v3/marketing/contacts',
+			body: {
+				contacts: [{ email: 'ada@example.com', custom_fields: { campaign_news: 'campaign-old,campaign-new' } }],
+			},
+		});
+	});
+
+	test('does not append a campaign ID that is already present', async () => {
+		mockRequest
+			.mockResolvedValueOnce([
+				{},
+				{
+					result: {
+						'ada@example.com': {
+							contact: { email: 'ada@example.com', custom_fields: { campaign_news: 'campaign-123' } },
+						},
+					},
+				},
+			])
+			.mockResolvedValueOnce([{}, { suppressions: [] }])
+			.mockResolvedValueOnce([{}, {}]);
+
+		await expect(
+			upsertSendgridNewsletterSubscription({
+				email: 'ada@example.com',
+				language: 'en',
+				status: 'subscribed',
+				campaignId: 'campaign-123',
+			}),
+		).resolves.toEqual(resultOk(undefined));
+
+		expect(mockRequest).toHaveBeenCalledTimes(3);
+	});
+
+	test('includes the campaign ID when creating a new contact', async () => {
+		mockRequest.mockRejectedValueOnce({ code: 404 }).mockResolvedValueOnce([{}, {}]).mockResolvedValueOnce([{}, {}]);
+
+		await upsertSendgridNewsletterSubscription({
+			email: 'ada@example.com',
+			language: 'en',
+			status: 'subscribed',
+			campaignId: 'campaign-123',
+		});
+
+		expect(mockRequest).toHaveBeenNthCalledWith(2, {
+			method: 'PUT',
+			url: '/v3/marketing/contacts',
+			body: {
+				list_ids: ['list-1'],
+				contacts: [
+					{
+						email: 'ada@example.com',
+						first_name: undefined,
+						last_name: undefined,
+						country: undefined,
+						custom_fields: { language: 'en', contributor: 'no', campaign_news: 'campaign-123' },
+					},
+				],
+			},
+		});
+	});
 });

@@ -19,7 +19,7 @@ export const OriginalLanguageLink = ({ originalLanguage, slug, lang, currency, t
 
 	return (
 		<p className="text-muted-foreground text-sm">
-			{text}
+			{text}{' '}
 			<Link
 				className={cn('text-primary font-medium underline-offset-4 hover:underline')}
 				href={createWebsiteJournalArticleLink(slug, originalLanguage, currency)}

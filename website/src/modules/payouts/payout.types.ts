@@ -155,6 +155,7 @@ export type PayoutForecastTableViewRow = {
 	numberOfRecipients: number;
 	amountInProgramCurrency: number;
 	amountUsd: number;
+	amountInDisplayCurrency?: number;
 	programCurrency: Currency;
 };
 

@@ -11,6 +11,8 @@ export type StripeEmbeddedCheckoutSessionInput = {
 	currency?: string;
 	returnPath?: string;
 	stripeCustomerId: string | null;
+	// The donation bar pays with Stripe's Express Checkout Element instead of the embedded form
+	uiMode?: 'embedded_page' | 'elements';
 };
 
 export type DonationWizardAmountContext = {
@@ -57,6 +59,8 @@ export type PaidCheckoutDonation = {
 	amount: number;
 	currency: string;
 	recurring: boolean;
+	/** `undefined` when the account could not be looked up. */
+	donorStatus: 'new' | 'returning' | undefined;
 };
 
 export type UpdateContributorAfterCheckoutInput = {

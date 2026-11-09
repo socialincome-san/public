@@ -31,10 +31,11 @@ type FindManyQuery = {
 };
 
 const mockFindMany = jest.fn<Promise<ContributionRow[]>, [FindManyQuery]>();
+const mockCount = jest.fn<Promise<number>, [unknown]>();
 
 jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
-		contribution: { findMany: mockFindMany },
+		contribution: { findMany: mockFindMany, count: mockCount },
 	},
 }));
 
@@ -109,10 +110,15 @@ let getPaginatedTableView: (
 	userId: string,
 	query: ContributionTableQuery,
 ) => Promise<Result<ContributionPaginatedTableView>>;
+let hasSucceededContributionsBefore: (contributorId: string, before: Date) => Promise<Result<boolean>>;
 
 beforeAll(async () => {
-	({ getRecentSuccessfulContributions, getSucceededContributionSourceTotals, getPaginatedTableView } =
-		await import('./contribution.service'));
+	({
+		getRecentSuccessfulContributions,
+		getSucceededContributionSourceTotals,
+		getPaginatedTableView,
+		hasSucceededContributionsBefore,
+	} = await import('./contribution.service'));
 });
 
 describe('getSucceededContributionSourceTotals', () => {
@@ -131,6 +137,25 @@ describe('getSucceededContributionSourceTotals', () => {
 			data: { individual: 125.5, foundation_grant: 0, corporate_partner: 0 },
 		});
 		expect(mockGroupSucceededContributionTotalsBySource).toHaveBeenCalledWith(undefined);
+	});
+});
+
+describe('hasSucceededContributionsBefore', () => {
+	const before = new Date('2026-10-20T08:00:00.000Z');
+
+	it('counts only succeeded contributions of the contributor created before the given time', async () => {
+		mockCount.mockResolvedValueOnce(2);
+
+		expect(expectSuccess(await hasSucceededContributionsBefore('contributor-1', before))).toBe(true);
+		expect(mockCount).toHaveBeenLastCalledWith({
+			where: { contributorId: 'contributor-1', status: 'succeeded', createdAt: { lt: before } },
+		});
+	});
+
+	it('is false without earlier contributions', async () => {
+		mockCount.mockResolvedValueOnce(0);
+
+		expect(expectSuccess(await hasSucceededContributionsBefore('contributor-1', before))).toBe(false);
 	});
 });
 
