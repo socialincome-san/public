@@ -503,7 +503,9 @@ class AccountPageState extends State<AccountPage> {
                 ButtonBig(
                   onPressed: () => showDialog(
                     context: context,
-                    builder: (context) => const SocialIncomeContactDialog(),
+                    builder: (context) => SocialIncomeContactDialog(
+                      localPartner: widget.recipient.localPartner,
+                    ),
                   ),
                   label: context.l10n.getInTouch,
                 ),

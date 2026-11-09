@@ -84,6 +84,7 @@ export const CampaignVideoSlider = ({ translations, videoPlaybackIds }: Props) =
 												key={playbackId}
 												className="size-full object-cover"
 												playbackId={playbackId}
+												disableCookies
 												poster={getMuxPosterUrl(playbackId)}
 												title={translations.videoTitles[index]}
 												controls

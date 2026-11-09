@@ -21,11 +21,11 @@ import {
 	SelectValue,
 } from '@socialincome/design-system/forms/select/select';
 import { Switch } from '@socialincome/design-system/forms/switch/switch';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { buildDefaultValues } from './defaults';
-import { ProfileFormInput, ProfileFormOutput, profileFormSchema } from './schemas';
+import { createProfileFormSchema, ProfileFormInput, ProfileFormOutput } from './schemas';
 import { submitProfileForm } from './submit';
 import { ProfileFormTranslations } from './translated-form';
 
@@ -38,6 +38,14 @@ type Props = {
 export const ProfileForm = ({ session, translations, isNewsletterSubscribed = false }: Props) => {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [focusOptions, setFocusOptions] = useState<MultiSelectOption[]>([]);
+	const profileFormSchema = useMemo(
+		() =>
+			createProfileFormSchema({
+				required: translations.required,
+				invalidEmail: translations.invalidEmail,
+			}),
+		[translations.invalidEmail, translations.required],
+	);
 
 	const form = useForm<ProfileFormInput, unknown, ProfileFormOutput>({
 		resolver: zodResolver(profileFormSchema),

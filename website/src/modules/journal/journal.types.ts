@@ -55,10 +55,18 @@ export type JournalOverviewPageData = {
 	roleLabels: Record<string, string>;
 };
 
+export type JournalArticleAuthor = {
+	person: ISbStoryData<Person>;
+	articleCount: number;
+};
+
 export type JournalArticlePageData = {
 	story: ISbStoryData<JournalArticle>;
+	authors: JournalArticleAuthor[];
 	relatedArticles: ISbStoryData<JournalArticle>[];
 	breadcrumbs: JournalBreadcrumbLink[];
+	roleLabels: Record<string, string>;
+	circleLabels: Record<string, string>;
 };
 
 export type JournalPersonPageData = {
@@ -70,6 +78,7 @@ export type JournalPersonPageData = {
 	roleLabels: Record<string, string>;
 	circleLabels: Record<string, string>;
 	timeCommitmentLabels: Record<string, string>;
+	workStyleLabels: Record<string, string>;
 	contributions: PersonContribution[];
 	otherPersons: ISbStoryData<Person>[];
 };

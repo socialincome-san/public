@@ -315,6 +315,16 @@ export const getSucceededForContributorAndYear = async (
 	}
 };
 
+export const hasSucceededContributionsBefore = async (contributorId: string, before: Date): Promise<Result<boolean>> => {
+	try {
+		return resultOk((await contributionRepository.countSucceededContributionsBefore(contributorId, before)) > 0);
+	} catch (error) {
+		console.error(error);
+
+		return resultFail('Could not count earlier contributions');
+	}
+};
+
 export const getContributorContributionSummary = async (
 	contributorId: string,
 ): Promise<Result<ContributorContributionSummary>> => {

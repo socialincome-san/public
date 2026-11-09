@@ -2,6 +2,7 @@
 
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramPayoutForecastTable } from '@/components/storyblok/program/program-payout-forecast-table';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getPublicPayoutForecastTableAction } from '@/modules/payouts/payout.actions';
 import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
@@ -17,6 +18,8 @@ type Props = {
 	payoutForecastInfoTooltip: string;
 	financesCard: ReactNode;
 	programId: string;
+	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
 };
 
 export const ProgramFinancesDialog = ({
@@ -27,16 +30,22 @@ export const ProgramFinancesDialog = ({
 	payoutForecastInfoTooltip,
 	financesCard,
 	programId,
+	lang,
+	currency,
 }: Props) => {
 	const t = useTranslations('website-common');
 	const [isOpen, setIsOpen] = useState(false);
-	const [rows, setRows] = useState<PayoutForecastTableViewRow[] | null>(null);
+	const [forecast, setForecast] = useState<{
+		programId: string;
+		currency: WebsiteCurrency;
+		rows: PayoutForecastTableViewRow[];
+	} | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasError, setHasError] = useState(false);
 	const [retryKey, setRetryKey] = useState(0);
 
 	useEffect(() => {
-		if (!isOpen || rows !== null) {
+		if (!isOpen || (forecast?.programId === programId && forecast.currency === currency)) {
 			return;
 		}
 
@@ -46,7 +55,7 @@ export const ProgramFinancesDialog = ({
 			setIsLoading(true);
 			setHasError(false);
 
-			const result = await getPublicPayoutForecastTableAction(programId);
+			const result = await getPublicPayoutForecastTableAction(programId, currency);
 
 			if (isCancelled) {
 				setIsLoading(false);
@@ -62,7 +71,7 @@ export const ProgramFinancesDialog = ({
 				return;
 			}
 
-			setRows(result.data.tableRows);
+			setForecast({ programId, currency, rows: result.data.tableRows });
 		};
 
 		void loadForecast();
@@ -70,7 +79,7 @@ export const ProgramFinancesDialog = ({
 		return () => {
 			isCancelled = true;
 		};
-	}, [isOpen, programId, rows, retryKey]);
+	}, [currency, forecast?.currency, forecast?.programId, isOpen, programId, retryKey]);
 
 	return (
 		<ProgramDetailDialog
@@ -105,8 +114,13 @@ export const ProgramFinancesDialog = ({
 						</Button>
 					</div>
 				</div>
-			) : rows ? (
-				<ProgramPayoutForecastTable rows={rows} titleInfoTooltip={payoutForecastInfoTooltip} />
+			) : forecast?.programId === programId && forecast.currency === currency ? (
+				<ProgramPayoutForecastTable
+					rows={forecast.rows}
+					titleInfoTooltip={payoutForecastInfoTooltip}
+					lang={lang}
+					displayCurrency={currency}
+				/>
 			) : null}
 		</ProgramDetailDialog>
 	);

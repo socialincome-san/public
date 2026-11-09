@@ -810,10 +810,17 @@ const buildRecipientTableWhere = (
 		return baseWhere;
 	}
 
+	const phoneSearch = /^[+\d\s().-]+$/.test(search) ? search.replace(/\D/g, '') : '';
 	const nameFilters: Prisma.RecipientWhereInput[] = canSearchRecipientNames
 		? [
 				{ contact: { is: { firstName: { contains: search, mode: 'insensitive' } } } },
 				{ contact: { is: { lastName: { contains: search, mode: 'insensitive' } } } },
+			]
+		: [];
+	const phoneFilters: Prisma.RecipientWhereInput[] = phoneSearch
+		? [
+				{ contact: { is: { phone: { is: { number: { contains: phoneSearch } } } } } },
+				{ paymentInformation: { is: { phone: { is: { number: { contains: phoneSearch } } } } } },
 			]
 		: [];
 
@@ -827,6 +834,7 @@ const buildRecipientTableWhere = (
 					{ paymentInformation: { is: { code: { contains: search, mode: 'insensitive' } } } },
 					{ localPartner: { is: { name: { contains: search, mode: 'insensitive' } } } },
 					{ program: { is: { name: { contains: search, mode: 'insensitive' } } } },
+					...phoneFilters,
 				],
 			},
 		],

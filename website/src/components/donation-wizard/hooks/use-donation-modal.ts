@@ -1,11 +1,17 @@
 'use client';
 
 import { createContext, useContext } from 'react';
+import type { ResumableDonation } from '../resume-bar/resumable-donation';
 import type { DonationAmountContext } from '../utils/donation-amount';
 
 type DonationModalContextValue = {
+	isOpen: boolean;
 	openWizardAtAmountStep: () => void;
 	openWizardWithFormAmount: (context: DonationAmountContext) => void;
+	// Reopens a donation from the donation bar on the step it was left
+	resumeDonation: (donation: ResumableDonation) => void;
+	// Continues with the post-payment onboarding after a payment outside the wizard
+	openWizardAfterPayment: (context: DonationAmountContext, sessionId: string) => void;
 };
 
 export const DonationModalContext = createContext<DonationModalContextValue | null>(null);

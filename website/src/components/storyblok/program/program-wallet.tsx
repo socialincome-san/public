@@ -4,6 +4,7 @@ import { getWebsiteBasePath, type WebsiteCurrency, type WebsiteLanguage } from '
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
 import type { PublicProgramStats } from '@/modules/programs/program.types';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { Wallet } from '@socialincome/design-system/data-display/wallet/wallet';
 import { getTranslations } from 'next-intl/server';
 import type { ProgramStory } from './program.types';
@@ -41,6 +42,7 @@ export const ProgramWallet = async ({ program, stats, walletDisplay, lang, curre
 			href={`${getWebsiteBasePath(lang, currency)}/programs/${storyblokSlug}`}
 			title={programTitle}
 			subtitle={stats ? getCountryNameByCode(stats.countryIsoCode) : undefined}
+			badge={stats?.isConcluded ? <Badge variant="frosted">{t('wallet.concluded')}</Badge> : undefined}
 			footerLeft={
 				stats && walletDisplay
 					? {

@@ -39,8 +39,8 @@ export const LongLabels: Story = {
 	args: {
 		links: [
 			{ href: '/', label: 'Home' },
-			{ href: '/programs', label: 'Programs with long descriptive names' },
-			{ href: '/programs/ghana', label: 'Detailed recipient payment overview' },
+			{ href: '/recipients', label: 'Recipient Selection Process' },
+			{ href: '/recipients/universal-basic-income', label: 'Universal Basic Income' },
 		],
 	},
 };

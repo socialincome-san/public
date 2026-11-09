@@ -17,6 +17,17 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+export const LongMobileTitle: Story = {
+	args: { children: 'Wirkungsmessung', as: 'h1', size: 1, align: 'left', bold: true },
+	decorators: [
+		(Story) => (
+			<div className="w-64" lang="de">
+				<Story />
+			</div>
+		),
+	],
+};
+
 export const Sizes: Story = {
 	render: () => (
 		<div className="flex flex-col gap-6">

@@ -1,4 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
+import type { CountryCode } from '@/generated/prisma/enums';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 
@@ -7,10 +8,14 @@ import { auditedWrite, defineAuditedEntity } from '@/lib/audit/audited-write';
 // users, so they are written through those modules. Reads live in
 // organization.repository.read.ts.
 
-export const createOrganization = async (audit: AuditContext, name: string) =>
+export const createOrganization = async (
+	audit: AuditContext,
+	name: string,
+	operatorFallbackCountryCode: CountryCode | null,
+) =>
 	auditedWrite({ entity: organizationEntity, context: audit, action: 'create' }, (transaction) =>
 		transaction.organization.create({
-			data: { name },
+			data: { name, operatorFallbackCountryCode },
 			select: { id: true, name: true },
 		}),
 	);
@@ -24,6 +29,20 @@ export const updateOrganizationName = async (audit: AuditContext, organizationId
 		}),
 	);
 
+export const updateOrganization = async (
+	audit: AuditContext,
+	organizationId: string,
+	name: string,
+	operatorFallbackCountryCode: CountryCode | null,
+) =>
+	auditedWrite({ entity: organizationEntity, context: audit, action: 'update', entityId: organizationId }, (transaction) =>
+		transaction.organization.update({
+			where: { id: organizationId },
+			data: { name, operatorFallbackCountryCode },
+			select: { id: true, name: true },
+		}),
+	);
+
 export const deleteOrganization = async (audit: AuditContext, organizationId: string) =>
 	auditedWrite({ entity: organizationEntity, context: audit, action: 'delete', entityId: organizationId }, (transaction) =>
 		transaction.organization.delete({ where: { id: organizationId } }),
@@ -31,7 +50,7 @@ export const deleteOrganization = async (audit: AuditContext, organizationId: st
 
 const organizationAuditSnapshotSelect = {
 	name: true,
-	isOperatorFallback: true,
+	operatorFallbackCountryCode: true,
 } satisfies Prisma.OrganizationSelect;
 
 const organizationEntity = defineAuditedEntity({

@@ -36,6 +36,7 @@ type ProgramSettingsFormSchema = {
 		slug: FormField;
 		country: FormField;
 		coveredByReserves: FormField;
+		isConcluded: FormField;
 		programDurationInMonths: FormField;
 		payoutPerInterval: FormField;
 		payoutInterval: FormField;
@@ -74,6 +75,10 @@ const initialFormSchema: ProgramSettingsFormSchema = {
 		},
 		coveredByReserves: {
 			label: 'Covered by reserves',
+			zodSchema: z.boolean().optional(),
+		},
+		isConcluded: {
+			label: 'Concluded',
 			zodSchema: z.boolean().optional(),
 		},
 		programDurationInMonths: {
@@ -152,6 +157,7 @@ const fillFormSchema = (
 			slug: { ...formSchema.fields.slug },
 			country: { ...formSchema.fields.country },
 			coveredByReserves: { ...formSchema.fields.coveredByReserves },
+			isConcluded: { ...formSchema.fields.isConcluded },
 			programDurationInMonths: { ...formSchema.fields.programDurationInMonths },
 			payoutPerInterval: { ...formSchema.fields.payoutPerInterval },
 			payoutInterval: { ...formSchema.fields.payoutInterval },
@@ -170,6 +176,7 @@ const fillFormSchema = (
 	nextSchema.fields.slug.value = settings.slug;
 	nextSchema.fields.country.value = settings.countryId;
 	nextSchema.fields.coveredByReserves.value = settings.coveredByReserves;
+	nextSchema.fields.isConcluded.value = settings.isConcluded;
 	nextSchema.fields.country.options = countryOptions;
 	nextSchema.fields.country.zodSchema =
 		countryOptions.length > 0 ? z.nativeEnum(countryEnum) : z.string().trim().min(1, 'Country is required.');
@@ -188,6 +195,7 @@ const fillFormSchema = (
 	nextSchema.fields.slug.disabled = readOnlyFields;
 	nextSchema.fields.country.disabled = readOnlyFields;
 	nextSchema.fields.coveredByReserves.disabled = readOnlyFields;
+	nextSchema.fields.isConcluded.disabled = readOnlyFields;
 	nextSchema.fields.programDurationInMonths.disabled = readOnlyFields;
 	nextSchema.fields.payoutPerInterval.disabled = readOnlyFields;
 	nextSchema.fields.payoutInterval.disabled = readOnlyFields;

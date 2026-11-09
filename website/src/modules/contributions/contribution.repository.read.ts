@@ -155,6 +155,11 @@ export const findSucceededContributionsForContributorAndYear = async (contributo
 		},
 	});
 
+export const countSucceededContributionsBefore = async (contributorId: string, before: Date) =>
+	prisma.contribution.count({
+		where: { contributorId, status: ContributionStatus.succeeded, createdAt: { lt: before } },
+	});
+
 export const findContributorContributionSummary = async (contributorId: string) => {
 	const [aggregate, firstContribution] = await Promise.all([
 		prisma.contribution.aggregate({

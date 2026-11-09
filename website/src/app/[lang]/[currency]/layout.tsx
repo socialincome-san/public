@@ -2,6 +2,8 @@ import { DefaultLayoutProps } from '@/app/[lang]/[currency]';
 import { RootDocument, rootViewport } from '@/app/root-document';
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { CommunityBackstageProvider } from '@/components/community/community-backstage';
+import { VisitorCountryProvider } from '@/lib/geo/visitor-country';
+import { getVisitorCountry } from '@/lib/geo/visitor-geo';
 import {
 	defaultLanguage,
 	isWebsiteLanguage,
@@ -15,6 +17,7 @@ import {
 import { WebsiteCurrencyProvider } from '@/lib/i18n/website-currency';
 import { getMetadata } from '@/lib/utils/metadata';
 import { getCurrentSessions } from '@/modules/auth/session.service';
+import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import type { PropsWithChildren } from 'react';
@@ -53,16 +56,22 @@ const WebsiteShell = ({
 	currency,
 	children,
 }: PropsWithChildren<{ lang: WebsiteLanguage; currency: WebsiteCurrency }>) => {
-	// Not awaited: only the navbar's session slots suspend on it, so the rest of the shell needs no request data.
+	// Not awaited: only the navbar's session slots and the ZEWO badges wait for these, so the rest of the shell needs no
+	// request data.
 	const sessions = getCurrentSessions().then((result) => (result.success ? result.data : []));
+	const visitorCountry = Promise.all([headers(), cookies()]).then(([requestHeaders, requestCookies]) =>
+		getVisitorCountry({ headers: requestHeaders, cookies: requestCookies }),
+	);
 
 	return (
 		<WebsiteCurrencyProvider currency={currency}>
-			<CommunityBackstageProvider>
-				<WebsiteAppShell sessions={sessions} lang={lang} currency={currency} scope="website">
-					{children}
-				</WebsiteAppShell>
-			</CommunityBackstageProvider>
+			<VisitorCountryProvider country={visitorCountry}>
+				<CommunityBackstageProvider>
+					<WebsiteAppShell sessions={sessions} lang={lang} currency={currency} scope="website">
+						{children}
+					</WebsiteAppShell>
+				</CommunityBackstageProvider>
+			</VisitorCountryProvider>
 		</WebsiteCurrencyProvider>
 	);
 };

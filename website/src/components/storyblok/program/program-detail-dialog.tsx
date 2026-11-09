@@ -39,12 +39,12 @@ export const ProgramDetailDialog = ({
 			<LinkPill label={triggerLabel} isOpen={isOpen} onClick={() => handleOpenChange(true)} />
 
 			<Dialog open={isOpen} onOpenChange={handleOpenChange}>
-				<DialogContent size="full" closeLabel={closeAriaLabel}>
+				<DialogContent size="lg" closeLabel={closeAriaLabel}>
 					<DialogHeader>
 						<div className="flex items-start justify-between gap-4">
 							<DialogTitle size="lg">{title}</DialogTitle>
 							{headerActions ? (
-								<div className="flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">{headerActions}</div>
+								<div className="mr-4 flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">{headerActions}</div>
 							) : null}
 						</div>
 					</DialogHeader>

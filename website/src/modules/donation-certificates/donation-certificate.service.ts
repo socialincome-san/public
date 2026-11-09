@@ -17,6 +17,7 @@ import type { ContributorDonationCertificate } from '@/modules/contributors/cont
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { createTranslator } from 'next-intl';
+import { randomUUID } from 'node:crypto';
 import { createWriteStream } from 'node:fs';
 import * as path from 'node:path';
 import PDFDocument from 'pdfkit';
@@ -166,16 +167,6 @@ export const createDonationCertificateForContributor = async (
 			LANGUAGE_CODES.find((candidate) => candidate === language) ??
 			LANGUAGE_CODES.find((candidate) => candidate === contributor.language) ??
 			DEFAULT_DONATION_CERTIFICATE_LANGUAGE;
-		const existingCertificate = await donationCertificateRepository.findDonationCertificateByYearAndLanguage(
-			year,
-			contributorId,
-			certificateLanguage,
-		);
-		if (existingCertificate) {
-			console.info('Donation certificate already exists', { contributorId, year, language: certificateLanguage });
-
-			return resultFail(DONATION_CERTIFICATE_ALREADY_EXISTS);
-		}
 
 		const contributionsResult = await getSucceededForContributorAndYear(contributorId, year);
 		if (!contributionsResult.success) {
@@ -189,7 +180,7 @@ export const createDonationCertificateForContributor = async (
 			return resultFail(DONATION_CERTIFICATE_NO_CONTRIBUTIONS);
 		}
 
-		const destinationFilePath = `users/${contributor.authId}/donation-certificates/${year}_${certificateLanguage}.pdf`;
+		const destinationFilePath = `users/${contributor.authId}/donation-certificates/${year}_${certificateLanguage}_${randomUUID()}.pdf`;
 		const fileResult = await withFile(async ({ path: temporaryFilePath }) => {
 			const writeResult = await writeDonationCertificatePdf(
 				temporaryFilePath,
@@ -233,7 +224,6 @@ const createDonationCertificates = async (
 	try {
 		let successCount = 0;
 		const creationWithFailures: string[] = [];
-		const skippedExists: string[] = [];
 		const skippedNoContributions: string[] = [];
 
 		await Promise.all(
@@ -245,9 +235,7 @@ const createDonationCertificates = async (
 					return;
 				}
 
-				if (result.error === DONATION_CERTIFICATE_ALREADY_EXISTS) {
-					skippedExists.push(contributorId);
-				} else if (result.error === DONATION_CERTIFICATE_NO_CONTRIBUTIONS) {
+				if (result.error === DONATION_CERTIFICATE_NO_CONTRIBUTIONS) {
 					skippedNoContributions.push(contributorId);
 				} else {
 					creationWithFailures.push(contributorId);
@@ -258,7 +246,6 @@ const createDonationCertificates = async (
 		if (successCount === 0) {
 			console.error('No donation certificates were created', {
 				year,
-				skippedExistingContributorIds: skippedExists,
 				skippedWithoutContributionsContributorIds: skippedNoContributions,
 				failedContributorIds: creationWithFailures,
 			});
@@ -267,7 +254,6 @@ const createDonationCertificates = async (
 		}
 
 		const success = `Successfully created ${successCount} donation certificates for ${year}.
-					Skipped, because certificate already exists (${skippedExists.length}): ${skippedExists.join(', ')}
 					Skipped, because no contributions available for contribot (${skippedNoContributions.length}): ${skippedNoContributions.join(', ')}
 					Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`;
 		console.info(success);
@@ -417,5 +403,4 @@ const groupContributionsByCurrency = (contributions: ContributionDonationEntry[]
 const ASSET_DIR = path.join(process.cwd(), 'public', 'assets');
 const DONATION_CERTIFICATE_TECHNICAL_ERROR: DonationCertificateError = 'technicalError';
 const DONATION_CERTIFICATE_BUCKET_MISSING: DonationCertificateError = 'bucketMissing';
-const DONATION_CERTIFICATE_ALREADY_EXISTS: DonationCertificateError = 'alreadyExists';
 const DONATION_CERTIFICATE_NO_CONTRIBUTIONS: DonationCertificateError = 'noContributions';

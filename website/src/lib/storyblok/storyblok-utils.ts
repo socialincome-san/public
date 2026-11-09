@@ -2,7 +2,7 @@ import type { ArticleType, Person } from '@/generated/storyblok/types/109655/sto
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultCurrency, defaultLanguage, getWebsiteBasePath, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataImage, WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
-import { humanizeIdentifier } from '@/lib/utils/string-utils';
+import { humanizeIdentifier, slugify } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import type { Metadata } from 'next';
@@ -11,6 +11,7 @@ import { normalizeStoryblokFocusForImageService } from './storyblok-image-focus'
 import {
 	getWebsitePathTailFromStoryblokSlug,
 	getWebsitePublicPath,
+	WEBSITE_CIRCLE_PATH_SEGMENT,
 	WEBSITE_PEOPLE_PATH_SEGMENT,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from './storyblok-paths';
@@ -37,14 +38,7 @@ export const isResolvedArticle = (story: unknown): story is ISbStoryData<Resolve
 	return tags === undefined || tags === null || (Array.isArray(tags) && tags.every(isResolvedRelation));
 };
 
-export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>, includeSubtitle = false) => {
-	if (!includeSubtitle) {
-		return article.content.title;
-	}
-	const subtitle = article.content.subtitle?.trim();
-
-	return subtitle ? `${article.content.title} ${subtitle}` : article.content.title;
-};
+export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>) => article.content.title;
 
 export const getArticleTypeLabel = (articleType: ISbStoryData<ArticleType>) => {
 	const value = articleType.content?.value?.trim();
@@ -57,6 +51,25 @@ export const getArticleTypeLabel = (articleType: ISbStoryData<ArticleType>) => {
 
 export const getPersonDisplayName = (person: ISbStoryData<Person>) =>
 	`${person.content.firstName} ${person.content.lastName}`.trim() || person.content.fullName;
+
+const getPersonFirstName = (person: ISbStoryData<Person>) => person.content.firstName.trim() || getPersonDisplayName(person);
+
+export const getArticleAuthors = (article: ResolvedArticle): ISbStoryData<Person>[] =>
+	[
+		article.author,
+		// Unpublished co-authors stay unresolved uuids
+		...(article.coAuthors ?? []).filter((coAuthor): coAuthor is ISbStoryData<Person> => typeof coAuthor !== 'string'),
+	].filter((person, index, all) => all.findIndex((other) => other.uuid === person.uuid) === index);
+
+// Several full names don't fit next to an avatar stack, so co-authored articles name authors by first name
+// unless two of them share one
+export const formatArticleAuthorNames = (authors: ISbStoryData<Person>[], language: string) => {
+	const firstNames = authors.map(getPersonFirstName);
+	const names =
+		authors.length > 1 && new Set(firstNames).size === firstNames.length ? firstNames : authors.map(getPersonDisplayName);
+
+	return new Intl.ListFormat(language, { type: 'conjunction' }).format(names);
+};
 
 export const getPersonAvatarSrc = (person: ISbStoryData<Person>) => {
 	const filename = person.content.avatar?.filename;
@@ -270,6 +283,10 @@ export const createWebsiteJournalArticleTypeLink = (articleTypeSlug: string, lan
 export const createWebsitePersonLink = (slug: string, language: string, currency: WebsiteCurrency) =>
 	createWebsitePath(language, currency, WEBSITE_PERSON_PATH_SEGMENT, slug);
 
+// Circle pages are named after the datasource value, e.g. "Communication" lives at /circle/communication
+export const createWebsiteCirclePath = (circleCode: string, language: string, currency: WebsiteCurrency) =>
+	createWebsitePath(language, currency, WEBSITE_CIRCLE_PATH_SEGMENT, slugify(circleCode));
+
 export const createWebsitePeoplePath = (language: string, currency: WebsiteCurrency) =>
 	createWebsitePath(language, currency, WEBSITE_PEOPLE_PATH_SEGMENT);
 
@@ -302,7 +319,7 @@ export const resolveStoryblokLink = (
 
 export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>, url: string): Metadata => {
 	const article = story.content;
-	const authorsFullName = `${article.author.content.firstName} ${article.author.content.lastName}`;
+	const authorNames = getArticleAuthors(article).map(getPersonDisplayName);
 	const imageFilename = article.image?.filename;
 	const tags = article.tags?.map((tag) => tag.content.value).join(', ');
 	const dimensions = imageFilename ? getDimensionsFromStoryblokImageUrl(imageFilename) : {};
@@ -325,7 +342,7 @@ export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>,
 		title: article.title,
 		description: article.leadText,
 		keywords: tags,
-		authors: { name: authorsFullName },
+		authors: authorNames.map((name) => ({ name })),
 		openGraph: {
 			title: article.title,
 			description: article.leadText,
@@ -344,7 +361,7 @@ export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>,
 		other: {
 			'article:published_time': formatStoryblokDateToIso(story.first_published_at),
 			'article:modified_time': formatStoryblokDateToIso(story.updated_at),
-			'article:author': authorsFullName,
+			'article:author': authorNames,
 			'article:section': 'News',
 			...(tags ? { 'article:tag': tags } : {}),
 		},

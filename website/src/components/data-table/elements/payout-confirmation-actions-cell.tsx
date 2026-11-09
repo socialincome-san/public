@@ -38,7 +38,7 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 			</div>
 
 			<Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-				<DialogContent size="alert">
+				<DialogContent size="sm">
 					<DialogHeader>
 						<DialogTitle>Confirm payout?</DialogTitle>
 						<DialogDescription>This action will mark the payout as confirmed.</DialogDescription>
@@ -63,7 +63,7 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 			</Dialog>
 
 			<Dialog open={contestOpen} onOpenChange={setContestOpen}>
-				<DialogContent size="alert">
+				<DialogContent size="sm">
 					<DialogHeader>
 						<DialogTitle>Contest payout?</DialogTitle>
 						<DialogDescription>This action will mark the payout as contested.</DialogDescription>

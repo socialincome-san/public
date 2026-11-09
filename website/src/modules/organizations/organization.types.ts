@@ -1,4 +1,4 @@
-import type { UserRole } from '@/generated/prisma/enums';
+import type { CountryCode, UserRole } from '@/generated/prisma/enums';
 
 export type OrganizationMemberTableViewRow = {
 	id: string;
@@ -55,6 +55,7 @@ export type OrganizationOption = {
 export type OrganizationPayload = {
 	id: string;
 	name: string;
+	operatorFallbackCountryCode: CountryCode | null;
 	userIds: string[];
 	ownedProgramIds: string[];
 	operatedProgramIds: string[];

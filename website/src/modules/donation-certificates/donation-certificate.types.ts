@@ -44,4 +44,4 @@ export type YourDonationCertificatePaginatedTableView = {
 	totalCount: number;
 };
 
-export type DonationCertificateError = 'technicalError' | 'bucketMissing' | 'alreadyExists' | 'noContributions';
+export type DonationCertificateError = 'technicalError' | 'bucketMissing' | 'noContributions';
