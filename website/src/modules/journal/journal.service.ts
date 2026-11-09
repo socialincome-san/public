@@ -347,7 +347,7 @@ export const getJournalArticlesByTag = async (
 	tagUuid: string,
 ): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
 	try {
-		const result = await storyblokContent.getArticlesByTag(tagUuid, language);
+		const result = await storyblokContent.getLatestArticlesByTag(tagUuid, language);
 
 		return result.success ? result : resultFail('Could not load journal articles', result.status);
 	} catch (error) {
@@ -362,7 +362,7 @@ export const getJournalArticlesByArticleType = async (
 	articleTypeUuid: string,
 ): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
 	try {
-		const result = await storyblokContent.getArticlesByArticleType(articleTypeUuid, language);
+		const result = await storyblokContent.getLatestArticlesByArticleType(articleTypeUuid, language);
 
 		return result.success ? result : resultFail('Could not load journal articles', result.status);
 	} catch (error) {
