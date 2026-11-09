@@ -21,11 +21,11 @@ type Props = {
 
 export const CampaignsGridSection = ({ heading, data, lang, currency, cta }: Props) => (
 	<>
-		{heading && (
+		{heading ? (
 			<div className="mb-8 md:mb-10">
 				<SectionHeading>{heading}</SectionHeading>
 			</div>
-		)}
+		) : null}
 		<CampaignsOverview campaigns={data.campaigns} statsById={data.statsById} lang={lang} currency={currency} />
 		{cta && (
 			<div className="mt-10 flex justify-center">
