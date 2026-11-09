@@ -3,7 +3,15 @@
 import { Button } from '../../actions/button/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../forms/select/select';
 
+export type DataTablePaginationLabels = {
+	rowsPerPage: string;
+	previous: string;
+	next: string;
+	of: string;
+};
+
 type DataTablePaginationProps = {
+	labels: DataTablePaginationLabels;
 	startRow: number;
 	endRow: number;
 	totalRows: number;
@@ -18,6 +26,7 @@ type DataTablePaginationProps = {
 };
 
 export const DataTablePagination = ({
+	labels,
 	startRow,
 	endRow,
 	totalRows,
@@ -34,7 +43,7 @@ export const DataTablePagination = ({
 		<div className="flex items-center gap-2">
 			{showRowsPerPageSelector ? (
 				<>
-					<span className="text-muted-foreground text-sm">Rows per page</span>
+					<span className="text-muted-foreground text-sm">{labels.rowsPerPage}</span>
 					<Select value={`${pageSize}`} onValueChange={(value) => onPageSizeChange(Number(value))}>
 						<div className="w-20">
 							<SelectTrigger size="sm" data-testid="data-table-page-size-trigger">
@@ -61,10 +70,10 @@ export const DataTablePagination = ({
 				disabled={!canPreviousPage}
 				data-testid="data-table-pagination-previous"
 			>
-				Previous
+				{labels.previous}
 			</Button>
 			<span className="text-muted-foreground text-sm" data-testid="data-table-pagination-range">
-				{startRow}-{endRow} of {totalRows}
+				{startRow}-{endRow} {labels.of} {totalRows}
 			</span>
 			<Button
 				variant="outline"
@@ -73,7 +82,7 @@ export const DataTablePagination = ({
 				disabled={!canNextPage}
 				data-testid="data-table-pagination-next"
 			>
-				Next
+				{labels.next}
 			</Button>
 		</div>
 	</div>

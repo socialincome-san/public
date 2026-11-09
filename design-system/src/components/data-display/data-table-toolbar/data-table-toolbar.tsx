@@ -36,9 +36,30 @@ export type DataTableToolbarSortOption = {
 
 export type DataTableSortDirection = 'asc' | 'desc';
 
+export type DataTableToolbarLabels = {
+	search: string;
+	searchPlaceholder: string;
+	searchFields: string;
+	clear: string;
+	columns: string;
+	visibleColumns: string;
+	sort: string;
+	sortBy: string;
+	field: string;
+	chooseField: string;
+	direction: string;
+	chooseDirection: string;
+	ascending: string;
+	descending: string;
+	filters: string;
+	filterResults: string;
+	noOptionsAvailable: string;
+};
+
 const isSortDirection = (value: string): value is DataTableSortDirection => value === 'asc' || value === 'desc';
 
 type DataTableToolbarProps = {
+	labels: DataTableToolbarLabels;
 	showControls: boolean;
 	searchKeys: string[];
 	searchValue?: string;
@@ -54,6 +75,7 @@ type DataTableToolbarProps = {
 };
 
 export const DataTableToolbar = ({
+	labels,
 	showControls,
 	searchKeys,
 	searchValue,
@@ -94,7 +116,13 @@ export const DataTableToolbar = ({
 				{hasSearch ? (
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button type="button" variant="outline" size="icon" aria-label="Search" data-testid="data-table-search-button">
+							<Button
+								type="button"
+								variant="outline"
+								size="icon"
+								aria-label={labels.search}
+								data-testid="data-table-search-button"
+							>
 								<SearchIcon className="size-4" />
 								{hasSearchValue ? (
 									<span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" aria-hidden />
@@ -104,20 +132,22 @@ export const DataTableToolbar = ({
 						<PopoverContent align="end">
 							<div className="space-y-3">
 								<div className="flex items-center justify-between">
-									<p className="text-sm font-medium">Search</p>
+									<p className="text-sm font-medium">{labels.search}</p>
 									<Button type="button" variant="ghost" size="sm" onClick={clearSearch} disabled={!hasSearchValue}>
-										Clear
+										{labels.clear}
 									</Button>
 								</div>
 								<Input
 									key={`table-search-${searchValue ?? ''}`}
-									placeholder="Search..."
+									placeholder={labels.searchPlaceholder}
 									defaultValue={searchValue}
 									onChange={(e) => onSearchChange(e.target.value)}
 									autoFocus
 									data-testid="data-table-search-input"
 								/>
-								<p className="text-muted-foreground text-xs">Fields: {searchKeys.join(', ')}</p>
+								<p className="text-muted-foreground text-xs">
+									{labels.searchFields} {searchKeys.join(', ')}
+								</p>
 							</div>
 						</PopoverContent>
 					</Popover>
@@ -129,7 +159,7 @@ export const DataTableToolbar = ({
 								type="button"
 								variant="outline"
 								size="icon"
-								aria-label="Columns"
+								aria-label={labels.columns}
 								data-testid="data-table-columns-button"
 							>
 								<Columns3Icon className="size-4" />
@@ -138,7 +168,7 @@ export const DataTableToolbar = ({
 						<PopoverContent align="end">
 							<div className="space-y-3">
 								<div className="flex items-center justify-between">
-									<p className="text-sm font-medium">Visible columns</p>
+									<p className="text-sm font-medium">{labels.visibleColumns}</p>
 									<Button
 										type="button"
 										variant="ghost"
@@ -146,7 +176,7 @@ export const DataTableToolbar = ({
 										onClick={clearAllColumns}
 										disabled={hiddenColumnCount === 0}
 									>
-										Clear
+										{labels.clear}
 									</Button>
 								</div>
 								<div className="space-y-1">
@@ -172,7 +202,13 @@ export const DataTableToolbar = ({
 				{hasSorting ? (
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button type="button" variant="outline" size="icon" aria-label="Sort" data-testid="data-table-sort-button">
+							<Button
+								type="button"
+								variant="outline"
+								size="icon"
+								aria-label={labels.sort}
+								data-testid="data-table-sort-button"
+							>
 								<ArrowUpDownIcon className="size-4" />
 								{hasSortingValue ? (
 									<span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" aria-hidden />
@@ -182,7 +218,7 @@ export const DataTableToolbar = ({
 						<PopoverContent align="end">
 							<div className="space-y-3">
 								<div className="flex items-center justify-between">
-									<p className="text-sm font-medium">Sort by</p>
+									<p className="text-sm font-medium">{labels.sortBy}</p>
 									<Button
 										type="button"
 										variant="ghost"
@@ -190,15 +226,15 @@ export const DataTableToolbar = ({
 										onClick={() => onSortChange?.(undefined, undefined)}
 										disabled={!hasSortingValue}
 									>
-										Clear
+										{labels.clear}
 									</Button>
 								</div>
 								<div className="space-y-2">
 									<div className="space-y-1">
-										<label className="text-muted-foreground text-xs">Field</label>
+										<label className="text-muted-foreground text-xs">{labels.field}</label>
 										<Select value={sortBy} onValueChange={(value) => onSortChange?.(value, sortDirection ?? 'asc')}>
 											<SelectTrigger data-testid="data-table-sort-field-trigger">
-												<SelectValue placeholder="Choose field" />
+												<SelectValue placeholder={labels.chooseField} />
 											</SelectTrigger>
 											<SelectContent align="end">
 												{sortOptions.map((option) => (
@@ -210,7 +246,7 @@ export const DataTableToolbar = ({
 										</Select>
 									</div>
 									<div className="space-y-1">
-										<label className="text-muted-foreground text-xs">Direction</label>
+										<label className="text-muted-foreground text-xs">{labels.direction}</label>
 										<Select
 											value={sortDirection}
 											onValueChange={(value) => {
@@ -221,11 +257,11 @@ export const DataTableToolbar = ({
 											disabled={!sortBy}
 										>
 											<SelectTrigger data-testid="data-table-sort-direction-trigger">
-												<SelectValue placeholder="Choose direction" />
+												<SelectValue placeholder={labels.chooseDirection} />
 											</SelectTrigger>
 											<SelectContent align="end">
-												<SelectItem value="asc">Ascending</SelectItem>
-												<SelectItem value="desc">Descending</SelectItem>
+												<SelectItem value="asc">{labels.ascending}</SelectItem>
+												<SelectItem value="desc">{labels.descending}</SelectItem>
 											</SelectContent>
 										</Select>
 									</div>
@@ -241,7 +277,7 @@ export const DataTableToolbar = ({
 								type="button"
 								variant="outline"
 								size="icon"
-								aria-label="Filters"
+								aria-label={labels.filters}
 								data-testid="data-table-filters-button"
 							>
 								<FilterIcon className="size-4" />
@@ -255,7 +291,7 @@ export const DataTableToolbar = ({
 						<PopoverContent align="end">
 							<div className="space-y-3">
 								<div className="flex items-center justify-between">
-									<p className="text-sm font-medium">Filter results</p>
+									<p className="text-sm font-medium">{labels.filterResults}</p>
 									<Button
 										type="button"
 										variant="ghost"
@@ -263,7 +299,7 @@ export const DataTableToolbar = ({
 										onClick={clearAllFilters}
 										disabled={activeFilterCount === 0}
 									>
-										Clear
+										{labels.clear}
 									</Button>
 								</div>
 								<div className="space-y-2">
@@ -280,7 +316,7 @@ export const DataTableToolbar = ({
 													disabled={!hasOptions}
 												>
 													<SelectTrigger data-testid={`data-table-filter-${filter.id}-trigger`}>
-														<SelectValue placeholder={hasOptions ? filter.placeholder : 'No options available'} />
+														<SelectValue placeholder={hasOptions ? filter.placeholder : labels.noOptionsAvailable} />
 													</SelectTrigger>
 													<SelectContent align="end">
 														{hasOptions ? (
@@ -291,7 +327,7 @@ export const DataTableToolbar = ({
 															))
 														) : (
 															<SelectItem value="no-options-available" disabled>
-																No options available
+																{labels.noOptionsAvailable}
 															</SelectItem>
 														)}
 													</SelectContent>

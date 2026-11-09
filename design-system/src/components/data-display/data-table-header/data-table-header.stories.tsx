@@ -12,6 +12,25 @@ const meta = {
 		infoTooltip: 'Recipients of all programs you have access to.',
 		toolbar: (
 			<DataTableToolbar
+				labels={{
+					search: 'Search',
+					searchPlaceholder: 'Search...',
+					searchFields: 'Fields:',
+					clear: 'Clear',
+					columns: 'Columns',
+					visibleColumns: 'Visible columns',
+					sort: 'Sort',
+					sortBy: 'Sort by',
+					field: 'Field',
+					chooseField: 'Choose field',
+					direction: 'Direction',
+					chooseDirection: 'Choose direction',
+					ascending: 'Ascending',
+					descending: 'Descending',
+					filters: 'Filters',
+					filterResults: 'Filter results',
+					noOptionsAvailable: 'No options available',
+				}}
 				showControls
 				searchKeys={['firstName', 'lastName']}
 				searchValue=""

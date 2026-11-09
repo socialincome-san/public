@@ -52,6 +52,7 @@ export const WithPagination: Story = {
 	args: {
 		pagination: (
 			<DataTablePagination
+				labels={{ rowsPerPage: 'Rows per page', previous: 'Previous', next: 'Next', of: 'of' }}
 				startRow={1}
 				endRow={3}
 				totalRows={3}
