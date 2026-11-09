@@ -24,7 +24,7 @@ export type TableFilterConfig = {
 
 export type DataTableConfig<Row extends RowData> = {
 	id: string;
-	title: string;
+	title?: string;
 	emptyMessage: ReactNode;
 	searchKeys: (keyof Row)[];
 	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, t?: DataTableTranslator) => ColumnDef<Row>[];

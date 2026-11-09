@@ -4,14 +4,11 @@ import type { YourDonationCertificateTableViewRow } from '@/modules/donation-cer
 import type { ReactNode } from 'react';
 
 export const getYourDonationCertificatesTableConfig = ({
-	title,
 	emptyMessage,
 }: {
-	title: string;
 	emptyMessage: ReactNode;
 }): DataTableConfig<YourDonationCertificateTableViewRow> => ({
 	id: 'your-donation-certificates',
-	title,
 	emptyMessage,
 	searchKeys: [],
 	sortOptions: [
