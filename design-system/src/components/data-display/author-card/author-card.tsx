@@ -56,7 +56,7 @@ export const AuthorCard = ({ name, href, image, subtitle, description, facts, ac
 							<NextLink href={subtitle.count.href} className={linkClassName}>
 								{subtitle.count.label}
 							</NextLink>
-							{')'}
+							)
 						</>
 					) : null}
 					{subtitle.detail ? ` · ${subtitle.detail}` : null}
