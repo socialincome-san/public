@@ -10,6 +10,7 @@ import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
 import { IframeEmbedBlock } from '@/components/content-blocks/iframe-embed';
+import { ImageGeneratorGalleryBlock } from '@/components/content-blocks/image-generator-gallery';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
@@ -91,6 +92,8 @@ const renderPageBlock = (
 			);
 		case 'imageText':
 			return <ImageTextBlock blok={block} />;
+		case 'imageGeneratorGallery':
+			return <ImageGeneratorGalleryBlock blok={block} lang={lang} />;
 		case 'impactMeasurement':
 			return <ImpactMeasurementBlock blok={block} lang={lang} searchParams={searchParams} />;
 		case 'inflows':
