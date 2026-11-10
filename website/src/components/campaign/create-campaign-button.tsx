@@ -2,6 +2,7 @@
 
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import type { ComponentProps } from 'react';
 import type { SubmissionLabels } from './campaign-submission/types';
 import { CreateCampaignDialog } from './create-campaign-dialog';
 
@@ -10,15 +11,15 @@ type Props = {
 	labels: SubmissionLabels;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
-};
+} & Pick<ComponentProps<typeof Button>, 'variant' | 'fullWidth'>;
 
-export const CreateCampaignButton = ({ label, labels, lang, currency }: Props) => (
+export const CreateCampaignButton = ({ label, labels, lang, currency, variant, fullWidth }: Props) => (
 	<CreateCampaignDialog
 		labels={labels}
 		lang={lang}
 		currency={currency}
 		trigger={({ openDialog }) => (
-			<Button type="button" onClick={openDialog}>
+			<Button type="button" variant={variant} fullWidth={fullWidth} onClick={openDialog}>
 				{label}
 			</Button>
 		)}

@@ -116,6 +116,17 @@ export interface CampaignGlobals {
   [k: string]: unknown;
 }
 
+export interface CampaignGrid {
+  heading?: string;
+  button?: Button[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "campaignGrid";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface CampaignOverview {
   title?: string;
   text?: string;
@@ -224,6 +235,20 @@ export interface CountryOverview {
   title?: string;
   text?: string;
   component: "Country Overview";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface CtaBanner {
+  title: string;
+  description?: string;
+  image?: StoryblokAsset;
+  button: Button[];
+  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "ctaBanner";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -467,6 +492,30 @@ export interface JournalTeasers {
   [k: string]: unknown;
 }
 
+export interface LandingHero {
+  title: string;
+  description?: string;
+  image?: StoryblokAsset;
+  facts?: LandingHeroFact[];
+  cardTitle?: string;
+  cardDescription?: string;
+  button?: Button[];
+  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
+  showDonationForm?: boolean;
+  component: "landingHero";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface LandingHeroFact {
+  label: string;
+  component: "landingHeroFact";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface Layout {
   menu: (MenuItem | DropdownItem)[];
   footerMenu: MenuItemGroup[];
@@ -475,6 +524,7 @@ export interface Layout {
   supportedByLogo?: StoryblokAsset;
   supportedByUrl?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   mainMenu?: (MenuItem | DropdownItem)[];
+  donateLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "layout";
   _uid: string;
   _editable?: string | undefined;
@@ -688,6 +738,9 @@ export interface Page {
     | TaskCards
     | IframeEmbed
     | ImageGeneratorGallery
+    | LandingHero
+    | CtaBanner
+    | CampaignGrid
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
@@ -885,6 +938,7 @@ export interface ReservesBlock {
 export interface RichtextButtonHeader {
   heading?: StoryblokRichTextDoc;
   button?: Button[];
+  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
   buttonStyle?: "" | "outline" | "primary";
   disableMarginBottom?: boolean;
   disableMarginTop?: boolean;

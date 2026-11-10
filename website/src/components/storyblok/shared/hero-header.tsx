@@ -27,6 +27,7 @@ export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>
 
 type Props = {
 	title: string;
+	description?: string;
 	heroImage?: HeroHeaderImage | null;
 	stats: HeroHeaderStat[];
 	titleIcon?: string;
@@ -42,6 +43,7 @@ type Props = {
 
 export const HeroHeader = ({
 	title,
+	description,
 	heroImage,
 	stats,
 	titleIcon,
@@ -71,21 +73,22 @@ export const HeroHeader = ({
 		>
 			<MediaHeroIntro
 				title={title}
+				description={description}
 				eyebrow={preTitle ? <MediaHeroChips>{preTitle}</MediaHeroChips> : null}
 				titleIcon={titleIcon ? { src: titleIcon, alt: titleIconAlt ?? title } : undefined}
 			>
 				{stats.length > 0 ? (
 					<MediaHeroChips>
-						{stats.map((stat) =>
+						{stats.map((stat, index) =>
 							stat.href ? (
 								<LinkPill
-									key={stat.label}
+									key={`${index}-${stat.label}`}
 									label={`${stat.value !== undefined ? `${stat.value} ` : ''}${stat.label}`}
 									href={stat.href}
 									icon={stat.icon}
 								/>
 							) : (
-								<MediaHeroPill key={stat.label}>
+								<MediaHeroPill key={`${index}-${stat.label}`}>
 									{stat.icon}
 									{stat.value !== undefined ? `${stat.value} ` : ''}
 									{stat.label}

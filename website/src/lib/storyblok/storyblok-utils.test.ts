@@ -9,6 +9,7 @@ import {
 	getScaledAssetDimensions,
 	getStoryblokImageObjectPosition,
 	getStoryblokMetadataImage,
+	getTranslatedStoryName,
 	getVolunteerDurationParts,
 	isResolvedArticle,
 	resolveStoryblokLink,
@@ -250,5 +251,25 @@ describe('getStoryblokMetadataImage', () => {
 
 	it('returns nothing without an image, so the default of the language applies', () => {
 		expect(getStoryblokMetadataImage({ filename: '' })).toBeUndefined();
+	});
+});
+
+describe('getTranslatedStoryName', () => {
+	const story = {
+		name: 'Donate',
+		translated_slugs: [
+			{ path: 'pages/donate', lang: 'de', name: 'Spenden' },
+			{ path: 'pages/donate', lang: 'fr', name: null },
+		],
+	};
+
+	it('returns the name for the language', () => {
+		expect(getTranslatedStoryName(story, 'de')).toBe('Spenden');
+	});
+
+	it('falls back to the default name without a translation', () => {
+		expect(getTranslatedStoryName(story, 'fr')).toBe('Donate');
+		expect(getTranslatedStoryName(story, 'it')).toBe('Donate');
+		expect(getTranslatedStoryName({ name: 'Donate' }, 'de')).toBe('Donate');
 	});
 });

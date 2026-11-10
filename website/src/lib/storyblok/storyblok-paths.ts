@@ -284,6 +284,24 @@ export const isRoutableWebsiteStoryblokSlug = (storyblokSlug: string) => {
 	return slug.startsWith(pagesPrefix);
 };
 
+const DEDICATED_ROUTE_FOLDERS = [
+	STORYBLOK_PROGRAMS_FOLDER,
+	STORYBLOK_LOCAL_PARTNERS_FOLDER,
+	STORYBLOK_FOCUSES_FOLDER,
+	STORYBLOK_COUNTRIES_FOLDER,
+	STORYBLOK_CAMPAIGNS_FOLDER,
+	STORYBLOK_CIRCLES_FOLDER,
+	STORYBLOK_PERSONS_FOLDER,
+	STORYBLOK_JOURNAL_FOLDER,
+];
+
+/** A page rendered by the generic content page route, in any folder that has no route of its own. */
+export const isContentPageStoryblokSlug = (storyblokSlug: string) => {
+	const slug = normalizeStoryblokSlug(storyblokSlug);
+
+	return slug.startsWith(pagesPrefix) && !DEDICATED_ROUTE_FOLDERS.some((folder) => slug.startsWith(`${folder}/`));
+};
+
 export const isAllowedStoryblokPreviewSlug = (rawSlug: string) => {
 	const slug = normalizeStoryblokSlug(rawSlug);
 

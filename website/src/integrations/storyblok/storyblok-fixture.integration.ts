@@ -1,5 +1,6 @@
 import type { ISbResult, ISbStoryData } from '@storyblok/js';
 import layoutStory from '../../../test/e2e/fixtures/storyblok/globals-layout';
+import donatePageStory from '../../../test/e2e/fixtures/storyblok/pages-get-involved-individuals-donate';
 import homeStory from '../../../test/e2e/fixtures/storyblok/pages-home';
 import sierraLeoneCoreProgramStory from '../../../test/e2e/fixtures/storyblok/pages-programs-sierra-leone-core-program';
 import skillsProgramStory from '../../../test/e2e/fixtures/storyblok/pages-programs-skills-program';
@@ -8,6 +9,7 @@ import type { StoryblokContentClient } from './storyblok-content.integration';
 const STORY_FIXTURES: Record<string, unknown> = {
 	'globals/layout': layoutStory,
 	'pages/home': homeStory,
+	'pages/get-involved/individuals/donate': donatePageStory,
 	'pages/programs/sierra-leone-core-program': sierraLeoneCoreProgramStory,
 	'pages/programs/skills-program': skillsProgramStory,
 };
