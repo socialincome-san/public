@@ -247,7 +247,17 @@ describe('recipient statistics', () => {
 
 describe('getRecipientStatusBreakdown', () => {
 	const program = { programDurationInMonths: 12, payoutInterval: PayoutInterval.monthly };
-	const paid = (paymentAt: string) => ({ status: PayoutStatus.paid, paymentAt: new Date(paymentAt) });
+	const recipient = (
+		startDate: string | null,
+		paidPayoutDates: string[],
+		overrides: { suspendedAt?: Date; program?: typeof program } = {},
+	) => ({
+		startDate: startDate ? new Date(startDate) : null,
+		suspendedAt: overrides.suspendedAt ?? null,
+		program: overrides.program ?? program,
+		_count: { payouts: paidPayoutDates.length },
+		payouts: paidPayoutDates.slice(0, 1).map((paymentAt) => ({ paymentAt: new Date(paymentAt) })),
+	});
 
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -255,32 +265,16 @@ describe('getRecipientStatusBreakdown', () => {
 
 	test('counts each recipient once by lifecycle status and excludes waitlisted and new from the total', async () => {
 		mockFindRecipientsForStatusBreakdown.mockResolvedValue([
-			{
-				startDate: new Date('2025-01-01T00:00:00.000Z'),
-				suspendedAt: null,
-				program,
-				payouts: [paid('2025-01-05T00:00:00.000Z'), paid('2025-02-05T00:00:00.000Z')],
-			},
-			{
-				startDate: new Date('2025-06-01T00:00:00.000Z'),
-				suspendedAt: null,
-				program,
-				payouts: [paid('2025-06-05T00:00:00.000Z')],
-			},
-			{
-				startDate: new Date('2025-01-01T00:00:00.000Z'),
-				suspendedAt: null,
+			recipient('2025-01-01T00:00:00.000Z', ['2025-01-05T00:00:00.000Z', '2025-02-05T00:00:00.000Z']),
+			recipient('2025-06-01T00:00:00.000Z', ['2025-06-05T00:00:00.000Z']),
+			recipient('2025-01-01T00:00:00.000Z', ['2025-01-05T00:00:00.000Z', '2025-02-05T00:00:00.000Z'], {
 				program: { programDurationInMonths: 2, payoutInterval: PayoutInterval.monthly },
-				payouts: [paid('2025-01-05T00:00:00.000Z'), paid('2025-02-05T00:00:00.000Z')],
-			},
-			{
-				startDate: new Date('2025-01-01T00:00:00.000Z'),
+			}),
+			recipient('2025-01-01T00:00:00.000Z', ['2025-01-05T00:00:00.000Z'], {
 				suspendedAt: new Date('2025-03-01T00:00:00.000Z'),
-				program,
-				payouts: [paid('2025-01-05T00:00:00.000Z')],
-			},
-			{ startDate: null, suspendedAt: null, program, payouts: [] },
-			{ startDate: new Date('2025-07-01T00:00:00.000Z'), suspendedAt: null, program, payouts: [] },
+			}),
+			recipient(null, []),
+			recipient('2025-07-01T00:00:00.000Z', []),
 		]);
 
 		const result = expectSuccess(await getRecipientStatusBreakdown({ programId: 'program-1' }));
@@ -296,24 +290,11 @@ describe('getRecipientStatusBreakdown', () => {
 		});
 	});
 
-	test('only paid or confirmed payouts within the last 30 days make a recipient new', async () => {
+	test('only a first payout within the last 30 days makes a recipient new', async () => {
 		mockFindRecipientsForStatusBreakdown.mockResolvedValue([
-			{
-				startDate: new Date('2025-05-01T00:00:00.000Z'),
-				suspendedAt: null,
-				program,
-				payouts: [
-					{ status: PayoutStatus.failed, paymentAt: new Date('2025-06-10T00:00:00.000Z') },
-					paid('2025-05-10T00:00:00.000Z'),
-					paid('2025-06-10T00:00:00.000Z'),
-				],
-			},
-			{
-				startDate: new Date('2025-05-16T00:00:00.000Z'),
-				suspendedAt: null,
-				program,
-				payouts: [{ status: PayoutStatus.confirmed, paymentAt: new Date('2025-05-17T00:00:00.000Z') }],
-			},
+			recipient('2025-05-01T00:00:00.000Z', ['2025-05-10T00:00:00.000Z', '2025-06-10T00:00:00.000Z']),
+			recipient('2025-05-16T00:00:00.000Z', ['2025-05-17T00:00:00.000Z']),
+			recipient('2025-05-16T00:00:00.000Z', []),
 		]);
 
 		expect(expectSuccess(await getRecipientStatusBreakdown({ localPartnerSlug: 'partner' })).newCount).toBe(1);

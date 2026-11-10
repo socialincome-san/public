@@ -97,10 +97,17 @@ describe('MediaHero', () => {
 	describe('MediaHeroPill', () => {
 		const render = (pill: React.ReactElement) => {
 			const container = document.createElement('div');
+			document.body.appendChild(container);
 			const root = createRoot(container);
 			act(() => root.render(pill));
 
-			return { container, unmount: () => act(() => root.unmount()) };
+			return {
+				container,
+				unmount: () => {
+					act(() => root.unmount());
+					container.remove();
+				},
+			};
 		};
 
 		test('renders a plain pill without a trigger when there is no breakdown', () => {
@@ -128,6 +135,49 @@ describe('MediaHero', () => {
 			);
 
 			expect(container.querySelector('button')?.textContent).toBe('3 recipients');
+
+			unmount();
+		});
+
+		beforeAll(() => {
+			globalThis.ResizeObserver = jest.fn(() => ({ observe: jest.fn(), unobserve: jest.fn(), disconnect: jest.fn() }));
+		});
+
+		const openTooltip = (container: HTMLElement) => {
+			act(() => {
+				container.querySelector('button')?.focus();
+			});
+		};
+
+		test('shows rows, a divider and extra rows in the tooltip', () => {
+			const { container, unmount } = render(
+				<MediaHeroPill
+					breakdown={{
+						rows: [{ label: 'Active', value: 3 }],
+						extraRows: [{ label: 'Waitlisted', value: 2 }],
+					}}
+				>
+					3 recipients
+				</MediaHeroPill>,
+			);
+			openTooltip(container);
+
+			expect(document.body.textContent).toContain('Active');
+			expect(document.body.textContent).toContain('Waitlisted');
+			expect(document.body.querySelector('hr')).not.toBeNull();
+
+			unmount();
+		});
+
+		test('omits the divider and stays focusable when only extra rows are given', () => {
+			const { container, unmount } = render(
+				<MediaHeroPill breakdown={{ rows: [], extraRows: [{ label: 'Waitlisted', value: 2 }] }}>0 recipients</MediaHeroPill>,
+			);
+			openTooltip(container);
+
+			expect(container.querySelector('button')).not.toBeNull();
+			expect(document.body.textContent).toContain('Waitlisted');
+			expect(document.body.querySelector('hr')).toBeNull();
 
 			unmount();
 		});

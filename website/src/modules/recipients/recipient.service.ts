@@ -1187,13 +1187,10 @@ export const getRecipientStatusBreakdown = async (
 			if (!recipient.program) {
 				continue;
 			}
-			const paidOrConfirmedPayouts = recipient.payouts.filter(
-				({ status }) => status === PayoutStatus.paid || status === PayoutStatus.confirmed,
-			);
 			const statusResult = getRecipientLifecycleStatus({
 				startDate: recipient.startDate,
 				suspendedAt: recipient.suspendedAt,
-				paidOrConfirmedCount: paidOrConfirmedPayouts.length,
+				paidOrConfirmedCount: recipient._count.payouts,
 				programDurationInMonths: recipient.program.programDurationInMonths,
 				payoutInterval: recipient.program.payoutInterval,
 				nowDate,
@@ -1212,11 +1209,8 @@ export const getRecipientStatusBreakdown = async (
 				breakdown.waitlistedCount++;
 			}
 
-			const firstPayoutAt = paidOrConfirmedPayouts.reduce<Date | null>(
-				(earliest, { paymentAt }) => (earliest === null || paymentAt < earliest ? paymentAt : earliest),
-				null,
-			);
-			if (firstPayoutAt !== null && firstPayoutAt >= newSince && firstPayoutAt <= nowDate) {
+			const firstPayoutAt = recipient.payouts[0]?.paymentAt;
+			if (firstPayoutAt && firstPayoutAt >= newSince && firstPayoutAt <= nowDate) {
 				breakdown.newCount++;
 			}
 		}

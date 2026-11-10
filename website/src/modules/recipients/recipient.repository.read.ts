@@ -1,5 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
-import type { CountryCode } from '@/generated/prisma/enums';
+import { type CountryCode, PayoutStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import type { RecipientStatusBreakdownScope, RecipientTableQuery } from './recipient.types';
 
@@ -982,6 +982,10 @@ const normalizeOptionalFilter = (value: string | undefined): string | undefined 
 	return normalizedValue;
 };
 
+const paidOrConfirmedPayoutWhere = {
+	status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] },
+} satisfies Prisma.PayoutWhereInput;
+
 export const findRecipientsForStatusBreakdown = async (scope: RecipientStatusBreakdownScope) =>
 	prisma.recipient.findMany({
 		where:
@@ -994,6 +998,7 @@ export const findRecipientsForStatusBreakdown = async (scope: RecipientStatusBre
 			startDate: true,
 			suspendedAt: true,
 			program: { select: { programDurationInMonths: true, payoutInterval: true } },
-			payouts: { select: { status: true, paymentAt: true } },
+			_count: { select: { payouts: { where: paidOrConfirmedPayoutWhere } } },
+			payouts: { where: paidOrConfirmedPayoutWhere, orderBy: { paymentAt: 'asc' }, take: 1, select: { paymentAt: true } },
 		},
 	});
