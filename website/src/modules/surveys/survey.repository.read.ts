@@ -197,7 +197,8 @@ export const findExistingSurveyIdentities = async (recipientIds: string[]) =>
 
 export const findOutstandingSurveysForRecipient = async (recipientId: string) =>
 	prisma.survey.findMany({
-		where: { recipientId, completedAt: null, status: { not: SurveyStatus.completed } },
+		// Missed and in-progress surveys keep their history and answers
+		where: { recipientId, status: { in: [SurveyStatus.new, SurveyStatus.scheduled, SurveyStatus.sent] } },
 		select: { id: true, accessEmail: true },
 	});
 
