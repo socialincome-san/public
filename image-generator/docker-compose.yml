@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:18-alpine@sha256:123b17998ccaf47e53b502e8c6a1e79afd8f579c6f3eec83c563da026f957395
     ports:
-      - "5432:5432"
+      - "5434:5432"
     environment:
       POSTGRES_USER: social-income-image-generator
       POSTGRES_PASSWORD: social-income-image-generator
