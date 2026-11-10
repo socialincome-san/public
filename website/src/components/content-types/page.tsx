@@ -1,7 +1,9 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { blockMargins } from '@/components/content-blocks/block-margins';
+import { CampaignGridBlock } from '@/components/content-blocks/campaign-grid';
 import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
 import { CountryOfficeBlock } from '@/components/content-blocks/country-office';
+import { CtaBannerBlock } from '@/components/content-blocks/cta-banner';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
@@ -65,10 +67,14 @@ const renderPageBlock = (
 	searchParams?: Promise<AnySearchParams>,
 ): ReactNode => {
 	switch (block.component) {
+		case 'campaignGrid':
+			return <CampaignGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'circleGrid':
 			return <CircleGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'countryOffice':
 			return <CountryOfficeBlock blok={block} lang={lang} />;
+		case 'ctaBanner':
+			return <CtaBannerBlock blok={block} lang={lang} currency={currency} />;
 		case 'donationGlobe':
 			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':

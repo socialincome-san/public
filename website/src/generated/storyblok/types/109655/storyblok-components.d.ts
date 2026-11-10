@@ -116,6 +116,17 @@ export interface CampaignGlobals {
   [k: string]: unknown;
 }
 
+export interface CampaignGrid {
+  heading?: string;
+  button?: Button[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "campaignGrid";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface CampaignOverview {
   title?: string;
   text?: string;
@@ -224,6 +235,20 @@ export interface CountryOverview {
   title?: string;
   text?: string;
   component: "Country Overview";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface CtaBanner {
+  title: string;
+  description?: string;
+  image?: StoryblokAsset;
+  button: Button[];
+  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "ctaBanner";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -714,6 +739,8 @@ export interface Page {
     | IframeEmbed
     | ImageGeneratorGallery
     | LandingHero
+    | CtaBanner
+    | CampaignGrid
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];

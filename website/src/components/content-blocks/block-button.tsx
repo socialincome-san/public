@@ -8,11 +8,12 @@ import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { getTranslations } from 'next-intl/server';
 import NextLink from 'next/link';
+import type { ComponentProps } from 'react';
 
 type Props = {
 	button: ButtonBlok | undefined;
 	action: LandingHero['buttonAction'];
-	variant: 'default' | 'outline';
+	variant: NonNullable<ComponentProps<typeof Button>['variant']>;
 	fullWidth?: boolean;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
