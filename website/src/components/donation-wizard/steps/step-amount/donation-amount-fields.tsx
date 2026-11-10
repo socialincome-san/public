@@ -203,6 +203,11 @@ export const DonationAmountFields = ({
 							id={`${id}-monthly-income`}
 							data-testid="donation-wizard-monthly-income"
 							inputMode="numeric"
+							// Password managers ignore autoComplete="off" and need their own opt-out
+							autoComplete="off"
+							data-1p-ignore
+							data-lpignore="true"
+							data-bwignore
 							value={monthlyIncome.text}
 							aria-invalid={monthlyIncome.error !== null}
 							aria-describedby={monthlyIncome.error === null ? undefined : `${id}-monthly-income-hint`}

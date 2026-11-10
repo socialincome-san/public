@@ -64,6 +64,11 @@ const AmountField = ({
 						variant="bare"
 						id={inputId}
 						inputMode="numeric"
+						// Password managers ignore autoComplete="off" and need their own opt-out
+						autoComplete="off"
+						data-1p-ignore
+						data-lpignore="true"
+						data-bwignore
 						value={value}
 						aria-invalid={error !== undefined}
 						aria-describedby={error === undefined ? undefined : errorId}
