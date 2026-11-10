@@ -3,11 +3,8 @@ import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
-import {
-	EMPTY_RECIPIENT_STATUS_BREAKDOWN,
-	getRecipientStatusBreakdown,
-	recipientStatusService,
-} from '@/modules/recipients/recipient.service';
+import { recipientStatusService } from '@/modules/recipients/recipient.service';
+import type { RecipientLifecycleStatus } from '@/modules/recipients/recipient.types';
 import * as programRepository from './program.repository.read';
 import type { ProgramBudgetCalculationInput, ProgramFinancesStatsInput } from './program.schemas';
 import type {
@@ -18,8 +15,12 @@ import type {
 } from './program.types';
 
 type ExchangeRates = Partial<Record<Currency, number>>;
-const { countPaidOrConfirmedPayouts, getExpectedIntervals, getRecipientLifecycleStatusFromExpectedIntervals } =
-	recipientStatusService;
+const {
+	countPaidOrConfirmedPayouts,
+	getExpectedIntervals,
+	getRecipientLifecycleStatusFromExpectedIntervals,
+	summarizeRecipientStatuses,
+} = recipientStatusService;
 
 export const isReadyForFirstPayoutInterval = async (programId: string): Promise<Result<boolean>> => {
 	try {
@@ -126,10 +127,7 @@ export const getProgramDashboardStats = async (programId: string): Promise<Resul
 		}
 		const totalExpectedIntervals = totalExpectedIntervalsResult.data;
 		const cohorts = splitRecipientCohorts(program, nowDate, totalExpectedIntervals);
-		const [rates, breakdownResult] = await Promise.all([
-			getLatestRatesOrUndefined(),
-			getRecipientStatusBreakdown({ programId }),
-		]);
+		const rates = await getLatestRatesOrUndefined();
 		const costPerIntervalProgramCurrency = cohorts.activeRecipientsCount * payoutPerInterval;
 		const costPerIntervalChf =
 			convertAmount(costPerIntervalProgramCurrency, program.country.currency, Currency.CHF, rates) ??
@@ -152,7 +150,6 @@ export const getProgramDashboardStats = async (programId: string): Promise<Resul
 		const surveys = computeSurveys(program);
 
 		return resultOk({
-			recipientStatusBreakdown: breakdownResult.success ? breakdownResult.data : EMPTY_RECIPIENT_STATUS_BREAKDOWN,
 			...contributions,
 			totalProgramCostsChf,
 			...payouts,
@@ -410,6 +407,7 @@ const splitRecipientCohorts = (program: ProgramDashboardSource, nowDate: Date, e
 	let activeRecipientsCount = 0;
 	let suspendedRecipientsCount = 0;
 	let completedRecipientsCount = 0;
+	const statusEntries: { status: RecipientLifecycleStatus; firstPaymentAt: Date | null }[] = [];
 
 	for (const recipient of program.recipients) {
 		const paidCountResult = countPaidOrConfirmedPayouts(recipient.payouts);
@@ -421,6 +419,7 @@ const splitRecipientCohorts = (program: ProgramDashboardSource, nowDate: Date, e
 			nowDate,
 		});
 		const status = statusResult.success ? statusResult.data : 'future';
+		statusEntries.push({ status, firstPaymentAt: getFirstPaidOrConfirmedPaymentAt(recipient.payouts) });
 		if (status === 'future') {
 			futureRecipientsCount++;
 		} else if (status === 'active') {
@@ -432,8 +431,19 @@ const splitRecipientCohorts = (program: ProgramDashboardSource, nowDate: Date, e
 		}
 	}
 
-	return { futureRecipientsCount, activeRecipientsCount, suspendedRecipientsCount, completedRecipientsCount };
+	return {
+		futureRecipientsCount,
+		activeRecipientsCount,
+		suspendedRecipientsCount,
+		completedRecipientsCount,
+		recipientStatusBreakdown: summarizeRecipientStatuses(statusEntries, nowDate),
+	};
 };
+
+const getFirstPaidOrConfirmedPaymentAt = (payouts: { paymentAt: Date; status: PayoutStatus }[]) =>
+	payouts
+		.filter(({ status }) => status === PayoutStatus.paid || status === PayoutStatus.confirmed)
+		.reduce<Date | null>((first, { paymentAt }) => (first === null || paymentAt < first ? paymentAt : first), null);
 
 const getExchangeRateText = (fromCurrency: Currency, toCurrency: Currency, rates?: ExchangeRates): string | undefined => {
 	const converted = convertAmount(1, fromCurrency, toCurrency, rates);

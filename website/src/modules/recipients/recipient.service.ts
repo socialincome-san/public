@@ -1171,16 +1171,46 @@ export { EMPTY_RECIPIENT_STATUS_BREAKDOWN } from './recipient.types';
 
 const NEW_RECIPIENT_WINDOW_IN_DAYS = 30;
 
+type RecipientStatusEntry = {
+	status: RecipientLifecycleStatus;
+	firstPaymentAt: Date | null | undefined;
+};
+
+const summarizeRecipientStatuses = (entries: RecipientStatusEntry[], nowDate: Date): RecipientStatusBreakdown => {
+	const newSince = subDays(nowDate, NEW_RECIPIENT_WINDOW_IN_DAYS);
+	// A Record over the union makes the compiler flag this function when a lifecycle status is added
+	const statusCounts: Record<RecipientLifecycleStatus, number> = { future: 0, active: 0, suspended: 0, completed: 0 };
+	let newLast30Days = 0;
+
+	for (const { status, firstPaymentAt } of entries) {
+		statusCounts[status]++;
+		if (firstPaymentAt && firstPaymentAt >= newSince && firstPaymentAt <= nowDate) {
+			newLast30Days++;
+		}
+	}
+
+	const { active, completed: former, suspended, future: waitlisted } = statusCounts;
+	// Becomes the interrupted status count once #3353 adds it
+	const deceased = 0;
+
+	return {
+		total: active + former + suspended + deceased,
+		active,
+		former,
+		suspended,
+		deceased,
+		newLast30Days,
+		waitlisted,
+	};
+};
+
 export const getRecipientStatusBreakdown = async (
 	scope: RecipientStatusScope,
 ): Promise<Result<RecipientStatusBreakdown>> => {
 	try {
 		const recipients = await recipientRepository.findRecipientStatusSources(scope);
 		const nowDate = now();
-		const newSince = subDays(nowDate, NEW_RECIPIENT_WINDOW_IN_DAYS);
-		// A Record over the union makes the compiler flag this function when a lifecycle status is added
-		const statusCounts: Record<RecipientLifecycleStatus, number> = { future: 0, active: 0, suspended: 0, completed: 0 };
-		let newLast30Days = 0;
+		const entries: RecipientStatusEntry[] = [];
 
 		for (const recipient of recipients) {
 			if (!recipient.program) {
@@ -1197,27 +1227,10 @@ export const getRecipientStatusBreakdown = async (
 			if (!statusResult.success) {
 				return resultFail(statusResult.error);
 			}
-			statusCounts[statusResult.data]++;
-
-			const firstPaymentAt = recipient.payouts[0]?.paymentAt;
-			if (firstPaymentAt && firstPaymentAt >= newSince && firstPaymentAt <= nowDate) {
-				newLast30Days++;
-			}
+			entries.push({ status: statusResult.data, firstPaymentAt: recipient.payouts[0]?.paymentAt });
 		}
 
-		const { active, completed: former, suspended, future: waitlisted } = statusCounts;
-		// Becomes the interrupted status count once #3353 adds it
-		const deceased = 0;
-
-		return resultOk({
-			total: active + former + suspended + deceased,
-			active,
-			former,
-			suspended,
-			deceased,
-			newLast30Days,
-			waitlisted,
-		});
+		return resultOk(summarizeRecipientStatuses(entries, nowDate));
 	} catch (error) {
 		console.error('Could not build recipient status breakdown', { scope, error });
 
@@ -1231,6 +1244,7 @@ export const recipientStatusService = {
 	getRecipientLifecycleStatus,
 	getRecipientLifecycleStatusFromExpectedIntervals,
 	isRecipientEligibleForPayout,
+	summarizeRecipientStatuses,
 };
 
 const getActorAccessiblePrograms = async (session: Session): Promise<Result<AccessibleProgram[]>> =>
