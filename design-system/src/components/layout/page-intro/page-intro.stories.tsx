@@ -14,7 +14,8 @@ const meta = {
 		layout: 'padded',
 		docs: {
 			description: {
-				component: 'An introduction for a page or section, with an optional eyebrow. Renders nothing without content.',
+				component:
+					'An introduction for a page or section, with an optional eyebrow, illustration and actions. Renders nothing without content.',
 			},
 		},
 	},
@@ -43,5 +44,26 @@ export const SectionLongText: Story = {
 		variant: 'section',
 		eyebrow: 'Our local country office team',
 		title: 'Democratic Republic of the Congo',
+	},
+};
+
+export const WithIllustration: Story = {
+	args: { illustrationSrc: '/assets/storybook/illustration-bike.png' },
+};
+
+export const PartlyBoldTitle: Story = {
+	args: {
+		title: (
+			<>
+				<strong>Donate 1&#8239;%</strong> of your income.
+			</>
+		),
+	},
+};
+
+export const WithActions: Story = {
+	args: {
+		illustrationSrc: '/assets/storybook/illustration-bike.png',
+		actions: <a href="#video">Why donating 1%?</a>,
 	},
 };

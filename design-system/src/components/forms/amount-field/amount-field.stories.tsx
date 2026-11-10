@@ -18,7 +18,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'A numeric amount input with a floating label. Optional quick picks appear inside the field while it has focus.',
+					'A numeric amount input with a floating label. Optional quick picks appear inside the field while it has focus, or always from sm up. The large size grows the number from sm up.',
 			},
 		},
 	},
@@ -65,6 +65,17 @@ export const Inactive: Story = {
 	args: {
 		inactive: true,
 	},
+};
+
+export const Large: Story = {
+	args: { size: 'lg', value: '60', quickPicks, quickPicksVisibility: 'always', selectedQuickPick: 60 },
+	decorators: [
+		(Story) => (
+			<div className="w-[32rem]">
+				<Story />
+			</div>
+		),
+	],
 };
 
 export const WithError: Story = {
