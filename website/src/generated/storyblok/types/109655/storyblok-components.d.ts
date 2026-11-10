@@ -670,6 +670,15 @@ export interface ModalCards {
   [k: string]: unknown;
 }
 
+export interface MuxVideo {
+  playbackId: string;
+  title: string;
+  component: "muxVideo";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface NewsletterForm {
   component: "newsletterForm";
   _uid: string;
@@ -766,6 +775,7 @@ export interface Page {
     | PageIntro
     | DonationCalculator
     | Timeline
+    | VideoCarousel
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
@@ -1228,6 +1238,18 @@ export interface TwoColumnText {
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
   marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "twoColumnText";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface VideoCarousel {
+  heading?: string;
+  description?: string;
+  videos: MuxVideo[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "videoCarousel";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;

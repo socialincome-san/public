@@ -8,9 +8,10 @@ import { CampaignHero } from '@/components/campaign/campaign-hero';
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import { CampaignProgramTeaser } from '@/components/campaign/campaign-program-teaser';
-import { CampaignVideoSlider } from '@/components/campaign/campaign-video-slider';
 import { Community } from '@/components/community/community';
+import { MuxVideoCarousel } from '@/components/mux-video-carousel/mux-video-carousel';
 import { NewsletterSignup } from '@/components/newsletter/newsletter-signup';
+import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -80,12 +81,6 @@ export const CampaignDetail = async ({
 	const { faqs, videoPlaybackIds, newsletter } = pageContentResult.data;
 	const trimmedDescription = description.trim();
 	const submissionLabels = buildCampaignSubmissionLabels(tCommon);
-	const videoSliderTranslations = {
-		title: t('campaign.video-slider.title'),
-		description: t('campaign.video-slider.description'),
-		videoTitles: videoPlaybackIds.map((_, index) => t('campaign.video-slider.video-title', { index: index + 1 })),
-		showVideoLabels: videoPlaybackIds.map((_, index) => t('campaign.video-slider.show-video', { index: index + 1 })),
-	};
 
 	return (
 		<>
@@ -136,7 +131,19 @@ export const CampaignDetail = async ({
 				imageSrc={newsletter.imageSrc}
 				imageAlt={newsletter.imageAlt}
 			/>
-			<CampaignVideoSlider translations={videoSliderTranslations} videoPlaybackIds={videoPlaybackIds} />
+			{videoPlaybackIds.length > 0 && (
+				<BlockWrapper width="bleed">
+					<MuxVideoCarousel
+						title={<StoryblokMarkdown>{t('campaign.video-slider.title')}</StoryblokMarkdown>}
+						description={t('campaign.video-slider.description')}
+						videos={videoPlaybackIds.map((playbackId, index) => ({
+							id: playbackId,
+							playbackId,
+							title: t('campaign.video-slider.video-title', { index: index + 1 }),
+						}))}
+					/>
+				</BlockWrapper>
+			)}
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} currency={currency} />
 			<CampaignJournalTeaser lang={lang} currency={currency} />
 			{faqs.length > 0 && <CampaignFaqSection heading={tFaq('title')} faqs={faqs} />}

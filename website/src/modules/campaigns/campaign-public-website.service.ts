@@ -2,6 +2,7 @@ import type { CampaignGlobals, Faq } from '@/generated/storyblok/types/109655/st
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
+import { normalizeMuxPlaybackId } from '@/lib/utils/url-video-parser';
 import { getCampaignGlobals } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type { CampaignNewsletterContent, CampaignPageContent } from './campaign.types';
@@ -61,23 +62,4 @@ const toNewsletterContent = (globals: CampaignGlobals): CampaignNewsletterConten
 			: null,
 		imageAlt: imageAlt || senderName,
 	};
-};
-
-const normalizeMuxPlaybackId = (value: string): string | null => {
-	const trimmed = value.trim();
-	if (!trimmed) {
-		return null;
-	}
-
-	const playbackIdFromPlayerUrl = trimmed.match(/player\.mux\.com\/([^/?#]+)/)?.[1];
-	if (playbackIdFromPlayerUrl) {
-		return playbackIdFromPlayerUrl;
-	}
-
-	const playbackIdFromStreamUrl = trimmed.match(/stream\.mux\.com\/([^/.?#]+)/)?.[1];
-	if (playbackIdFromStreamUrl) {
-		return playbackIdFromStreamUrl;
-	}
-
-	return trimmed;
 };

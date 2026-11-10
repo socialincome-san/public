@@ -30,3 +30,13 @@ export class YouTubeVideoMatchAndExtract implements VideoMatchAndExtract {
 		return null;
 	}
 }
+
+// Editors paste either the playback ID or a player or stream link
+export const normalizeMuxPlaybackId = (value: string): string | null => {
+	const trimmed = value.trim();
+	if (!trimmed) {
+		return null;
+	}
+
+	return trimmed.match(/player\.mux\.com\/([^/?#]+)/)?.[1] ?? trimmed.match(/stream\.mux\.com\/([^/.?#]+)/)?.[1] ?? trimmed;
+};

@@ -43,6 +43,7 @@ import { TransparencyCountriesBlock } from '@/components/content-blocks/transpar
 import { TransparencySummaryBlock } from '@/components/content-blocks/transparency-summary-block';
 import { TwoColumnBlock } from '@/components/content-blocks/two-column';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
+import { VideoCarouselBlock } from '@/components/content-blocks/video-carousel';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/newsletter/newsletter-signup';
 import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -174,6 +175,8 @@ const renderPageBlock = (
 		}
 		case 'twoColumnText':
 			return <TwoColumnTextBlock blok={block} />;
+		case 'videoCarousel':
+			return <VideoCarouselBlock blok={block} />;
 		case 'videoText':
 			return <VideoTextBlock blok={block} />;
 		case 'runwayMonthGrid':
