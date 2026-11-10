@@ -18,5 +18,12 @@
 			"path": "/api/v1/monthly-summary",
 			"schedule": "0 8 1 * *"
 		}
-	]
+	],
+	"git": {
+		"deploymentEnabled": {
+			"**": false,
+			"main": true,
+			"production": true
+		}
+	}
 }

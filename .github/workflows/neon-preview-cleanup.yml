@@ -1,0 +1,21 @@
+name: Delete Neon preview branch
+
+# pull_request_target so PRs from forks can read NEON_API_KEY; safe because nothing from the PR is checked out or run.
+on:
+  pull_request_target:
+    types:
+      - closed
+
+jobs:
+  delete-neon-branch:
+    name: "🧹 Delete Neon preview branch"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete preview/${{ github.head_ref }}
+        uses: neondatabase/delete-branch-action@4468d825d5a88ef4012f1705a82f02ec3072f776 # v3.2.1
+        # Most PRs never get a preview, so the branch usually does not exist.
+        continue-on-error: true
+        with:
+          project_id: plain-haze-45855712 # social-income-website-staging
+          branch: preview/${{ github.head_ref }}
+          api_key: ${{ secrets.NEON_API_KEY }}
