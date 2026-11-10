@@ -55,3 +55,11 @@ export const CustomMinMax: Story = {
 	},
 	render: renderSlider,
 };
+
+export const Large: Story = {
+	args: {
+		defaultValue: [40],
+		size: 'lg',
+	},
+	render: renderSlider,
+};

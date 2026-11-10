@@ -1,9 +1,35 @@
+import { cva } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 import { Input } from '../input/input';
 
 const fieldBorder = 'border-input/60';
+
+// lg matches the compact donation box on small screens and gives the number more room from sm up
+const labelVariants = cva('', {
+	variants: {
+		size: { default: '', lg: '' },
+		floating: { true: 'text-2xs top-3', false: 'top-1/2 -translate-y-1/2 text-sm' },
+	},
+	compoundVariants: [
+		{ size: 'lg', floating: true, className: 'sm:text-xs' },
+		{ size: 'lg', floating: false, className: 'sm:text-base' },
+	],
+});
+
+const spacerVariants = cva('h-3.5', { variants: { size: { default: '', lg: 'sm:h-4' } } });
+
+const rowVariants = cva('flex items-baseline gap-2 text-lg leading-none font-medium @max-[10rem]:flex-wrap', {
+	variants: { size: { default: '', lg: 'sm:gap-3 sm:text-4xl sm:leading-tight' } },
+});
+
+const chipVariants = cva(
+	'text-2xs cursor-pointer rounded-full border px-2.5 py-1 font-medium whitespace-nowrap transition-colors',
+	{
+		variants: { size: { default: '', lg: 'sm:px-3 sm:text-xs' } },
+	},
+);
 
 type AmountQuickPick = {
 	value: number;
@@ -20,7 +46,10 @@ type AmountFieldProps = {
 	quickPicks?: AmountQuickPick[];
 	selectedQuickPick?: number | null;
 	onQuickPickSelect?: (value: number) => void;
-} & WithoutClassName<Omit<React.ComponentProps<'input'>, 'value'>>;
+	// always: the quick picks also show while the field is idle from sm up, so a roomy field does not look empty
+	quickPicksVisibility?: 'focus' | 'always';
+	size?: 'default' | 'lg';
+} & WithoutClassName<Omit<React.ComponentProps<'input'>, 'value' | 'size'>>;
 
 const AmountField = ({
 	label,
@@ -30,6 +59,8 @@ const AmountField = ({
 	quickPicks = [],
 	selectedQuickPick = null,
 	onQuickPickSelect,
+	quickPicksVisibility = 'focus',
+	size = 'default',
 	id,
 	...props
 }: AmountFieldProps) => {
@@ -38,7 +69,7 @@ const AmountField = ({
 	const errorId = `${inputId}-error`;
 
 	return (
-		<div>
+		<div className="w-full">
 			<div
 				className={cn(
 					fieldBorder,
@@ -50,16 +81,16 @@ const AmountField = ({
 					htmlFor={inputId}
 					className={cn(
 						'absolute left-4 cursor-text font-medium transition-all motion-reduce:transition-none',
-						value === ''
-							? 'group-focus-within:text-2xs top-1/2 -translate-y-1/2 text-sm group-focus-within:top-3 group-focus-within:translate-y-0'
-							: 'text-2xs top-3',
+						labelVariants({ size, floating: value !== '' }),
+						value === '' && 'group-focus-within:text-2xs group-focus-within:top-3 group-focus-within:translate-y-0',
+						value === '' && size === 'lg' && 'sm:group-focus-within:text-xs',
 					)}
 				>
 					{label}
 				</label>
-				<div className="h-3.5" aria-hidden />
+				<div className={spacerVariants({ size })} aria-hidden />
 				{/* Below 10rem the chips no longer fit next to the digits and move to their own line */}
-				<div className="flex items-baseline gap-2 text-lg leading-none font-medium @max-[10rem]:flex-wrap">
+				<div className={rowVariants({ size })}>
 					<Input
 						variant="bare"
 						id={inputId}
@@ -71,7 +102,13 @@ const AmountField = ({
 					/>
 					{quickPicks.length > 0 && (
 						// The shift puts the chips' bottom edge on the bottom of the digits
-						<div className="-my-1 hidden shrink-0 -translate-y-2 gap-1.5 group-focus-within:flex @max-[10rem]:my-0 @max-[10rem]:shrink @max-[10rem]:translate-y-0 @max-[10rem]:flex-wrap">
+						<div
+							className={cn(
+								'-my-1 hidden shrink-0 -translate-y-2 gap-1.5 group-focus-within:flex @max-[10rem]:my-0 @max-[10rem]:shrink @max-[10rem]:translate-y-0 @max-[10rem]:flex-wrap',
+								quickPicksVisibility === 'always' && 'sm:flex',
+								size === 'lg' && 'sm:my-0 sm:-translate-y-1.5',
+							)}
+						>
 							{quickPicks.map((quickPick) => (
 								<button
 									key={quickPick.value}
@@ -83,7 +120,7 @@ const AmountField = ({
 									onClick={() => onQuickPickSelect?.(quickPick.value)}
 									className={cn(
 										fieldBorder,
-										'text-2xs cursor-pointer rounded-full border px-2.5 py-1 font-medium whitespace-nowrap transition-colors',
+										chipVariants({ size }),
 										selectedQuickPick === quickPick.value
 											? 'bg-muted text-foreground'
 											: 'bg-card text-muted-foreground hover:bg-muted/50 hover:text-foreground',

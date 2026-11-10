@@ -29,3 +29,11 @@ export const Vertical: Story = {
 		</div>
 	),
 };
+
+export const WithLabel: Story = {
+	render: () => (
+		<div className="w-80">
+			<Separator label="Or choose own amount" />
+		</div>
+	),
+};
