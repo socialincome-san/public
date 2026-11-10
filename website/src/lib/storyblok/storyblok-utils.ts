@@ -410,3 +410,23 @@ export const getTitleAndTextMetadata = (story: ISbStoryData<{ title?: string; te
 	title: story.content.title?.trim() ? story.content.title.trim() : story.name,
 	description: story.content.text,
 });
+
+type TranslatedStoryName = { lang: string; name: string };
+
+const isTranslatedStoryName = (value: unknown): value is TranslatedStoryName =>
+	typeof value === 'object' &&
+	value !== null &&
+	'lang' in value &&
+	'name' in value &&
+	typeof value.lang === 'string' &&
+	typeof value.name === 'string';
+
+// story.name is always the default language; translated names live in translated_slugs
+export const getTranslatedStoryName = (
+	story: { name?: string; translated_slugs?: unknown[] | null },
+	language: string,
+): string | undefined =>
+	story.translated_slugs
+		?.filter(isTranslatedStoryName)
+		.find((translation) => translation.lang === language && translation.name.trim())
+		?.name.trim() ?? story.name?.trim();

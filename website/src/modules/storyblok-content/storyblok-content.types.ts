@@ -2,6 +2,7 @@ export type { ResolvedArticle } from '@/lib/storyblok/storyblok-article';
 
 export type StoryTitleData = {
 	name?: string;
+	translated_slugs?: unknown[] | null;
 	content?: {
 		component?: string;
 		title?: string;
