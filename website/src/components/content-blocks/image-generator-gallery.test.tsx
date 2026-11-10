@@ -97,10 +97,10 @@ test('renders nothing when there are no images', async () => {
 	expect(storyblokEditable).not.toHaveBeenCalled();
 });
 
-test('initially renders 24 images and offers a load-more button for the rest', async () => {
+test('initially renders 12 images and offers a load-more button for a gallery of 19 images', async () => {
 	jest.mocked(getImageGeneratorGalleryAction).mockResolvedValueOnce(
 		resultOk(
-			Array.from({ length: 25 }, (_, index) => ({
+			Array.from({ length: 19 }, (_, index) => ({
 				id: String(index),
 				prompt: null,
 				previewUrl: `${blobHost}/previews/image-${index}.webp`,
@@ -111,9 +111,27 @@ test('initially renders 24 images and offers a load-more button for the rest', a
 		),
 	);
 	const markup = renderToStaticMarkup(await ImageGeneratorGalleryBlock({ blok, lang: 'en' }));
-	expect(markup.match(/<article\b/g)).toHaveLength(24);
+	expect(markup.match(/<article\b/g)).toHaveLength(12);
 	expect(markup).toContain('Load more');
-	expect(markup).not.toContain('/previews/image-24.webp');
+	expect(markup).not.toContain('/previews/image-12.webp');
+});
+
+test('does not offer load more when all 12 images are already visible', async () => {
+	jest.mocked(getImageGeneratorGalleryAction).mockResolvedValueOnce(
+		resultOk(
+			Array.from({ length: 12 }, (_, index) => ({
+				id: String(index),
+				prompt: null,
+				previewUrl: `${blobHost}/previews/image-${index}.webp`,
+				imageUrl: null,
+				costUsd: null,
+				createdAt: null,
+			})),
+		),
+	);
+	const markup = renderToStaticMarkup(await ImageGeneratorGalleryBlock({ blok, lang: 'en' }));
+	expect(markup.match(/<article\b/g)).toHaveLength(12);
+	expect(markup).not.toContain('Load more');
 });
 
 test('renders nothing when the image generator is unavailable', async () => {

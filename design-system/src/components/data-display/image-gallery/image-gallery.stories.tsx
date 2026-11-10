@@ -70,7 +70,12 @@ export const UnavailablePrice: Story = {
 };
 
 export const WithLoadMore: Story = {
-	args: { density: 'compact', infoPlacement: 'metadata', pagination: { pageSize: 2, loadMoreLabel: 'Load more' } },
+	args: {
+		density: 'compact',
+		infoPlacement: 'metadata',
+		images: Array.from({ length: 19 }, (_, index) => ({ ...images[index % images.length], id: String(index) })),
+		pagination: { pageSize: 12, loadMoreLabel: 'Load more' },
+	},
 };
 
 export const WithActions: Story = {
