@@ -8,6 +8,7 @@ import { storyblokRichtextToPlainText } from '@/lib/storyblok/storyblok-richtext
 import { getStoryblokMetadataImage } from '@/lib/storyblok/storyblok-utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
 import { getCountryPageStats } from '@/modules/countries/country.cache';
+import { EMPTY_RECIPIENT_STATUS_BREAKDOWN } from '@/modules/recipients/recipient.types';
 import { getCountryBySlug } from '@/modules/storyblok-content/storyblok-content.cache';
 import { notFound } from 'next/navigation';
 
@@ -44,9 +45,9 @@ export default async function CountryPage({ params }: DefaultLayoutPropsWithSlug
 		getCountryPageStats(countryResult.data.content.isoCode.toString()),
 		getCommunityPanelData(pickCommunityPage(countryResult.data.content), lang, toWebsiteCurrency(currency)),
 	]);
-	const { activeProgramsCount, recipientsCount, candidatesCount } = statsResult.success
+	const { activeProgramsCount, recipientStatusBreakdown, candidatesCount } = statsResult.success
 		? statsResult.data
-		: { activeProgramsCount: 0, recipientsCount: 0, candidatesCount: 0 };
+		: { activeProgramsCount: 0, recipientStatusBreakdown: EMPTY_RECIPIENT_STATUS_BREAKDOWN, candidatesCount: 0 };
 
 	return (
 		<CountryDetail
@@ -54,7 +55,7 @@ export default async function CountryPage({ params }: DefaultLayoutPropsWithSlug
 			lang={lang as WebsiteLanguage}
 			currency={toWebsiteCurrency(currency)}
 			activeProgramsCount={activeProgramsCount}
-			recipientsCount={recipientsCount}
+			recipientStatusBreakdown={recipientStatusBreakdown}
 			candidatesCount={candidatesCount}
 			community={communityResult.success ? communityResult.data : null}
 		/>

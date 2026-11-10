@@ -1,4 +1,5 @@
 import type { CountryCode, Currency, NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
+import type { RecipientStatusBreakdown } from '@/modules/recipients/recipient.types';
 
 export type MobileMoneyProviderRef = {
 	id: string;
@@ -125,7 +126,7 @@ export type CountryStatisticRow = {
 
 export type CountryPageStats = {
 	activeProgramsCount: number;
-	recipientsCount: number;
+	recipientStatusBreakdown: RecipientStatusBreakdown;
 	candidatesCount: number;
 };
 

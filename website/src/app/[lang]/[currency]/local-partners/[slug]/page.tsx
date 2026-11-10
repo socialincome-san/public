@@ -9,6 +9,7 @@ import { toWebsiteCurrency } from '@/lib/i18n/utils';
 import { getStoryblokMetadataImage } from '@/lib/storyblok/storyblok-utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
 import { getLocalPartnerDashboardStats } from '@/modules/local-partners/local-partner.cache';
+import { EMPTY_RECIPIENT_STATUS_BREAKDOWN } from '@/modules/recipients/recipient.types';
 import { getLocalPartnerBySlug } from '@/modules/storyblok-content/storyblok-content.cache';
 import { notFound } from 'next/navigation';
 
@@ -45,16 +46,16 @@ export default async function LocalPartnerPage({ params }: DefaultLayoutPropsWit
 		getLocalPartnerDashboardStats(localPartnerResult.data.content.portalSlug),
 		getCommunityPanelData(pickCommunityPage(localPartnerResult.data.content), lang, toWebsiteCurrency(currency)),
 	]);
-	const { recipientsCount, completedSurveysCount } = statsResult.success
+	const { recipientStatusBreakdown, completedSurveysCount } = statsResult.success
 		? statsResult.data
-		: { recipientsCount: 0, completedSurveysCount: 0 };
+		: { recipientStatusBreakdown: EMPTY_RECIPIENT_STATUS_BREAKDOWN, completedSurveysCount: 0 };
 
 	return (
 		<LocalPartnerDetail
 			localPartner={localPartnerResult.data}
 			lang={lang as WebsiteLanguage}
 			currency={toWebsiteCurrency(currency)}
-			recipientsCount={recipientsCount}
+			recipientStatusBreakdown={recipientStatusBreakdown}
 			completedSurveysCount={completedSurveysCount}
 			community={communityResult.success ? communityResult.data : null}
 		/>

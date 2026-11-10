@@ -120,6 +120,29 @@ export type SurveyRecipientOption = {
 
 export type RecipientLifecycleStatus = 'future' | 'active' | 'suspended' | 'completed';
 
+export type RecipientStatusScope = { programId: string } | { localPartnerSlug: string } | { countryCode: CountryCode };
+
+export type RecipientStatusBreakdown = {
+	// active + former + suspended + deceased; newLast30Days and waitlisted are not part of it
+	total: number;
+	active: number;
+	former: number;
+	suspended: number;
+	deceased: number;
+	newLast30Days: number;
+	waitlisted: number;
+};
+
+export const EMPTY_RECIPIENT_STATUS_BREAKDOWN: RecipientStatusBreakdown = {
+	total: 0,
+	active: 0,
+	former: 0,
+	suspended: 0,
+	deceased: 0,
+	newLast30Days: 0,
+	waitlisted: 0,
+};
+
 export type RecipientLifecycleStatusInput = {
 	startDate: Date | null;
 	suspendedAt: Date | null;

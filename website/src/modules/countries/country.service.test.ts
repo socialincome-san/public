@@ -2,6 +2,7 @@ import { UserRole } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
 import type { UserSession } from '@/modules/users/user.types';
 
+import type * as RecipientTypes from '@/modules/recipients/recipient.types';
 const mockIsAdmin = jest.fn();
 const mockFindCountryById = jest.fn();
 const mockFindPaginatedCountries = jest.fn();
@@ -9,6 +10,7 @@ const mockFindCountriesForFeasibility = jest.fn();
 const mockFindUnassignedRecipientCountries = jest.fn();
 const mockFindPublicCountryStats = jest.fn();
 const mockCountCandidatesForLocalPartnerCountry = jest.fn();
+const mockGetRecipientStatusBreakdown = jest.fn();
 const mockFindCountryByIsoCode = jest.fn();
 const mockCreateCountry = jest.fn();
 const mockUpdateCountry = jest.fn();
@@ -22,6 +24,9 @@ jest.mock('@/modules/users/user.service', () => ({
 jest.mock('@/modules/recipients/recipient.service', () => ({
 	getUnassignedRecipientCountries: mockFindUnassignedRecipientCountries,
 	countCandidatesForCountry: mockCountCandidatesForLocalPartnerCountry,
+	getRecipientStatusBreakdown: mockGetRecipientStatusBreakdown,
+	EMPTY_RECIPIENT_STATUS_BREAKDOWN: jest.requireActual<typeof RecipientTypes>('@/modules/recipients/recipient.types')
+		.EMPTY_RECIPIENT_STATUS_BREAKDOWN,
 }));
 
 jest.mock('@/integrations/world-bank/world-bank.integration', () => ({
@@ -43,12 +48,23 @@ jest.mock('./country.repository.write', () => ({
 	deleteCountry: mockDeleteCountry,
 }));
 
+import { EMPTY_RECIPIENT_STATUS_BREAKDOWN } from '@/modules/recipients/recipient.types';
 import {
 	deleteCountry,
 	getCountryPageStats,
 	getPaginatedCountryTableView,
 	getProgramCountryFeasibility,
 } from './country.service';
+
+const recipientStatusBreakdown = {
+	total: 4,
+	active: 2,
+	former: 1,
+	suspended: 1,
+	deceased: 0,
+	newLast30Days: 1,
+	waitlisted: 3,
+};
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -143,11 +159,13 @@ describe('country service', () => {
 			{ ...createCountry('country-sl', 'SL'), programs: [{ _count: { recipients: 4 } }], _count: { programs: 1 } },
 		]);
 		mockCountCandidatesForLocalPartnerCountry.mockResolvedValue({ success: true, data: 3 });
+		mockGetRecipientStatusBreakdown.mockResolvedValue({ success: true, data: recipientStatusBreakdown });
 
 		const data = expectSuccess(await getCountryPageStats('sl'));
 
-		expect(data).toEqual({ activeProgramsCount: 1, recipientsCount: 4, candidatesCount: 3 });
+		expect(data).toEqual({ activeProgramsCount: 1, recipientStatusBreakdown, candidatesCount: 3 });
 		expect(mockCountCandidatesForLocalPartnerCountry).toHaveBeenCalledWith('SL');
+		expect(mockGetRecipientStatusBreakdown).toHaveBeenCalledWith({ countryCode: 'SL' });
 	});
 
 	test('keeps the other country page stats when the candidate count fails', async () => {
@@ -158,10 +176,23 @@ describe('country service', () => {
 			success: false,
 			error: 'Could not count candidates',
 		});
+		mockGetRecipientStatusBreakdown.mockResolvedValue({ success: true, data: recipientStatusBreakdown });
 
 		const data = expectSuccess(await getCountryPageStats('SL'));
 
-		expect(data).toEqual({ activeProgramsCount: 1, recipientsCount: 4, candidatesCount: 0 });
+		expect(data).toEqual({ activeProgramsCount: 1, recipientStatusBreakdown, candidatesCount: 0 });
+	});
+
+	test('falls back to an empty recipient breakdown when it cannot be built', async () => {
+		mockFindPublicCountryStats.mockResolvedValue([
+			{ ...createCountry('country-sl', 'SL'), programs: [{ _count: { recipients: 4 } }], _count: { programs: 1 } },
+		]);
+		mockCountCandidatesForLocalPartnerCountry.mockResolvedValue({ success: true, data: 3 });
+		mockGetRecipientStatusBreakdown.mockResolvedValue({ success: false, error: 'Could not build' });
+
+		const data = expectSuccess(await getCountryPageStats('SL'));
+
+		expect(data.recipientStatusBreakdown).toEqual(EMPTY_RECIPIENT_STATUS_BREAKDOWN);
 	});
 });
 

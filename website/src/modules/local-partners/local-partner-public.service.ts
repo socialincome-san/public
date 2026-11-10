@@ -4,10 +4,11 @@ import { LOCAL_PARTNER_PROGRAM_ROWS, selectLocalPartnerProgramStories } from '@/
 import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from '@/lib/storyblok/program-story';
 import { getDefaultCampaignForProgram } from '@/modules/campaigns/campaign.service';
 import { getPublicProgramFilterDataByPortalSlugs } from '@/modules/programs/program.service';
+import { EMPTY_RECIPIENT_STATUS_BREAKDOWN, getRecipientStatusBreakdown } from '@/modules/recipients/recipient.service';
 import { getPrograms } from '@/modules/storyblok-content/storyblok-content.cache';
 import {
+	countPublicLocalPartnerCompletedSurveysBySlug,
 	getProgramRecipientCountsByLocalPartnerSlug,
-	getPublicLocalPartnerDashboardStatsBySlug,
 	getPublicLocalPartnerOverviewStatsBySlugs,
 } from './local-partner.service';
 import type {
@@ -17,7 +18,7 @@ import type {
 } from './local-partner.types';
 
 const emptyDashboardStats: LocalPartnerDashboardStats = {
-	recipientsCount: 0,
+	recipientStatusBreakdown: EMPTY_RECIPIENT_STATUS_BREAKDOWN,
 	completedSurveysCount: 0,
 };
 
@@ -34,9 +35,15 @@ export const getLocalPartnerDashboardStats = async (portalSlug?: string): Promis
 		return resultOk(emptyDashboardStats);
 	}
 
-	const statsResult = await getPublicLocalPartnerDashboardStatsBySlug(normalizedSlug);
+	const [breakdownResult, completedSurveysResult] = await Promise.all([
+		getRecipientStatusBreakdown({ localPartnerSlug: normalizedSlug }),
+		countPublicLocalPartnerCompletedSurveysBySlug(normalizedSlug),
+	]);
 
-	return resultOk(statsResult.success ? statsResult.data : emptyDashboardStats);
+	return resultOk({
+		recipientStatusBreakdown: breakdownResult.success ? breakdownResult.data : EMPTY_RECIPIENT_STATUS_BREAKDOWN,
+		completedSurveysCount: completedSurveysResult.success ? completedSurveysResult.data : 0,
+	});
 };
 
 export const getLocalPartnerOverviewStats = async (

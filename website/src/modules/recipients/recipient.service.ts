@@ -23,7 +23,7 @@ import { getLocalPartnerFilterOption, getLocalPartnerOptions } from '@/modules/l
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 import { getProgramNameById } from '@/modules/programs/program-reference.service';
-import { differenceInCalendarDays, startOfDay } from 'date-fns';
+import { differenceInCalendarDays, startOfDay, subDays } from 'date-fns';
 import {
 	canCreateRecipient,
 	canExportRecipients,
@@ -60,6 +60,8 @@ import {
 	RecipientPayload,
 	RecipientProgramAssignment,
 	RecipientProgramFilterOption,
+	RecipientStatusBreakdown,
+	RecipientStatusScope,
 	RecipientTableQuery,
 	RecipientTableViewRow,
 	RecipientUpcomingOnboardingPaginatedTableView,
@@ -1162,6 +1164,64 @@ export const countCandidatesForCountry = async (countryCode: CountryCode): Promi
 		console.error('Could not count candidates for country', { countryCode, error });
 
 		return resultFail('Could not count candidates');
+	}
+};
+
+export { EMPTY_RECIPIENT_STATUS_BREAKDOWN } from './recipient.types';
+
+const NEW_RECIPIENT_WINDOW_IN_DAYS = 30;
+
+export const getRecipientStatusBreakdown = async (
+	scope: RecipientStatusScope,
+): Promise<Result<RecipientStatusBreakdown>> => {
+	try {
+		const recipients = await recipientRepository.findRecipientStatusSources(scope);
+		const nowDate = now();
+		const newSince = subDays(nowDate, NEW_RECIPIENT_WINDOW_IN_DAYS);
+		// A Record over the union makes the compiler flag this function when a lifecycle status is added
+		const statusCounts: Record<RecipientLifecycleStatus, number> = { future: 0, active: 0, suspended: 0, completed: 0 };
+		let newLast30Days = 0;
+
+		for (const recipient of recipients) {
+			if (!recipient.program) {
+				continue;
+			}
+			const statusResult = getRecipientLifecycleStatus({
+				startDate: recipient.startDate,
+				suspendedAt: recipient.suspendedAt,
+				paidOrConfirmedCount: recipient._count.payouts,
+				programDurationInMonths: recipient.program.programDurationInMonths,
+				payoutInterval: recipient.program.payoutInterval,
+				nowDate,
+			});
+			if (!statusResult.success) {
+				return resultFail(statusResult.error);
+			}
+			statusCounts[statusResult.data]++;
+
+			const firstPaymentAt = recipient.payouts[0]?.paymentAt;
+			if (firstPaymentAt && firstPaymentAt >= newSince && firstPaymentAt <= nowDate) {
+				newLast30Days++;
+			}
+		}
+
+		const { active, completed: former, suspended, future: waitlisted } = statusCounts;
+		// Becomes the interrupted status count once #3353 adds it
+		const deceased = 0;
+
+		return resultOk({
+			total: active + former + suspended + deceased,
+			active,
+			former,
+			suspended,
+			deceased,
+			newLast30Days,
+			waitlisted,
+		});
+	} catch (error) {
+		console.error('Could not build recipient status breakdown', { scope, error });
+
+		return resultFail('Could not build recipient status breakdown');
 	}
 };
 

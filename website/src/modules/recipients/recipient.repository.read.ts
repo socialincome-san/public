@@ -1,7 +1,9 @@
 import type { Prisma } from '@/generated/prisma/client';
-import type { CountryCode } from '@/generated/prisma/enums';
+import { PayoutStatus, type CountryCode } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
-import type { RecipientTableQuery } from './recipient.types';
+import type { RecipientStatusScope, RecipientTableQuery } from './recipient.types';
+
+const paidOrConfirmedPayoutStatuses = [PayoutStatus.paid, PayoutStatus.confirmed];
 
 export const findRecipientMonthlySummarySource = async (from: Date, to: Date) => {
 	const [newRecipientCount, recipients] = await Promise.all([
@@ -28,6 +30,27 @@ export const findRecipientMonthlySummarySource = async (from: Date, to: Date) =>
 
 	return { newRecipientCount, recipients };
 };
+
+export const findRecipientStatusSources = async (scope: RecipientStatusScope) =>
+	prisma.recipient.findMany({
+		where: {
+			programId: 'programId' in scope ? scope.programId : { not: null },
+			...('localPartnerSlug' in scope ? { localPartner: { slug: scope.localPartnerSlug } } : {}),
+			...('countryCode' in scope ? { program: { country: { isoCode: scope.countryCode } } } : {}),
+		},
+		select: {
+			startDate: true,
+			suspendedAt: true,
+			program: { select: { programDurationInMonths: true, payoutInterval: true } },
+			_count: { select: { payouts: { where: { status: { in: paidOrConfirmedPayoutStatuses } } } } },
+			payouts: {
+				where: { status: { in: paidOrConfirmedPayoutStatuses } },
+				select: { paymentAt: true },
+				orderBy: { paymentAt: 'asc' },
+				take: 1,
+			},
+		},
+	});
 
 export const findRecipientOwnership = async (recipientId: string) =>
 	prisma.recipient.findUnique({

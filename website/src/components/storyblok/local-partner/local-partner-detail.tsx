@@ -5,10 +5,12 @@ import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonia
 import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
+import { buildRecipientsStat } from '@/components/storyblok/shared/recipients-stat';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { getLocalPartnerProgramSummariesAction } from '@/modules/local-partners/local-partner.actions';
+import type { RecipientStatusBreakdown } from '@/modules/recipients/recipient.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
 import { LocalPartnerAboutMetaCard, LocalPartnerFocusBadges } from './local-partner-about-meta';
@@ -23,7 +25,7 @@ type Props = {
 	localPartner: LocalPartnerStory;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
-	recipientsCount: number;
+	recipientStatusBreakdown: RecipientStatusBreakdown;
 	completedSurveysCount: number;
 	community: CommunityPanelData | null;
 };
@@ -32,7 +34,7 @@ export const LocalPartnerDetail = async ({
 	localPartner,
 	lang,
 	currency,
-	recipientsCount,
+	recipientStatusBreakdown,
 	completedSurveysCount,
 	community,
 }: Props) => {
@@ -70,13 +72,12 @@ export const LocalPartnerDetail = async ({
 				showDonationsFormMobile={false}
 				heroCard={heroCard}
 				stats={[
-					{
-						value: recipientsCount,
-						label:
-							recipientsCount === 1
-								? t('local-partners-page.recipient-singular')
-								: t('local-partners-page.recipient-plural'),
-					},
+					buildRecipientsStat(
+						recipientStatusBreakdown,
+						recipientStatusBreakdown.total === 1
+							? t('local-partners-page.recipient-singular')
+							: t('local-partners-page.recipient-plural'),
+					),
 					{
 						value: completedSurveysCount,
 						label:

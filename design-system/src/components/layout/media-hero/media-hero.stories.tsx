@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Button } from '../../actions/button/button';
 import { Badge } from '../../data-display/badge/badge';
 import { Card } from '../../data-display/card/card';
+import { ValueList, ValueListDivider, ValueListRow } from '../../data-display/value-list/value-list';
 import { MediaHero, MediaHeroChips, MediaHeroIntro, MediaHeroPill, MediaHeroStat, MediaHeroStats } from './media-hero';
 
 const image = { src: '/assets/storybook/placeholder-portrait.svg', alt: 'Recipients in Sierra Leone' };
@@ -49,6 +50,33 @@ export const DetailPage: Story = {
 			>
 				<MediaHeroChips>
 					<MediaHeroPill>162 Recipients</MediaHeroPill>
+					<MediaHeroPill>3 Programs</MediaHeroPill>
+				</MediaHeroChips>
+			</MediaHeroIntro>
+		),
+	},
+};
+
+export const PillWithTooltip: Story = {
+	args: {
+		image,
+		children: (
+			<MediaHeroIntro title="Sierra Leone">
+				<MediaHeroChips>
+					<MediaHeroPill
+						tooltip={
+							<ValueList>
+								<ValueListRow label="Active" value="120" />
+								<ValueListRow label="Former" value="40" />
+								<ValueListRow label="Suspended" value="2" />
+								<ValueListDivider />
+								<ValueListRow label="New (30 days)" value="8" />
+								<ValueListRow label="Waitlisted" value="25" />
+							</ValueList>
+						}
+					>
+						162 Recipients
+					</MediaHeroPill>
 					<MediaHeroPill>3 Programs</MediaHeroPill>
 				</MediaHeroChips>
 			</MediaHeroIntro>

@@ -1,6 +1,7 @@
 import { Currency, PayoutInterval } from '@/generated/prisma/enums';
 import { resultOk } from '@/lib/result';
 
+import type * as RecipientTypes from '@/modules/recipients/recipient.types';
 const mockGetLatestRates = jest.fn();
 const mockFindProgramDashboardSource = jest.fn();
 const mockGetExpectedIntervals = jest.fn();
@@ -11,6 +12,9 @@ jest.mock('@/modules/exchange-rates/exchange-rate.service', () => ({
 	getLatestRates: mockGetLatestRates,
 }));
 jest.mock('@/modules/recipients/recipient.service', () => ({
+	getRecipientStatusBreakdown: jest.fn(),
+	EMPTY_RECIPIENT_STATUS_BREAKDOWN: jest.requireActual<typeof RecipientTypes>('@/modules/recipients/recipient.types')
+		.EMPTY_RECIPIENT_STATUS_BREAKDOWN,
 	recipientStatusService: {
 		countPaidOrConfirmedPayouts: mockCountPaidOrConfirmedPayouts,
 		getExpectedIntervals: mockGetExpectedIntervals,

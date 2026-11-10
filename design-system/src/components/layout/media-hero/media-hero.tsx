@@ -4,6 +4,7 @@ import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 import { Progress } from '../../feedback/progress/progress';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../overlays/tool-tip/tool-tip';
 import { BlockWrapper } from '../block-wrapper/block-wrapper';
 
 export type MediaHeroImage = {
@@ -203,11 +204,37 @@ export const MediaHeroChips = ({ children }: { children: ReactNode }) => (
 	<div className="flex flex-wrap gap-2">{children}</div>
 );
 
-export const MediaHeroPill = ({ children }: { children: ReactNode }) => (
-	<span className="text-primary-foreground border-primary-foreground/50 bg-foreground/40 inline-flex items-center justify-center rounded-full border px-3 py-1 text-xs leading-none font-medium">
-		{children}
-	</span>
-);
+const mediaHeroPillClasses =
+	'text-primary-foreground border-primary-foreground/50 bg-foreground/40 inline-flex items-center justify-center rounded-full border px-3 py-1 text-xs leading-none font-medium';
+
+type MediaHeroPillProps = {
+	children: ReactNode;
+	// Turns the pill into a focusable button that shows this content on hover, focus or tap
+	tooltip?: ReactNode;
+};
+
+export const MediaHeroPill = ({ children, tooltip }: MediaHeroPillProps) => {
+	if (!tooltip) {
+		return <span className={mediaHeroPillClasses}>{children}</span>;
+	}
+
+	return (
+		<Tooltip>
+			<TooltipTrigger asChild>
+				<button
+					type="button"
+					className={cn(
+						mediaHeroPillClasses,
+						'focus-visible:ring-ring cursor-help focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+					)}
+				>
+					{children}
+				</button>
+			</TooltipTrigger>
+			<TooltipContent sideOffset={8}>{tooltip}</TooltipContent>
+		</Tooltip>
+	);
+};
 
 export const MediaHeroStats = ({ children }: { children: ReactNode }) => (
 	<div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-16">{children}</div>

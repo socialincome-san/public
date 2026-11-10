@@ -1,4 +1,5 @@
 import type { CountryCode, Gender } from '@/generated/prisma/enums';
+import type { RecipientStatusBreakdown } from '@/modules/recipients/recipient.types';
 
 type ContactPhone = {
 	id: string;
@@ -105,7 +106,7 @@ export type PublicProgramLocalPartner = {
 };
 
 export type LocalPartnerDashboardStats = {
-	recipientsCount: number;
+	recipientStatusBreakdown: RecipientStatusBreakdown;
 	completedSurveysCount: number;
 };
 

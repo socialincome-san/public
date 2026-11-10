@@ -3,7 +3,11 @@ import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
-import { recipientStatusService } from '@/modules/recipients/recipient.service';
+import {
+	EMPTY_RECIPIENT_STATUS_BREAKDOWN,
+	getRecipientStatusBreakdown,
+	recipientStatusService,
+} from '@/modules/recipients/recipient.service';
 import * as programRepository from './program.repository.read';
 import type { ProgramBudgetCalculationInput, ProgramFinancesStatsInput } from './program.schemas';
 import type {
@@ -122,7 +126,10 @@ export const getProgramDashboardStats = async (programId: string): Promise<Resul
 		}
 		const totalExpectedIntervals = totalExpectedIntervalsResult.data;
 		const cohorts = splitRecipientCohorts(program, nowDate, totalExpectedIntervals);
-		const rates = await getLatestRatesOrUndefined();
+		const [rates, breakdownResult] = await Promise.all([
+			getLatestRatesOrUndefined(),
+			getRecipientStatusBreakdown({ programId }),
+		]);
 		const costPerIntervalProgramCurrency = cohorts.activeRecipientsCount * payoutPerInterval;
 		const costPerIntervalChf =
 			convertAmount(costPerIntervalProgramCurrency, program.country.currency, Currency.CHF, rates) ??
@@ -145,6 +152,7 @@ export const getProgramDashboardStats = async (programId: string): Promise<Resul
 		const surveys = computeSurveys(program);
 
 		return resultOk({
+			recipientStatusBreakdown: breakdownResult.success ? breakdownResult.data : EMPTY_RECIPIENT_STATUS_BREAKDOWN,
 			...contributions,
 			totalProgramCostsChf,
 			...payouts,

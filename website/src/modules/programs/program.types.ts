@@ -8,6 +8,7 @@ import type {
 	ProgramPermission,
 	SurveyStatus,
 } from '@/generated/prisma/enums';
+import type { RecipientStatusBreakdown } from '@/modules/recipients/recipient.types';
 
 export type ProgramWallet = {
 	id: string;
@@ -160,6 +161,7 @@ export type ProgramFinancesDisplayAmounts = {
 };
 
 export type ProgramDashboardStats = {
+	recipientStatusBreakdown: RecipientStatusBreakdown;
 	contributedToProgramSoFarChf: number;
 	contributedViaStripeChf: number;
 	contributedViaWireTransferChf: number;

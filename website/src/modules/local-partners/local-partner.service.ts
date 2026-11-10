@@ -109,9 +109,7 @@ export const getProgramRecipientCountsByLocalPartnerSlug = async (
 	}
 };
 
-export const getPublicLocalPartnerDashboardStatsBySlug = async (
-	localPartnerSlug: string,
-): Promise<Result<{ recipientsCount: number; completedSurveysCount: number }>> => {
+export const countPublicLocalPartnerCompletedSurveysBySlug = async (localPartnerSlug: string): Promise<Result<number>> => {
 	const normalizedSlug = localPartnerSlug.trim();
 	if (!normalizedSlug) {
 		return resultFail('Missing local partner slug');
@@ -122,16 +120,12 @@ export const getPublicLocalPartnerDashboardStatsBySlug = async (
 		if (!partner) {
 			return resultFail('Local partner not found');
 		}
-		const [recipientsCount, completedSurveysCount] = await Promise.all([
-			localPartnerRepository.countAssignedRecipientsByLocalPartnerId(partner.id),
-			localPartnerRepository.countCompletedSurveysByLocalPartnerId(partner.id),
-		]);
 
-		return resultOk({ recipientsCount, completedSurveysCount });
+		return resultOk(await localPartnerRepository.countCompletedSurveysByLocalPartnerId(partner.id));
 	} catch (error) {
-		console.error('Could not fetch local partner dashboard stats', { error });
+		console.error('Could not count local partner completed surveys', { error });
 
-		return resultFail('Could not fetch local partner dashboard stats');
+		return resultFail('Could not count local partner completed surveys');
 	}
 };
 
