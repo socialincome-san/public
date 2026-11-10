@@ -29,7 +29,7 @@ const FilteredCampaigns = async ({
 }: Omit<Props, 'overview'> & { showFilters: boolean }) => {
 	const [campaignStoriesResult, campaignsResult, resolvedSearchParams] = await Promise.all([
 		getCampaignsAction(lang),
-		// Activity filter is applied in CampaignsOverview via isCampaignPubliclyActive.
+		// Activity filter is applied in CampaignsOverview via campaign.isActive.
 		getAllCampaignsForCmsJoinWithStatsAction('all'),
 		searchParams,
 	]);
