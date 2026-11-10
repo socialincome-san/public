@@ -517,7 +517,6 @@ export interface LandingHeroFact {
 }
 
 export interface Layout {
-  menu: (MenuItem | DropdownItem)[];
   footerMenu: MenuItemGroup[];
   copyrightNotice?: string;
   supportedByLabel?: string;
