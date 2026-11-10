@@ -1125,7 +1125,7 @@ export interface TimelineStep {
   title: string;
   description?: string;
   badge?: string;
-  badgeFigure?: "" | "paidOut" | "recipients" | "happier";
+  badgeFigure?: "" | "paidOut" | "recipients" | "happier" | "reach";
   component: "timelineStep";
   _uid: string;
   _editable?: string | undefined;

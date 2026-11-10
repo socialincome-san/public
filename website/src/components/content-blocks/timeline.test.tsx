@@ -92,6 +92,12 @@ test('adds up the recipients of all country pages', async () => {
 	expect(markup).toContain('102 people in our programs');
 });
 
+test('shows the share that reaches recipients directly', async () => {
+	const markup = await renderTimeline([step({ badge: 'go directly to recipients', badgeFigure: 'reach' })]);
+
+	expect(markup).toContain('88% go directly to recipients');
+});
+
 test('shows the happier share only once recipients have answered', async () => {
 	const badge = step({ badge: 'feel happier', badgeFigure: 'happier' });
 

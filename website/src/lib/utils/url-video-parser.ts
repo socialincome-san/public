@@ -40,3 +40,6 @@ export const normalizeMuxPlaybackId = (value: string): string | null => {
 
 	return trimmed.match(/player\.mux\.com\/([^/?#]+)/)?.[1] ?? trimmed.match(/stream\.mux\.com\/([^/.?#]+)/)?.[1] ?? trimmed;
 };
+
+export const getMuxPosterUrl = (playbackId: string, width: number) =>
+	`https://image.mux.com/${playbackId}/thumbnail.webp?time=2&width=${width}`;

@@ -1,4 +1,5 @@
 import { blockMargins } from '@/components/content-blocks/block-margins';
+import { OUTFLOW_REACH_PERCENT } from '@/components/outflows/outflows-spend';
 import { getCountryRecipients, getPaidOutFigure } from '@/components/public-figures/public-figures';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Timeline, TimelineStep } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -31,12 +32,13 @@ const loadHappierShare = async (locale: string) => {
 	const question = impact.success ? impact.data.questions.find(({ name }) => name === HAPPIER_QUESTION) : undefined;
 	const share = question?.answeredCount ? question.options.find(({ value }) => value === 'true')?.percentage : undefined;
 
-	return share === undefined
-		? undefined
-		: new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 0 }).format(share / 100);
+	return share === undefined ? undefined : formatPercent(share, locale);
 };
 
-const loadFigure = (figure: BadgeFigure, lang: WebsiteLanguage, currency: WebsiteCurrency) => {
+const formatPercent = (percent: number, locale: string) =>
+	new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 0 }).format(percent / 100);
+
+const loadFigure = async (figure: BadgeFigure, lang: WebsiteLanguage, currency: WebsiteCurrency) => {
 	const locale = getSafeNumberFormatLocale(lang);
 
 	switch (figure) {
@@ -46,6 +48,8 @@ const loadFigure = (figure: BadgeFigure, lang: WebsiteLanguage, currency: Websit
 			return loadRecipients(lang, locale);
 		case 'happier':
 			return loadHappierShare(locale);
+		case 'reach':
+			return formatPercent(OUTFLOW_REACH_PERCENT, locale);
 	}
 };
 

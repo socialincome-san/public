@@ -1,3 +1,4 @@
+import { getMuxPosterUrl } from '@/lib/utils/url-video-parser';
 import MuxVideo from '@mux/mux-video-react';
 import { VideoCarousel } from '@socialincome/design-system/data-display/video-carousel/video-carousel';
 import { getTranslations } from 'next-intl/server';
@@ -9,7 +10,7 @@ type Props = {
 	videos: { id: string; playbackId: string; title: string }[];
 };
 
-const getPosterUrl = (playbackId: string) => `https://image.mux.com/${playbackId}/thumbnail.webp?time=2&width=1280`;
+const POSTER_WIDTH = 1280;
 
 export const MuxVideoCarousel = async ({ title, description, videos }: Props) => {
 	const t = await getTranslations('website-common');
@@ -21,13 +22,13 @@ export const MuxVideoCarousel = async ({ title, description, videos }: Props) =>
 			items={videos.map((video, index) => ({
 				id: video.id,
 				title: video.title,
-				posterSrc: getPosterUrl(video.playbackId),
+				posterSrc: getMuxPosterUrl(video.playbackId, POSTER_WIDTH),
 				selectLabel: t('video-carousel.show-video', { index: index + 1 }),
 				video: (
 					<MuxVideo
 						playbackId={video.playbackId}
 						title={video.title}
-						poster={getPosterUrl(video.playbackId)}
+						poster={getMuxPosterUrl(video.playbackId, POSTER_WIDTH)}
 						disableCookies
 						controls
 						preload="metadata"

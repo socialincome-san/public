@@ -42,6 +42,10 @@ export const VideoCarousel = ({ title, description, items }: VideoCarouselProps)
 		};
 	}, [api]);
 
+	if (items.length === 0) {
+		return null;
+	}
+
 	return (
 		<div className="flex flex-col items-center gap-12">
 			{title || description ? (
@@ -60,7 +64,7 @@ export const VideoCarousel = ({ title, description, items }: VideoCarouselProps)
 										item.video
 									) : (
 										// Posters come from the video host in the right size already
-										<NextImage src={item.posterSrc} alt={item.title} fill unoptimized sizes="60vw" />
+										<NextImage src={item.posterSrc} alt={item.title} fill unoptimized />
 									)}
 								</div>
 							</CarouselItem>
