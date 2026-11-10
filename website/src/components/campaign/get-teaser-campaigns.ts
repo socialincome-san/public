@@ -1,5 +1,4 @@
 import { resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
-import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getAllCampaignsForCmsJoinWithStatsAction } from '@/modules/campaigns/campaign.actions';
 import type { PublicCampaignsWithStats } from '@/modules/campaigns/campaign.types';
@@ -13,7 +12,7 @@ export const getTeaserCampaigns = async (lang: WebsiteLanguage, excludeSlug?: st
 		getAllCampaignsForCmsJoinWithStatsAction('active'),
 	]);
 
-	const campaignStories = (campaignStoriesResult.success ? campaignStoriesResult.data : []) as CampaignStory[];
+	const campaignStories = campaignStoriesResult.success ? campaignStoriesResult.data : [];
 	const campaignsData = campaignsResult.success ? campaignsResult.data : { campaigns: [], statsById: {} };
 	const resolved = resolveCampaignsWithCmsEntries(campaignStories, campaignsData.campaigns, campaignsData.statsById);
 	const campaigns = resolved.campaigns.filter((campaign) => campaign.slug !== excludeSlug).slice(0, TEASER_LIMIT);

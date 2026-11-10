@@ -1,5 +1,6 @@
 import { CampaignsGridSection } from '@/components/campaign/campaigns-grid-section';
 import { getTeaserCampaigns } from '@/components/campaign/get-teaser-campaigns';
+import { hasBlockButton } from '@/components/content-blocks/block-button';
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { CampaignGrid } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -21,8 +22,6 @@ export const CampaignGridBlock = async ({ blok, lang, currency }: Props) => {
 	}
 
 	const button = blok.button?.[0];
-	const label = button?.label?.trim();
-	const href = resolveStoryblokLink(button?.link, lang, currency);
 
 	return (
 		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
@@ -31,7 +30,11 @@ export const CampaignGridBlock = async ({ blok, lang, currency }: Props) => {
 				data={data}
 				lang={lang}
 				currency={currency}
-				cta={label && href !== '#' ? { href, label } : undefined}
+				cta={
+					button && hasBlockButton(button, undefined, lang, currency)
+						? { href: resolveStoryblokLink(button.link, lang, currency), label: button.label?.trim() ?? '' }
+						: undefined
+				}
 			/>
 		</BlockWrapper>
 	);

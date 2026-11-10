@@ -23,7 +23,7 @@ export const CtaBannerBlock = ({ blok, lang, currency }: Props) => {
 			<CtaBannerView
 				title={blok.title}
 				description={blok.description}
-				image={blok.image?.filename ? { src: blok.image.filename, alt: blok.image.alt ?? '' } : undefined}
+				imageSrc={blok.image?.filename ?? undefined}
 				action={
 					<BlockButton button={button} action={blok.buttonAction} variant="secondary" lang={lang} currency={currency} />
 				}

@@ -30,7 +30,7 @@ export const CampaignCreationTeaser = ({ translations, labels, lang, currency }:
 				<CtaBanner
 					title={translations.title}
 					description={translations.description}
-					image={{ src: backgroundImageSrc, alt: '' }}
+					imageSrc={backgroundImageSrc}
 					action={
 						<Button type="button" variant="secondary" onClick={openDialog}>
 							{translations.button}

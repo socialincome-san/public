@@ -1,26 +1,21 @@
 import NextImage from 'next/image';
 import { type ReactNode } from 'react';
 
-export type CtaBannerImage = {
-	src: string;
-	alt: string;
-};
-
 type CtaBannerProps = {
 	title: ReactNode;
 	description?: ReactNode;
 	action: ReactNode;
-	// Decorative background; the gradient keeps the text readable on the left
-	image?: CtaBannerImage;
+	// Decorative background, hidden from screen readers; the gradient keeps the text readable on the left
+	imageSrc?: string;
 };
 
-export const CtaBanner = ({ title, description, action, image }: CtaBannerProps) => (
+export const CtaBanner = ({ title, description, action, imageSrc }: CtaBannerProps) => (
 	<section className="bg-accent-foreground relative overflow-hidden rounded-3xl px-6 py-12 scheme-dark md:px-10 md:pt-16 md:pb-14">
-		{image ? (
-			<div className="pointer-events-none absolute inset-0">
+		{imageSrc ? (
+			<div aria-hidden className="pointer-events-none absolute inset-0">
 				<NextImage
-					src={image.src}
-					alt={image.alt}
+					src={imageSrc}
+					alt=""
 					fill
 					sizes="(max-width: 768px) 100vw, 1200px"
 					className="object-cover object-[70%_center] md:object-[right_center]"

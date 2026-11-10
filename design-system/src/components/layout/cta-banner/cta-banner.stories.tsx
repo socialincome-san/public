@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 
 export const WithImage: Story = {
 	args: {
-		image: { src: '/assets/storybook/market-sierra-leone.jpg', alt: '' },
+		imageSrc: '/assets/storybook/market-sierra-leone.jpg',
 	},
 };
 
