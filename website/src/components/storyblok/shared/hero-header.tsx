@@ -16,11 +16,12 @@ import type { ReactNode } from 'react';
 
 const HERO_HEADER_IMAGE_WIDTH = 1920;
 
-type HeroHeaderStat = {
+export type HeroHeaderStat = {
 	value?: number;
 	label: string;
 	href?: string;
 	icon?: ReactNode;
+	tooltip?: ReactNode;
 };
 
 export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>;
@@ -85,7 +86,7 @@ export const HeroHeader = ({
 									icon={stat.icon}
 								/>
 							) : (
-								<MediaHeroPill key={stat.label}>
+								<MediaHeroPill key={stat.label} tooltip={stat.tooltip}>
 									{stat.icon}
 									{stat.value !== undefined ? `${stat.value} ` : ''}
 									{stat.label}

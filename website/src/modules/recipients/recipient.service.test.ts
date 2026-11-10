@@ -11,6 +11,8 @@ const mockFindRecipientTableSource = jest.fn();
 const mockGetLocalPartnerOptions = jest.fn();
 const mockGetLocalPartnerFilterOption = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
+const mockFindRecipientStatusSources = jest.fn();
+const mockRemoveOutstandingSurveysForInterruptedRecipient = jest.fn();
 
 jest.mock('./recipient.repository.read', () => ({
 	findPublicRecipientTableSource: mockFindPublicRecipientTableSource,
@@ -18,6 +20,7 @@ jest.mock('./recipient.repository.read', () => ({
 	countRecipientsForProgramsAndLocalPartners: mockCountRecipientsForProgramsAndLocalPartners,
 	countCandidatesForLocalPartners: mockCountCandidatesForLocalPartners,
 	findRecipientTableSource: mockFindRecipientTableSource,
+	findRecipientStatusSources: mockFindRecipientStatusSources,
 }));
 
 jest.mock('@/modules/auth/auth.service', () => ({}));
@@ -35,6 +38,9 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 jest.mock('@/modules/programs/program-reference.service', () => ({
 	getProgramNameById: mockGetProgramNameById,
 }));
+jest.mock('@/modules/surveys/survey-interruption.service', () => ({
+	removeOutstandingSurveysForInterruptedRecipient: mockRemoveOutstandingSurveysForInterruptedRecipient,
+}));
 jest.mock('@/lib/utils/now', () => ({
 	now: () => new Date('2025-06-15T12:00:00.000Z'),
 }));
@@ -44,7 +50,9 @@ import {
 	countRecipientsForProgramsAndLocalPartners,
 	getPaginatedRecipientTableView,
 	getPublicRecipientsTableView,
+	getRecipientStatusBreakdown,
 	getUnassignedRecipientCountries,
+	recipientStatusService,
 } from './recipient.service';
 
 const expectSuccess = <T>(result: Result<T>): T => {
@@ -239,5 +247,109 @@ describe('recipient statistics', () => {
 
 		expect(expectSuccess(await countRecipientsForProgramsAndLocalPartners(['program-1'], ['partner-1']))).toBe(7);
 		expect(expectSuccess(await countCandidatesForLocalPartners(['partner-1']))).toBe(3);
+	});
+});
+
+describe('recipient status breakdown', () => {
+	const program = { programDurationInMonths: 12, payoutInterval: PayoutInterval.monthly };
+	const createSource = (input: {
+		startDate: string | null;
+		suspendedAt?: string;
+		interruptedAt?: string;
+		paidOrConfirmedCount?: number;
+		firstPaymentAt?: string;
+	}) => ({
+		startDate: input.startDate ? new Date(input.startDate) : null,
+		suspendedAt: input.suspendedAt ? new Date(input.suspendedAt) : null,
+		interruptedAt: input.interruptedAt ? new Date(input.interruptedAt) : null,
+		program,
+		_count: { payouts: input.paidOrConfirmedCount ?? 0 },
+		payouts: input.firstPaymentAt ? [{ paymentAt: new Date(input.firstPaymentAt) }] : [],
+	});
+
+	test('counts each status and leaves new and waitlisted recipients out of the total', async () => {
+		mockFindRecipientStatusSources.mockResolvedValue([
+			createSource({ startDate: '2025-01-01', paidOrConfirmedCount: 5, firstPaymentAt: '2025-01-31' }),
+			createSource({ startDate: '2025-05-20', paidOrConfirmedCount: 1, firstPaymentAt: '2025-06-01' }),
+			createSource({ startDate: '2024-01-01', paidOrConfirmedCount: 12, firstPaymentAt: '2024-01-31' }),
+			createSource({
+				startDate: '2024-06-01',
+				suspendedAt: '2025-03-01',
+				paidOrConfirmedCount: 8,
+				firstPaymentAt: '2024-06-30',
+			}),
+			createSource({
+				startDate: '2024-09-01',
+				interruptedAt: '2025-04-01',
+				paidOrConfirmedCount: 7,
+				firstPaymentAt: '2024-09-30',
+			}),
+			createSource({ startDate: null }),
+			createSource({ startDate: '2025-07-01' }),
+			{ ...createSource({ startDate: '2025-01-01' }), program: null },
+		]);
+
+		const data = expectSuccess(await getRecipientStatusBreakdown({ countryCode: 'SL' }));
+
+		expect(data).toEqual({
+			total: 5,
+			active: 2,
+			former: 1,
+			suspended: 1,
+			deceased: 1,
+			newLast30Days: 1,
+			waitlisted: 2,
+		});
+		expect(mockFindRecipientStatusSources).toHaveBeenCalledWith({ countryCode: 'SL' });
+	});
+
+	test('counts a recipient as new when the first payout is at most 30 days old', async () => {
+		mockFindRecipientStatusSources.mockResolvedValue([
+			createSource({ startDate: '2025-05-01', paidOrConfirmedCount: 1, firstPaymentAt: '2025-05-16T12:00:00.000Z' }),
+			createSource({ startDate: '2025-05-01', paidOrConfirmedCount: 1, firstPaymentAt: '2025-05-16T11:59:59.000Z' }),
+		]);
+
+		const data = expectSuccess(await getRecipientStatusBreakdown({ programId: 'program-1' }));
+
+		expect(data.newLast30Days).toBe(1);
+	});
+
+	test('fails when the recipients cannot be loaded', async () => {
+		mockFindRecipientStatusSources.mockRejectedValue(new Error('db down'));
+		jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+		expectFailure(
+			await getRecipientStatusBreakdown({ localPartnerSlug: 'partner' }),
+			'Could not build recipient status breakdown',
+		);
+	});
+});
+
+describe('recipient lifecycle status', () => {
+	test('interruptions take precedence over completed payout counts', () => {
+		const result = recipientStatusService.getRecipientLifecycleStatusFromExpectedIntervals({
+			startDate: new Date('2025-01-01T00:00:00.000Z'),
+			suspendedAt: null,
+			interruptedAt: new Date('2025-06-01T00:00:00.000Z'),
+			paidOrConfirmedCount: 12,
+			expectedIntervals: 12,
+			nowDate: new Date('2025-06-15T12:00:00.000Z'),
+		});
+
+		expect(result).toEqual({ success: true, data: 'interrupted' });
+	});
+
+	test('interrupted recipients are not eligible for payouts', () => {
+		const result = recipientStatusService.isRecipientEligibleForPayout({
+			startDate: new Date('2025-01-01T00:00:00.000Z'),
+			suspendedAt: null,
+			interruptedAt: new Date('2025-06-01T00:00:00.000Z'),
+			paidOrConfirmedCount: 0,
+			programDurationInMonths: 12,
+			payoutInterval: PayoutInterval.monthly,
+			nowDate: new Date('2025-06-15T12:00:00.000Z'),
+		});
+
+		expect(result).toEqual({ success: true, data: false });
 	});
 });

@@ -4,6 +4,7 @@ import { Country } from '@/generated/storyblok/types/109655/storyblok-components
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCommunityPanelDataAction } from '@/modules/community/community.actions';
 import { getCountryPageStatsAction } from '@/modules/countries/country.actions';
+import { EMPTY_RECIPIENT_STATUS_BREAKDOWN } from '@/modules/recipients/recipient.types';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 
@@ -33,9 +34,9 @@ export const StoryblokPreviewCountryPage = async ({ storyPath, lang, currency, p
 				getCountryPageStatsAction(story.content.isoCode.toString()),
 				getCommunityPanelDataAction({ page: story.content, language: lang, currency }),
 			]);
-			const { activeProgramsCount, recipientsCount, candidatesCount } = statsResult.success
+			const { activeProgramsCount, recipientStatusBreakdown, candidatesCount } = statsResult.success
 				? statsResult.data
-				: { activeProgramsCount: 0, recipientsCount: 0, candidatesCount: 0 };
+				: { activeProgramsCount: 0, recipientStatusBreakdown: EMPTY_RECIPIENT_STATUS_BREAKDOWN, candidatesCount: 0 };
 
 			return (
 				<CountryDetail
@@ -43,7 +44,7 @@ export const StoryblokPreviewCountryPage = async ({ storyPath, lang, currency, p
 					lang={lang}
 					currency={currency}
 					activeProgramsCount={activeProgramsCount}
-					recipientsCount={recipientsCount}
+					recipientStatusBreakdown={recipientStatusBreakdown}
 					candidatesCount={candidatesCount}
 					community={communityResult.success ? communityResult.data : null}
 				/>

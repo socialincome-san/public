@@ -16,6 +16,7 @@ import { ProgramPayoutsTotal } from '@/components/storyblok/program/program-payo
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
+import { buildRecipientsStat } from '@/components/storyblok/shared/recipients-stat';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryNameFromIsoCode, isValidCountryCode } from '@/lib/types/country';
 import type { CommunityPanelData } from '@/modules/community/community.types';
@@ -38,6 +39,7 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 		programDetailData.programDetails?.recipientsCount ??
 		programDetailData.stats?.recipientsCount ??
 		0;
+	const recipientStatusBreakdown = programDetailData.dashboardStats?.recipientStatusBreakdown;
 	const completedSurveysCount =
 		programDetailData.dashboardStats?.completedSurveysCount ?? programDetailData.programDetails?.completedSurveysCount ?? 0;
 
@@ -74,15 +76,14 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 				heroImage={programDetailData.heroImage}
 				stats={[
 					...(countryStat ? [countryStat] : []),
-					...(programDetailData.stats
+					...(recipientStatusBreakdown
 						? [
-								{
-									value: programDetailData.stats.recipientsCount,
-									label:
-										programDetailData.stats.recipientsCount === 1
-											? t('programs-page.recipient-singular')
-											: t('programs-page.recipient-plural'),
-								},
+								buildRecipientsStat(
+									recipientStatusBreakdown,
+									recipientStatusBreakdown.total === 1
+										? t('programs-page.recipient-singular')
+										: t('programs-page.recipient-plural'),
+								),
 							]
 						: []),
 					...(programDetailData.stats?.isConcluded ? [{ label: t('wallet.concluded') }] : []),

@@ -33,6 +33,10 @@ jest.mock('@/modules/programs/program-reference.service', () => ({
 	getProgramNameById: jest.fn(),
 }));
 
+jest.mock('@/modules/surveys/survey-interruption.service', () => ({
+	removeOutstandingSurveysForInterruptedRecipient: jest.fn().mockResolvedValue({ success: true, data: undefined }),
+}));
+
 import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import type { UserSession } from '@/modules/users/user.types';
@@ -83,6 +87,8 @@ const validInput: CreateRecipientInput = {
 	startDate: null,
 	suspendedAt: null,
 	suspensionReason: null,
+	interrupted: false,
+	interruptionComment: null,
 	successorName: null,
 	contact: {
 		firstName: 'Ada',

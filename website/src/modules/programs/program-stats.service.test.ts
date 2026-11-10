@@ -16,6 +16,7 @@ jest.mock('@/modules/recipients/recipient.service', () => ({
 		getExpectedIntervals: mockGetExpectedIntervals,
 		getRecipientLifecycleStatusFromExpectedIntervals: mockGetRecipientLifecycleStatus,
 		isRecipientEligibleForPayout: jest.fn(),
+		summarizeRecipientStatuses: jest.fn(),
 	},
 }));
 jest.mock('./program.repository.read', () => ({

@@ -121,6 +121,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 	const activeRecipientsExplanation = 'Active recipients are started, not suspended, and not completed.';
 	const suspendedRecipientsExplanation =
 		'Suspended recipients have a suspension date at or before now and are not counted as active.';
+	const interruptedRecipientsExplanation = 'Interrupted recipients (e.g. deceased) receive no further payouts or surveys.';
 	const completedRecipientsExplanation =
 		'Completed recipients have paid or confirmed payout count at least equal to expected intervals for the current program setup.';
 	const completedSurveysExplanation = 'Completed surveys counts surveys with completed status.';
@@ -270,6 +271,11 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 									label="Suspended"
 									value={formatNumber(stats.suspendedRecipientsCount)}
 									info={suspendedRecipientsExplanation}
+								/>
+								<Stat
+									label="Interrupted"
+									value={formatNumber(stats.interruptedRecipientsCount)}
+									info={interruptedRecipientsExplanation}
 								/>
 								<Stat
 									label="Completed"

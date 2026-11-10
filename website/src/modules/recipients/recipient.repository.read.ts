@@ -1,7 +1,9 @@
 import type { Prisma } from '@/generated/prisma/client';
-import type { CountryCode } from '@/generated/prisma/enums';
+import { PayoutStatus, type CountryCode } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
-import type { RecipientTableQuery } from './recipient.types';
+import type { RecipientStatusScope, RecipientTableQuery } from './recipient.types';
+
+const paidOrConfirmedPayoutStatuses = [PayoutStatus.paid, PayoutStatus.confirmed];
 
 export const findRecipientMonthlySummarySource = async (from: Date, to: Date) => {
 	const [newRecipientCount, recipients] = await Promise.all([
@@ -13,6 +15,7 @@ export const findRecipientMonthlySummarySource = async (from: Date, to: Date) =>
 				programId: true,
 				startDate: true,
 				suspendedAt: true,
+				interruptedAt: true,
 				program: {
 					select: {
 						programDurationInMonths: true,
@@ -28,6 +31,28 @@ export const findRecipientMonthlySummarySource = async (from: Date, to: Date) =>
 
 	return { newRecipientCount, recipients };
 };
+
+export const findRecipientStatusSources = async (scope: RecipientStatusScope) =>
+	prisma.recipient.findMany({
+		where: {
+			programId: 'programId' in scope ? scope.programId : { not: null },
+			...('localPartnerSlug' in scope ? { localPartner: { slug: scope.localPartnerSlug } } : {}),
+			...('countryCode' in scope ? { program: { country: { isoCode: scope.countryCode } } } : {}),
+		},
+		select: {
+			startDate: true,
+			suspendedAt: true,
+			interruptedAt: true,
+			program: { select: { programDurationInMonths: true, payoutInterval: true } },
+			_count: { select: { payouts: { where: { status: { in: paidOrConfirmedPayoutStatuses } } } } },
+			payouts: {
+				where: { status: { in: paidOrConfirmedPayoutStatuses } },
+				select: { paymentAt: true },
+				orderBy: { paymentAt: 'asc' },
+				take: 1,
+			},
+		},
+	});
 
 export const findRecipientOwnership = async (recipientId: string) =>
 	prisma.recipient.findUnique({
@@ -49,6 +74,7 @@ export const findPayoutProcessRecipients = async (programIds: string[], mobileMo
 			id: true,
 			startDate: true,
 			suspendedAt: true,
+			interruptedAt: true,
 			contact: {
 				select: {
 					firstName: true,
@@ -210,6 +236,7 @@ export const findSurveyRecipients = async (programIds: string[], currentDate: Da
 		where: {
 			programId: { in: programIds },
 			suspendedAt: null,
+			interruptedAt: null,
 			startDate: { lte: currentDate },
 		},
 		select: {
@@ -485,6 +512,8 @@ const recipientDetailSelect = {
 	startDate: true,
 	suspendedAt: true,
 	suspensionReason: true,
+	interruptedAt: true,
+	interruptionComment: true,
 	successorName: true,
 	termsAccepted: true,
 	localPartner: {
@@ -527,6 +556,7 @@ const recipientDetailSelect = {
 const recipientUpdateContextSelect = {
 	programId: true,
 	localPartnerId: true,
+	interruptedAt: true,
 	contact: {
 		select: {
 			id: true,
@@ -549,6 +579,7 @@ const recipientTableSelect = {
 	startDate: true,
 	suspendedAt: true,
 	suspensionReason: true,
+	interruptedAt: true,
 	paymentInformation: {
 		select: {
 			code: true,
@@ -602,6 +633,7 @@ const recipientTableSelect = {
 const publicRecipientTableSelect = {
 	startDate: true,
 	suspendedAt: true,
+	interruptedAt: true,
 	contact: {
 		select: {
 			dateOfBirth: true,
@@ -671,6 +703,8 @@ const recipientCsvSelect = {
 	startDate: true,
 	suspendedAt: true,
 	suspensionReason: true,
+	interruptedAt: true,
+	interruptionComment: true,
 	successorName: true,
 	termsAccepted: true,
 	createdAt: true,
@@ -749,6 +783,7 @@ export const recipientWithPaymentInformationSelect = {
 	startDate: true,
 	suspendedAt: true,
 	suspensionReason: true,
+	interruptedAt: true,
 	successorName: true,
 	termsAccepted: true,
 	paymentInformationId: true,

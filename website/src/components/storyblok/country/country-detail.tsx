@@ -5,8 +5,10 @@ import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { CountryOfficeSection } from '@/components/storyblok/shared/country-office-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
+import { buildRecipientsStat } from '@/components/storyblok/shared/recipients-stat';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
+import type { RecipientStatusBreakdown } from '@/modules/recipients/recipient.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
@@ -23,7 +25,7 @@ type Props = {
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 	activeProgramsCount: number;
-	recipientsCount: number;
+	recipientStatusBreakdown: RecipientStatusBreakdown;
 	candidatesCount: number;
 	community: CommunityPanelData | null;
 };
@@ -33,7 +35,7 @@ export const CountryDetail = async ({
 	lang,
 	currency,
 	activeProgramsCount,
-	recipientsCount,
+	recipientStatusBreakdown,
 	candidatesCount,
 	community,
 }: Props) => {
@@ -66,10 +68,12 @@ export const CountryDetail = async ({
 								? t('countries-page.active-program-singular')
 								: t('countries-page.active-program-plural'),
 					},
-					{
-						value: recipientsCount,
-						label: recipientsCount === 1 ? t('countries-page.recipient-singular') : t('countries-page.recipient-plural'),
-					},
+					buildRecipientsStat(
+						recipientStatusBreakdown,
+						recipientStatusBreakdown.total === 1
+							? t('countries-page.recipient-singular')
+							: t('countries-page.recipient-plural'),
+					),
 					{
 						value: candidatesCount,
 						label: candidatesCount === 1 ? t('countries-page.candidate-singular') : t('countries-page.candidate-plural'),

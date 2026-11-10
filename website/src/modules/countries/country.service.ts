@@ -3,7 +3,12 @@ import { fetchWorldBankIndicator } from '@/integrations/world-bank/world-bank.in
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode, isValidCountryCode, toCountryCode } from '@/lib/types/country';
-import { countCandidatesForCountry, getUnassignedRecipientCountries } from '@/modules/recipients/recipient.service';
+import {
+	countCandidatesForCountry,
+	EMPTY_RECIPIENT_STATUS_BREAKDOWN,
+	getRecipientStatusBreakdown,
+	getUnassignedRecipientCountries,
+} from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import * as countryRepository from './country.repository.read';
@@ -267,7 +272,7 @@ const getPublicCountryStatsByIsoCode = async (isoCode: string): Promise<Result<P
 
 const emptyCountryPageStats: CountryPageStats = {
 	activeProgramsCount: 0,
-	recipientsCount: 0,
+	recipientStatusBreakdown: EMPTY_RECIPIENT_STATUS_BREAKDOWN,
 	candidatesCount: 0,
 };
 
@@ -277,14 +282,15 @@ export const getCountryPageStats = async (isoCode: string): Promise<Result<Count
 		return resultOk(emptyCountryPageStats);
 	}
 
-	const [statsResult, candidatesCountResult] = await Promise.all([
+	const [statsResult, breakdownResult, candidatesCountResult] = await Promise.all([
 		getPublicCountryStatsByIsoCode(countryCode),
+		getRecipientStatusBreakdown({ countryCode }),
 		countCandidatesForCountry(countryCode),
 	]);
 
 	return resultOk({
 		activeProgramsCount: statsResult.success ? statsResult.data.programsCount : 0,
-		recipientsCount: statsResult.success ? statsResult.data.recipientsCount : 0,
+		recipientStatusBreakdown: breakdownResult.success ? breakdownResult.data : EMPTY_RECIPIENT_STATUS_BREAKDOWN,
 		candidatesCount: candidatesCountResult.success ? candidatesCountResult.data : 0,
 	});
 };

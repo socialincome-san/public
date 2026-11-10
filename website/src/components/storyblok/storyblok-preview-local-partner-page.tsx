@@ -4,6 +4,7 @@ import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCommunityPanelDataAction } from '@/modules/community/community.actions';
 import { getLocalPartnerDashboardStatsAction } from '@/modules/local-partners/local-partner.actions';
+import { EMPTY_RECIPIENT_STATUS_BREAKDOWN } from '@/modules/recipients/recipient.types';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 
 type Props = {
@@ -36,16 +37,16 @@ export const StoryblokPreviewLocalPartnerPage = async ({
 				getLocalPartnerDashboardStatsAction(story.content.portalSlug),
 				getCommunityPanelDataAction({ page: story.content, language: lang, currency }),
 			]);
-			const { recipientsCount, completedSurveysCount } = statsResult.success
+			const { recipientStatusBreakdown, completedSurveysCount } = statsResult.success
 				? statsResult.data
-				: { recipientsCount: 0, completedSurveysCount: 0 };
+				: { recipientStatusBreakdown: EMPTY_RECIPIENT_STATUS_BREAKDOWN, completedSurveysCount: 0 };
 
 			return (
 				<LocalPartnerDetail
 					localPartner={story}
 					lang={lang}
 					currency={currency}
-					recipientsCount={recipientsCount}
+					recipientStatusBreakdown={recipientStatusBreakdown}
 					completedSurveysCount={completedSurveysCount}
 					community={communityResult.success ? communityResult.data : null}
 				/>

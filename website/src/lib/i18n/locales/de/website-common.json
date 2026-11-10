@@ -511,5 +511,13 @@
 		"accept": "Akzeptieren",
 		"decline": "Ablehnen",
 		"settings": "Cookie-Einstellungen"
+	},
+	"recipient-status-breakdown": {
+		"active": "Aktiv",
+		"former": "Ehemalig",
+		"suspended": "Pausiert",
+		"deceased": "Verstorben",
+		"new-last-30-days": "Neu (30 Tage)",
+		"waitlisted": "Warteliste"
 	}
 }

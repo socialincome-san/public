@@ -261,6 +261,7 @@ const getRecipientsReadyForPayout = async (
 				const eligibilityResult = recipientStatusService.isRecipientEligibleForPayout({
 					startDate: recipient.startDate,
 					suspendedAt: recipient.suspendedAt,
+					interruptedAt: recipient.interruptedAt,
 					paidOrConfirmedCount: paidCountResult.data,
 					programDurationInMonths: recipient.program.programDurationInMonths,
 					payoutInterval: recipient.program.payoutInterval,

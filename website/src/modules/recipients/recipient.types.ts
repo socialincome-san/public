@@ -18,6 +18,8 @@ export type RecipientPayload = {
 	startDate: Date | null;
 	suspendedAt: Date | null;
 	suspensionReason: string | null;
+	interruptedAt: Date | null;
+	interruptionComment: string | null;
 	successorName: string | null;
 	termsAccepted: boolean;
 	localPartner: {
@@ -54,6 +56,7 @@ export type RecipientMonthlySummarySource = {
 		programId: string | null;
 		startDate: Date | null;
 		suspendedAt: Date | null;
+		interruptedAt: Date | null;
 		program: {
 			programDurationInMonths: number;
 			payoutInterval: PayoutInterval;
@@ -68,6 +71,7 @@ export type PayoutProcessRecipient = {
 	id: string;
 	startDate: Date | null;
 	suspendedAt: Date | null;
+	interruptedAt: Date | null;
 	contact: {
 		firstName: string;
 		lastName: string;
@@ -118,11 +122,35 @@ export type SurveyRecipientOption = {
 	} | null;
 };
 
-export type RecipientLifecycleStatus = 'future' | 'active' | 'suspended' | 'completed';
+export type RecipientLifecycleStatus = 'future' | 'active' | 'suspended' | 'interrupted' | 'completed';
+
+export type RecipientStatusScope = { programId: string } | { localPartnerSlug: string } | { countryCode: CountryCode };
+
+export type RecipientStatusBreakdown = {
+	// active + former + suspended + deceased; newLast30Days and waitlisted are not part of it
+	total: number;
+	active: number;
+	former: number;
+	suspended: number;
+	deceased: number;
+	newLast30Days: number;
+	waitlisted: number;
+};
+
+export const EMPTY_RECIPIENT_STATUS_BREAKDOWN: RecipientStatusBreakdown = {
+	total: 0,
+	active: 0,
+	former: 0,
+	suspended: 0,
+	deceased: 0,
+	newLast30Days: 0,
+	waitlisted: 0,
+};
 
 export type RecipientLifecycleStatusInput = {
 	startDate: Date | null;
 	suspendedAt: Date | null;
+	interruptedAt: Date | null;
 	paidOrConfirmedCount: number;
 	programDurationInMonths: number;
 	payoutInterval: PayoutInterval;
@@ -132,6 +160,7 @@ export type RecipientLifecycleStatusInput = {
 export type RecipientLifecycleStatusFromExpectedIntervalsInput = {
 	startDate: Date | null;
 	suspendedAt: Date | null;
+	interruptedAt: Date | null;
 	paidOrConfirmedCount: number;
 	expectedIntervals: number;
 	nowDate: Date;
@@ -154,6 +183,7 @@ export type RecipientTableViewRow = {
 	localPartnerName: string | null;
 	suspendedAt: Date | null;
 	suspensionReason: string | null;
+	interruptedAt: Date | null;
 	programId: string | null;
 	programName: string | null;
 	payoutsReceived: number;
@@ -229,6 +259,7 @@ export type RecipientWithPaymentInfo = {
 	startDate: Date | null;
 	suspendedAt: Date | null;
 	suspensionReason: string | null;
+	interruptedAt: Date | null;
 	successorName: string | null;
 	termsAccepted: boolean;
 	paymentInformationId: string | null;
