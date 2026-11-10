@@ -301,12 +301,13 @@ const computeProjectedRemaining = (input: {
 		const statusResult = getRecipientLifecycleStatusFromExpectedIntervals({
 			startDate: recipient.startDate,
 			suspendedAt: recipient.suspendedAt,
+			interruptedAt: recipient.interruptedAt,
 			paidOrConfirmedCount,
 			expectedIntervals: input.expectedIntervals,
 			nowDate: input.nowDate,
 		});
 		const status = statusResult.success ? statusResult.data : 'future';
-		if (status === 'suspended' || status === 'completed') {
+		if (status === 'suspended' || status === 'interrupted' || status === 'completed') {
 			continue;
 		}
 		const remainingIntervals = Math.max(0, input.expectedIntervals - paidOrConfirmedCount);
@@ -406,6 +407,7 @@ const splitRecipientCohorts = (program: ProgramDashboardSource, nowDate: Date, e
 	let futureRecipientsCount = 0;
 	let activeRecipientsCount = 0;
 	let suspendedRecipientsCount = 0;
+	let interruptedRecipientsCount = 0;
 	let completedRecipientsCount = 0;
 	const statusEntries: { status: RecipientLifecycleStatus; firstPaymentAt: Date | null }[] = [];
 
@@ -414,6 +416,7 @@ const splitRecipientCohorts = (program: ProgramDashboardSource, nowDate: Date, e
 		const statusResult = getRecipientLifecycleStatusFromExpectedIntervals({
 			startDate: recipient.startDate,
 			suspendedAt: recipient.suspendedAt,
+			interruptedAt: recipient.interruptedAt,
 			paidOrConfirmedCount: paidCountResult.success ? paidCountResult.data : 0,
 			expectedIntervals,
 			nowDate,
@@ -426,7 +429,9 @@ const splitRecipientCohorts = (program: ProgramDashboardSource, nowDate: Date, e
 			activeRecipientsCount++;
 		} else if (status === 'suspended') {
 			suspendedRecipientsCount++;
-		} else {
+		} else if (status === 'interrupted') {
+			interruptedRecipientsCount++;
+		} else if (status === 'completed') {
 			completedRecipientsCount++;
 		}
 	}
@@ -435,6 +440,7 @@ const splitRecipientCohorts = (program: ProgramDashboardSource, nowDate: Date, e
 		futureRecipientsCount,
 		activeRecipientsCount,
 		suspendedRecipientsCount,
+		interruptedRecipientsCount,
 		completedRecipientsCount,
 		recipientStatusBreakdown: summarizeRecipientStatuses(statusEntries, nowDate),
 	};

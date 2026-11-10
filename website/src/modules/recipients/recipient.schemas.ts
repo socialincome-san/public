@@ -58,6 +58,8 @@ export const recipientCreateSchema = z.object({
 	startDate: optionalDate,
 	suspendedAt: optionalDate,
 	suspensionReason: nullableTrimmedString,
+	interrupted: z.boolean().optional().default(false),
+	interruptionComment: nullableTrimmedString,
 	successorName: nullableTrimmedString,
 	termsAccepted: z.boolean().optional().default(false),
 	programId: optionalTrimmedString,

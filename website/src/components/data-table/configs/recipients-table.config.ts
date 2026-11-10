@@ -15,6 +15,7 @@ const recipientStatusOptions = [
 	{ value: 'future', label: 'Future' },
 	{ value: 'active', label: 'Active' },
 	{ value: 'suspended', label: 'Suspended' },
+	{ value: 'interrupted', label: 'Interrupted' },
 	{ value: 'completed', label: 'Completed' },
 ];
 

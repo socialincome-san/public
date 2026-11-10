@@ -66,6 +66,7 @@ export type ProgramPayoutForecastSource = {
 	recipients: {
 		startDate: Date | null;
 		suspendedAt: Date | null;
+		interruptedAt: Date | null;
 		payouts: { id: string }[];
 	}[];
 };
@@ -195,6 +196,7 @@ export type ProgramDashboardStats = {
 	futureRecipientsCount: number;
 	activeRecipientsCount: number;
 	suspendedRecipientsCount: number;
+	interruptedRecipientsCount: number;
 	completedRecipientsCount: number;
 	programDurationInMonths: number;
 	recipientsCount: number;
@@ -210,6 +212,7 @@ export type ProgramDashboardSource = {
 		id: string;
 		startDate: Date | null;
 		suspendedAt: Date | null;
+		interruptedAt: Date | null;
 		payouts: {
 			paymentAt: Date;
 			amount: unknown;
