@@ -154,5 +154,12 @@
 		"label": "Schnell spenden",
 		"summary": "{cadence, select, monthly {{amount} monatlich spenden, Betrag ändern} other {{amount} einmalig spenden, Betrag ändern}}",
 		"continue": "Weiter"
+	},
+	"calculator": {
+		"your-donation": "Deine Spende",
+		"per-month": "pro Monat",
+		"per-year": "{amount} in einem Jahr",
+		"beneficiaries": "{directCount, plural, one {# Person erhält} other {# Personen erhalten}} ein Einkommen, {indirectCount} weitere profitieren",
+		"reach": "{percent} % gehen direkt an die Empfänger:innen"
 	}
 }

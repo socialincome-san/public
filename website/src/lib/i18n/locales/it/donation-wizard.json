@@ -154,5 +154,12 @@
 		"label": "Donazione rapida",
 		"summary": "{cadence, select, monthly {Dona {amount} al mese, modifica l'importo} other {Dona {amount} una volta, modifica l'importo}}",
 		"continue": "Continua"
+	},
+	"calculator": {
+		"your-donation": "La tua donazione",
+		"per-month": "al mese",
+		"per-year": "{amount} in un anno",
+		"beneficiaries": "{directCount, plural, one {# persona riceve} other {# persone ricevono}} un reddito, altre {indirectCount} ne beneficiano",
+		"reach": "Il {percent} % va direttamente ai beneficiari"
 	}
 }

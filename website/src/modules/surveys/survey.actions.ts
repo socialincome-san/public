@@ -7,13 +7,14 @@ import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import type {
 	SurveyGenerationPreviewResult,
 	SurveyGenerationResult,
+	SurveyImpactData,
 	SurveyImpactFilterOptions,
 	SurveyPaginatedTableView,
 	SurveyPayload,
 	SurveyWithRecipient,
 } from '@/modules/surveys/survey.types';
 import { revalidatePath } from 'next/cache';
-import { getSurveyImpactFilterOptions } from './survey.cache';
+import { getSurveyImpactFilterOptions, getSurveyImpactMeasurements } from './survey.cache';
 import {
 	surveyCreateSchema,
 	surveyIdSchema,
@@ -152,3 +153,6 @@ export const saveSurveyChangesAction = async (input: unknown): Promise<Result<Su
 
 export const getSurveyImpactFilterOptionsAction = async (): Promise<Result<SurveyImpactFilterOptions>> =>
 	getSurveyImpactFilterOptions();
+
+export const getSurveyImpactMeasurementsAction = async (): Promise<Result<SurveyImpactData>> =>
+	getSurveyImpactMeasurements();

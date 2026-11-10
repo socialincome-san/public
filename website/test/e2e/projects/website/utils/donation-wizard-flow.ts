@@ -23,7 +23,7 @@ const clickWizardButton = async (scope: Locator, testId: string) => {
 
 export const openDonationWizardFromDonatePage = async (page: Page) => {
 	await page.goto('/en/chf/get-involved/individuals/donate');
-	// The header also opens the wizard, and the hero renders its card once per breakpoint
+	// The header also opens the wizard
 	await page.getByRole('main').getByTestId('donation-wizard-trigger').filter({ visible: true }).click();
 	await expect(wizard(page)).toBeVisible();
 	await waitForWizardStep(wizard(page), 'donation-wizard-step-amount');

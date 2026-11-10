@@ -4,6 +4,7 @@ import { CampaignGridBlock } from '@/components/content-blocks/campaign-grid';
 import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
 import { CountryOfficeBlock } from '@/components/content-blocks/country-office';
 import { CtaBannerBlock } from '@/components/content-blocks/cta-banner';
+import { DonationCalculatorBlock } from '@/components/content-blocks/donation-calculator';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
@@ -23,6 +24,7 @@ import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-so
 import { OpenSourceIssuesBlock } from '@/components/content-blocks/open-source-issues';
 import { OpenSourceStatsBlock } from '@/components/content-blocks/open-source-stats';
 import { OutflowsBlock } from '@/components/content-blocks/outflows-block';
+import { PageIntroBlock } from '@/components/content-blocks/page-intro';
 import { PartnershipsCardBlock } from '@/components/content-blocks/partnerships-card';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
@@ -36,24 +38,23 @@ import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
 import { TextBlock } from '@/components/content-blocks/text';
+import { TimelineBlock } from '@/components/content-blocks/timeline';
 import { TransparencyCountriesBlock } from '@/components/content-blocks/transparency-countries-block';
 import { TransparencySummaryBlock } from '@/components/content-blocks/transparency-summary-block';
 import { TwoColumnBlock } from '@/components/content-blocks/two-column';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/newsletter/newsletter-signup';
-import type { CountryOffice } from '@/generated/storyblok/types/109655/country-office-components';
 import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Fragment, type ReactNode } from 'react';
 
-// The office block is generated separately until the unrelated CMS schema changes are pulled in.
-type PageBlock = Page['content'][number] | CountryOffice;
+type PageBlock = Page['content'][number];
 type NestedPageBlock = TwoColumn['leftColumn'][number];
 
 type PageContentTypeProps = {
-	blok: Omit<Page, 'content'> & { content: PageBlock[] };
+	blok: Page;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 	searchParams?: Promise<AnySearchParams>;
@@ -75,6 +76,8 @@ const renderPageBlock = (
 			return <CountryOfficeBlock blok={block} lang={lang} />;
 		case 'ctaBanner':
 			return <CtaBannerBlock blok={block} lang={lang} currency={currency} />;
+		case 'donationCalculator':
+			return <DonationCalculatorBlock blok={block} />;
 		case 'donationGlobe':
 			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':
@@ -121,6 +124,8 @@ const renderPageBlock = (
 			return <OpenSourceIssuesBlock blok={block} />;
 		case 'outflows':
 			return <OutflowsBlock blok={block} lang={lang} currency={currency} />;
+		case 'pageIntro':
+			return <PageIntroBlock blok={block} lang={lang} currency={currency} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'partnershipsCard':
@@ -145,6 +150,8 @@ const renderPageBlock = (
 			return <TestimonialCarouselBlock blok={block} />;
 		case 'text':
 			return <TextBlock blok={block} />;
+		case 'timeline':
+			return <TimelineBlock blok={block} lang={lang} currency={currency} />;
 		case 'transparencyCountries':
 			return <TransparencyCountriesBlock blok={block} lang={lang} currency={currency} />;
 		case 'transparencySummary':

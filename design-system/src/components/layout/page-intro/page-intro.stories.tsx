@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { Button } from '../../actions/button/button';
 import { PageIntro } from './page-intro';
 
 const meta = {
@@ -14,7 +15,8 @@ const meta = {
 		layout: 'padded',
 		docs: {
 			description: {
-				component: 'An introduction for a page or section, with an optional eyebrow. Renders nothing without content.',
+				component:
+					'An introduction for a page or section, with an optional eyebrow. Optionally shows an illustration and actions. The landing variant sets the title in the regular weight and bolds only the words wrapped in `<strong>`. Renders nothing without content.',
 			},
 		},
 	},
@@ -43,5 +45,20 @@ export const SectionLongText: Story = {
 		variant: 'section',
 		eyebrow: 'Our local country office team',
 		title: 'Democratic Republic of the Congo',
+	},
+};
+
+export const Landing: Story = {
+	args: {
+		variant: 'landing',
+		title: (
+			<>
+				<strong>Donate 1 %</strong> of your income.
+			</>
+		),
+		description:
+			'Give 1 % of your income, monthly or once. 88 % of every contribution reaches people living in extreme poverty directly.',
+		illustrationSrc: '/assets/storybook/illustration-bike.png',
+		actions: <Button>Donate now</Button>,
 	},
 };

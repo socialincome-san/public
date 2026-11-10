@@ -231,6 +231,19 @@ export interface Country {
   [k: string]: unknown;
 }
 
+export interface CountryOffice {
+  countryOffice: number | string;
+  title?: string;
+  heading: string;
+  description?: string;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "countryOffice";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface CountryOverview {
   title?: string;
   text?: string;
@@ -276,6 +289,15 @@ export interface DocumentFile {
   file: StoryblokAsset;
   language: "en" | "de" | "en+de";
   component: "documentFile";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface DonationCalculator {
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "donationCalculator";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -737,10 +759,14 @@ export interface Page {
     | CircleGrid
     | TaskCards
     | IframeEmbed
+    | CountryOffice
     | ImageGeneratorGallery
     | LandingHero
     | CtaBanner
     | CampaignGrid
+    | PageIntro
+    | DonationCalculator
+    | Timeline
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
@@ -750,6 +776,23 @@ export interface Page {
   metaDescription?: string;
   metaImage?: StoryblokAsset;
   component: "page";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface PageIntro {
+  title: string;
+  description?: string;
+  image?: StoryblokAsset;
+  button?: Button[];
+  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
+  videoLabel?: string;
+  videoLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  videoThumbnail?: StoryblokAsset;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "pageIntro";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -1050,6 +1093,31 @@ export interface Text {
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
   marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "text";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface Timeline {
+  title?: string;
+  description?: string;
+  steps: TimelineStep[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "timeline";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface TimelineStep {
+  image?: StoryblokAsset;
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  badge?: string;
+  badgeFigure?: "" | "paidOut" | "recipients" | "happier";
+  component: "timelineStep";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;

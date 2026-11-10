@@ -1,9 +1,19 @@
+import { cva } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 import { Input } from '../input/input';
 
 const fieldBorder = 'border-input/60';
+
+const digitsVariants = cva('flex items-baseline gap-2 leading-none font-medium @max-[10rem]:flex-wrap', {
+	variants: {
+		size: {
+			default: 'text-lg',
+			lg: 'text-lg sm:gap-3 sm:text-4xl',
+		},
+	},
+});
 
 type AmountQuickPick = {
 	value: number;
@@ -20,7 +30,9 @@ type AmountFieldProps = {
 	quickPicks?: AmountQuickPick[];
 	selectedQuickPick?: number | null;
 	onQuickPickSelect?: (value: number) => void;
-} & WithoutClassName<Omit<React.ComponentProps<'input'>, 'value'>>;
+	// lg: bigger digits, and the quick picks also show while the field is idle from sm up
+	size?: 'default' | 'lg';
+} & WithoutClassName<Omit<React.ComponentProps<'input'>, 'value' | 'size'>>;
 
 const AmountField = ({
 	label,
@@ -30,6 +42,7 @@ const AmountField = ({
 	quickPicks = [],
 	selectedQuickPick = null,
 	onQuickPickSelect,
+	size = 'default',
 	id,
 	...props
 }: AmountFieldProps) => {
@@ -59,7 +72,7 @@ const AmountField = ({
 				</label>
 				<div className="h-3.5" aria-hidden />
 				{/* Below 10rem the chips no longer fit next to the digits and move to their own line */}
-				<div className="flex items-baseline gap-2 text-lg leading-none font-medium @max-[10rem]:flex-wrap">
+				<div className={digitsVariants({ size })}>
 					<Input
 						variant="bare"
 						id={inputId}
@@ -71,7 +84,12 @@ const AmountField = ({
 					/>
 					{quickPicks.length > 0 && (
 						// The shift puts the chips' bottom edge on the bottom of the digits
-						<div className="-my-1 hidden shrink-0 -translate-y-2 gap-1.5 group-focus-within:flex @max-[10rem]:my-0 @max-[10rem]:shrink @max-[10rem]:translate-y-0 @max-[10rem]:flex-wrap">
+						<div
+							className={cn(
+								'-my-1 hidden shrink-0 -translate-y-2 gap-1.5 group-focus-within:flex @max-[10rem]:my-0 @max-[10rem]:shrink @max-[10rem]:translate-y-0 @max-[10rem]:flex-wrap',
+								size === 'lg' && 'sm:my-0 sm:flex',
+							)}
+						>
 							{quickPicks.map((quickPick) => (
 								<button
 									key={quickPick.value}
