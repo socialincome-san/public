@@ -511,5 +511,8 @@
 		"accept": "Akzeptieren",
 		"decline": "Ablehnen",
 		"settings": "Cookie-Einstellungen"
+	},
+	"video-carousel": {
+		"show-video": "Video {index} anzeigen"
 	}
 }

@@ -1,4 +1,4 @@
-import { getCountryIsoCode } from '@/components/storyblok/country/country.utils';
+import { getCountryRecipients, getPaidOutFigure } from '@/components/public-figures/public-figures';
 import type {
 	DropdownItem,
 	Layout,
@@ -9,18 +9,14 @@ import type {
 import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { type Result } from '@/lib/result';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
-import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
+import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getContributorCommunityStatsAction } from '@/modules/contributors/contributor.actions';
-import { getPublicCountryStatsByIsoCodesAction } from '@/modules/countries/country.actions';
-import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import {
 	getAllPersonsAction,
-	getCountriesAction,
 	getFocusesAction,
 	getLocalPartnersAction,
 	getProgramsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
-import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
 import {
 	type SiteMenuEntry,
 	type SiteMenuFooter,
@@ -39,31 +35,19 @@ type Figures = {
 const countOf = (result: Result<unknown[]>) => (result.success ? result.data.length : 0);
 
 const getFigures = async (lang: WebsiteLanguage, currency: WebsiteCurrency): Promise<Figures> => {
-	const [programs, focuses, localPartners, persons, countries, communityStats, transparency] = await Promise.all([
+	const [programs, focuses, localPartners, persons, communityStats, countryRecipients, paidOut] = await Promise.all([
 		getProgramsAction(lang),
 		getFocusesAction(lang),
 		getLocalPartnersAction(lang),
 		getAllPersonsAction(lang),
-		getCountriesAction(lang),
 		getContributorCommunityStatsAction(),
-		getTransparencySummaryAction(),
+		getCountryRecipients(lang),
+		getPaidOutFigure(lang, currency),
 	]);
-	const countryStories = (countries.success ? countries.data : []).map((story) => ({
-		uuid: story.uuid,
-		isoCode: getCountryIsoCode(story.content).toUpperCase(),
-	}));
-	const [countryStats, paidOut] = await Promise.all([
-		getPublicCountryStatsByIsoCodesAction(countryStories.map((country) => country.isoCode)),
-		transparency.success
-			? resolveChfAmountsAction({ amounts: [transparency.data.financialSummary.outflowsChf], displayCurrency: currency })
-			: undefined,
-	]);
-	const recipientsOf = (isoCode: string) => (countryStats.success ? countryStats.data[isoCode]?.recipientsCount : 0) ?? 0;
 
 	const locale = getSafeNumberFormatLocale(lang);
 	const format = (value: number) => formatNumberLocale(value, locale);
 	const count = (value: number) => (value > 0 ? format(value) : undefined);
-	const paidOutAmount = paidOut?.success ? paidOut.data[0] : undefined;
 
 	return {
 		stats: {
@@ -72,18 +56,16 @@ const getFigures = async (lang: WebsiteLanguage, currency: WebsiteCurrency): Pro
 			localPartners: count(countOf(localPartners)),
 			volunteers: count(countOf(persons)),
 			donors: count(communityStats.success ? communityStats.data.supporterCount : 0),
-			recipients: count(countryStories.reduce((total, country) => total + recipientsOf(country.isoCode), 0)),
-			paidOut:
-				paidOutAmount &&
-				formatCurrencyLocale(paidOutAmount.amount, paidOutAmount.currency, locale, {
-					compactThreshold: 1_000_000,
-					compactLocale: locale,
-				}),
+			recipients: count(countryRecipients.reduce((total, country) => total + (country.recipients ?? 0), 0)),
+			paidOut,
 		},
 		countries: new Map(
-			countryStories.map((country) => [
+			countryRecipients.map((country) => [
 				country.uuid,
-				{ isoCode: country.isoCode, recipients: countryStats.success ? format(recipientsOf(country.isoCode)) : undefined },
+				{
+					isoCode: country.isoCode,
+					recipients: country.recipients === undefined ? undefined : format(country.recipients),
+				},
 			]),
 		),
 	};

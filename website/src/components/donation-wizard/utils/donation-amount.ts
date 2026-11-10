@@ -12,6 +12,7 @@ export const DONATION_MONTHLY_INCOME_MIN = 50;
 export const DONATION_MONTHLY_INCOME_MAX = 1000_000;
 export const DONATION_CUSTOM_AMOUNT_MIN = 1;
 export const DONATION_CUSTOM_AMOUNT_MAX = 1000_000;
+export const CUSTOM_AMOUNT_QUICK_PICKS = [40, 60, 100];
 
 const roundAmount = (amount: number): number => Math.round(amount * 100) / 100;
 

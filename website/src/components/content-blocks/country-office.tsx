@@ -1,6 +1,6 @@
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import { CountryOfficeSection } from '@/components/storyblok/shared/country-office-section';
-import type { CountryOffice } from '@/generated/storyblok/types/109655/country-office-components';
+import type { CountryOffice } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { storyblokEditable } from '@storyblok/react';
 

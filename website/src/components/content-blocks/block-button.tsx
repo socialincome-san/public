@@ -2,7 +2,7 @@ import { buildCampaignSubmissionLabels } from '@/components/campaign/build-campa
 import { CreateCampaignButton } from '@/components/campaign/create-campaign-button';
 import { CreateProgramButton } from '@/components/create-program-wizard/create-program-button';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
-import type { Button as ButtonBlok, LandingHero } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Button as ButtonBlok, PageIntro } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
@@ -12,7 +12,7 @@ import type { ComponentProps } from 'react';
 
 type Props = {
 	button: ButtonBlok | undefined;
-	action: LandingHero['buttonAction'];
+	action: PageIntro['buttonAction'];
 	variant: NonNullable<ComponentProps<typeof Button>['variant']>;
 	fullWidth?: boolean;
 	lang: WebsiteLanguage;
@@ -21,7 +21,7 @@ type Props = {
 
 export const hasBlockButton = (
 	button: ButtonBlok | undefined,
-	action: LandingHero['buttonAction'],
+	action: PageIntro['buttonAction'],
 	lang: WebsiteLanguage,
 	currency: WebsiteCurrency,
 ) => {

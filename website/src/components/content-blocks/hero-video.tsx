@@ -1,6 +1,7 @@
 'use client';
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getMuxPosterUrl } from '@/lib/utils/url-video-parser';
 import MuxVideo from '@mux/mux-video-react';
 import { VideoControlButton } from '@socialincome/design-system/actions/video-control-button/video-control-button';
 import { MediaHero, MediaHeroIntro } from '@socialincome/design-system/layout/media-hero/media-hero';
@@ -56,7 +57,7 @@ export const HeroVideoBlock = ({ blok, lang, translations, donationForm, disable
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(!disableAutoplay);
 	const [showCaptions, setShowCaptions] = useState(true);
-	const posterUrl = `https://image.mux.com/${muxPlaybackId}/thumbnail.webp?time=2&width=1600`;
+	const posterUrl = getMuxPosterUrl(muxPlaybackId, 1600);
 	// The poster is the LCP element and <video> has no fetchpriority attribute.
 	preload(posterUrl, { as: 'image', fetchPriority: 'high' });
 

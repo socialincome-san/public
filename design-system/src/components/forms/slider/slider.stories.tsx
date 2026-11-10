@@ -7,6 +7,12 @@ const meta = {
 	component: Slider,
 	tags: ['autodocs'],
 	parameters: {
+		docs: {
+			description: {
+				component:
+					'Picks a value or a range by dragging a thumb. The large size has a bigger track and thumb for prominent inputs.',
+			},
+		},
 		design: {
 			type: 'figma',
 			url: 'https://www.figma.com/design/IDEMMGr7QkVOY4Ksbgbc57/Social-Income---shadcn-UI-Kit?node-id=46-67&p=f&t=uDt5Wmo7FudNnpiF-0',
@@ -27,6 +33,14 @@ const renderSlider = (args: React.ComponentProps<typeof Slider>) => (
 export const SingleValue: Story = {
 	args: {
 		defaultValue: [50],
+	},
+	render: renderSlider,
+};
+
+export const Large: Story = {
+	args: {
+		defaultValue: [50],
+		size: 'lg',
 	},
 	render: renderSlider,
 };

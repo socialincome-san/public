@@ -154,5 +154,12 @@
 		"label": "Don rapide",
 		"summary": "{cadence, select, monthly {Donner {amount} par mois, modifier le montant} other {Donner {amount} une fois, modifier le montant}}",
 		"continue": "Continuer"
+	},
+	"calculator": {
+		"your-donation": "Ton don",
+		"per-month": "par mois",
+		"per-year": "{amount} en un an",
+		"beneficiaries": "{directCount, plural, one {# personne reçoit} other {# personnes reçoivent}} un revenu, {indirectCount} autres en profitent",
+		"reach": "{percent} % vont directement aux bénéficiaires"
 	}
 }

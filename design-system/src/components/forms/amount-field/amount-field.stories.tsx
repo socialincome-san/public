@@ -18,7 +18,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'A numeric amount input with a floating label. Optional quick picks appear inside the field while it has focus.',
+					'A numeric amount input with a floating label. Optional quick picks appear inside the field while it has focus; the large size has bigger digits and always shows them from small screens up.',
 			},
 		},
 	},
@@ -35,7 +35,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const InteractiveAmountField = () => {
+const InteractiveAmountField = ({ size }: Pick<React.ComponentProps<typeof AmountField>, 'size'>) => {
 	const [value, setValue] = useState('');
 	const selected = Number(value);
 
@@ -47,12 +47,17 @@ const InteractiveAmountField = () => {
 			quickPicks={quickPicks}
 			selectedQuickPick={quickPicks.some((quickPick) => quickPick.value === selected) ? selected : null}
 			onQuickPickSelect={(pick) => setValue(String(pick))}
+			size={size}
 		/>
 	);
 };
 
 export const Default: Story = {
 	render: () => <InteractiveAmountField />,
+};
+
+export const Large: Story = {
+	render: () => <InteractiveAmountField size="lg" />,
 };
 
 export const Filled: Story = {

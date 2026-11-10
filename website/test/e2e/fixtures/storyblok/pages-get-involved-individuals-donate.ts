@@ -8,8 +8,8 @@ const donatePageStory = {
 		_uid: 'e2e-get-involved-individuals-donate-content',
 		content: [
 			{
-				component: 'landingHero',
-				_uid: 'e2e-get-involved-individuals-donate-hero',
+				component: 'pageIntro',
+				_uid: 'e2e-get-involved-individuals-donate-intro',
 				title: 'Donate',
 				button: [{ component: 'button', _uid: 'e2e-get-involved-individuals-donate-button', label: 'Donate now' }],
 				buttonAction: 'donate',

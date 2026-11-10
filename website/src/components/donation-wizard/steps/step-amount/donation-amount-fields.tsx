@@ -2,15 +2,16 @@
 
 import { useIsSwissVisitor } from '@/lib/geo/visitor-country';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { AmountField } from '@socialincome/design-system/forms/amount-field/amount-field';
 import { Input } from '@socialincome/design-system/forms/input/input';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import NextImage from 'next/image';
-import { useId, useState, type ChangeEvent } from 'react';
+import { useId } from 'react';
+import { useAmountInput } from '../../hooks/use-amount-input';
 import {
+	CUSTOM_AMOUNT_QUICK_PICKS,
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
 	DONATION_MONTHLY_INCOME_MAX,
@@ -22,8 +23,6 @@ import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 
 const amountFieldBorder = 'border-input/60';
 const amountTextClass = 'text-lg leading-none font-medium';
-
-const customAmountChips = [40, 60, 100];
 
 const submitLabelKeys = {
 	monthly: 'stepAmount.donate-monthly-with-amount',
@@ -39,41 +38,6 @@ const switchCadenceLabelKeys = {
 } as const;
 
 export const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
-
-type AmountError = 'not-whole' | 'below-min' | 'above-max';
-
-// Apostrophes and spaces are thousands separators. A dot or comma may be a decimal separator,
-// so 10.50 is rejected instead of being read as 1050.
-const parseWholeAmount = (text: string, max: number): { value: number | null } | { error: AmountError } => {
-	const digits = text.replace(/['’\s]/g, '');
-	if (digits === '') {
-		return { value: null };
-	}
-	if (!/^\d+$/.test(digits)) {
-		return { error: 'not-whole' };
-	}
-	const value = Number(digits);
-
-	return value > max ? { error: 'above-max' } : { value };
-};
-
-// Rejected text stays in the field so the person sees what to fix; only valid amounts reach the form state.
-const useAmountInput = (value: number | null, onChange: (value: number | null) => void, min: number, max: number) => {
-	const [rejected, setRejected] = useState<{ text: string; error: AmountError } | null>(null);
-
-	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const result = parseWholeAmount(event.target.value, max);
-		setRejected('error' in result ? { text: event.target.value, error: result.error } : null);
-		onChange('error' in result ? null : result.value);
-	};
-
-	return {
-		text: rejected?.text ?? value?.toString() ?? '',
-		error: rejected?.error ?? (value !== null && value < min ? 'below-min' : null),
-		onChange: handleChange,
-		reset: () => setRejected(null),
-	};
-};
 
 type DonationAmountFieldsValues = {
 	monthlyIncome: number | null;
@@ -111,40 +75,29 @@ export const DonationAmountFields = ({
 	showTitle = true,
 }: Props) => {
 	const t = useTranslations('donation-wizard');
-	const locale = useLocale();
 	const isSwissVisitor = useIsSwissVisitor();
 	// The hero renders this twice (mobile and desktop), so ids must be unique per instance
 	const id = useId();
-	const monthlyIncome = useAmountInput(
-		values.monthlyIncome,
-		actions.setMonthlyIncome,
-		DONATION_MONTHLY_INCOME_MIN,
-		DONATION_MONTHLY_INCOME_MAX,
-	);
+	const monthlyIncome = useAmountInput({
+		value: values.monthlyIncome,
+		onChange: actions.setMonthlyIncome,
+		min: DONATION_MONTHLY_INCOME_MIN,
+		max: DONATION_MONTHLY_INCOME_MAX,
+		currency,
+	});
 	// The campaign form preselects a preset amount; this step has no presets, so it shows it as a custom amount
 	const customAmountValue = typeof values.selectedAmount === 'number' ? values.selectedAmount : values.customAmount;
-	const customAmount = useAmountInput(
-		customAmountValue,
-		actions.setCustomAmount,
-		DONATION_CUSTOM_AMOUNT_MIN,
-		DONATION_CUSTOM_AMOUNT_MAX,
-	);
+	const customAmount = useAmountInput({
+		value: customAmountValue,
+		onChange: actions.setCustomAmount,
+		min: DONATION_CUSTOM_AMOUNT_MIN,
+		max: DONATION_CUSTOM_AMOUNT_MAX,
+		currency,
+	});
 
 	const isCustomAmount = !values.onePercentSelected;
 	const otherCadence: Cadence = values.cadence === 'monthly' ? 'one-time' : 'monthly';
 	const amount = values.resolvedAmount === null ? null : `${currency} ${values.resolvedAmount}`;
-
-	const formatLimit = (limit: number) => `${currency} ${formatNumberLocale(limit, locale)}`;
-	const getHint = (error: AmountError, min: number, max: number) => {
-		switch (error) {
-			case 'not-whole':
-				return t('stepAmount.whole-amount-only');
-			case 'below-min':
-				return t('stepAmount.below-minimum', { amount: formatLimit(min) });
-			case 'above-max':
-				return t('stepAmount.above-maximum', { amount: formatLimit(max) });
-		}
-	};
 
 	const selectOnePercent = () => {
 		customAmount.reset();
@@ -209,8 +162,8 @@ export const DonationAmountFields = ({
 							data-lpignore="true"
 							data-bwignore
 							value={monthlyIncome.text}
-							aria-invalid={monthlyIncome.error !== null}
-							aria-describedby={monthlyIncome.error === null ? undefined : `${id}-monthly-income-hint`}
+							aria-invalid={monthlyIncome.hint !== undefined}
+							aria-describedby={monthlyIncome.hint === undefined ? undefined : `${id}-monthly-income-hint`}
 							onFocus={selectOnePercent}
 							onChange={monthlyIncome.onChange}
 						/>
@@ -234,9 +187,9 @@ export const DonationAmountFields = ({
 					<div className={cn(amountTextClass, 'py-0.5 whitespace-nowrap')}>{values.onePercent}</div>
 				</button>
 			</div>
-			{monthlyIncome.error !== null && (
+			{monthlyIncome.hint !== undefined && (
 				<p id={`${id}-monthly-income-hint`} className="text-destructive text-2xs -mt-2 mb-4 font-medium">
-					{getHint(monthlyIncome.error, DONATION_MONTHLY_INCOME_MIN, DONATION_MONTHLY_INCOME_MAX)}
+					{monthlyIncome.hint}
 				</p>
 			)}
 
@@ -250,11 +203,7 @@ export const DonationAmountFields = ({
 					label={`${t('stepAmount.custom-amount-label')} (${currency})`}
 					data-testid="donation-wizard-custom-amount"
 					value={customAmount.text}
-					error={
-						customAmount.error === null
-							? undefined
-							: getHint(customAmount.error, DONATION_CUSTOM_AMOUNT_MIN, DONATION_CUSTOM_AMOUNT_MAX)
-					}
+					error={customAmount.hint}
 					inactive={!isCustomAmount}
 					onFocus={() => {
 						if (!isCustomAmount) {
@@ -262,7 +211,7 @@ export const DonationAmountFields = ({
 						}
 					}}
 					onChange={customAmount.onChange}
-					quickPicks={customAmountChips.map((chip) => ({ value: chip, ariaLabel: `${currency} ${chip}` }))}
+					quickPicks={CUSTOM_AMOUNT_QUICK_PICKS.map((chip) => ({ value: chip, ariaLabel: `${currency} ${chip}` }))}
 					selectedQuickPick={customAmountValue}
 					onQuickPickSelect={(chip) => {
 						customAmount.reset();

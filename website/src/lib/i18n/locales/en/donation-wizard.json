@@ -154,5 +154,12 @@
 		"label": "Quick donation",
 		"summary": "{cadence, select, monthly {Donate {amount} monthly, change amount} other {Donate {amount} once, change amount}}",
 		"continue": "Continue"
+	},
+	"calculator": {
+		"your-donation": "Your donation",
+		"per-month": "per month",
+		"per-year": "{amount} in one year",
+		"beneficiaries": "{directCount, plural, one {# person gets} other {# people get}} an income, {indirectCount} more benefit",
+		"reach": "{percent} % reaches recipients directly"
 	}
 }
