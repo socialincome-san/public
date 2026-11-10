@@ -14,6 +14,11 @@ Configure `.env.local` with `DATABASE_URL`, `APP_PASSWORD`,
 and `BLOB_HOSTNAME` (the exact store hostname, without `https://` or a
 path). Never commit credentials.
 
+The local Compose database uses port 5434, separate from the website
+database on port 5432. Start it with `docker compose up -d postgres` and
+set `DATABASE_URL` to
+`postgresql://social-income-image-generator:social-income-image-generator@127.0.0.1:5434/social-income-image-generator`.
+
 Create a **public** Vercel Blob store under the project's Storage tab
 and connect it to the Image Generator project. Vercel adds
 `BLOB_READ_WRITE_TOKEN` automatically; add `BLOB_HOSTNAME` for each
@@ -39,8 +44,14 @@ Apply `migrations/add-image-cost.sql` once before deploying image cost
 badges. New images store the AI Gateway's reported USD cost; existing
 images have no recorded cost and show an unavailable badge.
 
-Start the app with `npm run dev` and open http://localhost:3000. Basic
+Start the app with `npm run dev` and open http://localhost:3001. Basic
 Auth accepts any username and checks the configured password.
+
+For the website gallery, run the website separately on port 3000. In
+`website/.env.local`, set `IMAGE_GENERATOR_URL=http://localhost:3001`
+and set `IMAGE_GENERATOR_PASSWORD` to this app's `APP_PASSWORD`. To read
+the production generator instead, use `https://image.socialincome.org`
+and its production `APP_PASSWORD`, not the local password.
 
 ## Implementation
 
