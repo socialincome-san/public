@@ -451,6 +451,12 @@
 			}
 		}
 	},
+	"link-cards": {
+		"empty": "Hier gibt es noch nichts."
+	},
+	"tab-navigation": {
+		"label": "Bereiche"
+	},
 	"circles": {
 		"title": "Kreise",
 		"member-summary": "{active} aktiv · {interested, plural, one {# interessiertes Mitglied} other {# interessierte Mitglieder}}",

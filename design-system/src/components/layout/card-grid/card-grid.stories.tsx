@@ -34,6 +34,19 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+export const ThreeColumns: Story = {
+	args: {
+		columns: 'three',
+		children: programs.slice(0, 3).map((program) => (
+			<CardGridItem key={program}>
+				<Card>
+					<p className="text-foreground p-6 font-medium">{program}</p>
+				</Card>
+			</CardGridItem>
+		)),
+	},
+};
+
 export const Empty: Story = {
 	args: { children: [] },
 };

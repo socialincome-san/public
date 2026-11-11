@@ -16,6 +16,25 @@ const pagesPrefix = `${STORYBLOK_PAGES_FOLDER}/`;
 
 export const getPageStoryPath = (pageSlug: string) => `${pagesPrefix}${pageSlug}`;
 
+/**
+ * A folder's overview page is the story named like the folder, such as pages/get-involved/get-involved,
+ * and has the folder's URL (get-involved).
+ */
+export const getFolderOverviewStoryPath = (folderPath: string) => `${folderPath}/${folderPath.split('/').at(-1)}`;
+
+const getParentPath = (path: string) => path.split('/').slice(0, -1).join('/');
+
+export const isFolderOverviewStoryblokSlug = (storyblokSlug: string) => {
+	const slug = normalizeStoryblokSlug(storyblokSlug);
+	const parentPath = getParentPath(slug);
+
+	return parentPath.startsWith(pagesPrefix) && getFolderOverviewStoryPath(parentPath) === slug;
+};
+
+/** The overview of the folder above a folder overview: pages/a/b/b → pages/a/a. */
+export const getParentFolderOverviewStoryPath = (folderOverviewSlug: string) =>
+	getFolderOverviewStoryPath(getParentPath(getParentPath(normalizeStoryblokSlug(folderOverviewSlug))));
+
 export const getHomeStoryPath = () => getPageStoryPath(STORYBLOK_HOME_PAGE_SLUG);
 
 export const STORYBLOK_PROGRAMS_FOLDER = `${STORYBLOK_PAGES_FOLDER}/programs`;
@@ -257,6 +276,10 @@ export const getWebsitePathTailFromStoryblokSlug = (storyblokSlug: string): stri
 
 	if (slug.startsWith(`${STORYBLOK_JOURNAL_TAGS_FOLDER}/`)) {
 		return getJournalTagWebsitePathTail(slug.slice(STORYBLOK_JOURNAL_TAGS_FOLDER.length + 1));
+	}
+
+	if (isFolderOverviewStoryblokSlug(slug)) {
+		return getParentPath(slug).slice(pagesPrefix.length);
 	}
 
 	if (slug.startsWith(pagesPrefix)) {
