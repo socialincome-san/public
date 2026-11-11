@@ -139,12 +139,11 @@ const withFolderOverviewFallback = async <T>(
 	if (result.success || result.status !== 404 || !normalizedSlug.startsWith(`${STORYBLOK_PAGES_FOLDER}/`)) {
 		return result;
 	}
-	// Legacy folder paths such as pages/programs already normalize to their overview
-	const overviewPath = isFolderOverviewStoryblokSlug(normalizedSlug)
-		? normalizedSlug
-		: getFolderOverviewStoryPath(normalizedSlug);
+	// Legacy folder paths such as pages/programs normalize to their overview. Any other path that was not found,
+	// even a repeated name such as pages/give/give, is a folder: a story and a folder never share a slug.
+	const isLegacyOverview = normalizedSlug !== slug && isFolderOverviewStoryblokSlug(normalizedSlug);
 
-	return overviewPath === slug ? result : fetchStory(overviewPath);
+	return fetchStory(isLegacyOverview ? normalizedSlug : getFolderOverviewStoryPath(normalizedSlug));
 };
 
 export const getStoryWithFallback = async <T>(slug: string, language: string): Promise<Result<T>> =>
