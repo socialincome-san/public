@@ -19,7 +19,7 @@ const cardVariants = cva('relative overflow-hidden rounded-3xl transition-all', 
 			gradient: 'bg-donation-modal-gradient',
 		},
 		interactive: {
-			true: 'hover:-translate-y-1 hover:shadow-xl',
+			true: 'hover:shadow-xl motion-safe:hover:-translate-y-1 motion-reduce:transition-none',
 		},
 		fullHeight: {
 			true: 'h-full',
