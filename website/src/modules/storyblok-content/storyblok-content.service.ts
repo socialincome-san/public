@@ -35,6 +35,7 @@ import {
 	getProgramStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
 	isFolderOverviewStoryblokSlug,
+	normalizeStoryblokSlug,
 	STORYBLOK_CAMPAIGNS_FOLDER,
 	STORYBLOK_COMMUNITY_GLOBALS_PATH,
 	STORYBLOK_COUNTRIES_FOLDER,
@@ -134,10 +135,16 @@ const withFolderOverviewFallback = async <T>(
 	fetchStory: (storySlug: string) => Promise<Result<T>>,
 ): Promise<Result<T>> => {
 	const result = await fetchStory(slug);
+	const normalizedSlug = normalizeStoryblokSlug(slug);
+	if (result.success || result.status !== 404 || !normalizedSlug.startsWith(`${STORYBLOK_PAGES_FOLDER}/`)) {
+		return result;
+	}
+	// Legacy folder paths such as pages/programs already normalize to their overview
+	const overviewPath = isFolderOverviewStoryblokSlug(normalizedSlug)
+		? normalizedSlug
+		: getFolderOverviewStoryPath(normalizedSlug);
 
-	const isPageFolder = slug.startsWith(`${STORYBLOK_PAGES_FOLDER}/`) && !isFolderOverviewStoryblokSlug(slug);
-
-	return !result.success && result.status === 404 && isPageFolder ? fetchStory(getFolderOverviewStoryPath(slug)) : result;
+	return overviewPath === slug ? result : fetchStory(overviewPath);
 };
 
 export const getStoryWithFallback = async <T>(slug: string, language: string): Promise<Result<T>> =>

@@ -13,7 +13,7 @@ const imageVariants = cva('', {
 			contain: 'object-contain p-6',
 		},
 		zoomOnHover: {
-			true: 'transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none',
+			true: 'transition-transform duration-300 motion-safe:group-hover:scale-105 motion-reduce:transition-none',
 		},
 	},
 });
@@ -84,7 +84,7 @@ export const LinkCard = ({
 							className="border-border text-primary group-hover:bg-primary group-hover:text-primary-foreground flex size-11 shrink-0 items-center justify-center rounded-full border transition-colors"
 							aria-hidden
 						>
-							<Icon className="size-5 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" />
+							<Icon className="size-5 transition-transform motion-safe:group-hover:translate-x-0.5 motion-reduce:transition-none" />
 						</span>
 					</div>
 				</div>
