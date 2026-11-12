@@ -3,9 +3,11 @@ import { buildProgramAboutContent } from '@/components/storyblok/program/build-p
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramAboutDialog } from '@/components/storyblok/program/program-about-dialog';
 import { ProgramAboutRowValues } from '@/components/storyblok/program/program-about-row-values';
+import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { ProgramFinancesDisplayAmounts } from '@/modules/programs/program.types';
 import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
+import { Wallet } from '@socialincome/design-system/data-display/wallet/wallet';
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
@@ -39,6 +41,20 @@ export const ProgramAbout = async ({
 		financesDisplayAmounts,
 	});
 	const aboutTitle = t('program-detail-page.about-title');
+	const { title, images = [] } = programDetailData;
+	const [primaryAsset, secondaryAsset, tertiaryAsset] = images;
+	const primaryImage = createWalletImageFromStoryblokAsset(primaryAsset, title);
+	const walletImages = primaryImage
+		? {
+				primaryImage,
+				hoverEffectImage1:
+					createWalletImageFromStoryblokAsset(secondaryAsset, title, primaryImage, { preserveFallbackAlt: true }) ??
+					primaryImage,
+				hoverEffectImage2:
+					createWalletImageFromStoryblokAsset(tertiaryAsset, title, primaryImage, { preserveFallbackAlt: true }) ??
+					primaryImage,
+			}
+		: undefined;
 	const hasDialogContent = content.overlaySections.length > 0;
 
 	return (
@@ -62,6 +78,7 @@ export const ProgramAbout = async ({
 					viewDetailsLabel={t('program-detail-page.view-details')}
 					closeAriaLabel={t('program-detail-page.close')}
 					content={content}
+					wallet={<Wallet size="sm" title={title} images={walletImages} />}
 				/>
 			) : null}
 		</DetailPanel>

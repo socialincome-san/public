@@ -49,6 +49,23 @@ export const WithImages: Story = {
 	},
 };
 
+export const Small: Story = {
+	args: {
+		size: 'sm',
+		subtitle: undefined,
+		footerLeft: undefined,
+		footerRight: undefined,
+		images: { primaryImage: flagImage, hoverEffectImage1: flagImage, hoverEffectImage2: flagImage },
+	},
+	decorators: [
+		(Story) => (
+			<div className="w-48">
+				<Story />
+			</div>
+		),
+	],
+};
+
 export const WithBadge: Story = {
 	args: {
 		badge: <Badge variant="secondary">Funding needed</Badge>,
