@@ -49,6 +49,32 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+export const PageOpening: Story = {
+	args: {
+		eyebrow: undefined,
+		headline: (
+			<>
+				Country <strong>eligibility</strong>
+			</>
+		),
+		headingLevel: 1,
+		description: 'We reviewed every country against four conditions.\n\nAn unmet condition is not a verdict on the country.',
+		intro: undefined,
+	},
+};
+
+export const WithStatus: Story = {
+	args: {
+		children: (
+			<SplitSectionCard title="Breakdown" status={{ text: 'Zewo certified since 2023', variant: 'confirm' }}>
+				<BreakdownList>
+					<BreakdownRow label="Recipients" value="CHF 93" description="Paid out via mobile money." />
+				</BreakdownList>
+			</SplitSectionCard>
+		),
+	},
+};
+
 export const WithMarkers: Story = {
 	args: {
 		eyebrow: 'Where the money comes from',

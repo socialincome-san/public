@@ -1,6 +1,7 @@
 'use client';
 
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
+import { useTranslations } from 'next-intl';
 import { ActiveCountryCards } from './active-country-cards';
 import { CountryTable } from './country-table';
 
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export const CountrySelectionStep = ({ rows, selectedCountryId, openRowIds, onSelectCountry, onToggleRow }: Props) => {
+	const t = useTranslations('create-program-wizard');
 	const active = rows
 		.filter((r) => r.country.isActive)
 		.sort((a, b) => {
@@ -27,6 +29,7 @@ export const CountrySelectionStep = ({ rows, selectedCountryId, openRowIds, onSe
 
 			<CountryTable
 				rows={rows}
+				title={t('step1.feasibility_title')}
 				value={selectedCountryId}
 				openIds={openRowIds}
 				onValueChange={(id) => id && onSelectCountry(id)}

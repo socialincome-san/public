@@ -23,7 +23,7 @@
 	"step1": {
 		"choose_country": "Wähle ein Land, in dem wir tätig sind",
 		"feasibility_title": "Prüfe die Eignung für jedes Land in Afrika",
-		"all_conditions_met": "Alle Bedingungen erfüllt",
+		"all_conditions_met": "Geeignet",
 		"no_countries_match": "Keine Länder entsprechen den aktuellen Filtern",
 		"no_active_programs": "Keine aktiven Programme",
 		"programs": "Programme",
@@ -31,14 +31,15 @@
 		"candidates_ready_to_enroll": "{count, plural, one {{count} Kandidat:in für ein Programm} other {{count} Kandidat:innen für ein Programm}}",
 		"no_candidates": "Derzeit gibt es keine Kandidat:innen",
 		"table": {
+			"country": "Land",
 			"cash": "Eignung für Bargeld",
 			"mobile_money": "Mobile Money",
 			"mobile_network": "Netzabdeckung",
 			"sanctions": "Keine Sanktionen"
 		},
 		"condition": {
-			"met": "Bedingung erfüllt",
-			"not_met": "Bedingungen nicht erfüllt",
+			"met": "Erfüllt",
+			"not_met": "Nicht erfüllt",
 			"restrictions_apply": "Einschränkungen"
 		},
 		"details": {
@@ -64,7 +65,13 @@
 		"source": {
 			"si_research": "SI research",
 			"sanctions_lists": "Quelle: EU Sanctions Map & US Sanctions List"
-		}
+		},
+		"expand_all": "Alle aufklappen",
+		"collapse_all": "Alle zuklappen",
+		"active_countries": "Aktive Länder",
+		"active_badge": "Aktiv",
+		"country_page": "Länderseite",
+		"conditions_met_count": "{met} von {total} Bedingungen erfüllt"
 	},
 	"step2": {
 		"recipient_selection": {
@@ -155,5 +162,23 @@
 		"title": "Ihr Programm ist bereit",
 		"description": "Wir haben Ihr Konto, Ihre Organisation und die erste Programmeinrichtung erstellt. Melden Sie sich jetzt mit Ihrer E-Mail-Adresse an, um Ihr Dashboard zu öffnen und Ihr Programm zu verwalten.",
 		"go_to_login": "Zum Login"
+	},
+	"country_eligibility_page": {
+		"title": "Länder-Eignung",
+		"description": "Unsere Recherche zu allen afrikanischen Ländern: wo ein Cash-Programm über Mobile Money umsetzbar ist, geprüft anhand von vier Bedingungen.",
+		"open_research": "Offene Recherche",
+		"headline": "Länder-<b>Eignung</b>",
+		"lead": "Bei der Auswahl der Länder, in denen wir arbeiten, haben wir gründlich recherchiert. Wir finden, diese Recherche soll allen offenstehen. Hier ist sie: alle 54 afrikanischen Länder, geprüft anhand der vier Bedingungen, auf die unsere Programme angewiesen sind.",
+		"note": "Eine Einschränkung oder eine nicht erfüllte Bedingung bedeutet nicht, dass Cash-Programme dort unmöglich sind. Sie bedeutet, dass ein Mobile-Money-Programm wie unseres nicht ohne grossen Zusatzaufwand umsetzbar war.",
+		"review_title": "Was wir prüfen",
+		"met_count": "{met} von {total}",
+		"conditions": {
+			"cash": "Funktionieren die lokalen Märkte, sodass Menschen Geld für das ausgeben können, was sie brauchen?",
+			"mobile_money": "Gibt es Mobile-Money-Anbieter, um Zahlungen direkt zu überweisen?",
+			"mobile_network": "Ist ein ausreichender Teil der Bevölkerung durch ein Mobilfunknetz abgedeckt?",
+			"sanctions": "Ist das Land frei von internationalen Sanktionen, die Überweisungen blockieren?"
+		},
+		"eligible_summary": "{eligible} Länder erfüllen alle vier Bedingungen. Wir sind in {active} aktiv.",
+		"contact_text": "{name} hält diese Daten aktuell und freut sich über <link>Hinweise auf Änderungen</link>."
 	}
 }

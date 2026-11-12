@@ -20,6 +20,7 @@ import {
 	updateCountry,
 } from '@/modules/countries/country.service';
 import type {
+	CountryEligibilityRow,
 	CountryPageStats,
 	CountryPaginatedTableView,
 	CountryPayload,
@@ -28,7 +29,12 @@ import type {
 	PublicCountryStatsMap,
 } from '@/modules/countries/country.types';
 import { revalidatePath } from 'next/cache';
-import { getCountryPageStats, getCountryStatisticsComparison, getPublicCountryStatsByIsoCodes } from './country.cache';
+import {
+	getCountryEligibility,
+	getCountryPageStats,
+	getCountryStatisticsComparison,
+	getPublicCountryStatsByIsoCodes,
+} from './country.cache';
 
 const REVALIDATE_PATH = '/portal/admin/countries';
 
@@ -107,6 +113,8 @@ export const getCountryAction = async (input: unknown): Promise<Result<CountryPa
 
 export const getProgramCountryFeasibilityAction = async (): Promise<Result<ProgramCountryFeasibilityView>> =>
 	getProgramCountryFeasibility();
+
+export const getCountryEligibilityAction = async (): Promise<Result<CountryEligibilityRow[]>> => getCountryEligibility();
 
 export const getCountryPageStatsAction = async (input: unknown): Promise<Result<CountryPageStats>> => {
 	const parsedInput = countryPageIsoCodeSchema.safeParse(input);

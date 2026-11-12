@@ -2,6 +2,7 @@ import type { AnySearchParams } from '@/app/page-props';
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import { CampaignGridBlock } from '@/components/content-blocks/campaign-grid';
 import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
+import { CountryEligibilityBlock, type CountryEligibilityBlok } from '@/components/content-blocks/country-eligibility';
 import { CountryOfficeBlock } from '@/components/content-blocks/country-office';
 import { CtaBannerBlock } from '@/components/content-blocks/cta-banner';
 import { DonationCalculatorBlock } from '@/components/content-blocks/donation-calculator';
@@ -51,7 +52,8 @@ import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Fragment, type ReactNode } from 'react';
 
-type PageBlock = Page['content'][number];
+// CountryEligibilityBlok joins the generated union the next time the Storyblok types are regenerated
+type PageBlock = Page['content'][number] | CountryEligibilityBlok;
 type NestedPageBlock = TwoColumn['leftColumn'][number];
 
 type PageContentTypeProps = {
@@ -73,6 +75,8 @@ const renderPageBlock = (
 			return <CampaignGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'circleGrid':
 			return <CircleGridBlock blok={block} lang={lang} currency={currency} />;
+		case 'countryEligibility':
+			return <CountryEligibilityBlock blok={block} lang={lang} currency={currency} />;
 		case 'countryOffice':
 			return <CountryOfficeBlock blok={block} lang={lang} />;
 		case 'ctaBanner':

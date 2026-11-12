@@ -85,6 +85,34 @@ export const StickyHeader: Story = {
 	),
 };
 
+export const FixedLayout: Story = {
+	render: () => (
+		<Table layout="fixed">
+			<TableHeader>
+				<TableRow>
+					<TableHead width="control" />
+					<TableHead>Country</TableHead>
+					<TableHead>Recipients</TableHead>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				<TableRow>
+					<TableCell>○</TableCell>
+					<TableCell>Ghana</TableCell>
+					<TableCell>128</TableCell>
+				</TableRow>
+				<TableRow>
+					<TableCell />
+					<TableCell verticalAlign="top">
+						A long detail text that wraps inside its column instead of widening it, as in an expanded row.
+					</TableCell>
+					<TableCell />
+				</TableRow>
+			</TableBody>
+		</Table>
+	),
+};
+
 export const InteractiveRows: Story = {
 	render: () => (
 		<Table>

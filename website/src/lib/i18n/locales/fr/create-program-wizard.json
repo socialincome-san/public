@@ -23,7 +23,7 @@
 	"step1": {
 		"choose_country": "Sélectionnez un pays où nous opérons",
 		"feasibility_title": "Verifier l'eligibilite pour n'importe quel pays en Afrique",
-		"all_conditions_met": "Toutes les conditions sont remplies",
+		"all_conditions_met": "Éligibles",
 		"no_countries_match": "Aucun pays ne correspond aux filtres actuels",
 		"no_active_programs": "Aucun programme actif",
 		"programs": "Programmes",
@@ -31,14 +31,15 @@
 		"candidates_ready_to_enroll": "{count, plural, one {{count} candidat prêt à s'inscrire} other {{count} candidats prêts à s'inscrire}}",
 		"no_candidates": "Il n'y a actuellement aucun candidat",
 		"table": {
+			"country": "Pays",
 			"cash": "Adequation du cash",
 			"mobile_money": "Mobile money",
 			"mobile_network": "Couverture reseau",
 			"sanctions": "Aucune sanction"
 		},
 		"condition": {
-			"met": "Condition remplie",
-			"not_met": "Conditions non remplies",
+			"met": "Remplie",
+			"not_met": "Non remplie",
 			"restrictions_apply": "Restrictions"
 		},
 		"details": {
@@ -64,7 +65,13 @@
 		"source": {
 			"si_research": "SI research",
 			"sanctions_lists": "Source: EU Sanctions Map & US Sanctions List"
-		}
+		},
+		"expand_all": "Tout déplier",
+		"collapse_all": "Tout replier",
+		"active_countries": "Pays actifs",
+		"active_badge": "Actif",
+		"country_page": "Page du pays",
+		"conditions_met_count": "{met} conditions sur {total} remplies"
 	},
 	"step2": {
 		"recipient_selection": {
@@ -155,5 +162,23 @@
 		"title": "Votre programme est pret",
 		"description": "Nous avons cree votre compte, votre organisation et la configuration initiale du programme. Connectez-vous maintenant avec votre e-mail pour ouvrir votre tableau de bord et gerer votre programme.",
 		"go_to_login": "Aller a la connexion"
+	},
+	"country_eligibility_page": {
+		"title": "Éligibilité des pays",
+		"description": "Nos recherches sur tous les pays d'Afrique : où un programme de transferts par mobile money est réalisable, selon quatre conditions.",
+		"open_research": "Recherche ouverte",
+		"headline": "<b>Éligibilité</b> des pays",
+		"lead": "Pour choisir les pays où nous travaillons, nous avons fait nos recherches. Nous pensons qu'elles doivent être accessibles à tous. Les voici : les 54 pays d'Afrique, examinés selon les quatre conditions dont dépendent nos programmes.",
+		"note": "Une restriction ou une condition non remplie ne signifie pas que des programmes de transferts monétaires y sont impossibles. Cela signifie qu'un programme par mobile money comme le nôtre n'était pas réalisable sans beaucoup d'efforts supplémentaires.",
+		"review_title": "Ce que nous examinons",
+		"met_count": "{met} sur {total}",
+		"conditions": {
+			"cash": "Les marchés locaux fonctionnent-ils, pour que les gens puissent dépenser l'argent selon leurs besoins ?",
+			"mobile_money": "Existe-t-il des opérateurs de mobile money pour verser les paiements directement ?",
+			"mobile_network": "Une part suffisante de la population est-elle couverte par un réseau mobile ?",
+			"sanctions": "Le pays est-il libre de sanctions internationales qui bloquent les transferts ?"
+		},
+		"eligible_summary": "{eligible} pays remplissent les quatre conditions. Nous sommes actifs dans {active}.",
+		"contact_text": "{name} veille à l'exactitude de ces données et accueille volontiers <link>vos signalements</link>."
 	}
 }

@@ -23,7 +23,7 @@
 	"step1": {
 		"choose_country": "Select a country we operate in",
 		"feasibility_title": "Review eligibility for any country in Africa",
-		"all_conditions_met": "All conditions met",
+		"all_conditions_met": "Eligible",
 		"no_countries_match": "No countries match the current filters",
 		"no_active_programs": "No active programs",
 		"programs": "Programs",
@@ -31,14 +31,15 @@
 		"candidates_ready_to_enroll": "{count, plural, one {{count} candidate ready to enroll} other {{count} candidates ready to enroll}}",
 		"no_candidates": "There are currently no candidates",
 		"table": {
+			"country": "Country",
 			"cash": "Suitability of cash",
 			"mobile_money": "Mobile money",
 			"mobile_network": "Network coverage",
 			"sanctions": "No sanctions"
 		},
 		"condition": {
-			"met": "Condition met",
-			"not_met": "Conditions not met",
+			"met": "Met",
+			"not_met": "Not met",
 			"restrictions_apply": "Restrictions"
 		},
 		"details": {
@@ -64,7 +65,13 @@
 		"source": {
 			"si_research": "SI research",
 			"sanctions_lists": "Source: EU Sanctions Map & US Sanctions List"
-		}
+		},
+		"expand_all": "Expand all",
+		"collapse_all": "Collapse all",
+		"active_countries": "Active countries",
+		"active_badge": "Active",
+		"country_page": "Country Page",
+		"conditions_met_count": "{met} of {total} conditions met"
 	},
 	"step2": {
 		"recipient_selection": {
@@ -155,5 +162,23 @@
 		"title": "Your program is ready",
 		"description": "We created your account, organization, and initial program setup. Next, log in with your email to open your dashboard and start managing your program.",
 		"go_to_login": "Go to login"
+	},
+	"country_eligibility_page": {
+		"title": "Country eligibility",
+		"description": "Our research on every African country: where a mobile money cash program is feasible, reviewed against four conditions.",
+		"open_research": "Open research",
+		"headline": "Country <b>eligibility</b>",
+		"lead": "In choosing the countries we work in, we did our research. We think it should be open to everyone, so here it is: all 54 African countries, reviewed against the four conditions our programs rely on.",
+		"note": "A restriction or an unmet condition does not mean cash programs are impossible there. It means that a mobile money program like ours was not feasible without a lot of extra effort.",
+		"review_title": "What we review",
+		"met_count": "{met} of {total}",
+		"conditions": {
+			"cash": "Are local markets working, so people can spend cash on what they need?",
+			"mobile_money": "Are there mobile money providers to deliver payments directly?",
+			"mobile_network": "Is enough of the population covered by a mobile network?",
+			"sanctions": "Is the country free of international sanctions that block transfers?"
+		},
+		"eligible_summary": "{eligible} countries meet all four conditions. We are active in {active}.",
+		"contact_text": "{name} keeps this data accurate and is glad to <link>hear about changes</link>."
 	}
 }
