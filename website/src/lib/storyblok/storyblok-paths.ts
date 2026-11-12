@@ -115,7 +115,8 @@ const stripStoryblokLanguagePrefix = (slug: string) => {
  * Normalizes slugs from Storyblok preview URLs or legacy paths to current space paths.
  */
 export const normalizeStoryblokSlug = (rawSlug: string): string => {
-	let slug = rawSlug.trim();
+	// A folder's start page has a trailing slash in its full_slug, e.g. pages/policies/
+	let slug = rawSlug.trim().replace(/\/+$/, '');
 
 	slug = stripStoryblokLanguagePrefix(slug);
 
