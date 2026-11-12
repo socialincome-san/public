@@ -94,9 +94,9 @@ export const LocalPartnerGridBlock = async ({ blok, lang, currency }: Props) => 
 				</div>
 			)}
 			{blok.description && (
-				<p className="text-foreground -mt-4 mb-10 text-center text-lg leading-7 font-normal whitespace-pre-line">
+				<div className="text-foreground -mt-4 mb-10 text-center text-lg leading-7 font-normal whitespace-pre-line">
 					<StoryblokMarkdown>{blok.description}</StoryblokMarkdown>
-				</p>
+				</div>
 			)}
 			<LocalPartnersGrid
 				localPartners={localPartners}
