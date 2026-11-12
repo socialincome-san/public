@@ -3,6 +3,7 @@ import { CountryEligibilityTable } from '@/components/country-eligibility/countr
 import { getCountryPageHrefs } from '@/components/country-eligibility/country-page-hrefs';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryEligibilityAction } from '@/modules/countries/country.actions';
+import { Alert, AlertDescription } from '@socialincome/design-system/feedback/alert/alert';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable } from '@storyblok/react';
 import { getTranslations } from 'next-intl/server';
@@ -35,9 +36,9 @@ export const CountryEligibilityBlock = async ({ blok, lang, currency }: Props) =
 
 		return (
 			<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
-				<p className="text-muted-foreground text-center" role="status">
-					{t('country_eligibility_page.unavailable')}
-				</p>
+				<Alert role="status">
+					<AlertDescription>{t('country_eligibility_page.unavailable')}</AlertDescription>
+				</Alert>
 			</BlockWrapper>
 		);
 	}

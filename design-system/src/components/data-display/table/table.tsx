@@ -11,7 +11,9 @@ type TableProps = WithoutClassName<ComponentProps<'table'>> & {
 };
 
 const Table = ({ size = 'default', stickyHeader = false, layout = 'auto', ...props }: TableProps) => (
-	<div className={stickyHeader ? 'relative w-full overflow-x-auto overflow-y-clip' : 'relative w-full overflow-auto'}>
+	// A sticky header sticks to its nearest scroll container, so the wrapper must not be one: with overflow-x set,
+	// overflow-y can no longer stay visible or clip. The TableFrame or the page scrolls instead.
+	<div className={stickyHeader ? 'relative w-full' : 'relative w-full overflow-auto'}>
 		<table
 			data-size={size}
 			className={`group/table w-full caption-bottom border-separate border-spacing-0 text-sm ${layout === 'fixed' ? 'table-fixed' : ''}`}
@@ -26,7 +28,7 @@ type TableFrameProps = {
 	maxHeight?: 'none' | 'sm';
 };
 
-/** A card-like panel around a table; wide tables scroll sideways inside it */
+/** A card-like panel around a table; wide tables scroll sideways inside it, and it is the scroll container a sticky header sticks to */
 const TableFrame = ({ children, maxHeight = 'none' }: TableFrameProps) => (
 	<div className={`bg-card overflow-x-auto rounded-xl border ${maxHeight === 'sm' ? 'max-h-96 overflow-y-auto' : ''}`}>
 		{children}
