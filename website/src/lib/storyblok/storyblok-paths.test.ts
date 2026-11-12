@@ -88,6 +88,12 @@ describe('storyblok-paths', () => {
 		expect(normalizeStoryblokSlug('article-type/essay')).toBe('globals/journal/article-types/essay');
 	});
 
+	it('treats a folder start page as the page at the folder path', () => {
+		expect(normalizeStoryblokSlug('pages/policies/')).toBe('pages/policies');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/policies/')).toBe('policies');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/policies/do-no-harm')).toBe('policies/do-no-harm');
+	});
+
 	it('allows preview only for pages and layout, not journal reference entries', () => {
 		expect(isAllowedStoryblokPreviewSlug('pages/journal/my-article')).toBe(true);
 		expect(isAllowedStoryblokPreviewSlug('globals/layout')).toBe(true);
