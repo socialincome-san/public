@@ -1,5 +1,5 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
-import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
+import { JournalArticleList } from '@/components/storyblok/journal/journal-article-list';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
@@ -20,7 +20,7 @@ type Props = {
 	pageDescription?: string;
 	editorsHeading: string;
 	allArticleTypesLabel: string;
-	articleCountLabel: string;
+	initialQuery: string;
 	moreArticlesLabel: string;
 	videoLabel: string;
 	pathname: string;
@@ -36,12 +36,11 @@ type Props = {
 	roleLabels: Record<string, string>;
 };
 
+// Looks like the FilterTrigger pills of the other overviews: the active one is filled, not outlined
 const articleTypeFilterClassName = (active: boolean) =>
 	cn(
-		'inline-flex rounded-full border bg-transparent px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors',
-		active
-			? 'border-foreground text-foreground'
-			: 'border-border text-muted-foreground hover:text-foreground hover:bg-muted/50',
+		'border-border text-foreground focus-visible:ring-ring inline-flex h-10 shrink-0 items-center rounded-full border px-4 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-1 focus-visible:outline-hidden',
+		active ? 'bg-input' : 'bg-card hover:bg-muted',
 	);
 
 export const JournalOverview = ({
@@ -50,7 +49,7 @@ export const JournalOverview = ({
 	pageDescription,
 	editorsHeading,
 	allArticleTypesLabel,
-	articleCountLabel,
+	initialQuery,
 	moreArticlesLabel,
 	videoLabel,
 	pathname,
@@ -69,34 +68,29 @@ export const JournalOverview = ({
 		<JournalBreadcrumb links={breadcrumbs} />
 		<PageIntro title={pageTitle} description={pageDescription} />
 
-		<section className="flex flex-wrap items-center gap-2">
-			<Link href={journalPath} className={articleTypeFilterClassName(!activeTagSlug && !activeArticleTypeSlug)}>
-				{allArticleTypesLabel}
-			</Link>
-			{articleTypes.map((articleType) => (
-				<Link
-					key={articleType.slug}
-					href={createWebsiteJournalArticleTypeLink(articleType.slug, lang, currency)}
-					className={articleTypeFilterClassName(activeArticleTypeSlug === articleType.slug)}
-				>
-					{getArticleTypeLabel(articleType)}
-				</Link>
-			))}
-			<span className="text-muted-foreground ml-auto text-sm font-normal whitespace-nowrap">{articleCountLabel}</span>
-		</section>
-
-		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{articles.map((article, index) => (
-				<JournalArticleCard
-					key={article.uuid}
-					lang={lang}
-					currency={currency}
-					article={article}
-					videoLabel={videoLabel}
-					preload={index === 0}
-				/>
-			))}
-		</div>
+		<JournalArticleList
+			filters={
+				<>
+					<Link href={journalPath} className={articleTypeFilterClassName(!activeTagSlug && !activeArticleTypeSlug)}>
+						{allArticleTypesLabel}
+					</Link>
+					{articleTypes.map((articleType) => (
+						<Link
+							key={articleType.slug}
+							href={createWebsiteJournalArticleTypeLink(articleType.slug, lang, currency)}
+							className={articleTypeFilterClassName(activeArticleTypeSlug === articleType.slug)}
+						>
+							{getArticleTypeLabel(articleType)}
+						</Link>
+					))}
+				</>
+			}
+			articles={articles}
+			initialQuery={initialQuery}
+			lang={lang}
+			currency={currency}
+			videoLabel={videoLabel}
+		/>
 
 		{showMoreArticlesLink && <MoreArticlesButton label={moreArticlesLabel} pathname={pathname} />}
 

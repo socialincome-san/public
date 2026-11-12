@@ -8,7 +8,12 @@
 		"description": "Storie e aggiornamenti sul nostro percorso per creare un impatto.",
 		"editors": "Redattori collaboratori",
 		"more-articles": "Ci sono altri articoli disponibili in inglese",
-		"article-count": "{count, plural, one {{count} articolo} other {{count} articoli}}"
+		"article-count": "{count, plural, one {{count} articolo} other {{count} articoli}}",
+		"article-count-filtered": "{count} di {total, plural, one {# articolo} other {# articoli}}",
+		"search": "Cerca articoli",
+		"no-results": "Nessun articolo corrisponde a «{query}».",
+		"clear-search": "Cancella la ricerca",
+		"search-count": "Cerca tra {count, plural, one {# articolo} other {# articoli}}"
 	},
 	"person": {
 		"articles": "Articoli di {name}",
