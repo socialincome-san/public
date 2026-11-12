@@ -2,19 +2,27 @@ import type { ProgramDetailData } from '@/components/storyblok/program/load-prog
 import type { PayoutInterval } from '@/generated/prisma/client';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getSafeNumberFormatLocale, getWebsiteBasePath } from '@/lib/i18n/utils';
-import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { createWebsiteCirclePath } from '@/lib/storyblok/storyblok-utils';
+import { formatCompactNumberLocale, formatNumberLocale } from '@/lib/utils/string-utils';
+import type { ProgramFinancesDisplayAmounts } from '@/modules/programs/program.types';
 import { type useTranslations } from 'next-intl';
+
+export type ProgramAboutDetailValue = {
+	text: string;
+	href?: string;
+	info?: { label: string; text: string };
+};
 
 export type ProgramAboutDetailRow = {
 	label: string;
-	value: string;
-	href?: string;
+	values: ProgramAboutDetailValue[];
 };
 
 export type ProgramAboutOverlaySection = {
 	id: 'parties' | 'program-design' | 'delivery';
 	title: string;
 	rows: ProgramAboutDetailRow[];
+	responsibleCircle?: { label: string; href: string };
 };
 
 export type ProgramAboutContent = {
@@ -30,7 +38,8 @@ type BuildProgramAboutContentInput = {
 	t: ProgramAboutTranslator;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
-	countryName?: string;
+	country?: ProgramAboutDetailValue;
+	financesDisplayAmounts?: ProgramFinancesDisplayAmounts;
 };
 
 const formatDuration = (durationMonths: number, t: ProgramAboutTranslator): string => {
@@ -75,7 +84,7 @@ const partyRowsToOrderedArray = (partyRowsByRole: PartyRowsByRole, order: PartyR
 
 const buildPartyRowsByRole = (
 	programDetails: NonNullable<ProgramDetailData['programDetails']>,
-	localPartnerHref: string | undefined,
+	localPartnersBasePath: string,
 	t: ProgramAboutTranslator,
 ): PartyRowsByRole => {
 	const partyRowsByRole: PartyRowsByRole = {};
@@ -83,22 +92,24 @@ const buildPartyRowsByRole = (
 	if (programDetails.ownerOrganizationName) {
 		partyRowsByRole.owner = {
 			label: t('program-detail-page.program-owner'),
-			value: programDetails.ownerOrganizationName,
+			values: [{ text: programDetails.ownerOrganizationName }],
 		};
 	}
 
 	if (programDetails.operatorOrganizationName) {
 		partyRowsByRole.operator = {
 			label: t('program-detail-page.program-operator'),
-			value: programDetails.operatorOrganizationName,
+			values: [{ text: programDetails.operatorOrganizationName }],
 		};
 	}
 
-	if (programDetails.localPartnerName) {
+	if (programDetails.localPartners.length > 0) {
 		partyRowsByRole.localPartner = {
 			label: t('program-detail-page.local-program-partner'),
-			value: programDetails.localPartnerName,
-			href: localPartnerHref,
+			values: programDetails.localPartners.map(({ name, slug }) => ({
+				text: name,
+				href: `${localPartnersBasePath}/${slug}`,
+			})),
 		};
 	}
 
@@ -118,34 +129,38 @@ const buildProgramDesignRows = (
 	if (durationMonths !== undefined) {
 		programDesignRows.duration = {
 			label: t('program-detail-page.duration'),
-			value: formatDuration(durationMonths, t),
+			values: [{ text: formatDuration(durationMonths, t) }],
 		};
 	}
 
 	if (programDetails.startedAt) {
 		programDesignRows.startDate = {
 			label: t('program-detail-page.start-date'),
-			value: formatStartDate(programDetails.startedAt, lang),
+			values: [{ text: formatStartDate(programDetails.startedAt, lang) }],
 		};
 	}
 
 	if (isConcluded !== undefined) {
 		programDesignRows.status = {
 			label: t('program-detail-page.program-status'),
-			value: isConcluded ? t('status-filter.concluded') : t('status-filter.active'),
+			values: [{ text: isConcluded ? t('status-filter.concluded') : t('status-filter.active') }],
 		};
 	}
 
 	if (programDetails.payoutPerInterval !== undefined && programDetails.payoutCurrency && programDetails.payoutInterval) {
 		programDesignRows.paymentAmount = {
 			label: t('program-detail-page.payment-amount'),
-			value: formatPaymentAmount(
-				programDetails.payoutPerInterval,
-				programDetails.payoutCurrency,
-				programDetails.payoutInterval,
-				locale,
-				t,
-			),
+			values: [
+				{
+					text: formatPaymentAmount(
+						programDetails.payoutPerInterval,
+						programDetails.payoutCurrency,
+						programDetails.payoutInterval,
+						locale,
+						t,
+					),
+				},
+			],
 		};
 	}
 
@@ -172,21 +187,40 @@ export const buildProgramAboutContent = ({
 	t,
 	lang,
 	currency,
-	countryName,
+	country,
+	financesDisplayAmounts,
 }: BuildProgramAboutContentInput): ProgramAboutContent => {
 	const { description, programDetails, dashboardStats, stats } = programDetailData;
 	const locale = getSafeNumberFormatLocale(lang);
 	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails?.programDurationInMonths;
-	const localPartnerHref = programDetails?.localPartnerSlug
-		? `${getWebsiteBasePath(lang, currency)}/local-partners/${programDetails.localPartnerSlug}`
-		: undefined;
+	const localPartnersBasePath = `${getWebsiteBasePath(lang, currency)}/local-partners`;
 
 	const overlaySections: ProgramAboutOverlaySection[] = [];
 	let cardRows: ProgramAboutDetailRow[] = [];
 
 	if (programDetails) {
-		const partyRowsByRole = buildPartyRowsByRole(programDetails, localPartnerHref, t);
+		const partyRowsByRole = buildPartyRowsByRole(programDetails, localPartnersBasePath, t);
 		const programDesignRows = buildProgramDesignRows(programDetails, durationMonths, stats?.isConcluded, lang, locale, t);
+
+		overlaySections.push({
+			id: 'program-design',
+			title: t('program-detail-page.program-design'),
+			rows: [
+				...programDesignRowsToOverlayArray(programDesignRows),
+				{
+					label: t('program-detail-page.conditionality'),
+					values: [
+						{
+							text: t('program-detail-page.conditionality-unconditional'),
+							info: {
+								label: t('program-detail-page.conditionality-info-label'),
+								text: t('program-detail-page.conditionality-info'),
+							},
+						},
+					],
+				},
+			],
+		});
 
 		const partiesRows = partyRowsToOrderedArray(partyRowsByRole, OVERLAY_PARTY_ORDER);
 		if (partiesRows.length > 0) {
@@ -194,30 +228,54 @@ export const buildProgramAboutContent = ({
 				id: 'parties',
 				title: t('program-detail-page.parties-involved'),
 				rows: partiesRows,
+				responsibleCircle: {
+					label: t('program-detail-page.operation-circle'),
+					href: createWebsiteCirclePath('operation', lang, currency),
+				},
 			});
 		}
 
-		const programDesignOverlayRows = programDesignRowsToOverlayArray(programDesignRows);
-		if (programDesignOverlayRows.length > 0) {
-			overlaySections.push({
-				id: 'program-design',
-				title: t('program-detail-page.program-design'),
-				rows: programDesignOverlayRows,
+		const deliveryRows: ProgramAboutDetailRow[] = [];
+		if (country) {
+			deliveryRows.push({ label: t('program-detail-page.country'), values: [country] });
+		}
+		if (programDetails.mobileMoneyProviders.length > 0) {
+			deliveryRows.push({
+				label: t('program-detail-page.mobile-money-providers'),
+				values: programDetails.mobileMoneyProviders.map((name) => ({ text: name })),
 			});
 		}
-
-		if (countryName) {
-			overlaySections.push({
-				id: 'delivery',
-				title: t('program-detail-page.delivery'),
-				rows: [
-					{
-						label: t('program-detail-page.country'),
-						value: countryName,
-					},
-				],
-			});
+		deliveryRows.push({
+			label: t('program-detail-page.payments-made'),
+			values: [{ text: formatNumberLocale(programDetails.totalPayoutsCount, locale) }],
+		});
+		if (financesDisplayAmounts) {
+			// Same amounts and compact format as the finances card, so both panels show identical figures.
+			const { currency: amountCurrency, paidOutSoFar, totalProgramCosts } = financesDisplayAmounts;
+			deliveryRows.push(
+				{
+					label: t('program-detail-page.payouts-to-date'),
+					values: [{ text: `${amountCurrency} ${formatCompactNumberLocale(paidOutSoFar, locale)}` }],
+				},
+				{
+					label: t('program-detail-page.future-payouts'),
+					values: [
+						{
+							text: `${amountCurrency} ${formatCompactNumberLocale(Math.max(0, totalProgramCosts - paidOutSoFar), locale)}`,
+						},
+					],
+				},
+			);
 		}
+		overlaySections.push({
+			id: 'delivery',
+			title: t('program-detail-page.delivery'),
+			rows: deliveryRows,
+			responsibleCircle: {
+				label: t('program-detail-page.finance-circle'),
+				href: createWebsiteCirclePath('finance', lang, currency),
+			},
+		});
 
 		cardRows = deriveCardRows(partyRowsByRole, programDesignRows);
 	}

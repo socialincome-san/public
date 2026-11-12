@@ -2,31 +2,19 @@ import { ProgramFinancesCard } from '@/components/storyblok/program/program-fina
 import { ProgramFinancesDialog } from '@/components/storyblok/program/program-finances-dialog';
 import { ProgramManageLabel } from '@/components/storyblok/program/program-manage-label';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { resolveProgramFinancesDisplayAmountsAction } from '@/modules/programs/program.actions';
-import type { ProgramDashboardStats } from '@/modules/programs/program.types';
+import type { ProgramFinancesDisplayAmounts } from '@/modules/programs/program.types';
 import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
-	stats: ProgramDashboardStats;
+	displayAmounts: ProgramFinancesDisplayAmounts;
 	programId: string;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 };
 
-export const ProgramFinances = async ({ stats, programId, lang, currency }: Props) => {
-	const [t, displayAmountsResult] = await Promise.all([
-		getTranslations('website-common'),
-		resolveProgramFinancesDisplayAmountsAction(stats, currency),
-	]);
-	const displayAmounts = displayAmountsResult.success
-		? displayAmountsResult.data
-		: {
-				currency: stats.payoutCurrency,
-				paidOutSoFar: stats.paidOutSoFarProgramCurrency,
-				totalProgramCosts: stats.totalProgramCostsProgramCurrency,
-				availableCredits: stats.availableCreditsProgramCurrency,
-			};
+export const ProgramFinances = async ({ displayAmounts, programId, lang, currency }: Props) => {
+	const t = await getTranslations('website-common');
 	const financesCard = <ProgramFinancesCard displayAmounts={displayAmounts} lang={lang} embedded />;
 
 	return (
