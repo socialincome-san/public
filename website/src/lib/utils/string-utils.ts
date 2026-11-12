@@ -103,6 +103,59 @@ export const titleCase = (value: string): string => {
 	);
 };
 
+// Chicago Manual of Style: articles, coordinating conjunctions and prepositions stay lower case
+const CHICAGO_ARTICLES_AND_CONJUNCTIONS = ['a', 'an', 'the', 'and', 'but', 'for', 'nor', 'or', 'so', 'yet'];
+const CHICAGO_PREPOSITIONS = new Set([
+	...['as', 'at', 'by', 'for', 'from', 'in', 'into', 'of', 'off', 'on', 'onto', 'over', 'per', 'to', 'up', 'via', 'with'],
+	...['about', 'above', 'across', 'after', 'against', 'among', 'around', 'before', 'behind', 'below', 'between'],
+	...['beyond', 'during', 'inside', 'outside', 'through', 'toward', 'under', 'until', 'upon', 'within', 'without'],
+]);
+const CHICAGO_MINOR_WORDS = new Set([...CHICAGO_ARTICLES_AND_CONJUNCTIONS, ...CHICAGO_PREPOSITIONS]);
+
+// Prepositions that are also the particle of a phrasal verb ("sign up", "log in"), which Chicago capitalizes
+const PHRASAL_PARTICLES = new Set(['up', 'off', 'on', 'in', 'over', 'through', 'around']);
+
+// Stay upper case even when the whole text is upper case. Words that are also ordinary words (US, IT) are left out.
+const KNOWN_ACRONYMS = new Set(['FAQ', 'NGO', 'UBI', 'UN', 'EU', 'UK', 'USA', 'SMS', 'API', 'ID', 'CEO', 'HR', 'AI']);
+
+const capitalizeFirst = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+const stripPunctuation = (word: string) => word.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
+
+// Words with a capital after their first letter (iPhone, McDonald) are kept as written, unless the whole text is
+// upper case
+const hasInnerCapital = (word: string) => /\p{Lu}/u.test(word.slice(1));
+const isAllUpperCase = (value: string) => !/\p{Ll}/u.test(value);
+
+/** Title case after the Chicago Manual of Style, e.g. "who we support" → "Who We Support". */
+export const chicagoTitleCase = (value: string): string => {
+	const words = value.trim().split(/\s+/);
+	const isMixedCase = !isAllUpperCase(value);
+
+	return words
+		.map((word, index) => {
+			if (KNOWN_ACRONYMS.has(stripPunctuation(word)) || (isMixedCase && hasInnerCapital(word))) {
+				return word;
+			}
+			const lower = word.toLowerCase();
+			const isEdge = index === 0 || index === words.length - 1 || /[:—–]$/.test(words[index - 1] ?? '');
+			// "Sign Up for Updates": a particle is followed by a preposition, a preposition by its object. Where
+			// that does not settle it, the capital the author wrote does.
+			const isParticle =
+				PHRASAL_PARTICLES.has(lower) &&
+				(CHICAGO_PREPOSITIONS.has(words[index + 1]?.toLowerCase() ?? '') || (isMixedCase && word !== lower));
+
+			if (!isEdge && !isParticle && CHICAGO_MINOR_WORDS.has(lower)) {
+				return lower;
+			}
+
+			return lower
+				.split('-')
+				.map((part, partIndex) => (partIndex > 0 && CHICAGO_MINOR_WORDS.has(part) ? part : capitalizeFirst(part)))
+				.join('-');
+		})
+		.join(' ');
+};
+
 export const formatNumberLocale = (
 	value: number,
 	locale: string,

@@ -24,20 +24,7 @@ type BuildBreadcrumbLinksParams = {
 	includeCurrentLabel?: boolean;
 };
 
-const humanizeSlugSegment = (segment: string) => {
-	return segment
-		.split('-')
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(' ');
-};
-
-const capitalizeLabel = (label: string) => {
-	return label
-		.split(' ')
-		.filter(Boolean)
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(' ');
-};
+const humanizeSlugSegment = (segment: string) => segment.replaceAll('-', ' ');
 
 const getStoryLabel = (story: StoryTitleData, lang: WebsiteLanguage, fallbackSegment: string) => {
 	if (story.content?.component === 'Country') {
@@ -90,7 +77,7 @@ export const buildBreadcrumbLinks = async ({
 	const links: BreadcrumbLink[] = [
 		{
 			href: getWebsitePublicPath(lang, currency, ''),
-			label: capitalizeLabel(t('breadcrumb.home')),
+			label: t('breadcrumb.home'),
 		},
 	];
 
@@ -106,7 +93,7 @@ export const buildBreadcrumbLinks = async ({
 					href: linked
 						? getWebsitePublicPath(lang, currency, getWebsitePathTailFromStoryblokSlug(storyblokPath))
 						: undefined,
-					label: capitalizeLabel(label),
+					label,
 				};
 			}),
 		)),
