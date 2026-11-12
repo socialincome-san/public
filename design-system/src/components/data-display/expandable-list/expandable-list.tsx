@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react';
-import { type ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import { cn } from '../../../cn';
 
 type ExpandableListProps = {
@@ -43,48 +43,56 @@ export const ExpandableListItem = ({
 	open,
 	onOpenChange,
 	selected = false,
-}: ExpandableListItemProps) => (
-	// The button inside handles the keyboard; the click handler only widens the tap target to the whole item
-	<li className={cn('cursor-pointer p-4 transition-colors', selected && 'bg-muted')} onClick={() => onOpenChange(!open)}>
-		<div className="flex items-center gap-3">
-			{leading !== undefined && (
-				<span className="flex" onClick={(event) => event.stopPropagation()}>
-					{leading}
-				</span>
-			)}
-			<button
-				type="button"
-				aria-expanded={open}
-				className="focus-visible:ring-ring flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-sm text-left text-sm font-medium outline-hidden focus-visible:ring-2"
-			>
-				<span className="min-w-0 flex-1">{title}</span>
-				{summary !== undefined && <span className="shrink-0">{summary}</span>}
-				<ChevronDown
-					aria-hidden
-					className={cn(
-						'text-muted-foreground size-4 shrink-0 transition-transform motion-reduce:transition-none',
-						open && 'rotate-180',
-					)}
-				/>
-			</button>
-		</div>
+}: ExpandableListItemProps) => {
+	const fieldsId = useId();
 
-		{open && actions !== undefined && (
-			<div className="mt-3 flex" onClick={(event) => event.stopPropagation()}>
-				{actions}
+	return (
+		// The button inside handles the keyboard; the click handler only widens the tap target to the whole item
+		<li className={cn('cursor-pointer p-4 transition-colors', selected && 'bg-muted')} onClick={() => onOpenChange(!open)}>
+			<div className="flex items-center gap-3">
+				{leading !== undefined && (
+					<span className="flex" onClick={(event) => event.stopPropagation()}>
+						{leading}
+					</span>
+				)}
+				<button
+					type="button"
+					aria-expanded={open}
+					aria-controls={fieldsId}
+					className="focus-visible:ring-ring flex min-w-0 flex-1 cursor-pointer items-center gap-3 rounded-sm text-left text-sm font-medium outline-hidden focus-visible:ring-2"
+				>
+					<span className="min-w-0 flex-1">{title}</span>
+					{summary !== undefined && <span className="shrink-0">{summary}</span>}
+					<ChevronDown
+						aria-hidden
+						className={cn(
+							'text-muted-foreground size-4 shrink-0 transition-transform motion-reduce:transition-none',
+							open && 'rotate-180',
+						)}
+					/>
+				</button>
 			</div>
-		)}
 
-		<dl className={cn('mt-4 gap-4 @2xl:grid @2xl:auto-cols-fr @2xl:grid-flow-col', open ? 'grid' : 'hidden')}>
-			{fields.map((field) => (
-				<div key={field.label} className="min-w-0 border-t pt-4 @2xl:border-t-0 @2xl:pt-0">
-					<div className="flex items-center justify-between gap-3 @2xl:flex-col @2xl:items-start @2xl:gap-1">
-						<dt className="text-muted-foreground text-xs">{field.label}</dt>
-						<dd className="flex">{field.value}</dd>
-					</div>
-					{open && field.detail !== undefined && <dd className="mt-2 text-sm break-words">{field.detail}</dd>}
+			{open && actions !== undefined && (
+				<div className="mt-3 flex" onClick={(event) => event.stopPropagation()}>
+					{actions}
 				</div>
-			))}
-		</dl>
-	</li>
-);
+			)}
+
+			<dl
+				id={fieldsId}
+				className={cn('mt-4 gap-4 @2xl:grid @2xl:auto-cols-fr @2xl:grid-flow-col', open ? 'grid' : 'hidden')}
+			>
+				{fields.map((field) => (
+					<div key={field.label} className="min-w-0 border-t pt-4 @2xl:border-t-0 @2xl:pt-0">
+						<div className="flex items-center justify-between gap-3 @2xl:flex-col @2xl:items-start @2xl:gap-1">
+							<dt className="text-muted-foreground text-xs">{field.label}</dt>
+							<dd className="flex">{field.value}</dd>
+						</div>
+						{open && field.detail !== undefined && <dd className="mt-2 text-sm break-words">{field.detail}</dd>}
+					</div>
+				))}
+			</dl>
+		</li>
+	);
+};
