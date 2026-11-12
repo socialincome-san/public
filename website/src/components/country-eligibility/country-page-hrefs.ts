@@ -13,10 +13,13 @@ export const getCountryPageHrefs = async (lang: WebsiteLanguage, currency: Websi
 	}
 
 	return Object.fromEntries(
-		result.data.map((country) => [
-			// Editors enter the code in either case; the database uses upper case
-			getCountryIsoCode(country.content).toUpperCase(),
-			`${getWebsiteBasePath(lang, currency)}/countries/${getCountrySlug(country)}`,
-		]),
+		// A country story saved without an ISO code cannot be matched to a row
+		result.data
+			.filter((country) => country.content.isoCode !== null && country.content.isoCode !== undefined)
+			.map((country) => [
+				// Editors enter the code in either case; the database uses upper case
+				getCountryIsoCode(country.content).toUpperCase(),
+				`${getWebsiteBasePath(lang, currency)}/countries/${getCountrySlug(country)}`,
+			]),
 	);
 };

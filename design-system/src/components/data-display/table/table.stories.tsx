@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
+import { Table, TableBody, TableCell, TableFrame, TableHead, TableHeader, TableRow } from './table';
 
 const meta = {
 	title: 'Data Display/Table',
@@ -82,6 +82,29 @@ export const StickyHeader: Story = {
 				</TableBody>
 			</Table>
 		</div>
+	),
+};
+
+export const Framed: Story = {
+	render: () => (
+		<TableFrame maxHeight="sm">
+			<Table stickyHeader>
+				<TableHeader sticky>
+					<TableRow>
+						<TableHead>Country</TableHead>
+						<TableHead>Recipients</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					{Array.from({ length: 16 }, (_, index) => (
+						<TableRow key={index}>
+							<TableCell>Country {index + 1}</TableCell>
+							<TableCell>{(index + 1) * 12}</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableFrame>
 	),
 };
 

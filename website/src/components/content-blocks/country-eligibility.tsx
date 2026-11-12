@@ -5,6 +5,7 @@ import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryEligibilityAction } from '@/modules/countries/country.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable } from '@storyblok/react';
+import { getTranslations } from 'next-intl/server';
 
 // Mirrors the `countryEligibility` component in Storyblok. Replace it with the generated type the next time
 // the Storyblok types are regenerated.
@@ -30,7 +31,15 @@ export const CountryEligibilityBlock = async ({ blok, lang, currency }: Props) =
 	const [result, countryPageHrefs] = await Promise.all([getCountryEligibilityAction(), getCountryPageHrefs(lang, currency)]);
 
 	if (!result.success) {
-		return null;
+		const t = await getTranslations('create-program-wizard');
+
+		return (
+			<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
+				<p className="text-muted-foreground text-center" role="status">
+					{t('country_eligibility_page.unavailable')}
+				</p>
+			</BlockWrapper>
+		);
 	}
 
 	// Storyblok omits booleans that were never saved, so only an explicit false hides an option

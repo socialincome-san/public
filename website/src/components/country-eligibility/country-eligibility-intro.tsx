@@ -41,6 +41,7 @@ export const CountryEligibilityIntro = async ({ rows, contact }: Props) => {
 		>
 			<SplitSectionCard
 				title={t('country_eligibility_page.review_title')}
+				headingLevel={2}
 				status={{
 					text: t('country_eligibility_page.eligible_summary', {
 						eligible: rows.filter(meetsAllConditions).length,

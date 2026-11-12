@@ -179,6 +179,7 @@
 			"sanctions": "Is the country free of international sanctions that block transfers?"
 		},
 		"eligible_summary": "{eligible} countries meet all four conditions. We are active in {active}.",
-		"contact_text": "{name} keeps this data accurate and is glad to <link>hear about changes</link>."
+		"contact_text": "{name} keeps this data accurate and is glad to <link>hear about changes</link>.",
+		"unavailable": "The eligibility data is not available right now. Please try again later."
 	}
 }

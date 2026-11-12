@@ -179,6 +179,7 @@
 			"sanctions": "Ist das Land frei von internationalen Sanktionen, die Überweisungen blockieren?"
 		},
 		"eligible_summary": "{eligible} Länder erfüllen alle vier Bedingungen. Wir sind in {active} aktiv.",
-		"contact_text": "{name} hält diese Daten aktuell und freut sich über <link>Hinweise auf Änderungen</link>."
+		"contact_text": "{name} hält diese Daten aktuell und freut sich über <link>Hinweise auf Änderungen</link>.",
+		"unavailable": "Die Daten zur Eignung sind im Moment nicht verfügbar. Bitte versuchen Sie es später erneut."
 	}
 }

@@ -75,6 +75,18 @@ export const WithStatus: Story = {
 	},
 };
 
+export const WithSecondaryStatus: Story = {
+	args: {
+		children: (
+			<SplitSectionCard title="Breakdown" status={{ text: 'Figures for 2025 are provisional', variant: 'secondary' }}>
+				<BreakdownList>
+					<BreakdownRow label="Recipients" value="CHF 93" description="Paid out via mobile money." />
+				</BreakdownList>
+			</SplitSectionCard>
+		),
+	},
+};
+
 export const WithMarkers: Story = {
 	args: {
 		eyebrow: 'Where the money comes from',

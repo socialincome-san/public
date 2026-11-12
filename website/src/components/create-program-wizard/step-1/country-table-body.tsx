@@ -1,5 +1,6 @@
 'use client';
 
+import { getCountryNameByCode } from '@/lib/types/country';
 import type { CountryEligibilityRow } from '@/modules/countries/country.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
@@ -7,6 +8,7 @@ import {
 	Table,
 	TableBody,
 	TableCell,
+	TableFrame,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -46,76 +48,73 @@ export const CountryTableBody = ({ rows, selectable, value, openIds, onToggleRow
 				/>
 			</div>
 
-			<div
-				className={cn(
-					'bg-card hidden overflow-x-auto rounded-xl border @[52rem]:block',
-					// In the wizard the table shares a modal with other content, so it scrolls; on its own page it grows with the page
-					selectable && 'max-h-96 overflow-y-auto',
-				)}
-			>
-				<Table stickyHeader layout="fixed">
-					<TableHeader sticky>
-						<TableRow>
-							{selectable && <TableHead width="control" />}
-							<TableHead>{t('step1.table.country')}</TableHead>
-							<TableHead>{t('step1.table.cash')}</TableHead>
-							<TableHead>{t('step1.table.mobile_money')}</TableHead>
-							<TableHead>{t('step1.table.mobile_network')}</TableHead>
-							<TableHead>{t('step1.table.sanctions')}</TableHead>
-							<TableHead width="control" />
-						</TableRow>
-					</TableHeader>
+			<div className="hidden @[52rem]:block">
+				{/* In the wizard the table shares a modal with other content, so it scrolls; on its own page it grows with the page */}
+				<TableFrame maxHeight={selectable ? 'sm' : 'none'}>
+					<Table stickyHeader layout="fixed">
+						<TableHeader sticky>
+							<TableRow>
+								{selectable && <TableHead width="control" />}
+								<TableHead>{t('step1.table.country')}</TableHead>
+								<TableHead>{t('step1.table.cash')}</TableHead>
+								<TableHead>{t('step1.table.mobile_money')}</TableHead>
+								<TableHead>{t('step1.table.mobile_network')}</TableHead>
+								<TableHead>{t('step1.table.sanctions')}</TableHead>
+								<TableHead width="control" />
+							</TableRow>
+						</TableHeader>
 
-					<TableBody>
-						{rows.map((row) => {
-							const isOpen = openIds.includes(row.id);
-							const rowState = value === row.id || isOpen ? 'selected' : undefined;
+						<TableBody>
+							{rows.map((row) => {
+								const isOpen = openIds.includes(row.id);
+								const rowState = value === row.id || isOpen ? 'selected' : undefined;
 
-							return (
-								<Fragment key={row.id}>
-									<TableRow onClick={() => onToggleRow(row.id)} data-state={rowState}>
-										{selectable && (
-											<TableCell onClick={(e) => e.stopPropagation()}>
-												<RadioGroupItem value={row.id} />
+								return (
+									<Fragment key={row.id}>
+										<TableRow onClick={() => onToggleRow(row.id)} data-state={rowState}>
+											{selectable && (
+												<TableCell onClick={(e) => e.stopPropagation()}>
+													<RadioGroupItem value={row.id} aria-label={getCountryNameByCode(row.country.isoCode)} />
+												</TableCell>
+											)}
+
+											<TableCell>
+												<CountryTableName country={row.country} />
 											</TableCell>
+
+											<TableCell>
+												<CountryConditionBadge condition={row.cash.condition} />
+											</TableCell>
+											<TableCell>
+												<CountryConditionBadge condition={row.mobileMoney.condition} />
+											</TableCell>
+											<TableCell>
+												<CountryConditionBadge condition={row.mobileNetwork.condition} />
+											</TableCell>
+											<TableCell>
+												<CountryConditionBadge condition={row.sanctions.condition} />
+											</TableCell>
+
+											<TableCell onClick={(e) => e.stopPropagation()}>
+												<Button variant="ghost" size="icon" onClick={() => onToggleRow(row.id)}>
+													<ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
+												</Button>
+											</TableCell>
+										</TableRow>
+
+										{isOpen && (
+											<ExpansionRow
+												row={row}
+												selectable={selectable}
+												countryPageHref={row.country.isActive ? countryPageHrefs?.[row.country.isoCode] : undefined}
+											/>
 										)}
-
-										<TableCell>
-											<CountryTableName country={row.country} />
-										</TableCell>
-
-										<TableCell>
-											<CountryConditionBadge condition={row.cash.condition} />
-										</TableCell>
-										<TableCell>
-											<CountryConditionBadge condition={row.mobileMoney.condition} />
-										</TableCell>
-										<TableCell>
-											<CountryConditionBadge condition={row.mobileNetwork.condition} />
-										</TableCell>
-										<TableCell>
-											<CountryConditionBadge condition={row.sanctions.condition} />
-										</TableCell>
-
-										<TableCell onClick={(e) => e.stopPropagation()}>
-											<Button variant="ghost" size="icon" onClick={() => onToggleRow(row.id)}>
-												<ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
-											</Button>
-										</TableCell>
-									</TableRow>
-
-									{isOpen && (
-										<ExpansionRow
-											row={row}
-											selectable={selectable}
-											countryPageHref={row.country.isActive ? countryPageHrefs?.[row.country.isoCode] : undefined}
-										/>
-									)}
-								</Fragment>
-							);
-						})}
-					</TableBody>
-				</Table>
+									</Fragment>
+								);
+							})}
+						</TableBody>
+					</Table>
+				</TableFrame>
 			</div>
 		</div>
 	);

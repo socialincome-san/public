@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { type ComponentProps } from 'react';
+import { type ComponentProps, type ReactNode } from 'react';
 import { type WithoutClassName } from '../../../without-class-name';
 
 type TableProps = WithoutClassName<ComponentProps<'table'>> & {
@@ -17,6 +17,19 @@ const Table = ({ size = 'default', stickyHeader = false, layout = 'auto', ...pro
 			className={`group/table w-full caption-bottom border-separate border-spacing-0 text-sm ${layout === 'fixed' ? 'table-fixed' : ''}`}
 			{...props}
 		/>
+	</div>
+);
+
+type TableFrameProps = {
+	children: ReactNode;
+	/** sm: a tall table scrolls inside the frame, e.g. in a dialog; none: the frame grows with the table */
+	maxHeight?: 'none' | 'sm';
+};
+
+/** A card-like panel around a table; wide tables scroll sideways inside it */
+const TableFrame = ({ children, maxHeight = 'none' }: TableFrameProps) => (
+	<div className={`bg-card overflow-x-auto rounded-xl border ${maxHeight === 'sm' ? 'max-h-96 overflow-y-auto' : ''}`}>
+		{children}
 	</div>
 );
 
@@ -90,4 +103,4 @@ const TableCell = ({ width, verticalAlign, ...props }: WithoutClassName<Componen
 	/>
 );
 
-export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow };
+export { Table, TableBody, TableCell, TableFrame, TableHead, TableHeader, TableRow };

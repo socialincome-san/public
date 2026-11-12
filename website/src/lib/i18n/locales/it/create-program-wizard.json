@@ -179,6 +179,7 @@
 			"sanctions": "Il paese è libero da sanzioni internazionali che bloccano i trasferimenti?"
 		},
 		"eligible_summary": "{eligible} paesi soddisfano tutte e quattro le condizioni. Siamo attivi in {active}.",
-		"contact_text": "{name} cura l'accuratezza di questi dati e accoglie volentieri <link>le segnalazioni</link>."
+		"contact_text": "{name} cura l'accuratezza di questi dati e accoglie volentieri <link>le segnalazioni</link>.",
+		"unavailable": "I dati sull'idoneità non sono disponibili al momento. Riprova più tardi."
 	}
 }

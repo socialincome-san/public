@@ -1,3 +1,4 @@
+import { cva } from 'class-variance-authority';
 import { type ReactNode } from 'react';
 import { cn } from '../../../cn';
 import { CardAlertFooter, type CardAlertFooterVariant } from '../../feedback/card-alert-footer/card-alert-footer';
@@ -33,15 +34,33 @@ export const SplitSection = ({ eyebrow, headline, headingLevel = 2, description,
 	);
 };
 
+const statusShellVariants = cva('rounded-4xl', {
+	variants: {
+		variant: {
+			confirm: 'bg-confirm-foreground',
+			secondary: 'bg-secondary',
+		},
+	},
+});
+
 type SplitSectionCardProps = {
 	title: string;
+	// 2 when the section's headline is the page's h1, so the outline does not skip a level
+	headingLevel?: 2 | 3;
 	children: ReactNode;
 	align?: 'stretch' | 'center';
 	// A coloured strip below the card, e.g. a key figure
 	status?: { text: string; variant: CardAlertFooterVariant };
 };
 
-export const SplitSectionCard = ({ title, children, align = 'stretch', status }: SplitSectionCardProps) => {
+export const SplitSectionCard = ({
+	title,
+	headingLevel = 3,
+	children,
+	align = 'stretch',
+	status,
+}: SplitSectionCardProps) => {
+	const Heading = headingLevel === 2 ? 'h2' : 'h3';
 	const card = (
 		<div
 			className={cn(
@@ -49,7 +68,7 @@ export const SplitSectionCard = ({ title, children, align = 'stretch', status }:
 				align === 'center' && 'items-center',
 			)}
 		>
-			<h3 className="text-foreground w-full text-2xl leading-none font-medium">{title}</h3>
+			<Heading className="text-foreground w-full text-2xl leading-none font-medium">{title}</Heading>
 			{children}
 		</div>
 	);
@@ -59,7 +78,7 @@ export const SplitSectionCard = ({ title, children, align = 'stretch', status }:
 	}
 
 	return (
-		<div className={cn('rounded-4xl', status.variant === 'confirm' ? 'bg-confirm-foreground' : 'bg-secondary')}>
+		<div className={statusShellVariants({ variant: status.variant })}>
 			{card}
 			<CardAlertFooter text={status.text} variant={status.variant} inset="lg" />
 		</div>

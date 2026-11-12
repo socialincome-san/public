@@ -1,5 +1,6 @@
 'use client';
 
+import { getCountryNameByCode } from '@/lib/types/country';
 import { CountryCondition, type CountryEligibilityRow } from '@/modules/countries/country.types';
 import {
 	ExpandableList,
@@ -58,7 +59,11 @@ export const CountryTableList = ({ rows, selectable, value, openIds, onToggleRow
 						}
 						actions={countryPageHref === undefined ? undefined : <CountryPageLink href={countryPageHref} />}
 						title={<CountryTableName country={row.country} />}
-						leading={selectable ? <RadioGroupItem value={row.id} /> : undefined}
+						leading={
+							selectable ? (
+								<RadioGroupItem value={row.id} aria-label={getCountryNameByCode(row.country.isoCode)} />
+							) : undefined
+						}
 						fields={conditions.map(({ key, label }) => ({
 							label,
 							value: <CountryConditionBadge condition={row[key].condition} />,
