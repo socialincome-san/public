@@ -7,8 +7,10 @@ import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-sy
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable } from '@storyblok/react';
+import Autoplay from 'embla-carousel-autoplay';
 import NextImage from 'next/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
 import Markdown from 'react-markdown';
 
 type Props = {
@@ -23,6 +25,7 @@ type PartnershipWithLogo = Partnership & {
 
 const LOGO_MAX_WIDTH = 240;
 const LOGO_FALLBACK_HEIGHT = 120;
+const AUTOPLAY_DELAY_MS = 3000;
 
 const isPartnershipWithLogo = (partnership: Partnership): partnership is PartnershipWithLogo => {
 	return Boolean(partnership.logo?.filename);
@@ -39,6 +42,10 @@ const getWebsiteHref = (website: Partnership['website']) => {
 };
 
 export const PartnershipsCarouselBlock = ({ blok }: Props) => {
+	const autoplayPlugin = useMemo(
+		() => Autoplay({ delay: AUTOPLAY_DELAY_MS, stopOnInteraction: false, stopOnMouseEnter: true }),
+		[],
+	);
 	const entries = blok.partnerships
 		.filter((entry): entry is ISbStoryData<Partnership> => typeof entry !== 'string')
 		.map((entry) => entry.content)
@@ -62,6 +69,8 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 					align: 'center',
 					loop: true,
 				}}
+				// Carousels saved before the field existed have no value and autoplay too
+				plugins={blok.autoplay === false ? [] : [autoplayPlugin]}
 			>
 				<CarouselContent>
 					{entries.map((entry) => {
