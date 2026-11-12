@@ -103,6 +103,90 @@ export const titleCase = (value: string): string => {
 	);
 };
 
+// Chicago Manual of Style: articles, coordinating conjunctions and prepositions stay lower case
+const CHICAGO_MINOR_WORDS = new Set([
+	'a',
+	'an',
+	'the',
+	'and',
+	'but',
+	'for',
+	'nor',
+	'or',
+	'so',
+	'yet',
+	'as',
+	'at',
+	'by',
+	'from',
+	'in',
+	'into',
+	'of',
+	'off',
+	'on',
+	'onto',
+	'over',
+	'per',
+	'to',
+	'up',
+	'via',
+	'with',
+	'about',
+	'above',
+	'across',
+	'after',
+	'against',
+	'among',
+	'around',
+	'before',
+	'behind',
+	'below',
+	'between',
+	'beyond',
+	'during',
+	'inside',
+	'outside',
+	'through',
+	'toward',
+	'under',
+	'until',
+	'upon',
+	'within',
+	'without',
+]);
+
+const capitalizeFirst = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
+
+// Words with a capital after their first letter (FAQ, iPhone, McDonald) are kept as written, unless the whole
+// text is upper case
+const hasInnerCapital = (word: string) => /\p{Lu}/u.test(word.slice(1));
+const isAllUpperCase = (value: string) => !/\p{Ll}/u.test(value);
+
+/** Title case after the Chicago Manual of Style, e.g. "who we support" → "Who We Support". */
+export const chicagoTitleCase = (value: string): string => {
+	const words = value.trim().split(/\s+/);
+	const keepInnerCapitals = !isAllUpperCase(value);
+
+	return words
+		.map((word, index) => {
+			if (keepInnerCapitals && hasInnerCapital(word)) {
+				return word;
+			}
+			const lower = word.toLowerCase();
+			const isEdge = index === 0 || index === words.length - 1 || /[:—–]$/.test(words[index - 1] ?? '');
+
+			if (!isEdge && CHICAGO_MINOR_WORDS.has(lower)) {
+				return lower;
+			}
+
+			return lower
+				.split('-')
+				.map((part, partIndex) => (partIndex > 0 && CHICAGO_MINOR_WORDS.has(part) ? part : capitalizeFirst(part)))
+				.join('-');
+		})
+		.join(' ');
+};
+
 export const formatNumberLocale = (
 	value: number,
 	locale: string,

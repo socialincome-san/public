@@ -1,4 +1,5 @@
 import {
+	chicagoTitleCase,
 	formatCompactNumberLocale,
 	formatCurrency,
 	formatCurrencyLocale,
@@ -14,6 +15,26 @@ import {
 const normalizeTestIntlOutput = (value: string): string => value.replace(/['\u2018\u2019\u02BC]/g, ',');
 
 describe('string-utils', () => {
+	describe('chicagoTitleCase', () => {
+		const cases = [
+			{ input: 'who we support', expected: 'Who We Support' },
+			{ input: 'GET INVOLVED', expected: 'Get Involved' },
+			{ input: 'the power of a basic income', expected: 'The Power of a Basic Income' },
+			{ input: 'what we are working on', expected: 'What We Are Working On' },
+			{ input: 'reports and downloads', expected: 'Reports and Downloads' },
+			{ input: 'country-eligibility review', expected: 'Country-Eligibility Review' },
+			{ input: 'open research: a look into the data', expected: 'Open Research: A Look into the Data' },
+			{ input: 'FAQ for iPhone users', expected: 'FAQ for iPhone Users' },
+			{ input: '  extra   spaces ', expected: 'Extra Spaces' },
+		];
+
+		cases.forEach(({ input, expected }) => {
+			test(`"${input}"`, () => {
+				expect(chicagoTitleCase(input)).toBe(expected);
+			});
+		});
+	});
+
 	describe('slugify', () => {
 		const cases = [
 			{ input: 'Hello World!', expected: 'hello-world' },
