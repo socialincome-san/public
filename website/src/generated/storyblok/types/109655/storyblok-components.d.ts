@@ -832,6 +832,8 @@ export interface PartnershipsCarousel {
   heading?: string;
   description?: string;
   partnerships: (ISbStoryData<Partnership> | string)[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "partnershipsCarousel";
   _uid: string;
   _editable?: string | undefined;

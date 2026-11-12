@@ -1,5 +1,6 @@
 'use client';
 
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import type { Partnership, PartnershipsCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getScaledDimensions } from '@/lib/storyblok/storyblok-utils';
 import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/data-display/carousel/carousel';
@@ -49,7 +50,7 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok)}>
+		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			{blok.heading && <h2 className="text-3xl font-bold">{blok.heading}</h2>}
 			{blok.description && (
 				<div className="text-foreground mt-4 text-lg">
@@ -63,7 +64,7 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 				}}
 			>
 				<CarouselContent>
-					{entries.map((entry, index) => {
+					{entries.map((entry) => {
 						const href = getWebsiteHref(entry.website);
 						const isSvg = isSvgAsset(entry.logo.filename, entry.logo.content_type);
 						const dimensions = getScaledDimensions(entry.logo.filename, LOGO_MAX_WIDTH) ?? {
@@ -72,7 +73,7 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 						};
 
 						return (
-							<CarouselItem key={entry._uid ?? `${entry.name}-${index}`} size="tile">
+							<CarouselItem key={entry._uid} size="tile">
 								<Link
 									href={href ?? '#'}
 									target="_blank"
