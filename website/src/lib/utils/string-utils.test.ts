@@ -26,6 +26,13 @@ describe('string-utils', () => {
 			{ input: 'open research: a look into the data', expected: 'Open Research: A Look into the Data' },
 			{ input: 'FAQ for iPhone users', expected: 'FAQ for iPhone Users' },
 			{ input: '  extra   spaces ', expected: 'Extra Spaces' },
+			{ input: 'FAQ', expected: 'FAQ' },
+			{ input: 'FAQ AND DOWNLOADS', expected: 'FAQ and Downloads' },
+			{ input: 'sign up for updates', expected: 'Sign Up for Updates' },
+			{ input: 'Sign Up for Updates', expected: 'Sign Up for Updates' },
+			{ input: 'Sign Up Today', expected: 'Sign Up Today' },
+			{ input: 'log in to your account', expected: 'Log In to Your Account' },
+			{ input: 'a walk up the hill', expected: 'A Walk up the Hill' },
 		];
 
 		cases.forEach(({ input, expected }) => {
