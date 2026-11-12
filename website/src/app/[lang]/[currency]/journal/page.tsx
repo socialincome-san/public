@@ -1,5 +1,6 @@
 import type { DefaultLayoutProps } from '@/app/[lang]/[currency]';
 import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
+import type { AnySearchParams } from '@/app/page-props';
 import { JournalOverview } from '@/components/storyblok/journal/journal-overview';
 import { toWebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getJournalOverviewPageData } from '@/modules/journal/journal.cache';
@@ -8,7 +9,7 @@ import { notFound } from 'next/navigation';
 
 type JournalOverviewPageProps = {
 	params: Promise<{ lang: WebsiteLanguage; currency: string }>;
-	searchParams: Promise<Record<string, string>>;
+	searchParams: Promise<AnySearchParams>;
 };
 
 export const generateMetadata = async ({ params }: DefaultLayoutProps) => {
@@ -51,7 +52,7 @@ export default async function Page({ params, searchParams }: JournalOverviewPage
 			{...pageResult.data}
 			editorsHeading={t('overview.editors')}
 			allArticleTypesLabel={t('overview.all')}
-			articleCountLabel={t('overview.article-count', { count: pageResult.data.articles.length })}
+			initialQuery={typeof resolvedSearchParams.q === 'string' ? resolvedSearchParams.q : ''}
 			moreArticlesLabel={t('overview.more-articles')}
 			videoLabel={t('badge.video')}
 			lang={lang}

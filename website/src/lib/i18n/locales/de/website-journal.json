@@ -8,7 +8,12 @@
 		"description": "News, Insights und Einblicke in die Arbeit von Social Income.",
 		"editors": "Mitwirkende Redakteure",
 		"more-articles": "Weitere Artikel sind auf Englisch verfügbar",
-		"article-count": "{count, plural, one {{count} Artikel} other {{count} Artikel}}"
+		"article-count": "{count, plural, one {{count} Artikel} other {{count} Artikel}}",
+		"article-count-filtered": "{count} von {total, plural, one {# Artikel} other {# Artikeln}}",
+		"search": "Artikel suchen",
+		"no-results": "Keine Artikel passen zu «{query}».",
+		"clear-search": "Suche zurücksetzen",
+		"search-count": "{count, plural, one {# Artikel} other {# Artikel}} durchsuchen"
 	},
 	"person": {
 		"articles": "Artikel von {name}",

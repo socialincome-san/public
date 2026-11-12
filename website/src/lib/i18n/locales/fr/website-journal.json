@@ -8,7 +8,12 @@
 		"description": "Histoires, réflexions et nouvelles de notre parcours pour créer un impact.",
 		"editors": "Rédacteurs contributeurs",
 		"more-articles": "Il y a plus d'articles disponibles en anglais",
-		"article-count": "{count, plural, one {{count} article} other {{count} articles}}"
+		"article-count": "{count, plural, one {{count} article} other {{count} articles}}",
+		"article-count-filtered": "{count} sur {total, plural, one {# article} other {# articles}}",
+		"search": "Rechercher des articles",
+		"no-results": "Aucun article ne correspond à « {query} ».",
+		"clear-search": "Effacer la recherche",
+		"search-count": "Rechercher parmi {count, plural, one {# article} other {# articles}}"
 	},
 	"person": {
 		"articles": "Articles de {name}",

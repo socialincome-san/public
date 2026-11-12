@@ -8,7 +8,12 @@
 		"description": "Stories, insights and updates on our journey to create impact.",
 		"editors": "Contributing Editors",
 		"more-articles": "There are more articles available in English",
-		"article-count": "{count, plural, one {{count} article} other {{count} articles}}"
+		"article-count": "{count, plural, one {{count} article} other {{count} articles}}",
+		"article-count-filtered": "{count} of {total, plural, one {# article} other {# articles}}",
+		"search": "Search articles",
+		"no-results": "No articles match “{query}”.",
+		"clear-search": "Clear search",
+		"search-count": "Search {count, plural, one {# article} other {# articles}}"
 	},
 	"person": {
 		"articles": "Articles by {name}",
