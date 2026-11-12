@@ -1,11 +1,19 @@
+import { cva } from 'class-variance-authority';
 import { PlusIcon } from 'lucide-react';
 import { cn } from '../../../cn';
 import { type WalletBadge, type WalletFooterColumn, type WalletSize, type WalletVariant } from './wallet.types';
 
-const sizeClasses = {
-	default: { content: 'pt-9', inner: 'px-7 pb-8', title: 'mb-3 text-4xl' },
-	sm: { content: 'pt-5', inner: 'px-4 pb-4', title: 'text-xl' },
-};
+const contentVariants = cva('min-w-0 flex-1', {
+	variants: { size: { default: 'pt-9', sm: 'pt-5' } },
+});
+
+const innerVariants = cva('h-full min-w-0 pt-0', {
+	variants: { size: { default: 'px-7 pb-8', sm: 'px-4 pb-4' } },
+});
+
+const titleVariants = cva('leading-none font-normal wrap-break-word whitespace-normal', {
+	variants: { size: { default: 'mb-3 text-4xl', sm: 'text-xl' } },
+});
 
 type WalletFrontProps = {
 	variant: WalletVariant;
@@ -34,20 +42,17 @@ export const WalletFront = ({ variant, size, title, subtitle, badge, footerLeft,
 const WalletFrontContent = ({ variant, size, title, subtitle, badge, footerLeft, footerRight }: WalletFrontProps) => (
 	<div
 		className={cn(
-			'min-w-0 flex-1',
-			sizeClasses[size].content,
+			contentVariants({ size }),
 			variant === 'default' ? 'text-primary-foreground' : 'text-card-foreground',
 			'[background:var(--wallet-front-bg)]',
 			'[clip-path:polygon(100%_0%,_100%_100%,_0%_100%,_0%_0%,_var(--slant-shift)_0%,_var(--slant-position)_var(--slant-height),_calc(100%_-_var(--slant-position))_var(--slant-height),_calc(100%_-_var(--slant-shift))_0%)]',
 		)}
 	>
-		<div className={cn('h-full min-w-0 pt-0', sizeClasses[size].inner)}>
+		<div className={innerVariants({ size })}>
 			{variant === 'default' ? (
 				<div className="flex h-full w-full min-w-0 flex-col items-start gap-2">
 					<div className="w-full min-w-0">
-						<h2 className={cn('leading-none font-normal wrap-break-word whitespace-normal', sizeClasses[size].title)}>
-							{title}
-						</h2>
+						<h2 className={titleVariants({ size })}>{title}</h2>
 						{size === 'default' || subtitle ? (
 							<p className="mb-3 line-clamp-1 w-full min-w-0 text-base leading-6 font-medium">{subtitle}</p>
 						) : null}
