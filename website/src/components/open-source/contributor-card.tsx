@@ -14,7 +14,7 @@ export const ContributorCard = ({ name, commits, avatarUrl, commitSingularLabel,
 	const commitLabel = commits === 1 ? commitSingularLabel : commitPluralLabel;
 
 	return (
-		<article className="flex min-w-60 items-center gap-4 py-2">
+		<article className="flex min-w-0 items-center gap-4 py-2">
 			<Image
 				src={avatarUrl}
 				alt={`${name}'s avatar`}
@@ -22,12 +22,12 @@ export const ContributorCard = ({ name, commits, avatarUrl, commitSingularLabel,
 				width={AVATAR_SIZE}
 				height={AVATAR_SIZE}
 			/>
-			<div className="flex flex-col items-start">
+			<div className="flex min-w-0 flex-col items-start">
 				<Link
 					href={`${GITHUB_BASE_URL}/${name}`}
 					target="_blank"
 					rel="noopener noreferrer"
-					className="text-lg font-medium hover:underline"
+					className="max-w-full truncate text-lg font-medium hover:underline"
 				>
 					{name}
 				</Link>
