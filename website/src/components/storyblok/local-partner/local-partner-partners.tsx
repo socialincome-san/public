@@ -1,3 +1,4 @@
+import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
@@ -12,6 +13,11 @@ type Props = {
 };
 
 export const LocalPartnerPartners = async ({ localPartner, lang, currency }: Props) => {
+	const gridBlok = localPartner.content.localPartnerGrid?.[0];
+	if (gridBlok) {
+		return <LocalPartnerGridBlock blok={gridBlok} lang={lang} currency={currency} />;
+	}
+
 	const partners = localPartner.content.partners ?? [];
 	if (partners.length === 0) {
 		return null;
