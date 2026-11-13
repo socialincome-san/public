@@ -701,6 +701,9 @@ export interface OpenSource {
 }
 
 export interface OpenSourceContributors {
+  maxRows?: "" | "1" | "2" | "3" | "4";
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "openSourceContributors";
   _uid: string;
   _editable?: string | undefined;
