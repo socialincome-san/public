@@ -1,15 +1,18 @@
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
+import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getWebsiteBasePath } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
+import { createWebsitePersonLink, getPersonDisplayName, resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/design-system/cn';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
-import { ArrowUpRight } from 'lucide-react';
+import type { ISbStoryData } from '@storyblok/js';
+import { ArrowUpRight, BadgeCheck } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 type ExternalLink = {
 	label: string;
@@ -51,6 +54,8 @@ type AboutMetaCardProps = {
 	foundingYear?: string;
 	location?: string;
 	externalLinks: ExternalLink[];
+	assessmentLead?: ISbStoryData<Person>;
+	assessmentReviewer?: ISbStoryData<Person>;
 };
 
 export const LocalPartnerAboutMetaCard = async ({
@@ -61,6 +66,8 @@ export const LocalPartnerAboutMetaCard = async ({
 	foundingYear,
 	location,
 	externalLinks,
+	assessmentLead,
+	assessmentReviewer,
 }: AboutMetaCardProps) => {
 	const t = await getTranslations('website-common');
 	const resolvedExternalLinks = externalLinks
@@ -82,14 +89,25 @@ export const LocalPartnerAboutMetaCard = async ({
 		Boolean(partnerSince) ||
 		Boolean(foundingYear) ||
 		Boolean(location) ||
-		resolvedExternalLinks.length > 0;
+		resolvedExternalLinks.length > 0 ||
+		Boolean(assessmentLead);
 	if (!hasMeta) {
 		return null;
 	}
 
+	const personLink = (person: ISbStoryData<Person>) => (chunks: ReactNode) => (
+		<Link
+			href={createWebsitePersonLink(person.slug, lang, currency)}
+			className="inline-flex items-center gap-0.5 underline-offset-4 hover:underline"
+		>
+			{chunks}
+			<ArrowUpRight className="size-3" aria-hidden="true" />
+		</Link>
+	);
+
 	return (
-		<div className="border-border bg-card mt-2 rounded-2xl border p-6">
-			<div className="space-y-6">
+		<div className="border-border bg-card mt-2 overflow-hidden rounded-2xl border">
+			<div className="space-y-6 p-6">
 				{mission ? (
 					<div>
 						<p className="text-muted-foreground text-sm">{t('local-partners-page.mission')}</p>
@@ -135,6 +153,24 @@ export const LocalPartnerAboutMetaCard = async ({
 					) : null}
 				</div>
 			</div>
+			{assessmentLead ? (
+				<div className="border-border bg-muted/40 text-muted-foreground flex items-start gap-2 border-t px-6 py-4 text-sm">
+					<BadgeCheck className="mt-0.5 size-4 shrink-0" strokeWidth={1.7} aria-hidden="true" />
+					<p>
+						{assessmentReviewer
+							? t.rich('local-partners-page.assessment-with-reviewer', {
+									lead: getPersonDisplayName(assessmentLead),
+									reviewer: getPersonDisplayName(assessmentReviewer),
+									leadLink: personLink(assessmentLead),
+									reviewerLink: personLink(assessmentReviewer),
+								})
+							: t.rich('local-partners-page.assessment', {
+									lead: getPersonDisplayName(assessmentLead),
+									leadLink: personLink(assessmentLead),
+								})}
+					</p>
+				</div>
+			) : null}
 		</div>
 	);
 };

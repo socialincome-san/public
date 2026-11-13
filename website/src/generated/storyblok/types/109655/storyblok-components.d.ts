@@ -572,6 +572,8 @@ export interface LocalPartner {
   programs?: ProgramGrid[];
   partners?: (ISbStoryData<LocalPartner> | string)[];
   testimonial?: TestimonialCarousel[];
+  assessmentLead?: (ISbStoryData<Person> | string)[];
+  assessmentReviewer?: (ISbStoryData<Person> | string)[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
   communityContactEmail?: string;

@@ -95,7 +95,9 @@
 		"location": "Sede",
 		"learn-more": "Scopri di più",
 		"opens-in-new-tab": "(si apre in una nuova scheda)",
-		"website": "Sito web"
+		"website": "Sito web",
+		"assessment": "Valutazione dell’ONG condotta da <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "Valutazione dell’ONG condotta da <leadLink>{lead}</leadLink>, verificata da <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "Tutti gli anni ({count})",

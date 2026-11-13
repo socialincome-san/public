@@ -95,7 +95,9 @@
 		"location": "Location",
 		"learn-more": "Learn more",
 		"opens-in-new-tab": "(opens in a new tab)",
-		"website": "Website"
+		"website": "Website",
+		"assessment": "NGO assessment led by <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "NGO assessment led by <leadLink>{lead}</leadLink>, reviewed by <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "All years ({count})",
