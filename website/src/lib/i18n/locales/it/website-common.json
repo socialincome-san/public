@@ -453,9 +453,13 @@
 	},
 	"circles": {
 		"title": "Circoli",
-		"member-summary": "{active, plural, one {# attivo} other {# attivi}} · {interested, plural, one {# membro interessato} other {# membri interessati}}",
-		"members-empty": "Ancora nessun membro",
-		"empty": "Ancora nessun circolo."
+		"empty": "Ancora nessun circolo.",
+		"active-count": "{count, plural, one {# Membro} other {# Membri}}",
+		"interested-count": "{count} Follower",
+		"legend-active": "Membri del circolo",
+		"legend-active-info": "I membri portano avanti il lavoro del circolo e ne sono responsabili.",
+		"legend-interested": "Follower",
+		"legend-interested-info": "I follower sono invitati alle riunioni del circolo e sono i primi a cui chiediamo aiuto quando un compito richiede più persone."
 	},
 	"task-cards": {
 		"show-all": "Mostra tutte le {count} attività",
