@@ -17,7 +17,8 @@ test('country list in create program wizard matches screenshot', async ({ page }
 	await page.getByTestId('create-program-modal-trigger').click();
 
 	for (const countryLabel of ['Algeria', 'Angola', 'Burkina Faso', 'Ethiopia', 'Kenya', 'Malawi', 'Tanzania']) {
-		await page.getByRole('cell', { name: countryLabel }).click();
+		// The radio button's cell is named after the country too, but only the name cell shows it as text
+		await page.getByRole('cell', { name: countryLabel }).filter({ hasText: countryLabel }).click();
 	}
 
 	await page.getByRole('dialog').evaluate((element) => {
@@ -25,10 +26,14 @@ test('country list in create program wizard matches screenshot', async ({ page }
 		dialog.style.maxHeight = 'none';
 		dialog.style.overflow = 'visible';
 	});
+	// The table scrolls inside a frame of limited height: lifting every limit puts all rows in the screenshot
 	await page.getByTestId('country-table').evaluate((element) => {
-		const table = element as HTMLElement;
-		table.style.maxHeight = 'none';
-		table.style.overflow = 'visible';
+		for (const node of [element, ...element.querySelectorAll('*')]) {
+			if (node instanceof HTMLElement && getComputedStyle(node).maxHeight !== 'none') {
+				node.style.maxHeight = 'none';
+				node.style.overflow = 'visible';
+			}
+		}
 	});
 
 	await expectToHaveScreenshot(page.getByTestId('country-table'));

@@ -97,6 +97,9 @@ export type ProgramCountryFeasibilityRow = {
 	sanctions: CountryFeasibility;
 };
 
+/** What the public may see: no program, recipient or candidate counts. */
+export type CountryEligibilityRow = Omit<ProgramCountryFeasibilityRow, 'stats'>;
+
 export type ProgramCountryFeasibilityView = {
 	rows: ProgramCountryFeasibilityRow[];
 };

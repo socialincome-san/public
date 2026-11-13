@@ -45,6 +45,7 @@ jest.mock('./country.repository.write', () => ({
 
 import {
 	deleteCountry,
+	getCountryEligibility,
 	getCountryPageStats,
 	getPaginatedCountryTableView,
 	getProgramCountryFeasibility,
@@ -136,6 +137,17 @@ describe('country service', () => {
 		expect(data.rows.find((row) => row.id === 'country-sl')?.stats.candidateCount).toBe(1);
 		expect(data.rows.find((row) => row.id === 'country-ke')?.stats.candidateCount).toBe(2);
 		expect(data.rows.find((row) => row.id === 'country-ug')?.stats.candidateCount).toBe(0);
+	});
+
+	test('leaves program, recipient and candidate counts out of the public eligibility rows', async () => {
+		mockFindCountriesForFeasibility.mockResolvedValue([createCountry('country-sl', 'SL')]);
+		mockFindUnassignedRecipientCountries.mockResolvedValue({ success: true, data: [createCandidate('SL', 'SL')] });
+
+		const rows = expectSuccess(await getCountryEligibility());
+
+		expect(rows).toHaveLength(1);
+		expect(rows[0]).not.toHaveProperty('stats');
+		expect(rows[0]).toMatchObject({ id: 'country-sl', country: { isoCode: 'SL' } });
 	});
 
 	test('counts candidates by local partner country on the country page', async () => {

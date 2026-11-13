@@ -12,6 +12,7 @@ import type { CountryCreateInput, CountryUpdateInput } from './country.schemas';
 import {
 	CountryCondition,
 	NETWORK_TECH_LABELS,
+	type CountryEligibilityRow,
 	type CountryPageStats,
 	type CountryPaginatedTableView,
 	type CountryPayload,
@@ -269,6 +270,24 @@ const emptyCountryPageStats: CountryPageStats = {
 	activeProgramsCount: 0,
 	recipientsCount: 0,
 	candidatesCount: 0,
+};
+
+export const getCountryEligibility = async (): Promise<Result<CountryEligibilityRow[]>> => {
+	const result = await getProgramCountryFeasibility();
+	if (!result.success) {
+		return result;
+	}
+
+	return resultOk(
+		result.data.rows.map(({ id, country, cash, mobileMoney, mobileNetwork, sanctions }) => ({
+			id,
+			country,
+			cash,
+			mobileMoney,
+			mobileNetwork,
+			sanctions,
+		})),
+	);
 };
 
 export const getCountryPageStats = async (isoCode: string): Promise<Result<CountryPageStats>> => {
