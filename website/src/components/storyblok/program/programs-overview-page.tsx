@@ -1,14 +1,10 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { PageBlocks } from '@/components/content-types/page';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
-import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import type { ISbStoryData } from '@storyblok/js';
-import { Suspense } from 'react';
-import { ProgramsOverviewSection } from './programs-overview-section';
 
 type Props = {
 	overview: ISbStoryData<ProgramOverview>;
@@ -18,12 +14,9 @@ type Props = {
 };
 
 export const ProgramsOverviewPage = async ({ overview, lang, currency, searchParams }: Props) => {
-	const title = overview.content.title?.trim() ?? overview.name;
-	const text = overview.content.text?.trim();
-	const showFilters = overview.content.showFilters !== false;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
-		currentLabel: title,
+		currentLabel: overview.name,
 		lang,
 		currency,
 		includeCurrentLabel: false,
@@ -32,19 +25,8 @@ export const ProgramsOverviewPage = async ({ overview, lang, currency, searchPar
 	return (
 		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} layout="section" />
-			<BlockWrapper marginTop="none" marginBottom="none">
-				<PageIntro title={title} description={text} />
-				<section className="mt-8 flex flex-col gap-6">
-					<Suspense fallback={<AppLoadingSkeleton />}>
-						<ProgramsOverviewSection
-							lang={lang}
-							currency={currency}
-							searchParams={showFilters ? searchParams : Promise.resolve({})}
-							showFilters={showFilters}
-						/>
-					</Suspense>
-				</section>
-			</BlockWrapper>
+			{/* A story saved before the blocks field existed has none */}
+			<PageBlocks blocks={overview.content.content ?? []} lang={lang} currency={currency} searchParams={searchParams} />
 		</div>
 	);
 };

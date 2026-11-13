@@ -26,6 +26,16 @@ describe('PageIntro', () => {
 		expect(markup).not.toContain('<p');
 	});
 
+	it('puts the actions beside the description on large screens, unless an illustration takes that room', () => {
+		const props = { title: 'Our programs', description: 'Our work', actions: <button>Start</button> };
+
+		expect(renderToStaticMarkup(<PageIntro {...props} actionsPosition="beside" />)).toContain('lg:ml-auto');
+		expect(renderToStaticMarkup(<PageIntro {...props} />)).not.toContain('lg:ml-auto');
+		expect(
+			renderToStaticMarkup(<PageIntro {...props} actionsPosition="beside" illustrationSrc="/bike.png" />),
+		).not.toContain('lg:ml-auto');
+	});
+
 	it('renders nothing without content', () => {
 		expect(renderToStaticMarkup(<PageIntro title=" " description=" " eyebrow=" " />)).toBe('');
 	});

@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import NextImage from 'next/image';
 import { type ReactNode } from 'react';
+import { cn } from '../../../cn';
 
 const pageIntroVariants = cva('', {
 	variants: {
@@ -49,26 +50,58 @@ type PageIntroProps = {
 	illustrationSrc?: string;
 	// Below the description, such as a button or a video link
 	actions?: ReactNode;
+	// `beside` puts the actions to the right of the description from large screens up, level with it
+	actionsPosition?: 'below' | 'beside';
 };
 
-export const PageIntro = ({ title, description, eyebrow, variant = 'page', illustrationSrc, actions }: PageIntroProps) => {
+export const PageIntro = ({
+	title,
+	description,
+	eyebrow,
+	variant = 'page',
+	illustrationSrc,
+	actions,
+	actionsPosition = 'below',
+}: PageIntroProps) => {
 	const trimmedTitle = typeof title === 'string' ? title.trim() : title;
 	const trimmedDescription = description?.trim();
 	const trimmedEyebrow = eyebrow?.trim();
 	// Apart from the title, landing looks like page
 	const layout = variant === 'section' ? 'section' : 'page';
 	const Heading = variant === 'section' ? 'h2' : 'h1';
+	// An illustration takes the room beside the text
+	const actionsBeside = actionsPosition === 'beside' && !illustrationSrc;
 
 	if (!trimmedTitle && !trimmedDescription && !trimmedEyebrow) {
 		return null;
 	}
 
+	const descriptionNode = trimmedDescription ? (
+		<p className={descriptionVariants({ variant: layout })}>{trimmedDescription}</p>
+	) : null;
+	const actionsNode = actions ? (
+		<div
+			className={cn('flex flex-wrap items-center gap-x-6 gap-y-4 pt-3', actionsBeside && 'lg:ml-auto lg:shrink-0 lg:pt-0')}
+		>
+			{actions}
+		</div>
+	) : null;
+
 	const text = (
 		<div className={pageIntroVariants({ variant: layout })}>
 			{trimmedEyebrow ? <p className={eyebrowVariants({ variant: layout })}>{trimmedEyebrow}</p> : null}
 			{trimmedTitle ? <Heading className={headingVariants({ variant })}>{trimmedTitle}</Heading> : null}
-			{trimmedDescription ? <p className={descriptionVariants({ variant: layout })}>{trimmedDescription}</p> : null}
-			{actions ? <div className="flex flex-wrap items-center gap-x-6 gap-y-4 pt-3">{actions}</div> : null}
+			{actionsBeside ? (
+				<div className={cn(pageIntroVariants({ variant: layout }), 'lg:flex lg:items-center lg:gap-12 lg:space-y-0')}>
+					{descriptionNode}
+					{actionsNode}
+				</div>
+			) : (
+				<>
+					{descriptionNode}
+					{actionsNode}
+				</>
+			)}
 		</div>
 	);
 
