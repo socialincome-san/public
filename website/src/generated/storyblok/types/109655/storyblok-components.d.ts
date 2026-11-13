@@ -13,6 +13,22 @@ export interface ActionButton {
   [k: string]: unknown;
 }
 
+export interface AfricaMap {
+  countries?: (number | string)[];
+  highlightColor?: "" | "gradient" | "yellow" | "white";
+  mapColor?: "" | "light" | "blue" | "dark" | "satellite";
+  clouds?: boolean;
+  shadedRegion?: "" | "subSaharan" | "western" | "eastern" | "northern" | "southern" | "central";
+  zoom?: "" | "western" | "eastern" | "northern" | "southern" | "central";
+  wide?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "africaMap";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface Article {
   image: StoryblokAsset;
   useImageOnlyForPreview?: boolean;
@@ -776,6 +792,7 @@ export interface Page {
     | DonationCalculator
     | Timeline
     | VideoCarousel
+    | AfricaMap
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];

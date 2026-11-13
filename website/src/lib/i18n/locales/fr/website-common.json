@@ -514,5 +514,9 @@
 	},
 	"video-carousel": {
 		"show-video": "Afficher la vidéo {index}"
+	},
+	"africa-map": {
+		"label": "Carte de l’Afrique",
+		"recipients": "{count, plural, one {# bénéficiaire} other {# bénéficiaires}}"
 	}
 }

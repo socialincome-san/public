@@ -25,6 +25,15 @@ const toText = (node: RichTextNode): string => {
 export const storyblokRichtextToPlainText = (node: RichTextNode | string) =>
 	(typeof node === 'string' ? node : toText(node)).replaceAll(/\s+/g, ' ').trim();
 
+// The blocks editors placed in a rich text, in the order they appear. Their fields depend on the component.
+export const getRichTextBloks = (node: RichTextNode): unknown[] => {
+	if (node.type === 'blok') {
+		return node.attrs.body ?? [];
+	}
+
+	return 'content' in node && node.content ? node.content.flatMap(getRichTextBloks) : [];
+};
+
 // Hero headings and titles are Markdown, e.g. "Give 1 % of your income and **change lives**."
 const markdownToPlainText = (markdown: string) =>
 	markdown

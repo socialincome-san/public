@@ -1,4 +1,5 @@
 import type { AnySearchParams } from '@/app/page-props';
+import { AfricaMapBlock } from '@/components/content-blocks/africa-map';
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import { CampaignGridBlock } from '@/components/content-blocks/campaign-grid';
 import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
@@ -69,6 +70,8 @@ const renderPageBlock = (
 	searchParams?: Promise<AnySearchParams>,
 ): ReactNode => {
 	switch (block.component) {
+		case 'africaMap':
+			return <AfricaMapBlock blok={block} lang={lang} currency={currency} />;
 		case 'campaignGrid':
 			return <CampaignGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'circleGrid':
