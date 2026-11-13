@@ -5,10 +5,12 @@ import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonia
 import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
+import { buildRecipientStatusBreakdown } from '@/components/storyblok/shared/recipient-status-breakdown';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { getLocalPartnerProgramSummariesAction } from '@/modules/local-partners/local-partner.actions';
+import { getRecipientStatusBreakdownAction } from '@/modules/recipients/recipient.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
 import { LocalPartnerAboutMetaCard, LocalPartnerFocusBadges } from './local-partner-about-meta';
@@ -39,13 +41,17 @@ export const LocalPartnerDetail = async ({
 	const localPartnerTitle = getLocalPartnerTitle(localPartner.content);
 	const isoCode = getLocalPartnerIsoCode(localPartner.content);
 	const focuses = (localPartner.content.focuses ?? []).filter(isFocusStory);
-	const [t, partnerProgramsResult] = await Promise.all([
+	const localPartnerSlug = localPartner.content.portalSlug?.trim() ?? '';
+	const [t, partnerProgramsResult, statusBreakdownResult] = await Promise.all([
 		getTranslations('website-common'),
 		getLocalPartnerProgramSummariesAction({
 			lang,
-			localPartnerPortalSlug: localPartner.content.portalSlug?.trim() ?? '',
+			localPartnerPortalSlug: localPartnerSlug,
 		}),
+		getRecipientStatusBreakdownAction({ localPartnerSlug }),
 	]);
+	const statusBreakdown = buildRecipientStatusBreakdown(statusBreakdownResult, t);
+	const recipientsTotal = statusBreakdown.recipientsCount ?? recipientsCount;
 	const partnerPrograms = partnerProgramsResult.success
 		? partnerProgramsResult.data
 		: { programs: [], programCount: 0, recipientsTotal: 0, isPartnerScoped: false };
@@ -71,9 +77,10 @@ export const LocalPartnerDetail = async ({
 				heroCard={heroCard}
 				stats={[
 					{
-						value: recipientsCount,
+						value: recipientsTotal,
+						breakdown: statusBreakdown.breakdown,
 						label:
-							recipientsCount === 1
+							recipientsTotal === 1
 								? t('local-partners-page.recipient-singular')
 								: t('local-partners-page.recipient-plural'),
 					},

@@ -137,6 +137,20 @@ export type RecipientLifecycleStatusFromExpectedIntervalsInput = {
 	nowDate: Date;
 };
 
+export type RecipientStatusBreakdown = {
+	activeCount: number;
+	formerCount: number;
+	suspendedCount: number;
+	newCount: number;
+	waitlistedCount: number;
+	totalCount: number;
+};
+
+export type RecipientStatusBreakdownScope =
+	{ programId: string } | { countryIsoCode: CountryCode } | { localPartnerSlug: string };
+
+export const RECIPIENT_CACHE_TAG = 'recipients';
+
 export type RecipientFilterOption = {
 	id: string;
 	name: string;

@@ -466,6 +466,13 @@
 		"active": "Attivo",
 		"concluded": "Concluso"
 	},
+	"recipient-status": {
+		"active": "Attivi",
+		"former": "Ex beneficiari",
+		"suspended": "Sospesi",
+		"new": "Nuovi (30 giorni)",
+		"waitlisted": "Lista d’attesa"
+	},
 	"breadcrumb": {
 		"home": "Inizio"
 	},

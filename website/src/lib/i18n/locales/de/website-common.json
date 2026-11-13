@@ -466,6 +466,13 @@
 		"active": "Aktiv",
 		"concluded": "Abgeschlossen"
 	},
+	"recipient-status": {
+		"active": "Aktiv",
+		"former": "Ehemalig",
+		"suspended": "Pausiert",
+		"new": "Neu (30 Tage)",
+		"waitlisted": "Warteliste"
+	},
 	"breadcrumb": {
 		"home": "Startseite"
 	},
