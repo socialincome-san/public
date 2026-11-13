@@ -548,6 +548,7 @@ We receive in-kind donations from
 [Storyblok](https://www.storyblok.com),
 [1Password](https://1password.com),
 [Mux](https://www.mux.com),
+[Neon](https://neon.com),
 [Sentry](https://sentry.io), [Make](https://make.com),
 [Lineto](https://www.lineto.com). Our tools also use open-source technologies
 such as [Storybook](https://storybook.js.org) and
