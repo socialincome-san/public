@@ -8,6 +8,7 @@ import { createWebsitePersonLink, getPersonDisplayName, resolveStoryblokLink } f
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/design-system/cn';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { FootnoteCard, FootnoteCardLink } from '@socialincome/design-system/data-display/footnote-card/footnote-card';
 import type { ISbStoryData } from '@storyblok/js';
 import { ArrowUpRight, BadgeCheck } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
@@ -96,81 +97,72 @@ export const LocalPartnerAboutMetaCard = async ({
 	}
 
 	const personLink = (person: ISbStoryData<Person>) => (chunks: ReactNode) => (
-		<Link
-			href={createWebsitePersonLink(person.slug, lang, currency)}
-			className="inline-flex items-center gap-0.5 underline-offset-4 hover:underline"
-		>
-			{chunks}
-			<ArrowUpRight className="size-3" aria-hidden="true" />
-		</Link>
+		<FootnoteCardLink href={createWebsitePersonLink(person.slug, lang, currency)}>{chunks}</FootnoteCardLink>
 	);
+	const assessmentFootnote = assessmentLead
+		? assessmentReviewer
+			? t.rich('local-partners-page.assessment-with-reviewer', {
+					lead: getPersonDisplayName(assessmentLead),
+					reviewer: getPersonDisplayName(assessmentReviewer),
+					leadLink: personLink(assessmentLead),
+					reviewerLink: personLink(assessmentReviewer),
+				})
+			: t.rich('local-partners-page.assessment', {
+					lead: getPersonDisplayName(assessmentLead),
+					leadLink: personLink(assessmentLead),
+				})
+		: undefined;
 
 	return (
-		<div className="border-border bg-card mt-2 overflow-hidden rounded-2xl border">
-			<div className="space-y-6 p-6">
-				{mission ? (
-					<div>
-						<p className="text-muted-foreground text-sm">{t('local-partners-page.mission')}</p>
-						<p className="text-foreground mt-2 text-lg">{mission}</p>
-					</div>
-				) : null}
-
-				<div className="space-y-4">
-					{facts.length > 0 ? (
-						<div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
-							{facts.map(({ label, value }) => (
-								<div key={label} className="flex items-baseline justify-between gap-4 sm:block">
-									<p className="text-muted-foreground text-sm">{label}</p>
-									<p className="text-foreground text-base font-medium sm:mt-1 sm:text-2xl">{value}</p>
-								</div>
-							))}
+		<div className="mt-2">
+			<FootnoteCard footnote={assessmentFootnote} footnoteIcon={BadgeCheck}>
+				<div className="space-y-6">
+					{mission ? (
+						<div>
+							<p className="text-muted-foreground text-sm">{t('local-partners-page.mission')}</p>
+							<p className="text-foreground mt-2 text-lg">{mission}</p>
 						</div>
 					) : null}
-					{resolvedExternalLinks.length > 0 ? (
-						<div
-							className={cn(
-								'flex items-baseline justify-between gap-4',
-								facts.length > 0 && 'border-border mt-6 border-t pt-6',
-							)}
-						>
-							<p className="text-muted-foreground shrink-0 text-sm">{t('local-partners-page.learn-more')}</p>
-							<div className="flex min-w-0 flex-wrap justify-end gap-2">
-								{resolvedExternalLinks.map(({ label, href }) => (
-									<Link
-										key={label}
-										href={href}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-foreground border-border bg-muted/50 hover:bg-muted flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors"
-									>
-										{label}
-										<ArrowUpRight className="size-3" aria-hidden="true" />
-										<span className="sr-only"> {t('local-partners-page.opens-in-new-tab')}</span>
-									</Link>
+
+					<div className="space-y-4">
+						{facts.length > 0 ? (
+							<div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
+								{facts.map(({ label, value }) => (
+									<div key={label} className="flex items-baseline justify-between gap-4 sm:block">
+										<p className="text-muted-foreground text-sm">{label}</p>
+										<p className="text-foreground text-base font-medium sm:mt-1 sm:text-2xl">{value}</p>
+									</div>
 								))}
 							</div>
-						</div>
-					) : null}
+						) : null}
+						{resolvedExternalLinks.length > 0 ? (
+							<div
+								className={cn(
+									'flex items-baseline justify-between gap-4',
+									facts.length > 0 && 'border-border mt-6 border-t pt-6',
+								)}
+							>
+								<p className="text-muted-foreground shrink-0 text-sm">{t('local-partners-page.learn-more')}</p>
+								<div className="flex min-w-0 flex-wrap justify-end gap-2">
+									{resolvedExternalLinks.map(({ label, href }) => (
+										<Link
+											key={label}
+											href={href}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-foreground border-border bg-muted/50 hover:bg-muted flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors"
+										>
+											{label}
+											<ArrowUpRight className="size-3" aria-hidden="true" />
+											<span className="sr-only"> {t('local-partners-page.opens-in-new-tab')}</span>
+										</Link>
+									))}
+								</div>
+							</div>
+						) : null}
+					</div>
 				</div>
-			</div>
-			{assessmentLead ? (
-				<div className="border-border bg-muted/40 text-muted-foreground flex items-start gap-2 border-t px-6 py-4 text-sm">
-					<BadgeCheck className="mt-0.5 size-4 shrink-0" strokeWidth={1.7} aria-hidden="true" />
-					<p>
-						{assessmentReviewer
-							? t.rich('local-partners-page.assessment-with-reviewer', {
-									lead: getPersonDisplayName(assessmentLead),
-									reviewer: getPersonDisplayName(assessmentReviewer),
-									leadLink: personLink(assessmentLead),
-									reviewerLink: personLink(assessmentReviewer),
-								})
-							: t.rich('local-partners-page.assessment', {
-									lead: getPersonDisplayName(assessmentLead),
-									leadLink: personLink(assessmentLead),
-								})}
-					</p>
-				</div>
-			) : null}
+			</FootnoteCard>
 		</div>
 	);
 };
