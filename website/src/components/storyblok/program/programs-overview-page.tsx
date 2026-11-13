@@ -4,7 +4,13 @@ import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-l
 import { PageBlocks } from '@/components/content-types/page';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getTitleAndTextMetadata } from '@/lib/storyblok/storyblok-utils';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import type { ISbStoryData } from '@storyblok/js';
+import { Suspense } from 'react';
+import { ProgramsOverviewSection } from './programs-overview-section';
 
 type Props = {
 	overview: ISbStoryData<ProgramOverview>;
@@ -14,6 +20,7 @@ type Props = {
 };
 
 export const ProgramsOverviewPage = async ({ overview, lang, currency, searchParams }: Props) => {
+	const blocks = overview.content.content;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: overview.name,
@@ -25,8 +32,34 @@ export const ProgramsOverviewPage = async ({ overview, lang, currency, searchPar
 	return (
 		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} layout="section" />
-			{/* A story saved before the blocks field existed has none */}
-			<PageBlocks blocks={overview.content.content ?? []} lang={lang} currency={currency} searchParams={searchParams} />
+			{blocks?.length ? (
+				<PageBlocks blocks={blocks} lang={lang} currency={currency} searchParams={searchParams} />
+			) : (
+				// Stories saved before the blocks field existed, in any locale or fallback, still use the old fields.
+				// Remove once every published overview story has blocks.
+				<LegacyProgramsOverview overview={overview} lang={lang} currency={currency} searchParams={searchParams} />
+			)}
 		</div>
+	);
+};
+
+const LegacyProgramsOverview = ({ overview, lang, currency, searchParams }: Props) => {
+	const { title, description } = getTitleAndTextMetadata(overview);
+	const showFilters = overview.content.showFilters !== false;
+
+	return (
+		<BlockWrapper marginTop="none" marginBottom="none">
+			<PageIntro title={title} description={description} />
+			<section className="mt-8 flex flex-col gap-6">
+				<Suspense fallback={<AppLoadingSkeleton />}>
+					<ProgramsOverviewSection
+						lang={lang}
+						currency={currency}
+						searchParams={showFilters ? searchParams : Promise.resolve({})}
+						showFilters={showFilters}
+					/>
+				</Suspense>
+			</section>
+		</BlockWrapper>
 	);
 };

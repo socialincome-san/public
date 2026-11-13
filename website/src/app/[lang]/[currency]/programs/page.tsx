@@ -5,7 +5,7 @@ import type { ProgramOverview } from '@/generated/storyblok/types/109655/storybl
 import { toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getPageStoryMetadata } from '@/lib/storyblok/storyblok-richtext';
-import { getStoryblokMetadataImage } from '@/lib/storyblok/storyblok-utils';
+import { getStoryblokMetadataImage, getTitleAndTextMetadata } from '@/lib/storyblok/storyblok-utils';
 import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
@@ -15,6 +15,10 @@ export const generateMetadata = async ({ params }: DefaultLayoutProps) => {
 	const overviewResult = await getStoryWithFallback<ISbStoryData<ProgramOverview>>(getProgramsOverviewStoryPath(), lang);
 	if (!overviewResult.success) {
 		return getPageMetadata(lang, 'programs', {});
+	}
+	// Stories saved before the blocks field existed still use the old fields, see ProgramsOverviewPage
+	if (!overviewResult.data.content.content?.length) {
+		return getPageMetadata(lang, 'programs', getTitleAndTextMetadata(overviewResult.data));
 	}
 	const { title: storyTitle, description, image } = getPageStoryMetadata(overviewResult.data.content);
 	const title = storyTitle ?? overviewResult.data.name;
