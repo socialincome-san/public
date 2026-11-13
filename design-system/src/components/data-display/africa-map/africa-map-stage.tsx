@@ -4,6 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import {
+	type FocusEvent,
 	type KeyboardEvent,
 	type MouseEvent,
 	type PointerEvent,
@@ -151,6 +152,7 @@ export const AfricaMapStage = ({
 }: AfricaMapStageProps) => {
 	const gradientId = useId();
 	const stageRef = useRef<HTMLDivElement>(null);
+	const revealRef = useRef<HTMLSpanElement>(null);
 	const cardRef = useRef<HTMLDivElement>(null);
 	const arrowRef = useRef<HTMLSpanElement>(null);
 	const pointerDownRef = useRef({ pointerType: 'mouse', x: 0, y: 0 });
@@ -166,20 +168,17 @@ export const AfricaMapStage = ({
 	const shownTop = shown ? toTop(shown.y) : 0;
 
 	useEffect(() => {
-		const stage = stageRef.current;
-		if (!stage || typeof IntersectionObserver === 'undefined') {
+		const target = revealRef.current;
+		if (!target || typeof IntersectionObserver === 'undefined') {
 			return;
 		}
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry?.isIntersecting) {
-					setRevealed(true);
-					observer.disconnect();
-				}
-			},
-			{ threshold: 0.35 },
-		);
-		observer.observe(stage);
+		const observer = new IntersectionObserver(([entry]) => {
+			if (entry?.isIntersecting) {
+				setRevealed(true);
+				observer.disconnect();
+			}
+		});
+		observer.observe(target);
 
 		return () => observer.disconnect();
 	}, []);
@@ -298,6 +297,14 @@ export const AfricaMapStage = ({
 		}
 	};
 
+	// Only keyboard focus opens the popup: a tap focuses its marker too, just before the click that opens the popup,
+	// which would then take that first tap for the second one and follow the link
+	const handleMarkerFocus = (event: FocusEvent<HTMLElement>, code: string) => {
+		if (event.currentTarget.matches(':focus-visible')) {
+			dispatch({ type: 'show', code });
+		}
+	};
+
 	const popupContent = shown ? (
 		<>
 			<span className="relative size-9 shrink-0">
@@ -354,6 +361,9 @@ export const AfricaMapStage = ({
 			onClickCapture={handleClickCapture}
 			onKeyDown={handleKeyDown}
 		>
+			{/* The map reveals itself once this band is in view: with 35% of the map in view, as long as the map fits the
+			    viewport, and still in time when it is taller */}
+			<span ref={revealRef} className="pointer-events-none absolute inset-x-0 top-[35%] bottom-[35%]" aria-hidden />
 			<div className={cn('absolute inset-0', cropped && 'overflow-hidden rounded-3xl')}>
 				{children}
 
@@ -437,7 +447,7 @@ export const AfricaMapStage = ({
 					// Screen readers get the detail with the name, as the popup that shows it is not announced
 					const markerLabel = highlight.detail ? `${highlight.name}, ${highlight.detail}` : highlight.name;
 					const markerClassName =
-						'focus-visible:ring-primary focus-visible:ring-offset-background absolute flex size-6 -translate-1/2 items-center justify-center rounded-full outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2';
+						'focus-visible:ring-primary focus-visible:ring-offset-background pointer-events-auto absolute flex size-6 -translate-1/2 items-center justify-center rounded-full outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2';
 					const marker = (
 						<span
 							className="relative flex size-2.5 scale-0 items-center justify-center transition-[scale] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-data-[revealed=true]/map:scale-100 motion-reduce:scale-100 motion-reduce:transition-none [@media(scripting:none)]:scale-100"
@@ -476,7 +486,7 @@ export const AfricaMapStage = ({
 									aria-label={markerLabel}
 									data-marker={highlight.code}
 									className={markerClassName}
-									onFocus={() => dispatch({ type: 'show', code: highlight.code })}
+									onFocus={(event) => handleMarkerFocus(event, highlight.code)}
 									onBlur={() => dispatch({ type: 'leave' })}
 								>
 									{marker}
@@ -486,7 +496,7 @@ export const AfricaMapStage = ({
 									type="button"
 									aria-label={markerLabel}
 									className={markerClassName}
-									onFocus={() => dispatch({ type: 'show', code: highlight.code })}
+									onFocus={(event) => handleMarkerFocus(event, highlight.code)}
 									onBlur={() => dispatch({ type: 'leave' })}
 								>
 									{marker}
