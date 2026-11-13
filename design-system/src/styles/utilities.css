@@ -63,4 +63,14 @@
 			transform: translateX(0);
 		}
 	}
+
+	@keyframes sway-y {
+		from {
+			translate: 0 -2%;
+		}
+
+		to {
+			translate: 0 2%;
+		}
+	}
 }

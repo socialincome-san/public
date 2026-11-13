@@ -514,5 +514,9 @@
 	},
 	"video-carousel": {
 		"show-video": "Video {index} anzeigen"
+	},
+	"africa-map": {
+		"label": "Karte von Afrika",
+		"recipients": "{count, plural, one {# Empfänger:in} other {# Empfänger:​innen}}"
 	}
 }
