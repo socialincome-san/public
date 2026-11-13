@@ -63,7 +63,7 @@ export const ImageGeneratorGalleryBlock = async ({ blok, lang }: Props) => {
 				errorLabel={t('imageError')}
 				density="compact"
 				infoPlacement="metadata"
-				pagination={{ pageSize: 24, loadMoreLabel: t('loadMore') }}
+				pagination={{ pageSize: 12, loadMoreLabel: t('loadMore') }}
 			/>
 		</BlockWrapper>
 	);
