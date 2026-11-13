@@ -19,4 +19,6 @@ export type WalletFooterColumn = {
 
 export type WalletVariant = 'default' | 'empty';
 
+export type WalletSize = 'default' | 'sm';
+
 export type WalletBadge = ReactNode;

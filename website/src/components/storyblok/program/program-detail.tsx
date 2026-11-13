@@ -19,8 +19,26 @@ import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryNameFromIsoCode, isValidCountryCode } from '@/lib/types/country';
 import type { CommunityPanelData } from '@/modules/community/community.types';
+import { resolveProgramFinancesDisplayAmountsAction } from '@/modules/programs/program.actions';
+import type { ProgramDashboardStats, ProgramFinancesDisplayAmounts } from '@/modules/programs/program.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
+
+const resolveFinancesDisplayAmounts = async (
+	stats: ProgramDashboardStats,
+	currency: WebsiteCurrency,
+): Promise<ProgramFinancesDisplayAmounts> => {
+	const result = await resolveProgramFinancesDisplayAmountsAction(stats, currency);
+
+	return result.success
+		? result.data
+		: {
+				currency: stats.payoutCurrency,
+				paidOutSoFar: stats.paidOutSoFarProgramCurrency,
+				totalProgramCosts: stats.totalProgramCostsProgramCurrency,
+				availableCredits: stats.availableCreditsProgramCurrency,
+			};
+};
 
 type Props = {
 	programDetailData: ProgramDetailData;
@@ -41,7 +59,8 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 	const completedSurveysCount =
 		programDetailData.dashboardStats?.completedSurveysCount ?? programDetailData.programDetails?.completedSurveysCount ?? 0;
 
-	const [t, tFaq, breadcrumbLinks, resolvedCountry] = await Promise.all([
+	const { dashboardStats } = programDetailData;
+	const [t, tFaq, breadcrumbLinks, resolvedCountry, financesDisplayAmounts] = await Promise.all([
 		getTranslations('website-common'),
 		getTranslations('website-faq'),
 		buildBreadcrumbLinks({
@@ -51,6 +70,7 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 			currency,
 		}),
 		resolveProgramCountry(countryIsoCode, lang, currency),
+		dashboardStats ? resolveFinancesDisplayAmounts(dashboardStats, currency) : undefined,
 	]);
 
 	const faqItems = resolveFaqItems(programDetailData.faq ?? []);
@@ -98,9 +118,9 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 				<BlockWrapper marginTop="none" marginBottom="none">
 					<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
 						<div className="flex flex-col gap-7">
-							{programDetailData.dashboardStats && programDetailData.programId ? (
+							{financesDisplayAmounts && programDetailData.programId ? (
 								<ProgramFinances
-									stats={programDetailData.dashboardStats}
+									displayAmounts={financesDisplayAmounts}
 									programId={programDetailData.programId}
 									lang={lang}
 									currency={currency}
@@ -111,6 +131,7 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 								lang={lang}
 								currency={currency}
 								resolvedCountry={resolvedCountry}
+								financesDisplayAmounts={financesDisplayAmounts}
 							/>
 						</div>
 						<div className="flex flex-col gap-7">

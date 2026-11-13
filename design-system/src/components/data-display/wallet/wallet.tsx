@@ -6,12 +6,20 @@ import { Card } from '../card/card';
 import { WalletFront } from './wallet-front';
 import { WalletImageStack } from './wallet-image-stack';
 import { WalletOverlayImages } from './wallet-overlay-images';
-import { type WalletBadge, type WalletFooterColumn, type WalletImages, type WalletVariant } from './wallet.types';
+import {
+	type WalletBadge,
+	type WalletFooterColumn,
+	type WalletImages,
+	type WalletSize,
+	type WalletVariant,
+} from './wallet.types';
 
 export type { WalletImage } from './wallet.types';
 
 type WalletProps = {
 	variant?: WalletVariant;
+	// `sm` is half the size, for a compact preview that shows only the title
+	size?: WalletSize;
 	title: string;
 	subtitle?: string | null;
 	badge?: WalletBadge;
@@ -23,6 +31,7 @@ type WalletProps = {
 
 export const Wallet = ({
 	variant = 'default',
+	size = 'default',
 	title,
 	subtitle,
 	badge,
@@ -33,14 +42,15 @@ export const Wallet = ({
 }: WalletProps) => {
 	type WalletStyle = CSSProperties & Record<`--${string}`, string>;
 
+	const scale = size === 'sm' ? 0.5 : 1;
 	const walletStyle: WalletStyle = {
-		'--slant-shift': '50px',
-		'--slant-width': '40px',
-		'--slant-height': '14px',
+		'--slant-shift': `${50 * scale}px`,
+		'--slant-width': `${40 * scale}px`,
+		'--slant-height': `${14 * scale}px`,
 		'--slant-position': 'calc(var(--slant-shift) + var(--slant-width))',
 		'--gradient': 'linear-gradient(to right, hsl(var(--gradient-card-from)), hsl(var(--gradient-card-to)))',
-		'--shadow-size': '11px',
-		'--stack-height': images?.primaryImage?.src ? '180px' : '28px',
+		'--shadow-size': `${11 * scale}px`,
+		'--stack-height': `${(images?.primaryImage?.src ? 180 : 28) * scale}px`,
 		'--wallet-front-bg': variant === 'default' ? 'var(--gradient)' : 'hsl(var(--card))',
 		'--wallet-front-box-shadow':
 			variant === 'default'
@@ -63,6 +73,7 @@ export const Wallet = ({
 					<WalletImageStack images={images} />
 					<WalletFront
 						variant={variant}
+						size={size}
 						title={title}
 						subtitle={subtitle}
 						badge={badge}

@@ -40,6 +40,7 @@ const publicProgramSelect = {
 		select: {
 			startDate: true,
 			localPartner: { select: { name: true, slug: true } },
+			paymentInformation: { select: { mobileMoneyProvider: { select: { name: true } } } },
 			payouts: {
 				where: { status: { in: completedPayoutStatuses } },
 				select: { amount: true },
