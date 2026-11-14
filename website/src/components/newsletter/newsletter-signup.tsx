@@ -1,6 +1,7 @@
 'use client';
 
 import { trackEvent } from '@/lib/analytics/analytics';
+import { getWebsiteBasePath, type WebsiteCurrency } from '@/lib/i18n/utils';
 import type { LanguageCode } from '@/lib/types/language';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +11,7 @@ import { Input } from '@socialincome/design-system/forms/input/input';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { useTranslations } from 'next-intl';
 import NextImage from 'next/image';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
@@ -23,6 +25,7 @@ const NEWSLETTER_IMAGE_SIZE = 60;
 
 type Props = {
 	lang: LanguageCode;
+	currency: WebsiteCurrency;
 	title?: string;
 	senderName?: string;
 	imageSrc?: string | null;
@@ -30,7 +33,7 @@ type Props = {
 	campaignId?: string;
 };
 
-export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt = '', campaignId }: Props) => {
+export const NewsletterSignup = ({ lang, currency, title, senderName, imageSrc, imageAlt = '', campaignId }: Props) => {
 	const t = useTranslations('website-newsletter');
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -63,6 +66,7 @@ export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt =
 
 	const displayTitle = (title ?? t('popup.information-label')).trim();
 	const displaySenderName = senderName?.trim() ?? '';
+	const archiveHref = `${getWebsiteBasePath(lang, currency)}/newsletter/archive`;
 
 	return (
 		<BlockWrapper marginTop="lg" marginBottom="lg">
@@ -111,6 +115,11 @@ export const NewsletterSignup = ({ lang, title, senderName, imageSrc, imageAlt =
 							</Button>
 						</form>
 					</Form>
+					<div>
+						<Button asChild variant="link" size="inline">
+							<Link href={archiveHref}>{t('popup.archive-link')}</Link>
+						</Button>
+					</div>
 
 					{displaySenderName || imageSrc ? (
 						<div className="flex items-center gap-3">
