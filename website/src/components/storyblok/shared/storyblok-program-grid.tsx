@@ -12,12 +12,12 @@ type Props = {
 	blok: ProgramGrid;
 	programs: ProgramStory[];
 	statsByPortalSlug: PublicProgramStatsMap;
-	allProgramsCount?: number;
+	allProgramsCount: number;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 };
 
-export const StoryblokProgramGrid = ({ blok, programs, statsByPortalSlug, allProgramsCount = 0, lang, currency }: Props) => {
+export const StoryblokProgramGrid = ({ blok, programs, statsByPortalSlug, allProgramsCount, lang, currency }: Props) => {
 	if (programs.length === 0) {
 		return null;
 	}
