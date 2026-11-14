@@ -1,3 +1,4 @@
+import { ProgramPermission } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 
 export const findActiveOrganizationId = async (userId: string) => {
@@ -31,6 +32,21 @@ export const findProgramAccessesByOrganizationId = async (organizationId: string
 			permission: true,
 			program: {
 				select: { name: true },
+			},
+		},
+	});
+
+export const findOperatorProgramCountriesByUserId = async (userId: string) =>
+	prisma.programAccess.findMany({
+		where: {
+			permission: ProgramPermission.operator,
+			organization: { organizationAccesses: { some: { userId } } },
+		},
+		select: {
+			program: {
+				select: {
+					country: { select: { isoCode: true } },
+				},
 			},
 		},
 	});

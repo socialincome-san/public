@@ -3,13 +3,15 @@ import type { Result } from '@/lib/result';
 
 const mockFindActiveOrganizationId = jest.fn();
 const mockFindProgramAccessesByOrganizationId = jest.fn();
+const mockFindOperatorProgramCountriesByUserId = jest.fn();
 
 jest.mock('./program-access.repository', () => ({
 	findActiveOrganizationId: mockFindActiveOrganizationId,
 	findProgramAccessesByOrganizationId: mockFindProgramAccessesByOrganizationId,
+	findOperatorProgramCountriesByUserId: mockFindOperatorProgramCountriesByUserId,
 }));
 
-import { getAccessiblePrograms } from './program-access.service';
+import { getAccessiblePrograms, getOperatorProgramCountriesForUser } from './program-access.service';
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -80,5 +82,30 @@ describe('program access service', () => {
 		const result = await getAccessiblePrograms('user-1');
 
 		expectFailure(result, 'Could not get accessible programs');
+	});
+
+	test('returns distinct countries from every operator program the user can access', async () => {
+		mockFindOperatorProgramCountriesByUserId.mockResolvedValue([
+			{ program: { country: { isoCode: 'GH' } } },
+			{ program: { country: { isoCode: 'SL' } } },
+			{ program: { country: { isoCode: 'GH' } } },
+		]);
+
+		const result = await getOperatorProgramCountriesForUser('user-1');
+
+		expect(expectSuccess(result)).toEqual(['GH', 'SL']);
+		expect(mockFindOperatorProgramCountriesByUserId).toHaveBeenCalledWith('user-1');
+	});
+
+	test('returns no countries when the user has no operator programs', async () => {
+		mockFindOperatorProgramCountriesByUserId.mockResolvedValue([]);
+
+		expect(expectSuccess(await getOperatorProgramCountriesForUser('user-1'))).toEqual([]);
+	});
+
+	test('does not leak operator program lookup errors', async () => {
+		mockFindOperatorProgramCountriesByUserId.mockRejectedValue(new Error('database unavailable'));
+
+		expectFailure(await getOperatorProgramCountriesForUser('user-1'), 'Could not get operator program countries');
 	});
 });
