@@ -1,15 +1,19 @@
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
+import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getWebsiteBasePath } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
+import { createWebsitePersonLink, getPersonDisplayName, resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/design-system/cn';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
-import { ArrowUpRight } from 'lucide-react';
+import { FootnoteCard, FootnoteCardLink } from '@socialincome/design-system/data-display/footnote-card/footnote-card';
+import type { ISbStoryData } from '@storyblok/js';
+import { ArrowUpRight, BadgeCheck } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 type ExternalLink = {
 	label: string;
@@ -51,6 +55,8 @@ type AboutMetaCardProps = {
 	foundingYear?: string;
 	location?: string;
 	externalLinks: ExternalLink[];
+	assessmentLead?: ISbStoryData<Person>;
+	assessmentReviewer?: ISbStoryData<Person>;
 };
 
 export const LocalPartnerAboutMetaCard = async ({
@@ -61,6 +67,8 @@ export const LocalPartnerAboutMetaCard = async ({
 	foundingYear,
 	location,
 	externalLinks,
+	assessmentLead,
+	assessmentReviewer,
 }: AboutMetaCardProps) => {
 	const t = await getTranslations('website-common');
 	const resolvedExternalLinks = externalLinks
@@ -82,59 +90,79 @@ export const LocalPartnerAboutMetaCard = async ({
 		Boolean(partnerSince) ||
 		Boolean(foundingYear) ||
 		Boolean(location) ||
-		resolvedExternalLinks.length > 0;
+		resolvedExternalLinks.length > 0 ||
+		Boolean(assessmentLead);
 	if (!hasMeta) {
 		return null;
 	}
 
-	return (
-		<div className="border-border bg-card mt-2 rounded-2xl border p-6">
-			<div className="space-y-6">
-				{mission ? (
-					<div>
-						<p className="text-muted-foreground text-sm">{t('local-partners-page.mission')}</p>
-						<p className="text-foreground mt-2 text-lg">{mission}</p>
-					</div>
-				) : null}
+	const personLink = (person: ISbStoryData<Person>) => (chunks: ReactNode) => (
+		<FootnoteCardLink href={createWebsitePersonLink(person.slug, lang, currency)}>{chunks}</FootnoteCardLink>
+	);
+	const assessmentFootnote = assessmentLead
+		? assessmentReviewer
+			? t.rich('local-partners-page.assessment-with-reviewer', {
+					lead: getPersonDisplayName(assessmentLead),
+					reviewer: getPersonDisplayName(assessmentReviewer),
+					leadLink: personLink(assessmentLead),
+					reviewerLink: personLink(assessmentReviewer),
+				})
+			: t.rich('local-partners-page.assessment', {
+					lead: getPersonDisplayName(assessmentLead),
+					leadLink: personLink(assessmentLead),
+				})
+		: undefined;
 
-				<div className="space-y-4">
-					{facts.length > 0 ? (
-						<div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
-							{facts.map(({ label, value }) => (
-								<div key={label} className="flex items-baseline justify-between gap-4 sm:block">
-									<p className="text-muted-foreground text-sm">{label}</p>
-									<p className="text-foreground text-base font-medium sm:mt-1 sm:text-2xl">{value}</p>
-								</div>
-							))}
+	return (
+		<div className="mt-2">
+			<FootnoteCard footnote={assessmentFootnote} footnoteIcon={BadgeCheck}>
+				<div className="space-y-6">
+					{mission ? (
+						<div>
+							<p className="text-muted-foreground text-sm">{t('local-partners-page.mission')}</p>
+							<p className="text-foreground mt-2 text-lg">{mission}</p>
 						</div>
 					) : null}
-					{resolvedExternalLinks.length > 0 ? (
-						<div
-							className={cn(
-								'flex items-baseline justify-between gap-4',
-								facts.length > 0 && 'border-border mt-6 border-t pt-6',
-							)}
-						>
-							<p className="text-muted-foreground shrink-0 text-sm">{t('local-partners-page.learn-more')}</p>
-							<div className="flex min-w-0 flex-wrap justify-end gap-2">
-								{resolvedExternalLinks.map(({ label, href }) => (
-									<Link
-										key={label}
-										href={href}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-foreground border-border bg-muted/50 hover:bg-muted flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors"
-									>
-										{label}
-										<ArrowUpRight className="size-3" aria-hidden="true" />
-										<span className="sr-only"> {t('local-partners-page.opens-in-new-tab')}</span>
-									</Link>
+
+					<div className="space-y-4">
+						{facts.length > 0 ? (
+							<div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
+								{facts.map(({ label, value }) => (
+									<div key={label} className="flex items-baseline justify-between gap-4 sm:block">
+										<p className="text-muted-foreground text-sm">{label}</p>
+										<p className="text-foreground text-base font-medium sm:mt-1 sm:text-2xl">{value}</p>
+									</div>
 								))}
 							</div>
-						</div>
-					) : null}
+						) : null}
+						{resolvedExternalLinks.length > 0 ? (
+							<div
+								className={cn(
+									'flex items-baseline justify-between gap-4',
+									facts.length > 0 && 'border-border mt-6 border-t pt-6',
+								)}
+							>
+								<p className="text-muted-foreground shrink-0 text-sm">{t('local-partners-page.learn-more')}</p>
+								<div className="flex min-w-0 flex-wrap justify-end gap-2">
+									{resolvedExternalLinks.map(({ label, href }) => (
+										<Link
+											key={label}
+											href={href}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-foreground border-border bg-muted/50 hover:bg-muted flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors"
+										>
+											{label}
+											<ArrowUpRight className="size-3" aria-hidden="true" />
+											<span className="sr-only"> {t('local-partners-page.opens-in-new-tab')}</span>
+										</Link>
+									))}
+								</div>
+							</div>
+						) : null}
+					</div>
 				</div>
-			</div>
+			</FootnoteCard>
 		</div>
 	);
 };

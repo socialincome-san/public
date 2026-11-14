@@ -71,7 +71,12 @@ const STANDARD_STORY_RELATIONS = [
 ];
 const COUNTRY_RELATIONS = ['Country.partners'];
 const FOCUS_RELATIONS = ['Focus.studies'];
-const LOCAL_PARTNER_RELATIONS = ['Local Partner.focuses', 'Local Partner.partners'];
+const LOCAL_PARTNER_RELATIONS = [
+	'Local Partner.focuses',
+	'Local Partner.partners',
+	'Local Partner.assessmentLead',
+	'Local Partner.assessmentReviewer',
+];
 const DEFAULT_PAGE_SIZE = 50;
 const CONTENT_FIELD = 'content';
 const EXCLUDED_FIELDS_FOR_COUNTING = 'content,leadText';
