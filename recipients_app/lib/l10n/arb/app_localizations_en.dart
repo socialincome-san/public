@@ -782,4 +782,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get countrySearchHint => 'Search by country name or dial code';
+
+  @override
+  String get onboarding => 'Onboarding';
+
+  @override
+  String get onboardingText =>
+      'Please fill in some important information to make your experience with Social Income as smooth as possible.';
 }
