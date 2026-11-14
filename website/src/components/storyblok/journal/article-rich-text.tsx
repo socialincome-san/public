@@ -9,6 +9,7 @@ import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/em
 import { ImageWithCaption } from '@/components/storyblok/journal/rich-text/image-with-caption';
 import { QuotedText } from '@/components/storyblok/journal/rich-text/quoted-text';
 import { ReferencesGroupBlock } from '@/components/storyblok/journal/rich-text/references-group';
+import { TableBlock } from '@/components/storyblok/journal/rich-text/table';
 import {
 	footnoteRichTextMarkResolvers,
 	footnoteRichTextNodeResolvers,
@@ -52,6 +53,7 @@ export const ArticleRichText = ({ document, lang, donationForm, variant = 'artic
 			actionButton: (props: StoryblokBlockProps) => (
 				<ActionButtonBlock {...(props as ComponentProps<typeof ActionButtonBlock>)} />
 			),
+			table: (props: StoryblokBlockProps) => <TableBlock {...(props as ComponentProps<typeof TableBlock>)} />,
 			lottie: (props: StoryblokBlockProps) => <LottieBlock blok={props as Lottie} />,
 			iframeEmbed: (props: StoryblokBlockProps) => (
 				<div className="my-8">

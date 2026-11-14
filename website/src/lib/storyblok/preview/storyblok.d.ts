@@ -8,7 +8,7 @@ type StoryblokBridgeInstance = {
 	on: (events: string | string[], handler: (event: StoryblokBridgeEvent) => void) => void;
 };
 
-type StoryblokBridgeConstructor = new () => StoryblokBridgeInstance;
+type StoryblokBridgeConstructor = new (config?: { resolveRelations?: string[] }) => StoryblokBridgeInstance;
 
 declare global {
 	interface Window {
