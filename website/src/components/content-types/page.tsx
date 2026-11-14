@@ -17,7 +17,6 @@ import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
-import { LandingHeroBlock } from '@/components/content-blocks/landing-hero';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
@@ -107,8 +106,6 @@ const renderPageBlock = (
 			return <InflowsBlock blok={block} lang={lang} currency={currency} />;
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} currency={currency} />;
-		case 'landingHero':
-			return <LandingHeroBlock blok={block} lang={lang} currency={currency} />;
 		case 'lottie':
 			return <LottieBlock blok={block} />;
 		case 'modalCards':
@@ -190,7 +187,7 @@ const renderPageBlock = (
 
 export default function PageContentType({ blok, lang, currency, searchParams, afterHero }: PageContentTypeProps) {
 	const blocks = blok.content ?? [];
-	const heroCount = blocks[0]?.component === 'heroVideo' || blocks[0]?.component === 'landingHero' ? 1 : 0;
+	const heroCount = blocks[0]?.component === 'heroVideo' ? 1 : 0;
 	const renderBlocks = (pageBlocks: PageBlock[]) =>
 		pageBlocks.map((currentBlock) => (
 			<Fragment key={currentBlock._uid}>{renderPageBlock(currentBlock, lang, currency, searchParams)}</Fragment>

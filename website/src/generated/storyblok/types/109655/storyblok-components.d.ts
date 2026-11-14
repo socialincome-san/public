@@ -514,30 +514,6 @@ export interface JournalTeasers {
   [k: string]: unknown;
 }
 
-export interface LandingHero {
-  title: string;
-  description?: string;
-  image?: StoryblokAsset;
-  facts?: LandingHeroFact[];
-  cardTitle?: string;
-  cardDescription?: string;
-  button?: Button[];
-  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
-  showDonationForm?: boolean;
-  component: "landingHero";
-  _uid: string;
-  _editable?: string | undefined;
-  [k: string]: unknown;
-}
-
-export interface LandingHeroFact {
-  label: string;
-  component: "landingHeroFact";
-  _uid: string;
-  _editable?: string | undefined;
-  [k: string]: unknown;
-}
-
 export interface Layout {
   footerMenu: MenuItemGroup[];
   copyrightNotice?: string;
@@ -769,7 +745,6 @@ export interface Page {
     | IframeEmbed
     | CountryOffice
     | ImageGeneratorGallery
-    | LandingHero
     | CtaBanner
     | CampaignGrid
     | PageIntro
