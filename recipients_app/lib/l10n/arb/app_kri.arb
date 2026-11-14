@@ -321,5 +321,7 @@
     "offlineBannerMessage": "Yu de ɔflayna. Sho di data we dɛn dɔn kech.",
     "openGoogleSupportPageUpdatePlayStore" : "Opin Sɔpɔt Pej",
     "appAttestationFailedError" : "Firebase AppCheck: App attestation failed.",
-    "countrySearchHint": "Luk fɔ di kɔntri nem ɔ di kɔntri kod"
+    "countrySearchHint": "Luk fɔ di kɔntri nem ɔ di kɔntri kod",
+    "onboarding": "Onboarding",
+    "onboardingText": "Duya fil sɔm impɔtant infɔmeshɔn fɔ mek yu ɛkspiriɛns wit Sɔshial Inkam go fayn as yu ebul."
 }
