@@ -25,32 +25,48 @@ const bodyVariants = cva('border-border bg-card relative flex min-w-0 flex-1 fle
 	},
 });
 
-// Without text only the colour of the status shows
-type Status = { text?: string; variant: CardAlertFooterVariant };
-
 type StatusCardProps = {
+	// Without text only the colour of the status shows
+	status: { text?: string; variant: CardAlertFooterVariant; action?: ReactNode };
 	children: ReactNode;
+	// Makes the card a link
+	href?: string;
 	// `none` when the content brings its own card, e.g. a radio card
 	inset?: 'none' | 'sm' | 'lg';
-} & (
-	| { href?: undefined; status: Status & { action?: ReactNode } }
-	// `href` makes the whole card a link, which must not contain an interactive action
-	| { href: string; status: Status & { action?: never } }
-);
+};
 
 export const StatusCard = ({ status, children, href, inset = 'lg' }: StatusCardProps) => {
-	const content = (
-		<>
-			{inset === 'none' ? children : <div className={bodyVariants({ inset })}>{children}</div>}
-			{status.text ? <CardAlertFooter text={status.text} variant={status.variant} action={status.action} /> : null}
-		</>
-	);
+	const body = inset === 'none' ? children : <div className={bodyVariants({ inset })}>{children}</div>;
+	const footer = status.text ? <CardAlertFooter text={status.text} variant={status.variant} action={status.action} /> : null;
 
-	return href ? (
+	if (!href) {
+		return (
+			<div className={shellVariants({ variant: status.variant, linked: false })}>
+				{body}
+				{footer}
+			</div>
+		);
+	}
+
+	// An interactive action must not sit inside the link, so only the body links
+	if (status.action) {
+		return (
+			<div className={shellVariants({ variant: status.variant, linked: false })}>
+				<NextLink
+					href={href}
+					className="focus-visible:ring-ring flex min-w-0 flex-1 flex-col rounded-2xl focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+				>
+					{body}
+				</NextLink>
+				{footer}
+			</div>
+		);
+	}
+
+	return (
 		<NextLink href={href} className={shellVariants({ variant: status.variant, linked: true })}>
-			{content}
+			{body}
+			{footer}
 		</NextLink>
-	) : (
-		<div className={shellVariants({ variant: status.variant, linked: false })}>{content}</div>
 	);
 };

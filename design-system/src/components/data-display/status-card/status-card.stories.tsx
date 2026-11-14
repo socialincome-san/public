@@ -58,3 +58,18 @@ export const WithAction: Story = {
 		},
 	},
 };
+
+export const LinkedWithAction: Story = {
+	args: {
+		href: '#',
+		status: {
+			text: '12 candidates ready to enroll',
+			variant: 'confirm',
+			action: (
+				<Button variant="outline" size="sm">
+					Build your own program
+				</Button>
+			),
+		},
+	},
+};
