@@ -92,4 +92,25 @@ describe('sendSendgridEmail', () => {
 			}),
 		).resolves.toEqual({ success: false, error: 'Could not send email' });
 	});
+
+	test('does not log a sensitive template error that may contain a sign-in link', async () => {
+		process.env.SENDGRID_API_KEY = 'test-api-key';
+		const signInLink = 'https://example.org/?oobCode=one-time-token';
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		mockSend.mockRejectedValue(new Error(signInLink));
+
+		await expect(
+			sendSendgridEmail({
+				to: 'recipient@example.com',
+				from: 'sender@example.com',
+				subject: 'Subject',
+				text: 'Safe archive',
+				template: { id: 'd-template-id', data: { magicLink: signInLink } },
+				sensitive: true,
+			}),
+		).resolves.toEqual({ success: false, error: 'Could not send email' });
+		expect(consoleError).toHaveBeenCalledWith('Could not send sensitive SendGrid email');
+		expect(consoleError.mock.calls.flat().join(' ')).not.toContain(signInLink);
+		consoleError.mockRestore();
+	});
 });

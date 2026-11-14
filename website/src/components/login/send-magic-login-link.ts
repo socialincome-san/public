@@ -1,14 +1,10 @@
 import { readPendingClaimIds } from '@/components/campaign/campaign-submission/pending-claim-ids';
 import { sendSignInLink, type ClientAuth } from '@/lib/firebase/client-auth';
+import { sendMagicLoginLinkAction } from '@/modules/auth/auth.actions';
 
-const mergeClaimIds = (storedClaimIds: string[], claimId?: string): string[] => {
-	const trimmed = claimId?.trim();
-	if (!trimmed || storedClaimIds.includes(trimmed)) {
-		return storedClaimIds;
-	}
-
-	return [...storedClaimIds, trimmed];
-};
+// The server rejects continue URLs with malformed claim IDs, so stale local storage must not block the email.
+const mergeClaimIds = (storedClaimIds: string[], claimId = ''): string[] =>
+	[...new Set([...storedClaimIds, claimId.trim()])].filter((id) => /^[A-Za-z0-9]{8}$/.test(id));
 
 export const buildMagicLoginContinueUrl = (
 	origin: string,
@@ -36,14 +32,13 @@ export const sendMagicLoginLink = async (input: {
 }): Promise<void> => {
 	const origin = input.origin ?? (typeof window !== 'undefined' ? window.location.origin : undefined);
 	if (!origin) {
-		return;
+		throw new Error('Missing sign-in request origin');
 	}
 
-	const result = await sendSignInLink(
-		input.auth,
-		input.email,
-		buildMagicLoginContinueUrl(origin, input.websiteBasePath, input.email, input.claimId),
-	);
+	const continueUrl = buildMagicLoginContinueUrl(origin, input.websiteBasePath, input.email, input.claimId);
+	const result = input.auth.emulatorConfig
+		? await sendSignInLink(input.auth, input.email, continueUrl)
+		: await sendMagicLoginLinkAction({ email: input.email, continueUrl });
 	if (!result.success) {
 		throw new Error(result.error);
 	}

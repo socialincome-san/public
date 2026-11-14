@@ -24,6 +24,17 @@
 		"retry": "Andere E-Mail verwenden",
 		"hint": "Nichts angekommen? Schau im Spam-Ordner nach."
 	},
+	"magic-link-email": {
+		"subject": "Dein Anmeldelink für Social Income",
+		"preview-text": "Mit diesem einmaligen Link kannst du dich bei Social Income anmelden.",
+		"heading": "Bei Social Income anmelden",
+		"body": "Klicke unten, um dich sicher bei deinem Social-Income-Konto anzumelden.",
+		"button": "Anmelden",
+		"security-notice": "Zu deiner Sicherheit kann dieser Link nur einmal verwendet werden.",
+		"ignore-notice": "Wenn du diese E-Mail nicht angefordert hast, kannst du sie einfach ignorieren.",
+		"footer": "Social Income · Bedingungsloses Grundeinkommen",
+		"archive": "Eine Anmelde-E-Mail wurde versendet. Der einmalige Link ist in diesem Archiv [REDACTED]."
+	},
 	"confirm-login": {
 		"title": "Anmeldung abschliessen",
 		"body": "Klicke auf den Button unten, um die Anmeldung abzuschliessen.",
@@ -39,6 +50,7 @@
 		"error-cta": "Neuen Link anfordern"
 	},
 	"error": {
-		"invalid-email": "Ungültige E-Mail-Adresse"
+		"invalid-email": "Ungültige E-Mail-Adresse",
+		"rate-limited": "Zu viele Anfragen. Bitte warte ein paar Minuten und versuche es erneut."
 	}
 }

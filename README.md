@@ -144,6 +144,25 @@ campaign submissions, or schema/type generation:
 - `STORYBLOK_PERSONAL_ACCESS_TOKEN`
 - `STORYBLOK_SPACE_ID`
 
+Production magic-link emails use the existing SendGrid integration. Create a
+dynamic template using the variables `subject`, `logoUrl`, `previewText`,
+`heading`, `body`, `buttonText`, `magicLink`, `securityNotice`,
+`ignoreNotice`, and `footer`; use `magicLink` for the sign-in button and
+`logoUrl` for the Social Income logo. Configure `SENDGRID_API_KEY`,
+`SENDGRID_FROM_EMAIL`, and the template's ID as
+`SENDGRID_MAGIC_LOGIN_TEMPLATE_ID` in the website environment; the variable is
+listed in `website/.env.local.sample`. Include a text version in the template
+that uses the same localized content and sign-in link. Do not commit SendGrid
+credentials. When the Firebase Auth emulator is connected, development keeps
+using the emulator's local email inbox and does not send through SendGrid.
+
+Roll out branded magic-link delivery in this order: configure the Firebase
+service-account JSON and SendGrid API key/from address, create the dynamic
+SendGrid template and set its ID as `SENDGRID_MAGIC_LOGIN_TEMPLATE_ID`, apply
+the `magic_link_rate_limit` database migration, then deploy the application.
+The deployment should have `SLACK_ALERT_WEBHOOK_URL` configured so missing
+magic-link configuration triggers an operational alert.
+
 ### 3. Start The Local Environment
 
 ```bash

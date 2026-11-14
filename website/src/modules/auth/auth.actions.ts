@@ -5,9 +5,35 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 import { SESSION_COOKIE_NAME } from '@/modules/auth/auth.types';
 import { getCurrentSessions, getCurrentUser, getSessionByType } from '@/modules/auth/session.service';
 import type { UserSession } from '@/modules/users/user.types';
-import { cookies } from 'next/headers';
-import { sessionIdTokenSchema, websiteLocaleSchema } from './auth.schemas';
+import { cookies, headers } from 'next/headers';
+import { magicLoginRequestSchema, sessionIdTokenSchema, websiteLocaleSchema } from './auth.schemas';
 import { createSessionCookie } from './auth.service';
+import { sendMagicLoginLink } from './magic-link.service';
+
+export const sendMagicLoginLinkAction = async (input: unknown): Promise<Result<void>> => {
+	const inputResult = magicLoginRequestSchema.safeParse(input);
+	if (!inputResult.success) {
+		return resultFail('Invalid sign-in request');
+	}
+
+	const requestHeaders = await headers();
+	const requestOrigin = requestHeaders.get('origin');
+	if (!requestOrigin) {
+		return resultFail('Invalid sign-in request');
+	}
+
+	// Keep delivery outcomes identical to avoid exposing account status through the public action.
+	const sendResult = await sendMagicLoginLink({
+		...inputResult.data,
+		requestOrigin,
+		requesterIp: requestHeaders.get('x-real-ip') ?? undefined,
+	});
+	if (!sendResult.success && sendResult.error === 'magic-link-rate-limited') {
+		return sendResult;
+	}
+
+	return resultOk(undefined);
+};
 
 export const createSessionAction = async (input: unknown): Promise<Result<boolean>> => {
 	const inputResult = sessionIdTokenSchema.safeParse(input);

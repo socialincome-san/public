@@ -9,6 +9,7 @@ export type SendMailInput = {
 	// Stored as the sent email body; SendGrid renders the template instead when one is given.
 	text: string;
 	template?: SendMailTemplate;
+	sensitive?: boolean;
 };
 
 export type SentEmailTableViewRow = {

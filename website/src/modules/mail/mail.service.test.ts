@@ -105,6 +105,33 @@ describe('mail service', () => {
 		expect(mockCreateSentEmail).toHaveBeenCalledWith(expect.objectContaining({ subject: 'Subject', body: 'Body' }));
 	});
 
+	test('stores only the explicitly safe archive body for sensitive template data', async () => {
+		const signInLink = 'https://example.org/?oobCode=one-time-token&continueUrl=https%3A%2F%2Fexample.org%2Flogin';
+		const archiveBody = 'A sign-in email was sent. The one-time link is [REDACTED] in this archive.';
+		const template = { id: 'd-template-id', data: { magicLink: signInLink } };
+
+		await expect(
+			sendMail({
+				to: 'recipient@example.com',
+				subject: 'Sign in',
+				text: archiveBody,
+				template,
+				sensitive: true,
+			}),
+		).resolves.toEqual({ success: true, data: undefined });
+
+		expect(mockSendSendgridEmail).toHaveBeenCalledWith({
+			to: 'recipient@example.com',
+			from: 'sender@example.com',
+			subject: 'Sign in',
+			text: archiveBody,
+			template,
+			sensitive: true,
+		});
+		expect(mockCreateSentEmail).toHaveBeenCalledWith(expect.objectContaining({ subject: 'Sign in', body: archiveBody }));
+		expect(mockCreateSentEmail.mock.calls.flat().join(' ')).not.toContain(signInLink);
+	});
+
 	test('does not store emails when SendGrid fails', async () => {
 		mockSendSendgridEmail.mockResolvedValue({ success: false, error: 'Could not send email' });
 
