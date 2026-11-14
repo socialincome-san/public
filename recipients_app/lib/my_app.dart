@@ -85,6 +85,7 @@ class MyApp extends StatelessWidget {
           create: (context) => MessagingRepository(
             messaging: messaging,
             localNotifications: FlutterLocalNotificationsPlugin(),
+            crashReportingRepository: crashReportingRepository
           ),
         ),
         RepositoryProvider(
