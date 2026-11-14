@@ -1,6 +1,7 @@
 'use client';
 
 import { trackEvent } from '@/lib/analytics/analytics';
+import { useVisitorCountry } from '@/lib/geo/visitor-country';
 import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { getPaidStripeCheckoutDonationAction } from '@/modules/stripe-payments/stripe-payment.actions';
 import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
@@ -44,6 +45,7 @@ const completionEvents = new Set<Parameters<DonationWizardSend>[0]['type']>([
 export const DonationModalProvider = ({ children }: Props) => {
 	const [state, , actorRef] = useMachine(donationWizardMachine);
 	const websiteCurrency = useWebsiteCurrency();
+	const visitorCountry = useVisitorCountry();
 
 	// Every step sends through here, so the funnel is tracked in one place with the context after the transition.
 	const send = useCallback<DonationWizardSend>(
@@ -126,7 +128,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 	}, [send, websiteCurrency]);
 
 	const openWizardAtAmountStep = () => {
-		send({ type: 'OPEN', currency: websiteCurrency });
+		send({ type: 'OPEN', currency: websiteCurrency, country: visitorCountry });
 	};
 
 	const openWizardWithFormAmount = (context: DonationAmountContext) => {

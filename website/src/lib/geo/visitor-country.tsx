@@ -17,4 +17,6 @@ export const VisitorCountryProvider = ({
 	children: ReactNode;
 }) => <VisitorCountryContext value={country}>{children}</VisitorCountryContext>;
 
-export const useIsSwissVisitor = () => useResolvedVisitorCountry(use(VisitorCountryContext))?.value === 'CH';
+export const useVisitorCountry = () => useResolvedVisitorCountry(use(VisitorCountryContext))?.value ?? null;
+
+export const useIsSwissVisitor = () => useVisitorCountry() === 'CH';

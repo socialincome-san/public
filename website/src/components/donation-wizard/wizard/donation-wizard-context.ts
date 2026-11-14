@@ -1,3 +1,4 @@
+import { type CountryCode } from '@/generated/prisma/enums';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
@@ -60,8 +61,11 @@ export const resetQrBillContext = {
 	qrBillError: null,
 };
 
-export const getInitialWizardContext = (currency: WebsiteCurrency): DonationWizardContext => ({
-	...getInitialDonationContext(currency),
+export const getInitialWizardContext = (
+	currency: WebsiteCurrency,
+	country: CountryCode | null = null,
+): DonationWizardContext => ({
+	...getInitialDonationContext(currency, country),
 	communityStats: null,
 	pendingStep: null,
 	...resetStripeCheckoutContext,
