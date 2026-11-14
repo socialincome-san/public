@@ -13,7 +13,7 @@ import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 
-export default function FinancesPageProgramScoped({ params, searchParams }: Props) {
+export default function ProgramFinancesPage({ params, searchParams }: Props) {
 	return (
 		<BlockWrapper marginTop="none" marginBottom="none">
 			<Card>

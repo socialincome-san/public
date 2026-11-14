@@ -1,0 +1,20 @@
+import { seedDatabase } from '@/lib/database/seed/run-seed';
+import { expect, test } from '@playwright/test';
+import { expectToHaveScreenshot } from '../../../utils';
+
+test.beforeEach(async () => {
+	await seedDatabase();
+});
+
+test('program finances page matches screenshot', async ({ page }) => {
+	await page.goto('/portal/programs/program-si-core-sl/finances?sortBy=period&sortDirection=asc');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expectToHaveScreenshot(page);
+});
+
+test('legacy payout forecast URL redirects to program finances', async ({ page }) => {
+	await page.goto('/portal/programs/program-si-core-sl/payout-forecast?sortBy=period&sortDirection=asc');
+
+	await expect(page).toHaveURL(/\/portal\/programs\/program-si-core-sl\/finances\?sortBy=period&sortDirection=asc/);
+	await expect(page.getByTestId('data-table')).toBeVisible();
+});
