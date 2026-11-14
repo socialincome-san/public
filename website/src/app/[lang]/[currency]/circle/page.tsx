@@ -17,7 +17,7 @@ export default async function CirclesOverviewRoute({ params, searchParams }: Def
 			lang={lang}
 			currency={currency}
 			searchParams={searchParams}
-			folderBreadcrumb={{ label: t('circles.title'), isOverview: true }}
+			folderBreadcrumb={{ label: t('circles.title') }}
 		/>
 	);
 }

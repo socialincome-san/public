@@ -451,6 +451,12 @@
 			}
 		}
 	},
+	"link-cards": {
+		"empty": "Ancora niente qui."
+	},
+	"tab-navigation": {
+		"label": "Sezioni"
+	},
 	"circles": {
 		"title": "Circoli",
 		"member-summary": "{active, plural, one {# attivo} other {# attivi}} · {interested, plural, one {# membro interessato} other {# membri interessati}}",

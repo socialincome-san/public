@@ -552,6 +552,30 @@ export interface Layout {
   [k: string]: unknown;
 }
 
+export interface LinkCard {
+  title: string;
+  description?: string;
+  image?: StoryblokAsset;
+  imageFit?: "" | "cover" | "contain";
+  link: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  newTab?: boolean;
+  component: "linkCard";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface LinkCards {
+  cards?: LinkCard[];
+  columns?: "" | "auto" | "three";
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "linkCards";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface LocalPartner {
   portalSlug?: string;
   countryIsoCode?: number | string;
@@ -776,6 +800,8 @@ export interface Page {
     | DonationCalculator
     | Timeline
     | VideoCarousel
+    | LinkCards
+    | TabNavigation
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
@@ -1031,6 +1057,25 @@ export interface Study {
   [k: string]: unknown;
 }
 
+export interface TabNavigation {
+  tabs?: TabNavigationItem[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "tabNavigation";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface TabNavigationItem {
+  label: string;
+  link: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  component: "tabNavigationItem";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface Tag {
   value: string;
   description?: string;
@@ -1097,6 +1142,7 @@ export interface TestimonialCarousel {
 export interface Text {
   content?: StoryblokRichTextDoc;
   widthRatio?: "" | "full" | "fourFifths" | "twoThirds" | "half" | "third";
+  align?: "" | "left" | "center";
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";

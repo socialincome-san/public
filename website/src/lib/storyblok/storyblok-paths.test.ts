@@ -7,6 +7,7 @@ import {
 	getCountryStoryPath,
 	getFocusStoryPath,
 	getFocusesOverviewStoryPath,
+	getFolderOverviewStoryPath,
 	getHomeStoryPath,
 	getJournalArticleStoryPath,
 	getJournalTagStoryPath,
@@ -14,12 +15,14 @@ import {
 	getLocalPartnerStoryPath,
 	getLocalPartnersOverviewStoryPath,
 	getPageStoryPath,
+	getParentFolderOverviewStoryPath,
 	getPersonStoryPath,
 	getProgramStoryPath,
 	getProgramsOverviewStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
 	getWebsiteRelativePathFromStoryblokSlug,
 	isAllowedStoryblokPreviewSlug,
+	isFolderOverviewStoryblokSlug,
 	normalizeStoryblokSlug,
 } from './storyblok-paths';
 
@@ -116,6 +119,21 @@ describe('storyblok-paths', () => {
 		expect(getWebsitePathTailFromStoryblokSlug('pages/journal/my-article')).toBe('journal/my-article');
 		expect(getWebsitePathTailFromStoryblokSlug('journal/my-article')).toBe('journal/my-article');
 		expect(getWebsitePathTailFromStoryblokSlug('globals/journal/tags/design')).toBe('journal/tag/design');
+	});
+
+	it('gives a folder overview story the URL of its folder', () => {
+		expect(getFolderOverviewStoryPath('pages/get-involved')).toBe('pages/get-involved/get-involved');
+		expect(isFolderOverviewStoryblokSlug('pages/get-involved/individuals/individuals')).toBe(true);
+		expect(isFolderOverviewStoryblokSlug('de/pages/get-involved/get-involved')).toBe(true);
+		expect(isFolderOverviewStoryblokSlug('pages/get-involved/individuals/donate')).toBe(false);
+		expect(isFolderOverviewStoryblokSlug('pages/pages')).toBe(false);
+		expect(getWebsitePathTailFromStoryblokSlug('pages/get-involved/get-involved')).toBe('get-involved');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/get-involved/individuals/individuals')).toBe(
+			'get-involved/individuals',
+		);
+		expect(getParentFolderOverviewStoryPath('pages/get-involved/individuals/individuals')).toBe(
+			'pages/get-involved/get-involved',
+		);
 	});
 
 	it('builds relative paths for revalidation', () => {
