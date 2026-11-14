@@ -796,6 +796,7 @@ export interface PageIntro {
   image?: StoryblokAsset;
   button?: Button[];
   buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
+  buttonPosition?: "" | "below" | "right";
   videoLabel?: string;
   videoLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   videoThumbnail?: StoryblokAsset;
@@ -922,6 +923,7 @@ export interface ProgramGrid {
   filterFocus?: ISbStoryData<Focus> | string;
   filterLocalPartner?: ISbStoryData<LocalPartner> | string;
   showAllPrograms?: boolean;
+  showFilters?: boolean;
   programs?: (ISbStoryData<Program> | string)[];
   hideConcludedPrograms?: boolean;
   sortBy?: "" | "newest" | "recipients" | "alphabetical";
@@ -938,10 +940,60 @@ export interface ProgramGrid {
 }
 
 export interface ProgramOverview {
+  content: (
+    | DonationsTotal
+    | Downloads
+    | FaqSelection
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | ModalCards
+    | PartnershipsCarousel
+    | ProgramGrid
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TwoColumnText
+    | VideoText
+    | OpenSource
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
+    | PartnershipsCard
+    | TwoColumn
+    | Inflows
+    | Outflows
+    | CircleGrid
+    | TaskCards
+    | IframeEmbed
+    | CountryOffice
+    | ImageGeneratorGallery
+    | CtaBanner
+    | CampaignGrid
+    | PageIntro
+    | DonationCalculator
+    | Timeline
+    | VideoCarousel
+  )[];
+  programDefaultImage: StoryblokAsset;
   title?: string;
   text?: string;
-  programDefaultImage: StoryblokAsset;
   showFilters?: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
+  metaImage?: StoryblokAsset;
   component: "programOverview";
   _uid: string;
   _editable?: string | undefined;

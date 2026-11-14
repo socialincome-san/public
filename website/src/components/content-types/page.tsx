@@ -134,7 +134,7 @@ const renderPageBlock = (
 		case 'personGrid':
 			return <PersonGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'programGrid':
-			return <ProgramGridBlock blok={block} lang={lang} currency={currency} />;
+			return <ProgramGridBlock blok={block} lang={lang} currency={currency} searchParams={searchParams} />;
 		case 'reservesBlock':
 			return <ReservesBlock blok={block} lang={lang} currency={currency} />;
 		case 'richtextButtonHeader':
@@ -188,19 +188,25 @@ const renderPageBlock = (
 	}
 };
 
+type PageBlocksProps = {
+	blocks: PageBlock[];
+	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
+	searchParams?: Promise<AnySearchParams>;
+};
+
+export const PageBlocks = ({ blocks, lang, currency, searchParams }: PageBlocksProps) =>
+	blocks.map((block) => <Fragment key={block._uid}>{renderPageBlock(block, lang, currency, searchParams)}</Fragment>);
+
 export default function PageContentType({ blok, lang, currency, searchParams, afterHero }: PageContentTypeProps) {
 	const blocks = blok.content ?? [];
 	const heroCount = blocks[0]?.component === 'heroVideo' || blocks[0]?.component === 'landingHero' ? 1 : 0;
-	const renderBlocks = (pageBlocks: PageBlock[]) =>
-		pageBlocks.map((currentBlock) => (
-			<Fragment key={currentBlock._uid}>{renderPageBlock(currentBlock, lang, currency, searchParams)}</Fragment>
-		));
 
 	return (
 		<>
-			{renderBlocks(blocks.slice(0, heroCount))}
+			<PageBlocks blocks={blocks.slice(0, heroCount)} lang={lang} currency={currency} searchParams={searchParams} />
 			{afterHero}
-			{renderBlocks(blocks.slice(heroCount))}
+			<PageBlocks blocks={blocks.slice(heroCount)} lang={lang} currency={currency} searchParams={searchParams} />
 		</>
 	);
 }

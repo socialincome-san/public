@@ -3,6 +3,9 @@ import type { StoryblokAsset, StoryblokRichTextDoc } from '@/generated/storyblok
 
 type RichTextNode = StoryblokRichTextDoc | StoryblokRichTextDoc['content'][number];
 
+// A page, or another story built from page blocks, such as the programs overview
+type PageStory = Pick<Page, 'content'> & Partial<Pick<Page, 'metaTitle' | 'metaDescription' | 'metaImage'>>;
+
 const isRichTextDoc = (value: unknown): value is StoryblokRichTextDoc =>
 	typeof value === 'object' && value !== null && 'type' in value && value.type === 'doc' && 'content' in value;
 
@@ -46,7 +49,7 @@ const isImageAsset = (value: unknown): value is StoryblokAsset =>
 const markdownFieldToPlainText = (value: unknown) =>
 	typeof value === 'string' ? markdownToPlainText(value) || undefined : undefined;
 
-const getPageStoryText = (page: Page) => {
+const getPageStoryText = (page: PageStory) => {
 	let heading: string | undefined;
 	let paragraph: string | undefined;
 
@@ -82,7 +85,7 @@ const nonEmpty = (value: string | undefined) => (value?.trim() ? value.trim() : 
  * `defaultTitle` or from what visitors see first: the first heading and paragraph of the page's blocks, and the
  * first block's image.
  */
-export const getPageStoryMetadata = (page: Page, defaultTitle?: string) => {
+export const getPageStoryMetadata = (page: PageStory, defaultTitle?: string) => {
 	const { heading, paragraph } = getPageStoryText(page);
 	const firstBlockImage: unknown = page.content?.[0]?.image;
 

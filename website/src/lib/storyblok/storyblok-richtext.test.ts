@@ -92,6 +92,17 @@ describe('getPageStoryMetadata overrides', () => {
 	it('uses the default title before the first heading', () => {
 		expect(getPageStoryMetadata(page([hero]), 'Home title').title).toBe('Home title');
 	});
+
+	it('reads the intro of a story without SEO fields that is built from page blocks, such as the programs overview', () => {
+		const text = getPageStoryMetadata({
+			content: [
+				{ component: 'pageIntro', _uid: 'intro', title: '**All Programs**', description: 'Find a program you like.' },
+				{ component: 'programGrid', _uid: 'grid', showFilters: true },
+			],
+		});
+
+		expect(text).toEqual({ title: 'All Programs', description: 'Find a program you like.', image: undefined });
+	});
 });
 
 describe('storyblokRichtextToPlainText', () => {
