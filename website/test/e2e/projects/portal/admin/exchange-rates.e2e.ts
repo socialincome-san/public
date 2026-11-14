@@ -16,7 +16,6 @@ test('exchange rates search sets URL and matches screenshot', async ({ page }) =
 	await page.goto('/portal/admin/exchange-rates?sortBy=timestamp&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
-	await page.getByTestId('data-table-search-button').click();
 	await page.getByTestId('data-table-search-input').fill('exchange-rate-historical-1200');
 	await expect(page).toHaveURL(/search=exchange-rate-historical-1200/);
 	await expect(page.getByTestId('data-table-pagination-range')).toContainText('1-1 of 1');
@@ -39,7 +38,6 @@ test('exchange rates search and filter combination sets URL and matches screensh
 	await page.goto('/portal/admin/exchange-rates?sortBy=timestamp&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
-	await page.getByTestId('data-table-search-button').click();
 	await page.getByTestId('data-table-search-input').fill('exchange-rate-historical-12');
 	await page.getByTestId('data-table-filters-button').click();
 	await page.getByTestId('data-table-filter-currency-trigger').click();
@@ -91,7 +89,6 @@ test('exchange rates no-result search keeps URL and matches screenshot', async (
 	await page.goto('/portal/admin/exchange-rates?sortBy=timestamp&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
-	await page.getByTestId('data-table-search-button').click();
 	await page.getByTestId('data-table-search-input').fill('exchange-rate-does-not-exist');
 	await expect(page).toHaveURL(/search=exchange-rate-does-not-exist/);
 	await expect(page.getByText('No exchange rates found')).toBeVisible();

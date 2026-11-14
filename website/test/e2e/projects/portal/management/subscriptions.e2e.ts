@@ -57,7 +57,6 @@ test('subscription search sets the URL and shows matching rows', async ({ page }
 	await page.goto('/portal/management/subscriptions');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
-	await page.getByTestId('data-table-search-button').click();
 	await page.getByTestId('data-table-search-input').fill(email);
 	await expect(page).toHaveURL((url) => url.searchParams.get('search') === email);
 	await expect(page.getByRole('row').filter({ hasText: email })).toHaveCount(2);
