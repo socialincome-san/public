@@ -299,15 +299,18 @@ export const updateRecipient = async (
 		);
 		// Runs on every save of an interrupted recipient, so saving again retries a failed cleanup.
 		if (updatedRecipient.interruptedAt) {
-			const cleanupResult = await removeOutstandingSurveysForInterruptedRecipient(
-				getSessionAuditContext(session),
-				updatedRecipient.id,
-			);
+			const cleanupAudit = getSessionAuditContext(session);
+			let cleanupResult = await removeOutstandingSurveysForInterruptedRecipient(cleanupAudit, updatedRecipient.id);
+			if (!cleanupResult.success) {
+				cleanupResult = await removeOutstandingSurveysForInterruptedRecipient(cleanupAudit, updatedRecipient.id);
+			}
 			if (!cleanupResult.success) {
 				console.error('Could not remove outstanding surveys of interrupted recipient', {
 					recipientId: updatedRecipient.id,
 					error: cleanupResult.error,
 				});
+
+				return resultFail('Recipient was updated, but outstanding surveys could not be revoked. Save again to retry.');
 			}
 		}
 

@@ -6,6 +6,7 @@ const mockGetAccessiblePrograms = jest.fn();
 const mockGetRecipientProgramAssignment = jest.fn();
 const mockGetSurveyRecipients = jest.fn();
 const mockCreateFirebaseSurveyUser = jest.fn();
+const mockDeleteFirebaseUserByEmailIfExists = jest.fn();
 const mockSynchronizeFirebaseSurveyUser = jest.fn();
 const mockFindSurveyById = jest.fn();
 const mockFindSurveyByRecipientId = jest.fn();
@@ -14,6 +15,8 @@ const mockFindSurveyByRecipientAndName = jest.fn();
 const mockFindSurveySchedulesByProgramIds = jest.fn();
 const mockFindCompletedSurveyImpactSource = jest.fn();
 const mockCreateSurvey = jest.fn();
+const mockCreateSurveyForActiveRecipient = jest.fn();
+const mockFindExistingSurveyIdentities = jest.fn();
 const mockGetRecipientFilterOption = jest.fn();
 const mockFindSurveyTableSource = jest.fn();
 
@@ -31,6 +34,7 @@ jest.mock('@/modules/recipients/recipient.service', () => ({
 
 jest.mock('@/modules/auth/auth.service', () => ({
 	createFirebaseSurveyUser: mockCreateFirebaseSurveyUser,
+	deleteFirebaseUserByEmailIfExists: mockDeleteFirebaseUserByEmailIfExists,
 	synchronizeFirebaseSurveyUser: mockSynchronizeFirebaseSurveyUser,
 }));
 
@@ -38,6 +42,7 @@ const mockUpdateSurvey = jest.fn();
 
 jest.mock('./survey.repository.write', () => ({
 	createSurvey: mockCreateSurvey,
+	createSurveyForActiveRecipient: mockCreateSurveyForActiveRecipient,
 	updateSurvey: mockUpdateSurvey,
 }));
 
@@ -50,7 +55,7 @@ jest.mock('./survey.repository.read', () => ({
 	findCompletedSurveyImpactSource: mockFindCompletedSurveyImpactSource,
 	findSurveyTableSource: mockFindSurveyTableSource,
 	findSurveyByIdAndRecipient: jest.fn(),
-	findExistingSurveyIdentities: jest.fn(),
+	findExistingSurveyIdentities: mockFindExistingSurveyIdentities,
 	findSurveyImpactFilterSource: jest.fn(),
 	findSurveyImpactStudySource: jest.fn(),
 }));
@@ -62,6 +67,7 @@ jest.mock('@/lib/utils/now', () => ({
 
 import {
 	createSurvey,
+	generateSurveys,
 	getPaginatedSurveyTableView,
 	getSurvey,
 	getSurveyImpactMeasurements,
@@ -234,6 +240,45 @@ describe('survey CRUD and access', () => {
 		});
 
 		expectFailure(await getSurvey('user-1', 'survey-1'), 'Access denied');
+	});
+});
+
+describe('survey generation', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: operatorAccess });
+		mockGetSurveyRecipients.mockResolvedValue({
+			success: true,
+			data: [{ id: 'recipient-1', programId: 'program-1', startDate: new Date('2026-01-01T00:00:00.000Z') }],
+		});
+		mockFindSurveySchedulesByProgramIds.mockResolvedValue([
+			{
+				id: 'schedule-1',
+				programId: 'program-1',
+				name: 'Onboarding',
+				questionnaire: SurveyQuestionnaire.onboarding,
+				dueInMonthsAfterStart: 1,
+			},
+		]);
+		mockFindExistingSurveyIdentities.mockResolvedValue([]);
+		mockCreateFirebaseSurveyUser.mockResolvedValue({ success: true, data: undefined });
+		mockDeleteFirebaseUserByEmailIfExists.mockResolvedValue({ success: true, data: true });
+		mockCreateSurveyForActiveRecipient.mockResolvedValue(null);
+	});
+
+	test('removes Firebase access and skips a recipient interrupted after preview', async () => {
+		const result = await generateSurveys(operator);
+
+		expect(expectSuccess(result).surveysCreated).toBe(0);
+		expect(mockCreateSurveyForActiveRecipient).toHaveBeenCalledTimes(1);
+		expect(mockDeleteFirebaseUserByEmailIfExists).toHaveBeenCalledTimes(1);
+	});
+
+	test('removes Firebase access when audited survey creation fails', async () => {
+		mockCreateSurveyForActiveRecipient.mockRejectedValueOnce(new Error('Database unavailable'));
+
+		expectFailure(await generateSurveys(operator), 'Failed to generate surveys');
+		expect(mockDeleteFirebaseUserByEmailIfExists).toHaveBeenCalledTimes(1);
 	});
 });
 

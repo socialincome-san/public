@@ -10,6 +10,13 @@
 		"finances": "Finanze",
 		"recipients": "Beneficiari"
 	},
+	"recipient-status": {
+		"interrupted": "Interrotto"
+	},
+	"audit-fields": {
+		"interrupted-at": "Interrotto il",
+		"interruption-comment": "Commento sull’interruzione"
+	},
 	"menu": {
 		"open": "Apri menu",
 		"close": "Chiudi menu",

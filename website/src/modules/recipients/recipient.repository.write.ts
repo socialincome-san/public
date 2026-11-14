@@ -17,16 +17,25 @@ export const updateRecipient = async (
 	input: UpdateRecipientInput,
 	context: RecipientUpdatePersistenceContext,
 ) =>
-	auditedWrite({ entity: recipientEntity, context: audit, action: 'update', entityId: input.id }, async (transaction) => {
-		const relations = await findRelationIds(transaction, input.id);
-		const recipient = await transaction.recipient.update({
-			where: { id: input.id },
-			data: buildRecipientUpdateData(input, context),
-		});
-		await deleteOrphanedRelations(transaction, relations);
+	auditedWrite(
+		{
+			entity: recipientEntity,
+			context: audit,
+			action: 'update',
+			entityId: input.id,
+			isolationLevel: input.interrupted ? 'Serializable' : undefined,
+		},
+		async (transaction) => {
+			const relations = await findRelationIds(transaction, input.id);
+			const recipient = await transaction.recipient.update({
+				where: { id: input.id },
+				data: buildRecipientUpdateData(input, context),
+			});
+			await deleteOrphanedRelations(transaction, relations);
 
-		return recipient;
-	});
+			return recipient;
+		},
+	);
 
 export const updateRecipientSelf = async (
 	audit: AuditContext,

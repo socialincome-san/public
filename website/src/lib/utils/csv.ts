@@ -110,10 +110,14 @@ export const parseCsvOptionalFields = (rowNumber: number, row: Record<string, st
 };
 
 const escapeCsvValue = (value: string): string => {
-	const escaped = value.replace(CSV_DOUBLE_QUOTES_REGEX, '""');
+	const safeValue = CSV_FORMULA_PREFIX_REGEX.test(value) && !CSV_NUMBER_REGEX.test(value) ? `'${value}` : value;
+	const escaped = safeValue.replace(CSV_DOUBLE_QUOTES_REGEX, '""');
 
 	return CSV_NEEDS_QUOTES_REGEX.test(escaped) ? `"${escaped}"` : escaped;
 };
+
+const CSV_FORMULA_PREFIX_REGEX = /^\s*[=+\-@]/;
+const CSV_NUMBER_REGEX = /^\s*[+-]?(?:\d+|\d*\.\d+)(?:[eE][+-]?\d+)?\s*$/;
 
 export const stringifyCsvLines = (rows: string[][]): string =>
 	rows.map((row) => row.map((cell) => escapeCsvValue(cell)).join(',')).join('\n');

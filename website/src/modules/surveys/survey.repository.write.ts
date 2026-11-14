@@ -11,6 +11,22 @@ export const createSurvey = async (audit: AuditContext, input: SurveyCreateData)
 		transaction.survey.create({ data: input, select: surveyRecordSelect }),
 	);
 
+export const createSurveyForActiveRecipient = async (audit: AuditContext, input: SurveyCreateData) =>
+	auditedWrite(
+		{ entity: surveyEntity, context: audit, action: 'create', isolationLevel: 'Serializable' },
+		async (transaction) => {
+			const recipient = await transaction.recipient.findUnique({
+				where: { id: input.recipientId },
+				select: { interruptedAt: true },
+			});
+			if (!recipient || recipient.interruptedAt) {
+				return null;
+			}
+
+			return transaction.survey.create({ data: input, select: surveyRecordSelect });
+		},
+	);
+
 export const updateSurvey = async (
 	audit: AuditContext,
 	surveyId: string,

@@ -154,7 +154,23 @@ describe('recipient write attribution', () => {
 		]);
 	});
 
-	test('keeps a committed interruption when survey cleanup fails', async () => {
+	test('retries survey cleanup once after committing an interruption', async () => {
+		const updatedRecipient = { id: 'recipient-1', interruptedAt: new Date('2025-06-15T12:00:00.000Z') };
+		mockWriteRepository.updateRecipient.mockResolvedValue(updatedRecipient);
+		mockRemoveOutstandingSurveysForInterruptedRecipient
+			.mockResolvedValueOnce({
+				success: false,
+				error: 'Survey cleanup failed',
+			})
+			.mockResolvedValueOnce({ success: true, data: undefined });
+
+		const result = await updateRecipient(operator, { ...input, interrupted: true });
+
+		expect(result).toEqual({ success: true, data: updatedRecipient });
+		expect(mockRemoveOutstandingSurveysForInterruptedRecipient).toHaveBeenCalledTimes(2);
+	});
+
+	test('reports cleanup failure after retrying a committed interruption', async () => {
 		const updatedRecipient = { id: 'recipient-1', interruptedAt: new Date('2025-06-15T12:00:00.000Z') };
 		mockWriteRepository.updateRecipient.mockResolvedValue(updatedRecipient);
 		mockRemoveOutstandingSurveysForInterruptedRecipient.mockResolvedValue({
@@ -164,8 +180,11 @@ describe('recipient write attribution', () => {
 
 		const result = await updateRecipient(operator, { ...input, interrupted: true });
 
-		expect(result).toEqual({ success: true, data: updatedRecipient });
-		expect(mockRemoveOutstandingSurveysForInterruptedRecipient).toHaveBeenCalledWith(portal, 'recipient-1');
+		expect(result).toEqual({
+			success: false,
+			error: 'Recipient was updated, but outstanding surveys could not be revoked. Save again to retry.',
+		});
+		expect(mockRemoveOutstandingSurveysForInterruptedRecipient).toHaveBeenCalledTimes(2);
 	});
 
 	test('attributes mobile app self-updates to the recipient', async () => {

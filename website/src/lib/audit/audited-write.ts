@@ -17,6 +17,7 @@ export const defineAuditedEntity = <Snapshot extends Prisma.InputJsonObject>(
 type AuditedWriteOptions<Snapshot extends Prisma.InputJsonObject> = {
 	entity: AuditedEntity<Snapshot>;
 	context: AuditContext;
+	isolationLevel?: Prisma.TransactionIsolationLevel;
 } & ({ action: 'create' | 'update' } | { action: 'update' | 'delete'; entityId: string | string[] });
 
 /**
@@ -42,6 +43,10 @@ export const auditedWrite = async <T, Snapshot extends Prisma.InputJsonObject>(
 		}
 
 		const result = await write(transaction);
+		if (result === null) {
+			// A guarded write uses null to signal that it did not persist a row.
+			return result;
+		}
 		const entityIds = new Set('entityId' in options ? [options.entityId].flat() : getReturnedIds(result));
 		const events: Prisma.AuditEventCreateManyInput[] = [];
 		for (const entityId of entityIds) {

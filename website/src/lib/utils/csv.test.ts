@@ -1,5 +1,5 @@
 import { Gender } from '@/generated/prisma/enums';
-import { parseCsvOptionalFields, parseCsvText } from './csv';
+import { parseCsvOptionalFields, parseCsvText, stringifyCsv, stringifyCsvLines } from './csv';
 
 type TestCase = {
 	name: string;
@@ -100,6 +100,23 @@ describe('parseCsvOptionalFields', () => {
 				paymentInformationCode: 'code-1',
 			},
 			status: undefined,
+		});
+	});
+
+	describe('CSV formula protection', () => {
+		test.each(['=1+1', '+SUM(A1:A2)', '-1+SUM(A1:A2)', '@SUM(A1:A2)', '\t=1+1'])(
+			'prefixes formula-leading values with a text marker',
+			(value) => {
+				expect(stringifyCsv([{ value }], ['value'])).toBe(`value\n'${value}`);
+			},
+		);
+
+		test('preserves numeric values, including negative numbers', () => {
+			expect(stringifyCsv([{ value: '-120.50' }], ['value'])).toBe('value\n-120.50');
+		});
+
+		test('protects formula-leading values in row-only exports', () => {
+			expect(stringifyCsvLines([['=1+1']])).toBe("'=1+1");
 		});
 	});
 

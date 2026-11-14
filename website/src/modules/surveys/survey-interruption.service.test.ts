@@ -42,7 +42,7 @@ describe('removeOutstandingSurveysForInterruptedRecipient', () => {
 		expect(mockDeleteSurvey).toHaveBeenNthCalledWith(2, audit, 'survey-2');
 	});
 
-	test('stops before deleting a survey whose login cannot be revoked', async () => {
+	test('continues cleaning up after a survey login cannot be revoked', async () => {
 		mockDeleteFirebaseUserByEmailIfExists.mockResolvedValueOnce({
 			success: false,
 			error: 'Firebase unavailable',
@@ -50,11 +50,16 @@ describe('removeOutstandingSurveysForInterruptedRecipient', () => {
 
 		const result = await removeOutstandingSurveysForInterruptedRecipient(audit, 'recipient-1');
 
-		expect(result).toEqual({ success: false, error: 'Firebase unavailable' });
-		expect(mockDeleteSurvey).not.toHaveBeenCalled();
+		expect(result).toEqual({
+			success: false,
+			error: 'Could not remove outstanding surveys for interrupted recipient',
+		});
+		expect(mockDeleteFirebaseUserByEmailIfExists).toHaveBeenCalledTimes(2);
+		expect(mockDeleteSurvey).toHaveBeenCalledTimes(1);
+		expect(mockDeleteSurvey).toHaveBeenCalledWith(audit, 'survey-2');
 	});
 
-	test('fails when a survey cannot be deleted', async () => {
+	test('continues cleaning up after a survey cannot be deleted', async () => {
 		mockDeleteSurvey.mockRejectedValueOnce(new Error('Database unavailable'));
 
 		const result = await removeOutstandingSurveysForInterruptedRecipient(audit, 'recipient-1');
@@ -63,5 +68,16 @@ describe('removeOutstandingSurveysForInterruptedRecipient', () => {
 			success: false,
 			error: 'Could not remove outstanding surveys for interrupted recipient',
 		});
+		expect(mockDeleteSurvey).toHaveBeenCalledTimes(2);
+	});
+
+	test('treats an already-deleted survey as successfully cleaned up', async () => {
+		mockDeleteSurvey.mockRejectedValueOnce({ code: 'P2025' });
+
+		await expect(removeOutstandingSurveysForInterruptedRecipient(audit, 'recipient-1')).resolves.toEqual({
+			success: true,
+			data: undefined,
+		});
+		expect(mockDeleteSurvey).toHaveBeenCalledTimes(2);
 	});
 });

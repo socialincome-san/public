@@ -4,7 +4,11 @@ import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now, nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
-import { createFirebaseSurveyUser, synchronizeFirebaseSurveyUser } from '@/modules/auth/auth.service';
+import {
+	createFirebaseSurveyUser,
+	deleteFirebaseUserByEmailIfExists,
+	synchronizeFirebaseSurveyUser,
+} from '@/modules/auth/auth.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import {
 	getRecipientAuditContext,
@@ -433,7 +437,33 @@ export const generateSurveys = async (session: UserSession): Promise<Result<Surv
 
 				return resultFail('Could not create survey authentication user');
 			}
-			await surveyWriteRepository.createSurvey(audit, surveyInput);
+			let survey: Awaited<ReturnType<typeof surveyWriteRepository.createSurveyForActiveRecipient>>;
+			try {
+				survey = await surveyWriteRepository.createSurveyForActiveRecipient(audit, surveyInput);
+			} catch (error) {
+				const cleanupResult = await deleteFirebaseUserByEmailIfExists(surveyInput.accessEmail);
+				if (!cleanupResult.success) {
+					console.error('Could not remove Firebase user after survey creation failed', {
+						recipientId: surveyInput.recipientId,
+						error: cleanupResult.error,
+					});
+				}
+
+				throw error;
+			}
+			if (!survey) {
+				const cleanupResult = await deleteFirebaseUserByEmailIfExists(surveyInput.accessEmail);
+				if (!cleanupResult.success) {
+					console.error('Could not remove Firebase user for interrupted recipient', {
+						recipientId: surveyInput.recipientId,
+						error: cleanupResult.error,
+					});
+
+					return resultFail('Could not remove survey authentication user');
+				}
+
+				continue;
+			}
 			surveysCreated += 1;
 		}
 

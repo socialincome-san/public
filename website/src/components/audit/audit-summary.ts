@@ -305,10 +305,18 @@ const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
 const dateFormat = new Intl.DateTimeFormat('de-CH', { dateStyle: 'short' });
 
 /** Field changes for ChangeList; empty for rows that are described by text instead. */
-export const getAuditChangeItems = ({ entityType, action, changes }: AuditTableViewRow): ChangeListItem[] =>
+export const getAuditChangeItems = (
+	{ entityType, action, changes }: AuditTableViewRow,
+	interruptionFieldLabels: { interruptedAt: string; interruptionComment: string },
+): ChangeListItem[] =>
 	action === 'update'
 		? changes.map((change) => ({
-				label: auditEntityTypes[entityType]?.fieldLabels[change.path] ?? change.path,
+				label:
+					entityType === 'recipient' && change.path === 'interruptedAt'
+						? interruptionFieldLabels.interruptedAt
+						: entityType === 'recipient' && change.path === 'interruptionComment'
+							? interruptionFieldLabels.interruptionComment
+							: (auditEntityTypes[entityType]?.fieldLabels[change.path] ?? change.path),
 				previous: formatValue(change.old),
 				next: formatValue(change.new),
 			}))
