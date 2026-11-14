@@ -19,6 +19,7 @@ import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryNameFromIsoCode, isValidCountryCode } from '@/lib/types/country';
 import type { CommunityPanelData } from '@/modules/community/community.types';
+import { cn } from '@socialincome/design-system/cn';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
 
@@ -115,14 +116,16 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 						</div>
 						<div className="flex flex-col gap-7">
 							{resolvedCountry ? <ProgramCountry resolvedCountry={resolvedCountry} /> : null}
-							<div className="grid flex-1 grid-cols-1 gap-7 sm:grid-cols-2">
+							<div className={cn('grid flex-1 grid-cols-1 gap-7', completedSurveysCount > 0 && 'sm:grid-cols-2')}>
 								<ProgramRecipients count={recipientsCount} programId={programDetailData.programId} lang={lang} />
-								<ProgramSurveys
-									completedCount={completedSurveysCount}
-									lang={lang}
-									currency={currency}
-									programId={programDetailData.programId}
-								/>
+								{completedSurveysCount > 0 ? (
+									<ProgramSurveys
+										completedCount={completedSurveysCount}
+										lang={lang}
+										currency={currency}
+										programId={programDetailData.programId}
+									/>
+								) : null}
 							</div>
 						</div>
 					</div>
