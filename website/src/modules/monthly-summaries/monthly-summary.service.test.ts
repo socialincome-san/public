@@ -70,6 +70,7 @@ describe('getLastMonthSummary', () => {
 						programId: 'program-1',
 						startDate: new Date('2026-01-01T00:00:00.000Z'),
 						suspendedAt: null,
+						interruptedAt: null,
 						program: {
 							programDurationInMonths: 12,
 							payoutInterval: PayoutInterval.monthly,
@@ -128,6 +129,7 @@ describe('getLastMonthSummary', () => {
 						programId: null,
 						startDate: null,
 						suspendedAt: null,
+						interruptedAt: null,
 						program: null,
 						localPartner: { name: 'Partner' },
 						payouts: [],

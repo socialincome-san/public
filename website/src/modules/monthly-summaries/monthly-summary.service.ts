@@ -123,6 +123,7 @@ const addRecord = (
 		const statusResult = recipientStatusService.getRecipientLifecycleStatus({
 			startDate: record.startDate,
 			suspendedAt: record.suspendedAt,
+			interruptedAt: record.interruptedAt,
 			paidOrConfirmedCount: record.payouts.filter(
 				({ status }) => status === PayoutStatus.paid || status === PayoutStatus.confirmed,
 			).length,
@@ -131,7 +132,7 @@ const addRecord = (
 			nowDate,
 		});
 		if (statusResult.success) {
-			const status = statusResult.data === 'completed' ? 'former' : statusResult.data;
+			const status = statusResult.data === 'completed' || statusResult.data === 'interrupted' ? 'former' : statusResult.data;
 			stats.recipients[status]++;
 		}
 	}

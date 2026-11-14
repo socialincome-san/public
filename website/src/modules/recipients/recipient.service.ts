@@ -23,6 +23,7 @@ import { getLocalPartnerFilterOption, getLocalPartnerOptions } from '@/modules/l
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 import { getProgramNameById } from '@/modules/programs/program-reference.service';
+import { removeOutstandingSurveysForInterruptedRecipient } from '@/modules/surveys/survey-interruption.service';
 import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import {
 	canCreateRecipient,
@@ -300,8 +301,22 @@ export const updateRecipient = async (
 				paymentInformationId: existing.paymentInformation?.id,
 				paymentPhoneId: existing.paymentInformation?.phone?.id,
 				paymentPhoneNumber: existing.paymentInformation?.phone?.number,
+				interruptedAt: existing.interruptedAt,
 			},
 		);
+		// Runs on every save of an interrupted recipient, so saving again retries a failed cleanup.
+		if (updatedRecipient.interruptedAt) {
+			const cleanupResult = await removeOutstandingSurveysForInterruptedRecipient(
+				getSessionAuditContext(session),
+				updatedRecipient.id,
+			);
+			if (!cleanupResult.success) {
+				console.error('Could not remove outstanding surveys of interrupted recipient', {
+					recipientId: updatedRecipient.id,
+					error: cleanupResult.error,
+				});
+			}
+		}
 
 		return resultOk(updatedRecipient);
 	} catch (error) {
@@ -677,6 +692,7 @@ export const getPayoutProcessRecipients = async (
 						id: recipient.id,
 						startDate: recipient.startDate,
 						suspendedAt: recipient.suspendedAt,
+						interruptedAt: recipient.interruptedAt,
 						contact: recipient.contact,
 						paymentInformation: recipient.paymentInformation,
 						program: {
@@ -777,6 +793,8 @@ export const exportRecipientsCsv = async (session: Session): Promise<Result<stri
 			startDate: formatCsvDate(recipient.startDate),
 			suspendedAt: formatCsvDate(recipient.suspendedAt),
 			suspensionReason: recipient.suspensionReason ?? '',
+			interruptedAt: formatCsvDate(recipient.interruptedAt),
+			interruptionComment: recipient.interruptionComment ?? '',
 			successorName: recipient.successorName ?? '',
 			termsAccepted: recipient.termsAccepted ? 'true' : 'false',
 			contactId: recipient.contact?.id ?? '',
@@ -1062,6 +1080,9 @@ const getRecipientLifecycleStatusFromExpectedIntervals = (
 	input: RecipientLifecycleStatusFromExpectedIntervalsInput,
 ): Result<RecipientLifecycleStatus> => {
 	try {
+		if (input.interruptedAt !== null && input.interruptedAt <= input.nowDate) {
+			return resultOk('interrupted');
+		}
 		if (input.suspendedAt !== null && input.suspendedAt <= input.nowDate) {
 			return resultOk('suspended');
 		}
@@ -1090,6 +1111,7 @@ const getRecipientLifecycleStatus = (input: RecipientLifecycleStatusInput): Resu
 		return getRecipientLifecycleStatusFromExpectedIntervals({
 			startDate: input.startDate,
 			suspendedAt: input.suspendedAt,
+			interruptedAt: input.interruptedAt,
 			paidOrConfirmedCount: input.paidOrConfirmedCount,
 			expectedIntervals: intervalsResult.data,
 			nowDate: input.nowDate,
@@ -1311,6 +1333,7 @@ const mapRecipientTableRows = (
 			? getRecipientLifecycleStatus({
 					startDate: recipient.startDate,
 					suspendedAt: recipient.suspendedAt,
+					interruptedAt: recipient.interruptedAt,
 					paidOrConfirmedCount: paidCountResult.success ? paidCountResult.data : 0,
 					programDurationInMonths: recipient.program.programDurationInMonths,
 					payoutInterval: recipient.program.payoutInterval,
@@ -1332,6 +1355,7 @@ const mapRecipientTableRows = (
 			localPartnerName: showLocalPartnerName ? (recipient.localPartner?.name ?? null) : null,
 			suspendedAt: recipient.suspendedAt,
 			suspensionReason: recipient.suspensionReason,
+			interruptedAt: recipient.interruptedAt,
 			programId: recipient.program?.id ?? null,
 			programName: recipient.program?.name ?? null,
 			payoutsReceived,
@@ -1350,6 +1374,7 @@ const mapPublicRecipientTableRows = (recipients: PublicRecipientTableSource, now
 			? getRecipientLifecycleStatus({
 					startDate: recipient.startDate,
 					suspendedAt: recipient.suspendedAt,
+					interruptedAt: recipient.interruptedAt,
 					paidOrConfirmedCount: paidCountResult.success ? paidCountResult.data : 0,
 					programDurationInMonths: recipient.program.programDurationInMonths,
 					payoutInterval: recipient.program.payoutInterval,
@@ -1428,6 +1453,8 @@ const mapCsvRowToRecipient = (rowNumber: number, row: Record<string, string>): R
 		startDate: null,
 		suspendedAt: null,
 		suspensionReason: null,
+		interrupted: false,
+		interruptionComment: null,
 		successorName: null,
 		termsAccepted: false,
 		programId: row.programId,
@@ -1467,6 +1494,7 @@ const createAppReviewRecipient = (phone: string): RecipientWithPaymentInfo => {
 		startDate: new Date('1970-05-29T00:00:00.000Z'),
 		suspendedAt: null,
 		suspensionReason: null,
+		interruptedAt: null,
 		successorName: 'Pepper Potts',
 		termsAccepted: true,
 		paymentInformationId: 'stark-payment-info',
@@ -1598,7 +1626,9 @@ const getProgramFilterOptions = (programs: AccessibleProgram[]): RecipientProgra
 	);
 
 const parseRecipientStatusFilter = (status: string | undefined): RecipientLifecycleStatus | undefined =>
-	status === 'future' || status === 'active' || status === 'suspended' || status === 'completed' ? status : undefined;
+	status === 'future' || status === 'active' || status === 'suspended' || status === 'interrupted' || status === 'completed'
+		? status
+		: undefined;
 
 const getRecipientStatusRank = (status: RecipientLifecycleStatus): number => {
 	switch (status) {
@@ -1608,8 +1638,10 @@ const getRecipientStatusRank = (status: RecipientLifecycleStatus): number => {
 			return 1;
 		case 'suspended':
 			return 2;
-		case 'completed':
+		case 'interrupted':
 			return 3;
+		case 'completed':
+			return 4;
 	}
 };
 
@@ -1637,6 +1669,8 @@ const CSV_HEADERS = [
 	'startDate',
 	'suspendedAt',
 	'suspensionReason',
+	'interruptedAt',
+	'interruptionComment',
 	'successorName',
 	'termsAccepted',
 	'contactId',

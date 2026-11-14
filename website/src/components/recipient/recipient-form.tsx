@@ -42,6 +42,8 @@ export type RecipientFormSchema = {
 		startDate: FormField;
 		suspendedAt: FormField;
 		suspensionReason: FormField;
+		interrupted: FormField;
+		interruptionComment: FormField;
 		successorName: FormField;
 		termsAccepted: FormField;
 		paymentInformation: {
@@ -72,6 +74,15 @@ const getInitialFormSchema = (sessionType: Session['type'] = 'user'): RecipientF
 			},
 			suspensionReason: {
 				label: 'Suspension Reason',
+				zodSchema: z.string().nullable().optional(),
+			},
+			interrupted: {
+				label: 'Interrupted',
+				zodSchema: z.boolean().optional(),
+				value: false,
+			},
+			interruptionComment: {
+				label: 'Interruption Comment',
 				zodSchema: z.string().nullable().optional(),
 			},
 			successorName: {
@@ -208,6 +219,11 @@ export const RecipientForm = ({
 									startDate: { ...nextSchema.fields.startDate, value: data.startDate ?? undefined },
 									suspendedAt: { ...nextSchema.fields.suspendedAt, value: data.suspendedAt },
 									suspensionReason: { ...nextSchema.fields.suspensionReason, value: data.suspensionReason },
+									interrupted: { ...nextSchema.fields.interrupted, value: data.interruptedAt !== null },
+									interruptionComment: {
+										...nextSchema.fields.interruptionComment,
+										value: data.interruptionComment,
+									},
 									successorName: { ...nextSchema.fields.successorName, value: data.successorName },
 									termsAccepted: { ...nextSchema.fields.termsAccepted, value: data.termsAccepted },
 									contact: {

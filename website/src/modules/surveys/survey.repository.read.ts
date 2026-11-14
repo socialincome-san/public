@@ -195,6 +195,13 @@ export const findExistingSurveyIdentities = async (recipientIds: string[]) =>
 		},
 	});
 
+export const findOutstandingSurveysForRecipient = async (recipientId: string) =>
+	prisma.survey.findMany({
+		// Missed and in-progress surveys keep their history and answers
+		where: { recipientId, status: { in: [SurveyStatus.new, SurveyStatus.scheduled, SurveyStatus.sent] } },
+		select: { id: true, accessEmail: true },
+	});
+
 export const findSurveyIdsByProgramSchedules = async (programId: string) =>
 	prisma.survey.findMany({ where: { surveySchedule: { programId } }, select: { id: true } });
 
