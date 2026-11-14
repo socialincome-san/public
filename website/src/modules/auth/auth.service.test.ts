@@ -80,6 +80,17 @@ test('rejects new accounts for phone numbers that are not preselected recipients
 	expect(mockCreateFirebaseToken).not.toHaveBeenCalled();
 });
 
+test('returns an error when the recipient lookup fails during signup', async () => {
+	mockVerifyTwilioOtp.mockResolvedValue(resultOk({ approved: true }));
+	mockFindFirebaseUser.mockResolvedValue(resultOk(null));
+	mockIsRecipientPhoneNumberPreselected.mockResolvedValue(resultFail('Could not check recipient phone number'));
+
+	expect(await verifyOtp({ phoneNumber: '+41791234567', otp: '123456' })).toEqual(
+		resultFail('Could not check recipient phone number'),
+	);
+	expect(mockCreateFirebaseUser).not.toHaveBeenCalled();
+});
+
 test('creates an account for a preselected recipient', async () => {
 	mockVerifyTwilioOtp.mockResolvedValue(resultOk({ approved: true }));
 	mockFindFirebaseUser.mockResolvedValue(resultOk(null));
