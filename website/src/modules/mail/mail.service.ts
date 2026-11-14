@@ -42,6 +42,16 @@ export const hasSentMailWithSubject = async (subject: string): Promise<Result<bo
 	}
 };
 
+export const hasSentMailToWithSubject = async (toEmail: string, subject: string): Promise<Result<boolean>> => {
+	try {
+		return resultOk((await mailRepository.findSentEmailBySubjectAndToEmail(subject, toEmail)) !== null);
+	} catch (error) {
+		console.error('Could not check sent email recipient', { error });
+
+		return resultFail('Could not check sent emails');
+	}
+};
+
 export const getPaginatedSentEmailTableView = async (
 	userId: string,
 	query: SentEmailTableQuery,

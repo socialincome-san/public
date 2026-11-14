@@ -1,16 +1,18 @@
 const mockFindMany = jest.fn();
+const mockFindFirst = jest.fn();
 const mockCount = jest.fn();
 
 jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
 		sentEmail: {
 			findMany: mockFindMany,
+			findFirst: mockFindFirst,
 			count: mockCount,
 		},
 	},
 }));
 
-import { findPaginatedSentEmails } from './mail.repository';
+import { findPaginatedSentEmails, findSentEmailBySubjectAndToEmail } from './mail.repository';
 
 describe('mail repository', () => {
 	beforeEach(() => {
@@ -79,5 +81,14 @@ describe('mail repository', () => {
 			}),
 		);
 		expect(mockCount).toHaveBeenCalledWith({ where });
+	});
+
+	test('finds whether a message was sent to a recipient', async () => {
+		await findSentEmailBySubjectAndToEmail('Subject', 'recipient@example.com');
+
+		expect(mockFindFirst).toHaveBeenCalledWith({
+			where: { subject: 'Subject', toEmail: 'recipient@example.com' },
+			select: { id: true },
+		});
 	});
 });
