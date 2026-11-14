@@ -28,6 +28,7 @@ import "package:app/view/widgets/offline_banner.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_local_notifications/flutter_local_notifications.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 
@@ -80,7 +81,12 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<DemoManager>(create: (context) => demoManager),
         RepositoryProvider<AppCacheDatabase>.value(value: cacheDatabase),
         RepositoryProvider<ConnectivityService>.value(value: connectivityService),
-        RepositoryProvider(create: (context) => MessagingRepository(messaging: messaging)),
+        RepositoryProvider(
+          create: (context) => MessagingRepository(
+            messaging: messaging,
+            localNotifications: FlutterLocalNotificationsPlugin(),
+          ),
+        ),
         RepositoryProvider(
           create: (context) => UserRepository(
             remoteDataSource: userRemoteDataSource,
