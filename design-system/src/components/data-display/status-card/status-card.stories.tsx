@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { Button } from '../../actions/button/button';
 import { StatusCard } from './status-card';
 
 const meta = {
@@ -42,4 +43,18 @@ export const Secondary: Story = {
 
 export const Linked: Story = {
 	args: { href: '#', inset: 'sm' },
+};
+
+export const WithAction: Story = {
+	args: {
+		status: {
+			text: '12 candidates ready to enroll',
+			variant: 'confirm',
+			action: (
+				<Button variant="outline" size="sm">
+					Build your own program
+				</Button>
+			),
+		},
+	},
 };

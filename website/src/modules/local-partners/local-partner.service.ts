@@ -13,6 +13,7 @@ import * as localPartnerRepository from './local-partner.repository.read';
 import * as localPartnerWriteRepository from './local-partner.repository.write';
 import type { LocalPartnerCreateInput, LocalPartnerUpdateInput } from './local-partner.schemas';
 import type {
+	LocalPartnerCandidates,
 	LocalPartnerMessagingTarget,
 	LocalPartnerOption,
 	LocalPartnerPaginatedTableView,
@@ -106,6 +107,23 @@ export const getProgramRecipientCountsByLocalPartnerSlug = async (
 		console.error('Could not fetch program recipient counts', { error });
 
 		return resultFail('Could not fetch program recipient counts');
+	}
+};
+
+export const getCandidatesByLocalPartnerSlug = async (localPartnerSlug: string): Promise<Result<LocalPartnerCandidates>> => {
+	const normalizedSlug = localPartnerSlug.trim();
+
+	try {
+		const partnerCount = normalizedSlug ? await localPartnerRepository.countCandidates(normalizedSlug) : 0;
+		if (partnerCount > 0) {
+			return resultOk({ count: partnerCount, isPartnerScoped: true });
+		}
+
+		return resultOk({ count: await localPartnerRepository.countCandidates(), isPartnerScoped: false });
+	} catch (error) {
+		console.error('Could not count local partner candidates', { error });
+
+		return resultFail('Could not count local partner candidates');
 	}
 };
 

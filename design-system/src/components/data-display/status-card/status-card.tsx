@@ -27,7 +27,7 @@ const bodyVariants = cva('border-border bg-card relative flex min-w-0 flex-1 fle
 
 type StatusCardProps = {
 	// Without text only the colour of the status shows
-	status: { text?: string; variant: CardAlertFooterVariant };
+	status: { text?: string; variant: CardAlertFooterVariant; action?: ReactNode };
 	children: ReactNode;
 	// Makes the whole card a link
 	href?: string;
@@ -39,7 +39,7 @@ export const StatusCard = ({ status, children, href, inset = 'lg' }: StatusCardP
 	const content = (
 		<>
 			{inset === 'none' ? children : <div className={bodyVariants({ inset })}>{children}</div>}
-			{status.text ? <CardAlertFooter text={status.text} variant={status.variant} /> : null}
+			{status.text ? <CardAlertFooter text={status.text} variant={status.variant} action={status.action} /> : null}
 		</>
 	);
 
