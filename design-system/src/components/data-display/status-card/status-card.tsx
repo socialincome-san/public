@@ -25,15 +25,18 @@ const bodyVariants = cva('border-border bg-card relative flex min-w-0 flex-1 fle
 	},
 });
 
+// Without text only the colour of the status shows
+type Status = { text?: string; variant: CardAlertFooterVariant };
+
 type StatusCardProps = {
-	// Without text only the colour of the status shows
-	status: { text?: string; variant: CardAlertFooterVariant; action?: ReactNode };
 	children: ReactNode;
-	// Makes the whole card a link
-	href?: string;
 	// `none` when the content brings its own card, e.g. a radio card
 	inset?: 'none' | 'sm' | 'lg';
-};
+} & (
+	| { href?: undefined; status: Status & { action?: ReactNode } }
+	// `href` makes the whole card a link, which must not contain an interactive action
+	| { href: string; status: Status & { action?: never } }
+);
 
 export const StatusCard = ({ status, children, href, inset = 'lg' }: StatusCardProps) => {
 	const content = (

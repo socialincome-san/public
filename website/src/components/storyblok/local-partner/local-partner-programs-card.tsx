@@ -4,10 +4,11 @@ import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { LOCAL_PARTNER_PROGRAM_ROWS } from '@/lib/storyblok/local-partner-programs.utils';
 import type { LocalPartnerPrograms } from '@/modules/local-partners/local-partner.types';
+import { RowLink } from '@socialincome/design-system/actions/row-link/row-link';
 import { cn } from '@socialincome/design-system/cn';
 import { StatusCard } from '@socialincome/design-system/data-display/status-card/status-card';
+import { SummaryHeading } from '@socialincome/design-system/data-display/summary-heading/summary-heading';
 import { getTranslations } from 'next-intl/server';
-import NextLink from 'next/link';
 import { LocalPartnerProgramRow } from './local-partner-program-row';
 
 /** Static classes so Tailwind can see them; the visible rows stay equally sized. */
@@ -68,23 +69,25 @@ export const LocalPartnerProgramsCard = async ({ partnerName, partnerPrograms, l
 				}
 			>
 				{/* Without linked recipients there is no partner total, so only the (empty) program count is shown. */}
-				<div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-					<p className="text-xl leading-none font-bold sm:text-2xl">
-						{isPartnerScoped
-							? t(
-									recipientsTotal === 1
-										? 'local-partners-page.recipient-singular-with-count'
-										: 'local-partners-page.recipient-plural-with-count',
-									{ count: recipientsTotal },
-								)
-							: t(
-									programCount === 1
-										? 'local-partners-page.programs-count-singular'
-										: 'local-partners-page.programs-count-plural',
-									{ count: programCount },
-								)}
-					</p>
-					{isPartnerScoped ? <p className="text-muted-foreground text-xs leading-4">{programCountLabel}</p> : null}
+				<div className="mb-4">
+					<SummaryHeading
+						title={
+							isPartnerScoped
+								? t(
+										recipientsTotal === 1
+											? 'local-partners-page.recipient-singular-with-count'
+											: 'local-partners-page.recipient-plural-with-count',
+										{ count: recipientsTotal },
+									)
+								: t(
+										programCount === 1
+											? 'local-partners-page.programs-count-singular'
+											: 'local-partners-page.programs-count-plural',
+										{ count: programCount },
+									)
+						}
+						detail={isPartnerScoped ? programCountLabel : undefined}
+					/>
 				</div>
 
 				<ul
@@ -110,17 +113,11 @@ export const LocalPartnerProgramsCard = async ({ partnerName, partnerPrograms, l
 
 					{hasOverflow ? (
 						<li className="min-h-0">
-							<NextLink
+							<RowLink
+								label={t('local-partners-page.programs-more', { count: hiddenCount })}
 								href={allProgramsHref}
-								data-testid="local-partner-programs-more"
-								className={cn(
-									'border-input/60 hover:bg-muted/50 focus-visible:ring-ring text-muted-foreground hover:text-foreground',
-									'flex h-full items-center rounded-xl border px-5 py-3 text-sm leading-5 font-medium transition-colors',
-									'focus-visible:ring-1 focus-visible:outline-hidden',
-								)}
-							>
-								{t('local-partners-page.programs-more', { count: hiddenCount })}
-							</NextLink>
+								testId="local-partner-programs-more"
+							/>
 						</li>
 					) : null}
 				</ul>
