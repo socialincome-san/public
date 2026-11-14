@@ -16,10 +16,10 @@
 	},
 	"dependencies": {
 		"@socialincome/design-system": "*",
-		"@vercel/blob": "2.8.2",
-		"ai": "7.0.163",
-		"lucide-react": "1.69.0",
-		"next": "16.4.5",
+		"@vercel/blob": "2.9.0",
+		"ai": "7.0.169",
+		"lucide-react": "1.72.0",
+		"next": "16.4.6",
 		"pg": "^8.23.1",
 		"react": "19.3.1",
 		"react-dom": "19.3.1",
@@ -28,7 +28,7 @@
 	},
 	"devDependencies": {
 		"@smartive/prettier-config": "3.1.2",
-		"@tailwindcss/turbopack": "4.3.4",
+		"@tailwindcss/turbopack": "4.3.5",
 		"@types/jest": "30.0.0",
 		"@types/node": "26.6.6",
 		"@types/pg": "8.23.1",
@@ -36,12 +36,12 @@
 		"@types/react-dom": "19.3.0",
 		"eslint": "10.14.0",
 		"jest": "30.5.2",
-		"eslint-config-next": "16.4.5",
-		"knip": "6.44.1",
-		"prettier": "3.9.10",
+		"eslint-config-next": "16.4.6",
+		"knip": "6.45.1",
+		"prettier": "3.10.0",
 		"prettier-plugin-organize-imports": "4.3.0",
 		"prettier-plugin-tailwindcss": "0.8.1",
-		"tailwindcss": "4.3.4",
+		"tailwindcss": "4.3.5",
 		"typescript": "5.9.3"
 	}
 }

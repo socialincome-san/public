@@ -25,7 +25,7 @@ runs:
       env:
         MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}/website
       with:
-        version: 2026.11.4
+        version: 2026.11.8
         working_directory: website
         install: ${{ inputs.installDependencies == 'true' }}
         cache: true
