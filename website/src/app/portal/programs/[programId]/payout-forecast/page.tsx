@@ -18,46 +18,50 @@ type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 export default function FinancesPageProgramScoped({ params, searchParams }: Props) {
 	return (
 		<BlockWrapper marginTop="none" marginBottom="none">
-			<Suspense fallback={<AppLoadingSkeleton />}>
-				<FinancesProgramScopedDataLoader params={params} searchParams={searchParams} />
-			</Suspense>
+			<div className="space-y-6">
+				<Suspense fallback={<AppLoadingSkeleton />}>
+					<ProgramFinanceSummaryLoader params={params} />
+				</Suspense>
+				<Suspense fallback={<AppLoadingSkeleton />}>
+					<PayoutForecastTableLoader params={params} searchParams={searchParams} />
+				</Suspense>
+			</div>
 		</BlockWrapper>
 	);
 }
 
-const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) => {
+const ProgramFinanceSummaryLoader = async ({ params }: Pick<Props, 'params'>) => {
+	const { programId } = await params;
+	await requireSession('user');
+	const statsResult = await getProgramDashboardStats(programId);
+
+	return statsResult.success ? (
+		<ProgramFinanceSummaryCards stats={statsResult.data} />
+	) : (
+		<p className="text-destructive text-sm">Could not load program finance summary: {statsResult.error}</p>
+	);
+};
+
+const PayoutForecastTableLoader = async ({ params, searchParams }: Props) => {
 	const { programId } = await params;
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 	const user = await requireSession('user');
 	const t = await getTranslations('website-common');
-
-	const [result, statsResult] = await Promise.all([
-		getPaginatedPayoutForecastTableView(user.id, programId, PAYOUT_FORECAST_MONTHS_AHEAD, tableQuery),
-		getProgramDashboardStats(programId),
-	]);
-
+	const result = await getPaginatedPayoutForecastTableView(user.id, programId, PAYOUT_FORECAST_MONTHS_AHEAD, tableQuery);
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
 
 	return (
-		<div className="space-y-6">
-			{statsResult.success ? (
-				<ProgramFinanceSummaryCards stats={statsResult.data} />
-			) : (
-				<p className="text-destructive text-sm">Could not load program finance summary: {statsResult.error}</p>
-			)}
-
-			<Card>
-				<ConfiguredDataTableClient
-					config={payoutForecastTableConfig}
-					titleInfoTooltip={t('program-detail-page.payout-forecast-info')}
-					rows={rows}
-					error={error}
-					query={{ ...tableQuery, totalRows }}
-				/>
-			</Card>
-		</div>
+		<Card>
+			<ConfiguredDataTableClient
+				config={payoutForecastTableConfig}
+				titleInfoTooltip={t('program-detail-page.payout-forecast-info')}
+				rows={rows}
+				error={error}
+				query={{ ...tableQuery, totalRows }}
+			/>
+		</Card>
 	);
 };
