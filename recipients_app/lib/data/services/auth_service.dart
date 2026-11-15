@@ -70,7 +70,15 @@ class AuthService {
     );
 
     if (response.statusCode != 204) {
-      throw Exception("Failed to request OTP: ${response.statusCode} - ${response.reasonPhrase}");
+      throw AuthException(
+        code: switch (response.statusCode) {
+          400 => "invalid-phone-number",
+          401 => "invalid-app-check-token",
+          429 => "too-many-verification-requests",
+          _ => "verification-code-not-sent",
+        },
+        message: "Failed to request OTP: ${response.statusCode} - ${response.reasonPhrase}",
+      );
     }
   }
 

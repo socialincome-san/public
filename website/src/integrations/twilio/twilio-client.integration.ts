@@ -12,13 +12,13 @@ export const getTwilioClient = async (): Promise<Result<twilio.Twilio>> => {
 	const apiKeySid = process.env.TWILIO_API_KEY_SID;
 	const apiKeySecret = process.env.TWILIO_API_KEY_SECRET;
 	if (!accountSid || !apiKeySid || !apiKeySecret) {
-		return resultFail('Missing Twilio environment variables');
+		return resultFail('Missing Twilio environment variables', 500);
 	}
 	if (!accountSid.startsWith('AC')) {
-		return resultFail('Invalid TWILIO_ACCOUNT_SID format');
+		return resultFail('Invalid TWILIO_ACCOUNT_SID format', 500);
 	}
 	if (!apiKeySid.startsWith('SK')) {
-		return resultFail('Invalid TWILIO_API_KEY_SID format');
+		return resultFail('Invalid TWILIO_API_KEY_SID format', 500);
 	}
 
 	try {
@@ -28,6 +28,6 @@ export const getTwilioClient = async (): Promise<Result<twilio.Twilio>> => {
 	} catch (error) {
 		console.error('Failed to initialize Twilio client', { error });
 
-		return resultFail('Failed to initialize Twilio client');
+		return resultFail('Failed to initialize Twilio client', 500);
 	}
 };
