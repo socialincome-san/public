@@ -15,7 +15,7 @@ import {
 import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/modules/surveys/survey-age-groups.types';
 import { QUESTIONS } from '@/modules/surveys/survey-questions.types';
 import type { UserSession } from '@/modules/users/user.types';
-import { addMonths, differenceInDays, endOfMonth, max, min, startOfMonth, subMonths } from 'date-fns';
+import { addMonths, differenceInCalendarDays, differenceInDays, endOfMonth, max, min, startOfMonth, subMonths } from 'date-fns';
 import crypto from 'node:crypto';
 import { hasSurveyOperatorAccess, hasSurveyProgramAccess } from './survey.permissions';
 import * as surveyRepository from './survey.repository.read';
@@ -612,7 +612,7 @@ export const getSurveyImpactStudyDetails = async (
 		return resultOk({
 			totalCompletedSurveys: surveys.length,
 			totalRecipients: uniqueRecipients.size,
-			lastResponseDaysAgo: lastCompletedAt ? Math.max(0, differenceInDays(nowMs(), lastCompletedAt)) : null,
+			lastResponseDaysAgo: lastCompletedAt ? Math.max(0, differenceInCalendarDays(nowMs(), lastCompletedAt)) : null,
 			timeFrameStart,
 			timeFrameEnd,
 			timeFrameDays: timeFrameStart && timeFrameEnd ? Math.max(0, differenceInDays(timeFrameEnd, timeFrameStart)) : null,
