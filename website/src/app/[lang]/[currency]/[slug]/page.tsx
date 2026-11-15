@@ -8,6 +8,10 @@ export const generateStaticParams = async () => [...(await getPublishedSlugParam
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;
+	// Missing pages are rewritten here, so a canonical or hreflang would point every 404 at this slug
+	if (slug === WEBSITE_NOT_FOUND_SLUG) {
+		return {};
+	}
 
 	return getContentPageMetadata(getPageStoryPath(slug), lang as WebsiteLanguage, slug);
 };

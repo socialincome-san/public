@@ -55,6 +55,7 @@ describe('isMissingWebsitePage', () => {
 	});
 
 	afterEach(() => {
+		waitUntil.mockClear();
 		jest.restoreAllMocks();
 		jest.useRealTimers();
 	});
@@ -92,18 +93,76 @@ describe('isMissingWebsitePage', () => {
 		expect(await isMissingWithoutLinks('xyz-not-a-page-123', waitUntil)).toBe(false);
 	});
 
-	test('picks up a newly published page after the refresh interval without blocking', async () => {
+	test('finds a page published a moment ago before answering 404', async () => {
 		jest.useFakeTimers();
 		const { isMissingWebsitePage } = loadModule();
 
 		expect(await isMissingWebsitePage('new-page', waitUntil)).toBe(true);
 
 		jest.mocked(getLatestPublishedPageLinks).mockResolvedValue({ success: true, data: [page('pages/new-page')] });
+		jest.advanceTimersByTime(11_000);
+
+		expect(await isMissingWebsitePage('new-page', waitUntil)).toBe(false);
+		expect(getLatestPublishedPageLinks).toHaveBeenCalledTimes(2);
+	});
+
+	test('asks Storyblok at most once per interval for unknown paths', async () => {
+		jest.useFakeTimers();
+		const { isMissingWebsitePage } = loadModule();
+
+		expect(await isMissingWebsitePage('junk-1', waitUntil)).toBe(true);
+		jest.advanceTimersByTime(9_000);
+		expect(await isMissingWebsitePage('junk-2', waitUntil)).toBe(true);
+		expect(
+			await Promise.all([isMissingWebsitePage('junk-3', waitUntil), isMissingWebsitePage('junk-4', waitUntil)]),
+		).toEqual([true, true]);
+
+		expect(getLatestPublishedPageLinks).toHaveBeenCalledTimes(1);
+	});
+
+	test('refreshes in the background for known pages and then drops an unpublished one', async () => {
+		jest.useFakeTimers();
+		const { isMissingWebsitePage } = loadModule();
+
+		expect(await isMissingWebsitePage('mission', waitUntil)).toBe(false);
+		expect(waitUntil).not.toHaveBeenCalled();
+
+		jest.mocked(getLatestPublishedPageLinks).mockResolvedValue({ success: true, data: [page('pages/other')] });
 		jest.advanceTimersByTime(61_000);
 
-		expect(await isMissingWebsitePage('new-page', waitUntil)).toBe(true);
+		expect(await isMissingWebsitePage('mission', waitUntil)).toBe(false);
+		expect(waitUntil).toHaveBeenCalledTimes(1);
 		await waitUntil.mock.lastCall?.[0];
-		expect(await isMissingWebsitePage('new-page', waitUntil)).toBe(false);
+		expect(await isMissingWebsitePage('mission', waitUntil)).toBe(true);
+	});
+
+	test('passes everything through after a failed refresh until one succeeds again', async () => {
+		jest.useFakeTimers();
+		const { isMissingWebsitePage } = loadModule();
+
+		expect(await isMissingWebsitePage('xyz-not-a-page-123', waitUntil)).toBe(true);
+
+		jest.mocked(getLatestPublishedPageLinks).mockResolvedValue({ success: false, error: 'failed' });
+		jest.advanceTimersByTime(11_000);
+
+		expect(await isMissingWebsitePage('xyz-not-a-page-123', waitUntil)).toBe(false);
+		expect(await isMissingWebsitePage('mission', waitUntil)).toBe(false);
+
+		jest.mocked(getLatestPublishedPageLinks).mockResolvedValue({ success: true, data: [] });
+		jest.advanceTimersByTime(11_000);
+
+		expect(await isMissingWebsitePage('xyz-not-a-page-123', waitUntil)).toBe(false);
+		expect(waitUntil).toHaveBeenCalledTimes(1);
+		await waitUntil.mock.lastCall?.[0];
+		expect(await isMissingWebsitePage('xyz-not-a-page-123', waitUntil)).toBe(false);
+
+		jest.mocked(getLatestPublishedPageLinks).mockResolvedValue({ success: true, data: [page('pages/mission')] });
+		jest.advanceTimersByTime(11_000);
+
+		expect(await isMissingWebsitePage('xyz-not-a-page-123', waitUntil)).toBe(false);
+		await waitUntil.mock.lastCall?.[0];
+		expect(await isMissingWebsitePage('xyz-not-a-page-123', waitUntil)).toBe(true);
+		expect(await isMissingWebsitePage('mission', waitUntil)).toBe(false);
 	});
 
 	test('does nothing outside production, where unpublished pages render from their draft', async () => {

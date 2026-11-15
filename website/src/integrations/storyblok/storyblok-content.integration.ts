@@ -112,6 +112,9 @@ export const fetchPublishedStoryblokArticles = async <T>(params: ISbStoriesParam
 	}
 };
 
+// The proxy waits for this read on the first request of a server instance
+const LATEST_LINKS_TIMEOUT_SECONDS = 3;
+
 /**
  * Reads the links as they are published right now. The shared client pins the content version it saw first,
  * so a long-running process would not see pages published later.
@@ -127,7 +130,8 @@ export const fetchLatestPublishedStoryblokLinks = async <T>(params: ISbStoriesPa
 			return resultFail('Storyblok preview token is not configured');
 		}
 
-		const links: unknown = await createIsolatedStoryblokClient('published-links', accessToken).getAll('cdn/links', {
+		const client = createIsolatedStoryblokClient('published-links', accessToken, LATEST_LINKS_TIMEOUT_SECONDS);
+		const links: unknown = await client.getAll('cdn/links', {
 			...params,
 			version: 'published',
 			per_page: 1000,
@@ -177,10 +181,11 @@ export const fetchStoryblokLinks = async <T>(params: ISbStoriesParams): Promise<
 
 // Storyblok's SDK keeps the latest content version in module-global state keyed by token. A namespaced
 // token, restored on the wire, keeps these reads from advancing the shared application client's cv.
-const createIsolatedStoryblokClient = (namespace: string, accessToken: string) =>
+const createIsolatedStoryblokClient = (namespace: string, accessToken: string, timeoutSeconds?: number) =>
 	new StoryblokClient({
 		accessToken: `${namespace}:${accessToken}`,
 		cache: { type: 'none', cv: 'manual' },
+		...(timeoutSeconds ? { timeout: timeoutSeconds } : {}),
 		...(process.env.STORYBLOK_API_ENDPOINT ? { endpoint: process.env.STORYBLOK_API_ENDPOINT } : {}),
 		fetch: async (input, options) => {
 			const requestUrl = toRequestUrl(input);

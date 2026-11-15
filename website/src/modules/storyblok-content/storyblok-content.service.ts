@@ -263,7 +263,7 @@ export const getPublishedPageLinks = async (): Promise<Result<StoryblokPublished
 		return resultFail('Could not fetch Storyblok page links');
 	}
 
-	return resultOk(result.data.filter(isStoryblokPublishedLink));
+	return resultOk(toPublishedLinks(result.data));
 };
 
 /** For the proxy, which runs outside the cached render and must see pages published since the deployment. */
@@ -273,7 +273,7 @@ export const getLatestPublishedPageLinks = async (): Promise<Result<StoryblokPub
 		return resultFail('Could not fetch Storyblok page links');
 	}
 
-	return resultOk(result.data.filter(isStoryblokPublishedLink));
+	return resultOk(toPublishedLinks(result.data));
 };
 
 /** Fails for folders whose path has a page, such as pages/programs with its overview page. */
@@ -735,6 +735,22 @@ const isStoryblokPublishedLink = (value: unknown): value is StoryblokPublishedLi
 	typeof value.slug === 'string' &&
 	typeof value.is_folder === 'boolean' &&
 	typeof value.published === 'boolean';
+
+const isPublishedLinkAlternate = (value: unknown): value is NonNullable<StoryblokPublishedLink['alternates']>[number] =>
+	typeof value === 'object' &&
+	value !== null &&
+	'lang' in value &&
+	'translated_slug' in value &&
+	typeof value.lang === 'string' &&
+	typeof value.translated_slug === 'string';
+
+// A malformed translation is dropped on its own, so its page stays listed under the slugs that are valid
+const toPublishedLinks = (values: unknown[]): StoryblokPublishedLink[] =>
+	values.filter(isStoryblokPublishedLink).map((link) => {
+		const alternates: unknown = link.alternates;
+
+		return { ...link, alternates: Array.isArray(alternates) ? alternates.filter(isPublishedLinkAlternate) : undefined };
+	});
 
 const uniqueTrimmed = (values: string[]): string[] => [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 

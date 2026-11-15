@@ -1,7 +1,11 @@
 import { getPublishedWebsitePathTails } from '@/lib/storyblok/storyblok-paths';
 import { getLatestPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.service';
 
+// Known pages refresh the list in the background. A path that is not on the list waits for a newer one, so a
+// page published a moment ago is not answered with 404, and unknown URLs cost at most one Storyblok request
+// per interval.
 const REFRESH_INTERVAL_MS = 60_000;
+const MISSING_RECHECK_INTERVAL_MS = 10_000;
 
 const PREVIEW_SEGMENT = 'preview';
 
@@ -40,11 +44,18 @@ export const isStoryblokPagePath = (pathTail: string) => {
 const refreshPublishedPathTails = async () => {
 	const result = await getLatestPublishedPageLinks();
 	const pathTails = result.success ? getPublishedWebsitePathTails(result.data) : undefined;
-	// An empty list (Storyblok failure, E2E fixtures) keeps the previous one instead of turning every page into a 404
-	if (pathTails && pathTails.size > 0) {
-		publishedPathTails = pathTails;
-	}
+	// A failed or empty read (E2E fixtures) makes the lookup unavailable. An older list would answer 404 for
+	// pages published since.
+	publishedPathTails = pathTails && pathTails.size > 0 ? pathTails : undefined;
 	refreshedAt = Date.now();
+};
+
+const refreshOnce = () => {
+	pendingRefresh ??= refreshPublishedPathTails().finally(() => {
+		pendingRefresh = undefined;
+	});
+
+	return pendingRefresh;
 };
 
 /**
@@ -57,16 +68,20 @@ export const isMissingWebsitePage = async (pathTail: string, waitUntil: (promise
 		return false;
 	}
 
-	if (Date.now() - refreshedAt > REFRESH_INTERVAL_MS) {
-		pendingRefresh ??= refreshPublishedPathTails().finally(() => {
-			pendingRefresh = undefined;
-		});
-		// Only the first request of a server instance waits; later ones use the list they have while it refreshes
-		if (publishedPathTails) {
-			waitUntil(pendingRefresh);
-		} else {
-			await pendingRefresh;
+	const listAge = Date.now() - refreshedAt;
+	if (!publishedPathTails && refreshedAt === 0) {
+		await refreshOnce();
+	} else if (!publishedPathTails) {
+		// Unavailable after a failed read: retry without holding up pages that may well exist
+		if (listAge > MISSING_RECHECK_INTERVAL_MS) {
+			waitUntil(refreshOnce());
 		}
+	} else if (publishedPathTails.has(pathTail)) {
+		if (listAge > REFRESH_INTERVAL_MS) {
+			waitUntil(refreshOnce());
+		}
+	} else if (listAge > MISSING_RECHECK_INTERVAL_MS) {
+		await refreshOnce();
 	}
 
 	return publishedPathTails ? !publishedPathTails.has(pathTail) : false;
