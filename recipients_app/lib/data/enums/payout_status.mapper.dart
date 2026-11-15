@@ -61,3 +61,4 @@ extension PayoutStatusMapperExtension on PayoutStatus {
     return MapperContainer.globals.toValue<PayoutStatus>(this) as String;
   }
 }
+
