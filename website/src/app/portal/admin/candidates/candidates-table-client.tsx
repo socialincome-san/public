@@ -27,6 +27,7 @@ type Props = {
 	genderFilterOptions?: { value: string; label: string }[];
 	localPartnerFilterOptions?: { value: string; label: string }[];
 	showGenderFilter?: boolean;
+	showCsvDownload?: boolean;
 };
 
 export const CandidatesTableClient = ({
@@ -39,6 +40,7 @@ export const CandidatesTableClient = ({
 	genderFilterOptions = [],
 	localPartnerFilterOptions = [],
 	showGenderFilter = false,
+	showCsvDownload = true,
 }: Props) => {
 	const canManageCandidates = sessionType === 'user';
 	const isReadOnly = readOnly ?? false;
@@ -82,26 +84,28 @@ export const CandidatesTableClient = ({
 	};
 
 	const actionMenuItems: ActionMenuItem[] = [
-		{
-			label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
-			icon: <DownloadIcon />,
-			disabled: isCsvDownloading,
-			onSelect: () => {
-				void handleDownloadCsv();
-			},
-		},
-		...(canManageCandidates
+		...(showCsvDownload
+			? [
+					{
+						label: isCsvDownloading ? 'Downloading…' : 'Download CSV',
+						icon: <DownloadIcon />,
+						disabled: isCsvDownloading,
+						onSelect: () => {
+							void handleDownloadCsv();
+						},
+					},
+				]
+			: []),
+		...(canManageCandidates && !isReadOnly
 			? [
 					{
 						label: 'Add new candidate',
 						icon: <PlusIcon />,
-						disabled: isReadOnly,
 						onSelect: openCreateDialog,
 					},
 					{
 						label: 'Upload CSV',
 						icon: <UploadIcon />,
-						disabled: isReadOnly,
 						onSelect: () => setIsCsvUploadDialogOpen(true),
 					},
 				]
@@ -128,7 +132,7 @@ export const CandidatesTableClient = ({
 				})}
 				hideLocalPartner={sessionType === 'local-partner'}
 				showEntityIdColumn={sessionType !== 'local-partner'}
-				actionMenuItems={actionMenuItems}
+				actionMenuItems={actionMenuItems.length ? actionMenuItems : undefined}
 				onRowClick={isReadOnly ? undefined : openEditDialog}
 			/>
 
