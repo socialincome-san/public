@@ -14,6 +14,7 @@ import type {
 } from '@/generated/storyblok/types/109655/storyblok-components';
 import { fetchStoryblokCampaignGlobals } from '@/integrations/storyblok/storyblok-campaign.integration';
 import {
+	fetchLatestPublishedStoryblokLinks,
 	fetchPublishedStoryblokArticles,
 	fetchStoryblokDatasourceEntries,
 	fetchStoryblokLinks,
@@ -258,6 +259,16 @@ export const getPublishedPageLinks = async (): Promise<Result<StoryblokPublished
 		version: 'published',
 		starts_with: `${STORYBLOK_PAGES_FOLDER}/`,
 	});
+	if (!result.success) {
+		return resultFail('Could not fetch Storyblok page links');
+	}
+
+	return resultOk(result.data.filter(isStoryblokPublishedLink));
+};
+
+/** For the proxy, which runs outside the cached render and must see pages published since the deployment. */
+export const getLatestPublishedPageLinks = async (): Promise<Result<StoryblokPublishedLink[]>> => {
+	const result = await fetchLatestPublishedStoryblokLinks<unknown>({ starts_with: `${STORYBLOK_PAGES_FOLDER}/` });
 	if (!result.success) {
 		return resultFail('Could not fetch Storyblok page links');
 	}

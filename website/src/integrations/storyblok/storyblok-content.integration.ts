@@ -77,20 +77,7 @@ export const fetchPublishedStoryblokArticles = async <T>(params: ISbStoriesParam
 			return resultFail('Storyblok preview token is not configured');
 		}
 
-		const client = new StoryblokClient({
-			// Storyblok's SDK keeps the latest content version in module-global state keyed
-			// by token. Use a feed-only namespace and restore the real token on the wire so
-			// overlapping RSS reads cannot advance the shared application client's cv.
-			accessToken: `journal-rss:${accessToken}`,
-			cache: { type: 'none', cv: 'manual' },
-			...(process.env.STORYBLOK_API_ENDPOINT ? { endpoint: process.env.STORYBLOK_API_ENDPOINT } : {}),
-			fetch: async (input, options) => {
-				const requestUrl = toRequestUrl(input);
-				requestUrl.searchParams.set('token', accessToken);
-
-				return fetch(requestUrl, options);
-			},
-		});
+		const client = createIsolatedStoryblokClient('journal-rss', accessToken);
 		const firstResponse = await client.get('cdn/stories', {
 			...params,
 			page: 1,
@@ -125,6 +112,39 @@ export const fetchPublishedStoryblokArticles = async <T>(params: ISbStoriesParam
 	}
 };
 
+/**
+ * Reads the links as they are published right now. The shared client pins the content version it saw first,
+ * so a long-running process would not see pages published later.
+ */
+export const fetchLatestPublishedStoryblokLinks = async <T>(params: ISbStoriesParams): Promise<Result<T[]>> => {
+	if (process.env.E2E_STORYBLOK_MOCK === '1') {
+		return fetchStoryblokLinks<T>(params);
+	}
+
+	try {
+		const accessToken = process.env.STORYBLOK_PREVIEW_TOKEN;
+		if (!accessToken) {
+			return resultFail('Storyblok preview token is not configured');
+		}
+
+		const links: unknown = await createIsolatedStoryblokClient('published-links', accessToken).getAll('cdn/links', {
+			...params,
+			version: 'published',
+			per_page: 1000,
+			cv: Date.now(),
+		});
+		if (!isExpectedArray<T>(links)) {
+			return resultFail('Storyblok returned an invalid links response');
+		}
+
+		return resultOk(links);
+	} catch (error) {
+		console.error('Could not fetch the latest Storyblok links', { error });
+
+		return resultFail('Could not fetch Storyblok links', getErrorStatus(error));
+	}
+};
+
 export const fetchStoryblokDatasourceEntries = async <T>(params: ISbStoriesParams): Promise<Result<T[]>> => {
 	try {
 		const entries: unknown = await getStoryblokContentClient().getAll('cdn/datasource_entries', params);
@@ -154,6 +174,21 @@ export const fetchStoryblokLinks = async <T>(params: ISbStoriesParams): Promise<
 		return resultFail('Could not fetch Storyblok links', getErrorStatus(error));
 	}
 };
+
+// Storyblok's SDK keeps the latest content version in module-global state keyed by token. A namespaced
+// token, restored on the wire, keeps these reads from advancing the shared application client's cv.
+const createIsolatedStoryblokClient = (namespace: string, accessToken: string) =>
+	new StoryblokClient({
+		accessToken: `${namespace}:${accessToken}`,
+		cache: { type: 'none', cv: 'manual' },
+		...(process.env.STORYBLOK_API_ENDPOINT ? { endpoint: process.env.STORYBLOK_API_ENDPOINT } : {}),
+		fetch: async (input, options) => {
+			const requestUrl = toRequestUrl(input);
+			requestUrl.searchParams.set('token', accessToken);
+
+			return fetch(requestUrl, options);
+		},
+	});
 
 const getStoryblokContentClient = (): StoryblokContentClient => {
 	if (storyblokApi) {
