@@ -33,7 +33,7 @@ void main() {
     await pumpPage(tester, const PayoutsState(status: PayoutsStatus.failure));
 
     expect(tester.takeException(), isNull);
-    expect(find.text("An error occurred"), findsOneWidget);
+    expect(find.text("Could not load your payments. Pull down to try again."), findsOneWidget);
   });
 
   testWidgets("shows a progress indicator while the payouts are loading", (tester) async {

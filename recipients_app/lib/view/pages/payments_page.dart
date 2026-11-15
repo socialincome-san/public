@@ -41,7 +41,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
             children: [
               Center(
                 child: payoutsState.status == PayoutsStatus.failure
-                    ? Text(context.l10n.anErrorOccurred)
+                    ? Text(context.l10n.paymentsLoadError, textAlign: TextAlign.center)
                     : const CircularProgressIndicator(),
               ),
             ],

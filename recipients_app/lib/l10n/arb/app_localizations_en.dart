@@ -181,6 +181,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentsEmptyList => 'No payments.';
 
   @override
+  String get paymentsLoadError => 'Could not load your payments. Pull down to try again.';
+
+  @override
   String get survey => 'Survey';
 
   @override
