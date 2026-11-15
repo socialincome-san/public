@@ -4,6 +4,7 @@ import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 import { Progress } from '../../feedback/progress/progress';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../overlays/tool-tip/tool-tip';
 import { BlockWrapper } from '../block-wrapper/block-wrapper';
 
 export type MediaHeroImage = {
@@ -203,11 +204,63 @@ export const MediaHeroChips = ({ children }: { children: ReactNode }) => (
 	<div className="flex flex-wrap gap-2">{children}</div>
 );
 
-export const MediaHeroPill = ({ children }: { children: ReactNode }) => (
-	<span className="text-primary-foreground border-primary-foreground/50 bg-foreground/40 inline-flex items-center justify-center rounded-full border px-3 py-1 text-xs leading-none font-medium">
-		{children}
-	</span>
+type MediaHeroPillBreakdownRow = {
+	label: string;
+	value: number;
+};
+
+export type MediaHeroPillProps = {
+	children: ReactNode;
+	// Tooltip listing the parts behind the pill's value; `extraRows` follow a divider and are not part of the value
+	breakdown?: {
+		rows: MediaHeroPillBreakdownRow[];
+		extraRows?: MediaHeroPillBreakdownRow[];
+	};
+};
+
+const MediaHeroPillBreakdownList = ({ rows }: { rows: MediaHeroPillBreakdownRow[] }) => (
+	<dl className="flex flex-col gap-1">
+		{rows.map(({ label, value }) => (
+			<div key={label} className="flex justify-between gap-6">
+				<dt>{label}</dt>
+				<dd className="font-medium tabular-nums">{value}</dd>
+			</div>
+		))}
+	</dl>
 );
+
+export const MediaHeroPill = ({ children, breakdown }: MediaHeroPillProps) => {
+	const pill = (
+		<span className="text-primary-foreground border-primary-foreground/50 bg-foreground/40 inline-flex items-center justify-center rounded-full border px-3 py-1 text-xs leading-none font-medium">
+			{children}
+		</span>
+	);
+	const extraRows = breakdown?.extraRows ?? [];
+
+	if (!breakdown || (breakdown.rows.length === 0 && extraRows.length === 0)) {
+		return pill;
+	}
+
+	return (
+		<Tooltip>
+			<TooltipTrigger asChild>
+				<button
+					type="button"
+					className="focus-visible:ring-ring rounded-full focus-visible:ring-2 focus-visible:outline-none"
+				>
+					{pill}
+				</button>
+			</TooltipTrigger>
+			<TooltipContent sideOffset={8}>
+				<div className="flex min-w-40 flex-col gap-2">
+					{breakdown.rows.length > 0 ? <MediaHeroPillBreakdownList rows={breakdown.rows} /> : null}
+					{breakdown.rows.length > 0 && extraRows.length > 0 ? <hr className="border-background/30" /> : null}
+					{extraRows.length > 0 ? <MediaHeroPillBreakdownList rows={extraRows} /> : null}
+				</div>
+			</TooltipContent>
+		</Tooltip>
+	);
+};
 
 export const MediaHeroStats = ({ children }: { children: ReactNode }) => (
 	<div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-16">{children}</div>

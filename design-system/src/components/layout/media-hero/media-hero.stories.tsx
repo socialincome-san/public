@@ -72,6 +72,35 @@ export const DetailPage: Story = {
 	},
 };
 
+export const PillWithBreakdown: Story = {
+	args: {
+		image,
+		aside: <DonationCard />,
+		mobileAside: <DonationCard />,
+		children: (
+			<MediaHeroIntro title="Sierra Leone">
+				<MediaHeroChips>
+					<MediaHeroPill
+						breakdown={{
+							rows: [
+								{ label: 'Active', value: 120 },
+								{ label: 'Former', value: 30 },
+								{ label: 'Suspended', value: 12 },
+							],
+							extraRows: [
+								{ label: 'New (30 days)', value: 8 },
+								{ label: 'Waitlisted', value: 5 },
+							],
+						}}
+					>
+						162 Recipients
+					</MediaHeroPill>
+				</MediaHeroChips>
+			</MediaHeroIntro>
+		),
+	},
+};
+
 export const Campaign: Story = {
 	args: {
 		image,

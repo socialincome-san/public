@@ -466,6 +466,13 @@
 		"active": "Active",
 		"concluded": "Concluded"
 	},
+	"recipient-status": {
+		"active": "Active",
+		"former": "Former",
+		"suspended": "Suspended",
+		"new": "New (30 days)",
+		"waitlisted": "Waitlisted"
+	},
 	"breadcrumb": {
 		"home": "Home"
 	},

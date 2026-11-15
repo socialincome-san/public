@@ -74,6 +74,12 @@ export const recipientIdSchema = z.string().trim().min(1, 'Recipient id is requi
 
 export const publicRecipientProgramIdSchema = z.string('Invalid program id').trim().min(1, 'Invalid program id');
 
+export const recipientStatusBreakdownScopeSchema = z.union([
+	z.strictObject({ programId: z.string().trim().min(1) }),
+	z.strictObject({ countryIsoCode: z.nativeEnum(CountryCode) }),
+	z.strictObject({ localPartnerSlug: z.string().trim().min(1) }),
+]);
+
 export const recipientSessionTypeSchema = z.enum(['user', 'local-partner', 'contributor']);
 
 export const recipientCsvFileSchema = z.instanceof(File);

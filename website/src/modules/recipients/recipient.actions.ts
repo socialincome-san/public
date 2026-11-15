@@ -8,14 +8,17 @@ import type {
 	RecipientFormOptions,
 	RecipientPaginatedTableView,
 	RecipientPayload,
+	RecipientStatusBreakdown,
 } from '@/modules/recipients/recipient.types';
 import { revalidatePath } from 'next/cache';
+import { getRecipientStatusBreakdown } from './recipient.cache';
 import {
 	publicRecipientProgramIdSchema,
 	recipientCreateSchema,
 	recipientCsvFileSchema,
 	recipientIdSchema,
 	recipientSessionTypeSchema,
+	recipientStatusBreakdownScopeSchema,
 	recipientTableQuerySchema,
 	recipientUpdateSchema,
 } from './recipient.schemas';
@@ -210,4 +213,13 @@ const revalidateRecipientPaths = (sessionType: Session['type']): void => {
 	if (sessionType === 'local-partner') {
 		revalidatePath('/partner-space/recipients');
 	}
+};
+
+export const getRecipientStatusBreakdownAction = async (input: unknown): Promise<Result<RecipientStatusBreakdown>> => {
+	const parsedInput = recipientStatusBreakdownScopeSchema.safeParse(input);
+	if (!parsedInput.success) {
+		return resultFail('Invalid recipient status breakdown scope.');
+	}
+
+	return getRecipientStatusBreakdown(parsedInput.data);
 };
