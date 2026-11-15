@@ -2,7 +2,7 @@ import { Gender, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { now, nowMs } from '@/lib/utils/now';
+import { now } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { createFirebaseSurveyUser, synchronizeFirebaseSurveyUser } from '@/modules/auth/auth.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
@@ -15,16 +15,7 @@ import {
 import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/modules/surveys/survey-age-groups.types';
 import { QUESTIONS } from '@/modules/surveys/survey-questions.types';
 import type { UserSession } from '@/modules/users/user.types';
-import {
-	addMonths,
-	differenceInCalendarDays,
-	differenceInDays,
-	endOfMonth,
-	max,
-	min,
-	startOfMonth,
-	subMonths,
-} from 'date-fns';
+import { addMonths, differenceInDays, endOfMonth, max, min, startOfMonth, subMonths } from 'date-fns';
 import crypto from 'node:crypto';
 import { hasSurveyOperatorAccess, hasSurveyProgramAccess } from './survey.permissions';
 import * as surveyRepository from './survey.repository.read';
@@ -617,11 +608,21 @@ export const getSurveyImpactStudyDetails = async (
 		const timeFrameStart = completedAtDates.length > 0 ? min(completedAtDates) : null;
 		const timeFrameEnd = completedAtDates.length > 0 ? max(completedAtDates) : null;
 		const lastCompletedAt = surveys.find((survey) => survey.completedAt !== null)?.completedAt ?? null;
+		// Calendar days in UTC, independent of the host time zone; UTC days are always exactly 24 hours long
+		const currentDate = now();
+		const lastResponseDaysAgo = lastCompletedAt
+			? Math.max(
+					0,
+					(Date.UTC(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate()) -
+						Date.UTC(lastCompletedAt.getUTCFullYear(), lastCompletedAt.getUTCMonth(), lastCompletedAt.getUTCDate())) /
+						86_400_000,
+				)
+			: null;
 
 		return resultOk({
 			totalCompletedSurveys: surveys.length,
 			totalRecipients: uniqueRecipients.size,
-			lastResponseDaysAgo: lastCompletedAt ? Math.max(0, differenceInCalendarDays(nowMs(), lastCompletedAt)) : null,
+			lastResponseDaysAgo,
 			timeFrameStart,
 			timeFrameEnd,
 			timeFrameDays: timeFrameStart && timeFrameEnd ? Math.max(0, differenceInDays(timeFrameEnd, timeFrameStart)) : null,
