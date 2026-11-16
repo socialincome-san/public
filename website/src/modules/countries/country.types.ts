@@ -78,11 +78,21 @@ type CountryFeasibility = {
 	};
 };
 
-export type ProgramCountryFeasibilityRow = {
+/** What the public page sends to the client: no payout settings and no program, recipient or candidate counts. */
+export type CountryEligibilityRow = {
 	id: string;
 	country: {
 		isoCode: CountryCode;
 		isActive: boolean;
+	};
+	cash: CountryFeasibility;
+	mobileMoney: CountryFeasibility;
+	mobileNetwork: CountryFeasibility;
+	sanctions: CountryFeasibility;
+};
+
+export type ProgramCountryFeasibilityRow = CountryEligibilityRow & {
+	country: {
 		currency: Currency;
 		defaultPayoutAmount: number;
 	};
@@ -91,14 +101,7 @@ export type ProgramCountryFeasibilityRow = {
 		recipientCount: number;
 		candidateCount: number;
 	};
-	cash: CountryFeasibility;
-	mobileMoney: CountryFeasibility;
-	mobileNetwork: CountryFeasibility;
-	sanctions: CountryFeasibility;
 };
-
-/** What the public may see: no program, recipient or candidate counts. */
-export type CountryEligibilityRow = Omit<ProgramCountryFeasibilityRow, 'stats'>;
 
 export type ProgramCountryFeasibilityView = {
 	rows: ProgramCountryFeasibilityRow[];

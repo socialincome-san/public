@@ -139,15 +139,17 @@ describe('country service', () => {
 		expect(data.rows.find((row) => row.id === 'country-ug')?.stats.candidateCount).toBe(0);
 	});
 
-	test('leaves program, recipient and candidate counts out of the public eligibility rows', async () => {
+	test('builds the public eligibility rows from the country query alone, without counts or payout settings', async () => {
 		mockFindCountriesForFeasibility.mockResolvedValue([createCountry('country-sl', 'SL')]);
-		mockFindUnassignedRecipientCountries.mockResolvedValue({ success: true, data: [createCandidate('SL', 'SL')] });
+		mockFindUnassignedRecipientCountries.mockResolvedValue({ success: false, error: 'Could not load candidates' });
 
 		const rows = expectSuccess(await getCountryEligibility());
 
 		expect(rows).toHaveLength(1);
 		expect(rows[0]).not.toHaveProperty('stats');
-		expect(rows[0]).toMatchObject({ id: 'country-sl', country: { isoCode: 'SL' } });
+		expect(Object.keys(rows[0].country).sort()).toEqual(['isActive', 'isoCode']);
+		expect(rows[0]).toMatchObject({ id: 'country-sl' });
+		expect(mockFindUnassignedRecipientCountries).not.toHaveBeenCalled();
 	});
 
 	test('counts candidates by local partner country on the country page', async () => {

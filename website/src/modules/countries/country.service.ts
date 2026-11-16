@@ -60,6 +60,7 @@ const COUNTRY_STATISTIC_DEFINITIONS = [
 ] as const;
 
 type CountryRecord = NonNullable<Awaited<ReturnType<typeof countryRepository.findCountryById>>>;
+type FeasibilityCountry = Awaited<ReturnType<typeof countryRepository.findCountriesForFeasibility>>[number];
 type CountryStatisticKey = (typeof COUNTRY_STATISTIC_DEFINITIONS)[number]['key'];
 type CountryStatisticValueMap = Record<CountryStatisticKey, number | null>;
 
@@ -144,103 +145,21 @@ export const getProgramCountryFeasibility = async (): Promise<Result<ProgramCoun
 			}
 		}
 
-		const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => {
-			const microfinanceIndex = country.microfinanceIndex === null ? null : Number(country.microfinanceIndex);
-			const populationCoverage = country.populationCoverage === null ? null : Number(country.populationCoverage);
-			const cashIsOverridden = country.cashConditionOverride ?? false;
-			const mobileMoneyIsOverridden = country.mobileMoneyConditionOverride ?? false;
-			const cashCondition = getCashCondition(microfinanceIndex, cashIsOverridden);
-			const mobileMoneyProviders = country.mobileMoneyProviders.map(({ mobileMoneyProvider }) => mobileMoneyProvider);
-			const mobileMoneyCondition = getMobileMoneyCondition(mobileMoneyProviders, mobileMoneyIsOverridden);
-			const mobileMoneyProviderCount = mobileMoneyProviders.length;
-			const mobileNetworkCondition = getMobileNetworkCondition(populationCoverage);
-			const networkTechnologyLabel = getNetworkTechnologyLabel(country.networkTechnology);
-			const countryName = getCountryNameByCode(country.isoCode);
-			const mobileNetworkTranslationKey =
-				mobileNetworkCondition === CountryCondition.MET
-					? networkTechnologyLabel
-						? 'step1.details.mobile_network.met_with_tech'
-						: 'step1.details.mobile_network.met'
-					: populationCoverage === null
-						? 'step1.details.mobile_network.not_met_unknown'
-						: 'step1.details.mobile_network.not_met';
-			let mobileNetworkTranslationContext: Record<string, string | number> | undefined;
-			if (mobileNetworkCondition === CountryCondition.MET) {
-				mobileNetworkTranslationContext = {
-					populationCoverage: populationCoverage ?? 0,
-				};
-				if (networkTechnologyLabel) {
-					mobileNetworkTranslationContext.tech = networkTechnologyLabel;
-				}
-			} else if (populationCoverage !== null) {
-				mobileNetworkTranslationContext = { populationCoverage };
-			}
-
-			const recipientCount = country.programs.reduce((total, program) => total + program._count.recipients, 0);
-			const sanctionsCondition = getSanctionsCondition(country.sanctions);
-
-			return {
-				id: country.id,
-				country: {
-					isoCode: country.isoCode,
-					isActive: country.isActive,
-					currency: country.currency,
-					defaultPayoutAmount: Number(country.defaultPayoutAmount),
-				},
-				stats: {
-					programCount: country._count.programs,
-					recipientCount,
-					candidateCount: candidateCountsByCountry.get(country.isoCode) ?? 0,
-				},
-				cash: {
-					condition: cashCondition,
-					details: {
-						translationKey: cashCondition === CountryCondition.MET ? 'step1.details.cash.met' : 'step1.details.cash.not_met',
-						translationContext: { country: countryName },
-						source:
-							country.microfinanceSourceLink ??
-							(cashIsOverridden ? { translationKey: 'step1.source.si_research' } : undefined),
-					},
-				},
-				mobileMoney: {
-					condition: mobileMoneyCondition,
-					details: {
-						translationKey:
-							mobileMoneyCondition === CountryCondition.MET
-								? 'step1.details.mobile_money.met'
-								: 'step1.details.mobile_money.not_met',
-						translationContext:
-							mobileMoneyCondition === CountryCondition.MET
-								? {
-										providerCount: mobileMoneyProviderCount,
-										providerLabel: mobileMoneyProviderCount > 1 ? 'providers' : 'provider',
-										providers: mobileMoneyProviders.map((provider) => provider.name).join(', '),
-									}
-								: undefined,
-						source: { translationKey: 'step1.source.si_research' },
-					},
-				},
-				mobileNetwork: {
-					condition: mobileNetworkCondition,
-					details: {
-						translationKey: mobileNetworkTranslationKey,
-						translationContext: mobileNetworkTranslationContext,
-						source: country.networkSourceLink ?? undefined,
-					},
-				},
-				sanctions: {
-					condition: sanctionsCondition,
-					details: {
-						translationKey:
-							sanctionsCondition === CountryCondition.RESTRICTIONS_APPLY
-								? 'step1.details.sanctions.restrictions_apply'
-								: 'step1.details.sanctions.met',
-						translationContext: { country: countryName },
-						source: country.sanctions.length > 0 ? { translationKey: 'step1.source.sanctions_lists' } : undefined,
-					},
-				},
-			};
-		});
+		const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => ({
+			id: country.id,
+			country: {
+				isoCode: country.isoCode,
+				isActive: country.isActive,
+				currency: country.currency,
+				defaultPayoutAmount: Number(country.defaultPayoutAmount),
+			},
+			stats: {
+				programCount: country._count.programs,
+				recipientCount: country.programs.reduce((total, program) => total + program._count.recipients, 0),
+				candidateCount: candidateCountsByCountry.get(country.isoCode) ?? 0,
+			},
+			...toEligibilityConditions(country),
+		}));
 
 		return resultOk({ rows });
 	} catch (error) {
@@ -273,21 +192,21 @@ const emptyCountryPageStats: CountryPageStats = {
 };
 
 export const getCountryEligibility = async (): Promise<Result<CountryEligibilityRow[]>> => {
-	const result = await getProgramCountryFeasibility();
-	if (!result.success) {
-		return result;
-	}
+	try {
+		const countries = await countryRepository.findCountriesForFeasibility();
 
-	return resultOk(
-		result.data.rows.map(({ id, country, cash, mobileMoney, mobileNetwork, sanctions }) => ({
-			id,
-			country,
-			cash,
-			mobileMoney,
-			mobileNetwork,
-			sanctions,
-		})),
-	);
+		return resultOk(
+			countries.map((country) => ({
+				id: country.id,
+				country: { isoCode: country.isoCode, isActive: country.isActive },
+				...toEligibilityConditions(country),
+			})),
+		);
+	} catch (error) {
+		console.error('Could not fetch country eligibility', { error });
+
+		return resultFail('Could not fetch country eligibility');
+	}
 };
 
 export const getCountryPageStats = async (isoCode: string): Promise<Result<CountryPageStats>> => {
@@ -481,6 +400,90 @@ const loadCountryStatisticValues = async (countryCode: CountryCode): Promise<Res
 	}
 
 	return resultOk(values);
+};
+
+const toEligibilityConditions = (country: FeasibilityCountry) => {
+	const microfinanceIndex = country.microfinanceIndex === null ? null : Number(country.microfinanceIndex);
+	const populationCoverage = country.populationCoverage === null ? null : Number(country.populationCoverage);
+	const cashIsOverridden = country.cashConditionOverride ?? false;
+	const mobileMoneyIsOverridden = country.mobileMoneyConditionOverride ?? false;
+	const cashCondition = getCashCondition(microfinanceIndex, cashIsOverridden);
+	const mobileMoneyProviders = country.mobileMoneyProviders.map(({ mobileMoneyProvider }) => mobileMoneyProvider);
+	const mobileMoneyCondition = getMobileMoneyCondition(mobileMoneyProviders, mobileMoneyIsOverridden);
+	const mobileMoneyProviderCount = mobileMoneyProviders.length;
+	const mobileNetworkCondition = getMobileNetworkCondition(populationCoverage);
+	const networkTechnologyLabel = getNetworkTechnologyLabel(country.networkTechnology);
+	const countryName = getCountryNameByCode(country.isoCode);
+	const mobileNetworkTranslationKey =
+		mobileNetworkCondition === CountryCondition.MET
+			? networkTechnologyLabel
+				? 'step1.details.mobile_network.met_with_tech'
+				: 'step1.details.mobile_network.met'
+			: populationCoverage === null
+				? 'step1.details.mobile_network.not_met_unknown'
+				: 'step1.details.mobile_network.not_met';
+	let mobileNetworkTranslationContext: Record<string, string | number> | undefined;
+	if (mobileNetworkCondition === CountryCondition.MET) {
+		mobileNetworkTranslationContext = {
+			populationCoverage: populationCoverage ?? 0,
+		};
+		if (networkTechnologyLabel) {
+			mobileNetworkTranslationContext.tech = networkTechnologyLabel;
+		}
+	} else if (populationCoverage !== null) {
+		mobileNetworkTranslationContext = { populationCoverage };
+	}
+
+	const sanctionsCondition = getSanctionsCondition(country.sanctions);
+
+	return {
+		cash: {
+			condition: cashCondition,
+			details: {
+				translationKey: cashCondition === CountryCondition.MET ? 'step1.details.cash.met' : 'step1.details.cash.not_met',
+				translationContext: { country: countryName },
+				source:
+					country.microfinanceSourceLink ?? (cashIsOverridden ? { translationKey: 'step1.source.si_research' } : undefined),
+			},
+		},
+		mobileMoney: {
+			condition: mobileMoneyCondition,
+			details: {
+				translationKey:
+					mobileMoneyCondition === CountryCondition.MET
+						? 'step1.details.mobile_money.met'
+						: 'step1.details.mobile_money.not_met',
+				translationContext:
+					mobileMoneyCondition === CountryCondition.MET
+						? {
+								providerCount: mobileMoneyProviderCount,
+								providerLabel: mobileMoneyProviderCount > 1 ? 'providers' : 'provider',
+								providers: mobileMoneyProviders.map((provider) => provider.name).join(', '),
+							}
+						: undefined,
+				source: { translationKey: 'step1.source.si_research' },
+			},
+		},
+		mobileNetwork: {
+			condition: mobileNetworkCondition,
+			details: {
+				translationKey: mobileNetworkTranslationKey,
+				translationContext: mobileNetworkTranslationContext,
+				source: country.networkSourceLink ?? undefined,
+			},
+		},
+		sanctions: {
+			condition: sanctionsCondition,
+			details: {
+				translationKey:
+					sanctionsCondition === CountryCondition.RESTRICTIONS_APPLY
+						? 'step1.details.sanctions.restrictions_apply'
+						: 'step1.details.sanctions.met',
+				translationContext: { country: countryName },
+				source: country.sanctions.length > 0 ? { translationKey: 'step1.source.sanctions_lists' } : undefined,
+			},
+		},
+	};
 };
 
 const getCashCondition = (microfinanceIndex: number | null, overwriteCondition: boolean): CountryCondition => {

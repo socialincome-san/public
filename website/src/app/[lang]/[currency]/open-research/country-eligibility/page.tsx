@@ -8,9 +8,9 @@ import { getWebsiteBasePath, toWebsiteCurrency, type WebsiteLanguage } from '@/l
 import { createWebsitePersonLink, getPersonAvatarSrc, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
 import { getCountryEligibility } from '@/modules/countries/country.cache';
 import { getPerson } from '@/modules/storyblok-content/storyblok-content.cache';
+import { Alert, AlertDescription } from '@socialincome/design-system/feedback/alert/alert';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 
 // The person story of whoever maintains the eligibility data
 const DATA_CONTACT_SLUG = 'marc-werner';
@@ -36,10 +36,6 @@ export default async function CountryEligibilityPage({ params }: DefaultPageProp
 		getPerson(DATA_CONTACT_SLUG, lang),
 	]);
 
-	if (!result.success) {
-		notFound();
-	}
-
 	return (
 		<BlockWrapper marginTop="none">
 			<div className="space-y-10 pt-9">
@@ -52,19 +48,27 @@ export default async function CountryEligibilityPage({ params }: DefaultPageProp
 						{ label: t('country_eligibility_page.title') },
 					]}
 				/>
-				<CountryEligibilityIntro
-					rows={result.data}
-					contact={
-						contactResult.success
-							? {
-									name: getPersonDisplayName(contactResult.data),
-									href: createWebsitePersonLink(contactResult.data.slug, lang, websiteCurrency),
-									imageSrc: getPersonAvatarSrc(contactResult.data) ?? undefined,
-								}
-							: undefined
-					}
-				/>
-				<CountryEligibilityTable rows={result.data} countryPageHrefs={countryPageHrefs} />
+				{result.success ? (
+					<>
+						<CountryEligibilityIntro
+							rows={result.data}
+							contact={
+								contactResult.success
+									? {
+											name: getPersonDisplayName(contactResult.data),
+											href: createWebsitePersonLink(contactResult.data.slug, lang, websiteCurrency),
+											imageSrc: getPersonAvatarSrc(contactResult.data) ?? undefined,
+										}
+									: undefined
+							}
+						/>
+						<CountryEligibilityTable rows={result.data} countryPageHrefs={countryPageHrefs} />
+					</>
+				) : (
+					<Alert role="status">
+						<AlertDescription>{t('country_eligibility_page.unavailable')}</AlertDescription>
+					</Alert>
+				)}
 			</div>
 		</BlockWrapper>
 	);
