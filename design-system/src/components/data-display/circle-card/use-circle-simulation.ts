@@ -10,6 +10,8 @@ export const CIRCLE_CONFIG = {
 	comfortableDotCount: 12,
 	// Contacts are checked pair by pair, so very large circles draw only this many members (the count label stays exact)
 	maxDotCount: 40,
+	// The orbit draws at most this many interested members, so a huge count cannot create thousands of SVG nodes
+	maxInterestedCount: 60,
 	// Free space between a dot's edge and the ring's inner edge; keeps centres within 38 at the regular size
 	wallGap: 7.5,
 	// Free space kept between two dots; a centre distance of 20.5 at the regular size
@@ -46,9 +48,8 @@ export const CIRCLE_CONFIG = {
 	// A longer gap (e.g. a stalled tab) is cut short instead of fast-forwarding
 	maxFrameSeconds: 0.25,
 
+	// Opaque versions of --gradient-background-from/to, which the theme only has at 60% opacity
 	colors: {
-		orbit: '#CED3CA',
-		pulse: '#5792B7',
 		interested: ['#FBEDD1', '#CADDE9'],
 	},
 } as const;

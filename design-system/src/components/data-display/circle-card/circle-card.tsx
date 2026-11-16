@@ -51,10 +51,11 @@ const CircleVisual = ({ activeCount, interestedCount, seed }: CircleVisualProps)
 	const animated = !usePrefersReducedMotion();
 	const compact = useMediaQuery(COMPACT_QUERY, false);
 	const { layout, svgRef, pulseRef, setDotRef } = useCircleSimulation({ activeCount, seed, compact, animated });
-	const { center, ringRadius, orbit, orbitDotShare, pulse, colors } = CIRCLE_CONFIG;
+	const { center, ringRadius, orbit, orbitDotShare, pulse } = CIRCLE_CONFIG;
 	const baseDotRadius = compact ? CIRCLE_CONFIG.dotRadius.compact : CIRCLE_CONFIG.dotRadius.regular;
 	// Each dot may cover `orbitDotShare` of its stretch of the orbit
-	const satelliteRadius = Math.min(baseDotRadius, (Math.PI * orbit.radius * orbitDotShare) / Math.max(interestedCount, 1));
+	const satelliteCount = Math.min(interestedCount, CIRCLE_CONFIG.maxInterestedCount);
+	const satelliteRadius = Math.min(baseDotRadius, (Math.PI * orbit.radius * orbitDotShare) / Math.max(satelliteCount, 1));
 	const ids = { ring: `${id}-ring`, active: `${id}-active`, interested: `${id}-interested` };
 
 	return (
@@ -77,7 +78,7 @@ const CircleVisual = ({ activeCount, interestedCount, seed }: CircleVisualProps)
 					cy={center}
 					r={orbit.radius}
 					fill="none"
-					stroke={colors.orbit}
+					style={{ stroke: 'hsl(var(--gradient-card-to))' }}
 					strokeWidth={orbit.stroke}
 					strokeDasharray={orbit.dash}
 					strokeLinecap="round"
@@ -99,7 +100,7 @@ const CircleVisual = ({ activeCount, interestedCount, seed }: CircleVisualProps)
 					cy={center}
 					r={layout.dotRadius}
 					fill="none"
-					stroke={colors.pulse}
+					style={{ stroke: 'hsl(var(--gradient-card-from))' }}
 					strokeWidth={pulse.stroke}
 					opacity="0"
 				/>
@@ -126,8 +127,8 @@ const CircleVisual = ({ activeCount, interestedCount, seed }: CircleVisualProps)
 							repeatCount="indefinite"
 						/>
 					)}
-					{Array.from({ length: interestedCount }, (_, index) => {
-						const angle = -Math.PI / 2 + (index * 2 * Math.PI) / interestedCount;
+					{Array.from({ length: satelliteCount }, (_, index) => {
+						const angle = -Math.PI / 2 + (index * 2 * Math.PI) / satelliteCount;
 
 						return (
 							<circle
