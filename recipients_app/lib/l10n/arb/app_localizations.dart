@@ -434,6 +434,12 @@ abstract class AppLocalizations {
   /// **'No payments.'**
   String get paymentsEmptyList;
 
+  /// No description provided for @paymentsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your payments. Pull down to try again.'**
+  String get paymentsLoadError;
+
   /// No description provided for @survey.
   ///
   /// In en, this message translates to:
@@ -1597,6 +1603,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search by country name or dial code'**
   String get countrySearchHint;
+
+  /// No description provided for @onboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding'**
+  String get onboarding;
+
+  /// No description provided for @onboardingText.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in some important information to make your experience with Social Income as smooth as possible.'**
+  String get onboardingText;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

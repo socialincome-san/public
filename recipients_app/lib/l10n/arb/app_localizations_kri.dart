@@ -181,6 +181,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get paymentsEmptyList => 'Nɔ pemɛnt.';
 
   @override
+  String get paymentsLoadError => 'Nɔ bin ebul fɔ lod yu pemɛnt dɛn. Pul dɔŋ fɔ tray bak.';
+
+  @override
   String get survey => 'Sɔve';
 
   @override
@@ -783,4 +786,11 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get countrySearchHint => 'Luk fɔ di kɔntri nem ɔ di kɔntri kod';
+
+  @override
+  String get onboarding => 'Onboarding';
+
+  @override
+  String get onboardingText =>
+      'Duya fil sɔm impɔtant infɔmeshɔn fɔ mek yu ɛkspiriɛns wit Sɔshial Inkam go fayn as yu ebul.';
 }
