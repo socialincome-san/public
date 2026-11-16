@@ -59,6 +59,7 @@ export const AnimatedCircleIcon = ({ size = 22, variant = 'default' }: AnimatedC
 			height={size}
 			viewBox="0 0 100 100"
 			className="inline-block shrink-0"
+			data-slot="animated-circle-icon"
 			aria-hidden="true"
 			focusable="false"
 		>
