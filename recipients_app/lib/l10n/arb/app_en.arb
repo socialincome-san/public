@@ -57,6 +57,7 @@
     "futurePayments": "Future Payments",
     "paymentsSuspended": "Suspended",
     "paymentsEmptyList": "No payments.",
+    "paymentsLoadError": "Could not load your payments. Pull down to try again.",
     "survey": "Survey",
     "acceptAndContinueInfo": "Before proceeding, you must accept our ",
     "privacyPolicy": "Privacy Policy",

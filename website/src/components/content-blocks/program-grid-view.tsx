@@ -33,7 +33,7 @@ const getPortalSlugs = (programs: ProgramStory[]) => [
 	...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean)),
 ];
 
-const findSelectedStory = async <T,>(
+export const findSelectedStory = async <T,>(
 	selected: ISbStoryData<T> | string | undefined,
 	fetchStories: () => Promise<Result<ISbStoryData<T>[]>>,
 ) => {

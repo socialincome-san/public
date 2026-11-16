@@ -434,6 +434,12 @@ abstract class AppLocalizations {
   /// **'No payments.'**
   String get paymentsEmptyList;
 
+  /// No description provided for @paymentsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your payments. Pull down to try again.'**
+  String get paymentsLoadError;
+
   /// No description provided for @survey.
   ///
   /// In en, this message translates to:
