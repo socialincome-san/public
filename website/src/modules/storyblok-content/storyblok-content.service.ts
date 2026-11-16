@@ -40,6 +40,13 @@ import {
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
 	STORYBLOK_PAGES_FOLDER,
 } from '@/lib/storyblok/storyblok-paths';
+import {
+	COUNTRY_RELATIONS,
+	FOCUS_RELATIONS,
+	LOCAL_PARTNER_RELATIONS,
+	STANDARD_ARTICLE_RELATIONS,
+	STANDARD_STORY_RELATIONS,
+} from '@/lib/storyblok/storyblok-relations';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
@@ -56,22 +63,6 @@ const CONTENT_TYPE = {
 	person: 'person',
 	tag: 'tag',
 } as const;
-const STANDARD_ARTICLE_RELATIONS = ['article.author', 'article.coAuthors', 'article.tags', 'article.type'];
-const STANDARD_STORY_RELATIONS = [
-	'faqSelection.questions',
-	'Campaign.faq',
-	'campaignGlobals.faq',
-	'program.faq',
-	'downloads.documents',
-	'partnershipsCarousel.partnerships',
-	'partnershipsCard.partnerships',
-	'Country.partners',
-	'Local Partner.focuses',
-	'Local Partner.partners',
-];
-const COUNTRY_RELATIONS = ['Country.partners'];
-const FOCUS_RELATIONS = ['Focus.studies'];
-const LOCAL_PARTNER_RELATIONS = ['Local Partner.focuses', 'Local Partner.partners'];
 const DEFAULT_PAGE_SIZE = 50;
 const CONTENT_FIELD = 'content';
 const EXCLUDED_FIELDS_FOR_COUNTING = 'content,leadText';

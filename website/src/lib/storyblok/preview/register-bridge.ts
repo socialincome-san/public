@@ -1,3 +1,10 @@
+import {
+	COUNTRY_RELATIONS,
+	FOCUS_RELATIONS,
+	LOCAL_PARTNER_RELATIONS,
+	STANDARD_ARTICLE_RELATIONS,
+	STANDARD_STORY_RELATIONS,
+} from '@/lib/storyblok/storyblok-relations';
 import type { ISbStoryData } from '@storyblok/js';
 
 type RegisterBridgeParams = {
@@ -5,23 +12,15 @@ type RegisterBridgeParams = {
 };
 
 // Without these the editor sends every relation as a bare uuid on each keystroke, and pages that expect resolved
-// stories (article authors, tags, …) break. Keep in sync with the relations in storyblok-content.service.ts.
+// stories (article authors, tags, …) break.
 const PREVIEW_RELATIONS = [
-	'article.author',
-	'article.coAuthors',
-	'article.tags',
-	'article.type',
-	'faqSelection.questions',
-	'Campaign.faq',
-	'campaignGlobals.faq',
-	'program.faq',
-	'downloads.documents',
-	'partnershipsCarousel.partnerships',
-	'partnershipsCard.partnerships',
-	'Country.partners',
-	'Focus.studies',
-	'Local Partner.focuses',
-	'Local Partner.partners',
+	...new Set([
+		...STANDARD_ARTICLE_RELATIONS,
+		...STANDARD_STORY_RELATIONS,
+		...COUNTRY_RELATIONS,
+		...FOCUS_RELATIONS,
+		...LOCAL_PARTNER_RELATIONS,
+	]),
 ];
 
 export const registerStoryblokBridge = ({ onInput }: RegisterBridgeParams) => {
