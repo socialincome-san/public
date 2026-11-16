@@ -2,6 +2,7 @@
 
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import type { Partnership, PartnershipsCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
+import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import { getScaledDimensions } from '@/lib/storyblok/storyblok-utils';
 import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/data-display/carousel/carousel';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -42,8 +43,9 @@ const getWebsiteHref = (website: Partnership['website']) => {
 };
 
 export const PartnershipsCarouselBlock = ({ blok }: Props) => {
+	const prefersReducedMotion = usePrefersReducedMotion();
 	const autoplayPlugin = useMemo(
-		() => Autoplay({ delay: AUTOPLAY_DELAY_MS, stopOnInteraction: false, stopOnMouseEnter: true }),
+		() => Autoplay({ delay: AUTOPLAY_DELAY_MS, stopOnInteraction: false, stopOnMouseEnter: true, stopOnFocusIn: true }),
 		[],
 	);
 	const entries = blok.partnerships
@@ -70,7 +72,7 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 					loop: true,
 				}}
 				// Carousels saved before the field existed have no value and autoplay too
-				plugins={blok.autoplay === false ? [] : [autoplayPlugin]}
+				plugins={blok.autoplay === false || prefersReducedMotion ? [] : [autoplayPlugin]}
 			>
 				<CarouselContent>
 					{entries.map((entry) => {
