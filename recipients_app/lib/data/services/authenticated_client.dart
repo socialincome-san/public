@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:io";
 
 import "package:app/data/services/auth_service.dart";
 import "package:firebase_app_check/firebase_app_check.dart";
@@ -14,8 +15,16 @@ class AuthenticatedClient extends http.BaseClient {
   final FirebaseAuth _firebaseAuth;
   final http.Client _baseHttpClient;
   final Uri _baseUri;
+  final FirebaseAppCheck _appCheck;
 
-  AuthenticatedClient(this._firebaseAuth, this._baseHttpClient, this._baseUri);
+  static const _appCheckRetryDelay = Duration(seconds: 1);
+
+  AuthenticatedClient(
+    this._firebaseAuth,
+    this._baseHttpClient,
+    this._baseUri, {
+    FirebaseAppCheck? appCheck,
+  }) : _appCheck = appCheck ?? FirebaseAppCheck.instance;
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -77,7 +86,7 @@ class AuthenticatedClient extends http.BaseClient {
 
   Future<String> _getAppCheckToken() async {
     try {
-      final appCheckToken = await FirebaseAppCheck.instance.getToken();
+      final appCheckToken = await _fetchAppCheckToken();
       if (appCheckToken == null) {
         throw AuthException(
           code: "invalid-app-check-token",
@@ -96,7 +105,18 @@ class AuthenticatedClient extends http.BaseClient {
       if (message.contains("app attestation failed")) {
         throw AuthException(code: "app-attestation-failed", message: e.toString());
       }
-      rethrow;
+      // The SDK reports a dropped connection with the code "unknown", so what is left is treated
+      // as a network error. Callers then fall back to cached data like for any failed request.
+      throw HttpException("Failed to get App Check token: ${e.message}");
+    }
+  }
+
+  Future<String?> _fetchAppCheckToken() async {
+    try {
+      return await _appCheck.getToken();
+    } on FirebaseException {
+      await Future<void>.delayed(_appCheckRetryDelay);
+      return _appCheck.getToken();
     }
   }
 

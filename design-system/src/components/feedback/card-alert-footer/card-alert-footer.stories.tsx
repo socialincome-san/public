@@ -38,3 +38,7 @@ export const WithAction: Story = {
 		),
 	},
 };
+
+export const LargeInset: Story = {
+	args: { inset: 'lg' },
+};

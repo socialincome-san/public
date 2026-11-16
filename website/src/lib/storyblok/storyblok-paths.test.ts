@@ -7,6 +7,7 @@ import {
 	getCountryStoryPath,
 	getFocusStoryPath,
 	getFocusesOverviewStoryPath,
+	getFolderOverviewStoryPath,
 	getHomeStoryPath,
 	getJournalArticleStoryPath,
 	getJournalTagStoryPath,
@@ -14,12 +15,14 @@ import {
 	getLocalPartnerStoryPath,
 	getLocalPartnersOverviewStoryPath,
 	getPageStoryPath,
+	getParentFolderOverviewStoryPath,
 	getPersonStoryPath,
 	getProgramStoryPath,
 	getProgramsOverviewStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
 	getWebsiteRelativePathFromStoryblokSlug,
 	isAllowedStoryblokPreviewSlug,
+	isFolderOverviewStoryblokSlug,
 	normalizeStoryblokSlug,
 } from './storyblok-paths';
 
@@ -88,6 +91,12 @@ describe('storyblok-paths', () => {
 		expect(normalizeStoryblokSlug('article-type/essay')).toBe('globals/journal/article-types/essay');
 	});
 
+	it('treats a folder start page as the page at the folder path', () => {
+		expect(normalizeStoryblokSlug('pages/policies/')).toBe('pages/policies');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/policies/')).toBe('policies');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/policies/do-no-harm')).toBe('policies/do-no-harm');
+	});
+
 	it('allows preview only for pages and layout, not journal reference entries', () => {
 		expect(isAllowedStoryblokPreviewSlug('pages/journal/my-article')).toBe(true);
 		expect(isAllowedStoryblokPreviewSlug('globals/layout')).toBe(true);
@@ -116,6 +125,21 @@ describe('storyblok-paths', () => {
 		expect(getWebsitePathTailFromStoryblokSlug('pages/journal/my-article')).toBe('journal/my-article');
 		expect(getWebsitePathTailFromStoryblokSlug('journal/my-article')).toBe('journal/my-article');
 		expect(getWebsitePathTailFromStoryblokSlug('globals/journal/tags/design')).toBe('journal/tag/design');
+	});
+
+	it('gives a folder overview story the URL of its folder', () => {
+		expect(getFolderOverviewStoryPath('pages/get-involved')).toBe('pages/get-involved/get-involved');
+		expect(isFolderOverviewStoryblokSlug('pages/get-involved/individuals/individuals')).toBe(true);
+		expect(isFolderOverviewStoryblokSlug('de/pages/get-involved/get-involved')).toBe(true);
+		expect(isFolderOverviewStoryblokSlug('pages/get-involved/individuals/donate')).toBe(false);
+		expect(isFolderOverviewStoryblokSlug('pages/pages')).toBe(false);
+		expect(getWebsitePathTailFromStoryblokSlug('pages/get-involved/get-involved')).toBe('get-involved');
+		expect(getWebsitePathTailFromStoryblokSlug('pages/get-involved/individuals/individuals')).toBe(
+			'get-involved/individuals',
+		);
+		expect(getParentFolderOverviewStoryPath('pages/get-involved/individuals/individuals')).toBe(
+			'pages/get-involved/get-involved',
+		);
 	});
 
 	it('builds relative paths for revalidation', () => {

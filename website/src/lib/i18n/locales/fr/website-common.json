@@ -57,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "Voir les {count} partenaires locaux",
 		"empty": "Aucun partenaire local trouvé.",
 		"no-results": "Aucun partenaire local ne correspond aux filtres sélectionnés.",
 		"search-label": "Rechercher des partenaires locaux",
@@ -97,7 +98,9 @@
 		"location": "Lieu",
 		"learn-more": "En savoir plus",
 		"opens-in-new-tab": "(s'ouvre dans un nouvel onglet)",
-		"website": "Site web"
+		"website": "Site web",
+		"assessment": "Évaluation de l’ONG menée par <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "Évaluation de l’ONG menée par <leadLink>{lead}</leadLink>, relue par <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "Toutes les années ({count})",
@@ -453,6 +456,12 @@
 			}
 		}
 	},
+	"link-cards": {
+		"empty": "Rien ici pour le moment."
+	},
+	"tab-navigation": {
+		"label": "Sections"
+	},
 	"circles": {
 		"title": "Cercles",
 		"member-summary": "{active, plural, one {# actif} other {# actifs}} · {interested, plural, one {# membre intéressé} other {# membres intéressés}}",
@@ -516,5 +525,9 @@
 	},
 	"video-carousel": {
 		"show-video": "Afficher la vidéo {index}"
+	},
+	"africa-map": {
+		"label": "Carte de l’Afrique",
+		"recipients": "{count, plural, one {# bénéficiaire} other {# bénéficiaires}}"
 	}
 }

@@ -1,9 +1,11 @@
 const mockFetchStoryblokStoriesPage = jest.fn();
 const mockFetchStoryblokLinks = jest.fn();
+const mockFetchStoryblokStory = jest.fn();
 
 jest.mock('@/integrations/storyblok/storyblok-content.integration', () => ({
 	fetchStoryblokStoriesPage: mockFetchStoryblokStoriesPage,
 	fetchStoryblokLinks: mockFetchStoryblokLinks,
+	fetchStoryblokStory: mockFetchStoryblokStory,
 }));
 jest.mock('@/integrations/storyblok/storyblok-campaign.integration', () => ({}));
 jest.mock('@/integrations/storyblok/storyblok-program.integration', () => ({}));
@@ -12,7 +14,13 @@ jest.mock('next/headers', () => ({
 	draftMode: () => Promise.resolve({ isEnabled: false }),
 }));
 
-import { getLatestArticlesByArticleType, getLatestArticlesByTag, getPagelessFolderName } from './storyblok-content.service';
+import {
+	getLatestArticlesByArticleType,
+	getLatestArticlesByTag,
+	getPagelessFolderName,
+	getPublishedPageLinks,
+	getStoryWithFallback,
+} from './storyblok-content.service';
 
 const relation = { uuid: 'relation', content: {} };
 const createArticle = (uuid: string) => ({ uuid, content: { author: relation, type: relation, tags: [relation] } });
@@ -66,6 +74,45 @@ describe('latest articles by tag or article type', () => {
 	});
 });
 
+describe('getStoryWithFallback for folders', () => {
+	const notFound = { success: false, error: 'Could not fetch Storyblok story', status: 404 };
+	const found = (slug: string) => ({ success: true, data: { full_slug: slug } });
+	const fetchedSlugs = () => mockFetchStoryblokStory.mock.calls.map((call: unknown[]) => call[0]);
+
+	beforeEach(() => {
+		mockFetchStoryblokStory.mockReset();
+		mockFetchStoryblokStory.mockImplementation((slug: string) =>
+			Promise.resolve(slug.split('/').length > 3 || slug === 'pages/programs/programs' ? found(slug) : notFound),
+		);
+	});
+
+	test('shows the overview story of a folder', async () => {
+		expect(await getStoryWithFallback('pages/get-involved/individuals', 'en')).toEqual(
+			found('pages/get-involved/individuals/individuals'),
+		);
+		expect(fetchedSlugs()).toEqual(['pages/get-involved/individuals', 'pages/get-involved/individuals/individuals']);
+	});
+
+	test('retries legacy folder paths with the overview they normalize to', async () => {
+		expect(await getStoryWithFallback('pages/programs', 'en')).toEqual(found('pages/programs/programs'));
+		expect(fetchedSlugs()).toEqual(['pages/programs', 'pages/programs/programs']);
+	});
+
+	test('does not retry an overview slug that was not found', async () => {
+		expect(await getStoryWithFallback('pages/get-involved/get-involved', 'en')).toEqual(notFound);
+		expect(fetchedSlugs()).toEqual(['pages/get-involved/get-involved']);
+	});
+
+	test('returns an existing overview story without retrying', async () => {
+		mockFetchStoryblokStory.mockResolvedValue(found('pages/get-involved/get-involved'));
+
+		expect(await getStoryWithFallback('pages/get-involved/get-involved', 'en')).toEqual(
+			found('pages/get-involved/get-involved'),
+		);
+		expect(fetchedSlugs()).toEqual(['pages/get-involved/get-involved']);
+	});
+});
+
 describe('getPagelessFolderName', () => {
 	const folder = (slug: string, name: string) => ({
 		uuid: slug,
@@ -111,5 +158,37 @@ describe('getPagelessFolderName', () => {
 
 	test('fails for a folder whose path has an overview page', async () => {
 		expect((await getPagelessFolderName('pages/programs', 'en')).success).toBe(false);
+	});
+});
+
+describe('getPublishedPageLinks', () => {
+	const alternate = (translatedSlug: unknown) => ({
+		lang: 'de',
+		path: '',
+		name: null,
+		published: true,
+		translated_slug: translatedSlug,
+	});
+	const page = (slug: string, alternates?: unknown) => ({ uuid: slug, slug, is_folder: false, published: true, alternates });
+
+	test('drops malformed links and translations but keeps their pages', async () => {
+		mockFetchStoryblokLinks.mockResolvedValue({
+			success: true,
+			data: [
+				page('pages/mission', [alternate('pages/auftrag'), alternate(null), 'broken', null]),
+				page('pages/contact', 'not-a-list'),
+				page('pages/team'),
+				{ slug: 42, is_folder: false, published: true },
+				null,
+			],
+		});
+
+		const result = await getPublishedPageLinks();
+
+		expect(result.success && result.data.map((link) => [link.slug, link.alternates])).toEqual([
+			['pages/mission', [alternate('pages/auftrag')]],
+			['pages/contact', undefined],
+			['pages/team', undefined],
+		]);
 	});
 });

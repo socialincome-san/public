@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <application android:icon="@mipmap/ic_launcher" android:label="Social Income" android:roundIcon="@mipmap/ic_launcher_round">
+    <application android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules" android:icon="@mipmap/ic_launcher" android:label="Social Income" android:roundIcon="@mipmap/ic_launcher_round">
         <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
         <!-- Setting android:taskAffinity="" is a security countermeasure against Task hijacking. See https://www.guardsquare.com/mobile-app-security-research-center/malware/empty-task-affinity -->
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:taskAffinity="" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
