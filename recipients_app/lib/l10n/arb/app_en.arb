@@ -181,6 +181,8 @@
     },
     "mySurveysTitle": "My surveys",
     "invalidPhoneNumberError": "Invalid phone number. Please check your phone number and try again.",
+    "tooManyVerificationRequestsError": "Too many attempts. Please wait a few minutes and try again.",
+    "verificationCodeNotSentError": "We could not send the verification code. Please try again later.",
     "failedSentVerificationCodeError": "Failed to send verification code. Please check your Internet and try again. {errorMessage}",
     "@failedSentVerificationCodeError": {
         "placeholders": {

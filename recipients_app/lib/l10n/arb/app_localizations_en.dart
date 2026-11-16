@@ -394,6 +394,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidPhoneNumberError => 'Invalid phone number. Please check your phone number and try again.';
 
   @override
+  String get tooManyVerificationRequestsError => 'Too many attempts. Please wait a few minutes and try again.';
+
+  @override
+  String get verificationCodeNotSentError => 'We could not send the verification code. Please try again later.';
+
+  @override
   String failedSentVerificationCodeError(String errorMessage) {
     return 'Failed to send verification code. Please check your Internet and try again. $errorMessage';
   }

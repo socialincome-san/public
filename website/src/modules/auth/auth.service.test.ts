@@ -42,6 +42,17 @@ test('normalizes and requests a Twilio OTP', async () => {
 	expect(mockRequestTwilioOtp).toHaveBeenCalledWith('+41791234567');
 });
 
+test('passes the status of a failed Twilio OTP request on', async () => {
+	mockRequestTwilioOtp.mockResolvedValue(resultFail('Too many OTP requests', 429));
+
+	expect(await requestOtp('+41791234567')).toEqual(resultFail('Too many OTP requests', 429));
+});
+
+test('rejects a malformed phone number as a bad request', async () => {
+	expect(await requestOtp('+0123')).toMatchObject({ success: false, status: 400 });
+	expect(mockRequestTwilioOtp).not.toHaveBeenCalled();
+});
+
 test('app review mode bypasses Twilio while retaining configuration validation', async () => {
 	process.env.APP_REVIEW_MODE_ENABLED = 'true';
 	process.env.APP_REVIEW_PHONE_NUMBER = '+41791234567';

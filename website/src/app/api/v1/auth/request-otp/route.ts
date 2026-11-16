@@ -27,7 +27,7 @@ export const POST = withAppCheck(async (request: Request) => {
 	const result = await requestOtp(parsed.data.phoneNumber);
 
 	if (!result.success) {
-		return new Response(result.error, { status: result.status ?? 400 });
+		return new Response(result.error, { status: result.status ?? 500 });
 	}
 
 	return new Response(null, { status: 204 });
