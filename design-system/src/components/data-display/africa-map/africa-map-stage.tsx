@@ -169,7 +169,12 @@ export const AfricaMapStage = ({
 
 	useEffect(() => {
 		const target = revealRef.current;
-		if (!target || typeof IntersectionObserver === 'undefined') {
+		if (!target) {
+			return;
+		}
+		if (typeof IntersectionObserver === 'undefined') {
+			setRevealed(true);
+
 			return;
 		}
 		const observer = new IntersectionObserver(([entry]) => {
@@ -496,6 +501,8 @@ export const AfricaMapStage = ({
 									type="button"
 									aria-label={markerLabel}
 									className={markerClassName}
+									// Enter and Space reopen a popup that Escape closed while the marker keeps the focus
+									onClick={(event) => event.detail === 0 && dispatch({ type: 'show', code: highlight.code })}
 									onFocus={(event) => handleMarkerFocus(event, highlight.code)}
 									onBlur={() => dispatch({ type: 'leave' })}
 								>

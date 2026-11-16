@@ -196,3 +196,23 @@ test('opens the popup of a marker that gets the keyboard focus', () => {
 	});
 	expect(popup()?.dataset.open).toBe('false');
 });
+
+test('reopens the popup of a marker without a link on Enter after Escape closed it', () => {
+	render();
+	const ghana = container.querySelector<HTMLButtonElement>('li > button[aria-label="Ghana"]');
+
+	act(() => ghana?.focus());
+	act(() => {
+		stage()?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+	});
+	expect(popup()?.dataset.open).toBe('false');
+
+	act(() => ghana?.click());
+	expect(popup()?.dataset.open).toBe('true');
+});
+
+test('reveals the map right away without IntersectionObserver', () => {
+	render();
+
+	expect(stage()?.dataset.revealed).toBe('true');
+});
