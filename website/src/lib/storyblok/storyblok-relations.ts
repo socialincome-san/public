@@ -13,4 +13,9 @@ export const STANDARD_STORY_RELATIONS = [
 ];
 export const COUNTRY_RELATIONS = ['Country.partners'];
 export const FOCUS_RELATIONS = ['Focus.studies'];
-export const LOCAL_PARTNER_RELATIONS = ['Local Partner.focuses', 'Local Partner.partners'];
+export const LOCAL_PARTNER_RELATIONS = [
+	'Local Partner.focuses',
+	'Local Partner.partners',
+	'Local Partner.assessmentLead',
+	'Local Partner.assessmentReviewer',
+];
