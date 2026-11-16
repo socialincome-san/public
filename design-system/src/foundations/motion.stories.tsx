@@ -64,6 +64,11 @@ const MotionOverview = () => (
 				<AnimationRow name="animate-globe-badge" duration="350ms">
 					<div className="bg-card animate-globe-badge rounded-full px-4 py-2 text-sm shadow-md">CHF 50</div>
 				</AnimationRow>
+				<AnimationRow name="animate-outline-spin" duration="10s">
+					<div className="bg-primary/20 animate-outline-spin flex size-12 justify-center rounded-full motion-reduce:animate-none">
+						<div className="bg-primary size-2 rounded-full" />
+					</div>
+				</AnimationRow>
 				<AnimationRow name="animate-settle-zoom" duration="24s">
 					<div className="bg-primary/20 h-12 w-24 overflow-hidden rounded-md">
 						<div className="bg-primary/40 animate-settle-zoom size-full" />
