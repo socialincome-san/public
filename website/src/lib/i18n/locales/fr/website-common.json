@@ -95,7 +95,9 @@
 		"location": "Lieu",
 		"learn-more": "En savoir plus",
 		"opens-in-new-tab": "(s'ouvre dans un nouvel onglet)",
-		"website": "Site web"
+		"website": "Site web",
+		"assessment": "Évaluation de l’ONG menée par <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "Évaluation de l’ONG menée par <leadLink>{lead}</leadLink>, relue par <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "Toutes les années ({count})",
