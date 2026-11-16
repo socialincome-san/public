@@ -36,3 +36,12 @@ export const FixedHeight: Story = {
 export const WithCaption: Story = {
 	args: { caption: 'A caption below the frame.' },
 };
+
+export const StaticContent: Story = {
+	args: {
+		src: 'https://example.org',
+		title: 'Archived newsletter',
+		height: 620,
+		staticContent: true,
+	},
+};

@@ -31,7 +31,12 @@ export const ArticleDetailBody = async ({ story, slug, lang, currency }: Props) 
 			/>
 
 			<div className="prose text-foreground prose-a:text-primary max-w-none [&_a]:[font-size:inherit]! [&_a]:[font-weight:inherit]! [&_a]:[color:inherit]!">
-				<ArticleRichText document={article.content as StoryblokRichtext} lang={lang} donationForm={<DonationForm />} />
+				<ArticleRichText
+					document={article.content as StoryblokRichtext}
+					lang={lang}
+					currency={currency}
+					donationForm={<DonationForm />}
+				/>
 			</div>
 
 			{article.footnotes && (
@@ -39,6 +44,7 @@ export const ArticleDetailBody = async ({ story, slug, lang, currency }: Props) 
 					<ArticleRichText
 						document={article.footnotes as StoryblokRichtext}
 						lang={lang}
+						currency={currency}
 						donationForm={<DonationForm />}
 						variant="footnotes"
 					/>
