@@ -4,8 +4,7 @@ import "package:shared_preferences/shared_preferences.dart";
 /// what they mean is up to the cubits.
 ///
 /// Stored in SharedPreferences instead of [AppCacheDatabase], because the cache
-/// lives in the OS cache directory and is cleared on logout, which would reset
-/// these settings.
+/// is cleared on logout, which would reset these settings.
 ///
 /// Per-recipient keys are namespaced by recipient ID, so several recipients can
 /// use the same device without sharing settings.

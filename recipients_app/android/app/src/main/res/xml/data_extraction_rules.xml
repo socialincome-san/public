@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12 and higher. Keep in sync with backup_rules.xml. -->
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Offline cache database, see app_cache_database.dart. -->
+        <exclude domain="file" path="offline_cache" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="offline_cache" />
+    </device-transfer>
+</data-extraction-rules>

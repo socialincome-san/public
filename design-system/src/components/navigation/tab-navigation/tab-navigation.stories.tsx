@@ -14,6 +14,14 @@ const meta = {
 			{ href: '/portal/management/contributors', label: 'Contributors', active: false },
 		],
 	},
+	parameters: {
+		docs: {
+			description: {
+				component:
+					'Links between sibling pages, highlighting the current one. `segmented` looks like `Tabs` but navigates, e.g. between the audience pages of "Get involved"; it keeps the scroll position.',
+			},
+		},
+	},
 } satisfies Meta<typeof TabNavigation>;
 
 export default meta;
@@ -21,3 +29,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const Segmented: Story = {
+	args: {
+		variant: 'segmented',
+		label: 'Ways to get involved',
+		links: [
+			{ href: '/get-involved/individuals', label: 'Individuals', active: true },
+			{ href: '/get-involved/companies', label: 'Companies', active: false },
+			{ href: '/get-involved/ngos', label: 'NGOs', active: false },
+		],
+	},
+};

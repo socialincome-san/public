@@ -3,8 +3,13 @@ import { ContentPage, getContentPageMetadata } from '@/app/[lang]/[currency]/con
 import { getPublishedNestedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { StoryblokPreviewPage } from '@/components/storyblok/storyblok-preview-page';
 import { getWebsiteBasePath, toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { getPageStoryPath, isContentPageStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
-import { notFound } from 'next/navigation';
+import {
+	getPageStoryPath,
+	getWebsitePathTailFromStoryblokSlug,
+	isContentPageStoryblokSlug,
+	isFolderOverviewStoryblokSlug,
+} from '@/lib/storyblok/storyblok-paths';
+import { notFound, redirect } from 'next/navigation';
 
 type Props = DefaultLayoutProps<DefaultParams & { slug: string; path: string[] }> & {
 	searchParams: Promise<Record<string, string>>;
@@ -14,11 +19,17 @@ const PREVIEW_SEGMENT = 'preview';
 
 export const generateStaticParams = () => getPublishedNestedSlugParams();
 
+// A folder's overview story (pages/a/a) is also reachable at /a/a, but its page is the folder's /a
+const getCanonicalPathTail = (storyPath: string, pathTail: string) =>
+	isFolderOverviewStoryblokSlug(storyPath) ? getWebsitePathTailFromStoryblokSlug(storyPath) : pathTail;
+
 export const generateMetadata = async ({ params }: Props) => {
 	const { lang, slug, path } = await params;
 	const pathTail = [slug, ...path].join('/');
 
-	return getContentPageMetadata(getPageStoryPath(pathTail), lang as WebsiteLanguage, pathTail);
+	const storyPath = getPageStoryPath(pathTail);
+
+	return getContentPageMetadata(storyPath, lang as WebsiteLanguage, getCanonicalPathTail(storyPath, pathTail));
 };
 
 // The preview API redirects to "<page path>/preview", which this catch-all receives as its last segment
@@ -31,6 +42,11 @@ export default async function NestedContentPageRoute({ params, searchParams }: P
 	// Stories in folders like pages/persons render on their own routes, never as content pages
 	if (!isContentPageStoryblokSlug(storyPath)) {
 		return notFound();
+	}
+
+	const canonicalPathTail = getCanonicalPathTail(storyPath, pathTail);
+	if (!isPreview && canonicalPathTail !== pathTail) {
+		return redirect(`${getWebsiteBasePath(lang, toWebsiteCurrency(currency))}/${canonicalPathTail}`);
 	}
 
 	if (isPreview) {

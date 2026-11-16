@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:io";
 
 import "package:app/core/cubits/auth/auth_cubit.dart";
@@ -105,7 +106,7 @@ class _DashboardViewState extends State<_DashboardView> {
               BlocListener<PayoutsCubit, PayoutsState>(
                 listener: (context, state) {
                   if (state.status == PayoutsStatus.failure) {
-                    if (state.exception is SocketException) {
+                    if (_isConnectionError(state.exception)) {
                       FlushbarHelper.showFlushbar(
                         context,
                         message: context.l10n.noInternetConnection,
@@ -130,7 +131,7 @@ class _DashboardViewState extends State<_DashboardView> {
               BlocListener<SurveyCubit, SurveyState>(
                 listener: (context, state) {
                   if (state.status == SurveyStateStatus.updatedFailure) {
-                    state.exception is SocketException
+                    _isConnectionError(state.exception)
                         ? FlushbarHelper.showFlushbar(
                             context,
                             message: context.l10n.noInternetConnection,
@@ -165,3 +166,6 @@ class _DashboardViewState extends State<_DashboardView> {
     );
   }
 }
+
+bool _isConnectionError(Exception? exception) =>
+    exception is SocketException || exception is HttpException || exception is TimeoutException;

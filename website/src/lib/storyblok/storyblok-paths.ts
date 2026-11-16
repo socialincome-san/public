@@ -14,7 +14,30 @@ export const STORYBLOK_COMMUNITY_GLOBALS_PATH = `${STORYBLOK_GLOBALS_FOLDER}/com
 
 const pagesPrefix = `${STORYBLOK_PAGES_FOLDER}/`;
 
+// No story has this slug, so the content page route prerenders it as the not-found page with status 404.
+// The proxy rewrites missing pages to it.
+export const WEBSITE_NOT_FOUND_SLUG = '__not-found__';
+
 export const getPageStoryPath = (pageSlug: string) => `${pagesPrefix}${pageSlug}`;
+
+/**
+ * A folder's overview page is the story named like the folder, such as pages/get-involved/get-involved,
+ * and has the folder's URL (get-involved).
+ */
+export const getFolderOverviewStoryPath = (folderPath: string) => `${folderPath}/${folderPath.split('/').at(-1)}`;
+
+const getParentPath = (path: string) => path.split('/').slice(0, -1).join('/');
+
+export const isFolderOverviewStoryblokSlug = (storyblokSlug: string) => {
+	const slug = normalizeStoryblokSlug(storyblokSlug);
+	const parentPath = getParentPath(slug);
+
+	return parentPath.startsWith(pagesPrefix) && getFolderOverviewStoryPath(parentPath) === slug;
+};
+
+/** The overview of the folder above a folder overview: pages/a/b/b → pages/a/a. */
+export const getParentFolderOverviewStoryPath = (folderOverviewSlug: string) =>
+	getFolderOverviewStoryPath(getParentPath(getParentPath(normalizeStoryblokSlug(folderOverviewSlug))));
 
 export const getHomeStoryPath = () => getPageStoryPath(STORYBLOK_HOME_PAGE_SLUG);
 
@@ -115,7 +138,8 @@ const stripStoryblokLanguagePrefix = (slug: string) => {
  * Normalizes slugs from Storyblok preview URLs or legacy paths to current space paths.
  */
 export const normalizeStoryblokSlug = (rawSlug: string): string => {
-	let slug = rawSlug.trim();
+	// A folder's start page has a trailing slash in its full_slug, e.g. pages/policies/
+	let slug = rawSlug.trim().replace(/\/+$/, '');
 
 	slug = stripStoryblokLanguagePrefix(slug);
 
@@ -259,6 +283,10 @@ export const getWebsitePathTailFromStoryblokSlug = (storyblokSlug: string): stri
 		return getJournalTagWebsitePathTail(slug.slice(STORYBLOK_JOURNAL_TAGS_FOLDER.length + 1));
 	}
 
+	if (isFolderOverviewStoryblokSlug(slug)) {
+		return getParentPath(slug).slice(pagesPrefix.length);
+	}
+
 	if (slug.startsWith(pagesPrefix)) {
 		return slug.slice(pagesPrefix.length);
 	}
@@ -282,6 +310,32 @@ export const isRoutableWebsiteStoryblokSlug = (storyblokSlug: string) => {
 	const slug = normalizeStoryblokSlug(storyblokSlug);
 
 	return slug.startsWith(pagesPrefix);
+};
+
+type PublishedLink = {
+	slug: string;
+	is_folder: boolean;
+	published: boolean;
+	alternates?: { translated_slug: string }[];
+};
+
+/** Website path tails of every published page, including its translated slugs. */
+export const getPublishedWebsitePathTails = (links: PublishedLink[], isIncluded = isRoutableWebsiteStoryblokSlug) => {
+	const pathTails = new Set<string>();
+
+	for (const link of links) {
+		if (link.is_folder || !link.published) {
+			continue;
+		}
+
+		for (const storyblokSlug of [link.slug, ...(link.alternates ?? []).map((alternate) => alternate.translated_slug)]) {
+			if (isIncluded(storyblokSlug)) {
+				pathTails.add(getWebsitePathTailFromStoryblokSlug(storyblokSlug));
+			}
+		}
+	}
+
+	return pathTails;
 };
 
 const DEDICATED_ROUTE_FOLDERS = [

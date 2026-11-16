@@ -33,7 +33,7 @@ export const ProgramsOverviewPage = async ({ overview, lang, currency, searchPar
 		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} layout="section" />
 			{blocks?.length ? (
-				<PageBlocks blocks={blocks} lang={lang} currency={currency} searchParams={searchParams} />
+				<PageBlocks blocks={blocks} lang={lang} currency={currency} storyUuid={overview.uuid} searchParams={searchParams} />
 			) : (
 				// Stories saved before the blocks field existed, in any locale or fallback, still use the old fields.
 				// Remove once every published overview story has blocks.

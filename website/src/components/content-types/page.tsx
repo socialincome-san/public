@@ -1,7 +1,9 @@
 import type { AnySearchParams } from '@/app/page-props';
+import { AfricaMapBlock } from '@/components/content-blocks/africa-map';
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import { CampaignGridBlock } from '@/components/content-blocks/campaign-grid';
 import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
+import { CountryEligibilityBlock, type CountryEligibilityBlok } from '@/components/content-blocks/country-eligibility';
 import { CountryOfficeBlock } from '@/components/content-blocks/country-office';
 import { CtaBannerBlock } from '@/components/content-blocks/cta-banner';
 import { DonationCalculatorBlock } from '@/components/content-blocks/donation-calculator';
@@ -18,6 +20,8 @@ import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measu
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LandingHeroBlock } from '@/components/content-blocks/landing-hero';
+import { LinkCardsBlock } from '@/components/content-blocks/link-cards';
+import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
@@ -33,6 +37,7 @@ import { ReservesBlock } from '@/components/content-blocks/reserves-block';
 import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
 import { RunwayMonthGridBlock } from '@/components/content-blocks/runway-month-grid-block';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
+import { TabNavigationBlock } from '@/components/content-blocks/tab-navigation';
 import { TaskCardsBlock } from '@/components/content-blocks/task-cards';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
@@ -51,7 +56,8 @@ import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Fragment, type ReactNode } from 'react';
 
-type PageBlock = Page['content'][number];
+// CountryEligibilityBlok joins the generated union the next time the Storyblok types are regenerated
+type PageBlock = Page['content'][number] | CountryEligibilityBlok;
 type NestedPageBlock = TwoColumn['leftColumn'][number];
 
 type PageContentTypeProps = {
@@ -60,19 +66,26 @@ type PageContentTypeProps = {
 	currency: WebsiteCurrency;
 	searchParams?: Promise<AnySearchParams>;
 	afterHero?: ReactNode;
+	// uuid of the story, for blocks that depend on where they are shown
+	storyUuid: string;
 };
 
 const renderPageBlock = (
 	block: PageBlock | NestedPageBlock,
 	lang: WebsiteLanguage,
 	currency: WebsiteCurrency,
+	storyUuid: string,
 	searchParams?: Promise<AnySearchParams>,
 ): ReactNode => {
 	switch (block.component) {
+		case 'africaMap':
+			return <AfricaMapBlock blok={block} lang={lang} currency={currency} />;
 		case 'campaignGrid':
 			return <CampaignGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'circleGrid':
 			return <CircleGridBlock blok={block} lang={lang} currency={currency} />;
+		case 'countryEligibility':
+			return <CountryEligibilityBlock blok={block} lang={lang} currency={currency} />;
 		case 'countryOffice':
 			return <CountryOfficeBlock blok={block} lang={lang} />;
 		case 'ctaBanner':
@@ -109,6 +122,8 @@ const renderPageBlock = (
 			return <JournalTeasersBlock blok={block} lang={lang} currency={currency} />;
 		case 'landingHero':
 			return <LandingHeroBlock blok={block} lang={lang} currency={currency} />;
+		case 'linkCards':
+			return <LinkCardsBlock blok={block} lang={lang} currency={currency} />;
 		case 'lottie':
 			return <LottieBlock blok={block} />;
 		case 'modalCards':
@@ -133,6 +148,8 @@ const renderPageBlock = (
 			return <PartnershipsCardBlock blok={block} />;
 		case 'personGrid':
 			return <PersonGridBlock blok={block} lang={lang} currency={currency} />;
+		case 'localPartnerGrid':
+			return <LocalPartnerGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'programGrid':
 			return <ProgramGridBlock blok={block} lang={lang} currency={currency} searchParams={searchParams} />;
 		case 'reservesBlock':
@@ -141,6 +158,8 @@ const renderPageBlock = (
 			return <RichtextButtonHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'spacer':
 			return <SpacerBlock blok={block} />;
+		case 'tabNavigation':
+			return <TabNavigationBlock blok={block} lang={lang} currency={currency} storyUuid={storyUuid} />;
 		case 'taskCards':
 			return <TaskCardsBlock blok={block} />;
 		case 'teamGrid':
@@ -161,7 +180,9 @@ const renderPageBlock = (
 			const renderColumn = (column: typeof block.leftColumn) =>
 				column.length > 0
 					? column.map((columnBlock) => (
-							<Fragment key={columnBlock._uid}>{renderPageBlock(columnBlock, lang, currency, searchParams)}</Fragment>
+							<Fragment key={columnBlock._uid}>
+								{renderPageBlock(columnBlock, lang, currency, storyUuid, searchParams)}
+							</Fragment>
 						))
 					: undefined;
 
@@ -192,21 +213,36 @@ type PageBlocksProps = {
 	blocks: PageBlock[];
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
+	storyUuid: string;
 	searchParams?: Promise<AnySearchParams>;
 };
 
-export const PageBlocks = ({ blocks, lang, currency, searchParams }: PageBlocksProps) =>
-	blocks.map((block) => <Fragment key={block._uid}>{renderPageBlock(block, lang, currency, searchParams)}</Fragment>);
+export const PageBlocks = ({ blocks, lang, currency, storyUuid, searchParams }: PageBlocksProps) =>
+	blocks.map((block) => (
+		<Fragment key={block._uid}>{renderPageBlock(block, lang, currency, storyUuid, searchParams)}</Fragment>
+	));
 
-export default function PageContentType({ blok, lang, currency, searchParams, afterHero }: PageContentTypeProps) {
+export default function PageContentType({ blok, lang, currency, searchParams, afterHero, storyUuid }: PageContentTypeProps) {
 	const blocks = blok.content ?? [];
 	const heroCount = blocks[0]?.component === 'heroVideo' || blocks[0]?.component === 'landingHero' ? 1 : 0;
 
 	return (
 		<>
-			<PageBlocks blocks={blocks.slice(0, heroCount)} lang={lang} currency={currency} searchParams={searchParams} />
+			<PageBlocks
+				blocks={blocks.slice(0, heroCount)}
+				lang={lang}
+				currency={currency}
+				storyUuid={storyUuid}
+				searchParams={searchParams}
+			/>
 			{afterHero}
-			<PageBlocks blocks={blocks.slice(heroCount)} lang={lang} currency={currency} searchParams={searchParams} />
+			<PageBlocks
+				blocks={blocks.slice(heroCount)}
+				lang={lang}
+				currency={currency}
+				storyUuid={storyUuid}
+				searchParams={searchParams}
+			/>
 		</>
 	);
 }
