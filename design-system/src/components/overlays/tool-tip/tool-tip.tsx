@@ -59,30 +59,39 @@ const Tooltip = ({
 const TooltipTrigger = ({
 	onClick,
 	onPointerDown,
+	onPointerCancel,
 	...props
 }: WithoutClassName<React.ComponentProps<typeof TooltipPrimitive.Trigger>>) => {
 	const tooltip = React.useContext(TooltipContext);
+	// Set per press: touch on a device whose primary pointer is a mouse (e.g. a touchscreen laptop) counts as a tap too
+	const tapRef = React.useRef(false);
 
 	return (
 		<TooltipPrimitive.Trigger
 			data-slot="tooltip-trigger"
 			onPointerDown={(event) => {
 				onPointerDown?.(event);
+				tapRef.current = event.pointerType === 'touch' || isCoarsePointer();
 
-				if (event.defaultPrevented || !tooltip || !isCoarsePointer()) {
+				if (event.defaultPrevented || !tooltip || !tapRef.current) {
 					return;
 				}
 
 				event.preventDefault();
 				tooltip.setOpen(!tooltip.openRef.current);
 			}}
+			onPointerCancel={(event) => {
+				onPointerCancel?.(event);
+				tapRef.current = false;
+			}}
 			onClick={(event) => {
 				onClick?.(event);
 
 				// Radix closes the tooltip on click unless it was prevented, which would undo the tap that opened it
-				if (isCoarsePointer()) {
+				if (tapRef.current || isCoarsePointer()) {
 					event.preventDefault();
 				}
+				tapRef.current = false;
 			}}
 			{...props}
 		/>
