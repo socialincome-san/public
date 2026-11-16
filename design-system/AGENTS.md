@@ -91,9 +91,9 @@ language:
 
 - `src/styles.css` is the stylesheet the website imports. Fonts come
   from `public/fonts`.
-- Flags exist in `public/assets/flags` here (Storybook) and in
-  `website/public/assets/flags`. Keep both in sync; never point
-  Storybook at the website.
+- Flags and the images of `AfricaMap` exist in `public/assets` here
+  (Storybook) and in `website/public/assets`. Keep both in sync; never
+  point Storybook at the website.
 - `npm run storybook` serves http://localhost:6006. CI also runs
   `npm run build-storybook`. After changing a component, run `lint` and
   `typecheck` in `website/` too.

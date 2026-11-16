@@ -14,6 +14,7 @@ import type {
 } from '@/generated/storyblok/types/109655/storyblok-components';
 import { fetchStoryblokCampaignGlobals } from '@/integrations/storyblok/storyblok-campaign.integration';
 import {
+	fetchLatestPublishedStoryblokLinks,
 	fetchPublishedStoryblokArticles,
 	fetchStoryblokDatasourceEntries,
 	fetchStoryblokLinks,
@@ -43,6 +44,13 @@ import {
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
 	STORYBLOK_PAGES_FOLDER,
 } from '@/lib/storyblok/storyblok-paths';
+import {
+	COUNTRY_RELATIONS,
+	FOCUS_RELATIONS,
+	LOCAL_PARTNER_RELATIONS,
+	STANDARD_ARTICLE_RELATIONS,
+	STANDARD_STORY_RELATIONS,
+} from '@/lib/storyblok/storyblok-relations';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
@@ -59,27 +67,6 @@ const CONTENT_TYPE = {
 	person: 'person',
 	tag: 'tag',
 } as const;
-const STANDARD_ARTICLE_RELATIONS = ['article.author', 'article.coAuthors', 'article.tags', 'article.type'];
-const STANDARD_STORY_RELATIONS = [
-	'faqSelection.questions',
-	'Campaign.faq',
-	'campaignGlobals.faq',
-	'program.faq',
-	'downloads.documents',
-	'partnershipsCarousel.partnerships',
-	'partnershipsCard.partnerships',
-	'Country.partners',
-	'Local Partner.focuses',
-	'Local Partner.partners',
-];
-const COUNTRY_RELATIONS = ['Country.partners'];
-const FOCUS_RELATIONS = ['Focus.studies'];
-const LOCAL_PARTNER_RELATIONS = [
-	'Local Partner.focuses',
-	'Local Partner.partners',
-	'Local Partner.assessmentLead',
-	'Local Partner.assessmentReviewer',
-];
 const DEFAULT_PAGE_SIZE = 50;
 const CONTENT_FIELD = 'content';
 const EXCLUDED_FIELDS_FOR_COUNTING = 'content,leadText';
@@ -294,7 +281,17 @@ export const getPublishedPageLinks = async (): Promise<Result<StoryblokPublished
 		return resultFail('Could not fetch Storyblok page links');
 	}
 
-	return resultOk(result.data.filter(isStoryblokPublishedLink));
+	return resultOk(toPublishedLinks(result.data));
+};
+
+/** For the proxy, which runs outside the cached render and must see pages published since the deployment. */
+export const getLatestPublishedPageLinks = async (): Promise<Result<StoryblokPublishedLink[]>> => {
+	const result = await fetchLatestPublishedStoryblokLinks<unknown>({ starts_with: `${STORYBLOK_PAGES_FOLDER}/` });
+	if (!result.success) {
+		return resultFail('Could not fetch Storyblok page links');
+	}
+
+	return resultOk(toPublishedLinks(result.data));
 };
 
 /** Fails for folders whose path has a page, such as pages/programs with its overview page. */
@@ -756,6 +753,22 @@ const isStoryblokPublishedLink = (value: unknown): value is StoryblokPublishedLi
 	typeof value.slug === 'string' &&
 	typeof value.is_folder === 'boolean' &&
 	typeof value.published === 'boolean';
+
+const isPublishedLinkAlternate = (value: unknown): value is NonNullable<StoryblokPublishedLink['alternates']>[number] =>
+	typeof value === 'object' &&
+	value !== null &&
+	'lang' in value &&
+	'translated_slug' in value &&
+	typeof value.lang === 'string' &&
+	typeof value.translated_slug === 'string';
+
+// A malformed translation is dropped on its own, so its page stays listed under the slugs that are valid
+const toPublishedLinks = (values: unknown[]): StoryblokPublishedLink[] =>
+	values.filter(isStoryblokPublishedLink).map((link) => {
+		const alternates: unknown = link.alternates;
+
+		return { ...link, alternates: Array.isArray(alternates) ? alternates.filter(isPublishedLinkAlternate) : undefined };
+	});
 
 const uniqueTrimmed = (values: string[]): string[] => [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 

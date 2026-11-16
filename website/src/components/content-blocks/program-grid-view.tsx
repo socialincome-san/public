@@ -105,20 +105,13 @@ export const getProgramGridPrograms = async (blok: ProgramGrid, lang: WebsiteLan
 type Props = {
 	programs: ProgramStory[];
 	statsByPortalSlug: PublicProgramStatsMap;
-	allProgramsCount?: number;
+	allProgramsCount: number;
 	blok: ProgramGrid;
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
 };
 
-export const ProgramGridView = async ({
-	programs,
-	statsByPortalSlug,
-	allProgramsCount = 0,
-	blok,
-	lang,
-	currency,
-}: Props) => {
+export const ProgramGridView = async ({ programs, statsByPortalSlug, allProgramsCount, blok, lang, currency }: Props) => {
 	const t = await getTranslations('website-common');
 	const button = blok.button?.[0];
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, currency) : null;

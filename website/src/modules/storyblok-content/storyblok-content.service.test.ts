@@ -18,6 +18,7 @@ import {
 	getLatestArticlesByArticleType,
 	getLatestArticlesByTag,
 	getPagelessFolderName,
+	getPublishedPageLinks,
 	getStoryWithFallback,
 } from './storyblok-content.service';
 
@@ -157,5 +158,37 @@ describe('getPagelessFolderName', () => {
 
 	test('fails for a folder whose path has an overview page', async () => {
 		expect((await getPagelessFolderName('pages/programs', 'en')).success).toBe(false);
+	});
+});
+
+describe('getPublishedPageLinks', () => {
+	const alternate = (translatedSlug: unknown) => ({
+		lang: 'de',
+		path: '',
+		name: null,
+		published: true,
+		translated_slug: translatedSlug,
+	});
+	const page = (slug: string, alternates?: unknown) => ({ uuid: slug, slug, is_folder: false, published: true, alternates });
+
+	test('drops malformed links and translations but keeps their pages', async () => {
+		mockFetchStoryblokLinks.mockResolvedValue({
+			success: true,
+			data: [
+				page('pages/mission', [alternate('pages/auftrag'), alternate(null), 'broken', null]),
+				page('pages/contact', 'not-a-list'),
+				page('pages/team'),
+				{ slug: 42, is_folder: false, published: true },
+				null,
+			],
+		});
+
+		const result = await getPublishedPageLinks();
+
+		expect(result.success && result.data.map((link) => [link.slug, link.alternates])).toEqual([
+			['pages/mission', [alternate('pages/auftrag')]],
+			['pages/contact', undefined],
+			['pages/team', undefined],
+		]);
 	});
 });
