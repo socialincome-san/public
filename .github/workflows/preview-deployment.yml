@@ -1,40 +1,129 @@
 name: Preview deployment
 
-# Adding the label `preview-website`, `preview-image-generator` or `preview-design-system` to a PR deploys its branch to Vercel as a preview,
-# and every later push redeploys it while the label stays. Only people with triage access can add labels.
-# pull_request_target so the job can read VERCEL_TOKEN; safe because nothing from the PR is checked out or run here,
-# Vercel builds the commit itself.
+# Every PR gets a bot comment with one checkbox per Vercel project. Ticking a box (or adding the label
+# `preview-<project>`) deploys the PR branch as a preview, and later pushes redeploy it while it stays ticked.
+# Only people with write access can edit the bot comment or add labels, and the job checks that again.
+# pull_request_target and issue_comment run this file from main and can read VERCEL_TOKEN; safe because
+# nothing from the PR is checked out or run here, Vercel builds the commit itself.
 on:
   pull_request_target:
     types:
-      - labeled
+      - opened
+      - reopened
       - synchronize
+      - labeled
+      - unlabeled
+  issue_comment:
+    types:
+      - edited
 
-permissions: {}
+concurrency:
+  group: preview-deployment-${{ github.event.pull_request.number || github.event.issue.number }}
 
 jobs:
+  plan:
+    name: "📋 Preview plan"
+    if: >-
+      github.event_name == 'pull_request_target' ||
+      (github.event.issue.pull_request && github.event.comment.user.login == 'github-actions[bot]' &&
+      contains(github.event.comment.body, '<!-- vercel-preview -->'))
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    outputs:
+      projects: ${{ steps.plan.outputs.projects }}
+      ref: ${{ steps.plan.outputs.ref }}
+      sha: ${{ steps.plan.outputs.sha }}
+    steps:
+      - id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number || github.event.issue.number }}
+          EVENT: ${{ github.event_name }}
+          ACTION: ${{ github.event.action }}
+          LABEL: ${{ github.event.label.name }}
+          SENDER: ${{ github.event.sender.login }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          projects=(website image-generator design-system)
+          marker='<!-- vercel-preview -->'
+          deploy=()
+
+          pr=$(gh api "repos/$REPO/pulls/$PR")
+          # Vercel can only build branches of this repository, not of forks.
+          if [ "$(jq -r '.head.repo.full_name' <<<"$pr")" != "$REPO" ]; then
+            echo "projects=[]" >>"$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "ref=$(jq -r '.head.ref' <<<"$pr")" >>"$GITHUB_OUTPUT"
+          echo "sha=$(jq -r '.head.sha' <<<"$pr")" >>"$GITHUB_OUTPUT"
+          labels=$(jq -r '.labels[].name' <<<"$pr")
+          has_label() { grep -qxF "preview-$1" <<<"$labels"; }
+
+          if [ "$EVENT" = "issue_comment" ]; then
+            permission=$(gh api "repos/$REPO/collaborators/$SENDER/permission" --jq '.permission' || echo none)
+            if [ "$permission" = "admin" ] || [ "$permission" = "write" ]; then
+              body=$(tr -d '\r' <<<"$COMMENT_BODY")
+              for p in "${projects[@]}"; do
+                if grep -qixF -- "- [x] $p" <<<"$body"; then
+                  if ! has_label "$p"; then
+                    gh api "repos/$REPO/issues/$PR/labels" -f "labels[]=preview-$p" >/dev/null
+                    deploy+=("$p")
+                  fi
+                elif has_label "$p"; then
+                  gh api -X DELETE "repos/$REPO/issues/$PR/labels/preview-$p" >/dev/null
+                fi
+              done
+              labels=$(gh api "repos/$REPO/issues/$PR/labels" --jq '.[].name')
+            fi
+          elif [ "$ACTION" = "labeled" ]; then
+            for p in "${projects[@]}"; do
+              [ "$LABEL" = "preview-$p" ] && deploy+=("$p")
+            done
+          elif [ "$ACTION" = "synchronize" ]; then
+            for p in "${projects[@]}"; do
+              has_label "$p" && deploy+=("$p")
+            done
+          fi
+
+          # Render the comment from the labels, which also reverts ticks by people without write access.
+          text="$marker"$'\n'"**Vercel preview**: tick a project to deploy this PR as a preview. Later pushes redeploy it while it stays ticked."$'\n'
+          for p in "${projects[@]}"; do
+            if has_label "$p"; then box=x; else box=' '; fi
+            text+=$'\n'"- [$box] $p"
+          done
+          if [ -z "$COMMENT_ID" ]; then
+            COMMENT_ID=$(gh api --paginate "repos/$REPO/issues/$PR/comments" \
+              --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"$marker\"))) | .id" | sed -n 1p)
+          fi
+          if [ -n "$COMMENT_ID" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$COMMENT_ID" -f body="$text" >/dev/null
+          else
+            gh api "repos/$REPO/issues/$PR/comments" -f body="$text" >/dev/null
+          fi
+
+          echo "projects=$(printf '%s\n' "${deploy[@]}" | jq -R . | jq -sc 'map(select(length > 0))')" >>"$GITHUB_OUTPUT"
+
   deploy:
     name: "🔍 Preview ${{ matrix.project }}"
-    # Vercel can only build branches of this repository, not of forks.
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    needs: plan
+    if: needs.plan.outputs.projects != '' && needs.plan.outputs.projects != '[]'
     runs-on: ubuntu-latest
+    permissions: {}
     strategy:
       matrix:
-        project:
-          - website
-          - image-generator
-          - design-system
+        project: ${{ fromJSON(needs.plan.outputs.projects) }}
     steps:
-      - name: Deploy ${{ github.event.pull_request.head.ref }}
-        if: >-
-          (github.event.action == 'labeled' && github.event.label.name == format('preview-{0}', matrix.project)) ||
-          (github.event.action == 'synchronize' && contains(github.event.pull_request.labels.*.name, format('preview-{0}', matrix.project)))
+      - name: Deploy ${{ needs.plan.outputs.ref }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           PROJECT: ${{ matrix.project }}
           REPO_ID: ${{ github.event.repository.id }}
-          REF: ${{ github.event.pull_request.head.ref }}
-          SHA: ${{ github.event.pull_request.head.sha }}
+          REF: ${{ needs.plan.outputs.ref }}
+          SHA: ${{ needs.plan.outputs.sha }}
         run: |
           body=$(jq -n --arg project "$PROJECT" --arg ref "$REF" --arg sha "$SHA" --argjson repoId "$REPO_ID" \
             '{name: $project, project: $project, gitSource: {type: "github", repoId: $repoId, ref: $ref, sha: $sha}}')
