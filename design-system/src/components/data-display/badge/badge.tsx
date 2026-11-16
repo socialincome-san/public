@@ -3,10 +3,12 @@ import * as React from 'react';
 import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 
-const gradientOutlineVariants: ('gradient-outline' | 'gradient-outline-background')[] = [
-	'gradient-outline',
-	'gradient-outline-background',
-];
+const gradientOutlineVariants = ['gradient-outline', 'gradient-outline-background'] as const;
+
+type GradientOutlineVariant = (typeof gradientOutlineVariants)[number];
+
+const isGradientOutlineVariant = (variant: unknown): variant is GradientOutlineVariant =>
+	gradientOutlineVariants.some((gradientVariant) => gradientVariant === variant);
 
 const badgeVariants = cva(
 	// Badges wrapped in a link react to hovering the link
@@ -48,25 +50,25 @@ const badgeVariants = cva(
 				className: 'px-2',
 			},
 			{
-				// After the size classes, so an icon sits on the text baseline in every size
-				variant: gradientOutlineVariants,
-				className: 'items-baseline justify-center gap-[0.3em]',
+				// After the size classes, so an icon sits on the text baseline in every size. No wrapping: the ring square is sized from the width
+				variant: [...gradientOutlineVariants],
+				className: 'items-baseline justify-center gap-[0.3em] whitespace-nowrap',
 			},
 			{
 				// Text and PeopleIcon sit on the baseline; other icons and flags are centered on the line.
 				// Lucide icons follow the text size. Their glyphs sit inside empty space, which the negative margin takes
 				// back, so the gap to the text and to the edge look the same as for text or a tight icon like PeopleIcon
-				variant: gradientOutlineVariants,
+				variant: [...gradientOutlineVariants],
 				className:
 					'[&>[data-slot=country-flag]]:self-center [&>svg:not([data-slot=people-icon])]:self-center [&>svg.lucide]:-mx-[0.15em] [&>svg.lucide]:size-[1em] [&>svg.lucide]:shrink-0',
 			},
 			// Min width equals the height (line height plus padding), so a single digit gives a circle, never a narrow pill.
 			// sm takes less padding than the other variants, or a digit plus padding would be wider than the height.
 			// xl keeps its label padding, so a single digit there is slightly wider than tall
-			{ variant: gradientOutlineVariants, size: 'sm', className: 'min-w-4.5 px-1.5' },
-			{ variant: gradientOutlineVariants, size: 'default', className: 'min-w-6' },
-			{ variant: gradientOutlineVariants, size: 'lg', className: 'min-w-7' },
-			{ variant: gradientOutlineVariants, size: 'xl', className: 'min-w-8' },
+			{ variant: [...gradientOutlineVariants], size: 'sm', className: 'min-w-4.5 px-1.5' },
+			{ variant: [...gradientOutlineVariants], size: 'default', className: 'min-w-6' },
+			{ variant: [...gradientOutlineVariants], size: 'lg', className: 'min-w-7' },
+			{ variant: [...gradientOutlineVariants], size: 'xl', className: 'min-w-8' },
 		],
 		defaultVariants: {
 			variant: 'default',
@@ -83,10 +85,12 @@ const gradientOutlineRing =
 	'relative isolate inline-flex overflow-hidden rounded-full p-[1.5px] transition-opacity [a:hover>&]:opacity-80 before:absolute before:top-1/2 before:left-1/2 before:aspect-square before:w-[150%] before:-translate-1/2 before:rotate-90 before:animate-outline-spin before:bg-[conic-gradient(hsl(var(--gradient-button-from)),hsl(var(--gradient-button-to))_50%,hsl(var(--gradient-button-from)))] motion-reduce:before:animate-none';
 
 const Badge = ({ variant, size, children, ...props }: BadgeProps) => {
-	if (variant === 'gradient-outline' || variant === 'gradient-outline-background') {
+	if (isGradientOutlineVariant(variant)) {
 		return (
-			<div className={gradientOutlineRing} {...props}>
-				<span className={cn(badgeVariants({ variant, size }))}>{children}</span>
+			<div className={gradientOutlineRing}>
+				<div className={cn(badgeVariants({ variant, size }))} {...props}>
+					{children}
+				</div>
 			</div>
 		);
 	}

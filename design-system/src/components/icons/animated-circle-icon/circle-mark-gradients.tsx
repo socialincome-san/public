@@ -1,6 +1,6 @@
 // Illustration colors without a matching theme token; default ring and dark dot stop equal --gradient-card-* and --primary.
 // Dark surfaces declare `color-scheme: dark` (`scheme-dark`) and get the onDark colors, e.g. a light dot.
-export const circleMarkColors = {
+const circleMarkColors = {
 	default: {
 		ring: ['#5792B7', '#CED3CA'],
 		ringOnDark: ['#5792B7', '#CED3CA'],
