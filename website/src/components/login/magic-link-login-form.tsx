@@ -43,7 +43,13 @@ export const MagicLinkLoginForm = ({ prefilledEmail = '' }: Props) => {
 
 		try {
 			await sendMagicLoginLink({ auth, email: value, websiteBasePath });
-		} catch {
+		} catch (error) {
+			if (error instanceof Error && error.message === 'magic-link-rate-limited') {
+				setError(t('error.rate-limited'));
+				setStatus('idle');
+
+				return;
+			}
 			// Intentionally ignore errors to avoid account enumeration.
 		}
 

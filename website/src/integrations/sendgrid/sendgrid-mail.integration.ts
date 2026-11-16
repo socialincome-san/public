@@ -12,6 +12,7 @@ export type SendgridMailInput = {
 	subject: string;
 	text: string;
 	template?: SendgridTemplate;
+	sensitive?: boolean;
 };
 
 export const sendSendgridEmail = async (input: SendgridMailInput): Promise<Result<void>> => {
@@ -40,7 +41,11 @@ export const sendSendgridEmail = async (input: SendgridMailInput): Promise<Resul
 
 		return resultOk(undefined);
 	} catch (error) {
-		console.error('Could not send SendGrid email', { error });
+		if (input.sensitive) {
+			console.error('Could not send sensitive SendGrid email');
+		} else {
+			console.error('Could not send SendGrid email', { error });
+		}
 
 		return resultFail('Could not send email');
 	}
