@@ -2,7 +2,7 @@ import { Gender, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { now, nowMs } from '@/lib/utils/now';
+import { now } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { createFirebaseSurveyUser, synchronizeFirebaseSurveyUser } from '@/modules/auth/auth.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
@@ -612,7 +612,7 @@ export const getSurveyImpactStudyDetails = async (
 		return resultOk({
 			totalCompletedSurveys: surveys.length,
 			totalRecipients: uniqueRecipients.size,
-			lastResponseDaysAgo: lastCompletedAt ? Math.max(0, differenceInDays(nowMs(), lastCompletedAt)) : null,
+			lastCompletedAt,
 			timeFrameStart,
 			timeFrameEnd,
 			timeFrameDays: timeFrameStart && timeFrameEnd ? Math.max(0, differenceInDays(timeFrameEnd, timeFrameStart)) : null,
