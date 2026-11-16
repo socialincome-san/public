@@ -172,7 +172,7 @@ export type SurveyImpactStudyDetailItem = {
 export type SurveyImpactStudyDetails = {
 	totalCompletedSurveys: number;
 	totalRecipients: number;
-	lastResponseDaysAgo: number | null;
+	lastCompletedAt: Date | null;
 	timeFrameStart: Date | null;
 	timeFrameEnd: Date | null;
 	timeFrameDays: number | null;

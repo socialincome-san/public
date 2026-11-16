@@ -608,21 +608,11 @@ export const getSurveyImpactStudyDetails = async (
 		const timeFrameStart = completedAtDates.length > 0 ? min(completedAtDates) : null;
 		const timeFrameEnd = completedAtDates.length > 0 ? max(completedAtDates) : null;
 		const lastCompletedAt = surveys.find((survey) => survey.completedAt !== null)?.completedAt ?? null;
-		// Calendar days in UTC, independent of the host time zone; UTC days are always exactly 24 hours long
-		const currentDate = now();
-		const lastResponseDaysAgo = lastCompletedAt
-			? Math.max(
-					0,
-					(Date.UTC(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate()) -
-						Date.UTC(lastCompletedAt.getUTCFullYear(), lastCompletedAt.getUTCMonth(), lastCompletedAt.getUTCDate())) /
-						86_400_000,
-				)
-			: null;
 
 		return resultOk({
 			totalCompletedSurveys: surveys.length,
 			totalRecipients: uniqueRecipients.size,
-			lastResponseDaysAgo,
+			lastCompletedAt,
 			timeFrameStart,
 			timeFrameEnd,
 			timeFrameDays: timeFrameStart && timeFrameEnd ? Math.max(0, differenceInDays(timeFrameEnd, timeFrameStart)) : null,

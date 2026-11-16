@@ -14,6 +14,19 @@ describe('loadMessages', () => {
 		);
 	});
 
+	it.each([
+		['de', ['Letzte Antwort heute', 'Letzte Antwort gestern', 'Letzte Antwort vor 5 Tagen']],
+		['en', ['Last response today', 'Last response yesterday', 'Last response 5d ago']],
+		['fr', ['Dernière réponse aujourd’hui', 'Dernière réponse hier', 'Dernière réponse il y a 5 j']],
+		['it', ['Ultima risposta oggi', 'Ultima risposta ieri', 'Ultima risposta 5 giorni fa']],
+	] as const)('formats the last survey response age in %s', async (locale, [today, yesterday, daysAgo]) => {
+		const t = createTranslator({ locale, messages: await loadMessages(locale), namespace: 'website-survey' });
+
+		expect(t('survey.impactMeasurement.lastResponseDaysAgo', { days: 0 })).toBe(today);
+		expect(t('survey.impactMeasurement.lastResponseDaysAgo', { days: 1 })).toBe(yesterday);
+		expect(t('survey.impactMeasurement.lastResponseDaysAgo', { days: 5 })).toBe(daysAgo);
+	});
+
 	it('falls back to English for namespaces a language does not translate', async () => {
 		const messages = await loadMessages('kri');
 

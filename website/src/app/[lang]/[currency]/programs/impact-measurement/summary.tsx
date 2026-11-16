@@ -1,6 +1,8 @@
 import { CountryFlag } from '@/components/country-flag';
 import { isMessageKey } from '@/lib/i18n/message-keys';
 import { isValidCountryCode } from '@/lib/types/country';
+import { getUtcCalendarDaysAgo } from '@/lib/utils/days-ago';
+import { now } from '@/lib/utils/now';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getSurveyImpactStudyDetails } from '@/modules/surveys/survey.cache';
 import type { SurveyImpactStudyDetailItem } from '@/modules/surveys/survey.types';
@@ -33,9 +35,9 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 	const details = detailsResult.data;
 	const dateFormatter = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short', year: 'numeric' });
 	const lastResponseLabel =
-		details.lastResponseDaysAgo === null
+		details.lastCompletedAt === null
 			? t('survey.impactMeasurement.lastResponseNotAvailable')
-			: t('survey.impactMeasurement.lastResponseDaysAgo', { days: details.lastResponseDaysAgo });
+			: t('survey.impactMeasurement.lastResponseDaysAgo', { days: getUtcCalendarDaysAgo(details.lastCompletedAt, now()) });
 	const timeFrameLabel =
 		details.timeFrameStart && details.timeFrameEnd
 			? `${dateFormatter.format(details.timeFrameStart)} - ${dateFormatter.format(details.timeFrameEnd)}`
