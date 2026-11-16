@@ -2,7 +2,7 @@ name: Preview deployment
 
 # Every PR gets a bot comment with one checkbox per Vercel project. Ticking a box (or adding the label
 # `preview-<project>`) deploys the PR branch as a preview, and later pushes redeploy it while it stays ticked.
-# Only people with write access can edit the bot comment or add labels, and the job checks that again.
+# Ticks and labels only count from people with write access; anything else is reverted.
 # pull_request_target and issue_comment run this file from main and can read VERCEL_TOKEN; safe because
 # nothing from the PR is checked out or run here, Vercel builds the commit itself.
 on:
@@ -17,9 +17,6 @@ on:
     types:
       - edited
 
-concurrency:
-  group: preview-deployment-${{ github.event.pull_request.number || github.event.issue.number }}
-
 jobs:
   plan:
     name: "📋 Preview plan"
@@ -27,6 +24,9 @@ jobs:
       github.event_name == 'pull_request_target' ||
       (github.event.issue.pull_request && github.event.comment.user.login == 'github-actions[bot]' &&
       contains(github.event.comment.body, '<!-- vercel-preview -->'))
+    # On the job, not the workflow, so edits of other comments on the PR cannot cancel a pending run.
+    concurrency:
+      group: preview-deployment-${{ github.event.pull_request.number || github.event.issue.number }}
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -62,46 +62,67 @@ jobs:
           echo "sha=$(jq -r '.head.sha' <<<"$pr")" >>"$GITHUB_OUTPUT"
           labels=$(jq -r '.labels[].name' <<<"$pr")
           has_label() { grep -qxF "preview-$1" <<<"$labels"; }
+          add_label() {
+            gh api "repos/$REPO/issues/$PR/labels" -f "labels[]=preview-$1" >/dev/null
+            labels+=$'\n'"preview-$1"
+          }
+          remove_label() {
+            gh api -X DELETE "repos/$REPO/issues/$PR/labels/preview-$1" >/dev/null
+            labels=$(grep -vxF "preview-$1" <<<"$labels" || true)
+          }
+          sender_can_write() {
+            local permission
+            permission=$(gh api "repos/$REPO/collaborators/$SENDER/permission" --jq '.permission' || echo none)
+            [ "$permission" = "admin" ] || [ "$permission" = "write" ]
+          }
 
           if [ "$EVENT" = "issue_comment" ]; then
-            permission=$(gh api "repos/$REPO/collaborators/$SENDER/permission" --jq '.permission' || echo none)
-            if [ "$permission" = "admin" ] || [ "$permission" = "write" ]; then
+            if sender_can_write; then
               body=$(tr -d '\r' <<<"$COMMENT_BODY")
               for p in "${projects[@]}"; do
                 if grep -qixF -- "- [x] $p" <<<"$body"; then
                   if ! has_label "$p"; then
-                    gh api "repos/$REPO/issues/$PR/labels" -f "labels[]=preview-$p" >/dev/null
+                    add_label "$p"
                     deploy+=("$p")
                   fi
                 elif has_label "$p"; then
-                  gh api -X DELETE "repos/$REPO/issues/$PR/labels/preview-$p" >/dev/null
+                  remove_label "$p"
                 fi
               done
-              labels=$(gh api "repos/$REPO/issues/$PR/labels" --jq '.[].name')
             fi
           elif [ "$ACTION" = "labeled" ]; then
             for p in "${projects[@]}"; do
-              [ "$LABEL" = "preview-$p" ] && deploy+=("$p")
+              if [ "$LABEL" = "preview-$p" ]; then
+                if sender_can_write; then deploy+=("$p"); else remove_label "$p"; fi
+              fi
             done
           elif [ "$ACTION" = "synchronize" ]; then
             for p in "${projects[@]}"; do
-              has_label "$p" && deploy+=("$p")
+              if has_label "$p"; then deploy+=("$p"); fi
             done
           fi
 
           # Render the comment from the labels, which also reverts ticks by people without write access.
           text="$marker"$'\n'"**Vercel preview**: tick a project to deploy this PR as a preview. Later pushes redeploy it while it stays ticked."$'\n'
+          ticked=false
           for p in "${projects[@]}"; do
-            if has_label "$p"; then box=x; else box=' '; fi
+            if has_label "$p"; then box=x; ticked=true; else box=' '; fi
             text+=$'\n'"- [$box] $p"
           done
-          if [ -z "$COMMENT_ID" ]; then
-            COMMENT_ID=$(gh api --paginate "repos/$REPO/issues/$PR/comments" \
-              --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"$marker\"))) | .id" | sed -n 1p)
+          if [ -n "$COMMENT_ID" ]; then
+            current=$(tr -d '\r' <<<"$COMMENT_BODY")
+          else
+            comment=$(gh api --paginate "repos/$REPO/issues/$PR/comments" \
+              --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"$marker\"))) | {id, body}" | sed -n 1p)
+            COMMENT_ID=$(jq -r '.id // empty' <<<"${comment:-null}")
+            current=$(jq -r '.body // empty' <<<"${comment:-null}" | tr -d '\r')
           fi
           if [ -n "$COMMENT_ID" ]; then
-            gh api -X PATCH "repos/$REPO/issues/comments/$COMMENT_ID" -f body="$text" >/dev/null
-          else
+            if [ "$current" != "$text" ]; then
+              gh api -X PATCH "repos/$REPO/issues/comments/$COMMENT_ID" -f body="$text" >/dev/null
+            fi
+          # Bot PRs such as Renovate only get the comment once someone adds a preview label.
+          elif [ "$(jq -r '.user.type' <<<"$pr")" != "Bot" ] || [ "$ticked" = true ]; then
             gh api "repos/$REPO/issues/$PR/comments" -f body="$text" >/dev/null
           fi
 
@@ -127,6 +148,9 @@ jobs:
         run: |
           body=$(jq -n --arg project "$PROJECT" --arg ref "$REF" --arg sha "$SHA" --argjson repoId "$REPO_ID" \
             '{name: $project, project: $project, gitSource: {type: "github", repoId: $repoId, ref: $ref, sha: $sha}}')
-          url=$(curl --fail-with-body -sS -X POST "https://api.vercel.com/v13/deployments?slug=dev-social-incomes-projects" \
-            -H "Authorization: Bearer $VERCEL_TOKEN" -H "Content-Type: application/json" -d "$body" | jq -r '.url')
-          echo "Preview of $PROJECT: https://$url" | tee -a "$GITHUB_STEP_SUMMARY"
+          if ! response=$(curl --fail-with-body -sS -X POST "https://api.vercel.com/v13/deployments?slug=dev-social-incomes-projects" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" -H "Content-Type: application/json" -d "$body"); then
+            echo "::error::Vercel refused the deployment: $response"
+            exit 1
+          fi
+          echo "Preview of $PROJECT: https://$(jq -r '.url' <<<"$response")" | tee -a "$GITHUB_STEP_SUMMARY"
