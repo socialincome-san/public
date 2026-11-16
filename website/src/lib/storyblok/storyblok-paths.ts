@@ -14,6 +14,10 @@ export const STORYBLOK_COMMUNITY_GLOBALS_PATH = `${STORYBLOK_GLOBALS_FOLDER}/com
 
 const pagesPrefix = `${STORYBLOK_PAGES_FOLDER}/`;
 
+// No story has this slug, so the content page route prerenders it as the not-found page with status 404.
+// The proxy rewrites missing pages to it.
+export const WEBSITE_NOT_FOUND_SLUG = '__not-found__';
+
 export const getPageStoryPath = (pageSlug: string) => `${pagesPrefix}${pageSlug}`;
 
 export const getHomeStoryPath = () => getPageStoryPath(STORYBLOK_HOME_PAGE_SLUG);
@@ -283,6 +287,32 @@ export const isRoutableWebsiteStoryblokSlug = (storyblokSlug: string) => {
 	const slug = normalizeStoryblokSlug(storyblokSlug);
 
 	return slug.startsWith(pagesPrefix);
+};
+
+type PublishedLink = {
+	slug: string;
+	is_folder: boolean;
+	published: boolean;
+	alternates?: { translated_slug: string }[];
+};
+
+/** Website path tails of every published page, including its translated slugs. */
+export const getPublishedWebsitePathTails = (links: PublishedLink[], isIncluded = isRoutableWebsiteStoryblokSlug) => {
+	const pathTails = new Set<string>();
+
+	for (const link of links) {
+		if (link.is_folder || !link.published) {
+			continue;
+		}
+
+		for (const storyblokSlug of [link.slug, ...(link.alternates ?? []).map((alternate) => alternate.translated_slug)]) {
+			if (isIncluded(storyblokSlug)) {
+				pathTails.add(getWebsitePathTailFromStoryblokSlug(storyblokSlug));
+			}
+		}
+	}
+
+	return pathTails;
 };
 
 const DEDICATED_ROUTE_FOLDERS = [
