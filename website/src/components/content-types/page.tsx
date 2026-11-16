@@ -19,7 +19,6 @@ import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
-import { LandingHeroBlock } from '@/components/content-blocks/landing-hero';
 import { LinkCardsBlock } from '@/components/content-blocks/link-cards';
 import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { LottieBlock } from '@/components/content-blocks/lottie';
@@ -120,8 +119,6 @@ const renderPageBlock = (
 			return <InflowsBlock blok={block} lang={lang} currency={currency} />;
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} currency={currency} />;
-		case 'landingHero':
-			return <LandingHeroBlock blok={block} lang={lang} currency={currency} />;
 		case 'linkCards':
 			return <LinkCardsBlock blok={block} lang={lang} currency={currency} />;
 		case 'lottie':
@@ -224,7 +221,7 @@ export const PageBlocks = ({ blocks, lang, currency, storyUuid, searchParams }: 
 
 export default function PageContentType({ blok, lang, currency, searchParams, afterHero, storyUuid }: PageContentTypeProps) {
 	const blocks = blok.content ?? [];
-	const heroCount = blocks[0]?.component === 'heroVideo' || blocks[0]?.component === 'landingHero' ? 1 : 0;
+	const heroCount = blocks[0]?.component === 'heroVideo' ? 1 : 0;
 
 	return (
 		<>
