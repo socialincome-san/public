@@ -82,13 +82,17 @@ export const LocalPartnerDetail = async ({
 								? t('local-partners-page.recipient-singular')
 								: t('local-partners-page.recipient-plural'),
 					},
-					{
-						value: completedSurveysCount,
-						label:
-							completedSurveysCount === 1
-								? t('local-partners-page.completed-survey-singular')
-								: t('local-partners-page.completed-survey-plural'),
-					},
+					...(completedSurveysCount > 0
+						? [
+								{
+									value: completedSurveysCount,
+									label:
+										completedSurveysCount === 1
+											? t('local-partners-page.completed-survey-singular')
+											: t('local-partners-page.completed-survey-plural'),
+								},
+							]
+						: []),
 				]}
 			/>
 			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} /> : null} />
