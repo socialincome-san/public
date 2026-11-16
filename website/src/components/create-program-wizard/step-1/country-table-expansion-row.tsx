@@ -1,21 +1,26 @@
 'use client';
 
 import { isMessageKey } from '@/lib/i18n/message-keys';
-import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
+import type { CountryEligibilityRow } from '@/modules/countries/country.types';
 import { TableCell, TableRow } from '@socialincome/design-system/data-display/table/table';
 import { useMessages, useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { CountryPageLink } from './country-page-link';
 
 type Props = {
-	row: ProgramCountryFeasibilityRow;
+	row: CountryEligibilityRow;
+	selectable: boolean;
+	countryPageHref?: string;
 };
 
-export const ExpansionRow = ({ row }: Props) => {
+type CountryFeasibility = CountryEligibilityRow['cash'];
+
+export const CountryConditionDetails = ({ details }: { details: CountryFeasibility['details'] }) => {
 	const t = useTranslations('create-program-wizard');
 	const messages = useMessages();
 	const isConditionKey = (key: string) => isMessageKey(messages, 'create-program-wizard', key);
 
-	const renderSource = (source: ProgramCountryFeasibilityRow['cash']['details']['source'] | undefined) => {
+	const renderSource = (source: CountryFeasibility['details']['source']) => {
 		if (!source) {
 			return null;
 		}
@@ -44,27 +49,41 @@ export const ExpansionRow = ({ row }: Props) => {
 		return <p className="text-muted-foreground">{translatedSourceText}</p>;
 	};
 
-	const renderDetails = (details: ProgramCountryFeasibilityRow['cash']['details']) => {
-		return (
-			<div className="space-y-1 text-sm">
-				<p>
-					{isConditionKey(details.translationKey)
-						? t(details.translationKey, details.translationContext)
-						: details.translationKey}
-				</p>
-				{renderSource(details.source)}
-			</div>
-		);
-	};
-
 	return (
-		<TableRow data-state="selected">
-			<TableCell />
-			<TableCell />
-			<TableCell verticalAlign="top">{renderDetails(row.cash.details)}</TableCell>
-			<TableCell verticalAlign="top">{renderDetails(row.mobileMoney.details)}</TableCell>
-			<TableCell verticalAlign="top">{renderDetails(row.mobileNetwork.details)}</TableCell>
-			<TableCell verticalAlign="top">{renderDetails(row.sanctions.details)}</TableCell>
+		<div className="space-y-1 text-sm break-words">
+			<p>
+				{isConditionKey(details.translationKey)
+					? t(details.translationKey, details.translationContext)
+					: details.translationKey}
+			</p>
+			{renderSource(details.source)}
+		</div>
+	);
+};
+
+export const ExpansionRow = ({ row, selectable, countryPageHref }: Props) => {
+	return (
+		<TableRow>
+			{selectable && <TableCell />}
+			<TableCell>
+				{countryPageHref !== undefined && (
+					<div className="flex justify-center">
+						<CountryPageLink href={countryPageHref} />
+					</div>
+				)}
+			</TableCell>
+			<TableCell verticalAlign="top">
+				<CountryConditionDetails details={row.cash.details} />
+			</TableCell>
+			<TableCell verticalAlign="top">
+				<CountryConditionDetails details={row.mobileMoney.details} />
+			</TableCell>
+			<TableCell verticalAlign="top">
+				<CountryConditionDetails details={row.mobileNetwork.details} />
+			</TableCell>
+			<TableCell verticalAlign="top">
+				<CountryConditionDetails details={row.sanctions.details} />
+			</TableCell>
 			<TableCell />
 		</TableRow>
 	);

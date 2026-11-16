@@ -15,13 +15,14 @@ export const LocalPartnerPrograms = async ({ localPartner, lang, currency }: Pro
 		return null;
 	}
 
-	const { programs, statsByPortalSlug } = await getProgramGridPrograms(blok, lang);
+	const { programs, statsByPortalSlug, allProgramsCount } = await getProgramGridPrograms(blok, lang);
 
 	return (
 		<StoryblokProgramGrid
 			blok={blok}
 			programs={programs}
 			statsByPortalSlug={statsByPortalSlug}
+			allProgramsCount={allProgramsCount}
 			lang={lang}
 			currency={currency}
 		/>

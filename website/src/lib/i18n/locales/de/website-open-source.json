@@ -16,7 +16,6 @@
 		}
 	},
 	"contributors": {
-		"heading": "Mitwirkende",
 		"showAll": "Alle {count} Mitwirkenden anzeigen",
 		"commitSingular": "Commit",
 		"commitPlural": "Commits"

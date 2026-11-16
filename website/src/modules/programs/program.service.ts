@@ -591,6 +591,7 @@ const toPublicProgramDetails = (program: PublicProgramRecord): PublicProgramDeta
 	let completedSurveysCount = 0;
 	let earliestStart: Date | null = null;
 	const localPartnerCounts = new Map<string, { name: string; slug: string; count: number }>();
+	const mobileMoneyProviderCounts = new Map<string, number>();
 
 	for (const recipient of program.recipients) {
 		if (recipient.startDate && (!earliestStart || recipient.startDate < earliestStart)) {
@@ -606,17 +607,29 @@ const toPublicProgramDetails = (program: PublicProgramRecord): PublicProgramDeta
 				count: currentCount + 1,
 			});
 		}
+		const mobileMoneyProviderName = recipient.paymentInformation?.mobileMoneyProvider?.name;
+		if (mobileMoneyProviderName) {
+			mobileMoneyProviderCounts.set(
+				mobileMoneyProviderName,
+				(mobileMoneyProviderCounts.get(mobileMoneyProviderName) ?? 0) + 1,
+			);
+		}
 	}
 
-	const topLocalPartner = [...localPartnerCounts.values()].sort((left, right) => right.count - left.count)[0];
+	const localPartners = [...localPartnerCounts.values()]
+		.sort((left, right) => right.count - left.count)
+		.map(({ name, slug }) => ({ name, slug }));
+	const mobileMoneyProviders = [...mobileMoneyProviderCounts.entries()]
+		.sort(([, leftCount], [, rightCount]) => rightCount - leftCount)
+		.map(([name]) => name);
 
 	return {
 		programId: program.id,
 		programName: program.name,
 		countryIsoCode: program.country.isoCode,
 		ownerOrganizationName: ownerAccess?.organization.name ?? null,
-		localPartnerName: topLocalPartner?.name ?? null,
-		localPartnerSlug: topLocalPartner?.slug ?? null,
+		localPartners,
+		mobileMoneyProviders,
 		operatorOrganizationName: operatorAccess?.organization.name ?? null,
 		targetFocuses: program.targetFocuses.map(({ focusId }) => focusId),
 		amountOfRecipientsForStart: program.amountOfRecipientsForStart,

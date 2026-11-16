@@ -55,13 +55,16 @@ const collectCampaignEntries = async (links: StoryblokPublishedLink[]): Promise<
 	});
 };
 
-const ensureJournalIndex = (entries: LanguagePathTails[]) => {
-	const hasJournalIndex = entries.some((languages) =>
-		[...languages.values()].some((pathTail) => pathTail === WEBSITE_JOURNAL_PATH_SEGMENT),
-	);
+// Pages without a Storyblok story
+const STATIC_PATH_TAILS = [WEBSITE_JOURNAL_PATH_SEGMENT, 'open-research/country-eligibility'];
 
-	if (!hasJournalIndex) {
-		entries.push(new Map(mainWebsiteLanguages.map((lang) => [lang, WEBSITE_JOURNAL_PATH_SEGMENT])));
+const ensureStaticPages = (entries: LanguagePathTails[]) => {
+	for (const staticPathTail of STATIC_PATH_TAILS) {
+		const isListed = entries.some((languages) => [...languages.values()].some((pathTail) => pathTail === staticPathTail));
+
+		if (!isListed) {
+			entries.push(new Map(mainWebsiteLanguages.map((lang) => [lang, staticPathTail])));
+		}
 	}
 };
 
@@ -122,7 +125,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 			...(await collectCampaignEntries(linksResult.data)),
 		]);
 
-		ensureJournalIndex(entries);
+		ensureStaticPages(entries);
 
 		entries.sort((left, right) =>
 			(getPrimaryEntry(left)?.pathTail ?? '').localeCompare(getPrimaryEntry(right)?.pathTail ?? ''),

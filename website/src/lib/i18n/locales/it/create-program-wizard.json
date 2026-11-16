@@ -23,7 +23,7 @@
 	"step1": {
 		"choose_country": "Seleziona un paese in cui operiamo",
 		"feasibility_title": "Verifica la fattibilità del programma cash",
-		"all_conditions_met": "Tutte le condizioni soddisfatte",
+		"all_conditions_met": "Idonei",
 		"no_countries_match": "Nessun paese corrisponde ai filtri correnti",
 		"no_active_programs": "Nessun programma attivo",
 		"programs": "Programmi",
@@ -31,14 +31,15 @@
 		"candidates_ready_to_enroll": "{count, plural, one {{count} candidato pronto per l'iscrizione} other {{count} candidati pronti per l'iscrizione}}",
 		"no_candidates": "Al momento non ci sono candidati",
 		"table": {
+			"country": "Paese",
 			"cash": "Idoneità del cash",
 			"mobile_money": "Mobile money",
 			"mobile_network": "Copertura di rete",
 			"sanctions": "Nessuna sanzione"
 		},
 		"condition": {
-			"met": "Condizione soddisfatta",
-			"not_met": "Condizioni non soddisfatte",
+			"met": "Soddisfatta",
+			"not_met": "Non soddisfatta",
 			"restrictions_apply": "Restrizioni"
 		},
 		"details": {
@@ -64,7 +65,13 @@
 		"source": {
 			"si_research": "SI research",
 			"sanctions_lists": "Fonte: EU Sanctions Map & US Sanctions List"
-		}
+		},
+		"expand_all": "Espandi tutto",
+		"collapse_all": "Comprimi tutto",
+		"active_countries": "Paesi attivi",
+		"active_badge": "Attivo",
+		"country_page": "Pagina del paese",
+		"conditions_met_count": "{met} condizioni su {total} soddisfatte"
 	},
 	"step2": {
 		"recipient_selection": {
@@ -155,5 +162,24 @@
 		"title": "Il tuo programma è pronto",
 		"description": "Abbiamo creato il tuo account, la tua organizzazione e la configurazione iniziale del programma. Ora accedi con la tua email per aprire la dashboard e iniziare a gestire il programma.",
 		"go_to_login": "Vai al login"
+	},
+	"country_eligibility_page": {
+		"title": "Idoneità dei paesi",
+		"description": "Le nostre ricerche su tutti i paesi africani: dove un programma di trasferimenti via mobile money è realizzabile, secondo quattro condizioni.",
+		"open_research": "Ricerca aperta",
+		"headline": "<b>Idoneità</b> dei paesi",
+		"lead": "Per scegliere i paesi in cui lavoriamo abbiamo fatto le nostre ricerche. Crediamo che debbano essere accessibili a tutti. Eccole: tutti i 54 paesi africani, esaminati secondo le quattro condizioni da cui dipendono i nostri programmi.",
+		"note": "Una restrizione o una condizione non soddisfatta non significa che lì i programmi di trasferimento di denaro siano impossibili. Significa che un programma via mobile money come il nostro non era realizzabile senza un notevole impegno aggiuntivo.",
+		"review_title": "Cosa esaminiamo",
+		"met_count": "{met} su {total}",
+		"conditions": {
+			"cash": "I mercati locali funzionano, così che le persone possano spendere il denaro per ciò di cui hanno bisogno?",
+			"mobile_money": "Esistono operatori di mobile money per versare i pagamenti direttamente?",
+			"mobile_network": "Una parte sufficiente della popolazione è coperta da una rete mobile?",
+			"sanctions": "Il paese è libero da sanzioni internazionali che bloccano i trasferimenti?"
+		},
+		"eligible_summary": "{eligible} paesi soddisfano tutte e quattro le condizioni. Siamo attivi in {active}.",
+		"contact_text": "{name} cura l'accuratezza di questi dati e accoglie volentieri <link>le segnalazioni</link>.",
+		"unavailable": "I dati sull'idoneità non sono disponibili al momento. Riprova più tardi."
 	}
 }

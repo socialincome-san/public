@@ -79,6 +79,7 @@ export default async function HomePage({ params, searchParams }: DefaultPageProp
 				currency={toWebsiteCurrency(currency)}
 				searchParams={searchParams}
 				afterHero={community ? <CommunityRow data={community} /> : null}
+				storyUuid={story.uuid}
 			/>
 		</>
 	);

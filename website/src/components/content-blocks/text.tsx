@@ -21,7 +21,7 @@ const widthClassesByRatio = {
 };
 
 export const TextBlock = ({ blok }: Props) => {
-	const { content, widthRatio } = blok;
+	const { content, widthRatio, align } = blok;
 
 	if (!content) {
 		return null;
@@ -31,7 +31,7 @@ export const TextBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
-			<div className={cn('text-foreground text-lg', widthClass)}>
+			<div className={cn('text-foreground text-lg', widthClass, align === 'center' && 'mx-auto text-center')}>
 				<RichTextRenderer richTextDocument={content} />
 			</div>
 		</BlockWrapper>

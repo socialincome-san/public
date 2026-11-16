@@ -46,6 +46,8 @@ export const VideoCarousel = ({ title, description, items }: VideoCarouselProps)
 		return null;
 	}
 
+	const hasSeveral = items.length > 1;
+
 	return (
 		<div className="flex flex-col items-center gap-12">
 			{title || description ? (
@@ -55,23 +57,31 @@ export const VideoCarousel = ({ title, description, items }: VideoCarouselProps)
 				</div>
 			) : null}
 			<div className="w-full">
-				<Carousel setApi={setApi} opts={{ align: 'center', loop: items.length > 1 }} gap="lg">
-					<CarouselContent>
-						{items.map((item, index) => (
-							<CarouselItem key={item.id} size="featured">
-								<div className="bg-foreground relative aspect-video overflow-hidden rounded-2xl *:size-full *:object-cover">
-									{index === activeIndex ? (
-										item.video
-									) : (
-										// Posters come from the video host in the right size already
-										<NextImage src={item.posterSrc} alt={item.title} fill unoptimized />
-									)}
-								</div>
-							</CarouselItem>
-						))}
-					</CarouselContent>
-				</Carousel>
-				{items.length > 1 ? (
+				{/* The fade covers exactly the neighbouring slides that peek in beside the featured one */}
+				<div className="md:mask-x-from-90% lg:mask-x-from-80%">
+					<Carousel
+						setApi={setApi}
+						// Without containScroll: false, slides that fit the viewport stick to its left edge
+						opts={{ align: 'center', loop: hasSeveral, containScroll: false }}
+						gap={hasSeveral ? 'lg' : 'none'}
+					>
+						<CarouselContent>
+							{items.map((item, index) => (
+								<CarouselItem key={item.id} size="featured">
+									<div className="bg-foreground relative aspect-video overflow-hidden rounded-2xl *:size-full *:object-cover">
+										{index === activeIndex ? (
+											item.video
+										) : (
+											// Posters come from the video host in the right size already
+											<NextImage src={item.posterSrc} alt={item.title} fill unoptimized />
+										)}
+									</div>
+								</CarouselItem>
+							))}
+						</CarouselContent>
+					</Carousel>
+				</div>
+				{hasSeveral ? (
 					<div className="mt-10 flex items-center justify-center gap-4">
 						{items.map((item, index) => (
 							<button
