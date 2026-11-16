@@ -144,12 +144,7 @@ export const ImageGallery = ({
 									density === 'compact' ? 'p-2 sm:p-3' : 'p-4',
 								)}
 							>
-								<div
-									className={cn(
-										'text-muted-foreground flex min-w-0 items-center gap-2 text-xs',
-										infoPlacement === 'metadata' ? 'whitespace-nowrap' : 'flex-wrap',
-									)}
-								>
+								<div className="text-muted-foreground flex min-w-0 flex-wrap items-center gap-2 text-xs">
 									{image.date &&
 										(image.date.value ? <time dateTime={image.date.value}>{image.date.label}</time> : image.date.label)}
 									{image.date && image.price && <span aria-hidden="true">·</span>}
