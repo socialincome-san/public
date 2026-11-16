@@ -97,9 +97,9 @@ describe('getStoryWithFallback for folders', () => {
 		expect(fetchedSlugs()).toEqual(['pages/programs', 'pages/programs/programs']);
 	});
 
-	test('treats a folder named like its parent as a folder', async () => {
-		expect(await getStoryWithFallback('pages/give/give', 'en')).toEqual(found('pages/give/give/give'));
-		expect(fetchedSlugs()).toEqual(['pages/give/give', 'pages/give/give/give']);
+	test('does not retry an overview slug that was not found', async () => {
+		expect(await getStoryWithFallback('pages/get-involved/get-involved', 'en')).toEqual(notFound);
+		expect(fetchedSlugs()).toEqual(['pages/get-involved/get-involved']);
 	});
 
 	test('returns an existing overview story without retrying', async () => {
