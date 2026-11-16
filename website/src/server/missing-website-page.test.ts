@@ -10,8 +10,9 @@ const WEBSITE_APP_DIR = path.join(__dirname, '../app/[lang]/[currency]');
 
 const getRoutePatterns = () =>
 	readdirSync(WEBSITE_APP_DIR, { recursive: true, encoding: 'utf8' })
-		.filter((file) => /(^|\/)(page\.tsx|route\.ts)$/.test(file))
-		.map((file) => path.dirname(file))
+		.filter((file) => /(^|\/)(page|route)\.(tsx?|jsx?|mdx)$/.test(file))
+		.map((file) => path.dirname(file).replace(/(^|\/)\([^/]+\)(?=\/|$)/g, ''))
+		.map((pattern) => pattern.replace(/^\//, ''))
 		.map((pattern) => (pattern === '.' ? '' : pattern));
 
 // Each test gets a fresh module, because the published paths are kept in module state

@@ -31,7 +31,13 @@ const redirectToPath = (request: NextRequest, pathname: string, status: 307 | 30
 
 const getPathTail = (pathname: string) => {
 	try {
-		return decodeURIComponent(pathname).split('/').slice(3).filter(Boolean).join('/');
+		// An encoded slash stays inside its segment, so it cannot match a nested published path
+		return pathname
+			.split('/')
+			.slice(3)
+			.filter(Boolean)
+			.map((segment) => decodeURIComponent(segment).replaceAll('/', '%2F'))
+			.join('/');
 	} catch {
 		return undefined;
 	}

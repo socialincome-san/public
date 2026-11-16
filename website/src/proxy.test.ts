@@ -102,6 +102,12 @@ describe('proxy', () => {
 		expect(isMissingWebsitePage).toHaveBeenCalledWith('pages/transparency', expect.any(Function));
 	});
 
+	test('does not turn an encoded slash into a path separator', async () => {
+		await proxy(request('/de/usd/journal%2Fcash-works/caf%C3%A9'));
+
+		expect(isMissingWebsitePage).toHaveBeenCalledWith('journal%2Fcash-works/café', expect.any(Function));
+	});
+
 	test('leaves a path it cannot decode to the page', async () => {
 		const response = await proxy(request('/en/chf/%E0%A4%A'));
 
