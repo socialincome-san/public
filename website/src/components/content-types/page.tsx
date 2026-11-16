@@ -19,6 +19,7 @@ import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measu
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LandingHeroBlock } from '@/components/content-blocks/landing-hero';
+import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
@@ -136,6 +137,8 @@ const renderPageBlock = (
 			return <PartnershipsCardBlock blok={block} />;
 		case 'personGrid':
 			return <PersonGridBlock blok={block} lang={lang} currency={currency} />;
+		case 'localPartnerGrid':
+			return <LocalPartnerGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'programGrid':
 			return <ProgramGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'reservesBlock':

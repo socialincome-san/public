@@ -57,6 +57,11 @@ export const LocalPartnerDetail = async ({
 		currency,
 	});
 
+	// Unpublished people stay unresolved uuids
+	const [assessmentLead, assessmentReviewer] = [
+		localPartner.content.assessmentLead,
+		localPartner.content.assessmentReviewer,
+	].map((people) => people?.find((person) => typeof person !== 'string'));
 	const { mission, partnerSince, foundingYear, location, website, linkedin, instagram, facebook, youtube } =
 		localPartner.content;
 
@@ -106,6 +111,8 @@ export const LocalPartnerDetail = async ({
 						partnerSince={partnerSince}
 						foundingYear={foundingYear}
 						location={location}
+						assessmentLead={assessmentLead}
+						assessmentReviewer={assessmentReviewer}
 						externalLinks={[
 							{ label: t('local-partners-page.website'), link: website },
 							{ label: 'LinkedIn', link: linkedin },

@@ -57,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "View all {count} local partners",
 		"empty": "No local partners found.",
 		"no-results": "No local partners match the selected filters.",
 		"search-label": "Search local partners",
@@ -95,7 +96,9 @@
 		"location": "Location",
 		"learn-more": "Learn more",
 		"opens-in-new-tab": "(opens in a new tab)",
-		"website": "Website"
+		"website": "Website",
+		"assessment": "NGO assessment led by <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "NGO assessment led by <leadLink>{lead}</leadLink>, reviewed by <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "All years ({count})",
