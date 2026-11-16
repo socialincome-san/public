@@ -20,6 +20,7 @@ const STATIC_PATH_TAILS = new Set([
 	'journal/rss.xml',
 	'local-partners',
 	'login',
+	'open-research/country-eligibility',
 	'programs',
 ]);
 const STATIC_FIRST_SEGMENTS = new Set(['auth', 'dashboard', 'survey']);

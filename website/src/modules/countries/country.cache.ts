@@ -1,10 +1,11 @@
 import type { CountryCode } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
 import { cacheResult } from '@/lib/result-cache';
-import { cacheTag } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import * as service from './country.service';
 import {
 	COUNTRY_CACHE_TAG,
+	type CountryEligibilityRow,
 	type CountryPageStats,
 	type CountryStatisticRow,
 	type PublicCountryStatsMap,
@@ -32,4 +33,12 @@ export const getCountryStatisticsComparison = async (
 	cacheTag(COUNTRY_CACHE_TAG);
 
 	return cacheResult(service.getCountryStatisticsComparison(countryCode, visitorCountryCode));
+};
+
+export const getCountryEligibility = async (): Promise<Result<CountryEligibilityRow[]>> => {
+	'use cache';
+	cacheLife('hours');
+	cacheTag(COUNTRY_CACHE_TAG);
+
+	return cacheResult(service.getCountryEligibility());
 };
