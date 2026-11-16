@@ -57,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "Voir les {count} partenaires locaux",
 		"empty": "Aucun partenaire local trouvé.",
 		"no-results": "Aucun partenaire local ne correspond aux filtres sélectionnés.",
 		"search-label": "Rechercher des partenaires locaux",
@@ -95,7 +96,9 @@
 		"location": "Lieu",
 		"learn-more": "En savoir plus",
 		"opens-in-new-tab": "(s'ouvre dans un nouvel onglet)",
-		"website": "Site web"
+		"website": "Site web",
+		"assessment": "Évaluation de l’ONG menée par <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "Évaluation de l’ONG menée par <leadLink>{lead}</leadLink>, relue par <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "Toutes les années ({count})",
@@ -291,7 +294,17 @@
 		"program-design": "Conception du programme",
 		"delivery": "Distribution",
 		"country": "Pays",
+		"mobile-money-providers": "Opérateurs de mobile money",
+		"payments-made": "Paiements effectués",
+		"payouts-to-date": "Versements à ce jour",
+		"future-payouts": "Versements futurs",
+		"finance-circle": "Finance Circle",
+		"operation-circle": "Operation Circle",
 		"payment-amount": "Montant du versement",
+		"conditionality": "Conditionnalité",
+		"conditionality-unconditional": "Inconditionnel",
+		"conditionality-info-label": "Que signifie inconditionnel ?",
+		"conditionality-info": "Les bénéficiaires reçoivent l’argent sans aucune condition ni obligation. Ils décident eux-mêmes de son utilisation, que ce soit pour la nourriture, les frais de scolarité, les médicaments ou leur propre activité.",
 		"payout-interval-monthly": "mensuel",
 		"payout-interval-quarterly": "trimestriel",
 		"payout-interval-yearly": "annuel",
@@ -451,11 +464,21 @@
 			}
 		}
 	},
+	"link-cards": {
+		"empty": "Rien ici pour le moment."
+	},
+	"tab-navigation": {
+		"label": "Sections"
+	},
 	"circles": {
 		"title": "Cercles",
-		"member-summary": "{active, plural, one {# actif} other {# actifs}} · {interested, plural, one {# membre intéressé} other {# membres intéressés}}",
-		"members-empty": "Pas encore de membres",
-		"empty": "Pas encore de cercles."
+		"empty": "Pas encore de cercles.",
+		"active-count": "{count, plural, one {# Membre} other {# Membres}}",
+		"interested-count": "{count, plural, one {# Abonné} other {# Abonnés}}",
+		"legend-active": "Membres du cercle",
+		"legend-active-info": "Les membres portent le travail du cercle et en sont responsables.",
+		"legend-interested": "Abonnés",
+		"legend-interested-info": "Les abonnés sont invités aux réunions du cercle et sont les premiers sollicités quand une tâche demande plus de bras."
 	},
 	"task-cards": {
 		"show-all": "Afficher les {count} tâches",
@@ -514,5 +537,9 @@
 	},
 	"video-carousel": {
 		"show-video": "Afficher la vidéo {index}"
+	},
+	"africa-map": {
+		"label": "Carte de l’Afrique",
+		"recipients": "{count, plural, one {# bénéficiaire} other {# bénéficiaires}}"
 	}
 }

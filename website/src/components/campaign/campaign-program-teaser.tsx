@@ -188,7 +188,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, currency }: Props
 						</div>
 					) : null}
 				</div>
-				<div className="flex h-full w-full min-w-0 flex-col">
+				<div className="flex h-full w-full min-w-0 flex-col md:max-h-[32rem]">
 					<ProgramWallet
 						program={program}
 						stats={stats}

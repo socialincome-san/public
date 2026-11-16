@@ -16,8 +16,8 @@ const baseProgramDetailData: ProgramDetailData = {
 		programName: 'Test Program',
 		countryIsoCode: 'SL',
 		ownerOrganizationName: 'Migros',
-		localPartnerName: 'Jamil Foundation',
-		localPartnerSlug: 'jamil-foundation',
+		localPartners: [{ name: 'Jamil Foundation', slug: 'jamil-foundation' }],
+		mobileMoneyProviders: ['Orange Money', 'Africell Money'],
 		operatorOrganizationName: 'Social Income SL',
 		targetFocuses: [],
 		amountOfRecipientsForStart: 100,
@@ -46,16 +46,35 @@ describe('buildProgramAboutContent', () => {
 			t,
 			lang: 'en',
 			currency: 'CHF',
-			countryName: 'Sierra Leone',
+			country: { text: 'Sierra Leone', href: '/en/chf/countries/sierra-leone' },
 		});
 
 		expect(content.description).toBe('A program description.');
 		expect(content.cardRows).toHaveLength(5);
 		expect(content.overlaySections).toHaveLength(3);
-		expect(content.overlaySections.map((section) => section.id)).toEqual(['parties', 'program-design', 'delivery']);
-		expect(content.overlaySections[0]?.rows).toHaveLength(3);
+		expect(content.overlaySections.map((section) => section.id)).toEqual(['program-design', 'parties', 'delivery']);
 		expect(content.overlaySections[1]?.rows).toHaveLength(3);
-		expect(content.overlaySections[2]?.rows[0]?.value).toBe('Sierra Leone');
+		expect(content.overlaySections[0]?.rows).toHaveLength(4);
+		expect(content.overlaySections[0]?.rows.at(-1)?.values[0]).toMatchObject({
+			text: 'Unconditional',
+			info: { label: 'What does unconditional mean?' },
+		});
+		expect(content.overlaySections[2]?.rows[0]?.values).toEqual([
+			{ text: 'Sierra Leone', href: '/en/chf/countries/sierra-leone' },
+		]);
+		expect(content.overlaySections[2]?.rows[1]).toEqual({
+			label: 'Mobile money providers',
+			values: [{ text: 'Orange Money' }, { text: 'Africell Money' }],
+		});
+		expect(content.overlaySections[2]?.rows[2]).toEqual({ label: 'Payments made', values: [{ text: '5' }] });
+		expect(content.overlaySections[1]?.responsibleCircle).toEqual({
+			label: 'Operation Circle',
+			href: '/en/chf/circle/operation',
+		});
+		expect(content.overlaySections[2]?.responsibleCircle).toEqual({
+			label: 'Finance Circle',
+			href: '/en/chf/circle/finance',
+		});
 	});
 
 	test('omits overlay sections when related data is unavailable', () => {
@@ -74,13 +93,14 @@ describe('buildProgramAboutContent', () => {
 		expect(content.overlaySections).toHaveLength(0);
 	});
 
-	test('omits delivery section when country name is unavailable', () => {
+	test('shows only the payments count under delivery when country and providers are unknown', () => {
 		const content = buildProgramAboutContent({
 			programDetailData: {
 				...baseProgramDetailData,
 				programDetails: {
 					...baseProgramDetailData.programDetails!,
 					countryIsoCode: '-',
+					mobileMoneyProviders: [],
 				},
 			},
 			t,
@@ -88,7 +108,7 @@ describe('buildProgramAboutContent', () => {
 			currency: 'CHF',
 		});
 
-		expect(content.overlaySections.map((section) => section.id)).toEqual(['parties', 'program-design']);
+		expect(content.overlaySections[2]?.rows.map((row) => row.label)).toEqual(['Payments made']);
 	});
 
 	test('orders card party rows with local partner before operator', () => {
@@ -97,11 +117,11 @@ describe('buildProgramAboutContent', () => {
 			t,
 			lang: 'en',
 			currency: 'CHF',
-			countryName: 'Sierra Leone',
+			country: { text: 'Sierra Leone', href: '/en/chf/countries/sierra-leone' },
 		});
 
-		const cardPartyValues = content.cardRows.slice(0, 3).map((row) => row.value);
-		const overlayPartyValues = content.overlaySections[0]?.rows.map((row) => row.value);
+		const cardPartyValues = content.cardRows.slice(0, 3).map((row) => row.values[0]?.text);
+		const overlayPartyValues = content.overlaySections[1]?.rows.map((row) => row.values[0]?.text);
 
 		expect(cardPartyValues).toEqual(['Migros', 'Jamil Foundation', 'Social Income SL']);
 		expect(overlayPartyValues).toEqual(['Migros', 'Social Income SL', 'Jamil Foundation']);
@@ -130,28 +150,56 @@ describe('buildProgramAboutContent', () => {
 		});
 
 		expect(content.cardRows.slice(-2).map((row) => row.label)).toEqual(['Start date', 'Program status']);
-		expect(content.cardRows.at(-1)?.value).toBe(status);
-		expect(content.overlaySections[1]?.rows.map((row) => row.label)).toEqual([
+		expect(content.cardRows.at(-1)?.values).toEqual([{ text: status }]);
+		expect(content.overlaySections[0]?.rows.map((row) => row.label)).toEqual([
 			'Duration',
 			'Start date',
 			'Program status',
 			'Payment amount',
+			'Conditionality',
 		]);
 	});
 
-	test('includes local partner link when slug is available', () => {
+	test('lists every local partner with its own link', () => {
+		const content = buildProgramAboutContent({
+			programDetailData: {
+				...baseProgramDetailData,
+				programDetails: {
+					...baseProgramDetailData.programDetails!,
+					localPartners: [
+						{ name: 'Jamil Foundation', slug: 'jamil-foundation' },
+						{ name: 'Reachout Salone', slug: 'reachout-salone' },
+					],
+				},
+			},
+			t,
+			lang: 'en',
+			currency: 'CHF',
+			country: { text: 'Sierra Leone', href: '/en/chf/countries/sierra-leone' },
+		});
+
+		const expectedValues = [
+			{ text: 'Jamil Foundation', href: '/en/chf/local-partners/jamil-foundation' },
+			{ text: 'Reachout Salone', href: '/en/chf/local-partners/reachout-salone' },
+		];
+		const localPartnerLabel = 'Local Program Partner';
+
+		expect(content.cardRows.find((row) => row.label === localPartnerLabel)?.values).toEqual(expectedValues);
+		expect(content.overlaySections[1]?.rows.find((row) => row.label === localPartnerLabel)?.values).toEqual(expectedValues);
+	});
+
+	test('shows payouts to date and future payouts in the finances display currency', () => {
 		const content = buildProgramAboutContent({
 			programDetailData: baseProgramDetailData,
 			t,
 			lang: 'en',
-			currency: 'CHF',
-			countryName: 'Sierra Leone',
+			currency: 'EUR',
+			financesDisplayAmounts: { currency: 'EUR', paidOutSoFar: 400, totalProgramCosts: 1000, availableCredits: 0 },
 		});
 
-		const localPartnerCardRow = content.cardRows.find((row) => row.value === 'Jamil Foundation');
-		const localPartnerOverlayRow = content.overlaySections[0]?.rows.find((row) => row.value === 'Jamil Foundation');
-
-		expect(localPartnerCardRow?.href).toBe('/en/chf/local-partners/jamil-foundation');
-		expect(localPartnerOverlayRow?.href).toBe('/en/chf/local-partners/jamil-foundation');
+		expect(content.overlaySections[2]?.rows.slice(-2)).toEqual([
+			{ label: 'Payouts to date', values: [{ text: 'EUR 400' }] },
+			{ label: 'Future payouts', values: [{ text: 'EUR 600' }] },
+		]);
 	});
 });

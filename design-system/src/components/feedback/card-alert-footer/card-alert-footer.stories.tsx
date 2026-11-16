@@ -27,3 +27,7 @@ export const Confirm: Story = {};
 export const Secondary: Story = {
 	args: { variant: 'secondary', text: 'No candidates yet', trailingText: 'Sierra Leone' },
 };
+
+export const LargeInset: Story = {
+	args: { inset: 'lg' },
+};

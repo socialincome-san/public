@@ -2,12 +2,16 @@ import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[curr
 import { ContentPage, getContentPageMetadata } from '@/app/[lang]/[currency]/content-page';
 import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getPageStoryPath } from '@/lib/storyblok/storyblok-paths';
+import { getPageStoryPath, WEBSITE_NOT_FOUND_SLUG } from '@/lib/storyblok/storyblok-paths';
 
-export const generateStaticParams = () => getPublishedSlugParams();
+export const generateStaticParams = async () => [...(await getPublishedSlugParams()), { slug: WEBSITE_NOT_FOUND_SLUG }];
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;
+	// Missing pages are rewritten here, so a canonical or hreflang would point every 404 at this slug
+	if (slug === WEBSITE_NOT_FOUND_SLUG) {
+		return {};
+	}
 
 	return getContentPageMetadata(getPageStoryPath(slug), lang as WebsiteLanguage, slug);
 };

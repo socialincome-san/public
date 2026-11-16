@@ -1,6 +1,6 @@
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
 import {
-	getWebsitePathTailFromStoryblokSlug,
+	getPublishedWebsitePathTails,
 	isContentPageStoryblokSlug,
 	isRoutableWebsiteStoryblokSlug,
 } from '@/lib/storyblok/storyblok-paths';
@@ -22,21 +22,10 @@ const getPublishedSubPaths = async (parentPathTail: string, isIncluded = isRouta
 	const prefix = parentPathTail ? `${parentPathTail}/` : '';
 	const subPaths = new Set<string>();
 
-	for (const link of result.data) {
-		if (link.is_folder || !link.published) {
-			continue;
-		}
-
-		for (const storyblokSlug of [link.slug, ...(link.alternates ?? []).map((alternate) => alternate.translated_slug)]) {
-			if (!isIncluded(storyblokSlug)) {
-				continue;
-			}
-
-			const pathTail = getWebsitePathTailFromStoryblokSlug(storyblokSlug);
-			const subPath = pathTail.startsWith(prefix) ? pathTail.slice(prefix.length) : '';
-			if (subPath && !mainWebsiteLanguages.some((lang) => lang === subPath)) {
-				subPaths.add(subPath);
-			}
+	for (const pathTail of getPublishedWebsitePathTails(result.data, isIncluded)) {
+		const subPath = pathTail.startsWith(prefix) ? pathTail.slice(prefix.length) : '';
+		if (subPath && !mainWebsiteLanguages.some((lang) => lang === subPath)) {
+			subPaths.add(subPath);
 		}
 	}
 

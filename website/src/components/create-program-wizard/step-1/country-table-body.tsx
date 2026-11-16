@@ -1,14 +1,14 @@
 'use client';
 
-import { CountryFlag } from '@/components/country-flag';
 import { getCountryNameByCode } from '@/lib/types/country';
-import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
+import type { CountryEligibilityRow } from '@/modules/countries/country.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import {
 	Table,
 	TableBody,
 	TableCell,
+	TableFrame,
 	TableHead,
 	TableHeader,
 	TableRow,
@@ -19,82 +19,102 @@ import { useTranslations } from 'next-intl';
 import { Fragment } from 'react';
 import { CountryConditionBadge } from './country-condition-badge';
 import { ExpansionRow } from './country-table-expansion-row';
+import { CountryTableList } from './country-table-list';
+import { CountryTableName } from './country-table-name';
 
 type Props = {
-	rows: ProgramCountryFeasibilityRow[];
+	rows: CountryEligibilityRow[];
+	selectable: boolean;
 	value?: string | null;
 	openIds: string[];
 	onToggleRow: (id: string) => void;
+	countryPageHrefs?: Record<string, string>;
 };
 
-export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) => {
+export const CountryTableBody = ({ rows, selectable, value, openIds, onToggleRow, countryPageHrefs }: Props) => {
 	const t = useTranslations('create-program-wizard');
 
 	return (
-		<div
-			data-testid="country-table"
-			className="max-h-96 w-full max-w-full min-w-0 overflow-x-auto overflow-y-auto rounded-xl border"
-		>
-			<div className="min-w-[820px]">
-				<Table stickyHeader>
-					<TableHeader sticky>
-						<TableRow>
-							<TableHead width="fit" />
-							<TableHead />
-							<TableHead>{t('step1.table.cash')}</TableHead>
-							<TableHead>{t('step1.table.mobile_money')}</TableHead>
-							<TableHead>{t('step1.table.mobile_network')}</TableHead>
-							<TableHead>{t('step1.table.sanctions')}</TableHead>
-							<TableHead width="fit" />
-						</TableRow>
-					</TableHeader>
+		// The container, not the viewport, decides: the wizard dialog is narrower than the page
+		<div data-testid="country-table" className="@container w-full max-w-full min-w-0">
+			<div className="@[52rem]:hidden">
+				<CountryTableList
+					rows={rows}
+					selectable={selectable}
+					value={value}
+					openIds={openIds}
+					onToggleRow={onToggleRow}
+					countryPageHrefs={countryPageHrefs}
+				/>
+			</div>
 
-					<TableBody>
-						{rows.map((row) => {
-							const isOpen = openIds.includes(row.id);
-							// Open rows share the highlight with their expansion row
-							const rowState = value === row.id || isOpen ? 'selected' : undefined;
+			<div className="hidden @[52rem]:block">
+				{/* In the wizard the table shares a modal with other content, so it scrolls; on its own page it grows with the page */}
+				<TableFrame maxHeight={selectable ? 'sm' : 'none'}>
+					<Table stickyHeader layout="fixed">
+						<TableHeader sticky>
+							<TableRow>
+								{selectable && <TableHead width="control" />}
+								<TableHead>{t('step1.table.country')}</TableHead>
+								<TableHead>{t('step1.table.cash')}</TableHead>
+								<TableHead>{t('step1.table.mobile_money')}</TableHead>
+								<TableHead>{t('step1.table.mobile_network')}</TableHead>
+								<TableHead>{t('step1.table.sanctions')}</TableHead>
+								<TableHead width="control" />
+							</TableRow>
+						</TableHeader>
 
-							return (
-								<Fragment key={row.id}>
-									<TableRow onClick={() => onToggleRow(row.id)} data-state={rowState}>
-										<TableCell onClick={(e) => e.stopPropagation()}>
-											<RadioGroupItem value={row.id} />
-										</TableCell>
+						<TableBody>
+							{rows.map((row) => {
+								const isOpen = openIds.includes(row.id);
+								const rowState = value === row.id || isOpen ? 'selected' : undefined;
 
-										<TableCell>
-											<div className="flex items-center gap-3 whitespace-nowrap">
-												<CountryFlag country={row.country.isoCode} />
-												<span>{getCountryNameByCode(row.country.isoCode)}</span>
-											</div>
-										</TableCell>
+								return (
+									<Fragment key={row.id}>
+										<TableRow onClick={() => onToggleRow(row.id)} data-state={rowState}>
+											{selectable && (
+												<TableCell onClick={(e) => e.stopPropagation()}>
+													<RadioGroupItem value={row.id} aria-label={getCountryNameByCode(row.country.isoCode)} />
+												</TableCell>
+											)}
 
-										<TableCell>
-											<CountryConditionBadge condition={row.cash.condition} />
-										</TableCell>
-										<TableCell>
-											<CountryConditionBadge condition={row.mobileMoney.condition} />
-										</TableCell>
-										<TableCell>
-											<CountryConditionBadge condition={row.mobileNetwork.condition} />
-										</TableCell>
-										<TableCell>
-											<CountryConditionBadge condition={row.sanctions.condition} />
-										</TableCell>
+											<TableCell>
+												<CountryTableName country={row.country} />
+											</TableCell>
 
-										<TableCell onClick={(e) => e.stopPropagation()}>
-											<Button variant="ghost" size="icon" onClick={() => onToggleRow(row.id)}>
-												<ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
-											</Button>
-										</TableCell>
-									</TableRow>
+											<TableCell>
+												<CountryConditionBadge condition={row.cash.condition} />
+											</TableCell>
+											<TableCell>
+												<CountryConditionBadge condition={row.mobileMoney.condition} />
+											</TableCell>
+											<TableCell>
+												<CountryConditionBadge condition={row.mobileNetwork.condition} />
+											</TableCell>
+											<TableCell>
+												<CountryConditionBadge condition={row.sanctions.condition} />
+											</TableCell>
 
-									{isOpen && <ExpansionRow row={row} />}
-								</Fragment>
-							);
-						})}
-					</TableBody>
-				</Table>
+											<TableCell onClick={(e) => e.stopPropagation()}>
+												<Button variant="ghost" size="icon" onClick={() => onToggleRow(row.id)}>
+													<ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
+												</Button>
+											</TableCell>
+										</TableRow>
+
+										{isOpen && (
+											<ExpansionRow
+												row={row}
+												selectable={selectable}
+												countryPageHref={row.country.isActive ? countryPageHrefs?.[row.country.isoCode] : undefined}
+											/>
+										)}
+									</Fragment>
+								);
+							})}
+						</TableBody>
+					</Table>
+				</TableFrame>
 			</div>
 		</div>
 	);
