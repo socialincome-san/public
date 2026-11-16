@@ -1,9 +1,11 @@
 const mockFetchStoryblokStoriesPage = jest.fn();
 const mockFetchStoryblokLinks = jest.fn();
+const mockFetchStoryblokStory = jest.fn();
 
 jest.mock('@/integrations/storyblok/storyblok-content.integration', () => ({
 	fetchStoryblokStoriesPage: mockFetchStoryblokStoriesPage,
 	fetchStoryblokLinks: mockFetchStoryblokLinks,
+	fetchStoryblokStory: mockFetchStoryblokStory,
 }));
 jest.mock('@/integrations/storyblok/storyblok-campaign.integration', () => ({}));
 jest.mock('@/integrations/storyblok/storyblok-program.integration', () => ({}));
@@ -17,6 +19,7 @@ import {
 	getLatestArticlesByTag,
 	getPagelessFolderName,
 	getPublishedPageLinks,
+	getStoryWithFallback,
 } from './storyblok-content.service';
 
 const relation = { uuid: 'relation', content: {} };
@@ -68,6 +71,45 @@ describe('latest articles by tag or article type', () => {
 		mockFetchStoryblokStoriesPage.mockResolvedValue(failure);
 
 		expect(await getLatestArticlesByArticleType('type-1', 'en')).toEqual(failure);
+	});
+});
+
+describe('getStoryWithFallback for folders', () => {
+	const notFound = { success: false, error: 'Could not fetch Storyblok story', status: 404 };
+	const found = (slug: string) => ({ success: true, data: { full_slug: slug } });
+	const fetchedSlugs = () => mockFetchStoryblokStory.mock.calls.map((call: unknown[]) => call[0]);
+
+	beforeEach(() => {
+		mockFetchStoryblokStory.mockReset();
+		mockFetchStoryblokStory.mockImplementation((slug: string) =>
+			Promise.resolve(slug.split('/').length > 3 || slug === 'pages/programs/programs' ? found(slug) : notFound),
+		);
+	});
+
+	test('shows the overview story of a folder', async () => {
+		expect(await getStoryWithFallback('pages/get-involved/individuals', 'en')).toEqual(
+			found('pages/get-involved/individuals/individuals'),
+		);
+		expect(fetchedSlugs()).toEqual(['pages/get-involved/individuals', 'pages/get-involved/individuals/individuals']);
+	});
+
+	test('retries legacy folder paths with the overview they normalize to', async () => {
+		expect(await getStoryWithFallback('pages/programs', 'en')).toEqual(found('pages/programs/programs'));
+		expect(fetchedSlugs()).toEqual(['pages/programs', 'pages/programs/programs']);
+	});
+
+	test('does not retry an overview slug that was not found', async () => {
+		expect(await getStoryWithFallback('pages/get-involved/get-involved', 'en')).toEqual(notFound);
+		expect(fetchedSlugs()).toEqual(['pages/get-involved/get-involved']);
+	});
+
+	test('returns an existing overview story without retrying', async () => {
+		mockFetchStoryblokStory.mockResolvedValue(found('pages/get-involved/get-involved'));
+
+		expect(await getStoryWithFallback('pages/get-involved/get-involved', 'en')).toEqual(
+			found('pages/get-involved/get-involved'),
+		);
+		expect(fetchedSlugs()).toEqual(['pages/get-involved/get-involved']);
 	});
 });
 

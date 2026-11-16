@@ -28,12 +28,15 @@ import { defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	getCampaignStoryPath,
+	getFolderOverviewStoryPath,
 	getJournalArticleStoryPath,
 	getJournalArticleTypeStoryPath,
 	getJournalTagStoryPath,
 	getPersonStoryPath,
 	getProgramStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
+	isFolderOverviewStoryblokSlug,
+	normalizeStoryblokSlug,
 	STORYBLOK_CAMPAIGNS_FOLDER,
 	STORYBLOK_COMMUNITY_GLOBALS_PATH,
 	STORYBLOK_COUNTRIES_FOLDER,
@@ -100,7 +103,7 @@ const fetchDatasourceEntriesCached = cache(
 		}),
 );
 
-export const getStoryWithFallback = async <T>(slug: string, language: string): Promise<Result<T>> => {
+const fetchStoryWithLanguageFallback = async <T>(slug: string, language: string): Promise<Result<T>> => {
 	const params = await getStoryParams(language);
 	const result = await fetchStoryblokStory<T>(slug, {
 		...params,
@@ -118,11 +121,35 @@ export const getStoryWithFallback = async <T>(slug: string, language: string): P
 	return fallback.success ? fallback : resultFail('Could not fetch Storyblok story', fallback.status);
 };
 
-export const getStoryTitle = async (slug: string, language: string): Promise<Result<StoryTitleData>> => {
-	const result = await fetchStoryWithOptionalLanguageFallback<StoryTitleData>(slug, language);
+// A folder such as pages/get-involved is no story; its URL shows the folder's overview story
+const withFolderOverviewFallback = async <T>(
+	slug: string,
+	fetchStory: (storySlug: string) => Promise<Result<T>>,
+): Promise<Result<T>> => {
+	const result = await fetchStory(slug);
+	const normalizedSlug = normalizeStoryblokSlug(slug);
+	if (result.success || result.status !== 404 || !normalizedSlug.startsWith(`${STORYBLOK_PAGES_FOLDER}/`)) {
+		return result;
+	}
+	// Legacy folder paths such as pages/programs normalize to their overview. Any other overview slug that was not
+	// found is a missing story, not a folder (it would be a folder's overview itself), so it is not retried.
+	if (isFolderOverviewStoryblokSlug(normalizedSlug)) {
+		return normalizedSlug !== slug ? fetchStory(normalizedSlug) : result;
+	}
 
-	return result ?? resultFail('Story not found', 404);
+	return fetchStory(getFolderOverviewStoryPath(normalizedSlug));
 };
+
+export const getStoryWithFallback = async <T>(slug: string, language: string): Promise<Result<T>> =>
+	withFolderOverviewFallback(slug, (storySlug) => fetchStoryWithLanguageFallback<T>(storySlug, language));
+
+export const getStoryTitle = async (slug: string, language: string): Promise<Result<StoryTitleData>> =>
+	withFolderOverviewFallback(
+		slug,
+		async (storySlug) =>
+			(await fetchStoryWithOptionalLanguageFallback<StoryTitleData>(storySlug, language)) ??
+			resultFail('Story not found', 404),
+	);
 
 export const getOverviewArticlesCountForDefaultLang = async (): Promise<Result<number>> =>
 	getArticleCount({

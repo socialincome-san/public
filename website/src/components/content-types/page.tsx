@@ -20,6 +20,7 @@ import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measu
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LandingHeroBlock } from '@/components/content-blocks/landing-hero';
+import { LinkCardsBlock } from '@/components/content-blocks/link-cards';
 import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
@@ -36,6 +37,7 @@ import { ReservesBlock } from '@/components/content-blocks/reserves-block';
 import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
 import { RunwayMonthGridBlock } from '@/components/content-blocks/runway-month-grid-block';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
+import { TabNavigationBlock } from '@/components/content-blocks/tab-navigation';
 import { TaskCardsBlock } from '@/components/content-blocks/task-cards';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
@@ -64,12 +66,15 @@ type PageContentTypeProps = {
 	currency: WebsiteCurrency;
 	searchParams?: Promise<AnySearchParams>;
 	afterHero?: ReactNode;
+	// uuid of the story, for blocks that depend on where they are shown
+	storyUuid: string;
 };
 
 const renderPageBlock = (
 	block: PageBlock | NestedPageBlock,
 	lang: WebsiteLanguage,
 	currency: WebsiteCurrency,
+	storyUuid: string,
 	searchParams?: Promise<AnySearchParams>,
 ): ReactNode => {
 	switch (block.component) {
@@ -117,6 +122,8 @@ const renderPageBlock = (
 			return <JournalTeasersBlock blok={block} lang={lang} currency={currency} />;
 		case 'landingHero':
 			return <LandingHeroBlock blok={block} lang={lang} currency={currency} />;
+		case 'linkCards':
+			return <LinkCardsBlock blok={block} lang={lang} currency={currency} />;
 		case 'lottie':
 			return <LottieBlock blok={block} />;
 		case 'modalCards':
@@ -151,6 +158,8 @@ const renderPageBlock = (
 			return <RichtextButtonHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'spacer':
 			return <SpacerBlock blok={block} />;
+		case 'tabNavigation':
+			return <TabNavigationBlock blok={block} lang={lang} currency={currency} storyUuid={storyUuid} />;
 		case 'taskCards':
 			return <TaskCardsBlock blok={block} />;
 		case 'teamGrid':
@@ -171,7 +180,9 @@ const renderPageBlock = (
 			const renderColumn = (column: typeof block.leftColumn) =>
 				column.length > 0
 					? column.map((columnBlock) => (
-							<Fragment key={columnBlock._uid}>{renderPageBlock(columnBlock, lang, currency, searchParams)}</Fragment>
+							<Fragment key={columnBlock._uid}>
+								{renderPageBlock(columnBlock, lang, currency, storyUuid, searchParams)}
+							</Fragment>
 						))
 					: undefined;
 
@@ -198,12 +209,12 @@ const renderPageBlock = (
 	}
 };
 
-export default function PageContentType({ blok, lang, currency, searchParams, afterHero }: PageContentTypeProps) {
+export default function PageContentType({ blok, lang, currency, searchParams, afterHero, storyUuid }: PageContentTypeProps) {
 	const blocks = blok.content ?? [];
 	const heroCount = blocks[0]?.component === 'heroVideo' || blocks[0]?.component === 'landingHero' ? 1 : 0;
 	const renderBlocks = (pageBlocks: PageBlock[]) =>
 		pageBlocks.map((currentBlock) => (
-			<Fragment key={currentBlock._uid}>{renderPageBlock(currentBlock, lang, currency, searchParams)}</Fragment>
+			<Fragment key={currentBlock._uid}>{renderPageBlock(currentBlock, lang, currency, storyUuid, searchParams)}</Fragment>
 		));
 
 	return (
