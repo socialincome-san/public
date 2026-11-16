@@ -16,7 +16,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'An introduction for a page or section, with an optional eyebrow. Optionally shows an illustration and actions. The landing variant sets the title in the regular weight and bolds only the words wrapped in `<strong>`. Renders nothing without content.',
+					'An introduction for a page or section, with an optional eyebrow. Optionally shows an illustration and actions: below the text, or with `actionsPosition="beside"` to the right of the description from large screens up, unless there is an illustration. The landing variant sets the title in the regular weight and bolds only the words wrapped in `<strong>`. Renders nothing without content.',
 			},
 		},
 	},
@@ -45,6 +45,13 @@ export const SectionLongText: Story = {
 		variant: 'section',
 		eyebrow: 'Our local country office team',
 		title: 'Democratic Republic of the Congo',
+	},
+};
+
+export const ActionsBeside: Story = {
+	args: {
+		actions: <Button>Start a program</Button>,
+		actionsPosition: 'beside',
 	},
 };
 
