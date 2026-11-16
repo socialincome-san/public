@@ -3,7 +3,7 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import type { GithubContributor, GithubIssue, GithubOpenSourceIssuesData, GithubRepoStats } from './github.types';
 
-const RENOVATE_BOT_LOGIN = 'renovate[bot]';
+const HIDDEN_CONTRIBUTOR_LOGINS = new Set(['renovate[bot]', 'dependabot[bot]', 'Copilot']);
 
 export const getOpenSourceStats = async (): Promise<Result<GithubRepoStats>> => {
 	const repoResult = await fetchGithubData('');
@@ -52,7 +52,7 @@ export const getOpenSourceContributors = async (): Promise<Result<GithubContribu
 
 		contributors.push(
 			...result.data.data
-				.filter(({ login }) => login !== RENOVATE_BOT_LOGIN)
+				.filter(({ login }) => !HIDDEN_CONTRIBUTOR_LOGINS.has(login))
 				.map(({ id, login, avatar_url: avatarUrl, contributions: commits }) => ({
 					id,
 					name: login,

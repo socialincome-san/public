@@ -1,4 +1,5 @@
 import type { AnySearchParams } from '@/app/page-props';
+import { AfricaMapBlock } from '@/components/content-blocks/africa-map';
 import { blockMargins } from '@/components/content-blocks/block-margins';
 import { CampaignGridBlock } from '@/components/content-blocks/campaign-grid';
 import { CircleGridBlock } from '@/components/content-blocks/circle-grid';
@@ -19,6 +20,7 @@ import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measu
 import { InflowsBlock } from '@/components/content-blocks/inflows-block';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LandingHeroBlock } from '@/components/content-blocks/landing-hero';
+import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
@@ -71,6 +73,8 @@ const renderPageBlock = (
 	searchParams?: Promise<AnySearchParams>,
 ): ReactNode => {
 	switch (block.component) {
+		case 'africaMap':
+			return <AfricaMapBlock blok={block} lang={lang} currency={currency} />;
 		case 'campaignGrid':
 			return <CampaignGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'circleGrid':
@@ -137,6 +141,8 @@ const renderPageBlock = (
 			return <PartnershipsCardBlock blok={block} />;
 		case 'personGrid':
 			return <PersonGridBlock blok={block} lang={lang} currency={currency} />;
+		case 'localPartnerGrid':
+			return <LocalPartnerGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'programGrid':
 			return <ProgramGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'reservesBlock':

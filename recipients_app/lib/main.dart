@@ -96,7 +96,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   final connectivityService = ConnectivityService(
     connectivity: Connectivity(),
-    reachabilityUrl: Uri.parse("https://socialincome.org"),
+    reachabilityUrl: Uri.parse("https://www.google.com"),
   );
   await connectivityService.initialize();
 

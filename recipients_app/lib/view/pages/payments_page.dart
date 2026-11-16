@@ -22,14 +22,36 @@ class _PaymentsPageState extends State<PaymentsPage> {
   @override
   Widget build(BuildContext context) {
     final recipient = context.watch<AuthCubit>().state.recipient;
-    final payoutsUiState = context.watch<PayoutsCubit>().state.payoutsUiState!;
+    final payoutsState = context.watch<PayoutsCubit>().state;
+    final payoutsUiState = payoutsState.payoutsUiState;
+    final appBar = AppBar(
+      elevation: 0,
+      title: Text(context.l10n.payments),
+      centerTitle: true,
+    );
+
+    // Null until the first successful load, e.g. when loading failed and nothing is cached.
+    if (payoutsUiState == null) {
+      return Scaffold(
+        appBar: appBar,
+        body: RefreshIndicator(
+          onRefresh: () => context.read<PayoutsCubit>().loadPayments(),
+          child: ListView(
+            padding: AppSpacings.a16,
+            children: [
+              Center(
+                child: payoutsState.status == PayoutsStatus.failure
+                    ? Text(context.l10n.paymentsLoadError, textAlign: TextAlign.center)
+                    : const CircularProgressIndicator(),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(context.l10n.payments),
-        centerTitle: true,
-      ),
+      appBar: appBar,
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: () => context.read<PayoutsCubit>().loadPayments(),

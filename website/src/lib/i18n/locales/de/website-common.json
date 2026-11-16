@@ -57,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "Alle {count} lokalen Partner anzeigen",
 		"empty": "Keine lokalen Partner gefunden.",
 		"no-results": "Keine lokalen Partner entsprechen den gewählten Filtern.",
 		"search-label": "Lokale Partner suchen",
@@ -95,7 +96,9 @@
 		"location": "Standort",
 		"learn-more": "Mehr erfahren",
 		"opens-in-new-tab": "(öffnet in einem neuen Tab)",
-		"website": "Website"
+		"website": "Website",
+		"assessment": "NGO-Prüfung geleitet von <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "NGO-Prüfung geleitet von <leadLink>{lead}</leadLink>, gegengeprüft von <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "Alle Jahre ({count})",
@@ -514,5 +517,9 @@
 	},
 	"video-carousel": {
 		"show-video": "Video {index} anzeigen"
+	},
+	"africa-map": {
+		"label": "Karte von Afrika",
+		"recipients": "{count, plural, one {# Empfänger:in} other {# Empfänger:​innen}}"
 	}
 }
