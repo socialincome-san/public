@@ -99,3 +99,67 @@ export const InteractiveRows: Story = {
 		</Table>
 	),
 };
+
+const transferColumns = ['Country', 'Poverty line', 'CPI adjustment', 'Adjusted poverty line', 'Transfer value'];
+const transferRows = [
+	['Sierra Leone', 'SLE 330 (2018)', '350%', 'SLE 1160', 'SLE 800'],
+	['Liberia', 'LRD 5450 (2017)', '120%', 'LRD 11970', 'LRD 8,050'],
+	['Ghana', 'GHS 150 (2013)', '420%', 'GHS 465', 'GHS 335'],
+];
+
+const ContentTable = ({ surface, textSize }: { surface: 'none' | 'card'; textSize?: 'default' | 'lg' }) => (
+	<Table surface={surface} caption="Amounts per person and month.">
+		<TableHeader variant="content" textSize={textSize}>
+			<TableRow>
+				{transferColumns.map((column) => (
+					<TableHead key={column} variant="content" verticalAlign="top">
+						{column}
+					</TableHead>
+				))}
+			</TableRow>
+		</TableHeader>
+		<TableBody textSize={textSize}>
+			{transferRows.map(([country, ...values]) => (
+				<TableRow key={country}>
+					<TableHead variant="contentRow" scope="row" verticalAlign="top">
+						{country}
+					</TableHead>
+					{values.map((value, index) => (
+						<TableCell key={transferColumns[index + 1]} verticalAlign="top">
+							{value}
+						</TableCell>
+					))}
+				</TableRow>
+			))}
+		</TableBody>
+	</Table>
+);
+
+export const Content: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story: 'Editorial tables, e.g. in journal articles: wrapping headers, row headers and a caption.',
+			},
+		},
+	},
+	render: () => <ContentTable surface="none" />,
+};
+
+export const ContentOnCard: Story = {
+	parameters: {
+		docs: { description: { story: 'The `card` surface sets the table on a white panel.' } },
+	},
+	render: () => (
+		<div className="bg-muted p-8">
+			<ContentTable surface="card" />
+		</div>
+	),
+};
+
+export const ContentLargeText: Story = {
+	parameters: {
+		docs: { description: { story: 'Header and body take `textSize="lg"` independently; here both are set.' } },
+	},
+	render: () => <ContentTable surface="none" textSize="lg" />,
+};
