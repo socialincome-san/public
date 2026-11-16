@@ -46,6 +46,7 @@ const CountryFlagImage = ({
 					containerSize,
 				)}
 				aria-hidden={decorative || undefined}
+				data-slot="country-flag"
 			>
 				{country}
 			</span>
@@ -56,6 +57,7 @@ const CountryFlagImage = ({
 		<span
 			className={cn('inline-flex shrink-0 overflow-hidden rounded-full', containerSize)}
 			aria-hidden={decorative || undefined}
+			data-slot="country-flag"
 		>
 			<Image
 				src={`/assets/flags/${slug}.svg`}

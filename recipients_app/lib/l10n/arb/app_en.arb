@@ -57,6 +57,7 @@
     "futurePayments": "Future Payments",
     "paymentsSuspended": "Suspended",
     "paymentsEmptyList": "No payments.",
+    "paymentsLoadError": "Could not load your payments. Pull down to try again.",
     "survey": "Survey",
     "acceptAndContinueInfo": "Before proceeding, you must accept our ",
     "privacyPolicy": "Privacy Policy",
@@ -315,5 +316,7 @@
     "offlineBannerMessage": "You are offline. Showing cached data.",
     "openGoogleSupportPageUpdatePlayStore" : "Open Support Page",
     "appAttestationFailedError" : "Firebase AppCheck: App attestation failed.",
-    "countrySearchHint": "Search by country name or dial code"
+    "countrySearchHint": "Search by country name or dial code",
+    "onboarding": "Onboarding",
+    "onboardingText": "Please fill in some important information to make your experience with Social Income as smooth as possible."
 }

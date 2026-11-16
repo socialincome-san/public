@@ -1,6 +1,6 @@
 import type { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import { getPageStoryMetadata, storyblokRichtextToPlainText } from './storyblok-richtext';
+import { getPageStoryMetadata, getRichTextBloks, storyblokRichtextToPlainText } from './storyblok-richtext';
 
 const page = (content: Page['content']): Page => ({ component: 'page', _uid: 'page', content });
 
@@ -92,6 +92,17 @@ describe('getPageStoryMetadata overrides', () => {
 	it('uses the default title before the first heading', () => {
 		expect(getPageStoryMetadata(page([hero]), 'Home title').title).toBe('Home title');
 	});
+
+	it('reads the intro of a story without SEO fields that is built from page blocks, such as the programs overview', () => {
+		const text = getPageStoryMetadata({
+			content: [
+				{ component: 'pageIntro', _uid: 'intro', title: '**All Programs**', description: 'Find a program you like.' },
+				{ component: 'programGrid', _uid: 'grid', showFilters: true },
+			],
+		});
+
+		expect(text).toEqual({ title: 'All Programs', description: 'Find a program you like.', image: undefined });
+	});
 });
 
 describe('storyblokRichtextToPlainText', () => {
@@ -99,5 +110,25 @@ describe('storyblokRichtextToPlainText', () => {
 		expect(storyblokRichtextToPlainText('Sierra Leone sits on\n\nthe West African coast.')).toBe(
 			'Sierra Leone sits on the West African coast.',
 		);
+	});
+});
+
+describe('getRichTextBloks', () => {
+	it('finds the blocks in document order, also inside other nodes', () => {
+		const map = { component: 'africaMap', _uid: 'map', countries: ['sl'] };
+		const quote = { component: 'quotedText', _uid: 'quote' };
+		const video = { component: 'embeddedVideo', _uid: 'video' };
+
+		const bloks = getRichTextBloks({
+			type: 'doc',
+			content: [
+				{ type: 'paragraph', content: [{ type: 'text', text: 'Where we work:' }] },
+				{ type: 'blok', attrs: { id: 'first', body: [map, quote] } },
+				{ type: 'blockquote', content: [{ type: 'blok', attrs: { id: 'nested', body: [video] } }] },
+				{ type: 'blok', attrs: { id: 'empty', body: null } },
+			],
+		});
+
+		expect(bloks).toEqual([map, quote, video]);
 	});
 });

@@ -1,3 +1,5 @@
+import { useId } from 'react';
+
 export const ContactIcon = () => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
 		<path
@@ -28,6 +30,46 @@ export const QuoteIcon = () => (
 		/>
 	</svg>
 );
+
+type PeopleIconProps = {
+	/** Height in px. Without it the icon matches the surrounding text: as tall as a digit, on the baseline. */
+	size?: number;
+};
+
+export const PeopleIcon = ({ size }: PeopleIconProps) => {
+	const maskId = useId();
+
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="3 6.4 18 15.6"
+			height={size}
+			fill="currentColor"
+			aria-hidden="true"
+			data-slot="people-icon"
+			className={
+				size === undefined
+					? 'h-[0.7em] w-auto shrink-0 -translate-y-[0.25px] supports-[height:1cap]:h-[1cap]'
+					: 'w-auto shrink-0'
+			}
+		>
+			{/* Cuts a gap around the front person out of the back one, so they stay apart on any background */}
+			<mask id={maskId} maskUnits="userSpaceOnUse" x="3" y="6.4" width="18" height="15.6">
+				<rect x="3" y="6.4" width="18" height="15.6" fill="white" />
+				<g fill="black" stroke="black" strokeWidth="1.4">
+					<circle cx="15" cy="10" r="3.4" />
+					<path d="M9.2 21v-2.4a4.2 4.2 0 0 1 4.2-4.2h3.2a4.2 4.2 0 0 1 4.2 4.2V21a1 1 0 0 1-1 1H10.2a1 1 0 0 1-1-1z" />
+				</g>
+			</mask>
+			<g opacity="0.34" mask={`url(#${maskId})`}>
+				<circle cx="8.1" cy="9.1" r="2.7" />
+				<path d="M3.2 19v-2.6a3.6 3.6 0 0 1 3.6-3.6h2.6a3.6 3.6 0 0 1 3.6 3.6V19a1 1 0 0 1-1 1H4.2a1 1 0 0 1-1-1z" />
+			</g>
+			<circle cx="15" cy="10" r="3.4" />
+			<path d="M9.2 21v-2.4a4.2 4.2 0 0 1 4.2-4.2h3.2a4.2 4.2 0 0 1 4.2 4.2V21a1 1 0 0 1-1 1H10.2a1 1 0 0 1-1-1z" />
+		</svg>
+	);
+};
 
 type HairIconProps = {
 	size?: number;

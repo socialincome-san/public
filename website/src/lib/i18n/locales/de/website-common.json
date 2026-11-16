@@ -57,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "Alle {count} lokalen Partner anzeigen",
 		"empty": "Keine lokalen Partner gefunden.",
 		"no-results": "Keine lokalen Partner entsprechen den gewählten Filtern.",
 		"search-label": "Lokale Partner suchen",
@@ -86,7 +87,9 @@
 		"programs-in-count-plural": "in {count} Programmen",
 		"programs-fundraising": "Sammelt aktuell Spenden",
 		"programs-more": "+{count} weitere Programme",
-		"programs-build-own": "Eigenes Programm aufbauen",
+		"programs-build-own-with-partner-candidates": "{count, plural, one {Eigenes Programm aufbauen mit {count} Empfänger:in von {partner}} other {Eigenes Programm aufbauen mit bis zu {count} Empfänger:innen von {partner}}}",
+		"programs-build-own-with-candidates": "{count, plural, one {Eigenes Programm aufbauen mit {count} Empfänger:in} other {Eigenes Programm aufbauen mit bis zu {count} Empfänger:innen}}",
+		"programs-build-own-start": "Starten",
 		"programs-count-singular": "{count} Programm",
 		"programs-count-plural": "{count} Programme",
 		"mission": "Mission",
@@ -95,7 +98,9 @@
 		"location": "Standort",
 		"learn-more": "Mehr erfahren",
 		"opens-in-new-tab": "(öffnet in einem neuen Tab)",
-		"website": "Website"
+		"website": "Website",
+		"assessment": "NGO-Prüfung geleitet von <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "NGO-Prüfung geleitet von <leadLink>{lead}</leadLink>, gegengeprüft von <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "Alle Jahre ({count})",
@@ -291,7 +296,17 @@
 		"program-design": "Programmdesign",
 		"delivery": "Auszahlung",
 		"country": "Land",
+		"mobile-money-providers": "Mobile-Money-Anbieter",
+		"payments-made": "Getätigte Zahlungen",
+		"payouts-to-date": "Bisherige Auszahlungen",
+		"future-payouts": "Künftige Auszahlungen",
+		"finance-circle": "Finance Circle",
+		"operation-circle": "Operation Circle",
 		"payment-amount": "Auszahlungsbetrag",
+		"conditionality": "Bedingungen",
+		"conditionality-unconditional": "Bedingungslos",
+		"conditionality-info-label": "Was bedeutet bedingungslos?",
+		"conditionality-info": "Empfänger:\u200binnen erhalten das Geld ohne Bedingungen oder Verpflichtungen. Sie entscheiden selbst, wofür sie es einsetzen, ob für Essen, Schulgebühren, Medikamente oder ihr eigenes Geschäft.",
 		"payout-interval-monthly": "monatlich",
 		"payout-interval-quarterly": "vierteljährlich",
 		"payout-interval-yearly": "jährlich",
@@ -451,11 +466,21 @@
 			}
 		}
 	},
+	"link-cards": {
+		"empty": "Hier gibt es noch nichts."
+	},
+	"tab-navigation": {
+		"label": "Bereiche"
+	},
 	"circles": {
 		"title": "Kreise",
-		"member-summary": "{active} aktiv · {interested, plural, one {# interessiertes Mitglied} other {# interessierte Mitglieder}}",
-		"members-empty": "Noch keine Mitglieder",
-		"empty": "Noch keine Kreise."
+		"empty": "Noch keine Kreise.",
+		"active-count": "{count, plural, one {# Mitglied} other {# Mitglieder}}",
+		"interested-count": "{count} Follower",
+		"legend-active": "Kreismitglieder",
+		"legend-active-info": "Mitglieder tragen die Arbeit des Kreises und sind dafür verantwortlich.",
+		"legend-interested": "Follower",
+		"legend-interested-info": "Follower werden zu den Treffen des Kreises eingeladen und als Erste gefragt, wenn eine Aufgabe mehr Hände braucht."
 	},
 	"task-cards": {
 		"show-all": "Alle {count} Aufgaben anzeigen",
@@ -514,5 +539,9 @@
 	},
 	"video-carousel": {
 		"show-video": "Video {index} anzeigen"
+	},
+	"africa-map": {
+		"label": "Karte von Afrika",
+		"recipients": "{count, plural, one {# Empfänger:in} other {# Empfänger:​innen}}"
 	}
 }

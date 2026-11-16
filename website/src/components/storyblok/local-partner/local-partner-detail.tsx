@@ -48,8 +48,21 @@ export const LocalPartnerDetail = async ({
 	]);
 	const partnerPrograms = partnerProgramsResult.success
 		? partnerProgramsResult.data
-		: { programs: [], programCount: 0, recipientsTotal: 0, isPartnerScoped: false };
-	const heroCard = <LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} currency={currency} />;
+		: {
+				programs: [],
+				programCount: 0,
+				recipientsTotal: 0,
+				isPartnerScoped: false,
+				candidates: { count: 0, isPartnerScoped: false },
+			};
+	const heroCard = (
+		<LocalPartnerProgramsCard
+			partnerName={localPartnerTitle}
+			partnerPrograms={partnerPrograms}
+			lang={lang}
+			currency={currency}
+		/>
+	);
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: localPartner.full_slug,
 		currentLabel: localPartnerTitle,
@@ -57,6 +70,11 @@ export const LocalPartnerDetail = async ({
 		currency,
 	});
 
+	// Unpublished people stay unresolved uuids
+	const [assessmentLead, assessmentReviewer] = [
+		localPartner.content.assessmentLead,
+		localPartner.content.assessmentReviewer,
+	].map((people) => people?.find((person) => typeof person !== 'string'));
 	const { mission, partnerSince, foundingYear, location, website, linkedin, instagram, facebook, youtube } =
 		localPartner.content;
 
@@ -77,13 +95,17 @@ export const LocalPartnerDetail = async ({
 								? t('local-partners-page.recipient-singular')
 								: t('local-partners-page.recipient-plural'),
 					},
-					{
-						value: completedSurveysCount,
-						label:
-							completedSurveysCount === 1
-								? t('local-partners-page.completed-survey-singular')
-								: t('local-partners-page.completed-survey-plural'),
-					},
+					...(completedSurveysCount > 0
+						? [
+								{
+									value: completedSurveysCount,
+									label:
+										completedSurveysCount === 1
+											? t('local-partners-page.completed-survey-singular')
+											: t('local-partners-page.completed-survey-plural'),
+								},
+							]
+						: []),
 				]}
 			/>
 			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} /> : null} />
@@ -106,6 +128,8 @@ export const LocalPartnerDetail = async ({
 						partnerSince={partnerSince}
 						foundingYear={foundingYear}
 						location={location}
+						assessmentLead={assessmentLead}
+						assessmentReviewer={assessmentReviewer}
 						externalLinks={[
 							{ label: t('local-partners-page.website'), link: website },
 							{ label: 'LinkedIn', link: linkedin },

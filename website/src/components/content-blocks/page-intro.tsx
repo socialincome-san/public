@@ -53,6 +53,7 @@ export const PageIntroBlock = ({ blok, lang, currency }: Props) => {
 						</>
 					) : undefined
 				}
+				actionsPosition={blok.buttonPosition === 'right' ? 'beside' : 'below'}
 			/>
 		</BlockWrapper>
 	);

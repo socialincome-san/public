@@ -57,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "View all {count} local partners",
 		"empty": "No local partners found.",
 		"no-results": "No local partners match the selected filters.",
 		"search-label": "Search local partners",
@@ -86,7 +87,9 @@
 		"programs-in-count-plural": "in {count} programs",
 		"programs-fundraising": "Currently fundraising",
 		"programs-more": "+{count} more programs",
-		"programs-build-own": "Build your own program",
+		"programs-build-own-with-partner-candidates": "{count, plural, one {Build your own program with {count} recipient from {partner}} other {Build your own program with up to {count} recipients from {partner}}}",
+		"programs-build-own-with-candidates": "{count, plural, one {Build your own program with {count} recipient} other {Build your own program with up to {count} recipients}}",
+		"programs-build-own-start": "Start",
 		"programs-count-singular": "{count} program",
 		"programs-count-plural": "{count} programs",
 		"mission": "Mission",
@@ -95,7 +98,9 @@
 		"location": "Location",
 		"learn-more": "Learn more",
 		"opens-in-new-tab": "(opens in a new tab)",
-		"website": "Website"
+		"website": "Website",
+		"assessment": "NGO assessment led by <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "NGO assessment led by <leadLink>{lead}</leadLink>, reviewed by <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "All years ({count})",
@@ -291,7 +296,17 @@
 		"program-design": "Program Design",
 		"delivery": "Delivery",
 		"country": "Country",
+		"mobile-money-providers": "Mobile money providers",
+		"payments-made": "Payments made",
+		"payouts-to-date": "Payouts to date",
+		"future-payouts": "Future payouts",
+		"finance-circle": "Finance Circle",
+		"operation-circle": "Operation Circle",
 		"payment-amount": "Payment amount",
+		"conditionality": "Conditionality",
+		"conditionality-unconditional": "Unconditional",
+		"conditionality-info-label": "What does unconditional mean?",
+		"conditionality-info": "Recipients get the money without any conditions or obligations. They decide for themselves how to use it, whether for food, school fees, medicine or their own business.",
 		"payout-interval-monthly": "monthly",
 		"payout-interval-quarterly": "quarterly",
 		"payout-interval-yearly": "yearly",
@@ -451,11 +466,21 @@
 			}
 		}
 	},
+	"link-cards": {
+		"empty": "Nothing here yet."
+	},
+	"tab-navigation": {
+		"label": "Sections"
+	},
 	"circles": {
 		"title": "Circles",
-		"member-summary": "{active} active · {interested, plural, one {# interested member} other {# interested members}}",
-		"members-empty": "No members yet",
-		"empty": "No circles yet."
+		"empty": "No circles yet.",
+		"active-count": "{count, plural, one {# Member} other {# Members}}",
+		"interested-count": "{count, plural, one {# Follower} other {# Followers}}",
+		"legend-active": "Circle Members",
+		"legend-active-info": "Members carry the circle's work and are responsible for getting it done.",
+		"legend-interested": "Followers",
+		"legend-interested-info": "Followers are invited to the circle's meetings and are the first we ask when a task needs more hands."
 	},
 	"task-cards": {
 		"show-all": "Show all {count} tasks",
@@ -514,5 +539,9 @@
 	},
 	"video-carousel": {
 		"show-video": "Show video {index}"
+	},
+	"africa-map": {
+		"label": "Map of Africa",
+		"recipients": "{count, plural, one {# recipient} other {# recipients}}"
 	}
 }

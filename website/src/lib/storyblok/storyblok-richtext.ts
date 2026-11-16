@@ -3,6 +3,9 @@ import type { StoryblokAsset, StoryblokRichTextDoc } from '@/generated/storyblok
 
 type RichTextNode = StoryblokRichTextDoc | StoryblokRichTextDoc['content'][number];
 
+// A page, or another story built from page blocks, such as the programs overview
+type PageStory = Pick<Page, 'content'> & Partial<Pick<Page, 'metaTitle' | 'metaDescription' | 'metaImage'>>;
+
 const isRichTextDoc = (value: unknown): value is StoryblokRichTextDoc =>
 	typeof value === 'object' && value !== null && 'type' in value && value.type === 'doc' && 'content' in value;
 
@@ -25,6 +28,15 @@ const toText = (node: RichTextNode): string => {
 export const storyblokRichtextToPlainText = (node: RichTextNode | string) =>
 	(typeof node === 'string' ? node : toText(node)).replaceAll(/\s+/g, ' ').trim();
 
+// The blocks editors placed in a rich text, in the order they appear. Their fields depend on the component.
+export const getRichTextBloks = (node: RichTextNode): unknown[] => {
+	if (node.type === 'blok') {
+		return node.attrs.body ?? [];
+	}
+
+	return 'content' in node && node.content ? node.content.flatMap(getRichTextBloks) : [];
+};
+
 // Hero headings and titles are Markdown, e.g. "Give 1 % of your income and **change lives**."
 const markdownToPlainText = (markdown: string) =>
 	markdown
@@ -46,7 +58,7 @@ const isImageAsset = (value: unknown): value is StoryblokAsset =>
 const markdownFieldToPlainText = (value: unknown) =>
 	typeof value === 'string' ? markdownToPlainText(value) || undefined : undefined;
 
-const getPageStoryText = (page: Page) => {
+const getPageStoryText = (page: PageStory) => {
 	let heading: string | undefined;
 	let paragraph: string | undefined;
 
@@ -82,7 +94,7 @@ const nonEmpty = (value: string | undefined) => (value?.trim() ? value.trim() : 
  * `defaultTitle` or from what visitors see first: the first heading and paragraph of the page's blocks, and the
  * first block's image.
  */
-export const getPageStoryMetadata = (page: Page, defaultTitle?: string) => {
+export const getPageStoryMetadata = (page: PageStory, defaultTitle?: string) => {
 	const { heading, paragraph } = getPageStoryText(page);
 	const firstBlockImage: unknown = page.content?.[0]?.image;
 

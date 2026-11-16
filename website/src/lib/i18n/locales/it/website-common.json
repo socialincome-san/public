@@ -57,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "Visualizza tutti i {count} partner locali",
 		"empty": "Nessun partner locale trovato.",
 		"no-results": "Nessun partner locale corrisponde ai filtri selezionati.",
 		"search-label": "Cerca partner locali",
@@ -86,7 +87,9 @@
 		"programs-in-count-plural": "in {count} programmi",
 		"programs-fundraising": "Raccolta fondi in corso",
 		"programs-more": "+{count} altri programmi",
-		"programs-build-own": "Crea il tuo programma",
+		"programs-build-own-with-partner-candidates": "{count, plural, one {Crea il tuo programma con {count} beneficiario di {partner}} other {Crea il tuo programma con un massimo di {count} beneficiari di {partner}}}",
+		"programs-build-own-with-candidates": "{count, plural, one {Crea il tuo programma con {count} beneficiario} other {Crea il tuo programma con un massimo di {count} beneficiari}}",
+		"programs-build-own-start": "Inizia",
 		"programs-count-singular": "{count} programma",
 		"programs-count-plural": "{count} programmi",
 		"mission": "Missione",
@@ -95,7 +98,9 @@
 		"location": "Sede",
 		"learn-more": "Scopri di più",
 		"opens-in-new-tab": "(si apre in una nuova scheda)",
-		"website": "Sito web"
+		"website": "Sito web",
+		"assessment": "Valutazione dell’ONG condotta da <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "Valutazione dell’ONG condotta da <leadLink>{lead}</leadLink>, verificata da <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "Tutti gli anni ({count})",
@@ -291,7 +296,17 @@
 		"program-design": "Progettazione del programma",
 		"delivery": "Erogazione",
 		"country": "Paese",
+		"mobile-money-providers": "Operatori di mobile money",
+		"payments-made": "Pagamenti effettuati",
+		"payouts-to-date": "Versamenti ad oggi",
+		"future-payouts": "Versamenti futuri",
+		"finance-circle": "Finance Circle",
+		"operation-circle": "Operation Circle",
 		"payment-amount": "Importo del pagamento",
+		"conditionality": "Condizionalità",
+		"conditionality-unconditional": "Incondizionato",
+		"conditionality-info-label": "Cosa significa incondizionato?",
+		"conditionality-info": "I beneficiari ricevono il denaro senza condizioni né obblighi. Decidono autonomamente come usarlo, che sia per il cibo, le tasse scolastiche, i medicinali o la propria attività.",
 		"payout-interval-monthly": "mensile",
 		"payout-interval-quarterly": "trimestrale",
 		"payout-interval-yearly": "annuale",
@@ -451,11 +466,21 @@
 			}
 		}
 	},
+	"link-cards": {
+		"empty": "Ancora niente qui."
+	},
+	"tab-navigation": {
+		"label": "Sezioni"
+	},
 	"circles": {
 		"title": "Circoli",
-		"member-summary": "{active, plural, one {# attivo} other {# attivi}} · {interested, plural, one {# membro interessato} other {# membri interessati}}",
-		"members-empty": "Ancora nessun membro",
-		"empty": "Ancora nessun circolo."
+		"empty": "Ancora nessun circolo.",
+		"active-count": "{count, plural, one {# Membro} other {# Membri}}",
+		"interested-count": "{count} Follower",
+		"legend-active": "Membri del circolo",
+		"legend-active-info": "I membri portano avanti il lavoro del circolo e ne sono responsabili.",
+		"legend-interested": "Follower",
+		"legend-interested-info": "I follower sono invitati alle riunioni del circolo e sono i primi a cui chiediamo aiuto quando un compito richiede più persone."
 	},
 	"task-cards": {
 		"show-all": "Mostra tutte le {count} attività",
@@ -514,5 +539,9 @@
 	},
 	"video-carousel": {
 		"show-video": "Mostra il video {index}"
+	},
+	"africa-map": {
+		"label": "Mappa dell’Africa",
+		"recipients": "{count, plural, one {# beneficiario} other {# beneficiari}}"
 	}
 }

@@ -116,7 +116,7 @@
 			"genderHeading": "Gender",
 			"timeFrame": "Time Frame",
 			"days": "days",
-			"lastResponseDaysAgo": "Last response {days}d ago",
+			"lastResponseDaysAgo": "{days, plural, =0 {Last response today} =1 {Last response yesterday} other {Last response #d ago}}",
 			"lastResponseNotAvailable": "Last response N/A",
 			"surveyResponsesFrom": "survey responses from",
 			"recipients": "Recipients",

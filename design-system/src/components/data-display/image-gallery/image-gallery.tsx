@@ -124,7 +124,7 @@ export const ImageGallery = ({
 				className={cn(
 					'grid',
 					density === 'compact'
-						? 'grid-cols-[repeat(auto-fit,minmax(min(100%,22rem),1fr))] gap-3 sm:gap-6'
+						? 'grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 md:grid-cols-3'
 						: 'grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3',
 				)}
 			>
@@ -144,12 +144,7 @@ export const ImageGallery = ({
 									density === 'compact' ? 'p-2 sm:p-3' : 'p-4',
 								)}
 							>
-								<div
-									className={cn(
-										'text-muted-foreground flex min-w-0 items-center gap-2 text-xs',
-										infoPlacement === 'metadata' ? 'whitespace-nowrap' : 'flex-wrap',
-									)}
-								>
+								<div className="text-muted-foreground flex min-w-0 flex-wrap items-center gap-2 text-xs">
 									{image.date &&
 										(image.date.value ? <time dateTime={image.date.value}>{image.date.label}</time> : image.date.label)}
 									{image.date && image.price && <span aria-hidden="true">·</span>}

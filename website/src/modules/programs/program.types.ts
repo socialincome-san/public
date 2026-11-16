@@ -74,8 +74,8 @@ export type PublicProgramDetails = {
 	programName: string;
 	countryIsoCode: string;
 	ownerOrganizationName: string | null;
-	localPartnerName: string | null;
-	localPartnerSlug: string | null;
+	localPartners: { name: string; slug: string }[];
+	mobileMoneyProviders: string[];
 	operatorOrganizationName: string | null;
 	targetFocuses: string[];
 	amountOfRecipientsForStart: number | null;
