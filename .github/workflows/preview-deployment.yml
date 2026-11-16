@@ -1,0 +1,43 @@
+name: Preview deployment
+
+# Adding the label `preview-website`, `preview-image-generator` or `preview-design-system` to a PR deploys its branch to Vercel as a preview,
+# and every later push redeploys it while the label stays. Only people with triage access can add labels.
+# pull_request_target so the job can read VERCEL_TOKEN; safe because nothing from the PR is checked out or run here,
+# Vercel builds the commit itself.
+on:
+  pull_request_target:
+    types:
+      - labeled
+      - synchronize
+
+permissions: {}
+
+jobs:
+  deploy:
+    name: "🔍 Preview ${{ matrix.project }}"
+    # Vercel can only build branches of this repository, not of forks.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          - website
+          - image-generator
+          - design-system
+    steps:
+      - name: Deploy ${{ github.event.pull_request.head.ref }}
+        if: >-
+          (github.event.action == 'labeled' && github.event.label.name == format('preview-{0}', matrix.project)) ||
+          (github.event.action == 'synchronize' && contains(github.event.pull_request.labels.*.name, format('preview-{0}', matrix.project)))
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          PROJECT: ${{ matrix.project }}
+          REPO_ID: ${{ github.event.repository.id }}
+          REF: ${{ github.event.pull_request.head.ref }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          body=$(jq -n --arg project "$PROJECT" --arg ref "$REF" --arg sha "$SHA" --argjson repoId "$REPO_ID" \
+            '{name: $project, project: $project, gitSource: {type: "github", repoId: $repoId, ref: $ref, sha: $sha}}')
+          url=$(curl --fail-with-body -sS -X POST "https://api.vercel.com/v13/deployments?slug=dev-social-incomes-projects" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" -H "Content-Type: application/json" -d "$body" | jq -r '.url')
+          echo "Preview of $PROJECT: https://$url" | tee -a "$GITHUB_STEP_SUMMARY"
