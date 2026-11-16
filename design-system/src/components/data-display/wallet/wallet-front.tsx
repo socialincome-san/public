@@ -1,9 +1,23 @@
+import { cva } from 'class-variance-authority';
 import { PlusIcon } from 'lucide-react';
 import { cn } from '../../../cn';
-import { type WalletBadge, type WalletFooterColumn, type WalletVariant } from './wallet.types';
+import { type WalletBadge, type WalletFooterColumn, type WalletSize, type WalletVariant } from './wallet.types';
+
+const contentVariants = cva('min-w-0 flex-1', {
+	variants: { size: { default: 'pt-9', sm: 'pt-5' } },
+});
+
+const innerVariants = cva('h-full min-w-0 pt-0', {
+	variants: { size: { default: 'px-7 pb-8', sm: 'px-4 pb-4' } },
+});
+
+const titleVariants = cva('leading-none font-normal wrap-break-word whitespace-normal', {
+	variants: { size: { default: 'mb-3 text-4xl', sm: 'text-xl' } },
+});
 
 type WalletFrontProps = {
 	variant: WalletVariant;
+	size: WalletSize;
 	title: string;
 	subtitle?: string | null;
 	badge?: WalletBadge;
@@ -11,10 +25,11 @@ type WalletFrontProps = {
 	footerRight?: WalletFooterColumn;
 };
 
-export const WalletFront = ({ variant, title, subtitle, badge, footerLeft, footerRight }: WalletFrontProps) => (
+export const WalletFront = ({ variant, size, title, subtitle, badge, footerLeft, footerRight }: WalletFrontProps) => (
 	<div className="drop-shadow-card flex min-h-[calc(100cqw/1.9)] w-full min-w-0 grow" data-testid="wallet-front">
 		<WalletFrontContent
 			variant={variant}
+			size={size}
 			title={title}
 			subtitle={subtitle}
 			badge={badge}
@@ -24,21 +39,23 @@ export const WalletFront = ({ variant, title, subtitle, badge, footerLeft, foote
 	</div>
 );
 
-const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, footerRight }: WalletFrontProps) => (
+const WalletFrontContent = ({ variant, size, title, subtitle, badge, footerLeft, footerRight }: WalletFrontProps) => (
 	<div
 		className={cn(
-			'min-w-0 flex-1 pt-9',
+			contentVariants({ size }),
 			variant === 'default' ? 'text-primary-foreground' : 'text-card-foreground',
 			'[background:var(--wallet-front-bg)]',
 			'[clip-path:polygon(100%_0%,_100%_100%,_0%_100%,_0%_0%,_var(--slant-shift)_0%,_var(--slant-position)_var(--slant-height),_calc(100%_-_var(--slant-position))_var(--slant-height),_calc(100%_-_var(--slant-shift))_0%)]',
 		)}
 	>
-		<div className="h-full min-w-0 px-7 pt-0 pb-8">
+		<div className={innerVariants({ size })}>
 			{variant === 'default' ? (
 				<div className="flex h-full w-full min-w-0 flex-col items-start gap-2">
 					<div className="w-full min-w-0">
-						<h2 className="mb-3 text-4xl leading-none font-normal wrap-break-word whitespace-normal">{title}</h2>
-						<p className="mb-3 line-clamp-1 w-full min-w-0 text-base leading-6 font-medium">{subtitle}</p>
+						<h2 className={titleVariants({ size })}>{title}</h2>
+						{size === 'default' || subtitle ? (
+							<p className="mb-3 line-clamp-1 w-full min-w-0 text-base leading-6 font-medium">{subtitle}</p>
+						) : null}
 						{badge ? <div className="mt-1">{badge}</div> : null}
 					</div>
 
