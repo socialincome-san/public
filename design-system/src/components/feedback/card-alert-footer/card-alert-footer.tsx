@@ -1,9 +1,10 @@
 import { cva } from 'class-variance-authority';
 import { type ReactNode } from 'react';
+import { cn } from '../../../cn';
 
 export type CardAlertFooterVariant = 'confirm' | 'secondary';
 
-const footerVariants = cva('flex items-center gap-2', {
+const footerVariants = cva('flex flex-wrap items-center gap-x-2 gap-y-1', {
 	variants: {
 		inset: {
 			sm: 'rounded-b-2xl px-4 py-2',
@@ -40,7 +41,9 @@ export const CardAlertFooter = ({ text, variant, trailingText, action, inset = '
 			</span>
 		) : null}
 		<p className={textVariants({ inset })}>{text}</p>
-		{trailingText ? <p className="text-foreground ml-auto text-xs font-medium">{trailingText}</p> : null}
+		{trailingText ? (
+			<p className={cn('text-foreground min-w-0 text-xs font-medium', !action && 'ml-auto')}>{trailingText}</p>
+		) : null}
 		{action ? <div className="ml-auto shrink-0">{action}</div> : null}
 	</div>
 );

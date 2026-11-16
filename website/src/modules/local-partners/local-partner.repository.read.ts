@@ -68,11 +68,6 @@ export const countCompletedSurveysByLocalPartnerId = async (localPartnerId: stri
 		},
 	});
 
-export const countCandidates = async (localPartnerSlug?: string) =>
-	prisma.recipient.count({
-		where: { programId: null, ...(localPartnerSlug ? { localPartner: { slug: localPartnerSlug } } : {}) },
-	});
-
 export const findLocalPartnerById = async (localPartnerId: string) =>
 	prisma.localPartner.findUnique({
 		where: { id: localPartnerId },

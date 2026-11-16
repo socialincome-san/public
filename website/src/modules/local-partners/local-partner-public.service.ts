@@ -1,5 +1,5 @@
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { resultOk, type Result } from '@/lib/result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { LOCAL_PARTNER_PROGRAM_ROWS, selectLocalPartnerProgramStories } from '@/lib/storyblok/local-partner-programs.utils';
 import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from '@/lib/storyblok/program-story';
 import { getDefaultCampaignForProgram } from '@/modules/campaigns/campaign.service';
@@ -60,7 +60,11 @@ export const getLocalPartnerProgramSummaries = async (
 		getPrograms(lang),
 		getCandidatesByLocalPartnerSlug(localPartnerPortalSlug),
 	]);
-	const candidates = candidatesResult.success ? candidatesResult.data : emptyCandidates;
+	if (!candidatesResult.success) {
+		return resultFail(candidatesResult.error);
+	}
+
+	const candidates = candidatesResult.data;
 	if (!programsResult.success) {
 		return resultOk({ ...emptyPrograms, candidates });
 	}

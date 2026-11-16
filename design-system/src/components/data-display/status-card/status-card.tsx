@@ -11,6 +11,9 @@ const shellVariants = cva('flex h-full flex-col rounded-2xl drop-shadow-md', {
 		},
 		linked: {
 			true: 'group w-full overflow-hidden transition-transform duration-200 ease-out hover:-translate-y-0.5 focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+			// The link inside carries the focus, the footer action stays outside of it
+			withAction:
+				'group w-full overflow-hidden transition-transform duration-200 ease-out hover:-translate-y-0.5 has-[a:focus-visible]:ring-ring has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-offset-2',
 			false: '',
 		},
 	},
@@ -26,8 +29,10 @@ const bodyVariants = cva('border-border bg-card relative flex min-w-0 flex-1 fle
 });
 
 type StatusCardProps = {
-	// Without text only the colour of the status shows
-	status: { text?: string; variant: CardAlertFooterVariant; action?: ReactNode };
+	// Without text only the colour of the status shows; an action needs text to sit next to
+	status:
+		| { text?: undefined; variant: CardAlertFooterVariant; action?: undefined }
+		| { text: string; variant: CardAlertFooterVariant; action?: ReactNode };
 	children: ReactNode;
 	// Makes the card a link
 	href?: string;
@@ -48,14 +53,11 @@ export const StatusCard = ({ status, children, href, inset = 'lg' }: StatusCardP
 		);
 	}
 
-	// An interactive action must not sit inside the link, so only the body links
+	// An interactive action must not sit inside the link, so only the body links; the shell mirrors the linked look
 	if (status.action) {
 		return (
-			<div className={shellVariants({ variant: status.variant, linked: false })}>
-				<NextLink
-					href={href}
-					className="focus-visible:ring-ring flex min-w-0 flex-1 flex-col rounded-2xl focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-				>
+			<div className={shellVariants({ variant: status.variant, linked: 'withAction' })}>
+				<NextLink href={href} className="flex min-w-0 flex-1 flex-col rounded-2xl focus-visible:outline-none">
 					{body}
 				</NextLink>
 				{footer}

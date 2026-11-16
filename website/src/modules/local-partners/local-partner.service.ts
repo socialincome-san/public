@@ -113,13 +113,28 @@ export const getProgramRecipientCountsByLocalPartnerSlug = async (
 export const getCandidatesByLocalPartnerSlug = async (localPartnerSlug: string): Promise<Result<LocalPartnerCandidates>> => {
 	const normalizedSlug = localPartnerSlug.trim();
 
-	try {
-		const partnerCount = normalizedSlug ? await localPartnerRepository.countCandidates(normalizedSlug) : 0;
+	if (normalizedSlug) {
+		const partnerResult = await getPublicLocalPartnerOverviewStatsBySlugs([normalizedSlug]);
+		if (!partnerResult.success) {
+			return resultFail(partnerResult.error);
+		}
+
+		const partnerCount = partnerResult.data[normalizedSlug]?.candidatesCount ?? 0;
 		if (partnerCount > 0) {
 			return resultOk({ count: partnerCount, isPartnerScoped: true });
 		}
+	}
 
-		return resultOk({ count: await localPartnerRepository.countCandidates(), isPartnerScoped: false });
+	try {
+		const partners = await localPartnerRepository.findLocalPartnerOptions();
+		const statsResult = await getPublicLocalPartnerStatsByIds(partners.map(({ id }) => id));
+		if (!statsResult.success) {
+			return resultFail(statsResult.error);
+		}
+
+		const count = Object.values(statsResult.data).reduce((total, stats) => total + stats.waitingRecipientsCount, 0);
+
+		return resultOk({ count, isPartnerScoped: false });
 	} catch (error) {
 		console.error('Could not count local partner candidates', { error });
 
