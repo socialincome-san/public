@@ -57,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "View all {count} local partners",
 		"empty": "No local partners found.",
 		"no-results": "No local partners match the selected filters.",
 		"search-label": "Search local partners",

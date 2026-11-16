@@ -218,6 +218,7 @@ export interface Country {
   heroImage: StoryblokAsset;
   countryOfficeTitle?: string;
   countryOfficeDescription?: string;
+  localPartnerGrid?: LocalPartnerGrid[];
   partners?: (ISbStoryData<LocalPartner> | string)[];
   payouts?: DonationsTotal[];
   programs?: ProgramGrid[];
@@ -570,6 +571,7 @@ export interface LocalPartner {
   youtube?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   payouts?: DonationsTotal[];
   programs?: ProgramGrid[];
+  localPartnerGrid?: LocalPartnerGrid[];
   partners?: (ISbStoryData<LocalPartner> | string)[];
   testimonial?: TestimonialCarousel[];
   assessmentLead?: (ISbStoryData<Person> | string)[];
@@ -579,6 +581,26 @@ export interface LocalPartner {
   communityContactEmail?: string;
   communityArticles?: (ISbStoryData<Article> | string)[];
   component: "Local Partner";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface LocalPartnerGrid {
+  heading?: string;
+  description?: string;
+  filterBy?: "" | "country" | "focus";
+  filterCountry?: ISbStoryData<Country> | string;
+  filterFocus?: ISbStoryData<Focus> | string;
+  showAllLocalPartners?: boolean;
+  localPartners?: (ISbStoryData<LocalPartner> | string)[];
+  hideInactiveLocalPartners?: boolean;
+  sortBy?: "" | "alphabetical" | "recipients" | "newest";
+  maxLocalPartners?: "" | "3" | "6" | "9";
+  button?: Button[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "localPartnerGrid";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -778,6 +800,7 @@ export interface Page {
     | DonationCalculator
     | Timeline
     | VideoCarousel
+    | LocalPartnerGrid
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];

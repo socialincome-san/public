@@ -57,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "Visualizza tutti i {count} partner locali",
 		"empty": "Nessun partner locale trovato.",
 		"no-results": "Nessun partner locale corrisponde ai filtri selezionati.",
 		"search-label": "Cerca partner locali",
