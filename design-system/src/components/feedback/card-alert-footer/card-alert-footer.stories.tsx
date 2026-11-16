@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { Button } from '../../actions/button/button';
 import { CardAlertFooter } from './card-alert-footer';
 
 const meta = {
@@ -26,6 +27,16 @@ export const Confirm: Story = {};
 
 export const Secondary: Story = {
 	args: { variant: 'secondary', text: 'No candidates yet', trailingText: 'Sierra Leone' },
+};
+
+export const WithAction: Story = {
+	args: {
+		action: (
+			<Button variant="outline" size="sm">
+				Start
+			</Button>
+		),
+	},
 };
 
 export const LargeInset: Story = {

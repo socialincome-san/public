@@ -122,6 +122,13 @@ export type LocalPartnerPrograms = {
 	programCount: number;
 	recipientsTotal: number;
 	isPartnerScoped: boolean;
+	candidates: LocalPartnerCandidates;
+};
+
+export type LocalPartnerCandidates = {
+	count: number;
+	/** False when the partner has no candidates and the count covers all local partners */
+	isPartnerScoped: boolean;
 };
 
 export type LocalPartnerSession = {

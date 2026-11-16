@@ -1,16 +1,18 @@
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { resultOk, type Result } from '@/lib/result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { LOCAL_PARTNER_PROGRAM_ROWS, selectLocalPartnerProgramStories } from '@/lib/storyblok/local-partner-programs.utils';
 import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from '@/lib/storyblok/program-story';
 import { getDefaultCampaignForProgram } from '@/modules/campaigns/campaign.service';
 import { getPublicProgramFilterDataByPortalSlugs } from '@/modules/programs/program.service';
 import { getPrograms } from '@/modules/storyblok-content/storyblok-content.cache';
 import {
+	getCandidatesByLocalPartnerSlug,
 	getProgramRecipientCountsByLocalPartnerSlug,
 	getPublicLocalPartnerDashboardStatsBySlug,
 	getPublicLocalPartnerOverviewStatsBySlugs,
 } from './local-partner.service';
 import type {
+	LocalPartnerCandidates,
 	LocalPartnerDashboardStats,
 	LocalPartnerPrograms,
 	PublicLocalPartnerOverviewStatsMap,
@@ -21,11 +23,14 @@ const emptyDashboardStats: LocalPartnerDashboardStats = {
 	completedSurveysCount: 0,
 };
 
+const emptyCandidates: LocalPartnerCandidates = { count: 0, isPartnerScoped: false };
+
 const emptyPrograms: LocalPartnerPrograms = {
 	programs: [],
 	programCount: 0,
 	recipientsTotal: 0,
 	isPartnerScoped: false,
+	candidates: emptyCandidates,
 };
 
 export const getLocalPartnerDashboardStats = async (portalSlug?: string): Promise<Result<LocalPartnerDashboardStats>> => {
@@ -51,9 +56,17 @@ export const getLocalPartnerProgramSummaries = async (
 	lang: WebsiteLanguage,
 	localPartnerPortalSlug: string,
 ): Promise<Result<LocalPartnerPrograms>> => {
-	const programsResult = await getPrograms(lang);
+	const [programsResult, candidatesResult] = await Promise.all([
+		getPrograms(lang),
+		getCandidatesByLocalPartnerSlug(localPartnerPortalSlug),
+	]);
+	if (!candidatesResult.success) {
+		return resultFail(candidatesResult.error);
+	}
+
+	const candidates = candidatesResult.data;
 	if (!programsResult.success) {
-		return resultOk(emptyPrograms);
+		return resultOk({ ...emptyPrograms, candidates });
 	}
 
 	const stories = programsResult.data.filter((story) => getProgramPortalSlug(story.content));
@@ -99,5 +112,6 @@ export const getLocalPartnerProgramSummaries = async (
 		programCount: Object.keys(recipientsCountByProgramId).length,
 		recipientsTotal: Object.values(recipientsCountByProgramId).reduce((total, count) => total + count, 0),
 		isPartnerScoped,
+		candidates,
 	});
 };

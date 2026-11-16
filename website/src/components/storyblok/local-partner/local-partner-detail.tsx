@@ -48,8 +48,21 @@ export const LocalPartnerDetail = async ({
 	]);
 	const partnerPrograms = partnerProgramsResult.success
 		? partnerProgramsResult.data
-		: { programs: [], programCount: 0, recipientsTotal: 0, isPartnerScoped: false };
-	const heroCard = <LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} currency={currency} />;
+		: {
+				programs: [],
+				programCount: 0,
+				recipientsTotal: 0,
+				isPartnerScoped: false,
+				candidates: { count: 0, isPartnerScoped: false },
+			};
+	const heroCard = (
+		<LocalPartnerProgramsCard
+			partnerName={localPartnerTitle}
+			partnerPrograms={partnerPrograms}
+			lang={lang}
+			currency={currency}
+		/>
+	);
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: localPartner.full_slug,
 		currentLabel: localPartnerTitle,
