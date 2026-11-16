@@ -10,6 +10,7 @@ import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/b
 import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import type { ISbStoryData } from '@storyblok/js';
 import { Suspense } from 'react';
+import { getProgramsOverviewBlocks } from './program.utils';
 import { ProgramsOverviewSection } from './programs-overview-section';
 
 type Props = {
@@ -20,7 +21,7 @@ type Props = {
 };
 
 export const ProgramsOverviewPage = async ({ overview, lang, currency, searchParams }: Props) => {
-	const blocks = overview.content.content;
+	const blocks = getProgramsOverviewBlocks(overview);
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: overview.name,
@@ -32,11 +33,10 @@ export const ProgramsOverviewPage = async ({ overview, lang, currency, searchPar
 	return (
 		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} layout="section" />
-			{blocks?.length ? (
+			{blocks ? (
 				<PageBlocks blocks={blocks} lang={lang} currency={currency} storyUuid={overview.uuid} searchParams={searchParams} />
 			) : (
-				// Stories saved before the blocks field existed, in any locale or fallback, still use the old fields.
-				// Remove once every published overview story has blocks.
+				// Remove once every published overview story has blocks
 				<LegacyProgramsOverview overview={overview} lang={lang} currency={currency} searchParams={searchParams} />
 			)}
 		</div>

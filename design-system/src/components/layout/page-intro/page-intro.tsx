@@ -12,6 +12,15 @@ const pageIntroVariants = cva('', {
 	},
 });
 
+const actionsBesideVariants = cva('flex flex-col lg:flex-row lg:items-center lg:gap-12', {
+	variants: {
+		variant: {
+			page: 'gap-5',
+			section: 'gap-4',
+		},
+	},
+});
+
 const eyebrowVariants = cva('text-foreground text-4xl font-bold break-words', {
 	variants: {
 		variant: {
@@ -92,7 +101,7 @@ export const PageIntro = ({
 			{trimmedEyebrow ? <p className={eyebrowVariants({ variant: layout })}>{trimmedEyebrow}</p> : null}
 			{trimmedTitle ? <Heading className={headingVariants({ variant })}>{trimmedTitle}</Heading> : null}
 			{actionsBeside ? (
-				<div className={cn(pageIntroVariants({ variant: layout }), 'lg:flex lg:items-center lg:gap-12 lg:space-y-0')}>
+				<div className={actionsBesideVariants({ variant: layout })}>
 					{descriptionNode}
 					{actionsNode}
 				</div>

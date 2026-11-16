@@ -1,5 +1,6 @@
 import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[currency]';
 import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
+import { getProgramsOverviewBlocks } from '@/components/storyblok/program/program.utils';
 import { ProgramsOverviewPage } from '@/components/storyblok/program/programs-overview-page';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -16,8 +17,7 @@ export const generateMetadata = async ({ params }: DefaultLayoutProps) => {
 	if (!overviewResult.success) {
 		return getPageMetadata(lang, 'programs', {});
 	}
-	// Stories saved before the blocks field existed still use the old fields, see ProgramsOverviewPage
-	if (!overviewResult.data.content.content?.length) {
+	if (!getProgramsOverviewBlocks(overviewResult.data)) {
 		return getPageMetadata(lang, 'programs', getTitleAndTextMetadata(overviewResult.data));
 	}
 	const { title: storyTitle, description, image } = getPageStoryMetadata(overviewResult.data.content);

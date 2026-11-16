@@ -1,3 +1,6 @@
+/** @jest-environment jsdom */
+
+import { type ComponentProps } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { PageIntro } from './page-intro';
 
@@ -26,14 +29,26 @@ describe('PageIntro', () => {
 		expect(markup).not.toContain('<p');
 	});
 
-	it('puts the actions beside the description on large screens, unless an illustration takes that room', () => {
+	it('puts the actions in the row of the description when beside, after it when below, unless an illustration takes the room', () => {
 		const props = { title: 'Our programs', description: 'Our work', actions: <button>Start</button> };
+		const render = (extra: Partial<ComponentProps<typeof PageIntro>>) => {
+			const container = document.createElement('div');
+			container.innerHTML = renderToStaticMarkup(<PageIntro {...props} {...extra} />);
+			const description = container.querySelector('p');
+			const button = container.querySelector('button');
 
-		expect(renderToStaticMarkup(<PageIntro {...props} actionsPosition="beside" />)).toContain('lg:ml-auto');
-		expect(renderToStaticMarkup(<PageIntro {...props} />)).not.toContain('lg:ml-auto');
-		expect(
-			renderToStaticMarkup(<PageIntro {...props} actionsPosition="beside" illustrationSrc="/bike.png" />),
-		).not.toContain('lg:ml-auto');
+			return { description, button, row: description?.parentElement, intro: container.querySelector('h1')?.parentElement };
+		};
+
+		const beside = render({ actionsPosition: 'beside' });
+		expect(beside.row).not.toBe(beside.intro);
+		expect(beside.row?.contains(beside.button)).toBe(true);
+
+		for (const below of [render({}), render({ actionsPosition: 'beside', illustrationSrc: '/bike.png' })]) {
+			expect(below.row).toBe(below.intro);
+			expect(below.row?.contains(below.button)).toBe(true);
+			expect(below.description?.nextElementSibling).toBe(below.button?.parentElement);
+		}
 	});
 
 	it('renders nothing without content', () => {
