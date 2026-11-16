@@ -57,3 +57,18 @@ test('the action returns the cached gallery result', async () => {
 	expect(cacheLife).toHaveBeenCalledWith('default');
 	expect(fetchImageGeneratorGallery).toHaveBeenCalledTimes(1);
 });
+
+test('development requests bypass the gallery cache so configuration fixes can be retried immediately', async () => {
+	jest.replaceProperty(process, 'env', { ...process.env, NODE_ENV: 'development' });
+	const result = resultOk([]);
+	jest.mocked(fetchImageGeneratorGallery).mockResolvedValueOnce(result);
+
+	try {
+		await expect(getImageGeneratorGalleryAction()).resolves.toBe(result);
+		expect(cacheTag).not.toHaveBeenCalled();
+		expect(cacheLife).not.toHaveBeenCalled();
+		expect(fetchImageGeneratorGallery).toHaveBeenCalledTimes(1);
+	} finally {
+		jest.restoreAllMocks();
+	}
+});

@@ -201,7 +201,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 
 	// reset form values on schema/entity changes to avoid stale values
 	useEffect(() => {
-		const values = mode === 'add' ? {} : getFormValuesFromSchema(formSchema);
+		const values = getFormValuesFromSchema(formSchema);
 		const nextIdentity = `${mode}:${getValuesIdentity(values)}`;
 		if (lastResetIdentityRef.current === nextIdentity) {
 			return;

@@ -23,6 +23,9 @@ android {
     compileSdkMinor = 0
 
     compileOptions {
+        // flutter_local_notifications: Flag to enable support for the new language APIs
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -88,6 +91,11 @@ android {
                 value = "Social Income")
         }
     }
+}
+
+dependencies {
+    // flutter_local_notifications: enable desugaring even if they don't use scheduled notifications
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
 kotlin {

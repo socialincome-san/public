@@ -116,6 +116,17 @@ export interface CampaignGlobals {
   [k: string]: unknown;
 }
 
+export interface CampaignGrid {
+  heading?: string;
+  button?: Button[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "campaignGrid";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface CampaignOverview {
   title?: string;
   text?: string;
@@ -207,6 +218,7 @@ export interface Country {
   heroImage: StoryblokAsset;
   countryOfficeTitle?: string;
   countryOfficeDescription?: string;
+  localPartnerGrid?: LocalPartnerGrid[];
   partners?: (ISbStoryData<LocalPartner> | string)[];
   payouts?: DonationsTotal[];
   programs?: ProgramGrid[];
@@ -220,10 +232,37 @@ export interface Country {
   [k: string]: unknown;
 }
 
+export interface CountryOffice {
+  countryOffice: number | string;
+  title?: string;
+  heading: string;
+  description?: string;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "countryOffice";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface CountryOverview {
   title?: string;
   text?: string;
   component: "Country Overview";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface CtaBanner {
+  title: string;
+  description?: string;
+  image?: StoryblokAsset;
+  button: Button[];
+  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "ctaBanner";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -251,6 +290,15 @@ export interface DocumentFile {
   file: StoryblokAsset;
   language: "en" | "de" | "en+de";
   component: "documentFile";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface DonationCalculator {
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "donationCalculator";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -295,6 +343,7 @@ export interface Downloads {
 export interface DropdownItem {
   label?: string;
   menuItemGroups: MenuItemGroup[];
+  footer?: MenuFooter[];
   component: "dropdownItem";
   _uid: string;
   _editable?: string | undefined;
@@ -466,13 +515,38 @@ export interface JournalTeasers {
   [k: string]: unknown;
 }
 
+export interface LandingHero {
+  title: string;
+  description?: string;
+  image?: StoryblokAsset;
+  facts?: LandingHeroFact[];
+  cardTitle?: string;
+  cardDescription?: string;
+  button?: Button[];
+  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
+  showDonationForm?: boolean;
+  component: "landingHero";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface LandingHeroFact {
+  label: string;
+  component: "landingHeroFact";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface Layout {
-  menu: (MenuItem | DropdownItem)[];
   footerMenu: MenuItemGroup[];
   copyrightNotice?: string;
   supportedByLabel?: string;
   supportedByLogo?: StoryblokAsset;
   supportedByUrl?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  mainMenu?: (MenuItem | DropdownItem)[];
+  donateLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "layout";
   _uid: string;
   _editable?: string | undefined;
@@ -497,13 +571,36 @@ export interface LocalPartner {
   youtube?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   payouts?: DonationsTotal[];
   programs?: ProgramGrid[];
+  localPartnerGrid?: LocalPartnerGrid[];
   partners?: (ISbStoryData<LocalPartner> | string)[];
   testimonial?: TestimonialCarousel[];
+  assessmentLead?: (ISbStoryData<Person> | string)[];
+  assessmentReviewer?: (ISbStoryData<Person> | string)[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
   communityContactEmail?: string;
   communityArticles?: (ISbStoryData<Article> | string)[];
   component: "Local Partner";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface LocalPartnerGrid {
+  heading?: string;
+  description?: string;
+  filterBy?: "" | "country" | "focus";
+  filterCountry?: ISbStoryData<Country> | string;
+  filterFocus?: ISbStoryData<Focus> | string;
+  showAllLocalPartners?: boolean;
+  localPartners?: (ISbStoryData<LocalPartner> | string)[];
+  hideInactiveLocalPartners?: boolean;
+  sortBy?: "" | "alphabetical" | "recipients" | "newest";
+  maxLocalPartners?: "" | "3" | "6" | "9";
+  button?: Button[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "localPartnerGrid";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -522,6 +619,18 @@ export interface LocalPartnersOverview {
 export interface Lottie {
   animation?: StoryblokAsset;
   component: "lottie";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface MenuFooter {
+  text?: string;
+  stat?: "" | "programs" | "focuses" | "localPartners" | "donors" | "volunteers" | "recipients" | "paidOut";
+  links?: MenuItem[];
+  overviewLabel?: string;
+  overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  component: "menuFooter";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -554,6 +663,9 @@ export interface MenuItemGroup {
   overviewLabel?: string;
   overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   items?: MenuItem[];
+  stat?: "" | "programs" | "focuses" | "localPartners" | "donors" | "volunteers" | "recipients" | "paidOut";
+  badge?: string;
+  illustration?: StoryblokAsset;
   component: "menuItemGroup";
   _uid: string;
   _editable?: string | undefined;
@@ -577,6 +689,15 @@ export interface ModalCards {
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
   marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "modalCards";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface MuxVideo {
+  playbackId: string;
+  title: string;
+  component: "muxVideo";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -670,7 +791,16 @@ export interface Page {
     | CircleGrid
     | TaskCards
     | IframeEmbed
+    | CountryOffice
     | ImageGeneratorGallery
+    | LandingHero
+    | CtaBanner
+    | CampaignGrid
+    | PageIntro
+    | DonationCalculator
+    | Timeline
+    | VideoCarousel
+    | LocalPartnerGrid
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
@@ -680,6 +810,23 @@ export interface Page {
   metaDescription?: string;
   metaImage?: StoryblokAsset;
   component: "page";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface PageIntro {
+  title: string;
+  description?: string;
+  image?: StoryblokAsset;
+  button?: Button[];
+  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
+  videoLabel?: string;
+  videoLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  videoThumbnail?: StoryblokAsset;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "pageIntro";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -868,6 +1015,7 @@ export interface ReservesBlock {
 export interface RichtextButtonHeader {
   heading?: StoryblokRichTextDoc;
   button?: Button[];
+  buttonAction?: "" | "donate" | "createProgram" | "createCampaign";
   buttonStyle?: "" | "outline" | "primary";
   disableMarginBottom?: boolean;
   disableMarginTop?: boolean;
@@ -984,6 +1132,31 @@ export interface Text {
   [k: string]: unknown;
 }
 
+export interface Timeline {
+  title?: string;
+  description?: string;
+  steps: TimelineStep[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "timeline";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface TimelineStep {
+  image?: StoryblokAsset;
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  badge?: string;
+  badgeFigure?: "" | "paidOut" | "recipients" | "happier" | "reach";
+  component: "timelineStep";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface TransparencyCountries {
   component: "transparencyCountries";
   _uid: string;
@@ -1090,6 +1263,18 @@ export interface TwoColumnText {
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
   marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "twoColumnText";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface VideoCarousel {
+  heading?: string;
+  description?: string;
+  videos: MuxVideo[];
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "videoCarousel";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;

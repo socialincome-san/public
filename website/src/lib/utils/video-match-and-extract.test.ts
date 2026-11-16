@@ -1,4 +1,4 @@
-import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from './url-video-parser';
+import { normalizeMuxPlaybackId, VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from './url-video-parser';
 
 const YOUTUBE_TEST_CASES: { url: string; expectedId: string }[] = [
 	{ url: 'https://youtube.com/live/eLlxrBmD3H4', expectedId: 'eLlxrBmD3H4' },
@@ -72,4 +72,25 @@ test('Vimeo embeds disable tracking', () => {
 	expect(new VimeoVideoMatchAndExtract().parseUrl('https://vimeo.com/62092214')).toBe(
 		'https://player.vimeo.com/video/62092214?dnt=1',
 	);
+});
+
+describe('normalizeMuxPlaybackId', () => {
+	test.each([
+		['IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE', 'IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE'],
+		['  IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE  ', 'IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE'],
+		[
+			'https://player.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE?autoplay=1',
+			'IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE',
+		],
+		[
+			'https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE.m3u8',
+			'IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE',
+		],
+	])('reads the playback ID from %s', (value, expected) => {
+		expect(normalizeMuxPlaybackId(value)).toBe(expected);
+	});
+
+	test('returns null for an empty value', () => {
+		expect(normalizeMuxPlaybackId('  ')).toBeNull();
+	});
 });

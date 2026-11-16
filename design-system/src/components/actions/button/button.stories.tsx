@@ -33,13 +33,14 @@ const meta = {
 				'secondary',
 				'foreground',
 				'ghost',
+				'nav',
 				'link',
 				'confirmed',
 			],
 		},
 		size: {
 			control: 'select',
-			options: ['default', 'sm', 'md', 'lg', 'icon-sm', 'icon', 'icon-lg', 'inline'],
+			options: ['default', 'sm', 'md', 'nav', 'lg', 'icon-sm', 'icon', 'icon-lg', 'inline'],
 		},
 		fullWidth: {
 			control: 'boolean',
@@ -61,6 +62,9 @@ export const Variants: Story = {
 			<Button variant="foreground">Foreground</Button>
 			<Button variant="outline">Outline</Button>
 			<Button variant="ghost">Ghost</Button>
+			<Button variant="nav" size="nav">
+				Nav
+			</Button>
 			<Button variant="link">Link</Button>
 			<Button variant="confirmed">Confirmed</Button>
 			<Button variant="destructive">Destructive</Button>

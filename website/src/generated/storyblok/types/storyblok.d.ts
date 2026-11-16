@@ -415,18 +415,10 @@ type TableFieldValue2 = {
   }>;
 };
 /**
- * Plugin/Custom field type - field plugin with custom structure
+ * Custom field value stored by a field plugin. Any JSON value.
  */
-type PluginFieldValue2 = {
-  /**
-   * Technical name of the field plugin
-   */
-  plugin: string;
-  /**
-   * Unique identifier for this plugin field instance
-   */
-  _uid?: string;
-  [key: string]: unknown;
+type PluginFieldValue2 = null | string | number | boolean | Array<PluginFieldValue2> | {
+  [key: string]: PluginFieldValue2;
 };
 /**
  * Link to an internal Storyblok story.

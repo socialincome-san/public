@@ -23,7 +23,6 @@ export const YourDonationCertificateTable = ({
 	const [open, setOpen] = useState<boolean>(false);
 	const t = useTranslations('website-me');
 	const config = getYourDonationCertificatesTableConfig({
-		title: t('sections.contributions.donation-certificates-long'),
 		emptyMessage: t.rich('donation-certificates.no-certificates-yet', {
 			br: () => <br />,
 			contact: (chunks) => (
@@ -36,6 +35,7 @@ export const YourDonationCertificateTable = ({
 
 	return (
 		<>
+			<h2 className="sr-only">{t('sections.contributions.donation-certificates-long')}</h2>
 			<GenerateDonationCertificateDialog open={open} setOpen={setOpen} years={years} />
 			<ConfiguredDataTableClient
 				config={config}

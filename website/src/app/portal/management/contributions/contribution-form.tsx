@@ -1,23 +1,23 @@
 'use client';
 
-import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
+import DynamicForm, { type FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 
-import { ContributionStatus } from '@/generated/prisma/enums';
+import { ContributionSourceType, ContributionStatus } from '@/generated/prisma/enums';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 
 import { handleResult } from '@/lib/result-client';
 import { allCurrencies } from '@/lib/types/currency';
-import { CampaignOption } from '@/modules/campaigns/campaign.types';
+import { type CampaignOption } from '@/modules/campaigns/campaign.types';
 import {
 	createContributionAction,
 	getContributionAction,
 	getContributionsOptionsAction,
 	updateContributionAction,
 } from '@/modules/contributions/contribution.actions';
-import { ContributionPayload } from '@/modules/contributions/contribution.types';
-import { ContributorOption } from '@/modules/contributors/contributor.types';
+import { type ContributionPayload } from '@/modules/contributions/contribution.types';
+import { type ContributorOption } from '@/modules/contributors/contributor.types';
 import { buildCreateContributionInput, buildUpdateContributionInput } from './contribution-form-helpers';
 
 type ContributionFormProps = {
@@ -36,6 +36,7 @@ export type ContributionFormSchema = {
 		feesChf: FormField;
 		contributor: FormField;
 		status: FormField;
+		sourceType: FormField;
 		campaign: FormField;
 	};
 };
@@ -73,6 +74,17 @@ const initialFormSchema: ContributionFormSchema = {
 			placeholder: 'Contribution Status',
 			label: 'Status',
 			zodSchema: z.nativeEnum(ContributionStatus),
+		},
+		sourceType: {
+			placeholder: 'Select funding source',
+			label: 'Funding Source',
+			zodSchema: z.nativeEnum(ContributionSourceType),
+			value: ContributionSourceType.individual,
+			options: [
+				{ id: ContributionSourceType.individual, label: 'Individual' },
+				{ id: ContributionSourceType.foundation_grant, label: 'Foundation / Grant' },
+				{ id: ContributionSourceType.corporate_partner, label: 'Corporate Partner' },
+			],
 		},
 		campaign: {
 			placeholder: 'Select Campaign',
@@ -150,6 +162,7 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId 
 								amountChf: { ...next.fields.amountChf, value: data.amountChf },
 								feesChf: { ...next.fields.feesChf, value: data.feesChf },
 								status: { ...next.fields.status, value: data.status },
+								sourceType: { ...next.fields.sourceType, value: data.sourceType },
 								contributor: { ...next.fields.contributor, value: data.contributor.id },
 								campaign: { ...next.fields.campaign, value: data.campaign.id },
 							},

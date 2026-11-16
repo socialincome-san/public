@@ -33,6 +33,14 @@ export const StoryblokPreviewStory = async <TStory,>({
 		timestamp = previewToken.timestamp;
 
 		if (!verifyStoryblokPreviewToken(token, timestamp)) {
+			console.error('[Storyblok preview] TOKEN_REJECTED', {
+				storyPath,
+				lang,
+				previewRoutePath,
+				tokenPresent: !!token,
+				timestampPresent: !!timestamp,
+			});
+
 			return notFound();
 		}
 
@@ -44,6 +52,13 @@ export const StoryblokPreviewStory = async <TStory,>({
 
 	const story = cachedStory ?? (await loadStory(storyPath, lang));
 	if (!story) {
+		console.error('[Storyblok preview] STORY_LOAD_FAILED', {
+			storyPath,
+			lang,
+			previewRoutePath,
+			isVisualEditor,
+		});
+
 		return notFound();
 	}
 

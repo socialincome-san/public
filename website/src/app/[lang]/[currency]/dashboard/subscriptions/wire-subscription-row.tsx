@@ -97,12 +97,15 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 				className="border-border flex flex-col gap-4 rounded-xl border p-6 sm:flex-row sm:items-center sm:justify-between"
 				data-testid="wire-subscription-row"
 			>
-				<p className="text-base">
-					<span className="font-semibold">{formatCurrencyLocale(amount, currency, lang, wholeCurrencyFormatOptions)}</span>{' '}
-					<span className="text-muted-foreground">
-						{labels.perMonth} · {labels.since} {formatDateLocale(createdAt, lang)}
-					</span>
-				</p>
+				<div className="text-base">
+					<p>
+						<span className="font-semibold">{formatCurrencyLocale(amount, currency, lang, wholeCurrencyFormatOptions)}</span>{' '}
+						<span className="text-muted-foreground">{labels.perMonth}</span>
+					</p>
+					<p className="text-muted-foreground text-sm">
+						{labels.since} {formatDateLocale(createdAt, lang)}
+					</p>
+				</div>
 				<div className="flex flex-wrap items-center gap-3">
 					<SubscriptionPaymentMethodDisplay paymentDisplay={paymentDisplay} labels={labels} />
 					<Button

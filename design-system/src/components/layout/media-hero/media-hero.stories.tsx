@@ -2,7 +2,15 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Button } from '../../actions/button/button';
 import { Badge } from '../../data-display/badge/badge';
 import { Card } from '../../data-display/card/card';
-import { MediaHero, MediaHeroChips, MediaHeroIntro, MediaHeroPill, MediaHeroStat, MediaHeroStats } from './media-hero';
+import {
+	MediaHero,
+	MediaHeroCard,
+	MediaHeroChips,
+	MediaHeroIntro,
+	MediaHeroPill,
+	MediaHeroStat,
+	MediaHeroStats,
+} from './media-hero';
 
 const image = { src: '/assets/storybook/placeholder-portrait.svg', alt: 'Recipients in Sierra Leone' };
 
@@ -12,6 +20,14 @@ const DonationCard = () => (
 			<p className="text-foreground p-6">Donation form</p>
 		</Card>
 	</div>
+);
+
+const CallToActionCard = () => (
+	<MediaHeroCard
+		title="Ready to start?"
+		description="Choose a country, who you support and your budget. You see the full cost before you submit."
+		action={<Button fullWidth>Start a program</Button>}
+	/>
 );
 
 const meta = {
@@ -99,5 +115,47 @@ export const Statement: Story = {
 				</div>
 			</MediaHeroIntro>
 		),
+	},
+};
+
+export const WithFocalPoint: Story = {
+	args: {
+		image: {
+			...image,
+			objectPosition: '20% 30%',
+		},
+		aside: <DonationCard />,
+		mobileAside: <DonationCard />,
+		children: (
+			<MediaHeroIntro
+				title="Sierra Leone"
+				eyebrow={
+					<MediaHeroChips>
+						<Badge variant="frosted">Country</Badge>
+					</MediaHeroChips>
+				}
+			>
+				<MediaHeroChips>
+					<MediaHeroPill>162 Recipients</MediaHeroPill>
+					<MediaHeroPill>3 Programs</MediaHeroPill>
+				</MediaHeroChips>
+			</MediaHeroIntro>
+		),
+	},
+};
+
+export const WithCallToActionCard: Story = {
+	args: {
+		image,
+		children: (
+			<MediaHeroIntro title="Start your own cash program." description="We run it end to end, from enrolment to payouts.">
+				<MediaHeroChips>
+					<MediaHeroPill>From one person</MediaHeroPill>
+					<MediaHeroPill>At least six months</MediaHeroPill>
+				</MediaHeroChips>
+			</MediaHeroIntro>
+		),
+		aside: <CallToActionCard />,
+		mobileAside: <CallToActionCard />,
 	},
 };

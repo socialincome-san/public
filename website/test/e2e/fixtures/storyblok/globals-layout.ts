@@ -6,7 +6,6 @@ const layoutStory = {
 	content: {
 		component: 'layout',
 		_uid: 'e2e-layout-content',
-		menu: [],
 		footerMenu: [],
 		copyrightNotice: '© Social Income',
 	},

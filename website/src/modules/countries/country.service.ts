@@ -2,8 +2,8 @@ import { CountryCode, type NetworkTechnology, type SanctionRegime } from '@/gene
 import { fetchWorldBankIndicator } from '@/integrations/world-bank/world-bank.integration';
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
-import { getUnassignedRecipientCountries } from '@/modules/recipients/recipient.service';
+import { getCountryNameByCode, isValidCountryCode, toCountryCode } from '@/lib/types/country';
+import { countCandidatesForCountry, getUnassignedRecipientCountries } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import * as countryRepository from './country.repository.read';
@@ -268,22 +268,24 @@ const getPublicCountryStatsByIsoCode = async (isoCode: string): Promise<Result<P
 const emptyCountryPageStats: CountryPageStats = {
 	activeProgramsCount: 0,
 	recipientsCount: 0,
+	candidatesCount: 0,
 };
 
 export const getCountryPageStats = async (isoCode: string): Promise<Result<CountryPageStats>> => {
-	const normalizedIsoCode = isoCode.trim();
-	if (!normalizedIsoCode || normalizedIsoCode === '-') {
+	const countryCode = toCountryCode(isoCode);
+	if (!countryCode) {
 		return resultOk(emptyCountryPageStats);
 	}
 
-	const statsResult = await getPublicCountryStatsByIsoCode(normalizedIsoCode);
-	if (!statsResult.success) {
-		return resultOk(emptyCountryPageStats);
-	}
+	const [statsResult, candidatesCountResult] = await Promise.all([
+		getPublicCountryStatsByIsoCode(countryCode),
+		countCandidatesForCountry(countryCode),
+	]);
 
 	return resultOk({
-		activeProgramsCount: statsResult.data.programsCount,
-		recipientsCount: statsResult.data.recipientsCount,
+		activeProgramsCount: statsResult.success ? statsResult.data.programsCount : 0,
+		recipientsCount: statsResult.success ? statsResult.data.recipientsCount : 0,
+		candidatesCount: candidatesCountResult.success ? candidatesCountResult.data : 0,
 	});
 };
 

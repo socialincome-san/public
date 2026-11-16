@@ -115,6 +115,7 @@ test.each(['IMAGE_GENERATOR_URL', 'IMAGE_GENERATOR_PASSWORD'])('does not fetch w
 		status: undefined,
 	});
 	expect(fetch).not.toHaveBeenCalled();
+	expect(console.error).toHaveBeenCalledWith('Image generator gallery configuration is missing', { missing: [key] });
 });
 
 test.each(['http://localhost:3001', 'http://127.0.0.1:3001', 'http://[::1]:3001'])(
@@ -196,3 +197,39 @@ test.each([new Error('Network unavailable'), new DOMException('Request timed out
 		});
 	},
 );
+
+test('reports connection refusal without logging the password or raw exception', async () => {
+	const cause = Object.assign(new Error('Private upstream details'), { code: 'ECONNREFUSED' });
+	const error = new Error('Private upstream details', { cause });
+	jest.mocked(fetch).mockRejectedValueOnce(error);
+
+	await fetchImageGeneratorGallery();
+
+	expect(console.error).toHaveBeenCalledWith('Could not fetch image generator gallery', {
+		errorName: 'Error',
+		causeCode: 'ECONNREFUSED',
+	});
+	expect(JSON.stringify(jest.mocked(console.error).mock.calls)).not.toContain('Private upstream details');
+	expect(JSON.stringify(jest.mocked(console.error).mock.calls)).not.toContain('test-password');
+});
+
+test('logs request and validation counts in development without exposing credentials or image content', async () => {
+	jest.replaceProperty(process, 'env', { ...process.env, NODE_ENV: 'development' });
+	jest.spyOn(console, 'info').mockImplementation(() => undefined);
+	jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+	jest.mocked(fetch).mockResolvedValueOnce(Response.json({ images: [image, { ...image, costUsd: '0.06' }] }));
+
+	await expect(fetchImageGeneratorGallery()).resolves.toMatchObject({ success: true, data: [image] });
+	expect(console.info).toHaveBeenCalledWith('Image generator gallery request', {
+		origin: 'https://image-generator.example.com',
+		path: '/api/gallery',
+	});
+	expect(console.info).toHaveBeenCalledWith('Image generator gallery loaded', { received: 2, accepted: 1 });
+	expect(console.warn).toHaveBeenCalledWith('Image generator gallery rejected an image', {
+		issues: [{ path: 'costUsd', code: 'invalid_type' }],
+		expectedBlobHostname: 'jjjjivv3brvymvql.public.blob.vercel-storage.com',
+	});
+	const logs = JSON.stringify([...jest.mocked(console.info).mock.calls, ...jest.mocked(console.warn).mock.calls]);
+	expect(logs).not.toContain('test-password');
+	expect(logs).not.toContain(image.prompt);
+});

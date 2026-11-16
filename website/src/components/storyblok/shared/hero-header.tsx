@@ -1,6 +1,10 @@
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
+import {
+	formatStoryblokResizeUrl,
+	getScaledAssetDimensions,
+	getStoryblokImageObjectPosition,
+} from '@/lib/storyblok/storyblok-utils';
 import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
 import {
 	MediaHero,
@@ -11,7 +15,6 @@ import {
 import type { ReactNode } from 'react';
 
 const HERO_HEADER_IMAGE_WIDTH = 1920;
-const HERO_HEADER_IMAGE_HEIGHT = 1080;
 
 type HeroHeaderStat = {
 	value?: number;
@@ -24,6 +27,7 @@ export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>
 
 type Props = {
 	title: string;
+	description?: string;
 	heroImage?: HeroHeaderImage | null;
 	stats: HeroHeaderStat[];
 	titleIcon?: string;
@@ -39,6 +43,7 @@ type Props = {
 
 export const HeroHeader = ({
 	title,
+	description,
 	heroImage,
 	stats,
 	titleIcon,
@@ -50,34 +55,40 @@ export const HeroHeader = ({
 	showDonationForm = true,
 	showDonationsFormMobile = true,
 }: Props) => {
-	const heroImageSrc = heroImage?.filename
-		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
+	const scaledDimensions = heroImage?.filename
+		? getScaledAssetDimensions({ filename: heroImage.filename }, HERO_HEADER_IMAGE_WIDTH)
 		: null;
+	const heroImageSrc =
+		scaledDimensions && heroImage?.filename
+			? formatStoryblokResizeUrl(heroImage.filename, scaledDimensions.width, scaledDimensions.height)
+			: null;
+	const objectPosition = getStoryblokImageObjectPosition(heroImage);
 	const heroCardNode = heroCard ?? <DonationForm campaignId={campaignId} />;
 
 	return (
 		<MediaHero
-			image={heroImageSrc ? { src: heroImageSrc, alt: heroImage?.alt ?? title } : null}
+			image={heroImageSrc ? { src: heroImageSrc, alt: heroImage?.alt ?? title, objectPosition } : null}
 			aside={showDonationForm ? heroCardNode : null}
 			mobileAside={showDonationsFormMobile ? heroCardNode : null}
 		>
 			<MediaHeroIntro
 				title={title}
+				description={description}
 				eyebrow={preTitle ? <MediaHeroChips>{preTitle}</MediaHeroChips> : null}
 				titleIcon={titleIcon ? { src: titleIcon, alt: titleIconAlt ?? title } : undefined}
 			>
 				{stats.length > 0 ? (
 					<MediaHeroChips>
-						{stats.map((stat) =>
+						{stats.map((stat, index) =>
 							stat.href ? (
 								<LinkPill
-									key={stat.label}
+									key={`${index}-${stat.label}`}
 									label={`${stat.value !== undefined ? `${stat.value} ` : ''}${stat.label}`}
 									href={stat.href}
 									icon={stat.icon}
 								/>
 							) : (
-								<MediaHeroPill key={stat.label}>
+								<MediaHeroPill key={`${index}-${stat.label}`}>
 									{stat.icon}
 									{stat.value !== undefined ? `${stat.value} ` : ''}
 									{stat.label}

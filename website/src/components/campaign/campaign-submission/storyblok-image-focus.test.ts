@@ -30,10 +30,23 @@ describe('storyblok-image-focus', () => {
 		expect(normalizeStoryblokFocusForImageService('710x124:711x125')).toBe('710x124:711x125');
 	});
 
-	it('maps focus to CSS object-position percentages', () => {
+	it('maps focus to CSS object-position percentages with edge clamping', () => {
 		expect(focusToObjectPosition('400x300:401x301', 800, 600)).toBe('50% 50%');
 		expect(focusToObjectPosition('400x300:400x300', 800, 600)).toBe('50% 50%');
 		expect(focusToObjectPosition(null, 800, 600)).toBe('50% 50%');
+		expect(focusToObjectPosition('invalid', 800, 600)).toBe('50% 50%');
+
+		// Edge coordinates
+		expect(focusToObjectPosition('0x0:1x1', 800, 600)).toBe('0% 0%');
+		expect(focusToObjectPosition('800x600:801x601', 800, 600)).toBe('100% 100%');
+
+		// Clamping when focal point coordinates exceed natural dimensions
+		expect(focusToObjectPosition('1000x900:1001x901', 800, 600)).toBe('100% 100%');
+
+		// Different aspect ratios
+		expect(focusToObjectPosition('300x450:301x451', 600, 900)).toBe('50% 50%'); // portrait
+		expect(focusToObjectPosition('300x150:301x151', 1200, 600)).toBe('25% 25%'); // landscape 2:1
+		expect(focusToObjectPosition('480x270:481x271', 1920, 1080)).toBe('25% 25%'); // 16:9
 	});
 
 	it('maps a centered click to image center coordinates', () => {

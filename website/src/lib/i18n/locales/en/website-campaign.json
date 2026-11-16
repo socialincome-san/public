@@ -32,7 +32,6 @@
 		"video-slider": {
 			"title": "What does it mean to receive a **Social Income**?",
 			"description": "Hear directly from recipients across our programs what Social Income means in practice.",
-			"show-video": "Show video {index}",
 			"video-title": "Social Income recipient video {index}"
 		},
 		"other-campaigns": {

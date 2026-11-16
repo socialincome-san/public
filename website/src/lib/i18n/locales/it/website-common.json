@@ -40,6 +40,8 @@
 		"active-program-plural": "programmi attivi",
 		"recipient-singular": "beneficiario",
 		"recipient-plural": "beneficiari",
+		"candidate-singular": "candidato",
+		"candidate-plural": "candidati",
 		"donate-now": "Dona ora",
 		"about": "Informazioni su",
 		"person-carousel-next-button-aria": "Mostra la persona successiva",
@@ -55,6 +57,7 @@
 		}
 	},
 	"local-partners-page": {
+		"view-all": "Visualizza tutti i {count} partner locali",
 		"empty": "Nessun partner locale trovato.",
 		"no-results": "Nessun partner locale corrisponde ai filtri selezionati.",
 		"search-label": "Cerca partner locali",
@@ -93,7 +96,9 @@
 		"location": "Sede",
 		"learn-more": "Scopri di più",
 		"opens-in-new-tab": "(si apre in una nuova scheda)",
-		"website": "Sito web"
+		"website": "Sito web",
+		"assessment": "Valutazione dell’ONG condotta da <leadLink>{lead}</leadLink>",
+		"assessment-with-reviewer": "Valutazione dell’ONG condotta da <leadLink>{lead}</leadLink>, verificata da <reviewerLink>{reviewer}</reviewerLink>"
 	},
 	"downloads": {
 		"all-years": "Tutti gli anni ({count})",
@@ -509,5 +514,8 @@
 		"accept": "Accetta",
 		"decline": "Rifiuta",
 		"settings": "Impostazioni dei cookie"
+	},
+	"video-carousel": {
+		"show-video": "Mostra il video {index}"
 	}
 }

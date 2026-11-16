@@ -32,6 +32,7 @@ import {
 	getJournalTagStoryPath,
 	getPersonStoryPath,
 	getProgramStoryPath,
+	getWebsitePathTailFromStoryblokSlug,
 	STORYBLOK_CAMPAIGNS_FOLDER,
 	STORYBLOK_COMMUNITY_GLOBALS_PATH,
 	STORYBLOK_COUNTRIES_FOLDER,
@@ -70,7 +71,12 @@ const STANDARD_STORY_RELATIONS = [
 ];
 const COUNTRY_RELATIONS = ['Country.partners'];
 const FOCUS_RELATIONS = ['Focus.studies'];
-const LOCAL_PARTNER_RELATIONS = ['Local Partner.focuses', 'Local Partner.partners'];
+const LOCAL_PARTNER_RELATIONS = [
+	'Local Partner.focuses',
+	'Local Partner.partners',
+	'Local Partner.assessmentLead',
+	'Local Partner.assessmentReviewer',
+];
 const DEFAULT_PAGE_SIZE = 50;
 const CONTENT_FIELD = 'content';
 const EXCLUDED_FIELDS_FOR_COUNTING = 'content,leadText';
@@ -262,6 +268,22 @@ export const getPublishedPageLinks = async (): Promise<Result<StoryblokPublished
 	}
 
 	return resultOk(result.data.filter(isStoryblokPublishedLink));
+};
+
+/** Fails for folders whose path has a page, such as pages/programs with its overview page. */
+export const getPagelessFolderName = async (folderPath: string, language: string): Promise<Result<string>> => {
+	const result = await getPublishedPageLinks();
+	if (!result.success) {
+		return result;
+	}
+	const folderPathTail = getWebsitePathTailFromStoryblokSlug(folderPath);
+	const hasPage = result.data.some(
+		(link) => !link.is_folder && link.published && getWebsitePathTailFromStoryblokSlug(link.slug) === folderPathTail,
+	);
+	const folder = hasPage ? undefined : result.data.find((link) => link.is_folder && link.slug === folderPath);
+	const name = folder?.alternates?.find((alternate) => alternate.lang === language)?.name ?? folder?.name;
+
+	return name ? resultOk(name) : resultFail('Pageless Storyblok folder not found', 404);
 };
 
 export const getTag = async (slug: string, language: string): Promise<Result<ISbStoryData<Tag>>> =>

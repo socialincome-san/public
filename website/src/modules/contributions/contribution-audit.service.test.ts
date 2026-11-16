@@ -1,4 +1,11 @@
-import { ContributionStatus, Currency, PaymentEventType, ProgramPermission, UserRole } from '@/generated/prisma/enums';
+import {
+	ContributionSourceType,
+	ContributionStatus,
+	Currency,
+	PaymentEventType,
+	ProgramPermission,
+	UserRole,
+} from '@/generated/prisma/enums';
 
 const mockWriteRepository = {
 	createContribution: jest.fn(),
@@ -65,6 +72,7 @@ const contribution = {
 	amountChf: 50,
 	feesChf: 1,
 	status: ContributionStatus.succeeded,
+	sourceType: ContributionSourceType.individual,
 	contributorId: 'contributor-1',
 	campaignId: 'campaign-1',
 };

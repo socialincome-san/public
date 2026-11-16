@@ -6,6 +6,13 @@ const meta = {
 	title: 'Data Display/Separator',
 	component: Separator,
 	tags: ['autodocs'],
+	parameters: {
+		docs: {
+			description: {
+				component: 'A thin horizontal or vertical line. A horizontal separator can carry a short label in its middle.',
+			},
+		},
+	},
 } satisfies Meta<typeof Separator>;
 
 export default meta;
@@ -16,6 +23,14 @@ export const Horizontal: Story = {
 	render: () => (
 		<div className="w-80">
 			<Separator />
+		</div>
+	),
+};
+
+export const WithLabel: Story = {
+	render: () => (
+		<div className="w-80">
+			<Separator label="Or choose your own amount" />
 		</div>
 	),
 };

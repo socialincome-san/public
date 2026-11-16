@@ -34,7 +34,7 @@ const createLocalePath = (language: WebsiteLanguage, currency: WebsiteCurrency) 
 type Props = {
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
-	variant?: 'ghost' | 'outline';
+	variant?: 'nav' | 'outline';
 	icon?: ReactNode;
 	chosenCountry: CountryCode | null;
 	// The chosen or detected country, whose own currency the button leaves out
@@ -44,7 +44,7 @@ type Props = {
 const Switcher = ({
 	lang,
 	currency,
-	variant = 'ghost',
+	variant = 'nav',
 	icon,
 	chosenCountry,
 	visitorCountry,

@@ -7,7 +7,7 @@ import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getPageStoryMetadata } from '@/lib/storyblok/storyblok-richtext';
-import { getStoryblokMetadataImage } from '@/lib/storyblok/storyblok-utils';
+import { getStoryblokMetadataImage, getTranslatedStoryName } from '@/lib/storyblok/storyblok-utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
 import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.cache';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -50,7 +50,10 @@ export const ContentPage = async ({ storyPath, lang, currency, searchParams, chi
 	}
 
 	const story = storyResult.data;
-	const title = typeof story.content.title === 'string' ? story.content.title.trim() : story.name;
+	const title =
+		typeof story.content.title === 'string'
+			? story.content.title.trim()
+			: (getTranslatedStoryName(story, lang) ?? story.name);
 	const [builtBreadcrumbLinks, communityResult] = await Promise.all([
 		buildBreadcrumbLinks({
 			fullSlug: story.full_slug,

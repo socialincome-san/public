@@ -146,6 +146,12 @@ export const getPublishedPageLinks = async (): Promise<Result<StoryblokPublished
 	return withStoryblokCache(service.getPublishedPageLinks());
 };
 
+export const getPagelessFolderName = async (folderPath: string, language: string): Promise<Result<string>> => {
+	'use cache';
+
+	return withStoryblokCache(service.getPagelessFolderName(folderPath, language));
+};
+
 export const getTag = async (slug: string, language: string): Promise<Result<ISbStoryData<Tag>>> => {
 	'use cache';
 

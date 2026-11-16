@@ -13,7 +13,8 @@ import {
 
 export type BreadcrumbLinkItem = {
 	label: string;
-	href: string;
+	// Without one, the crumb is plain text, e.g. a folder that has no page of its own
+	href?: string;
 };
 
 export const truncateBreadcrumbLabel = (label: string, limit: number) => {
@@ -204,7 +205,7 @@ export const Breadcrumb = ({ links }: { links: BreadcrumbLinkItem[] }) => {
 						return (
 							<React.Fragment key={`${link.href}-${link.label}`}>
 								<BreadcrumbItem current={isLast} home={isHome}>
-									{isLast ? (
+									{isLast || !link.href ? (
 										<span className="block min-w-0" title={link.label}>
 											{content}
 										</span>

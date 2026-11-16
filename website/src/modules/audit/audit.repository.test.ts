@@ -43,4 +43,40 @@ describe('findAuditEventPage', () => {
 		expect(mockFindMany).toHaveBeenCalledTimes(1);
 		expect(mockCount).toHaveBeenCalledWith({ where: { entityType: undefined, action: { not: 'baseline' }, OR: undefined } });
 	});
+
+	test('finds every event of recipients whose snapshot matches the recipient filters', async () => {
+		mockFindMany.mockResolvedValueOnce([{ entityType: 'recipient', entityId: 'recipient-1' }]);
+
+		await findAuditEventPage({
+			search: '',
+			paymentPhone: '+2322',
+			contactPhone: '+2321',
+			firstName: 'Ada',
+			lastName: 'King',
+			skip: 0,
+			take: 10,
+		});
+
+		expect(mockFindMany).toHaveBeenNthCalledWith(1, {
+			where: {
+				entityType: 'recipient',
+				AND: [
+					{ snapshot: { path: ['paymentInformation', 'phone', 'number'], string_contains: '+2322', mode: 'insensitive' } },
+					{ snapshot: { path: ['contact', 'phone', 'number'], string_contains: '+2321', mode: 'insensitive' } },
+					{ snapshot: { path: ['contact', 'firstName'], string_contains: 'Ada', mode: 'insensitive' } },
+					{ snapshot: { path: ['contact', 'lastName'], string_contains: 'King', mode: 'insensitive' } },
+				],
+			},
+			distinct: ['entityType', 'entityId'],
+			select: { entityType: true, entityId: true },
+		});
+		expect(mockCount).toHaveBeenCalledWith({
+			where: {
+				entityType: undefined,
+				action: { not: 'baseline' },
+				AND: { OR: [{ entityType: 'recipient', entityId: 'recipient-1' }] },
+				OR: undefined,
+			},
+		});
+	});
 });

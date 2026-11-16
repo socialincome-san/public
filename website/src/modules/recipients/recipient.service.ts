@@ -1,4 +1,11 @@
-import { Currency, Gender, PayoutInterval, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
+import {
+	Currency,
+	Gender,
+	PayoutInterval,
+	PayoutStatus,
+	ProgramPermission,
+	type CountryCode,
+} from '@/generated/prisma/enums';
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
@@ -926,18 +933,18 @@ export const getPaginatedRecipientTableViewByLocalPartnerId = async (
 ): Promise<Result<RecipientPaginatedTableView>> => {
 	try {
 		const selectedStatus = parseRecipientStatusFilter(query.recipientStatus);
-		const shouldProcessStatus = query.sortBy === 'status' || Boolean(selectedStatus);
+		const shouldProcessRows = query.sortBy === 'status' || query.sortBy === 'paymentCode' || Boolean(selectedStatus);
 		const [{ recipients, totalCount }, filterSource] = await Promise.all([
 			recipientRepository.findLocalPartnerRecipientTableSource({
 				localPartnerId,
 				query,
-				paginate: !shouldProcessStatus,
+				paginate: !shouldProcessRows,
 			}),
 			recipientRepository.findLocalPartnerRecipientProgramFilterSource(localPartnerId),
 		]);
 
 		let tableRows = mapRecipientTableRows(recipients, [], false, now(), ProgramPermission.operator, false);
-		tableRows = processStatusRows(tableRows, query, selectedStatus);
+		tableRows = processRecipientRows(tableRows, query, selectedStatus);
 
 		const skip = (query.page - 1) * query.pageSize;
 		const programFilterOptions = Array.from(
@@ -951,8 +958,8 @@ export const getPaginatedRecipientTableViewByLocalPartnerId = async (
 			.sort((left, right) => left.name.localeCompare(right.name));
 
 		return resultOk({
-			tableRows: shouldProcessStatus ? tableRows.slice(skip, skip + query.pageSize) : tableRows,
-			totalCount: shouldProcessStatus ? tableRows.length : totalCount,
+			tableRows: shouldProcessRows ? tableRows.slice(skip, skip + query.pageSize) : tableRows,
+			totalCount: shouldProcessRows ? tableRows.length : totalCount,
 			permission: ProgramPermission.operator,
 			programFilterOptions,
 			localPartnerFilterOptions: [],
@@ -1148,6 +1155,16 @@ export const countCandidatesForLocalPartners = async (localPartnerIds: string[])
 	}
 };
 
+export const countCandidatesForCountry = async (countryCode: CountryCode): Promise<Result<number>> => {
+	try {
+		return resultOk(await recipientRepository.countCandidatesForCountry(countryCode));
+	} catch (error) {
+		console.error('Could not count candidates for country', { countryCode, error });
+
+		return resultFail('Could not count candidates');
+	}
+};
+
 export const recipientStatusService = {
 	countPaidOrConfirmedPayouts,
 	getExpectedIntervals: getExpectedPayoutIntervals,
@@ -1253,22 +1270,22 @@ const getPaginatedTableViewForPrograms = async (
 	}
 
 	const selectedStatus = parseRecipientStatusFilter(query.recipientStatus);
-	const shouldProcessStatus = query.sortBy === 'status' || Boolean(selectedStatus);
+	const shouldProcessRows = query.sortBy === 'status' || query.sortBy === 'paymentCode' || Boolean(selectedStatus);
 	const { recipients, totalCount } = await recipientRepository.findRecipientTableSource({
 		programIds,
 		localPartnerId: localPartnerOption?.id,
 		query,
 		canSearchRecipientNames: permission === ProgramPermission.operator,
-		paginate: !shouldProcessStatus,
+		paginate: !shouldProcessRows,
 	});
 
 	let tableRows = mapRecipientTableRows(recipients, programs, true, now());
-	tableRows = processStatusRows(tableRows, query, selectedStatus);
+	tableRows = processRecipientRows(tableRows, query, selectedStatus);
 	const skip = (query.page - 1) * query.pageSize;
 
 	return resultOk({
-		tableRows: shouldProcessStatus ? tableRows.slice(skip, skip + query.pageSize) : tableRows,
-		totalCount: shouldProcessStatus ? tableRows.length : totalCount,
+		tableRows: shouldProcessRows ? tableRows.slice(skip, skip + query.pageSize) : tableRows,
+		totalCount: shouldProcessRows ? tableRows.length : totalCount,
 		permission,
 		programFilterOptions,
 		localPartnerFilterOptions,
@@ -1353,28 +1370,36 @@ const mapPublicRecipientTableRows = (recipients: PublicRecipientTableSource, now
 		};
 	});
 
-const processStatusRows = (
+const processRecipientRows = (
 	rows: RecipientTableViewRow[],
 	query: RecipientTableQuery,
 	status: RecipientLifecycleStatus | undefined,
 ): RecipientTableViewRow[] => {
 	const filteredRows = status ? rows.filter((row) => row.status === status) : rows;
-	if (query.sortBy !== 'status') {
-		return filteredRows;
-	}
-
 	const direction = query.sortDirection === 'asc' ? 1 : -1;
 
-	return [...filteredRows].sort((left, right) => {
-		const statusDifference = (getRecipientStatusRank(left.status) - getRecipientStatusRank(right.status)) * direction;
-		if (statusDifference !== 0) {
-			return statusDifference;
-		}
+	if (query.sortBy === 'status') {
+		return [...filteredRows].sort((left, right) => {
+			const statusDifference = (getRecipientStatusRank(left.status) - getRecipientStatusRank(right.status)) * direction;
+			if (statusDifference !== 0) {
+				return statusDifference;
+			}
 
-		const firstNameDifference = left.firstName.localeCompare(right.firstName) * direction;
+			const firstNameDifference = left.firstName.localeCompare(right.firstName) * direction;
 
-		return firstNameDifference !== 0 ? firstNameDifference : left.lastName.localeCompare(right.lastName) * direction;
-	});
+			return firstNameDifference !== 0 ? firstNameDifference : left.lastName.localeCompare(right.lastName) * direction;
+		});
+	}
+
+	if (query.sortBy === 'paymentCode') {
+		return [...filteredRows].sort(
+			(left, right) =>
+				(left.paymentCode ?? '').localeCompare(right.paymentCode ?? '', undefined, { numeric: true, sensitivity: 'base' }) *
+				direction,
+		);
+	}
+
+	return filteredRows;
 };
 
 const mapCsvRowToRecipient = (rowNumber: number, row: Record<string, string>): Result<CreateRecipientInput> => {

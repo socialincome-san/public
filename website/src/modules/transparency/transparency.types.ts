@@ -1,4 +1,4 @@
-import type { CountryCode } from '@/generated/prisma/enums';
+import type { ContributionSourceType, CountryCode } from '@/generated/prisma/enums';
 import type { BankAccountLatestReserve } from '@/modules/reserves/reserve.types';
 
 export type TransparencyFinancialPeriod = { kind: 'all-time' } | { kind: 'ytd' } | { kind: 'year'; year: number };
@@ -32,10 +32,9 @@ export type TransparencyCountriesData = {
 export type TransparencySummaryData = {
 	financialSummary: {
 		inflowsChf: number;
+		inflowsBySourceChf: Record<ContributionSourceType, number>;
 		outflowsChf: number;
 		reservesChf: number;
 	};
 	reserveAccounts: BankAccountLatestReserve[];
 };
-
-export const TRANSPARENCY_CACHE_TAG = 'transparency';

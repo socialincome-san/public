@@ -53,7 +53,10 @@ export const focusToObjectPosition = (
 		return '50% 50%';
 	}
 
-	return `${(parsed.x / naturalWidth) * 100}% ${(parsed.y / naturalHeight) * 100}%`;
+	const clampedX = Math.max(0, Math.min(naturalWidth, parsed.x));
+	const clampedY = Math.max(0, Math.min(naturalHeight, parsed.y));
+
+	return `${(clampedX / naturalWidth) * 100}% ${(clampedY / naturalHeight) * 100}%`;
 };
 
 export const clickToStoryblokFocus = (

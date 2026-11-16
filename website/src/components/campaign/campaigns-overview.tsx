@@ -1,6 +1,5 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { buildCampaignSubmissionLabels } from '@/components/campaign/build-campaign-submission-labels';
-import { isCampaignActive } from '@/components/campaign/campaign-activity';
 import { CampaignPreviewWallet } from '@/components/campaign/campaign-preview-wallet';
 import { campaignMatchesSearchQuery } from '@/components/campaign/campaigns-overview.server';
 import { CreateCampaignButton } from '@/components/campaign/create-campaign-button';
@@ -25,13 +24,7 @@ type Props = {
 export const CampaignsOverview = async ({ campaigns, statsById, lang, currency, searchParams, showFilters }: Props) => {
 	const t = await getTranslations('website-common');
 	const campaignsWithStatus = campaigns.map((campaign) => {
-		const status: FilterStatus = isCampaignActive({
-			endDate: campaign.endDate,
-			goal: campaign.goal,
-			amountCollected: statsById[campaign.id]?.amountCollected ?? null,
-		})
-			? 'active'
-			: 'concluded';
+		const status: FilterStatus = campaign.isActive ? 'active' : 'concluded';
 
 		return { campaign, status };
 	});

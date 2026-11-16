@@ -14,7 +14,7 @@ test('dashboard donation certificates page matches screenshot', async ({ page })
 
 test('dashboard donation certificates has downloadable PDF links', async ({ page }) => {
 	await page.goto('/en/usd/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
-	await clickDataTableActionItem(page, 'data-table-action-item-generate-donation-certificate');
+	await clickDataTableActionItem(page, 'data-table-action-item-generate');
 
 	const dialog = page.getByRole('dialog');
 	await expect(dialog).toBeVisible();

@@ -1,6 +1,7 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { Community } from '@/components/community/community';
+import { LocalPartnerGridBlock } from '@/components/content-blocks/local-partner-grid';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { CountryOfficeSection } from '@/components/storyblok/shared/country-office-section';
@@ -24,13 +25,23 @@ type Props = {
 	currency: WebsiteCurrency;
 	activeProgramsCount: number;
 	recipientsCount: number;
+	candidatesCount: number;
 	community: CommunityPanelData | null;
 };
 
-export const CountryDetail = async ({ country, lang, currency, activeProgramsCount, recipientsCount, community }: Props) => {
+export const CountryDetail = async ({
+	country,
+	lang,
+	currency,
+	activeProgramsCount,
+	recipientsCount,
+	candidatesCount,
+	community,
+}: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
 	const countryTitle = getCountryTitle(country.content);
 	const localPartners = getCountryLocalPartners(country.content);
+	const localPartnerGrid = country.content.localPartnerGrid?.[0];
 	const [t, breadcrumbLinks] = await Promise.all([
 		getTranslations('website-common'),
 		buildBreadcrumbLinks({
@@ -61,6 +72,10 @@ export const CountryDetail = async ({ country, lang, currency, activeProgramsCou
 						value: recipientsCount,
 						label: recipientsCount === 1 ? t('countries-page.recipient-singular') : t('countries-page.recipient-plural'),
 					},
+					{
+						value: candidatesCount,
+						label: candidatesCount === 1 ? t('countries-page.candidate-singular') : t('countries-page.candidate-plural'),
+					},
 				]}
 			/>
 
@@ -85,8 +100,12 @@ export const CountryDetail = async ({ country, lang, currency, activeProgramsCou
 				</Suspense>
 			)}
 			<CountryPrograms country={country} lang={lang} currency={currency} />
-			{localPartners.length > 0 && (
-				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} currency={currency} />
+			{localPartnerGrid ? (
+				<LocalPartnerGridBlock blok={localPartnerGrid} lang={lang} currency={currency} />
+			) : (
+				localPartners.length > 0 && (
+					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} currency={currency} />
+				)
 			)}
 		</>
 	);

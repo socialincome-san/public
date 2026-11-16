@@ -1,14 +1,15 @@
 import { cva } from 'class-variance-authority';
 import NextImage from 'next/image';
-import { type HTMLAttributes, type ReactNode } from 'react';
+import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 import { Progress } from '../../feedback/progress/progress';
 import { BlockWrapper } from '../block-wrapper/block-wrapper';
 
-type MediaHeroImage = {
+export type MediaHeroImage = {
 	src: string;
 	alt: string;
+	objectPosition?: string;
 };
 
 const overlayClasses = {
@@ -68,10 +69,20 @@ export const MediaHero = ({
 				'bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden transition-[border-radius] duration-300 ease-out md:min-h-160',
 				expanded ? 'z-60' : 'md:rounded-b-5xl rounded-b-3xl',
 			)}
+			style={
+				image?.objectPosition ? ({ ['--media-hero-object-position']: image.objectPosition } as CSSProperties) : undefined
+			}
 		>
 			{media ??
 				(image ? (
-					<NextImage src={image.src} alt={image.alt} fill sizes="100vw" className="object-cover" priority />
+					<NextImage
+						src={image.src}
+						alt={image.alt}
+						fill
+						sizes="100vw"
+						className={cn('object-cover', image.objectPosition && '[object-position:var(--media-hero-object-position)]')}
+						priority
+					/>
 				) : (
 					<div className="bg-primary/20 absolute inset-0" />
 				))}
@@ -220,5 +231,22 @@ export const MediaHeroStat = ({ label, value, target, progress }: MediaHeroStatP
 			{target ? <p className="pb-1 text-xl font-medium opacity-40">{target}</p> : null}
 		</div>
 		<Progress value={progress} variant="onDark" />
+	</div>
+);
+
+type MediaHeroCardProps = {
+	title: string;
+	description?: string;
+	action: ReactNode;
+};
+
+// Same frame as the donation form, for heroes whose aside is a single call to action
+export const MediaHeroCard = ({ title, description, action }: MediaHeroCardProps) => (
+	<div className="border-input bg-card text-foreground flex w-full flex-col gap-6 rounded-3xl border px-7 pt-6 pb-7 shadow-xs md:p-9 lg:w-[400px]">
+		<div className="flex flex-col gap-3">
+			<h2 className="text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">{title}</h2>
+			{description ? <p className="text-muted-foreground text-base leading-6">{description}</p> : null}
+		</div>
+		{action}
 	</div>
 );

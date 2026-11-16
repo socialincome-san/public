@@ -8,7 +8,8 @@ import type {
 	ContributionPayload,
 	GlobeContribution,
 } from '@/modules/contributions/contribution.types';
-import { revalidatePath } from 'next/cache';
+import { TRANSPARENCY_CACHE_TAG } from '@/modules/transparency/transparency.cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { getRecentSuccessfulContributions } from './contribution.cache';
 import {
 	contributionCreateSchema,
@@ -52,6 +53,9 @@ export const createContributionAction = async (input: unknown): Promise<Result<C
 
 	const result = await createContribution(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/contributions');
+	if (result.success) {
+		revalidateTag(TRANSPARENCY_CACHE_TAG, { expire: 0 });
+	}
 
 	return result;
 };
@@ -69,6 +73,9 @@ export const updateContributionAction = async (input: unknown): Promise<Result<C
 
 	const result = await updateContribution(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/contributions');
+	if (result.success) {
+		revalidateTag(TRANSPARENCY_CACHE_TAG, { expire: 0 });
+	}
 
 	return result;
 };
