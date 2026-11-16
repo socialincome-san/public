@@ -66,7 +66,7 @@ export const PeopleIconOnSurfaces: Story = {
 			<div className="bg-muted text-foreground rounded-xl p-6">
 				<PeopleIcon size={48} />
 			</div>
-			<div className="bg-primary text-primary-foreground rounded-xl p-6">
+			<div className="bg-primary text-primary-foreground rounded-xl p-6 scheme-dark">
 				<PeopleIcon size={48} />
 			</div>
 		</div>

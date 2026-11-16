@@ -60,11 +60,12 @@ const badgeVariants = cva(
 				className:
 					'[&>[data-slot=country-flag]]:self-center [&>svg:not([data-slot=people-icon])]:self-center [&>svg.lucide]:-mx-[0.15em] [&>svg.lucide]:size-[1em] [&>svg.lucide]:shrink-0',
 			},
-			// Min width equals the height (line height plus padding), so a single digit gives a circle, never a narrow pill
-			{ variant: gradientOutlineVariants, size: 'sm', className: 'min-w-4.5' },
+			// Min width equals the height (line height plus padding), so a single digit gives a circle, never a narrow pill.
+			// sm and xl take less padding than the other variants, or a digit plus padding would be wider than the height
+			{ variant: gradientOutlineVariants, size: 'sm', className: 'min-w-4.5 px-1.5' },
 			{ variant: gradientOutlineVariants, size: 'default', className: 'min-w-6' },
 			{ variant: gradientOutlineVariants, size: 'lg', className: 'min-w-7' },
-			{ variant: gradientOutlineVariants, size: 'xl', className: 'min-w-8' },
+			{ variant: gradientOutlineVariants, size: 'xl', className: 'min-w-8 px-3' },
 		],
 		defaultVariants: {
 			variant: 'default',
