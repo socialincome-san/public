@@ -16,9 +16,18 @@ const HIDE_AFTER_ROWS: Record<MaxRows, string> = {
 	4: 'max-sm:*:nth-[n+5]:hidden sm:max-md:*:nth-[n+9]:hidden md:max-xl:*:nth-[n+13]:hidden xl:max-2xl:*:nth-[n+17]:hidden 2xl:*:nth-[n+21]:hidden',
 };
 
+// Per breakpoint range: its column count and the class that hides the button there.
+const HIDE_BUTTON_AT: { columns: number; hidden: string }[] = [
+	{ columns: 1, hidden: 'max-sm:hidden' },
+	{ columns: 2, hidden: 'sm:max-md:hidden' },
+	{ columns: 3, hidden: 'md:max-xl:hidden' },
+	{ columns: 4, hidden: 'xl:max-2xl:hidden' },
+	{ columns: 5, hidden: '2xl:hidden' },
+];
+
 type Props = {
 	contributors: GithubContributor[];
-	maxRows?: MaxRows;
+	maxRows: MaxRows;
 	showAllLabel: string;
 	commitSingularLabel: string;
 	commitPluralLabel: string;
@@ -27,7 +36,10 @@ type Props = {
 export const ContributorsList = ({ contributors, maxRows, showAllLabel, commitSingularLabel, commitPluralLabel }: Props) => {
 	const [showAll, setShowAll] = useState(false);
 	// One column on the smallest screens, so anything beyond maxRows is hidden somewhere.
-	const isTruncated = !showAll && maxRows !== undefined && contributors.length > maxRows;
+	const isTruncated = !showAll && contributors.length > maxRows;
+	const buttonClassName = HIDE_BUTTON_AT.filter(({ columns }) => contributors.length <= maxRows * columns)
+		.map(({ hidden }) => hidden)
+		.join(' ');
 
 	return (
 		<>
@@ -44,7 +56,7 @@ export const ContributorsList = ({ contributors, maxRows, showAllLabel, commitSi
 				))}
 			</div>
 			{isTruncated && (
-				<div className="mt-10 flex justify-center">
+				<div className={`mt-10 flex justify-center ${buttonClassName}`}>
 					<Button variant="outline" onClick={() => setShowAll(true)}>
 						{showAllLabel}
 					</Button>

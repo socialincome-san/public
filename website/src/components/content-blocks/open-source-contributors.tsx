@@ -20,7 +20,7 @@ export const OpenSourceContributorsBlock = async ({ blok }: Props) => {
 	]);
 
 	const contributors = contributorsResult.success ? contributorsResult.data : [];
-	const maxRows = MAX_ROWS.find((rows) => String(rows) === blok.maxRows);
+	const maxRows = MAX_ROWS.find((rows) => String(rows) === blok.maxRows) ?? 4;
 
 	return (
 		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
