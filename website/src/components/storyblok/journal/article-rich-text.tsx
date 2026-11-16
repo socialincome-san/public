@@ -17,7 +17,7 @@ import {
 } from '@/components/storyblok/rich-text/journal-resolvers';
 import type { IframeEmbed, Lottie } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps, ReactElement, ReactNode } from 'react';
 import { render, type StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 type StoryblokBlockProps = Record<string, unknown>;
@@ -26,10 +26,12 @@ type Props = {
 	document: StoryblokRichtext;
 	lang: WebsiteLanguage;
 	donationForm: ReactNode;
+	// Maps load their countries on the server, so they come in already rendered, by the `_uid` of their block
+	africaMaps?: Partial<Record<string, ReactElement>>;
 	variant?: 'article' | 'footnotes';
 };
 
-export const ArticleRichText = ({ document, lang, donationForm, variant = 'article' }: Props) => {
+export const ArticleRichText = ({ document, lang, donationForm, africaMaps = {}, variant = 'article' }: Props) => {
 	const isFootnotes = variant === 'footnotes';
 
 	return render(document, {
@@ -60,6 +62,7 @@ export const ArticleRichText = ({ document, lang, donationForm, variant = 'artic
 			),
 			newsletterSignup: () => <NewsletterSignup lang={lang} />,
 			campaignDonate: () => <div className="my-10">{donationForm}</div>,
+			africaMap: ({ _uid }: StoryblokBlockProps) => (typeof _uid === 'string' ? (africaMaps[_uid] ?? null) : null),
 		},
 	}) as ReactNode;
 };

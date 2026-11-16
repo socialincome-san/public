@@ -5,9 +5,9 @@ import Image from 'next/image';
 
 type Props = ImageWithCaptionBlok;
 
-// Breaks the image out of the article's max-w-2xl text column up to 800px wide.
+// Breaks wide images and maps out of the article's max-w-2xl text column up to 800px wide.
 // Gated behind `lg:` so the breakout math never has to fight overflow-x-clip on narrower viewports.
-const WIDE_BREAKOUT_CLASSES = 'lg:relative lg:left-1/2 lg:w-screen lg:max-w-[800px] lg:-translate-x-1/2';
+export const WIDE_BREAKOUT_CLASSES = 'lg:relative lg:left-1/2 lg:w-screen lg:max-w-[800px] lg:-translate-x-1/2';
 
 const figureLayoutClasses = {
 	default: 'my-8 w-full',
