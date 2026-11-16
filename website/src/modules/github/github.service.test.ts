@@ -5,7 +5,7 @@ describe('getOpenSourceContributors', () => {
 		jest.restoreAllMocks();
 	});
 
-	it('excludes Renovate from the public contributor list', async () => {
+	it('excludes bots from the public contributor list', async () => {
 		jest.spyOn(global, 'fetch').mockResolvedValue(
 			new Response(
 				JSON.stringify([
@@ -14,6 +14,18 @@ describe('getOpenSourceContributors', () => {
 						login: 'renovate[bot]',
 						avatar_url: 'https://avatars.githubusercontent.com/u/29139614',
 						contributions: 356,
+					},
+					{
+						id: 49_699_333,
+						login: 'dependabot[bot]',
+						avatar_url: 'https://avatars.githubusercontent.com/u/49699333',
+						contributions: 42,
+					},
+					{
+						id: 198_982_749,
+						login: 'Copilot',
+						avatar_url: 'https://avatars.githubusercontent.com/u/198982749',
+						contributions: 12,
 					},
 					{
 						id: 37_732_078,
