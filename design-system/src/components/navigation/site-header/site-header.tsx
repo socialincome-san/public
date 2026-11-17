@@ -76,6 +76,6 @@ export const SiteHeader = ({
 			</div>
 		</nav>
 		{/* Comes after the nav so it can react to the open desktop menu via peer-has */}
-		<div className="bg-foreground/55 pointer-events-none fixed inset-0 z-40 hidden opacity-0 backdrop-blur-[2px] transition-opacity duration-200 peer-has-[[data-desktop-menu]_[data-state=open]]:opacity-100 lg:block" />
+		<div className="bg-foreground/55 pointer-events-none fixed inset-0 z-40 hidden opacity-0 backdrop-blur-[2px] transition-opacity duration-200 peer-has-[[data-desktop-menu]_[data-state=open]]:opacity-100 motion-reduce:transition-none lg:block" />
 	</>
 );
