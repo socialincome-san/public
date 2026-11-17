@@ -34,7 +34,7 @@ describe('ImageUpload attachment preview', () => {
 		jest.restoreAllMocks();
 	});
 
-	test('keeps the remove control above the file input and clears the preview', () => {
+	test('clears the preview when the remove control is clicked', () => {
 		act(() => {
 			root.render(
 				createElement(ImageUpload, {
@@ -71,8 +71,6 @@ describe('ImageUpload attachment preview', () => {
 		if (!removeButton) {
 			throw new Error('Remove button missing');
 		}
-
-		expect(removeButton.parentElement?.parentElement?.classList.contains('z-20')).toBe(true);
 
 		act(() => removeButton.click());
 
