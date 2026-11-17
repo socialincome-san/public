@@ -1,3 +1,4 @@
+import type { PaidCheckoutDonation } from '@/modules/stripe-payments/stripe-payment.types';
 import { getDonationCompletedEvent, getDonationFunnelEvent } from './donation-analytics';
 import { type DonationWizardContext, getInitialWizardContext } from './donation-wizard-context';
 
@@ -52,16 +53,17 @@ describe('getDonationFunnelEvent', () => {
 });
 
 describe('getDonationCompletedEvent', () => {
+	const donation: PaidCheckoutDonation = {
+		checkoutSessionId: 'cs_123',
+		amount: 51.5,
+		currency: 'CHF',
+		recurring: true,
+		paymentMethodType: 'card',
+		donorStatus: 'returning',
+	};
+
 	it('builds the GA4 purchase parameters from the paid checkout', () => {
-		expect(
-			getDonationCompletedEvent({
-				checkoutSessionId: 'cs_123',
-				amount: 51.5,
-				currency: 'CHF',
-				recurring: true,
-				donorStatus: 'returning',
-			}),
-		).toEqual({
+		expect(getDonationCompletedEvent(donation)).toEqual({
 			name: 'donation_completed',
 			properties: {
 				value: 51.5,
@@ -73,5 +75,28 @@ describe('getDonationCompletedEvent', () => {
 				items: [{ item_id: 'donation', item_name: 'Donation', price: 51.5, quantity: 1 }],
 			},
 		});
+	});
+
+	it.each([
+		['card', 'credit_card'],
+		['twint', 'twint'],
+		['apple_pay', 'apple_pay'],
+		['google_pay', 'google_pay'],
+		['sepa_debit', 'unknown'],
+		[undefined, 'unknown'],
+	])('maps the checkout payment method type %s to %s', (paymentMethodType, expected) => {
+		const event = getDonationCompletedEvent({ ...donation, paymentMethodType });
+
+		expect(event.properties.payment_method).toBe(expected);
+	});
+
+	it.each([
+		['apple_pay', 'apple_pay'],
+		['google_pay', 'google_pay'],
+		['link', 'unknown'],
+	])('reports the donation bar wallet %s as %s', (expressPaymentType, expected) => {
+		const event = getDonationCompletedEvent(donation, expressPaymentType);
+
+		expect(event.properties.payment_method).toBe(expected);
 	});
 });

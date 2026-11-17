@@ -11,7 +11,7 @@ type DonationModalContextValue = {
 	// Reopens a donation from the donation bar on the step it was left
 	resumeDonation: (donation: ResumableDonation) => void;
 	// Continues with the post-payment onboarding after a payment outside the wizard
-	openWizardAfterPayment: (context: DonationAmountContext, sessionId: string) => void;
+	openWizardAfterPayment: (context: DonationAmountContext, sessionId: string, expressPaymentType: string) => void;
 };
 
 export const DonationModalContext = createContext<DonationModalContextValue | null>(null);

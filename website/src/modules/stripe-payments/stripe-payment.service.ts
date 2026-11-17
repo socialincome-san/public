@@ -242,7 +242,11 @@ export const createEmbeddedCheckoutSession = async (
 
 export const getPaidCheckoutDonation = async (sessionId: string): Promise<Result<PaidCheckoutDonation>> => {
 	try {
-		const sessionResult = await retrieveStripeCheckoutSession(sessionId);
+		// One-time sessions carry the payment method on the PaymentIntent, recurring ones on the subscription.
+		const sessionResult = await retrieveStripeCheckoutSession(sessionId, [
+			'payment_intent.payment_method',
+			'subscription.default_payment_method',
+		]);
 		if (!sessionResult.success) {
 			return sessionResult;
 		}
@@ -262,6 +266,7 @@ export const getPaidCheckoutDonation = async (sessionId: string): Promise<Result
 			amount: amountTotal / 100,
 			currency: currency.toUpperCase(),
 			recurring: mode === 'subscription',
+			paymentMethodType: getCheckoutPaymentMethodType(sessionResult.data),
 			donorStatus: await getDonorStatus(sessionResult.data),
 		});
 	} catch (error) {
@@ -1386,6 +1391,20 @@ const assertWizardCheckoutSessionPaid = (session: StripeApiCheckoutSession): Res
 	}
 
 	return resultOk(undefined);
+};
+
+const getCheckoutPaymentMethodType = (session: StripeApiCheckoutSession): string | undefined => {
+	const paymentIntent = typeof session.payment_intent === 'string' ? null : session.payment_intent;
+	const subscription = typeof session.subscription === 'string' ? null : session.subscription;
+	const paymentMethod = paymentIntent?.payment_method ?? subscription?.default_payment_method;
+	if (!paymentMethod || typeof paymentMethod === 'string') {
+		return undefined;
+	}
+
+	// Apple Pay and Google Pay are cards to Stripe; only the wallet tells them apart.
+	const wallet = paymentMethod.card?.wallet?.type;
+
+	return wallet === 'apple_pay' || wallet === 'google_pay' ? wallet : paymentMethod.type;
 };
 
 /**
