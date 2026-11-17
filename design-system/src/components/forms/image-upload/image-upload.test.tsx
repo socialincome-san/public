@@ -72,6 +72,11 @@ describe('ImageUpload attachment preview', () => {
 			throw new Error('Remove button missing');
 		}
 
+		const transformedPreviewWrapper = Array.from(container.querySelectorAll<HTMLDivElement>('div')).find((element) =>
+			element.classList.contains('-translate-y-1/2'),
+		);
+		expect(transformedPreviewWrapper?.classList.contains('z-20')).toBe(true);
+
 		act(() => removeButton.click());
 
 		expect(container.querySelector('button[aria-label="Remove reference image"]')).toBeNull();
