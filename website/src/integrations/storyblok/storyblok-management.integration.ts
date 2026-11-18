@@ -478,6 +478,100 @@ export const campaignStoryExists = async (slug: string): Promise<Result<boolean>
 	}
 };
 
+const isCampaignContent = (value: unknown): value is Campaign =>
+	isObjectRecord(value) &&
+	value.component === 'Campaign' &&
+	typeof value.title === 'string' &&
+	typeof value.portalSlug === 'string';
+
+const findCampaignStoryId = async (slug: string): Promise<number | null> => {
+	const storyPath = getCampaignStoryPath(slug);
+	const query = new URLSearchParams({ with_slug: storyPath });
+	const body = await requestManagement(`/spaces/${spaceId}/stories/?${query.toString()}`, { method: 'GET' });
+	const stories: unknown[] = isObjectRecord(body) && Array.isArray(body.stories) ? body.stories : [];
+	const story = stories.find((candidate) => isObjectRecord(candidate) && candidate.full_slug === storyPath);
+
+	return isObjectRecord(story) && typeof story.id === 'number' ? story.id : null;
+};
+
+// The Management API returns the working copy, which can hold unpublished edits from the CMS.
+export const getCampaignStory = async (
+	slug: string,
+): Promise<Result<{ storyId: number; content: Campaign; hasUnpublishedChanges: boolean } | null>> => {
+	try {
+		const storyId = await findCampaignStoryId(slug);
+		if (storyId === null) {
+			return resultOk(null);
+		}
+
+		const body = await requestManagement(`/spaces/${spaceId}/stories/${storyId}`, { method: 'GET' });
+		const story = isObjectRecord(body) && isObjectRecord(body.story) ? body.story : null;
+		if (!story || !isCampaignContent(story.content)) {
+			throw createStoryblokManagementError('Storyblok returned an invalid campaign story.', 502, false);
+		}
+
+		return resultOk({ storyId, content: story.content, hasUnpublishedChanges: story.unpublished_changes === true });
+	} catch (error) {
+		return toServiceFailure(error);
+	}
+};
+
+const listSpaceLanguageCodes = async (): Promise<string[]> => {
+	const body = await requestManagement(`/spaces/${spaceId}`, { method: 'GET' });
+	const languages = isObjectRecord(body) && isObjectRecord(body.space) ? body.space.languages : null;
+
+	return Array.isArray(languages)
+		? languages.flatMap((language) => (isObjectRecord(language) && typeof language.code === 'string' ? [language.code] : []))
+		: [];
+};
+
+const publishOtherLanguages = async (storyId: number): Promise<boolean> => {
+	try {
+		const languageCodes = await listSpaceLanguageCodes();
+		const published = await Promise.all(
+			languageCodes.map((languageCode) =>
+				requestManagement(
+					`/spaces/${spaceId}/stories/${storyId}/publish?${new URLSearchParams({ lang: languageCode }).toString()}`,
+					{ method: 'GET' },
+				).then(
+					() => true,
+					(error: unknown) => {
+						console.error('Storyblok language publish failed', { storyId, languageCode, error });
+
+						return false;
+					},
+				),
+			),
+		);
+
+		return published.every(Boolean);
+	} catch (error) {
+		console.error('Storyblok language publish failed', { storyId, error });
+
+		return false;
+	}
+};
+
+// `publish: 1` only publishes the default language; the space publishes each language separately.
+// Once the default language is live the update counts as done; a failed language publish is only reported, because
+// that language still shows its previous version.
+export const updatePublishedCampaignStory = async (
+	storyId: number,
+	content: Campaign,
+): Promise<Result<{ allLanguagesPublished: boolean }>> => {
+	try {
+		await requestManagement(`/spaces/${spaceId}/stories/${storyId}`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ story: { name: content.title, content }, publish: 1 }),
+		});
+	} catch (error) {
+		return toServiceFailure(error);
+	}
+
+	return resultOk({ allLanguagesPublished: await publishOtherLanguages(storyId) });
+};
+
 export type CreatePublishedCampaignStoryInput = {
 	slug: string;
 	title: string;

@@ -457,6 +457,7 @@
 				"program-not-eligible": "Le programme sélectionné n'est pas éligible.",
 				"slug-exists": "Une campagne avec ce slug existe déjà.",
 				"submission-failed": "Nous n'avons pas pu finaliser votre soumission. Veuillez réessayer dans quelques minutes.",
+				"campaign-not-found": "Nous n'avons pas trouvé cette campagne dans votre compte.",
 				"turnstile-required": "Veuillez terminer la vérification avant d'envoyer.",
 				"turnstile-invalid": "La vérification a échoué. Veuillez réessayer.",
 				"first-name-required": "Le prénom est obligatoire.",

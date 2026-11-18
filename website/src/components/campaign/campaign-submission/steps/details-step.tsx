@@ -72,6 +72,7 @@ export const DetailsStep = ({
 	const { inputRef, previewUrl, focus, setFocus, error: imageError, onChange: onPrimaryImageChange } = primaryImage;
 	const imageHintId = useId();
 	const imageFocusHintId = useId();
+	const hasFocusPicker = imageSelection?.type === 'upload' && Boolean(setFocus);
 	const imageErrorId = useId();
 	const imageErrorRef = useRef<HTMLParagraphElement>(null);
 	const durationPreset = form.watch('durationPreset');
@@ -85,11 +86,7 @@ export const DetailsStep = ({
 		}
 	}, [imageError]);
 
-	const imageDescribedBy = [
-		imageHintId,
-		imageSelection?.type === 'upload' ? imageFocusHintId : null,
-		imageError ? imageErrorId : null,
-	]
+	const imageDescribedBy = [imageHintId, hasFocusPicker ? imageFocusHintId : null, imageError ? imageErrorId : null]
 		.filter(Boolean)
 		.join(' ');
 
@@ -98,7 +95,7 @@ export const DetailsStep = ({
 			? previewUrl
 			: imageSelection?.type === 'default'
 				? (defaultImages.find((image) => image.id === imageSelection.id)?.url ?? null)
-				: null;
+				: (imageSelection?.url ?? null);
 
 	const setDurationPreset = (preset: CampaignSubmissionDurationPreset) => {
 		form.setValue('durationPreset', preset, { shouldDirty: true, shouldValidate: true });
@@ -187,7 +184,16 @@ export const DetailsStep = ({
 						)}
 					/>
 				) : (
-					<input type="hidden" {...form.register('endDate')} />
+					<FormField
+						control={form.control}
+						name="endDate"
+						render={({ field }) => (
+							<FormItem>
+								<input type="hidden" {...field} />
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 				)}
 			</div>
 
@@ -291,7 +297,7 @@ export const DetailsStep = ({
 
 				{previewSrc ? (
 					<div className="border-border relative aspect-[16/10] w-full overflow-hidden rounded-2xl border">
-						{imageSelection?.type === 'upload' && previewUrl ? (
+						{hasFocusPicker && previewUrl && setFocus ? (
 							<ImageFocusPoint
 								previewUrl={previewUrl}
 								focus={focus}
@@ -399,7 +405,7 @@ export const DetailsStep = ({
 				<p id={imageHintId} className="text-muted-foreground text-xs">
 					{labels.imageHint}
 				</p>
-				{imageSelection?.type === 'upload' ? (
+				{hasFocusPicker ? (
 					<p id={imageFocusHintId} className="text-muted-foreground text-xs">
 						{labels.imageFocusHint}
 					</p>

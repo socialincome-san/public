@@ -5,17 +5,11 @@ import type { AuditContext } from '@/lib/audit/audit-types';
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getOptionalContributor, getSessionByType } from '@/modules/auth/session.service';
-import type {
-	CampaignCmsJoinWithStats,
-	CampaignDefaultImageOption,
-	CampaignPage,
-	CampaignPageContent,
-	CampaignReference,
-} from '@/modules/campaigns/campaign.types';
 import { getOrCreateContributorFromEmailAndName } from '@/modules/contributors/contributor.service';
 import { getEligibleProgramsForPublicSubmission } from '@/modules/programs/program-public-submission.service';
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
+import { getOwnCampaignForEdit, updateOwnCampaign } from './campaign-edit.service';
 import { claimPendingCampaigns } from './campaign-pending-claim.service';
 import { getCampaignPageContent } from './campaign-public-website.service';
 import { submitCampaign } from './campaign-submission.service';
@@ -34,16 +28,27 @@ import {
 	parseCampaignSubmissionFields,
 	parseCampaignSubmissionImageFile,
 	parseCampaignSubmissionImageFocus,
+	parseCampaignUpdateFields,
+	parseFormDataFlag,
 	parseOptionalCampaignSubmissionImage,
 	readTurnstileToken,
 } from './campaign.schemas';
 import { getCampaignDefaultImages, getPublicCampaignTitle } from './campaign.service';
-import type {
-	CampaignSubmissionImageMultipartField,
-	CampaignSubmissionImageSource,
-	CampaignSubmissionOptionalImages,
-	CampaignSubmissionResult,
-	ClaimPendingCampaignsResult,
+import {
+	CAMPAIGN_CACHE_TAG,
+	type CampaignCmsJoinWithStats,
+	type CampaignDefaultImageOption,
+	type CampaignPage,
+	type CampaignPageContent,
+	type CampaignReference,
+	type CampaignSubmissionImageMultipartField,
+	type CampaignSubmissionImageSource,
+	type CampaignSubmissionOptionalImages,
+	type CampaignSubmissionResult,
+	type CampaignUpdateImages,
+	type CampaignUpdateOptionalImage,
+	type ClaimPendingCampaignsResult,
+	type EditableCampaign,
 } from './campaign.types';
 
 const personalSchema = createCampaignSubmissionPersonalSchema((code) => code);
@@ -225,6 +230,120 @@ export const submitCampaignAction = async (
 	revalidatePath('/[lang]/[currency]/campaigns', 'layout');
 
 	return resultOk(submissionResult.data);
+};
+
+const resolveUpdateOptionalImage = async (
+	formData: FormData,
+	field: 'profilePicture' | 'sectionImage',
+	removeFlag: 'removeProfilePicture' | 'removeSectionImage',
+): Promise<{ success: true; data: CampaignUpdateOptionalImage } | ImageFieldError> => {
+	if (parseFormDataFlag(formData.get(removeFlag))) {
+		return { success: true, data: { kind: 'remove' } };
+	}
+
+	const imageResult = await parseOptionalCampaignSubmissionImage(formData, field);
+	if (!imageResult.success) {
+		return { success: false, error: imageResult.error, field };
+	}
+	if (!imageResult.data) {
+		return { success: true, data: { kind: 'keep' } };
+	}
+
+	const focusResult = parseCampaignSubmissionImageFocus(formData.get(`${field}Focus`));
+	if (!focusResult.success) {
+		return { success: false, error: focusResult.error, field };
+	}
+
+	return { success: true, data: { kind: 'replace', image: { ...imageResult.data, focus: focusResult.data } } };
+};
+
+const resolveUpdateImages = async (
+	formData: FormData,
+): Promise<{ success: true; data: CampaignUpdateImages } | ImageFieldError> => {
+	const hasNewPrimaryImage = formData.has('primaryImage') || formData.has('defaultImageId');
+	const primaryImageResult = hasNewPrimaryImage
+		? await resolveImageSource(formData)
+		: { success: true as const, data: { kind: 'keep' as const } };
+	if (!primaryImageResult.success) {
+		return primaryImageResult;
+	}
+
+	const profilePictureResult = await resolveUpdateOptionalImage(formData, 'profilePicture', 'removeProfilePicture');
+	if (!profilePictureResult.success) {
+		return profilePictureResult;
+	}
+
+	const sectionImageResult = await resolveUpdateOptionalImage(formData, 'sectionImage', 'removeSectionImage');
+	if (!sectionImageResult.success) {
+		return sectionImageResult;
+	}
+
+	return {
+		success: true,
+		data: {
+			primaryImage: primaryImageResult.data,
+			profilePicture: profilePictureResult.data,
+			sectionImage: sectionImageResult.data,
+		},
+	};
+};
+
+export const getOwnCampaignForEditAction = async (campaignId: unknown): Promise<Result<EditableCampaign>> => {
+	const contributorSession = await getSessionByType('contributor');
+	if (!contributorSession.success) {
+		return resultFail('campaign-not-found', 404);
+	}
+
+	const parsedCampaignId = campaignIdSchema.safeParse(campaignId);
+	if (!parsedCampaignId.success) {
+		return resultFail('campaign-not-found', 404);
+	}
+
+	return getOwnCampaignForEdit(contributorSession.data.id, parsedCampaignId.data);
+};
+
+export const updateOwnCampaignAction = async (
+	formData: FormData,
+): Promise<Result<{ slug: string }, CampaignSubmissionActionFailure>> => {
+	const contributorSession = await getSessionByType('contributor');
+	if (!contributorSession.success) {
+		return submissionFail('campaign-not-found', 404);
+	}
+
+	const campaignIdResult = campaignIdSchema.safeParse(formData.get('campaignId'));
+	if (!campaignIdResult.success) {
+		return submissionFail('campaign-not-found', 404);
+	}
+
+	const fieldsResult = parseCampaignUpdateFields(formData);
+	if (!fieldsResult.success) {
+		return submissionFail(fieldsResult.error, 400);
+	}
+
+	const imagesResult = await resolveUpdateImages(formData);
+	if (!imagesResult.success) {
+		return submissionFail(imagesResult.error, 400, imagesResult.field);
+	}
+
+	const result = await updateOwnCampaign(
+		getSessionAuditContext(contributorSession.data),
+		contributorSession.data.id,
+		campaignIdResult.data,
+		fieldsResult.data,
+		imagesResult.data,
+	);
+	if (!result.success) {
+		const errorCode = isCampaignSubmissionErrorCode(result.error) ? result.error : 'submission-failed';
+		const field = isCampaignSubmissionImageErrorCode(errorCode)
+			? ('defaultImageId' satisfies CampaignSubmissionImageMultipartField)
+			: undefined;
+
+		return submissionFail(errorCode, result.status ?? 400, field);
+	}
+
+	updateTag(CAMPAIGN_CACHE_TAG);
+
+	return resultOk(result.data);
 };
 
 export const claimPendingCampaignsAction = async (claimIds: unknown): Promise<Result<ClaimPendingCampaignsResult>> => {

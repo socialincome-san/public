@@ -86,7 +86,8 @@ export type CampaignSubmissionStepId = 'program' | 'details' | 'about' | 'person
 
 export type { CampaignSubmissionFormValues };
 
-export type CampaignImageSelection = { type: 'default'; id: number } | { type: 'upload'; file: File } | null;
+export type CampaignImageSelection =
+	{ type: 'current'; url: string } | { type: 'default'; id: number } | { type: 'upload'; file: File } | null;
 
 export type CampaignSubmissionImageUploadField = {
 	inputRef: RefObject<HTMLInputElement | null>;
@@ -94,7 +95,8 @@ export type CampaignSubmissionImageUploadField = {
 	focus: string | null;
 	error: string | null;
 	onChange: (file: File | null) => void;
-	setFocus: (focus: string | null) => void;
+	// Without it the image shows without a focus point picker, e.g. an image that is already saved
+	setFocus?: (focus: string | null) => void;
 	setError: (error: string | null) => void;
 	clear: () => void;
 };

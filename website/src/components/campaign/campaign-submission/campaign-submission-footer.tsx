@@ -26,7 +26,7 @@ export const CampaignSubmissionFooter = ({
 	onBack,
 	onSubmit,
 }: Props) => {
-	const isFirstStep = currentStep === 'program';
+	const isFirstStep = currentStep === visibleSteps[0];
 	const isLastStep = currentStep === visibleSteps[visibleSteps.length - 1];
 
 	return (
