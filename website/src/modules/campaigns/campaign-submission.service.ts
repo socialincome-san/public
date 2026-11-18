@@ -226,7 +226,7 @@ const failDefaultImage = (defaultImageId: number, reason: string, assetFolderId:
 	return resultFail('default-image-invalid', 400);
 };
 
-const resolveImage = async (
+export const resolveImage = async (
 	imageSource: CampaignSubmissionImageSource,
 ): Promise<Result<CampaignSubmissionImageValidation>> => {
 	if (imageSource.kind === 'upload') {

@@ -299,6 +299,26 @@ describe('campaign-submission-input', () => {
 		expect(valid.success).toBe(true);
 	});
 
+	test('parseCampaignSubmissionFields keeps line breaks in descriptions only', () => {
+		const formData = withAboutFields(new FormData());
+		formData.set('title', 'Campaign\nTitle');
+		formData.set('description', 'First paragraph\r\n\r\nSecond paragraph\t');
+		formData.set('goal', '');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('hasAdditionalInformation', 'true');
+		formData.set('sectionDescription', 'Line one\nLine two');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.title).toBe('CampaignTitle');
+			expect(result.data.description).toBe('First paragraph\n\nSecond paragraph');
+			expect(result.data.sectionDescription).toBe('Line one\nLine two');
+		}
+	});
+
 	test('parseCampaignSubmissionFields clears additional information when disabled', () => {
 		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');

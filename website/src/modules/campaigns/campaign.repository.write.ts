@@ -90,6 +90,19 @@ export const updateCampaignContributorForClaim = async (
 		await transaction.campaignPending.delete({ where: { claimId } });
 	});
 
+export const updateCampaignDetails = async (
+	audit: AuditContext,
+	campaignId: string,
+	data: { goal: Prisma.Decimal | number | null; currency: Currency; endDate: Date },
+) =>
+	auditedWrite({ entity: campaignEntity, context: audit, action: 'update', entityId: campaignId }, (transaction) =>
+		transaction.campaign.update({
+			where: { id: campaignId },
+			data: { goal: data.goal, currency: data.currency, endDate: data.endDate },
+			select: { id: true },
+		}),
+	);
+
 export const deleteCampaignPending = async (audit: AuditContext, campaignId: string, claimId: string) =>
 	auditedWrite({ entity: campaignEntity, context: audit, action: 'update', entityId: campaignId }, (transaction) =>
 		transaction.campaignPending.delete({ where: { claimId } }),

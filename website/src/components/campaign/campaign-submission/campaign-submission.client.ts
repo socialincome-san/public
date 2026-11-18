@@ -29,17 +29,27 @@ type AppendCampaignSubmissionFormDataOptions = {
 
 const SOCIAL_HANDLE_REGEX = /^[a-zA-Z0-9._]+$/;
 
-const sanitizeText = (value: string) =>
-	Array.from(value)
+const removeControlCharacters = (value: string, keepNewlines: boolean) =>
+	Array.from(value.replace(/\r\n?/g, '\n'))
 		.filter((character) => {
 			const code = character.charCodeAt(0);
 
-			return code > 31 && code !== 127;
+			return (code > 31 && code !== 127) || (keepNewlines && character === '\n');
 		})
 		.join('')
 		.trim();
 
-const optionalSanitizedText = (maxLength: number, tooLongCode: CampaignSubmissionErrorCode, message: ErrorMessage) =>
+const sanitizeText = (value: string) => removeControlCharacters(value, false);
+
+// Descriptions are shown with their line breaks.
+const sanitizeMultilineText = (value: string) => removeControlCharacters(value, true);
+
+const optionalSanitizedText = (
+	maxLength: number,
+	tooLongCode: CampaignSubmissionErrorCode,
+	message: ErrorMessage,
+	sanitize = sanitizeText,
+) =>
 	z
 		.union([z.string(), z.null(), z.undefined()])
 		.transform((value) => {
@@ -47,7 +57,7 @@ const optionalSanitizedText = (maxLength: number, tooLongCode: CampaignSubmissio
 				return null;
 			}
 
-			const sanitized = sanitizeText(value);
+			const sanitized = sanitize(value);
 
 			return sanitized.length > 0 ? sanitized : null;
 		})
@@ -113,6 +123,7 @@ const createAdditionalFieldsSchema = (message: ErrorMessage) =>
 			campaignSubmissionConfig.maxSectionDescriptionLength,
 			'section-description-too-long',
 			message,
+			sanitizeMultilineText,
 		),
 		instagramHandle: optionalSocialHandleSchema(message),
 		xHandle: optionalSocialHandleSchema(message),
@@ -173,10 +184,12 @@ const validateEndDate = (endDate: Date): CampaignSubmissionErrorCode | null => {
 	return endDate > maxEndDate ? 'end-date-too-late' : null;
 };
 
+// An edit may keep an end date that no longer fits the duration limits.
 const refineGoalAndEndDate = (
 	values: { hasGoal: boolean; goal?: string | number | null; endDate: string },
 	context: z.RefinementCtx,
 	message: ErrorMessage,
+	currentEndDate?: string,
 ) => {
 	if (values.hasGoal) {
 		const parsedGoal = parseGoalInput(values.goal);
@@ -198,7 +211,7 @@ const refineGoalAndEndDate = (
 		return;
 	}
 
-	const validationError = validateEndDate(endDate);
+	const validationError = values.endDate.trim() === currentEndDate ? null : validateEndDate(endDate);
 	if (validationError) {
 		context.addIssue({ code: 'custom', path: ['endDate'], message: message(validationError) });
 	}
@@ -207,7 +220,7 @@ const refineGoalAndEndDate = (
 const detailsObjectSchema = (message: ErrorMessage) =>
 	z.object({
 		title: z.string().transform(sanitizeText).pipe(titleRule(message)),
-		description: z.string().transform(sanitizeText).pipe(descriptionRule(message)),
+		description: z.string().transform(sanitizeMultilineText).pipe(descriptionRule(message)),
 		hasGoal: z.boolean(),
 		goal: z.union([z.string(), z.number(), z.undefined(), z.null()]).optional(),
 		currency: z.enum(campaignSubmissionConfig.allowedCurrencies, { error: message('currency-unsupported') }),
@@ -216,41 +229,58 @@ const detailsObjectSchema = (message: ErrorMessage) =>
 		isPublic: z.boolean(),
 	});
 
-export const createCampaignSubmissionDetailsSchema = (message: ErrorMessage) =>
+export const createCampaignSubmissionDetailsSchema = (message: ErrorMessage, currentEndDate?: string) =>
 	detailsObjectSchema(message).superRefine((values, context) => {
-		refineGoalAndEndDate(values, context, message);
+		refineGoalAndEndDate(values, context, message, currentEndDate);
 	});
 
+const aboutObjectSchema = (message: ErrorMessage) =>
+	detailsObjectSchema(message).extend({
+		creatorName: z.string().transform(sanitizeText).pipe(creatorNameRule(message)),
+		quote: z.string().transform(sanitizeText).pipe(quoteRule(message)),
+		hasAdditionalInformation: z.boolean(),
+		sectionDescription: z.string().optional(),
+		instagramHandle: z.string().optional(),
+		xHandle: z.string().optional(),
+		linkWebsite: z.string().optional(),
+		tiktokHandle: z.string().optional(),
+	});
+
+const refineAboutFields = (
+	values: z.infer<ReturnType<typeof aboutObjectSchema>>,
+	context: z.RefinementCtx,
+	message: ErrorMessage,
+	currentEndDate?: string,
+) => {
+	refineGoalAndEndDate(values, context, message, currentEndDate);
+
+	if (!values.hasAdditionalInformation) {
+		return;
+	}
+
+	const additionalResult = createAdditionalFieldsSchema(message).safeParse(values);
+	if (!additionalResult.success) {
+		for (const issue of additionalResult.error.issues) {
+			context.addIssue({ code: 'custom', path: issue.path, message: issue.message });
+		}
+	}
+};
+
 export const createCampaignSubmissionFormSchema = (message: ErrorMessage) =>
-	detailsObjectSchema(message)
+	aboutObjectSchema(message)
 		.extend({
 			programId: programIdRule(message),
-			creatorName: z.string().transform(sanitizeText).pipe(creatorNameRule(message)),
-			quote: z.string().transform(sanitizeText).pipe(quoteRule(message)),
-			hasAdditionalInformation: z.boolean(),
-			sectionDescription: z.string().optional(),
-			instagramHandle: z.string().optional(),
-			xHandle: z.string().optional(),
-			linkWebsite: z.string().optional(),
-			tiktokHandle: z.string().optional(),
 			firstName: z.string(),
 			lastName: z.string(),
 			email: z.string(),
 		})
-		.superRefine((values, context) => {
-			refineGoalAndEndDate(values, context, message);
+		.superRefine((values, context) => refineAboutFields(values, context, message));
 
-			if (!values.hasAdditionalInformation) {
-				return;
-			}
-
-			const additionalResult = createAdditionalFieldsSchema(message).safeParse(values);
-			if (!additionalResult.success) {
-				for (const issue of additionalResult.error.issues) {
-					context.addIssue({ code: 'custom', path: issue.path, message: issue.message });
-				}
-			}
-		});
+// Program and personal data cannot change, but stay in the values so both flows share the form steps.
+export const createCampaignEditFormSchema = (message: ErrorMessage, currentEndDate: string) =>
+	aboutObjectSchema(message)
+		.extend({ programId: z.string(), firstName: z.string(), lastName: z.string(), email: z.string() })
+		.superRefine((values, context) => refineAboutFields(values, context, message, currentEndDate));
 
 export const createCampaignSubmissionPersonalSchema = (message: ErrorMessage) =>
 	z.object({

@@ -457,6 +457,7 @@
 				"program-not-eligible": "Das ausgewählte Programm ist nicht zulässig.",
 				"slug-exists": "Eine Kampagne mit diesem Slug existiert bereits.",
 				"submission-failed": "Ihre Eingabe konnte nicht abgeschlossen werden. Bitte versuchen Sie es in ein paar Minuten erneut.",
+				"campaign-not-found": "Wir konnten diese Kampagne in Ihrem Konto nicht finden.",
 				"turnstile-required": "Bitte schliesse die Verifizierung ab, bevor du die Kampagne einreichst.",
 				"turnstile-invalid": "Verifizierung fehlgeschlagen. Bitte versuche es erneut.",
 				"first-name-required": "Vorname ist erforderlich.",
@@ -542,6 +543,6 @@
 	},
 	"africa-map": {
 		"label": "Karte von Afrika",
-		"recipients": "{count, plural, one {# Empfänger:in} other {# Empfänger:​innen}}"
+		"recipients": "{count, plural, one {# Empfänger:in} other {# Empfänger:\u200binnen}}"
 	}
 }

@@ -98,7 +98,7 @@ export const DetailsStep = ({
 			? previewUrl
 			: imageSelection?.type === 'default'
 				? (defaultImages.find((image) => image.id === imageSelection.id)?.url ?? null)
-				: null;
+				: (imageSelection?.url ?? null);
 
 	const setDurationPreset = (preset: CampaignSubmissionDurationPreset) => {
 		form.setValue('durationPreset', preset, { shouldDirty: true, shouldValidate: true });
@@ -291,7 +291,7 @@ export const DetailsStep = ({
 
 				{previewSrc ? (
 					<div className="border-border relative aspect-[16/10] w-full overflow-hidden rounded-2xl border">
-						{imageSelection?.type === 'upload' && previewUrl ? (
+						{imageSelection?.type === 'upload' && previewUrl && setFocus ? (
 							<ImageFocusPoint
 								previewUrl={previewUrl}
 								focus={focus}
