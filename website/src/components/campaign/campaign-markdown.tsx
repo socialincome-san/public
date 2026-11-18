@@ -12,7 +12,12 @@ type Props = {
 // the like fall back to their text.
 const allowedElements = ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'a'];
 
-const urlTransform = (url: string) => (isSafeHref(url) && !url.startsWith('/') ? url : '');
+const urlTransform = (url: string) => {
+	// People often leave out the scheme, e.g. www.example.org.
+	const href = /^[a-z][a-z\d+.-]*:/i.test(url) || /^[/#?]/.test(url) ? url : `https://${url}`;
+
+	return isSafeHref(href) && !href.startsWith('/') ? href : '';
+};
 
 export const CampaignMarkdown = ({ children, size }: Props) => (
 	<Prose size={size}>

@@ -23,6 +23,10 @@ describe('CampaignMarkdown', () => {
 		expect(html).toContain('Big');
 	});
 
+	test('adds https to links typed without a scheme', () => {
+		expect(markup('[site](www.example.org)')).toContain('href="https://www.example.org"');
+	});
+
 	test('drops links that are not web or mail addresses', () => {
 		const html = markup('[click](javascript:alert(1)) [home](/en/ch)');
 

@@ -11,10 +11,24 @@ describe('applyMarkdownFormat', () => {
 
 	test('places the cursor between italic markers without a selection', () => {
 		expect(applyMarkdownFormat({ value: 'ab', selectionStart: 1, selectionEnd: 1 }, 'italic')).toEqual({
-			value: 'a__b',
+			value: 'a**b',
 			selectionStart: 2,
 			selectionEnd: 2,
 		});
+	});
+
+	test('keeps spaces around the selection outside the markers', () => {
+		expect(applyMarkdownFormat({ value: 'say hello now', selectionStart: 4, selectionEnd: 10 }, 'bold')).toEqual({
+			value: 'say **hello** now',
+			selectionStart: 6,
+			selectionEnd: 11,
+		});
+	});
+
+	test('stops at the last selected line when the selection ends after a newline', () => {
+		expect(applyMarkdownFormat({ value: 'one\ntwo', selectionStart: 0, selectionEnd: 4 }, 'bulletList').value).toBe(
+			'- one\ntwo',
+		);
 	});
 
 	test('turns every selected line into a list item', () => {

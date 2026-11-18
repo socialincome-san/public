@@ -42,7 +42,9 @@ export const markdownToPlainText = (markdown: string) =>
 	markdown
 		.replaceAll(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
 		.replaceAll(/^#+\s*/gm, '')
-		.replaceAll(/[*_`~]/g, '')
+		.replaceAll(/(\*\*|\*|~~|`)(\S(?:.*?\S)?)\1/g, '$2')
+		// Underscores inside words, as in my_handle, are not emphasis.
+		.replaceAll(/(?<!\w)(__|_)(\S(?:.*?\S)?)\1(?!\w)/g, '$2')
 		.replaceAll(/\s+/g, ' ')
 		.trim();
 

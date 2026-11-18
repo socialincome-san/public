@@ -1,6 +1,11 @@
 import type { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import { getPageStoryMetadata, getRichTextBloks, storyblokRichtextToPlainText } from './storyblok-richtext';
+import {
+	getPageStoryMetadata,
+	getRichTextBloks,
+	markdownToPlainText,
+	storyblokRichtextToPlainText,
+} from './storyblok-richtext';
 
 const page = (content: Page['content']): Page => ({ component: 'page', _uid: 'page', content });
 
@@ -109,6 +114,14 @@ describe('storyblokRichtextToPlainText', () => {
 	it('accepts fields that still hold a plain string', () => {
 		expect(storyblokRichtextToPlainText('Sierra Leone sits on\n\nthe West African coast.')).toBe(
 			'Sierra Leone sits on the West African coast.',
+		);
+	});
+});
+
+describe('markdownToPlainText', () => {
+	test('removes formatting but keeps stars and underscores that are text', () => {
+		expect(markdownToPlainText('**Thanks** to *all* of you, _friends_!\n- my_handle pays 2 * 5 CHF')).toBe(
+			'Thanks to all of you, friends! - my_handle pays 2 * 5 CHF',
 		);
 	});
 });

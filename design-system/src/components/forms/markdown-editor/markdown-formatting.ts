@@ -10,17 +10,22 @@ const LINK_URL_PLACEHOLDER = 'https://';
 
 const wrap = ({ value, selectionStart, selectionEnd }: TextEdit, marker: string): TextEdit => {
 	const selected = value.slice(selectionStart, selectionEnd);
+	// Markers next to a space don't render as emphasis, and a double click often selects the trailing space.
+	const start = selectionStart + selected.length - selected.trimStart().length;
+	const end = Math.max(start, selectionEnd - (selected.length - selected.trimEnd().length));
 
 	return {
-		value: `${value.slice(0, selectionStart)}${marker}${selected}${marker}${value.slice(selectionEnd)}`,
-		selectionStart: selectionStart + marker.length,
-		selectionEnd: selectionEnd + marker.length,
+		value: `${value.slice(0, start)}${marker}${value.slice(start, end)}${marker}${value.slice(end)}`,
+		selectionStart: start + marker.length,
+		selectionEnd: end + marker.length,
 	};
 };
 
 const prefixLines = ({ value, selectionStart, selectionEnd }: TextEdit): TextEdit => {
 	const lineStart = value.lastIndexOf('\n', selectionStart - 1) + 1;
-	const lineEnd = value.indexOf('\n', selectionEnd);
+	// A selection of whole lines ends after the newline, which must not pull in the next line.
+	const lastSelected = selectionEnd > selectionStart && value[selectionEnd - 1] === '\n' ? selectionEnd - 1 : selectionEnd;
+	const lineEnd = value.indexOf('\n', lastSelected);
 	const end = lineEnd === -1 ? value.length : lineEnd;
 	const lines = value.slice(lineStart, end).split('\n');
 	const prefixed = lines.map((line) => (line.startsWith('- ') ? line : `- ${line}`)).join('\n');
@@ -49,7 +54,7 @@ export const applyMarkdownFormat = (edit: TextEdit, format: MarkdownFormat): Tex
 		case 'bold':
 			return wrap(edit, '**');
 		case 'italic':
-			return wrap(edit, '_');
+			return wrap(edit, '*');
 		case 'bulletList':
 			return prefixLines(edit);
 		case 'link':

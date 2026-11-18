@@ -45,7 +45,9 @@ export const MarkdownEditor = ({
 }: MarkdownEditorProps) => {
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 	const [mode, setMode] = useState<'write' | 'preview'>('write');
-	const isPreview = mode === 'preview';
+	// An invalid value must stay visible, so the field can be fixed and focused.
+	const invalid = textareaProps['aria-invalid'];
+	const isPreview = mode === 'preview' && invalid !== true && invalid !== 'true';
 
 	const setTextareaRef = (element: HTMLTextAreaElement | null) => {
 		textareaRef.current = element;
@@ -76,7 +78,7 @@ export const MarkdownEditor = ({
 	return (
 		<div className="border-border focus-within:border-ring focus-within:ring-ring/50 has-aria-invalid:border-destructive flex flex-col rounded-2xl border shadow-xs focus-within:ring-[3px]">
 			<div className="border-border flex flex-wrap items-center justify-between gap-2 border-b px-2 py-1.5">
-				<div className="flex items-center gap-1" role="toolbar" aria-label={labels.toolbar}>
+				<div className="flex items-center gap-1" role="group" aria-label={labels.toolbar}>
 					{formats.map(({ format: markdownFormat, icon: Icon }) => (
 						<Button
 							key={markdownFormat}
@@ -94,7 +96,7 @@ export const MarkdownEditor = ({
 					))}
 				</div>
 				<SegmentedToggle
-					value={mode}
+					value={isPreview ? 'preview' : 'write'}
 					onValueChange={(next) => setMode(next === 'preview' ? 'preview' : 'write')}
 					options={[
 						{ value: 'write', label: labels.write },
