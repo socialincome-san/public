@@ -230,6 +230,13 @@ rows with backoff.
 
 ### 3.7 Visibility in the portal
 
+- `/portal/admin/emails` (built): a catalog of every email from the
+  registry, plus planned ones and those SendGrid, Firebase and Stripe
+  send today, with trigger, audience, languages, sent count, problems in
+  the last 30 days and last sent date. The detail page shows a preview
+  with sample data, the receivers and the log of that type; for SendGrid
+  automations it reads status and steps live from SendGrid. Scheduled
+  sends of sequences will appear there too.
 - `/portal/admin/sent-mails`: columns for type, category, language,
   status; filters by type, status and date; preview on row click; link
   to the contact.
@@ -276,10 +283,10 @@ Source: **T** = this task, **D** = Discussion #3356, **#n** = issue.
 
 Small steps, each shippable on its own:
 
-Steps 1 to 3 are implemented in the first pull request (only staff types
-so far; the per-type receiver variables stay until a settings page
-replaces them). Certificate ready (#3346) moves onto the new path when
-that PR is rebased.
+Steps 1 to 3 and the email catalog of step 5 are implemented in the
+first pull request (only staff types so far; the per-type receiver
+variables stay until a settings page replaces them). Certificate ready
+(#3346) moves onto the new path when that PR is rebased.
 
 1. **Foundation with the existing emails.** Registry,
    `sendNotification`, `SentEmail` columns, idempotency key. Move

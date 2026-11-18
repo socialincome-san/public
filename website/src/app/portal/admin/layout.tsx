@@ -29,6 +29,7 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 		{ href: `/portal/admin/countries`, label: 'Countries' },
 		{ href: `/portal/admin/focuses`, label: 'Focuses' },
 		{ href: `/portal/admin/mobile-money-providers`, label: 'Mobile Money Providers' },
+		{ href: `/portal/admin/emails`, label: 'Emails' },
 		{ href: `/portal/admin/sent-mails`, label: 'Sent emails' },
 		{ href: `/portal/admin/audit-log`, label: 'Audit log' },
 	];

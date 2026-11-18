@@ -337,17 +337,15 @@ export const updateOwnCampaign = async (
 		await Promise.all([
 			// A language that kept its previous version may still show the replaced images.
 			updateResult.data.allLanguagesPublished ? deleteReplacedCampaignAssets(replacedAssetIds) : Promise.resolve(),
-			notifyStaffOfCampaignEdit(
-				audit,
-				{
-					id: campaign.id,
-					slug: campaign.slug,
-					title: updatedContent.title,
-					storyId,
-					hadUnpublishedChanges: hasUnpublishedChanges,
-				},
+			notifyStaffOfCampaignEdit({
+				id: campaign.id,
+				slug: campaign.slug,
+				title: updatedContent.title,
+				storyId,
+				editorName: audit.actor.name ?? audit.actor.id,
 				changedFields,
-			),
+				hadUnpublishedChanges: hasUnpublishedChanges,
+			}),
 		]);
 
 		return resultOk({ slug: campaign.slug });

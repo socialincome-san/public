@@ -1,6 +1,5 @@
 import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { sendNotification } from '@/modules/mail/mail.service';
-import { createMonthlySummaryEmail } from '@/modules/monthly-summaries/monthly-summary-email.service';
 import { getLastMonthSummary } from '@/modules/monthly-summaries/monthly-summary.service';
 import { withSchedulerAuth } from '@/server/scheduler-auth';
 import { NextResponse } from 'next/server';
@@ -14,18 +13,11 @@ export const GET = withSchedulerAuth(async () => {
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 
-		const emailContentResult = createMonthlySummaryEmail(summaryResult.data);
-		if (!emailContentResult.success) {
-			sendSlackAlert('Monthly summary email creation failed', { emailContentResult });
-
-			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
-		}
-
 		// Vercel Cron can deliver the same event twice; the key makes the second run a no-op.
 		const month = summaryResult.data.period.from.toISOString().slice(0, 7);
 		const emailResult = await sendNotification({
 			type: 'monthly-summary',
-			...emailContentResult.data,
+			data: summaryResult.data,
 			idempotencyKey: `monthly-summary:${month}`,
 		});
 		if (!emailResult.success) {

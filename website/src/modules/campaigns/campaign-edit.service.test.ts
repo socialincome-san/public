@@ -10,7 +10,7 @@ const mockGetStoryblokAsset = jest.fn();
 const mockDeleteStoryblokAsset = jest.fn();
 const mockSendNotification = jest.fn<
 	Promise<unknown>,
-	[{ type: string; campaignId?: string; subject: string; text: string }]
+	[{ type: string; campaignId?: string; data: { changedFields: string[]; hadUnpublishedChanges: boolean } }]
 >();
 
 jest.mock('./campaign.repository.read', () => ({
@@ -162,7 +162,7 @@ describe('updateOwnCampaign', () => {
 		const mail = mockSendNotification.mock.calls[0]?.[0];
 		expect(mail?.type).toBe('campaign-edited');
 		expect(mail?.campaignId).toBe('campaign-1');
-		expect(mail?.text).toContain('Changed: title, profilePicture, goal');
+		expect(mail?.data.changedFields).toEqual(['title', 'profilePicture', 'goal']);
 	});
 
 	test('deletes a removed image only from the campaign asset folder', async () => {
@@ -263,7 +263,7 @@ describe('updateOwnCampaign', () => {
 
 		await updateOwnCampaign(audit, 'contributor-1', 'campaign-1', { ...fields, title: 'New title' }, keepImages);
 
-		expect(mockSendNotification.mock.calls[0]?.[0].text).toContain('unpublished changes');
+		expect(mockSendNotification.mock.calls[0]?.[0].data.hadUnpublishedChanges).toBe(true);
 	});
 
 	test('keeps an asset that another image field still uses', async () => {

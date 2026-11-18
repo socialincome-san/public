@@ -10,9 +10,9 @@ export const findContactIdByEmail = async (email: string) =>
 		select: { id: true },
 	});
 
-export const findPaginatedSentEmails = async (query: SentEmailTableQuery) => {
+export const findPaginatedSentEmails = async (query: SentEmailTableQuery, type?: string) => {
 	const search = query.search.trim();
-	const where: Prisma.SentEmailWhereInput | undefined = search
+	const searchWhere: Prisma.SentEmailWhereInput | undefined = search
 		? {
 				OR: [
 					{ id: { contains: search, mode: 'insensitive' } },
@@ -27,6 +27,7 @@ export const findPaginatedSentEmails = async (query: SentEmailTableQuery) => {
 				],
 			}
 		: undefined;
+	const where: Prisma.SentEmailWhereInput | undefined = type === undefined ? searchWhere : { ...searchWhere, type };
 
 	const [sentEmails, totalCount] = await Promise.all([
 		prisma.sentEmail.findMany({
@@ -57,6 +58,24 @@ export const findPaginatedSentEmails = async (query: SentEmailTableQuery) => {
 	]);
 
 	return { sentEmails, totalCount };
+};
+
+export const groupSentEmailCountsByType = async (problemStatuses: SentEmailStatus[], problemsSince: Date) => {
+	const [totals, problems] = await Promise.all([
+		prisma.sentEmail.groupBy({
+			by: ['type'],
+			where: { type: { not: null } },
+			_count: { _all: true },
+			_max: { sentAt: true },
+		}),
+		prisma.sentEmail.groupBy({
+			by: ['type'],
+			where: { type: { not: null }, status: { in: problemStatuses }, sentAt: { gte: problemsSince } },
+			_count: { _all: true },
+		}),
+	]);
+
+	return { totals, problems };
 };
 
 export const findSentEmailByIdempotencyKey = async (idempotencyKey: string) =>

@@ -7,6 +7,9 @@ const mockFindSentEmailByIdempotencyKey = jest.fn();
 const mockCreateSentEmail = jest.fn();
 const mockUpdateSentEmail = jest.fn();
 const mockUpdateSentEmailStatusIfIn = jest.fn();
+const mockGroupSentEmailCountsByType = jest.fn();
+const mockRenderNotification = jest.fn();
+const mockListSendgridAutomations = jest.fn();
 
 jest.mock('@/integrations/sendgrid/sendgrid-mail.integration', () => ({
 	sendSendgridEmail: mockSendSendgridEmail,
@@ -14,6 +17,14 @@ jest.mock('@/integrations/sendgrid/sendgrid-mail.integration', () => ({
 
 jest.mock('@/integrations/sendgrid/sendgrid-events.integration', () => ({
 	verifySendgridEventWebhook: mockVerifySendgridEventWebhook,
+}));
+
+jest.mock('@/integrations/sendgrid/sendgrid-automations.integration', () => ({
+	listSendgridAutomations: mockListSendgridAutomations,
+}));
+
+jest.mock('./mail-templates.service', () => ({
+	renderNotification: mockRenderNotification,
 }));
 
 jest.mock('@/modules/users/user.service', () => ({
@@ -27,10 +38,17 @@ jest.mock('./mail.repository', () => ({
 	createSentEmail: mockCreateSentEmail,
 	updateSentEmail: mockUpdateSentEmail,
 	updateSentEmailStatusIfIn: mockUpdateSentEmailStatusIfIn,
+	groupSentEmailCountsByType: mockGroupSentEmailCountsByType,
 }));
 
-import { getPaginatedSentEmailTableView, handleSendgridEvents, sendNotification } from './mail.service';
-import type { SentEmailTableQuery } from './mail.types';
+import {
+	getEmailCatalog,
+	getEmailCatalogDetail,
+	getPaginatedSentEmailTableView,
+	handleSendgridEvents,
+	sendNotification,
+} from './mail.service';
+import type { SendNotificationInput, SentEmailTableQuery } from './mail.types';
 
 const tableQuery: SentEmailTableQuery = {
 	page: 1,
@@ -57,6 +75,8 @@ describe('mail service', () => {
 		mockCreateSentEmail.mockResolvedValue({ kind: 'created', id: 'email-1' });
 		mockUpdateSentEmail.mockResolvedValue({ id: 'email-1' });
 		mockUpdateSentEmailStatusIfIn.mockResolvedValue({ count: 1 });
+		mockGroupSentEmailCountsByType.mockResolvedValue({ totals: [], problems: [] });
+		mockRenderNotification.mockReturnValue({ success: true, data: { subject: 'Subject', text: 'Body' } });
 	});
 
 	afterEach(() => {
@@ -64,7 +84,22 @@ describe('mail service', () => {
 	});
 
 	describe('sendNotification', () => {
-		const input = { type: 'monthly-summary', subject: 'Subject', text: 'Body' } as const;
+		const input: SendNotificationInput = {
+			type: 'campaign-edited',
+			data: {
+				id: 'campaign-1',
+				slug: 'campaign',
+				title: 'Campaign',
+				storyId: 1,
+				editorName: 'Ada',
+				changedFields: ['title'],
+				hadUnpublishedChanges: false,
+			},
+		};
+
+		beforeEach(() => {
+			process.env.CAMPAIGN_EDIT_NOTIFICATION_RECIPIENTS = 'one@example.com, two@example.com';
+		});
 
 		test('returns an error when SendGrid configuration is missing', async () => {
 			delete process.env.SENDGRID_FROM_EMAIL;
@@ -77,7 +112,7 @@ describe('mail service', () => {
 		});
 
 		test('returns an error when the staff receivers are not set', async () => {
-			delete process.env.MONTHLY_SUMMARY_RECIPIENTS;
+			delete process.env.CAMPAIGN_EDIT_NOTIFICATION_RECIPIENTS;
 
 			await expect(sendNotification(input)).resolves.toEqual({
 				success: false,
@@ -92,7 +127,7 @@ describe('mail service', () => {
 			);
 
 			await expect(
-				sendNotification({ ...input, idempotencyKey: 'monthly-summary:2026-10', campaignId: 'campaign-1' }),
+				sendNotification({ ...input, idempotencyKey: 'campaign-edited:1', campaignId: 'campaign-1' }),
 			).resolves.toEqual({ success: true, data: { sent: 2, skipped: 0 } });
 
 			expect(mockCreateSentEmail).toHaveBeenCalledWith({
@@ -101,9 +136,9 @@ describe('mail service', () => {
 				subject: 'Subject',
 				body: 'Body',
 				contactId: 'contact-1',
-				type: 'monthly-summary',
+				type: 'campaign-edited',
 				status: 'queued',
-				idempotencyKey: 'monthly-summary:2026-10:one@example.com',
+				idempotencyKey: 'campaign-edited:1:one@example.com',
 				campaignId: 'campaign-1',
 			});
 			expect(mockSendSendgridEmail).toHaveBeenCalledWith({
@@ -112,7 +147,7 @@ describe('mail service', () => {
 				subject: 'Subject',
 				text: 'Body',
 				template: undefined,
-				categories: ['internal', 'monthly-summary'],
+				categories: ['internal', 'campaign-edited'],
 				customArgs: { sent_email_id: 'email-1' },
 			});
 			expect(mockUpdateSentEmail).toHaveBeenCalledWith(
@@ -124,7 +159,7 @@ describe('mail service', () => {
 		test('skips receivers that already got the email', async () => {
 			mockFindSentEmailByIdempotencyKey.mockResolvedValue({ id: 'email-1', status: 'delivered' });
 
-			await expect(sendNotification({ ...input, idempotencyKey: 'monthly-summary:2026-10' })).resolves.toEqual({
+			await expect(sendNotification({ ...input, idempotencyKey: 'campaign-edited:1' })).resolves.toEqual({
 				success: true,
 				data: { sent: 0, skipped: 2 },
 			});
@@ -134,7 +169,7 @@ describe('mail service', () => {
 		test('skips when a parallel run logged the email first', async () => {
 			mockCreateSentEmail.mockResolvedValue({ kind: 'duplicate' });
 
-			await expect(sendNotification({ ...input, idempotencyKey: 'monthly-summary:2026-10' })).resolves.toEqual({
+			await expect(sendNotification({ ...input, idempotencyKey: 'campaign-edited:1' })).resolves.toEqual({
 				success: true,
 				data: { sent: 0, skipped: 2 },
 			});
@@ -144,12 +179,22 @@ describe('mail service', () => {
 		test('retries a failed email on the same log row', async () => {
 			mockFindSentEmailByIdempotencyKey.mockResolvedValue({ id: 'email-7', status: 'failed' });
 
-			await expect(sendNotification({ ...input, idempotencyKey: 'monthly-summary:2026-10' })).resolves.toEqual({
+			await expect(sendNotification({ ...input, idempotencyKey: 'campaign-edited:1' })).resolves.toEqual({
 				success: true,
 				data: { sent: 2, skipped: 0 },
 			});
 			expect(mockCreateSentEmail).not.toHaveBeenCalled();
 			expect(mockUpdateSentEmail).toHaveBeenCalledWith('email-7', expect.objectContaining({ status: 'sent' }));
+		});
+
+		test('returns the render error without sending', async () => {
+			mockRenderNotification.mockReturnValue({ success: false, error: 'Missing monthly summary SendGrid template' });
+
+			await expect(sendNotification(input)).resolves.toEqual({
+				success: false,
+				error: 'Missing monthly summary SendGrid template',
+			});
+			expect(mockCreateSentEmail).not.toHaveBeenCalled();
 		});
 
 		test('marks the log row as failed when SendGrid fails', async () => {
@@ -220,6 +265,102 @@ describe('mail service', () => {
 		});
 	});
 
+	describe('email catalog', () => {
+		test('lists live emails with their log counts, then planned and external ones', async () => {
+			mockGroupSentEmailCountsByType.mockResolvedValue({
+				totals: [{ type: 'campaign-edited', _count: { _all: 4 }, _max: { sentAt: new Date('2026-11-01T10:00:00.000Z') } }],
+				problems: [{ type: 'campaign-edited', _count: { _all: 1 } }],
+			});
+
+			const result = await getEmailCatalog('admin-1');
+
+			expect(result.success).toBe(true);
+			const entries = result.success ? result.data : [];
+			expect(entries.find((entry) => entry.key === 'campaign-edited')).toMatchObject({
+				status: 'live',
+				sentCount: 4,
+				problemCount30Days: 1,
+				lastSentAt: new Date('2026-11-01T10:00:00.000Z'),
+			});
+			expect(entries.find((entry) => entry.key === 'welcome-series')).toMatchObject({ status: 'external' });
+			expect(entries.find((entry) => entry.key === 'donation-thank-you')).toMatchObject({ status: 'planned' });
+		});
+
+		test('requires admin access', async () => {
+			mockIsAdmin.mockResolvedValue({ success: false, error: 'Permission denied' });
+
+			await expect(getEmailCatalog('user-1')).resolves.toEqual({ success: false, error: 'Permission denied' });
+			await expect(getEmailCatalogDetail('user-1', 'campaign-edited')).resolves.toEqual({
+				success: false,
+				error: 'Permission denied',
+			});
+		});
+
+		test('previews a live email with sample data and its receivers', async () => {
+			process.env.CAMPAIGN_EDIT_NOTIFICATION_RECIPIENTS = 'staff@example.com';
+
+			const result = await getEmailCatalogDetail('admin-1', 'campaign-edited');
+
+			expect(mockRenderNotification).toHaveBeenCalledWith(expect.objectContaining({ type: 'campaign-edited' }));
+			expect(result).toMatchObject({
+				success: true,
+				data: {
+					receivers: ['staff@example.com'],
+					preview: { from: 'sender@example.com', to: 'staff@example.com', subject: 'Subject', body: 'Body' },
+					previewError: null,
+				},
+			});
+		});
+
+		test('shows the steps of SendGrid automations', async () => {
+			mockListSendgridAutomations.mockResolvedValue({
+				success: true,
+				data: [
+					{
+						name: 'Welcome Series (EN)',
+						status: 'live',
+						steps: [
+							{ sendTiming: 'PT0S', subject: 'You made it on the list.' },
+							{ sendTiming: 'P4D', subject: 'Who should, if not us?' },
+						],
+					},
+				],
+			});
+
+			const result = await getEmailCatalogDetail('admin-1', 'welcome-series');
+
+			expect(mockListSendgridAutomations).toHaveBeenCalledWith([
+				'Welcome Series (EN)',
+				'Welcome Series (DE)',
+				'Welcome Series (FR)',
+			]);
+			expect(result).toMatchObject({
+				success: true,
+				data: {
+					preview: null,
+					automations: [
+						{
+							name: 'Welcome Series (EN)',
+							status: 'live',
+							steps: [
+								{ delay: 'Immediately', subject: 'You made it on the list.' },
+								{ delay: '4 days after the previous email', subject: 'Who should, if not us?' },
+							],
+						},
+					],
+				},
+			});
+		});
+
+		test('returns not found for an unknown email', async () => {
+			await expect(getEmailCatalogDetail('admin-1', 'unknown')).resolves.toEqual({
+				success: false,
+				error: 'Email not found',
+				status: 404,
+			});
+		});
+	});
+
 	describe('getPaginatedSentEmailTableView', () => {
 		test('returns paginated sent emails and formats the contact', async () => {
 			mockFindPaginatedSentEmails.mockResolvedValue({
@@ -261,7 +402,7 @@ describe('mail service', () => {
 				},
 			});
 			expect(mockIsAdmin).toHaveBeenCalledWith('admin-1');
-			expect(mockFindPaginatedSentEmails).toHaveBeenCalledWith(tableQuery);
+			expect(mockFindPaginatedSentEmails).toHaveBeenCalledWith(tableQuery, undefined);
 		});
 
 		test('requires admin access', async () => {
