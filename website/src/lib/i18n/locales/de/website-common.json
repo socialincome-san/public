@@ -347,6 +347,17 @@
 		"about": "Über",
 		"create-campaign": "Kampagne erstellen",
 		"submission": {
+			"markdown": {
+				"toolbar": "Formatierung",
+				"write": "Schreiben",
+				"preview": "Vorschau",
+				"empty-preview": "Noch nichts zum Anzeigen.",
+				"bold": "Fett",
+				"italic": "Kursiv",
+				"bullet-list": "Aufzählung",
+				"link": "Link",
+				"hint": "Mit den Buttons formatierst du fett, kursiv, Listen und Links. Eine leere Zeile beginnt einen neuen Absatz."
+			},
 			"program-step-title": "Für welches Programm möchtest du eine Kampagne erstellen?",
 			"details-step-title": "Kampagnendetails",
 			"about-step-title": "Über",

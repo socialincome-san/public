@@ -38,7 +38,7 @@ export const getRichTextBloks = (node: RichTextNode): unknown[] => {
 };
 
 // Hero headings and titles are Markdown, e.g. "Give 1 % of your income and **change lives**."
-const markdownToPlainText = (markdown: string) =>
+export const markdownToPlainText = (markdown: string) =>
 	markdown
 		.replaceAll(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
 		.replaceAll(/^#+\s*/gm, '')

@@ -5,6 +5,7 @@ import { cn } from '@socialincome/design-system/cn';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { Label } from '@socialincome/design-system/forms/label/label';
+import { MarkdownEditor } from '@socialincome/design-system/forms/markdown-editor/markdown-editor';
 import { RadioCard } from '@socialincome/design-system/forms/radio-card/radio-card';
 import { RadioGroup } from '@socialincome/design-system/forms/radio-group/radio-group';
 import {
@@ -18,6 +19,7 @@ import { Switch } from '@socialincome/design-system/forms/switch/switch';
 import { addDays, format } from 'date-fns';
 import { Camera, Check, Trash2 } from 'lucide-react';
 import { useEffect, useId, useRef } from 'react';
+import { CampaignMarkdown } from '../../campaign-markdown';
 import { endDateFromDurationPreset } from '../campaign-submission.client';
 import { ImageFocusPoint } from '../image-focus-point';
 import type { DetailsStepProps } from '../types';
@@ -126,13 +128,11 @@ export const DetailsStep = ({
 					<FormItem>
 						<FormLabel>{labels.description}</FormLabel>
 						<FormControl>
-							<textarea
+							<MarkdownEditor
 								{...field}
-								rows={4}
-								className={cn(
-									'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
-									'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-								)}
+								rows={6}
+								labels={labels.markdown}
+								renderPreview={(value) => <CampaignMarkdown>{value}</CampaignMarkdown>}
 							/>
 						</FormControl>
 						<FormMessage />

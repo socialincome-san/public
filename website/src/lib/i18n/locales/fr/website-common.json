@@ -347,6 +347,17 @@
 		"about": "À propos de",
 		"create-campaign": "Créer une campagne",
 		"submission": {
+			"markdown": {
+				"toolbar": "Mise en forme",
+				"write": "Écrire",
+				"preview": "Aperçu",
+				"empty-preview": "Rien à afficher pour le moment.",
+				"bold": "Gras",
+				"italic": "Italique",
+				"bullet-list": "Liste à puces",
+				"link": "Lien",
+				"hint": "Utilisez les boutons pour le gras, l’italique, les listes et les liens. Une ligne vide commence un nouveau paragraphe."
+			},
 			"program-step-title": "Pour quel programme souhaitez-vous créer une campagne ?",
 			"details-step-title": "Détails de la campagne",
 			"about-step-title": "À propos",
