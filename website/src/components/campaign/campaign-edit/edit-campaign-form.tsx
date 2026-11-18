@@ -22,7 +22,6 @@ import {
 	createCampaignSubmissionDetailsSchema,
 	isCampaignSubmissionErrorCode,
 	isCampaignSubmissionImageErrorCode,
-	resolveCampaignSubmissionQuote,
 } from '../campaign-submission/campaign-submission.client';
 import { compressCampaignImage } from '../campaign-submission/compress-campaign-image';
 import { CampaignSubmissionFormCard, CampaignSubmissionFormCardColumn } from '../campaign-submission/form-layout';
@@ -264,19 +263,15 @@ export const EditCampaignForm = ({ campaign, labels, lang, currency, onSaved }: 
 				return;
 			}
 
-			const formData = appendCampaignSubmissionFormData(
-				new FormData(),
-				{ ...values, quote: resolveCampaignSubmissionQuote(values.quote, labels.quotePlaceholder) },
-				{
-					primaryImage: primaryCompressed?.file,
-					primaryImageFocus: primaryCompressed?.focus,
-					defaultImageId: imageSelection?.type === 'default' ? imageSelection.id : undefined,
-					profilePicture: profileCompressed?.file,
-					profilePictureFocus: profileCompressed?.focus,
-					sectionImage: sectionCompressed?.file,
-					sectionImageFocus: sectionCompressed?.focus,
-				},
-			);
+			const formData = appendCampaignSubmissionFormData(new FormData(), values, {
+				primaryImage: primaryCompressed?.file,
+				primaryImageFocus: primaryCompressed?.focus,
+				defaultImageId: imageSelection?.type === 'default' ? imageSelection.id : undefined,
+				profilePicture: profileCompressed?.file,
+				profilePictureFocus: profileCompressed?.focus,
+				sectionImage: sectionCompressed?.file,
+				sectionImageFocus: sectionCompressed?.focus,
+			});
 			formData.append('campaignId', campaign.id);
 			formData.append('removeProfilePicture', profilePicture.removed ? 'true' : 'false');
 			formData.append('removeSectionImage', sectionImage.removed ? 'true' : 'false');

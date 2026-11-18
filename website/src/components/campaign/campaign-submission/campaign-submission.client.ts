@@ -279,7 +279,17 @@ export const createCampaignSubmissionFormSchema = (message: ErrorMessage) =>
 // Program and personal data cannot change, but stay in the values so both flows share the form steps.
 export const createCampaignEditFormSchema = (message: ErrorMessage, currentEndDate: string) =>
 	aboutObjectSchema(message)
-		.extend({ programId: z.string(), firstName: z.string(), lastName: z.string(), email: z.string() })
+		.extend({
+			// An existing campaign keeps the quote its creator wrote instead of falling back to the placeholder.
+			quote: z
+				.string()
+				.transform(sanitizeText)
+				.pipe(quoteRule(message).min(1, message('quote-required'))),
+			programId: z.string(),
+			firstName: z.string(),
+			lastName: z.string(),
+			email: z.string(),
+		})
 		.superRefine((values, context) => refineAboutFields(values, context, message, currentEndDate));
 
 export const createCampaignSubmissionPersonalSchema = (message: ErrorMessage) =>

@@ -1,5 +1,6 @@
 import {
 	appendCampaignSubmissionFormData,
+	createCampaignEditFormSchema,
 	createCampaignSubmissionDetailsSchema,
 	createCampaignSubmissionFormSchema,
 	createCampaignSubmissionPersonalSchema,
@@ -382,6 +383,16 @@ describe('campaign-submission-input', () => {
 			expect(messages).toContain('program-required');
 			expect(messages).toContain('goal-positive');
 		}
+	});
+
+	test('createCampaignEditFormSchema requires a quote and keeps an unchanged end date', () => {
+		const pastEndDate = format(addDays(startOfDay(new Date()), 2), 'yyyy-MM-dd');
+		const schema = createCampaignEditFormSchema((code) => code, pastEndDate);
+
+		expect(schema.safeParse(validFormValues({ endDate: pastEndDate })).success).toBe(true);
+		const result = schema.safeParse(validFormValues({ endDate: pastEndDate, quote: '  ' }));
+		expect(result.success).toBe(false);
+		expect(result.error?.issues.map((issue) => issue.message)).toContain('quote-required');
 	});
 
 	test('createCampaignSubmissionFormSchema requires creator name and allows empty quote', () => {
