@@ -120,8 +120,14 @@ describe('storyblokRichtextToPlainText', () => {
 
 describe('markdownToPlainText', () => {
 	test('removes formatting but keeps stars and underscores that are text', () => {
-		expect(markdownToPlainText('**Thanks** to *all* of you, _friends_!\n- my_handle pays 2 * 5 CHF')).toBe(
-			'Thanks to all of you, friends! - my_handle pays 2 * 5 CHF',
+		expect(markdownToPlainText('**Thanks** to *all* of you, _friends_!\n- my_handle pays 2 * 5 CHF\n- \\*note\\*')).toBe(
+			'Thanks to all of you, friends! my_handle pays 2 * 5 CHF *note*',
+		);
+	});
+
+	test('keeps link labels and image alt text', () => {
+		expect(markdownToPlainText('***Hi*** [Site](https://example.org/a(b)) ![Payments](https://example.org/p.png)')).toBe(
+			'Hi Site Payments',
 		);
 	});
 });

@@ -21,14 +21,16 @@ describe('CampaignMarkdown', () => {
 
 		expect(html).not.toMatch(/<h1|<img|<script/);
 		expect(html).toContain('Big');
+		expect(html).toContain('alt');
 	});
 
 	test('adds https to links typed without a scheme', () => {
 		expect(markup('[site](www.example.org)')).toContain('href="https://www.example.org"');
+		expect(markup('[site](www.example.org:8443/info)')).toContain('href="https://www.example.org:8443/info"');
 	});
 
 	test('drops links that are not web or mail addresses', () => {
-		const html = markup('[click](javascript:alert(1)) [home](/en/ch)');
+		const html = markup('[click](javascript:alert(1)) [home](/en/ch) [call](tel:+41441234567)');
 
 		expect(html).not.toContain('href');
 		expect(html).toContain('click');

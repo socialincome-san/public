@@ -1,5 +1,7 @@
 import type { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset, StoryblokRichTextDoc } from '@/generated/storyblok/types/storyblok';
+import type { Nodes as MarkdownNode } from 'mdast';
+import { fromMarkdown } from 'mdast-util-from-markdown';
 
 type RichTextNode = StoryblokRichTextDoc | StoryblokRichTextDoc['content'][number];
 
@@ -38,15 +40,31 @@ export const getRichTextBloks = (node: RichTextNode): unknown[] => {
 };
 
 // Hero headings and titles are Markdown, e.g. "Give 1 % of your income and **change lives**."
+const markdownNodeToText = (node: MarkdownNode): string => {
+	if (node.type === 'image') {
+		return node.alt ?? '';
+	}
+	if (node.type === 'break') {
+		return ' ';
+	}
+	if ('value' in node) {
+		return node.value;
+	}
+	if (!('children' in node)) {
+		return '';
+	}
+	const isInline =
+		node.type === 'paragraph' ||
+		node.type === 'heading' ||
+		node.type === 'emphasis' ||
+		node.type === 'strong' ||
+		node.type === 'link';
+
+	return node.children.map(markdownNodeToText).join(isInline ? '' : ' ');
+};
+
 export const markdownToPlainText = (markdown: string) =>
-	markdown
-		.replaceAll(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
-		.replaceAll(/^#+\s*/gm, '')
-		.replaceAll(/(\*\*|\*|~~|`)(\S(?:.*?\S)?)\1/g, '$2')
-		// Underscores inside words, as in my_handle, are not emphasis.
-		.replaceAll(/(?<!\w)(__|_)(\S(?:.*?\S)?)\1(?!\w)/g, '$2')
-		.replaceAll(/\s+/g, ' ')
-		.trim();
+	markdownNodeToText(fromMarkdown(markdown)).replaceAll(/\s+/g, ' ').trim();
 
 const isImageAsset = (value: unknown): value is StoryblokAsset =>
 	typeof value === 'object' &&

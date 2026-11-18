@@ -2,6 +2,7 @@
 
 import { Bold, Italic, Link, List } from 'lucide-react';
 import { type ComponentProps, type ReactNode, type Ref, useRef, useState } from 'react';
+import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 import { Button } from '../../actions/button/button';
 import { SegmentedToggle } from '../../actions/segmented-toggle/segmented-toggle';
@@ -17,7 +18,7 @@ export type MarkdownEditorLabels = {
 } & Record<MarkdownFormat, string>;
 
 type MarkdownEditorProps = WithoutClassName<
-	Omit<ComponentProps<'textarea'>, 'value' | 'defaultValue' | 'onChange' | 'ref'>
+	Omit<ComponentProps<'textarea'>, 'value' | 'defaultValue' | 'onChange' | 'ref' | 'style'>
 > & {
 	value: string;
 	onChange: (value: string) => void;
@@ -41,35 +42,56 @@ export const MarkdownEditor = ({
 	labels,
 	ref,
 	disabled,
+	readOnly,
+	onFocus,
 	...textareaProps
 }: MarkdownEditorProps) => {
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 	const [mode, setMode] = useState<'write' | 'preview'>('write');
-	// An invalid value must stay visible, so the field can be fixed and focused.
-	const invalid = textareaProps['aria-invalid'];
-	const isPreview = mode === 'preview' && invalid !== true && invalid !== 'true';
+	const invalid = textareaProps['aria-invalid'] === true || textareaProps['aria-invalid'] === 'true';
+	// An invalid value goes back to Write, so it stays visible while it is fixed.
+	if (invalid && mode === 'preview') {
+		setMode('write');
+	}
+	const isPreview = mode === 'preview' && !invalid;
+	const canFormat = !disabled && !readOnly && !isPreview;
 
-	const setTextareaRef = (element: HTMLTextAreaElement | null) => {
+	const setTextareaRef = (element: HTMLTextAreaElement) => {
 		textareaRef.current = element;
-		if (typeof ref === 'function') {
-			ref(element);
-		} else if (ref) {
+		const cleanup = typeof ref === 'function' ? ref(element) : undefined;
+		if (ref && typeof ref === 'object') {
 			ref.current = element;
 		}
+
+		return () => {
+			textareaRef.current = null;
+			if (typeof cleanup === 'function') {
+				cleanup();
+			} else if (typeof ref === 'function') {
+				ref(null);
+			} else if (ref) {
+				ref.current = null;
+			}
+		};
 	};
 
 	const format = (markdownFormat: MarkdownFormat) => {
 		const textarea = textareaRef.current;
-		if (!textarea) {
+		if (!textarea || !canFormat) {
 			return;
 		}
+		// The textarea normalizes line breaks, so its own value matches the selection offsets.
 		const edit = applyMarkdownFormat(
-			{ value, selectionStart: textarea.selectionStart, selectionEnd: textarea.selectionEnd },
+			{ value: textarea.value, selectionStart: textarea.selectionStart, selectionEnd: textarea.selectionEnd },
 			markdownFormat,
+			labels.link,
 		);
 		onChange(edit.value);
-		// The new value reaches the textarea on the next render.
+		// The new value reaches the textarea on the next render, unless something replaced it meanwhile.
 		requestAnimationFrame(() => {
+			if (!textarea.isConnected || textarea.value !== edit.value) {
+				return;
+			}
 			textarea.focus();
 			textarea.setSelectionRange(edit.selectionStart, edit.selectionEnd);
 		});
@@ -87,7 +109,7 @@ export const MarkdownEditor = ({
 							size="icon-sm"
 							aria-label={labels[markdownFormat]}
 							title={labels[markdownFormat]}
-							disabled={Boolean(disabled) || isPreview}
+							disabled={!canFormat}
 							onMouseDown={(event) => event.preventDefault()}
 							onClick={() => format(markdownFormat)}
 						>
@@ -104,7 +126,8 @@ export const MarkdownEditor = ({
 					]}
 				/>
 			</div>
-			<div className="px-3 py-2" hidden={isPreview}>
+			{/* Only visually hidden in Preview, so a form can still focus the field, which switches back to Write. */}
+			<div className={cn('px-3 py-2', isPreview && 'sr-only')}>
 				<Textarea
 					{...textareaProps}
 					ref={setTextareaRef}
@@ -112,6 +135,11 @@ export const MarkdownEditor = ({
 					resize="vertical"
 					value={value}
 					disabled={disabled}
+					readOnly={readOnly}
+					onFocus={(event) => {
+						setMode('write');
+						onFocus?.(event);
+					}}
 					onChange={(event) => onChange(event.target.value)}
 				/>
 			</div>

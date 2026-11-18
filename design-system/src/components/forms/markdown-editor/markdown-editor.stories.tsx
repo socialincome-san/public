@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { useState } from 'react';
+import { useArgs } from 'storybook/preview-api';
+import { userEvent, within } from 'storybook/test';
 import { MarkdownEditor } from './markdown-editor';
 
 const labels = {
@@ -11,7 +12,7 @@ const labels = {
 	italic: 'Italic',
 	bulletList: 'Bullet list',
 	link: 'Link',
-	hint: 'Supports **bold**, _italic_, lists and [links](https://…).',
+	hint: 'Supports **bold**, *italic*, lists and [links](https://…).',
 };
 
 const meta = {
@@ -34,9 +35,9 @@ const meta = {
 		'aria-label': 'Description',
 	},
 	render: function Render(args) {
-		const [value, setValue] = useState(args.value);
+		const [, updateArgs] = useArgs<typeof args>();
 
-		return <MarkdownEditor {...args} value={value} onChange={setValue} />;
+		return <MarkdownEditor {...args} onChange={(value) => updateArgs({ value })} />;
 	},
 	parameters: {
 		docs: {
@@ -68,4 +69,21 @@ export const Invalid: Story = {
 
 export const Disabled: Story = {
 	args: { disabled: true },
+};
+
+const openPreview: Story['play'] = async ({ canvasElement }) => {
+	await userEvent.click(within(canvasElement).getByRole('radio', { name: 'Preview' }));
+};
+
+export const Preview: Story = {
+	play: openPreview,
+};
+
+export const EmptyPreview: Story = {
+	args: { value: '' },
+	play: openPreview,
+};
+
+export const ReadOnly: Story = {
+	args: { readOnly: true },
 };
