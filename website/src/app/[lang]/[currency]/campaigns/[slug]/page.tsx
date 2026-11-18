@@ -3,6 +3,7 @@ import { getPageMetadata } from '@/app/[lang]/[currency]/page-metadata';
 import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import { loadCampaignDetailData } from '@/components/storyblok/campaign/load-campaign-detail-data';
 import { toWebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { markdownToPlainText } from '@/lib/storyblok/storyblok-richtext';
 import { getStoryblokMetadataImage } from '@/lib/storyblok/storyblok-utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
 import { notFound } from 'next/navigation';
@@ -17,7 +18,7 @@ export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) =
 		data
 			? {
 					title: data.title,
-					description: data.description,
+					description: markdownToPlainText(data.description),
 					image: getStoryblokMetadataImage(data.primaryImage, data.title),
 				}
 			: {},

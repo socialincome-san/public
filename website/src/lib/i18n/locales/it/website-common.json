@@ -347,6 +347,17 @@
 		"about": "Informazioni su",
 		"create-campaign": "Crea campagna",
 		"submission": {
+			"markdown": {
+				"toolbar": "Formattazione",
+				"write": "Scrivi",
+				"preview": "Anteprima",
+				"empty-preview": "Ancora niente da mostrare.",
+				"bold": "Grassetto",
+				"italic": "Corsivo",
+				"bullet-list": "Elenco puntato",
+				"link": "Link",
+				"hint": "Usa i pulsanti per grassetto, corsivo, elenchi e link. Una riga vuota inizia un nuovo paragrafo."
+			},
 			"program-step-title": "Per quale programma vorresti creare una campagna?",
 			"details-step-title": "Dettagli della campagna",
 			"about-step-title": "Informazioni",

@@ -2,10 +2,12 @@ import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CampaignDefaultImageOption } from '@/modules/campaigns/campaign.actions';
 import { type CampaignSubmissionErrorCode, type CampaignSubmissionFormValues } from '@/modules/campaigns/campaign.types';
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
+import type { MarkdownEditorLabels } from '@socialincome/design-system/forms/markdown-editor/markdown-editor';
 import type { RefObject } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 
 export type SubmissionLabels = {
+	markdown: MarkdownEditorLabels;
 	programStepTitle: string;
 	detailsStepTitle: string;
 	aboutStepTitle: string;
