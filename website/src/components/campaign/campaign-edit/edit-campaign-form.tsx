@@ -100,7 +100,6 @@ const useSavedImageField = (
 			onChange: (file) => {
 				if (file) {
 					upload.setFromFile(file);
-					setRemoved(false);
 				} else if (upload.file) {
 					upload.clear();
 				} else {
@@ -319,7 +318,11 @@ export const EditCampaignForm = ({ campaign, labels, lang, currency, onSaved }: 
 	}
 
 	const submit = () => {
-		void form.handleSubmit(onSubmit)();
+		void form.handleSubmit(onSubmit, (errors) => {
+			if (campaignSubmissionDetailsFieldNames.some((fieldName) => fieldName in errors)) {
+				setCurrentStep('details');
+			}
+		})();
 	};
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

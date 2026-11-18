@@ -41,6 +41,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+export const WithoutBadges: Story = {
+	args: { badges: undefined },
+};
+
 export const WithoutActions: Story = {
 	args: { actions: undefined },
 };

@@ -247,6 +247,39 @@ describe('updateOwnCampaign', () => {
 		expect(mockSendMail.mock.calls[0]?.[0].text).toContain('unpublished changes');
 	});
 
+	test('keeps an asset that another image field still uses', async () => {
+		mockGetCampaignStory.mockResolvedValue({
+			success: true,
+			data: { storyId: 42, content: { ...storyContent, profilePicture: asset(1) } },
+		});
+		mockGetStoryblokAsset.mockResolvedValue({
+			success: true,
+			data: { id: 1, assetFolderId: campaignSubmissionConfig.storyblokCampaignAssetFolderId },
+		});
+
+		await updateOwnCampaign(audit, 'contributor-1', 'campaign-1', fields, {
+			...keepImages,
+			profilePicture: { kind: 'remove' },
+		});
+
+		expect(mockDeleteStoryblokAsset).not.toHaveBeenCalled();
+	});
+
+	test('keeps a stored currency the form cannot offer', async () => {
+		mockFindCampaignForEdit.mockResolvedValue({
+			id: 'campaign-1',
+			slug: 'my-campaign',
+			contributorId: 'contributor-1',
+			goal: 500,
+			currency: 'SLE',
+			endDate,
+		});
+
+		await updateOwnCampaign(audit, 'contributor-1', 'campaign-1', { ...fields, goal: 800 }, keepImages);
+
+		expect(mockUpdateCampaignDetails).toHaveBeenCalledWith(audit, 'campaign-1', { goal: 800, currency: 'SLE', endDate });
+	});
+
 	test('rejects a new end date outside the duration limits', async () => {
 		const tooSoon = startOfDay(addDays(new Date(), 1));
 

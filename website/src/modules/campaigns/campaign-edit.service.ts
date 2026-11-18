@@ -309,7 +309,7 @@ export const updateOwnCampaign = async (
 		const [primaryImage, profilePicture, sectionImage] = await Promise.all([
 			resolvePrimaryImageUpdate(images.primaryImage, uploadedAssetIds),
 			resolveOptionalImageUpdate(images.profilePicture, uploadedAssetIds),
-			resolveOptionalImageUpdate(images.sectionImage, uploadedAssetIds),
+			resolveOptionalImageUpdate(fields.hasAdditionalInformation ? images.sectionImage : { kind: 'keep' }, uploadedAssetIds),
 		]);
 		if (!primaryImage.success) {
 			await discardUploads();
@@ -328,9 +328,11 @@ export const updateOwnCampaign = async (
 			sectionImage: sectionImage.data,
 		});
 		const previousGoal = campaign.goal === null ? null : Number(campaign.goal);
+		// The form can only offer allowed currencies, so another stored currency stays as it is.
+		const currency = isAllowedCurrency(campaign.currency) ? fields.currency : campaign.currency;
 		const changedFields = listChangedFields(
 			{ content, goal: previousGoal, currency: campaign.currency, endDate: previousEndDate },
-			{ content: updatedContent, goal: fields.goal, currency: fields.currency, endDate },
+			{ content: updatedContent, goal: fields.goal, currency, endDate },
 		);
 		if (changedFields.length === 0) {
 			await discardUploads();
@@ -342,7 +344,7 @@ export const updateOwnCampaign = async (
 		if (detailsChanged) {
 			await campaignWriteRepository.updateCampaignDetails(audit, campaign.id, {
 				goal: fields.goal,
-				currency: fields.currency,
+				currency,
 				// Keeps the stored time of day when only other fields change.
 				endDate: endDate === previousEndDate ? campaign.endDate : fields.endDate,
 			});
@@ -362,11 +364,16 @@ export const updateOwnCampaign = async (
 			return resultFail('submission-failed', updateResult.status ?? 503);
 		}
 
-		const replacedAssetIds = storyImageFields.flatMap((field) => {
-			const assetId = content[field]?.id;
+		const retainedAssetIds = new Set(storyImageFields.map((field) => updatedContent[field]?.id));
+		const replacedAssetIds = [
+			...new Set(
+				storyImageFields.flatMap((field) => {
+					const assetId = content[field]?.id;
 
-			return assetId && assetId !== updatedContent[field]?.id ? [assetId] : [];
-		});
+					return assetId && !retainedAssetIds.has(assetId) ? [assetId] : [];
+				}),
+			),
+		];
 		await Promise.all([
 			deleteReplacedCampaignAssets(replacedAssetIds),
 			notifyStaffOfCampaignEdit(

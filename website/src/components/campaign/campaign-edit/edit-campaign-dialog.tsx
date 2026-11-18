@@ -7,7 +7,7 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { isCampaignSubmissionErrorCode } from '../campaign-submission/campaign-submission.client';
 import { EditCampaignForm, type EditCampaignLabels } from './edit-campaign-form';
 
@@ -25,12 +25,18 @@ export const EditCampaignDialog = ({ campaignId, editLabel, labels, lang, curren
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
 	const [loadState, setLoadState] = useState<LoadState>({ kind: 'loading' });
+	// A load from an earlier opening must not replace the form of the current one.
+	const loadIdRef = useRef(0);
 
 	const openDialog = async () => {
+		const loadId = ++loadIdRef.current;
 		setLoadState({ kind: 'loading' });
 		setOpen(true);
 
 		const result = await getOwnCampaignForEditAction(campaignId).catch(() => null);
+		if (loadId !== loadIdRef.current) {
+			return;
+		}
 		if (!result?.success) {
 			const message = result && isCampaignSubmissionErrorCode(result.error) ? labels.errors[result.error] : labels.error;
 			setLoadState({ kind: 'error', message });

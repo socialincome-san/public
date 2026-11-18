@@ -72,6 +72,7 @@ export const DetailsStep = ({
 	const { inputRef, previewUrl, focus, setFocus, error: imageError, onChange: onPrimaryImageChange } = primaryImage;
 	const imageHintId = useId();
 	const imageFocusHintId = useId();
+	const hasFocusPicker = imageSelection?.type === 'upload' && Boolean(setFocus);
 	const imageErrorId = useId();
 	const imageErrorRef = useRef<HTMLParagraphElement>(null);
 	const durationPreset = form.watch('durationPreset');
@@ -85,11 +86,7 @@ export const DetailsStep = ({
 		}
 	}, [imageError]);
 
-	const imageDescribedBy = [
-		imageHintId,
-		imageSelection?.type === 'upload' ? imageFocusHintId : null,
-		imageError ? imageErrorId : null,
-	]
+	const imageDescribedBy = [imageHintId, hasFocusPicker ? imageFocusHintId : null, imageError ? imageErrorId : null]
 		.filter(Boolean)
 		.join(' ');
 
@@ -291,7 +288,7 @@ export const DetailsStep = ({
 
 				{previewSrc ? (
 					<div className="border-border relative aspect-[16/10] w-full overflow-hidden rounded-2xl border">
-						{imageSelection?.type === 'upload' && previewUrl && setFocus ? (
+						{hasFocusPicker && previewUrl && setFocus ? (
 							<ImageFocusPoint
 								previewUrl={previewUrl}
 								focus={focus}
@@ -399,7 +396,7 @@ export const DetailsStep = ({
 				<p id={imageHintId} className="text-muted-foreground text-xs">
 					{labels.imageHint}
 				</p>
-				{imageSelection?.type === 'upload' ? (
+				{hasFocusPicker ? (
 					<p id={imageFocusHintId} className="text-muted-foreground text-xs">
 						{labels.imageFocusHint}
 					</p>
