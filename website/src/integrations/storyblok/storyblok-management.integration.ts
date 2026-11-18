@@ -525,27 +525,40 @@ const listSpaceLanguageCodes = async (): Promise<string[]> => {
 		: [];
 };
 
-const publishOtherLanguages = async (storyId: number) => {
+const publishOtherLanguages = async (storyId: number): Promise<boolean> => {
 	try {
 		const languageCodes = await listSpaceLanguageCodes();
-		await Promise.all(
+		const published = await Promise.all(
 			languageCodes.map((languageCode) =>
 				requestManagement(
 					`/spaces/${spaceId}/stories/${storyId}/publish?${new URLSearchParams({ lang: languageCode }).toString()}`,
 					{ method: 'GET' },
-				).catch((error: unknown) => {
-					console.error('Storyblok language publish failed', { storyId, languageCode, error });
-				}),
+				).then(
+					() => true,
+					(error: unknown) => {
+						console.error('Storyblok language publish failed', { storyId, languageCode, error });
+
+						return false;
+					},
+				),
 			),
 		);
+
+		return published.every(Boolean);
 	} catch (error) {
 		console.error('Storyblok language publish failed', { storyId, error });
+
+		return false;
 	}
 };
 
 // `publish: 1` only publishes the default language; the space publishes each language separately.
-// Once the default language is live the update counts as done, so a failed language publish is only logged.
-export const updatePublishedCampaignStory = async (storyId: number, content: Campaign): Promise<Result<void>> => {
+// Once the default language is live the update counts as done; a failed language publish is only reported, because
+// that language still shows its previous version.
+export const updatePublishedCampaignStory = async (
+	storyId: number,
+	content: Campaign,
+): Promise<Result<{ allLanguagesPublished: boolean }>> => {
 	try {
 		await requestManagement(`/spaces/${spaceId}/stories/${storyId}`, {
 			method: 'PUT',
@@ -556,9 +569,7 @@ export const updatePublishedCampaignStory = async (storyId: number, content: Cam
 		return toServiceFailure(error);
 	}
 
-	await publishOtherLanguages(storyId);
-
-	return resultOk(undefined);
+	return resultOk({ allLanguagesPublished: await publishOtherLanguages(storyId) });
 };
 
 export type CreatePublishedCampaignStoryInput = {

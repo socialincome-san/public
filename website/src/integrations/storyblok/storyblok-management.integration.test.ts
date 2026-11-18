@@ -223,7 +223,7 @@ describe('updatePublishedCampaignStory', () => {
 
 		const result = await updatePublishedCampaignStory(42, content);
 
-		expect(result.success).toBe(true);
+		expect(result).toEqual({ success: true, data: { allLanguagesPublished: false } });
 		const urls = fetchMock.mock.calls.map(([url]) => url);
 		expect(urls).toEqual(
 			expect.arrayContaining([

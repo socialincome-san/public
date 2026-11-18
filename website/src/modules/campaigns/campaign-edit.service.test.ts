@@ -110,7 +110,7 @@ describe('updateOwnCampaign', () => {
 			endDate,
 		});
 		mockGetCampaignStory.mockResolvedValue({ success: true, data: { storyId: 42, content: storyContent } });
-		mockUpdatePublishedCampaignStory.mockResolvedValue({ success: true, data: undefined });
+		mockUpdatePublishedCampaignStory.mockResolvedValue({ success: true, data: { allLanguagesPublished: true } });
 		mockUpdateCampaignDetails.mockResolvedValue({ id: 'campaign-1' });
 		mockSendMail.mockResolvedValue({ success: true, data: undefined });
 		mockGetStoryblokAsset.mockResolvedValue({ success: true, data: null });
@@ -174,6 +174,22 @@ describe('updateOwnCampaign', () => {
 		});
 
 		expect(mockDeleteStoryblokAsset).toHaveBeenCalledWith(2);
+	});
+
+	test('keeps replaced images while a language still shows the previous version', async () => {
+		mockUpdatePublishedCampaignStory.mockResolvedValue({ success: true, data: { allLanguagesPublished: false } });
+		mockGetStoryblokAsset.mockResolvedValue({
+			success: true,
+			data: { id: 2, assetFolderId: campaignSubmissionConfig.storyblokCampaignAssetFolderId },
+		});
+
+		const result = await updateOwnCampaign(audit, 'contributor-1', 'campaign-1', fields, {
+			...keepImages,
+			profilePicture: { kind: 'remove' },
+		});
+
+		expect(result.success).toBe(true);
+		expect(mockDeleteStoryblokAsset).not.toHaveBeenCalled();
 	});
 
 	test('keeps a removed image that lives outside the campaign asset folder', async () => {
