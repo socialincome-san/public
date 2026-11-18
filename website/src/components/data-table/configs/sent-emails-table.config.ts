@@ -6,10 +6,12 @@ export const sentEmailsTableConfig: DataTableConfig<SentEmailTableViewRow> = {
 	id: 'admin-sent-emails',
 	title: 'Sent emails',
 	emptyMessage: 'No sent emails found',
-	searchKeys: ['id', 'toEmail', 'subject', 'body', 'fromEmail', 'contact'],
+	searchKeys: ['id', 'toEmail', 'type', 'subject', 'body', 'fromEmail', 'contact'],
 	sortOptions: [
 		{ id: 'sentAt', label: 'Sent' },
 		{ id: 'toEmail', label: 'To' },
+		{ id: 'type', label: 'Type' },
+		{ id: 'status', label: 'Status' },
 		{ id: 'subject', label: 'Subject' },
 		{ id: 'fromEmail', label: 'From' },
 		{ id: 'contact', label: 'Contact' },

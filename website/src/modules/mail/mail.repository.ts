@@ -1,4 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
+import type { SentEmailStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { SentEmailTableQuery } from './mail.types';
@@ -17,6 +18,7 @@ export const findPaginatedSentEmails = async (query: SentEmailTableQuery) => {
 					{ id: { contains: search, mode: 'insensitive' } },
 					{ toEmail: { contains: search, mode: 'insensitive' } },
 					{ fromEmail: { contains: search, mode: 'insensitive' } },
+					{ type: { contains: search, mode: 'insensitive' } },
 					{ subject: { contains: search, mode: 'insensitive' } },
 					{ body: { contains: search, mode: 'insensitive' } },
 					{ contact: { firstName: { contains: search, mode: 'insensitive' } } },
@@ -36,6 +38,9 @@ export const findPaginatedSentEmails = async (query: SentEmailTableQuery) => {
 				fromEmail: true,
 				subject: true,
 				body: true,
+				type: true,
+				status: true,
+				errorMessage: true,
 				contact: {
 					select: {
 						firstName: true,
@@ -54,27 +59,74 @@ export const findPaginatedSentEmails = async (query: SentEmailTableQuery) => {
 	return { sentEmails, totalCount };
 };
 
-export const findSentEmailBySubject = async (subject: string) =>
-	prisma.sentEmail.findFirst({
-		where: { subject },
-		select: { id: true },
+export const findSentEmailByIdempotencyKey = async (idempotencyKey: string) =>
+	prisma.sentEmail.findUnique({
+		where: { idempotencyKey },
+		select: { id: true, status: true },
 	});
 
-export const createSentEmail = async (input: {
+export const createSentEmail = async (data: {
 	toEmail: string;
 	fromEmail: string;
 	subject: string;
 	body: string;
 	contactId: string | null;
-}) =>
-	prisma.sentEmail.create({
-		data: input,
+	type: string;
+	status: SentEmailStatus;
+	idempotencyKey: string | null;
+	campaignId: string | null;
+}): Promise<{ kind: 'created'; id: string } | { kind: 'duplicate' }> => {
+	try {
+		const sentEmail = await prisma.sentEmail.create({ data, select: { id: true } });
+
+		return { kind: 'created', id: sentEmail.id };
+	} catch (error) {
+		if (isUniqueConstraintError(error)) {
+			return { kind: 'duplicate' };
+		}
+
+		throw error;
+	}
+};
+
+export const updateSentEmail = async (
+	id: string,
+	data: {
+		status: SentEmailStatus;
+		providerMessageId?: string | null;
+		errorMessage: string | null;
+		sentAt?: Date;
+		statusUpdatedAt: Date;
+	},
+) =>
+	prisma.sentEmail.update({
+		where: { id },
+		data,
 		select: { id: true },
+	});
+
+export const updateSentEmailStatusIfIn = async (
+	id: string,
+	currentStatuses: SentEmailStatus[],
+	data: { status: SentEmailStatus; errorMessage: string | null; statusUpdatedAt: Date },
+) =>
+	prisma.sentEmail.updateMany({
+		where: { id, status: { in: currentStatuses } },
+		data,
 	});
 
 const buildSentEmailOrderBy = (query: SentEmailTableQuery): Prisma.SentEmailOrderByWithRelationInput[] => {
 	const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-	const sortBy = toSortKey(query.sortBy, ['id', 'sentAt', 'toEmail', 'subject', 'fromEmail', 'contact'] as const);
+	const sortBy = toSortKey(query.sortBy, [
+		'id',
+		'sentAt',
+		'toEmail',
+		'subject',
+		'fromEmail',
+		'type',
+		'status',
+		'contact',
+	] as const);
 
 	switch (sortBy) {
 		case 'id':
@@ -87,9 +139,16 @@ const buildSentEmailOrderBy = (query: SentEmailTableQuery): Prisma.SentEmailOrde
 			return [{ subject: direction }, { id: direction }];
 		case 'fromEmail':
 			return [{ fromEmail: direction }, { id: direction }];
+		case 'type':
+			return [{ type: direction }, { id: direction }];
+		case 'status':
+			return [{ status: direction }, { id: direction }];
 		case 'contact':
 			return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }, { id: direction }];
 		default:
 			return [{ sentAt: 'desc' }, { id: 'desc' }];
 	}
 };
+
+const isUniqueConstraintError = (error: unknown): boolean =>
+	typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002';

@@ -15,6 +15,7 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 import { slugify } from '@/lib/utils/string-utils';
 import { isProgramEligibleForPublicSubmission } from '@/modules/programs/program-public-submission.service';
 import { randomBytes, randomUUID } from 'crypto';
+import { notifyStaffOfCampaignCreated } from './campaign-notification.service';
 import * as campaignRepository from './campaign.repository.read';
 import * as campaignWriteRepository from './campaign.repository.write';
 import { validateCampaignSubmissionImageBuffer, type CampaignSubmissionFields } from './campaign.schemas';
@@ -156,18 +157,27 @@ export const submitCampaign = async (
 		}
 		cleanupState.storyId = storyResult.data.storyId;
 
-		if (!contributorId) {
-			const claimId = await createCampaignPendingRecord(audit, campaign.id);
-			if (!claimId) {
-				await compensateSubmissionFailure(audit, cleanupState);
+		const claimId = contributorId ? null : await createCampaignPendingRecord(audit, campaign.id);
+		if (!contributorId && !claimId) {
+			await compensateSubmissionFailure(audit, cleanupState);
 
-				return resultFail('submission-failed', 503);
-			}
-
-			return resultOk({ slug, claimId });
+			return resultFail('submission-failed', 503);
 		}
 
-		return resultOk({ slug });
+		await notifyStaffOfCampaignCreated({
+			id: campaign.id,
+			slug,
+			title: fields.title,
+			storyId: storyResult.data.storyId,
+			creatorName: fields.creatorName,
+			goal: fields.goal,
+			currency: fields.currency,
+			endDate: fields.endDate,
+			public: fields.public,
+			hasAccount: Boolean(contributorId),
+		});
+
+		return resultOk(claimId ? { slug, claimId } : { slug });
 	} catch (error) {
 		await compensateSubmissionFailure(audit, cleanupState);
 		console.error(error, { slug });

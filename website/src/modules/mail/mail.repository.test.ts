@@ -35,6 +35,9 @@ describe('mail repository', () => {
 				fromEmail: true,
 				subject: true,
 				body: true,
+				type: true,
+				status: true,
+				errorMessage: true,
 				contact: {
 					select: {
 						firstName: true,
@@ -64,6 +67,7 @@ describe('mail repository', () => {
 				{ id: { contains: 'Ada', mode: 'insensitive' } },
 				{ toEmail: { contains: 'Ada', mode: 'insensitive' } },
 				{ fromEmail: { contains: 'Ada', mode: 'insensitive' } },
+				{ type: { contains: 'Ada', mode: 'insensitive' } },
 				{ subject: { contains: 'Ada', mode: 'insensitive' } },
 				{ body: { contains: 'Ada', mode: 'insensitive' } },
 				{ contact: { firstName: { contains: 'Ada', mode: 'insensitive' } } },
