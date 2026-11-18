@@ -184,7 +184,16 @@ export const DetailsStep = ({
 						)}
 					/>
 				) : (
-					<input type="hidden" {...form.register('endDate')} />
+					<FormField
+						control={form.control}
+						name="endDate"
+						render={({ field }) => (
+							<FormItem>
+								<input type="hidden" {...field} />
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 				)}
 			</div>
 

@@ -257,11 +257,15 @@ describe('updateOwnCampaign', () => {
 			data: { id: 1, assetFolderId: campaignSubmissionConfig.storyblokCampaignAssetFolderId },
 		});
 
-		await updateOwnCampaign(audit, 'contributor-1', 'campaign-1', fields, {
+		const result = await updateOwnCampaign(audit, 'contributor-1', 'campaign-1', fields, {
 			...keepImages,
 			profilePicture: { kind: 'remove' },
 		});
 
+		expect(result.success).toBe(true);
+		const content = mockUpdatePublishedCampaignStory.mock.calls[0]?.[1];
+		expect(content?.profilePicture).toBeUndefined();
+		expect(content?.primaryImage).toEqual(asset(1));
 		expect(mockDeleteStoryblokAsset).not.toHaveBeenCalled();
 	});
 
