@@ -1,5 +1,5 @@
 import { SentEmailStatus } from '@/generated/prisma/enums';
-import { listSendgridAutomations } from '@/integrations/sendgrid/sendgrid-automations.integration';
+import { listSendgridAutomations, type SendgridAutomation } from '@/integrations/sendgrid/sendgrid-automations.integration';
 import {
 	verifySendgridEventWebhook,
 	type SendgridEventWebhookInput,
@@ -78,20 +78,23 @@ export const handleSendgridEvents = async (input: SendgridEventWebhookInput): Pr
 			return resultFail('Invalid SendGrid event payload', 400);
 		}
 
-		let updated = 0;
-		for (const event of parsed.data) {
-			const status = toSentEmailStatus(event);
-			if (!status || !event.sent_email_id) {
-				continue;
-			}
+		const counts = await Promise.all(
+			parsed.data.map(async (event) => {
+				const status = toSentEmailStatus(event);
+				if (!status || !event.sent_email_id) {
+					return 0;
+				}
 
-			const result = await mailRepository.updateSentEmailStatusIfIn(event.sent_email_id, lowerStatuses(status), {
-				status,
-				errorMessage: event.reason ?? event.response ?? null,
-				statusUpdatedAt: new Date(event.timestamp * 1000),
-			});
-			updated += result.count;
-		}
+				const result = await mailRepository.updateSentEmailStatusIfIn(event.sent_email_id, lowerStatuses(status), {
+					status,
+					errorMessage: event.reason ?? event.response ?? null,
+					statusUpdatedAt: new Date(event.timestamp * 1000),
+				});
+
+				return result.count;
+			}),
+		);
+		const updated = counts.reduce((sum, count) => sum + count, 0);
 
 		return resultOk({ updated });
 	} catch (error) {
@@ -209,7 +212,7 @@ const deliver = async (
 ): Promise<'sent' | 'skipped' | 'failed'> => {
 	const idempotencyKey = input.idempotencyKey ? `${input.idempotencyKey}:${toEmail}` : null;
 	const existing = idempotencyKey ? await mailRepository.findSentEmailByIdempotencyKey(idempotencyKey) : null;
-	if (existing && existing.status !== 'failed') {
+	if (existing && !isRetryable(existing)) {
 		return 'skipped';
 	}
 
@@ -253,16 +256,24 @@ const deliver = async (
 		return 'failed';
 	}
 
-	await mailRepository.updateSentEmail(sentEmailId, {
+	await mailRepository.updateSentEmail(sentEmailId, { providerMessageId: sendResult.data.messageId, sentAt: now });
+	// A webhook event may already have moved the status past sent.
+	await mailRepository.updateSentEmailStatusIfIn(sentEmailId, ['queued', 'failed'], {
 		status: 'sent',
-		providerMessageId: sendResult.data.messageId,
 		errorMessage: null,
-		sentAt: now,
 		statusUpdatedAt: now,
 	});
 
 	return 'sent';
 };
+
+// A row stays queued when the process died between logging and sending;
+// after a while it no longer blocks a retry.
+const staleQueuedMs = 15 * 60 * 1000;
+
+const isRetryable = (sentEmail: { status: SentEmailStatus; createdAt: Date; updatedAt: Date | null }) =>
+	sentEmail.status === 'failed' ||
+	(sentEmail.status === 'queued' && Date.now() - (sentEmail.updatedAt ?? sentEmail.createdAt).getTime() > staleQueuedMs);
 
 const problemStatuses: SentEmailStatus[] = ['failed', 'bounced', 'dropped', 'spam_reported'];
 const problemWindowDays = 30;
@@ -309,11 +320,7 @@ const toPreview = (email: RenderedEmail, receivers: string[]): EmailPreview => (
 	sendgridTemplateId: email.template?.id ?? null,
 });
 
-const toAutomationView = (automation: {
-	name: string;
-	status: string;
-	steps: { sendTiming: string; subject: string }[];
-}): EmailAutomationView => ({
+const toAutomationView = (automation: SendgridAutomation): EmailAutomationView => ({
 	name: automation.name,
 	status: automation.status,
 	steps: automation.steps.map((step) => ({ delay: formatDelay(step.sendTiming), subject: step.subject })),
@@ -395,7 +402,8 @@ const sendgridEventStatuses: Record<string, SentEmailStatus> = {
 	spamreport: 'spam_reported',
 };
 
-const toSentEmailStatus = (event: SendgridEvent): SentEmailStatus | null => sendgridEventStatuses[event.event] ?? null;
+const toSentEmailStatus = (event: SendgridEvent): SentEmailStatus | null =>
+	Object.hasOwn(sendgridEventStatuses, event.event) ? sendgridEventStatuses[event.event] : null;
 
 const lowerStatuses = (status: SentEmailStatus) =>
 	Object.values(SentEmailStatus).filter((candidate) => sentEmailStatusRank[candidate] < sentEmailStatusRank[status]);

@@ -64,7 +64,7 @@ export const groupSentEmailCountsByType = async (problemStatuses: SentEmailStatu
 	const [totals, problems] = await Promise.all([
 		prisma.sentEmail.groupBy({
 			by: ['type'],
-			where: { type: { not: null } },
+			where: { type: { not: null }, status: { notIn: ['queued', 'failed'] } },
 			_count: { _all: true },
 			_max: { sentAt: true },
 		}),
@@ -81,7 +81,7 @@ export const groupSentEmailCountsByType = async (problemStatuses: SentEmailStatu
 export const findSentEmailByIdempotencyKey = async (idempotencyKey: string) =>
 	prisma.sentEmail.findUnique({
 		where: { idempotencyKey },
-		select: { id: true, status: true },
+		select: { id: true, status: true, createdAt: true, updatedAt: true },
 	});
 
 export const createSentEmail = async (data: {
@@ -110,13 +110,9 @@ export const createSentEmail = async (data: {
 
 export const updateSentEmail = async (
 	id: string,
-	data: {
-		status: SentEmailStatus;
-		providerMessageId?: string | null;
-		errorMessage: string | null;
-		sentAt?: Date;
-		statusUpdatedAt: Date;
-	},
+	data:
+		| { status: SentEmailStatus; errorMessage: string | null; statusUpdatedAt: Date }
+		| { providerMessageId: string | null; sentAt: Date },
 ) =>
 	prisma.sentEmail.update({
 		where: { id },

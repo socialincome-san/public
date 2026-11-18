@@ -150,14 +150,21 @@ describe('mail service', () => {
 				categories: ['internal', 'campaign-edited'],
 				customArgs: { sent_email_id: 'email-1' },
 			});
-			expect(mockUpdateSentEmail).toHaveBeenCalledWith(
+			expect(mockUpdateSentEmail).toHaveBeenCalledWith('email-1', expect.objectContaining({ providerMessageId: 'msg-1' }));
+			expect(mockUpdateSentEmailStatusIfIn).toHaveBeenCalledWith(
 				'email-1',
-				expect.objectContaining({ status: 'sent', providerMessageId: 'msg-1', errorMessage: null }),
+				['queued', 'failed'],
+				expect.objectContaining({ status: 'sent', errorMessage: null }),
 			);
 		});
 
 		test('skips receivers that already got the email', async () => {
-			mockFindSentEmailByIdempotencyKey.mockResolvedValue({ id: 'email-1', status: 'delivered' });
+			mockFindSentEmailByIdempotencyKey.mockResolvedValue({
+				id: 'email-1',
+				status: 'delivered',
+				createdAt: new Date(),
+				updatedAt: null,
+			});
 
 			await expect(sendNotification({ ...input, idempotencyKey: 'campaign-edited:1' })).resolves.toEqual({
 				success: true,
@@ -176,15 +183,53 @@ describe('mail service', () => {
 			expect(mockSendSendgridEmail).not.toHaveBeenCalled();
 		});
 
+		test('skips an email that another run is sending right now', async () => {
+			mockFindSentEmailByIdempotencyKey.mockResolvedValue({
+				id: 'email-7',
+				status: 'queued',
+				createdAt: new Date(Date.now() - 60 * 1000),
+				updatedAt: null,
+			});
+
+			await expect(sendNotification({ ...input, idempotencyKey: 'campaign-edited:1' })).resolves.toEqual({
+				success: true,
+				data: { sent: 0, skipped: 2 },
+			});
+			expect(mockSendSendgridEmail).not.toHaveBeenCalled();
+		});
+
+		test('retries an email that got stuck in the queue', async () => {
+			mockFindSentEmailByIdempotencyKey.mockResolvedValue({
+				id: 'email-7',
+				status: 'queued',
+				createdAt: new Date(Date.now() - 60 * 60 * 1000),
+				updatedAt: null,
+			});
+
+			await expect(sendNotification({ ...input, idempotencyKey: 'campaign-edited:1' })).resolves.toEqual({
+				success: true,
+				data: { sent: 2, skipped: 0 },
+			});
+		});
+
 		test('retries a failed email on the same log row', async () => {
-			mockFindSentEmailByIdempotencyKey.mockResolvedValue({ id: 'email-7', status: 'failed' });
+			mockFindSentEmailByIdempotencyKey.mockResolvedValue({
+				id: 'email-7',
+				status: 'failed',
+				createdAt: new Date(),
+				updatedAt: new Date(),
+			});
 
 			await expect(sendNotification({ ...input, idempotencyKey: 'campaign-edited:1' })).resolves.toEqual({
 				success: true,
 				data: { sent: 2, skipped: 0 },
 			});
 			expect(mockCreateSentEmail).not.toHaveBeenCalled();
-			expect(mockUpdateSentEmail).toHaveBeenCalledWith('email-7', expect.objectContaining({ status: 'sent' }));
+			expect(mockUpdateSentEmailStatusIfIn).toHaveBeenCalledWith(
+				'email-7',
+				['queued', 'failed'],
+				expect.objectContaining({ status: 'sent' }),
+			);
 		});
 
 		test('returns the render error without sending', async () => {
@@ -258,6 +303,7 @@ describe('mail service', () => {
 						{ event: 'delivered', timestamp: 1700000000 },
 						{ event: 'processed', timestamp: 1700000000, sent_email_id: 'email-1' },
 						{ event: 'click', timestamp: 1700000000, sent_email_id: 'email-1' },
+						{ event: 'constructor', timestamp: 1700000000, sent_email_id: 'email-1' },
 					]),
 				),
 			).resolves.toEqual({ success: true, data: { updated: 0 } });
