@@ -14,6 +14,17 @@ export const buildCampaignSubmissionLabels = (t: ReturnType<typeof useTranslatio
 	) as Record<CampaignSubmissionErrorCode, string>;
 
 	return {
+		markdown: {
+			toolbar: t('campaigns-page.submission.markdown.toolbar'),
+			write: t('campaigns-page.submission.markdown.write'),
+			preview: t('campaigns-page.submission.markdown.preview'),
+			emptyPreview: t('campaigns-page.submission.markdown.empty-preview'),
+			bold: t('campaigns-page.submission.markdown.bold'),
+			italic: t('campaigns-page.submission.markdown.italic'),
+			bulletList: t('campaigns-page.submission.markdown.bullet-list'),
+			link: t('campaigns-page.submission.markdown.link'),
+			hint: t('campaigns-page.submission.markdown.hint'),
+		},
 		programStepTitle: t('campaigns-page.submission.program-step-title'),
 		detailsStepTitle: t('campaigns-page.submission.details-step-title'),
 		aboutStepTitle: t('campaigns-page.submission.about-step-title'),

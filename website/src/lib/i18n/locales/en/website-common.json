@@ -347,6 +347,17 @@
 		"about": "About",
 		"create-campaign": "Create campaign",
 		"submission": {
+			"markdown": {
+				"toolbar": "Formatting",
+				"write": "Write",
+				"preview": "Preview",
+				"empty-preview": "Nothing to preview yet.",
+				"bold": "Bold",
+				"italic": "Italic",
+				"bullet-list": "Bullet list",
+				"link": "Link",
+				"hint": "Use the buttons for bold, italic, lists and links. An empty line starts a new paragraph."
+			},
 			"program-step-title": "Which program would you like to create a campaign for?",
 			"details-step-title": "Campaign Details",
 			"about-step-title": "About",
