@@ -10,7 +10,7 @@ const slugifyCountry = (name: string): string => {
 
 type CountryFlagProps = {
 	country: string;
-	size?: 'sm' | 'lg' | 'inline';
+	size?: 'sm' | 'md' | 'lg' | 'inline';
 	decorative?: boolean;
 	// Shown instead of the country code when there is no flag for the country.
 	fallback?: ReactNode;
@@ -18,6 +18,7 @@ type CountryFlagProps = {
 
 const containerSizeClasses = {
 	sm: 'size-4 text-2xs',
+	md: 'size-6 text-2xs',
 	lg: 'size-9 text-xs',
 	inline: 'size-[1em] text-[length:inherit]',
 };

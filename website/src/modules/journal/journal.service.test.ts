@@ -25,6 +25,7 @@ const mockGetLatestJournalArticles = jest.fn();
 const mockGetArticlesByUuids = jest.fn();
 const mockGetAllPersons = jest.fn();
 const mockGetPersonContributions = jest.fn();
+const mockGetPersonAssessments = jest.fn();
 
 jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getOverviewAuthors: mockGetOverviewAuthors,
@@ -55,6 +56,7 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 
 jest.mock('@/modules/community/community.cache', () => ({
 	getPersonContributions: mockGetPersonContributions,
+	getPersonAssessments: mockGetPersonAssessments,
 }));
 
 import {
@@ -129,6 +131,7 @@ beforeEach(() => {
 	mockGetRelativeArticles.mockResolvedValue({ success: true, data: [article] });
 	mockGetAllPersons.mockResolvedValue({ success: true, data: [] });
 	mockGetPersonContributions.mockResolvedValue({ success: true, data: [] });
+	mockGetPersonAssessments.mockResolvedValue({ success: true, data: [] });
 });
 
 describe('getJournalOverviewPageData', () => {

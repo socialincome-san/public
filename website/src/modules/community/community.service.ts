@@ -1,4 +1,4 @@
-import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { LocalPartner, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
@@ -15,17 +15,25 @@ import {
 	getRoleLabel,
 	resolveStoryblokLink,
 } from '@/lib/storyblok/storyblok-utils';
+import { toCountryCode } from '@/lib/types/country';
 import {
 	getAllPersons,
 	getArticlesByUuids,
 	getCommunityGlobals,
 	getCommunityPages,
 	getContributionAreaLabels,
+	getLocalPartners,
 	getPrimaryRoleLabels,
 } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import { communityPageSchema, type CommunityPage, type StoryReference } from './community.schemas';
-import type { CommunityPanelData, CommunityPerson, PersonContribution } from './community.types';
+import type {
+	CommunityPanelData,
+	CommunityPerson,
+	PersonAssessment,
+	PersonAssessmentRole,
+	PersonContribution,
+} from './community.types';
 
 const ARTICLE_IMAGE_SIZE = 128;
 
@@ -190,6 +198,42 @@ export const getPersonContributions = async (
 					title: typeof title === 'string' && title.trim() ? title.trim() : story.name,
 					href: getWebsitePublicPath(language, currency, getWebsitePathTailFromStoryblokSlug(story.full_slug)),
 					roles: [...new Set(roles)],
+				},
+			];
+		}),
+	);
+};
+
+const ASSESSMENT_ROLE_FIELDS = [
+	['lead', 'assessmentLead'],
+	['reviewer', 'assessmentReviewer'],
+] as const satisfies [PersonAssessmentRole, keyof LocalPartner][];
+
+export const getPersonAssessments = async (
+	personUuid: string,
+	language: string,
+	currency: WebsiteCurrency,
+): Promise<Result<PersonAssessment[]>> => {
+	const partnersResult = await getLocalPartners(language);
+	if (!partnersResult.success) {
+		return resultFail('Could not load the person assessments.');
+	}
+
+	return resultOk(
+		partnersResult.data.flatMap((story) => {
+			const roles = ASSESSMENT_ROLE_FIELDS.filter(([, field]) =>
+				(story.content[field] ?? []).some((reference) => toUuid(reference) === personUuid),
+			).map(([role]) => role);
+			if (roles.length === 0) {
+				return [];
+			}
+
+			return [
+				{
+					title: story.content.title.trim() || story.name,
+					href: getWebsitePublicPath(language, currency, getWebsitePathTailFromStoryblokSlug(story.full_slug)),
+					countryCode: toCountryCode(story.content.countryIsoCode?.toString()) ?? undefined,
+					roles,
 				},
 			];
 		}),
