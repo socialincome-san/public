@@ -40,7 +40,9 @@ export const CardAlertFooter = ({ text, variant, trailingText, action, inset = '
 			</span>
 		) : null}
 		<p className={textVariants({ inset })}>{text}</p>
-		{trailingText ? <p className="text-foreground shrink-0 text-xs font-medium">{trailingText}</p> : null}
+		{trailingText ? (
+			<p className="text-foreground max-w-1/2 min-w-0 text-right text-xs font-medium">{trailingText}</p>
+		) : null}
 		{action ? <div className="shrink-0">{action}</div> : null}
 	</div>
 );
