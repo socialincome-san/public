@@ -231,6 +231,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			workStyleLabelsResult,
 			personsResult,
 			contributionsResult,
+			assessmentsResult,
 		] = await Promise.all([
 			storyblokContent.getArticlesByAuthor(person.uuid, lang),
 			storyblokContent.getPrimaryRoleLabels(lang),
@@ -239,6 +240,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			storyblokContent.getWorkStyleLabels(lang),
 			storyblokContent.getAllPersons(lang),
 			community.getPersonContributions(person.uuid, lang, currency),
+			community.getPersonAssessments(person.uuid, lang, currency),
 		]);
 		const articles = articlesResult.success ? articlesResult.data : [];
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
@@ -270,6 +272,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			timeCommitmentLabels,
 			workStyleLabels,
 			contributions: contributionsResult.success ? contributionsResult.data : [],
+			assessments: assessmentsResult.success ? assessmentsResult.data : [],
 			otherPersons: personsResult.success ? pickOtherPersons(person, personsResult.data) : [],
 		});
 	} catch (error) {

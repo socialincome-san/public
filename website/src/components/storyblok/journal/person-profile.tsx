@@ -1,4 +1,5 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
+import { CountryFlag } from '@/components/country-flag';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
@@ -12,6 +13,7 @@ import {
 	formatStoryblokDateMedium,
 	formatStoryblokUrl,
 	getOptionCode,
+	getPersonAvatarSrc,
 	getPersonCircles,
 	getPersonDisplayName,
 	getPersonGitHubUrl,
@@ -20,16 +22,18 @@ import {
 	type PersonCircle,
 } from '@/lib/storyblok/storyblok-utils';
 import { HOURS_RANGE_REGEX } from '@/lib/utils/regex';
-import type { PersonContribution } from '@/modules/community/community.types';
+import type { PersonAssessment, PersonContribution } from '@/modules/community/community.types';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { ShowMoreToggle } from '@socialincome/design-system/actions/show-more-toggle/show-more-toggle';
+import {
+	ContributionCard,
+	ContributionCardPerson,
+} from '@socialincome/design-system/data-display/contribution-card/contribution-card';
 import { DurationBadge } from '@socialincome/design-system/data-display/duration-badge/duration-badge';
-import { LinkList } from '@socialincome/design-system/data-display/link-list/link-list';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
 import { AnimatedCircleIcon } from '@socialincome/design-system/icons/animated-circle-icon/animated-circle-icon';
 import { GithubIcon, LinkedinIcon } from '@socialincome/design-system/icons/social-icons/social-icons';
-import { AsideSection } from '@socialincome/design-system/layout/aside-section/aside-section';
 import { ProfileHeader } from '@socialincome/design-system/layout/profile-header/profile-header';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
@@ -47,6 +51,7 @@ type Props = {
 	person: ISbStoryData<Person>;
 	articles: ISbStoryData<JournalArticle>[];
 	contributions: PersonContribution[];
+	assessments: PersonAssessment[];
 	otherPersons: ISbStoryData<Person>[];
 	lang: string;
 	currency: WebsiteCurrency;
@@ -73,6 +78,7 @@ export const PersonProfile = ({
 	person,
 	articles,
 	contributions,
+	assessments,
 	otherPersons,
 	lang,
 	currency,
@@ -140,6 +146,16 @@ export const PersonProfile = ({
 		variant: circle.status === 'interested' ? ('light' as const) : ('solid' as const),
 	});
 
+	const contributionPerson = () => (
+		<ContributionCardPerson name={shortName} fullName={name} imageSrc={getPersonAvatarSrc(person)} />
+	);
+	const bold = (chunks: ReactNode) => <strong>{chunks}</strong>;
+	const contributionCardLabels = {
+		// The card fills in the numbers as rows are revealed
+		showMoreLabel: t('person.contributions-show-more', { count: '{count}' }),
+		counterLabel: t('person.contributions-counter', { shown: '{shown}', total: '{total}' }),
+	};
+
 	const externalLinkCue = (
 		<>
 			<ArrowUpRight aria-hidden />
@@ -194,28 +210,47 @@ export const PersonProfile = ({
 				}
 			/>
 
-			{contributions.length > 0 && (
+			{(contributions.length > 0 || assessments.length > 0) && (
 				<>
 					<Separator />
-					<AsideSection
-						title={t('person.contributions-title')}
-						description={t('person.contributions-description', { name: shortName, count: contributions.length })}
-					>
-						<LinkList
-							items={contributions.map((contribution) => ({
-								label: contribution.title,
-								href: contribution.href,
-								tags: contribution.roles,
-							}))}
-							// The list fills in the count of the current filter
-							showMoreLabel={t('person.contributions-show-all', { count: '{count}' })}
-							showLessLabel={t('person.contributions-show-fewer')}
-							tagFilter={{
-								allLabel: t('person.contributions-all'),
-								ariaLabel: t('person.contributions-filter'),
-							}}
-						/>
-					</AsideSection>
+					<Section title={t('person.contributions-title')}>
+						{/* One card per kind of contribution; they sit side by side where there is room */}
+						<div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))] items-start gap-3 sm:gap-4">
+							{contributions.length > 0 && (
+								<ContributionCard
+									summary={t.rich('person.contributions-pages', {
+										count: contributions.length,
+										person: contributionPerson,
+										b: bold,
+									})}
+									items={contributions.map((contribution) => ({
+										title: contribution.title,
+										href: contribution.href,
+										badges: contribution.roles,
+									}))}
+									{...contributionCardLabels}
+								/>
+							)}
+							{assessments.length > 0 && (
+								<ContributionCard
+									summary={t.rich('person.contributions-assessments', {
+										count: assessments.length,
+										person: contributionPerson,
+										b: bold,
+									})}
+									items={assessments.map((assessment) => ({
+										title: assessment.title,
+										href: assessment.href,
+										icon: assessment.countryCode ? (
+											<CountryFlag country={assessment.countryCode} size="md" decorative />
+										) : undefined,
+										badges: assessment.roles.map((role) => t(`person.contributions-assessment-${role}`)),
+									}))}
+									{...contributionCardLabels}
+								/>
+							)}
+						</div>
+					</Section>
 				</>
 			)}
 

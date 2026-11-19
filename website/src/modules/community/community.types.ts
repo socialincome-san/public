@@ -1,3 +1,5 @@
+import type { CountryCode } from '@/generated/prisma/enums';
+
 export type CommunityPerson = {
 	name: string;
 	imageSrc?: string;
@@ -26,6 +28,16 @@ export type CommunityPanelData = {
 	cta?: { label: string; href: string };
 	readingTitle?: string;
 	articles: { title: string; author: string; href: string; imageSrc?: string }[];
+};
+
+export type PersonAssessmentRole = 'lead' | 'reviewer';
+
+// A local partner whose assessment the person led or reviewed
+export type PersonAssessment = {
+	title: string;
+	href: string;
+	countryCode?: CountryCode;
+	roles: PersonAssessmentRole[];
 };
 
 export type PersonContribution = {
