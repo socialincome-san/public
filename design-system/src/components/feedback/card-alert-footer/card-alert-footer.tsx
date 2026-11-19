@@ -3,7 +3,7 @@ import { type ReactNode } from 'react';
 
 export type CardAlertFooterVariant = 'confirm' | 'secondary';
 
-const footerVariants = cva('flex items-center gap-2', {
+const footerVariants = cva('flex flex-wrap items-center gap-2', {
 	variants: {
 		inset: {
 			sm: 'rounded-b-2xl px-4 py-2',
@@ -43,6 +43,7 @@ export const CardAlertFooter = ({ text, variant, trailingText, action, inset = '
 		{trailingText ? (
 			<p className="text-foreground max-w-1/2 min-w-0 text-right text-xs font-medium">{trailingText}</p>
 		) : null}
-		{action ? <div className="shrink-0">{action}</div> : null}
+		{/* Stays at the end when it wraps onto a line of its own */}
+		{action ? <div className="ml-auto shrink-0">{action}</div> : null}
 	</div>
 );
