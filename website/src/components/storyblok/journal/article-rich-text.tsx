@@ -27,13 +27,14 @@ type Props = {
 	document: StoryblokRichtext;
 	lang: WebsiteLanguage;
 	donationForm: ReactNode;
-	// Maps load their countries on the server, so they come in already rendered, by the `_uid` of their block
-	africaMaps?: Partial<Record<string, ReactElement>>;
+	// Blocks that load data on the server come in already rendered, by the `_uid` of their block
+	serverBloks?: Partial<Record<string, ReactElement>>;
 	variant?: 'article' | 'footnotes';
 };
 
-export const ArticleRichText = ({ document, lang, donationForm, africaMaps = {}, variant = 'article' }: Props) => {
+export const ArticleRichText = ({ document, lang, donationForm, serverBloks = {}, variant = 'article' }: Props) => {
 	const isFootnotes = variant === 'footnotes';
+	const serverBlok = ({ _uid }: StoryblokBlockProps) => (typeof _uid === 'string' ? (serverBloks[_uid] ?? null) : null);
 
 	return render(document, {
 		markResolvers: isFootnotes ? footnoteRichTextMarkResolvers : storyblokRichTextMarkResolvers,
@@ -64,7 +65,8 @@ export const ArticleRichText = ({ document, lang, donationForm, africaMaps = {},
 			),
 			newsletterSignup: () => <NewsletterSignup lang={lang} />,
 			campaignDonate: () => <div className="my-10">{donationForm}</div>,
-			africaMap: ({ _uid }: StoryblokBlockProps) => (typeof _uid === 'string' ? (africaMaps[_uid] ?? null) : null),
+			africaMap: serverBlok,
+			peoplePill: serverBlok,
 		},
 	}) as ReactNode;
 };

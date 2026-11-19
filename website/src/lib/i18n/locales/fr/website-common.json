@@ -555,5 +555,9 @@
 	"africa-map": {
 		"label": "Carte de l’Afrique",
 		"recipients": "{count, plural, one {# bénéficiaire} other {# bénéficiaires}}"
+	},
+	"people-pill": {
+		"volunteer-since": "Bénévole depuis {date}",
+		"circle-more": "{circle} et {count, plural, one {# autre cercle} other {# autres cercles}}"
 	}
 }

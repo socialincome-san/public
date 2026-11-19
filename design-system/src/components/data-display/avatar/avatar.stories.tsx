@@ -39,6 +39,14 @@ export const WithImage: Story = {
 	),
 };
 
+export const MutedFallback: Story = {
+	render: (args) => (
+		<Avatar {...args}>
+			<AvatarFallback tone="muted">AB</AvatarFallback>
+		</Avatar>
+	),
+};
+
 export const Sizes: Story = {
 	render: () => (
 		<div className="flex items-center gap-3">
