@@ -9,6 +9,7 @@ import {
 	getScaledAssetDimensions,
 	getStoryblokImageObjectPosition,
 	getStoryblokMetadataImage,
+	getStoryblokYear,
 	getTranslatedStoryName,
 	getVolunteerDurationParts,
 	isResolvedArticle,
@@ -140,6 +141,23 @@ describe('Storyblok date utilities', () => {
 		expect(parts('2026-01-25 23:00')).toEqual({ unit: 'months', months: 6, isAnniversary: true });
 		expect(formatStoryblokDateMedium('2026-06-25 22:00', 'en')).toBe('Jun 26, 2026');
 		expect(formatStoryblokDateMedium('2026-01-25 23:00', 'en')).toBe('Jan 26, 2026');
+	});
+});
+
+describe('getStoryblokYear', () => {
+	it('reads the year of a date in the space time zone', () => {
+		expect(getStoryblokYear('2024-01-01 00:00')).toBe('2024');
+		expect(getStoryblokYear('2023-12-31 23:00')).toBe('2024');
+	});
+
+	it('keeps a value that is only a year', () => {
+		expect(getStoryblokYear('2024')).toBe('2024');
+	});
+
+	it('is empty without a readable date', () => {
+		expect(getStoryblokYear(undefined)).toBe('');
+		expect(getStoryblokYear('')).toBe('');
+		expect(getStoryblokYear('early days')).toBe('');
 	});
 });
 
