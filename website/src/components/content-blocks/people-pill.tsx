@@ -104,12 +104,14 @@ export const PeoplePillBlock = async ({ blok, lang, currency, circleSlug, placem
 		>
 			{persons.map((person) => {
 				const avatarSrc = getPersonAvatarSrc(person);
+				const { firstName, lastName, fullName } = person.content;
 
 				return (
 					<li key={person.uuid} className="flex max-w-full">
 						<PersonPill
-							firstName={person.content.firstName || person.content.fullName}
-							lastName={person.content.lastName}
+							firstName={firstName || fullName}
+							// The full name already ends with the last name
+							lastName={firstName ? lastName : undefined}
 							image={avatarSrc ? { src: avatarSrc, alt: '' } : null}
 							href={createWebsitePersonLink(person.slug, lang, currency)}
 							{...getSubline(person)}
