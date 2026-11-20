@@ -75,6 +75,21 @@ export const Campaign: Story = {
 	},
 };
 
+export const CampaignMobileFade: Story = {
+	args: {
+		...Campaign.args,
+		mobileMedia: 'fade',
+	},
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'On small screens the image sits on top and fades into the dark background, so the title and stats stand on a calm surface. Large screens look like `Campaign`.',
+			},
+		},
+	},
+};
+
 export const Statement: Story = {
 	args: {
 		image,

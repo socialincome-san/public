@@ -14,21 +14,50 @@ export type MediaHeroImage = {
 
 const overlayClasses = {
 	soft: 'from-foreground/70 via-foreground/35 to-foreground/15 bg-gradient-to-t',
-	strong: 'bg-[linear-gradient(to_top,hsl(var(--foreground))_0%,hsl(var(--foreground)/0.85)_22%,transparent_55%)]',
+	// Darkens the bottom and the left, where the text sits, and leaves the rest of the image bright
+	strong:
+		'bg-[linear-gradient(to_top,hsl(var(--foreground))_0%,hsl(var(--foreground)/0.85)_25%,transparent_60%),linear-gradient(to_right,hsl(var(--foreground)/0.75)_0%,hsl(var(--foreground)/0.45)_35%,transparent_60%)]',
 	none: 'hidden',
 };
 
 const contentVariants = cva(
-	'text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row justify-between gap-8',
+	'text-primary-foreground w-site-width max-w-content z-20 mx-auto mb-8 flex flex-row justify-between gap-8',
 	{
 		variants: {
 			align: {
 				bottom: 'items-end md:mb-24',
 				center: 'items-end md:mb-0 md:items-center',
 			},
+			mobileMedia: {
+				cover: 'absolute inset-0',
+				// Starts on the lower, faded part of the media and grows the frame with its content
+				fade: 'relative pt-[55vw] lg:absolute lg:inset-0 lg:pt-0',
+			},
 		},
 	},
 );
+
+const frameVariants = cva('bg-foreground relative w-full overflow-hidden transition-[border-radius] duration-300 ease-out', {
+	variants: {
+		mobileMedia: {
+			cover: 'aspect-video max-h-[80vh] min-h-112 md:min-h-160',
+			fade: 'lg:aspect-video lg:max-h-[80vh] lg:min-h-160',
+		},
+		expanded: {
+			true: 'z-60',
+			false: 'md:rounded-b-5xl rounded-b-3xl',
+		},
+	},
+});
+
+const mediaVariants = cva('absolute', {
+	variants: {
+		mobileMedia: {
+			cover: 'inset-0',
+			fade: 'inset-x-0 top-0 aspect-[4/3] lg:inset-0 lg:aspect-auto',
+		},
+	},
+});
 
 type MediaHeroProps = WithoutClassName<HTMLAttributes<HTMLElement>> & {
 	children: ReactNode;
@@ -37,6 +66,9 @@ type MediaHeroProps = WithoutClassName<HTMLAttributes<HTMLElement>> & {
 	media?: ReactNode;
 	overlay?: keyof typeof overlayClasses;
 	align?: 'bottom' | 'center';
+	// On small screens: `cover` fills the frame with the media; `fade` shows it on top, fades it into the
+	// dark background and places the content below it, so long content stays readable.
+	mobileMedia?: 'cover' | 'fade';
 	// Above the content, below the floating site header
 	top?: ReactNode;
 	// Shown next to the content on large screens
@@ -55,6 +87,7 @@ export const MediaHero = ({
 	media,
 	overlay = 'soft',
 	align = 'bottom',
+	mobileMedia = 'cover',
 	top,
 	aside,
 	mobileAside,
@@ -64,30 +97,37 @@ export const MediaHero = ({
 	...props
 }: MediaHeroProps) => (
 	<section className="storyblok__outline full-bleed-hero flex flex-col gap-6" {...props}>
-		<div
-			className={cn(
-				'bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden transition-[border-radius] duration-300 ease-out md:min-h-160',
-				expanded ? 'z-60' : 'md:rounded-b-5xl rounded-b-3xl',
-			)}
-			style={
-				image?.objectPosition ? ({ ['--media-hero-object-position']: image.objectPosition } as CSSProperties) : undefined
-			}
-		>
-			{media ??
-				(image ? (
-					<NextImage
-						src={image.src}
-						alt={image.alt}
-						fill
-						sizes="100vw"
-						className={cn('object-cover', image.objectPosition && '[object-position:var(--media-hero-object-position)]')}
-						priority
-					/>
-				) : (
-					<div className="bg-primary/20 absolute inset-0" />
-				))}
+		<div className={frameVariants({ mobileMedia, expanded })}>
+			<div
+				className={mediaVariants({ mobileMedia })}
+				style={
+					image?.objectPosition ? ({ ['--media-hero-object-position']: image.objectPosition } as CSSProperties) : undefined
+				}
+			>
+				{media ??
+					(image ? (
+						<NextImage
+							src={image.src}
+							alt={image.alt}
+							fill
+							sizes="100vw"
+							className={cn('object-cover', image.objectPosition && '[object-position:var(--media-hero-object-position)]')}
+							priority
+						/>
+					) : (
+						<div className="bg-primary/20 absolute inset-0" />
+					))}
 
-			<div className={cn('pointer-events-none absolute inset-0', overlayClasses[overlay])} />
+				{mobileMedia === 'fade' ? (
+					<>
+						{/* Reaches full opacity before the media ends, so its lower edge never shows. */}
+						<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_40%,hsl(var(--foreground)/0.85)_78%,hsl(var(--foreground))_100%)] lg:hidden" />
+						<div className={cn('pointer-events-none absolute inset-0 max-lg:hidden', overlayClasses[overlay])} />
+					</>
+				) : (
+					<div className={cn('pointer-events-none absolute inset-0', overlayClasses[overlay])} />
+				)}
+			</div>
 
 			{top && !expanded ? (
 				<div className="w-site-width max-w-content absolute inset-x-0 top-10 z-30 mx-auto lg:top-[calc(1.25rem+3.5rem+2.5rem)]">
@@ -105,7 +145,7 @@ export const MediaHero = ({
 
 			{expanded ? null : (
 				// Keeps the text clear of the controls at the bottom of small screens.
-				<div className={cn(contentVariants({ align }), controlsStart || controlsEnd ? 'mb-24' : undefined)}>
+				<div className={cn(contentVariants({ align, mobileMedia }), controlsStart || controlsEnd ? 'mb-24' : undefined)}>
 					<div className="flex min-w-0 flex-1 flex-col gap-10">{children}</div>
 					{aside ? <div className="hidden shrink-0 lg:block">{aside}</div> : null}
 				</div>
@@ -228,7 +268,7 @@ export const MediaHeroStat = ({ label, value, target, progress }: MediaHeroStatP
 				<p className="text-sm font-medium">{label}</p>
 				<p className="text-4xl font-normal md:text-6xl">{value}</p>
 			</div>
-			{target ? <p className="pb-1 text-xl font-medium opacity-40">{target}</p> : null}
+			{target ? <p className="pb-1 text-xl font-medium opacity-70">{target}</p> : null}
 		</div>
 		<Progress value={progress} variant="onDark" />
 	</div>
