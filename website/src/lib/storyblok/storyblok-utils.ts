@@ -230,6 +230,15 @@ export const formatStoryblokDateMedium = (date: string | null | undefined, langu
 	return dateObject.isValid ? dateObject.toLocaleString(DateTime.DATE_MED) : '';
 };
 
+export const formatStoryblokMonthYear = (date: string | null | undefined, language: string) => {
+	if (!date) {
+		return '';
+	}
+	const dateObject = toDateObject(date, language);
+
+	return dateObject.isValid ? dateObject.toLocaleString({ month: 'short', year: 'numeric' }) : '';
+};
+
 export type VolunteerDurationParts =
 	| { unit: 'days'; days: number }
 	| { unit: 'months'; months: number; isAnniversary: boolean }

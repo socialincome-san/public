@@ -17,6 +17,7 @@ import {
 	getAllPersons,
 	getCampaignBySlug,
 	getCampaigns,
+	getCircleLabels,
 	getCountries,
 	getCountryByIsoCode,
 	getFocusBySlug,
@@ -152,6 +153,12 @@ export const getPrimaryRoleLabelsAction = async (input: unknown): Promise<Result
 	const parsed = storyblokLanguageSchema.safeParse(input);
 
 	return parsed.success ? getPrimaryRoleLabels(parsed.data) : resultFail('Invalid Storyblok language');
+};
+
+export const getCircleLabelsAction = async (input: unknown): Promise<Result<Record<string, string>>> => {
+	const parsed = storyblokLanguageSchema.safeParse(input);
+
+	return parsed.success ? getCircleLabels(parsed.data) : resultFail('Invalid Storyblok language');
 };
 
 export const updateStoryblokPreviewAction = async (input: unknown): Promise<Result<void>> => {

@@ -555,5 +555,9 @@
 	"africa-map": {
 		"label": "Karte von Afrika",
 		"recipients": "{count, plural, one {# Empfänger:in} other {# Empfänger:\u200binnen}}"
+	},
+	"people-pill": {
+		"volunteer-since": "Freiwillig seit {date}",
+		"circle-more": "{circle} und {count, plural, one {# weiterer Kreis} other {# weitere Kreise}}"
 	}
 }

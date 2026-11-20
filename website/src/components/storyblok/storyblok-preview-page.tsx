@@ -3,6 +3,7 @@ import PageContentType from '@/components/content-types/page';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getCircleSlugFromStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
 import { getCommunityPanelDataAction } from '@/modules/community/community.actions';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
@@ -40,6 +41,7 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, currency, previewR
 					currency={currency}
 					searchParams={Promise.resolve(searchParams)}
 					storyUuid={story.uuid}
+					circleSlug={getCircleSlugFromStoryblokSlug(story.full_slug)}
 					afterHero={community ? <CommunityRow data={community} /> : null}
 				/>
 			);

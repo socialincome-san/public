@@ -294,6 +294,16 @@ export const getWebsitePathTailFromStoryblokSlug = (storyblokSlug: string): stri
 	return slug;
 };
 
+// `pages/circle/operation` → `operation`; the circles overview and every other story have no circle
+export const getCircleSlugFromStoryblokSlug = (storyblokSlug: string): string | undefined => {
+	const slug = normalizeStoryblokSlug(storyblokSlug);
+	const circlesPrefix = `${STORYBLOK_CIRCLES_FOLDER}/`;
+
+	return slug.startsWith(circlesPrefix) && slug !== getCirclesOverviewStoryPath()
+		? slug.slice(circlesPrefix.length)
+		: undefined;
+};
+
 export const getWebsiteRelativePathFromStoryblokSlug = (storyblokSlug: string): string => {
 	const tail = getWebsitePathTailFromStoryblokSlug(storyblokSlug);
 
