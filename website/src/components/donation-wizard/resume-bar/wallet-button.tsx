@@ -45,7 +45,7 @@ type Props = {
 	// Shown until Stripe reports a wallet, and instead of the wallet button when there is none
 	fallback: ReactNode;
 	onConfirm: (paymentMethod: string) => void;
-	onPaid: (sessionId: string) => void;
+	onPaid: (sessionId: string, paymentMethod: string) => void;
 };
 
 export const WalletButton = ({ donation, currency, hasWallet, onWalletChange, fallback, onConfirm, onPaid }: Props) => {
@@ -119,7 +119,7 @@ type ExpressCheckoutProps = {
 	donation: DonationAmountContext;
 	onWalletChange: (hasWallet: boolean) => void;
 	onConfirm: (paymentMethod: string) => void;
-	onPaid: (sessionId: string) => void;
+	onPaid: (sessionId: string, paymentMethod: string) => void;
 	onFailed: () => void;
 };
 
@@ -148,7 +148,7 @@ const ExpressCheckout = ({ sessionId, donation, onWalletChange, onConfirm, onPai
 					.then((result) => {
 						clearStoredStripeCheckoutContext(sessionId);
 						if (result.type === 'success') {
-							onPaid(sessionId);
+							onPaid(sessionId, event.expressPaymentType);
 						} else {
 							console.warn('Wallet payment failed', { code: result.error.code });
 							onFailed();

@@ -59,6 +59,8 @@ export type PaidCheckoutDonation = {
 	amount: number;
 	currency: string;
 	recurring: boolean;
+	/** Stripe's payment method type, or the wallet a card was paid through. `undefined` when Stripe does not report it. */
+	paymentMethodType: string | undefined;
 	/** `undefined` when the account could not be looked up. */
 	donorStatus: 'new' | 'returning' | undefined;
 };
