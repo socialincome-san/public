@@ -29,7 +29,7 @@ const contentVariants = cva(
 			mobileMedia: {
 				cover: 'absolute inset-0',
 				// Starts on the lower, faded part of the media and grows the frame with its content
-				fade: 'relative pt-[55vw] lg:absolute lg:inset-0 lg:pt-0',
+				fade: 'relative pt-[60vw] lg:absolute lg:inset-0 lg:pt-0',
 			},
 		},
 	},
@@ -119,7 +119,7 @@ export const MediaHero = ({
 				{mobileMedia === 'fade' ? (
 					<>
 						{/* Reaches full opacity before the media ends, so its lower edge never shows. */}
-						<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_40%,hsl(var(--foreground)/0.85)_78%,hsl(var(--foreground))_100%)] lg:hidden" />
+						<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_55%,hsl(var(--foreground)/0.85)_85%,hsl(var(--foreground))_100%)] lg:hidden" />
 						<div className={cn('pointer-events-none absolute inset-0 max-lg:hidden', overlayClasses[overlay])} />
 					</>
 				) : (
