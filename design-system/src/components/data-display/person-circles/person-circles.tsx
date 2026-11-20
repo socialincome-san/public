@@ -197,7 +197,9 @@ export const PersonCircles = ({
 				</div>
 
 				{/* All discs circle the portrait slowly and stop while the pointer or focus is on the composition */}
-				<PersonCirclesOrbit>
+				{/* A new set of discs (another person, same page component) starts a new orbit, so each label's turn
+				    back starts with the turn of the orbit and the labels stay upright */}
+				<PersonCirclesOrbit key={[...activeCircles, ...interestedCircles].map((circle) => circle.href).join(' ')}>
 					{activeDiscs.shown.map((circle, index) => (
 						<Disc
 							key={circle.href}

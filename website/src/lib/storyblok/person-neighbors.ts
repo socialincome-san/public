@@ -3,13 +3,24 @@ import type { ISbStoryData } from '@storyblok/js';
 
 type PersonStory = ISbStoryData<Person>;
 
-const sortKey = ({ content }: PersonStory) => `${content.firstName} ${content.lastName}`.trim() || content.fullName;
+// People without first and last name sort by their full name
+const sortNames = ({ content }: PersonStory) =>
+	content.firstName?.trim() || content.lastName?.trim()
+		? [content.firstName?.trim() ?? '', content.lastName?.trim() ?? '']
+		: [content.fullName ?? '', ''];
 
 // The order people are stepped through on their pages. Change it here to change it everywhere.
 const sortPersons = (persons: PersonStory[], language: string) =>
-	[...persons].sort(
-		(left, right) => sortKey(left).localeCompare(sortKey(right), language) || left.uuid.localeCompare(right.uuid),
-	);
+	[...persons].sort((left, right) => {
+		const [leftFirst, leftLast] = sortNames(left);
+		const [rightFirst, rightLast] = sortNames(right);
+
+		return (
+			leftFirst.localeCompare(rightFirst, language) ||
+			leftLast.localeCompare(rightLast, language) ||
+			left.uuid.localeCompare(right.uuid)
+		);
+	});
 
 /** The people before and after a person, alphabetically by first name. The list wraps around at both ends. */
 export const getPersonNeighbors = (persons: PersonStory[], personUuid: string, language: string) => {

@@ -38,3 +38,7 @@ export const Content: Story = {};
 export const Media: Story = {
 	args: { size: 'media' },
 };
+
+export const Expanded: Story = {
+	args: { size: 'media', expanded: true },
+};

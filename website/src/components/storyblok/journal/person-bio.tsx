@@ -1,4 +1,4 @@
-import { resolveRichTextHref } from '@/components/storyblok/rich-text/shared-resolvers';
+import { resolveRichTextHref } from '@/components/storyblok/rich-text/resolve-rich-text-href';
 import { getBioSegments, splitFirstSentence, type BioSegment } from '@/lib/storyblok/person-bio';
 import { LeadSection } from '@socialincome/design-system/layout/lead-section/lead-section';
 import NextLink from 'next/link';

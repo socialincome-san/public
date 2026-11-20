@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 import NextImage from 'next/image';
-import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+import { type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 import { Progress } from '../../feedback/progress/progress';
@@ -31,7 +31,7 @@ const contentVariants = cva(
 	},
 );
 
-type MediaHeroProps = WithoutClassName<HTMLAttributes<HTMLElement>> & {
+type MediaHeroProps = Omit<WithoutClassName<HTMLAttributes<HTMLElement>>, 'style'> & {
 	children: ReactNode;
 	// An image, or with `media` a custom background such as a video
 	image?: MediaHeroImage | null;
@@ -67,9 +67,7 @@ export const MediaHero = ({
 	<HeroShell
 		{...props}
 		expanded={expanded}
-		frameStyle={
-			image?.objectPosition ? ({ ['--media-hero-object-position']: image.objectPosition } as CSSProperties) : undefined
-		}
+		imagePosition={image?.objectPosition}
 		below={
 			// Stays while the media is expanded: it sits below the frame, and removing it would make the page jump.
 			mobileAside ? (
