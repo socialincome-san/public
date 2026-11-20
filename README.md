@@ -144,6 +144,11 @@ campaign submissions, or schema/type generation:
 - `STORYBLOK_PERSONAL_ACCESS_TOKEN`
 - `STORYBLOK_SPACE_ID`
 
+`GITHUB_PAT` is a GitHub token that is only used on the server. The open
+source pages load without it. The code contributions on a person page need
+it: without the token that card is left out. A fine-grained token with
+read-only access to public repositories is enough.
+
 ### 3. Start The Local Environment
 
 ```bash

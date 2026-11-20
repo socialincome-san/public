@@ -16,6 +16,8 @@ const WIDE_QUERY = '(min-width: 40rem)';
 type ContributionCardItem = {
 	title: string;
 	href: string;
+	// Opens in a new tab
+	external?: boolean;
 	// Small round image before the title, e.g. a flag
 	icon?: ReactNode;
 	badges?: string[];
@@ -29,6 +31,8 @@ type ContributionCardProps = {
 	showMoreLabel: string;
 	// `{shown}` and `{total}` are replaced with the number of visible items and of all items
 	counterLabel: string;
+	// Read out after the title of an external item, e.g. "opens in a new tab"
+	externalLinkLabel?: string;
 };
 
 type ContributionCardPersonProps = {
@@ -62,7 +66,13 @@ export const ContributionCardPerson = ({ name, fullName = name, imageSrc }: Cont
 	</span>
 );
 
-export const ContributionCard = ({ summary, items, showMoreLabel, counterLabel }: ContributionCardProps) => {
+export const ContributionCard = ({
+	summary,
+	items,
+	showMoreLabel,
+	counterLabel,
+	externalLinkLabel,
+}: ContributionCardProps) => {
 	// Until the first "show more", CSS decides how many of the first items a phone shows, so the server and the
 	// browser render the same markup
 	const [revealedCount, setRevealedCount] = useState<number | null>(null);
@@ -106,13 +116,19 @@ export const ContributionCard = ({ summary, items, showMoreLabel, counterLabel }
 							<NextLink
 								ref={index === focusIndex ? focusWhenAttached : undefined}
 								href={item.href}
+								{...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
 								className="group text-foreground focus-visible:ring-ring min-w-0 rounded-sm text-base font-medium wrap-anywhere hover:underline focus-visible:ring-2 focus-visible:outline-hidden sm:text-lg"
 							>
 								{item.title}
-								<ArrowUpRight
-									className="text-muted-foreground ml-1 inline size-4 align-middle transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
-									aria-hidden
-								/>
+								{/* Joined to the last word, so the arrow never wraps onto a line of its own */}
+								<span className="whitespace-nowrap">
+									{'\u2060'}
+									<ArrowUpRight
+										className="text-muted-foreground ml-1 inline size-4 align-middle transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
+										aria-hidden
+									/>
+								</span>
+								{item.external && externalLinkLabel ? <span className="sr-only">{externalLinkLabel}</span> : null}
 							</NextLink>
 						</span>
 						{item.badges && item.badges.length > 0 ? (
@@ -140,7 +156,7 @@ export const ContributionCard = ({ summary, items, showMoreLabel, counterLabel }
 							formatShowMore(revealedCount)
 						)}
 					</Button>
-					<span className="text-muted-foreground text-sm tabular-nums">
+					<span className="text-muted-foreground text-sm">
 						{isInitial ? (
 							<>
 								<span className="sm:hidden">{formatCounter(INITIAL_COUNT_PHONE)}</span>

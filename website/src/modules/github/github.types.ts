@@ -25,6 +25,18 @@ export type GithubOpenSourceIssuesData = {
 	labels: string[];
 };
 
+export type GithubCodeContribution = {
+	title: string;
+	url: string;
+	role: 'author' | 'reviewer';
+};
+
+export type GithubCodeContributions = {
+	// All merged pull requests the person wrote or reviewed; `items` holds the latest of them
+	total: number;
+	items: GithubCodeContribution[];
+};
+
 export const EMPTY_GITHUB_REPO_STATS: GithubRepoStats = {
 	totalCommits: 0,
 	newCommits: 0,

@@ -1,9 +1,115 @@
-import { fetchGithubData } from '@/integrations/github/github.integration';
+import { fetchGithubData, fetchGithubGraphql, GITHUB_REPOSITORY } from '@/integrations/github/github.integration';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
-import type { GithubContributor, GithubIssue, GithubOpenSourceIssuesData, GithubRepoStats } from './github.types';
+import type {
+	GithubCodeContribution,
+	GithubCodeContributions,
+	GithubContributor,
+	GithubIssue,
+	GithubOpenSourceIssuesData,
+	GithubRepoStats,
+} from './github.types';
 
 const HIDDEN_CONTRIBUTOR_LOGINS = new Set(['renovate[bot]', 'dependabot[bot]', 'Copilot']);
+
+// Apps that open pull requests on their own, e.g. dependency updates
+const AUTOMATION_APPS = ['renovate', 'dependabot', 'copilot-swe-agent', 'github-actions'];
+const GITHUB_USERNAME_PATTERN = /^[a-z\d](?:[a-z\d-]{0,38})$/i;
+const CODE_CONTRIBUTIONS_LIMIT = 100;
+
+const CODE_CONTRIBUTIONS_QUERY = `
+	query ($authored: String!, $reviewed: String!, $first: Int!) {
+		authored: search(type: ISSUE, query: $authored, first: $first) {
+			...pullRequests
+		}
+		reviewed: search(type: ISSUE, query: $reviewed, first: $first) {
+			...pullRequests
+		}
+	}
+	fragment pullRequests on SearchResultItemConnection {
+		issueCount
+		nodes {
+			... on PullRequest {
+				title
+				url
+				mergedAt
+				author {
+					__typename
+				}
+			}
+		}
+	}
+`;
+
+type PullRequestNode = {
+	title: string;
+	url: string;
+	mergedAt: string;
+	// null when the account was deleted
+	author: { __typename: string } | null;
+};
+
+type PullRequestSearch = {
+	issueCount: number;
+	nodes: PullRequestNode[];
+};
+
+const isPullRequestNode = (value: unknown): value is PullRequestNode =>
+	isRecord(value) &&
+	typeof value.title === 'string' &&
+	typeof value.url === 'string' &&
+	typeof value.mergedAt === 'string' &&
+	(value.author === null || (isRecord(value.author) && typeof value.author.__typename === 'string'));
+
+const isPullRequestSearch = (value: unknown): value is PullRequestSearch =>
+	isRecord(value) &&
+	typeof value.issueCount === 'number' &&
+	Array.isArray(value.nodes) &&
+	value.nodes.every(isPullRequestNode);
+
+/**
+ * The merged pull requests of this repository that the person wrote or reviewed, newest first. One they wrote
+ * counts once, as written. The search cannot sort by merge date, so the list holds the most recently opened ones.
+ */
+export const getCodeContributions = async (username: string): Promise<Result<GithubCodeContributions>> => {
+	const login = username.trim().toLowerCase();
+	// The name goes into a search query, so anything that is no GitHub username stops here
+	if (!GITHUB_USERNAME_PATTERN.test(login)) {
+		return resultFail('GitHub username is invalid');
+	}
+	const mergedPullRequests = `repo:${GITHUB_REPOSITORY} is:pr is:merged`;
+	const result = await fetchGithubGraphql(CODE_CONTRIBUTIONS_QUERY, {
+		authored: `${mergedPullRequests} author:${login} sort:created-desc`,
+		reviewed: [
+			mergedPullRequests,
+			`reviewed-by:${login}`,
+			`-author:${login}`,
+			...AUTOMATION_APPS.map((app) => `-author:app/${app}`),
+			'sort:created-desc',
+		].join(' '),
+		first: CODE_CONTRIBUTIONS_LIMIT,
+	});
+	if (!result.success) {
+		return resultFail(result.error);
+	}
+	const { data } = result;
+	if (!isRecord(data) || !isPullRequestSearch(data.authored) || !isPullRequestSearch(data.reviewed)) {
+		console.warn('GitHub pull request data is invalid');
+
+		return resultFail('GitHub pull request data is invalid');
+	}
+
+	const withRole = (search: PullRequestSearch, role: GithubCodeContribution['role']) =>
+		search.nodes.filter((node) => node.author?.__typename !== 'Bot').map((node) => ({ node, role }));
+
+	return resultOk({
+		total: data.authored.issueCount + data.reviewed.issueCount,
+		items: [...withRole(data.authored, 'author'), ...withRole(data.reviewed, 'reviewer')]
+			.sort((left, right) => right.node.mergedAt.localeCompare(left.node.mergedAt))
+			.slice(0, CODE_CONTRIBUTIONS_LIMIT)
+			.map(({ node, role }) => ({ title: node.title, url: node.url, role })),
+	});
+};
 
 export const getOpenSourceStats = async (): Promise<Result<GithubRepoStats>> => {
 	const repoResult = await fetchGithubData('');

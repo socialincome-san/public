@@ -23,6 +23,7 @@ import {
 } from '@/lib/storyblok/storyblok-utils';
 import { HOURS_RANGE_REGEX } from '@/lib/utils/regex';
 import type { PersonAssessment, PersonContribution } from '@/modules/community/community.types';
+import type { GithubCodeContributions } from '@/modules/github/github.types';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { ShowMoreToggle } from '@socialincome/design-system/actions/show-more-toggle/show-more-toggle';
@@ -52,6 +53,7 @@ type Props = {
 	articles: ISbStoryData<JournalArticle>[];
 	contributions: PersonContribution[];
 	assessments: PersonAssessment[];
+	codeContributions: GithubCodeContributions;
 	otherPersons: ISbStoryData<Person>[];
 	lang: string;
 	currency: WebsiteCurrency;
@@ -79,6 +81,7 @@ export const PersonProfile = ({
 	articles,
 	contributions,
 	assessments,
+	codeContributions,
 	otherPersons,
 	lang,
 	currency,
@@ -210,7 +213,7 @@ export const PersonProfile = ({
 				}
 			/>
 
-			{(contributions.length > 0 || assessments.length > 0) && (
+			{(contributions.length > 0 || assessments.length > 0 || codeContributions.items.length > 0) && (
 				<>
 					<Separator />
 					<Section title={t('person.contributions-title')}>
@@ -246,6 +249,23 @@ export const PersonProfile = ({
 										) : undefined,
 										badges: assessment.roles.map((role) => t(`person.contributions-assessment-${role}`)),
 									}))}
+									{...contributionCardLabels}
+								/>
+							)}
+							{codeContributions.items.length > 0 && (
+								<ContributionCard
+									summary={t.rich('person.contributions-code', {
+										count: codeContributions.total,
+										person: contributionPerson,
+										b: bold,
+									})}
+									items={codeContributions.items.map((contribution) => ({
+										title: contribution.title,
+										href: contribution.url,
+										external: true,
+										badges: [t(`person.contributions-code-${contribution.role}`)],
+									}))}
+									externalLinkLabel={t('person.opens-in-new-tab')}
 									{...contributionCardLabels}
 								/>
 							)}

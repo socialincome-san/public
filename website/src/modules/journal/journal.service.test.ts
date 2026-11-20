@@ -54,6 +54,12 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getAllPersons: mockGetAllPersons,
 }));
 
+const mockGetCodeContributions = jest.fn();
+
+jest.mock('@/modules/github/github.cache', () => ({
+	getCodeContributions: mockGetCodeContributions,
+}));
+
 jest.mock('@/modules/community/community.cache', () => ({
 	getPersonContributions: mockGetPersonContributions,
 	getPersonAssessments: mockGetPersonAssessments,
@@ -132,6 +138,7 @@ beforeEach(() => {
 	mockGetAllPersons.mockResolvedValue({ success: true, data: [] });
 	mockGetPersonContributions.mockResolvedValue({ success: true, data: [] });
 	mockGetPersonAssessments.mockResolvedValue({ success: true, data: [] });
+	mockGetCodeContributions.mockReset();
 });
 
 describe('getJournalOverviewPageData', () => {
@@ -238,6 +245,45 @@ const volunteer = (uuid: string, circles: string[], overrides: Record<string, un
 });
 
 describe('getJournalPersonPageData', () => {
+	const request = { lang: 'en', currency: 'CHF', slug: 'ada', parentLabel: 'People', homeLabel: 'Home' } as const;
+	const withGithubName = (githubName: string) =>
+		mockGetPerson.mockResolvedValue({ success: true, data: { ...author, content: { ...author.content, githubName } } });
+	const codeContributions = {
+		total: 12,
+		items: [{ title: 'Fix it', url: 'https://github.com/socialincome-san/public/pull/1', role: 'author' }],
+	};
+
+	test('loads the code contributions of the GitHub name stored on the person', async () => {
+		withGithubName(' ada-l ');
+		mockGetCodeContributions.mockResolvedValue({ success: true, data: codeContributions });
+
+		const result = await getJournalPersonPageData(request);
+
+		expect(mockGetCodeContributions).toHaveBeenCalledWith('ada-l');
+		expect(result.success && result.data.codeContributions).toEqual(codeContributions);
+	});
+
+	test('does not ask GitHub for a person without a GitHub name', async () => {
+		withGithubName('  ');
+
+		const result = await getJournalPersonPageData(request);
+
+		expect(mockGetCodeContributions).not.toHaveBeenCalled();
+		expect(result.success && result.data.codeContributions).toEqual({ total: 0, items: [] });
+	});
+
+	test.each([
+		['fails', () => Promise.resolve({ success: false, error: 'GitHub API rate limit exceeded' })],
+		['throws', () => Promise.reject(new Error('unexpected'))],
+	])('renders the page without code contributions when GitHub %s', async (_case, respond) => {
+		withGithubName('ada-l');
+		mockGetCodeContributions.mockImplementation(respond);
+
+		const result = await getJournalPersonPageData(request);
+
+		expect(result.success && result.data.codeContributions).toEqual({ total: 0, items: [] });
+	});
+
 	test('teases other active volunteers with a portrait, those from shared circles first', async () => {
 		mockGetPerson.mockResolvedValue({
 			success: true,

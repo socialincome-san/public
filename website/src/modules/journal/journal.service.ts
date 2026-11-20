@@ -18,6 +18,7 @@ import {
 	toStringArray,
 } from '@/lib/storyblok/storyblok-utils';
 import * as community from '@/modules/community/community.cache';
+import * as github from '@/modules/github/github.cache';
 import * as storyblokContent from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type {
@@ -223,6 +224,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			return resultFail('Journal person not found', personResult.status);
 		}
 		const person = personResult.data;
+		const githubName = person.content.githubName?.trim();
 		const [
 			articlesResult,
 			roleLabelsResult,
@@ -232,6 +234,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			personsResult,
 			contributionsResult,
 			assessmentsResult,
+			codeContributionsResult,
 		] = await Promise.all([
 			storyblokContent.getArticlesByAuthor(person.uuid, lang),
 			storyblokContent.getPrimaryRoleLabels(lang),
@@ -241,6 +244,8 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			storyblokContent.getAllPersons(lang),
 			community.getPersonContributions(person.uuid, lang, currency),
 			community.getPersonAssessments(person.uuid, lang, currency),
+			// Whatever goes wrong with GitHub, the page still renders, without the code contributions
+			githubName ? github.getCodeContributions(githubName).catch(() => null) : null,
 		]);
 		const articles = articlesResult.success ? articlesResult.data : [];
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
@@ -273,6 +278,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			workStyleLabels,
 			contributions: contributionsResult.success ? contributionsResult.data : [],
 			assessments: assessmentsResult.success ? assessmentsResult.data : [],
+			codeContributions: codeContributionsResult?.success ? codeContributionsResult.data : { total: 0, items: [] },
 			otherPersons: personsResult.success ? pickOtherPersons(person, personsResult.data) : [],
 		});
 	} catch (error) {

@@ -94,7 +94,31 @@ describe('ContributionCard', () => {
 
 		expect(rows()).toHaveLength(8);
 		expect(button()).toBeNull();
-		expect(document.activeElement?.textContent).toBe('Page 7');
+		expect(document.activeElement?.getAttribute('href')).toBe('/page-7');
+	});
+
+	it('opens external items in a new tab and says so to screen readers', () => {
+		act(() =>
+			root.render(
+				<ContributionCard
+					summary="Summary"
+					items={[
+						{ title: 'Pull request', href: 'https://example.org/1', external: true },
+						{ title: 'Page', href: '/page' },
+					]}
+					showMoreLabel="Show {count} more"
+					counterLabel="{shown} of {total}"
+					externalLinkLabel="Opens in a new tab"
+				/>,
+			),
+		);
+		const [external, internal] = container.querySelectorAll('a');
+
+		expect(external.target).toBe('_blank');
+		expect(external.rel).toBe('noopener noreferrer');
+		expect(external.textContent).toContain('Opens in a new tab');
+		expect(internal.target).toBe('');
+		expect(internal.textContent).not.toContain('Opens in a new tab');
 	});
 
 	it('has no button for two items', () => {
