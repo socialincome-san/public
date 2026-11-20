@@ -14,9 +14,7 @@ export type MediaHeroImage = {
 
 const overlayClasses = {
 	soft: 'from-foreground/70 via-foreground/35 to-foreground/15 bg-gradient-to-t',
-	// Darkens the bottom and the left, where the text sits, and leaves the rest of the image bright
-	strong:
-		'bg-[linear-gradient(to_top,hsl(var(--foreground))_0%,hsl(var(--foreground)/0.85)_25%,transparent_60%),linear-gradient(to_right,hsl(var(--foreground)/0.75)_0%,hsl(var(--foreground)/0.45)_35%,transparent_60%)]',
+	strong: 'bg-[linear-gradient(to_top,hsl(var(--foreground))_0%,hsl(var(--foreground)/0.85)_22%,transparent_55%)]',
 	none: 'hidden',
 };
 
@@ -268,7 +266,7 @@ export const MediaHeroStat = ({ label, value, target, progress }: MediaHeroStatP
 				<p className="text-sm font-medium">{label}</p>
 				<p className="text-4xl font-normal md:text-6xl">{value}</p>
 			</div>
-			{target ? <p className="pb-1 text-xl font-medium opacity-70">{target}</p> : null}
+			{target ? <p className="pb-1 text-xl font-medium opacity-70 lg:opacity-40">{target}</p> : null}
 		</div>
 		<Progress value={progress} variant="onDark" />
 	</div>
