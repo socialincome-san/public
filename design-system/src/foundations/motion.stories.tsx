@@ -74,6 +74,23 @@ const MotionOverview = () => (
 						<div className="bg-primary/40 animate-settle-zoom size-full" />
 					</div>
 				</AnimationRow>
+				<AnimationRow name="animate-fade-in" duration="400ms">
+					<div className="bg-primary/40 animate-fade-in size-12 rounded-full motion-reduce:animate-none" />
+				</AnimationRow>
+				<AnimationRow name="animate-disc-enter" duration="400ms">
+					<div className="bg-banner-blue animate-disc-enter size-12 rounded-full motion-reduce:animate-none" />
+				</AnimationRow>
+				<AnimationRow name="animate-disc-drift" duration="7s">
+					<div className="bg-banner-blue animate-disc-drift size-12 rounded-full motion-reduce:animate-none" />
+				</AnimationRow>
+				<AnimationRow name="animate-breathe" duration="8s">
+					<div className="border-primary animate-breathe size-12 rounded-full border motion-reduce:animate-none" />
+				</AnimationRow>
+				<AnimationRow name="animate-orbit" duration="120s">
+					<div className="animate-orbit relative size-12 motion-reduce:animate-none">
+						<div className="bg-banner-blue absolute top-0 left-1/2 size-4 -translate-x-1/2 rounded-full" />
+					</div>
+				</AnimationRow>
 				<AnimationRow name="animate-gauge-arc-draw" duration="900ms">
 					<svg viewBox="0 0 100 50" className="text-primary h-12 w-24" aria-hidden>
 						<path
@@ -95,6 +112,10 @@ const MotionOverview = () => (
 			<p className="text-muted-foreground text-sm">
 				<Code>ease-glide</Code> (<Code>cubic-bezier(0.32, 0.72, 0, 1)</Code>) for large surfaces that slide, such as the page
 				in <Code>Backstage</Code>.
+			</p>
+			<p className="text-muted-foreground text-sm">
+				<Code>ease-orbit</Code> (<Code>cubic-bezier(0.6, 0, 0.3, 1)</Code>) for slow, looping decorative motion: the orbit of{' '}
+				<Code>AnimatedCircleIcon</Code> and the drifting discs of <Code>PersonCircles</Code>.
 			</p>
 		</FoundationSection>
 

@@ -64,12 +64,7 @@ const formatDuration = (parts: VolunteerDurationParts, t: PersonCardTranslator) 
 	return count === 1 ? t('person-grid.duration-year-singular', { count }) : t('person-grid.duration-year-plural', { count });
 };
 
-export const getDurationLabels = (
-	volunteerSince: string | undefined,
-	lang: string,
-	todayMs: number,
-	t: PersonCardTranslator,
-) => {
+const getDurationLabels = (volunteerSince: string | undefined, lang: string, todayMs: number, t: PersonCardTranslator) => {
 	const parts = getVolunteerDurationParts(volunteerSince, lang, todayMs);
 
 	return parts

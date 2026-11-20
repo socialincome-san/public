@@ -78,7 +78,6 @@ const STORIES_PATH_PARAMS = {
 } as const;
 const PRIMARY_ROLES_DATASOURCE = 'primaryroles';
 const CIRCLES_DATASOURCE = 'circles';
-const TIME_COMMITMENTS_DATASOURCE = 'time-commitment';
 const WORK_STYLES_DATASOURCE = 'work-style';
 const CONTRIBUTION_AREAS_DATASOURCE = 'contribution-areas';
 
@@ -223,7 +222,7 @@ const getDatasourceEntries = async (
 	);
 };
 
-// Circles, time commitments and work styles store a slug as the entry name and the English text as the value.
+// Circles and work styles store a slug as the entry name and the English text as the value.
 // Circles show their slug ("Communication Circle") because the value alone ("Communication") reads like a role.
 const getEntryValue = (entry: StoryblokDatasourceEntry): string => entry.value;
 
@@ -232,9 +231,6 @@ export const getPrimaryRoleLabels = async (language: string): Promise<Result<Rec
 
 export const getCircleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(CIRCLES_DATASOURCE, language, (entry) => humanizeIdentifier(entry.name));
-
-export const getTimeCommitmentLabels = async (language: string): Promise<Result<Record<string, string>>> =>
-	getDatasourceEntries(TIME_COMMITMENTS_DATASOURCE, language, getEntryValue);
 
 export const getWorkStyleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(WORK_STYLES_DATASOURCE, language, getEntryValue);
