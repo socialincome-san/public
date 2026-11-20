@@ -1,4 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/nextjs-vite';
+import { userEvent, within } from 'storybook/test';
 import { ImageUpload } from './image-upload';
 
 const meta = {
@@ -32,3 +33,17 @@ export const Default: Story = {};
 export const Disabled: Story = { args: { disabled: true } };
 
 export const Attachment: Story = { args: { variant: 'attachment' } };
+export const AttachmentWithPreview: Story = {
+	args: { variant: 'attachment' },
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const imageBytes = Uint8Array.from(
+			atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jLZsAAAAASUVORK5CYII='),
+			(character) => character.charCodeAt(0),
+		);
+		await userEvent.upload(
+			canvas.getByLabelText('Reference image'),
+			new File([imageBytes], 'reference.png', { type: 'image/png' }),
+		);
+	},
+};

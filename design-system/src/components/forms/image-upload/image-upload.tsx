@@ -94,11 +94,11 @@ export const ImageUpload = ({
 					}}
 				/>
 				{preview && (
-					<div className="absolute top-1/2 left-3 size-14 -translate-y-1/2">
+					<div className="absolute top-1/2 left-3 z-20 size-14 -translate-y-1/2">
 						<div className="border-border bg-card relative size-full overflow-hidden rounded-lg border">
 							<Image src={preview} alt={previewLabel} fill sizes="56px" className="object-contain" unoptimized />
 						</div>
-						<div className="absolute -top-2 -right-2 z-20">
+						<div className="absolute -top-2 -right-2">
 							<button
 								type="button"
 								className="border-input bg-background text-primary hover:bg-accent focus-visible:ring-ring flex size-6 items-center justify-center rounded-full border shadow-xs focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
