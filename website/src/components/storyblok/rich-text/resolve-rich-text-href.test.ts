@@ -1,4 +1,4 @@
-import { resolveRichTextHref } from './shared-resolvers';
+import { resolveRichTextHref } from './resolve-rich-text-href';
 
 describe('resolveRichTextHref', () => {
 	it('maps Storyblok story links to website paths', () => {

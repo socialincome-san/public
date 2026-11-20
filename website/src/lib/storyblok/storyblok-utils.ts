@@ -53,7 +53,8 @@ export const getArticleTypeLabel = (articleType: ISbStoryData<ArticleType>) => {
 export const getPersonDisplayName = (person: ISbStoryData<Person>) =>
 	`${person.content.firstName} ${person.content.lastName}`.trim() || person.content.fullName;
 
-const getPersonFirstName = (person: ISbStoryData<Person>) => person.content.firstName.trim() || getPersonDisplayName(person);
+export const getPersonFirstName = (person: ISbStoryData<Person>) =>
+	person.content.firstName?.trim() || getPersonDisplayName(person);
 
 export const getArticleAuthors = (article: ResolvedArticle): ISbStoryData<Person>[] =>
 	[
@@ -266,6 +267,17 @@ export const getVolunteerDurationParts = (
 	}
 
 	return { unit: 'years', years: wholeYears, isAnniversary: wholeMonths === 0 && remainderDays === 0 };
+};
+
+/** How long someone has volunteered, in full years, or in months during the first year. Nothing before a full month. */
+export const getVolunteeringStat = (
+	parts: VolunteerDurationParts | null,
+): { unit: 'years' | 'months'; count: number } | null => {
+	if (parts?.unit === 'years') {
+		return { unit: 'years', count: parts.years };
+	}
+
+	return parts?.unit === 'months' ? { unit: 'months', count: parts.months } : null;
 };
 
 const formatStoryblokDateToIso = (date: string | null | undefined) => {

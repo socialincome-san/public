@@ -6,7 +6,7 @@ const twMerge = extendTailwindMerge({
 		theme: {
 			text: ['display', 'display-lg'],
 			shadow: ['card', 'raised', 'overlay', 'dock', 'backstage'],
-			ease: ['glide'],
+			ease: ['glide', 'orbit'],
 			'drop-shadow': ['card', 'on-media'],
 			radius: ['control'],
 		},

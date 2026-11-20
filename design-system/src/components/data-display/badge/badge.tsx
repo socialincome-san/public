@@ -27,6 +27,8 @@ const badgeVariants = cva(
 				fundraising:
 					'bg-confirm-foreground border-confirm/30 text-foreground text-sm leading-none font-medium whitespace-nowrap scheme-light',
 				video: 'bg-black/60 border-white/40 text-white backdrop-blur-sm scheme-dark',
+				// Translucent, for dark surfaces
+				ghost: 'bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground scheme-dark',
 				frosted: 'bg-white/80 border-white/40 text-foreground whitespace-nowrap backdrop-blur-sm scheme-light',
 				primary: 'bg-primary border-primary text-primary-foreground scheme-dark',
 				'primary-outline': 'border-primary/40 text-primary bg-transparent',

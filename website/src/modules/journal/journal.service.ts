@@ -2,19 +2,18 @@ import type { Person } from '@/generated/storyblok/types/109655/storyblok-compon
 import { defaultLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import type { JournalRssArticle } from '@/lib/storyblok/journal-rss';
+import { getPersonNeighbors } from '@/lib/storyblok/person-neighbors';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	createWebsiteJournalArticleLink,
 	createWebsiteJournalArticleTypeLink,
 	createWebsiteJournalPath,
 	createWebsiteJournalTagLink,
-	createWebsitePeoplePath,
 	createWebsitePersonLink,
 	getArticleAuthors,
 	getArticleTitle,
 	getArticleTypeLabel,
 	getPersonAvatarSrc,
-	getPersonDisplayName,
 	toStringArray,
 } from '@/lib/storyblok/storyblok-utils';
 import * as community from '@/modules/community/community.cache';
@@ -29,6 +28,7 @@ import type {
 	JournalPageRequest,
 	JournalPerson,
 	JournalPersonPageData,
+	JournalPersonPageRequest,
 } from './journal.types';
 
 const JOURNAL_RELATED_ARTICLES_COUNT = 3;
@@ -215,62 +215,45 @@ export const getJournalAuthorArticleCounts = async (authorIds: string[]): Promis
 	return resultOk(counts);
 };
 
-export const getJournalPersonPageData = async (request: JournalPageRequest): Promise<Result<JournalPersonPageData>> => {
+export const getJournalPersonPageData = async (
+	request: JournalPersonPageRequest,
+): Promise<Result<JournalPersonPageData>> => {
 	try {
-		const { lang, currency, slug, parentLabel, homeLabel } = request;
+		const { lang, currency, slug } = request;
 		const personResult = await storyblokContent.getPerson(slug, lang);
 		if (!personResult.success) {
 			return resultFail('Journal person not found', personResult.status);
 		}
 		const person = personResult.data;
-		const [
-			articlesResult,
-			roleLabelsResult,
-			circleLabelsResult,
-			timeCommitmentLabelsResult,
-			workStyleLabelsResult,
-			personsResult,
-			contributionsResult,
-		] = await Promise.all([
-			storyblokContent.getArticlesByAuthor(person.uuid, lang),
-			storyblokContent.getPrimaryRoleLabels(lang),
-			storyblokContent.getCircleLabels(lang),
-			storyblokContent.getTimeCommitmentLabels(lang),
-			storyblokContent.getWorkStyleLabels(lang),
-			storyblokContent.getAllPersons(lang),
-			community.getPersonContributions(person.uuid, lang, currency),
-		]);
+		const [articlesResult, roleLabelsResult, circleLabelsResult, workStyleLabelsResult, personsResult, contributionsResult] =
+			await Promise.all([
+				storyblokContent.getArticlesByAuthor(person.uuid, lang),
+				storyblokContent.getPrimaryRoleLabels(lang),
+				storyblokContent.getCircleLabels(lang),
+				storyblokContent.getWorkStyleLabels(lang),
+				storyblokContent.getAllPersons(lang),
+				community.getPersonContributions(person.uuid, lang, currency),
+			]);
 		const articles = articlesResult.success ? articlesResult.data : [];
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 		const circleLabels = circleLabelsResult.success ? circleLabelsResult.data : {};
-		const timeCommitmentLabels = timeCommitmentLabelsResult.success ? timeCommitmentLabelsResult.data : {};
-		const workStyleLabels = workStyleLabelsResult.success ? workStyleLabelsResult.data : {};
 		const totalInDefault = await getDefaultLanguageCount(lang, articles.length, () =>
 			storyblokContent.getArticleCountByAuthorForDefaultLang(person.uuid),
 		);
-		const pathname = createWebsitePersonLink(slug, lang, currency);
-		const peoplePath = createWebsitePeoplePath(lang, currency);
+		const persons = personsResult.success ? personsResult.data : [];
 
 		return resultOk({
 			person,
 			articles,
 			showMoreArticlesLink: totalInDefault > articles.length,
-			pathname,
-			breadcrumbs: buildJournalPersonBreadcrumbs(
-				homeLabel,
-				parentLabel,
-				peoplePath,
-				getPersonDisplayName(person),
-				pathname,
-				lang,
-				currency,
-			),
+			pathname: createWebsitePersonLink(slug, lang, currency),
+			neighbors: getPersonNeighbors(persons, person.uuid, lang),
+			activePeopleCount: persons.filter((other) => other.content.volunteerStatus === 'active').length,
 			roleLabels,
 			circleLabels,
-			timeCommitmentLabels,
-			workStyleLabels,
+			workStyleLabels: workStyleLabelsResult.success ? workStyleLabelsResult.data : {},
 			contributions: contributionsResult.success ? contributionsResult.data : [],
-			otherPersons: personsResult.success ? pickOtherPersons(person, personsResult.data) : [],
+			otherPersons: pickOtherPersons(person, persons),
 		});
 	} catch (error) {
 		console.error('Could not load journal person', { error });
@@ -428,19 +411,4 @@ const buildJournalArticleBreadcrumbs = (
 	buildHomeBreadcrumb(homeLabel, lang, currency),
 	{ label: journalLabel, href: journalPath },
 	{ label: articleTitle, href: articleHref },
-];
-
-// A person page sits under the people overview, not under the journal
-const buildJournalPersonBreadcrumbs = (
-	homeLabel: string,
-	peopleLabel: string,
-	peoplePath: string,
-	personName: string,
-	personHref: string,
-	lang: string,
-	currency: WebsiteCurrency,
-): JournalBreadcrumbLink[] => [
-	buildHomeBreadcrumb(homeLabel, lang, currency),
-	{ label: peopleLabel, href: peoplePath },
-	{ label: personName, href: personHref },
 ];

@@ -31,11 +31,13 @@ export type JournalOverviewRequest = {
 	filter?: JournalOverviewFilter;
 };
 
+export type JournalPersonPageRequest = Pick<JournalPageRequest, 'lang' | 'currency' | 'slug'>;
+
 export type JournalPageRequest = {
 	lang: string;
 	currency: WebsiteCurrency;
 	slug: string;
-	// Label of the page above this one in the breadcrumbs: the journal for articles, the people overview for persons
+	// Label of the page above this one in the breadcrumbs
 	parentLabel: string;
 	homeLabel: string;
 };
@@ -74,10 +76,12 @@ export type JournalPersonPageData = {
 	articles: ISbStoryData<JournalArticle>[];
 	showMoreArticlesLink: boolean;
 	pathname: string;
-	breadcrumbs: JournalBreadcrumbLink[];
+	// The people before and after this one
+	neighbors: { previous: ISbStoryData<Person>; next: ISbStoryData<Person> } | null;
+	// Volunteers and staff marked active, people who left are not counted
+	activePeopleCount: number;
 	roleLabels: Record<string, string>;
 	circleLabels: Record<string, string>;
-	timeCommitmentLabels: Record<string, string>;
 	workStyleLabels: Record<string, string>;
 	contributions: PersonContribution[];
 	otherPersons: ISbStoryData<Person>[];

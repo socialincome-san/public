@@ -1,5 +1,6 @@
 'use client';
 
+import { resolveRichTextHref } from '@/components/storyblok/rich-text/resolve-rich-text-href';
 import type {
 	RichTextAlignment,
 	RichTextAlignmentProps,
@@ -7,7 +8,6 @@ import type {
 	RichTextLinkProps,
 	RichTextTableCellProps,
 } from '@/components/storyblok/rich-text/rich-text.types';
-import { getWebsiteRelativePathFromStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
 import { cn } from '@socialincome/design-system/cn';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/design-system/data-display/table/table';
 import { headingStyles } from '@socialincome/design-system/layout/section-heading/heading-styles';
@@ -54,12 +54,6 @@ export const buildLinkRel = (target?: string, rel?: string) => {
 	tokens.add('noreferrer');
 
 	return [...tokens].join(' ');
-};
-
-export const resolveRichTextHref = (href: string) => {
-	const match = href.match(/^(https?:\/\/[^/]+)?\/?(pages\/.*)$/);
-
-	return match ? `${match[1] ?? ''}${getWebsiteRelativePathFromStoryblokSlug(match[2])}` : href;
 };
 
 export const storyblokRichTextMarkResolvers = {

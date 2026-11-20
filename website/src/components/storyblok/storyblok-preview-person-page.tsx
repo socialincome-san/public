@@ -5,7 +5,6 @@ import { getTodayMs } from '@/lib/utils/today';
 import { getJournalPersonAction, getJournalPersonPageDataAction } from '@/modules/journal/journal.actions';
 import type { JournalPerson } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
-import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -25,11 +24,7 @@ export const StoryblokPreviewPersonPage = async ({
 	previewRoutePath,
 	searchParams,
 }: Props) => {
-	const [t, tCommon, todayMs] = await Promise.all([
-		getTranslations('website-journal'),
-		getTranslations('website-common'),
-		getTodayMs(),
-	]);
+	const todayMs = await getTodayMs();
 
 	return await StoryblokPreviewStory<ISbStoryData<JournalPerson>>({
 		storyPath,
@@ -45,13 +40,7 @@ export const StoryblokPreviewPersonPage = async ({
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async () => {
-			const pageResult = await getJournalPersonPageDataAction({
-				lang,
-				currency,
-				slug,
-				parentLabel: t('person.breadcrumb'),
-				homeLabel: tCommon('breadcrumb.home'),
-			});
+			const pageResult = await getJournalPersonPageDataAction({ lang, currency, slug });
 
 			if (!pageResult.success) {
 				return notFound();

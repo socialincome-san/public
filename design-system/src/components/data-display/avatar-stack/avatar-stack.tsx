@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import NextLink from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '../avatar/avatar';
+import { getInitials } from '../avatar/get-initials';
 
 export type AvatarStackPerson = {
 	name: string;
@@ -25,15 +26,6 @@ type AvatarStackProps = VariantProps<typeof ringVariants> & {
 	people: AvatarStackPerson[];
 };
 
-const initialsOf = (name: string) =>
-	name
-		.split(/\s+/)
-		.filter(Boolean)
-		.slice(0, 2)
-		.map((part) => part[0])
-		.join('')
-		.toUpperCase();
-
 export const AvatarStack = ({ people, size = 'lg' }: AvatarStackProps) => {
 	// The ring only separates overlapping faces
 	const ringClassName = people.length > 1 ? ringVariants({ size }) : undefined;
@@ -44,7 +36,7 @@ export const AvatarStack = ({ people, size = 'lg' }: AvatarStackProps) => {
 				const avatar = (
 					<Avatar size={size}>
 						{person.imageSrc ? <AvatarImage src={person.imageSrc} alt="" /> : null}
-						<AvatarFallback>{initialsOf(person.name)}</AvatarFallback>
+						<AvatarFallback>{getInitials(person.name)}</AvatarFallback>
 					</Avatar>
 				);
 

@@ -13,6 +13,7 @@ import {
 	type JournalPageRequest,
 	type JournalPerson,
 	type JournalPersonPageData,
+	type JournalPersonPageRequest,
 } from './journal.types';
 
 export const getJournalOverviewPageData = async (
@@ -38,7 +39,9 @@ export const getJournalAuthorArticleCounts = async (authorIds: string[]): Promis
 	return cacheResult(service.getJournalAuthorArticleCounts(authorIds));
 };
 
-export const getJournalPersonPageData = async (request: JournalPageRequest): Promise<Result<JournalPersonPageData>> => {
+export const getJournalPersonPageData = async (
+	request: JournalPersonPageRequest,
+): Promise<Result<JournalPersonPageData>> => {
 	'use cache';
 	cacheTag(JOURNAL_CACHE_TAG);
 

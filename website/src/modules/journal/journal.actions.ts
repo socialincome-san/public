@@ -24,6 +24,7 @@ import {
 	journalAuthorArticleCountsRequestSchema,
 	journalLanguageRequestSchema,
 	journalPageRequestSchema,
+	journalPersonPageRequestSchema,
 } from './journal.schemas';
 
 export const getJournalArticlePageDataAction = async (input: unknown): Promise<Result<JournalArticlePageData>> => {
@@ -41,7 +42,7 @@ export const getJournalAuthorArticleCountsAction = async (input: unknown): Promi
 };
 
 export const getJournalPersonPageDataAction = async (input: unknown): Promise<Result<JournalPersonPageData>> => {
-	const parsed = journalPageRequestSchema.safeParse(input);
+	const parsed = journalPersonPageRequestSchema.safeParse(input);
 
 	return parsed.success ? getJournalPersonPageData(parsed.data) : resultFail('Invalid journal person request');
 };

@@ -11,6 +11,7 @@ import {
 	getStoryblokMetadataImage,
 	getTranslatedStoryName,
 	getVolunteerDurationParts,
+	getVolunteeringStat,
 	isResolvedArticle,
 	resolveStoryblokLink,
 } from './storyblok-utils';
@@ -140,6 +141,21 @@ describe('Storyblok date utilities', () => {
 		expect(parts('2026-01-25 23:00')).toEqual({ unit: 'months', months: 6, isAnniversary: true });
 		expect(formatStoryblokDateMedium('2026-06-25 22:00', 'en')).toBe('Jun 26, 2026');
 		expect(formatStoryblokDateMedium('2026-01-25 23:00', 'en')).toBe('Jan 26, 2026');
+	});
+});
+
+describe('getVolunteeringStat', () => {
+	it('counts full years, and months during the first year', () => {
+		expect(getVolunteeringStat({ unit: 'years', years: 6, isAnniversary: false })).toEqual({ unit: 'years', count: 6 });
+		expect(getVolunteeringStat({ unit: 'months', months: 10, isAnniversary: false })).toEqual({
+			unit: 'months',
+			count: 10,
+		});
+	});
+
+	it('has nothing before a full month or without a start date', () => {
+		expect(getVolunteeringStat({ unit: 'days', days: 12 })).toBeNull();
+		expect(getVolunteeringStat(null)).toBeNull();
 	});
 });
 

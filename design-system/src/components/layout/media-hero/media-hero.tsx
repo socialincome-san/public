@@ -1,10 +1,11 @@
 import { cva } from 'class-variance-authority';
 import NextImage from 'next/image';
-import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+import { type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 import { Progress } from '../../feedback/progress/progress';
 import { BlockWrapper } from '../block-wrapper/block-wrapper';
+import { heroDescriptionVariants, HeroShell, heroTitleVariants } from '../hero-shell/hero-shell';
 
 export type MediaHeroImage = {
 	src: string;
@@ -30,7 +31,7 @@ const contentVariants = cva(
 	},
 );
 
-type MediaHeroProps = WithoutClassName<HTMLAttributes<HTMLElement>> & {
+type MediaHeroProps = Omit<WithoutClassName<HTMLAttributes<HTMLElement>>, 'style'> & {
 	children: ReactNode;
 	// An image, or with `media` a custom background such as a video
 	image?: MediaHeroImage | null;
@@ -63,16 +64,22 @@ export const MediaHero = ({
 	expanded = false,
 	...props
 }: MediaHeroProps) => (
-	<section className="storyblok__outline full-bleed-hero flex flex-col gap-6" {...props}>
-		<div
-			className={cn(
-				'bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden transition-[border-radius] duration-300 ease-out md:min-h-160',
-				expanded ? 'z-60' : 'md:rounded-b-5xl rounded-b-3xl',
-			)}
-			style={
-				image?.objectPosition ? ({ ['--media-hero-object-position']: image.objectPosition } as CSSProperties) : undefined
-			}
-		>
+	<HeroShell
+		{...props}
+		expanded={expanded}
+		imagePosition={image?.objectPosition}
+		below={
+			// Stays while the media is expanded: it sits below the frame, and removing it would make the page jump.
+			mobileAside ? (
+				<div className="lg:hidden">
+					<BlockWrapper marginTop="none" marginBottom="none">
+						{mobileAside}
+					</BlockWrapper>
+				</div>
+			) : null
+		}
+	>
+		<>
 			{media ??
 				(image ? (
 					<NextImage
@@ -110,36 +117,9 @@ export const MediaHero = ({
 					{aside ? <div className="hidden shrink-0 lg:block">{aside}</div> : null}
 				</div>
 			)}
-		</div>
-
-		{/* Stays while the media is expanded: it sits below the frame, and removing it would make the page jump. */}
-		{mobileAside ? (
-			<div className="lg:hidden">
-				<BlockWrapper marginTop="none" marginBottom="none">
-					{mobileAside}
-				</BlockWrapper>
-			</div>
-		) : null}
-	</section>
+		</>
+	</HeroShell>
 );
-
-const titleVariants = cva('', {
-	variants: {
-		variant: {
-			bold: 'text-5xl leading-tight font-bold text-pretty md:text-6xl',
-			light: 'text-4xl xl:text-6xl [&_strong]:font-bold',
-		},
-	},
-});
-
-const descriptionVariants = cva('', {
-	variants: {
-		variant: {
-			bold: 'text-xl',
-			light: 'text-lg lg:text-2xl',
-		},
-	},
-});
 
 type MediaHeroIntroProps = {
 	title?: ReactNode;
@@ -172,7 +152,7 @@ export const MediaHeroIntro = ({
 		<div className={cn('flex flex-col', variant === 'light' ? 'gap-3' : 'gap-4', glow && 'relative isolate')}>
 			{glow ? <div aria-hidden className="absolute -inset-8 -z-10 rounded-full bg-black/30 blur-[100px]" /> : null}
 			{title ? (
-				<h1 className={titleVariants({ variant })}>
+				<h1 className={heroTitleVariants({ variant })}>
 					{title}
 					{titleIcon ? (
 						<NextImage
@@ -185,7 +165,7 @@ export const MediaHeroIntro = ({
 					) : null}
 				</h1>
 			) : null}
-			{description ? <p className={descriptionVariants({ variant })}>{description}</p> : null}
+			{description ? <p className={heroDescriptionVariants({ variant })}>{description}</p> : null}
 		</div>
 	);
 
