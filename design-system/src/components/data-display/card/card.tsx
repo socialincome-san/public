@@ -32,12 +32,31 @@ const cardVariants = cva('relative overflow-hidden rounded-3xl transition-all', 
 	},
 });
 
-type CardProps = WithoutClassName<React.HTMLAttributes<HTMLDivElement>> & VariantProps<typeof cardVariants>;
+type CardProps = WithoutClassName<React.HTMLAttributes<HTMLDivElement>> &
+	VariantProps<typeof cardVariants> & {
+		/** Shown on a tinted strip below the card, e.g. payment logos or a certification */
+		footer?: React.ReactNode;
+	};
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-	({ padding, elevation, surface, interactive, fullHeight, ...props }, ref) => (
-		<div ref={ref} className={cardVariants({ padding, elevation, surface, interactive, fullHeight })} {...props} />
-	),
+	({ padding, elevation, surface, interactive, fullHeight, footer, ...props }, ref) => {
+		const card = (
+			<div ref={ref} className={cardVariants({ padding, elevation, surface, interactive, fullHeight })} {...props} />
+		);
+
+		if (!footer) {
+			return card;
+		}
+
+		return (
+			<div className="bg-secondary overflow-hidden rounded-3xl">
+				{card}
+				<div className="text-foreground flex flex-wrap items-center gap-x-6 gap-y-3 px-6 py-4 text-sm font-medium">
+					{footer}
+				</div>
+			</div>
+		);
+	},
 );
 
 Card.displayName = 'Card';

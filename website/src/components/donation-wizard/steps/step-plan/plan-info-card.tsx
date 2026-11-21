@@ -28,7 +28,21 @@ export const PlanInfoCard = ({ context }: Props) => {
 	const cancelable = context.cadence === 'monthly' || context.oneTimePlanChoice === 'monthly-half';
 
 	return (
-		<Card padding="compact" elevation="flat">
+		<Card
+			padding="compact"
+			elevation="flat"
+			footer={
+				<>
+					<span className="flex flex-wrap items-center gap-3">
+						{t('impact.pay-with')}
+						<ImpactPaymentLogos />
+					</span>
+					{isSwissVisitor ? (
+						<CertificationBadge label={t('impact.zewo')} imageSrc="/assets/zewo.svg" href={ZEWO_NPO_DETAIL_URL} />
+					) : null}
+				</>
+			}
+		>
 			<div className="flex flex-col gap-5">
 				<CheckList
 					items={[
@@ -38,24 +52,14 @@ export const PlanInfoCard = ({ context }: Props) => {
 					]}
 				/>
 				<Separator />
-				<div className="flex flex-col gap-4">
-					{isSwissVisitor ? (
-						<CertificationBadge label={t('impact.zewo')} imageSrc="/assets/zewo.svg" href={ZEWO_NPO_DETAIL_URL} />
-					) : null}
-					<ExplainerVideoTrigger
-						layout="inline"
-						label={whyOnePercent}
-						embedUrl={explainerVideo.embedUrl}
-						thumbnailSrc={explainerVideo.thumbnailSrc}
-						thumbnailAlt={whyOnePercent}
-						dialogTitle={whyOnePercent}
-					/>
-				</div>
-				<Separator />
-				<div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm">
-					{t('impact.pay-with')}
-					<ImpactPaymentLogos />
-				</div>
+				<ExplainerVideoTrigger
+					layout="inline"
+					label={whyOnePercent}
+					embedUrl={explainerVideo.embedUrl}
+					thumbnailSrc={explainerVideo.thumbnailSrc}
+					thumbnailAlt={whyOnePercent}
+					dialogTitle={whyOnePercent}
+				/>
 			</div>
 		</Card>
 	);
