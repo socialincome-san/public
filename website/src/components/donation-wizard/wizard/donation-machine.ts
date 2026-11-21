@@ -1,3 +1,4 @@
+import { type CountryCode } from '@/generated/prisma/enums';
 import { type WebsiteCurrency, defaultCurrency } from '@/lib/i18n/utils';
 import { getContributorCommunityStatsAction } from '@/modules/contributors/contributor.actions';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
@@ -35,7 +36,7 @@ export const donationWizardMachine = setup({
 		context: DonationWizardContext;
 		tags: 'currencyEditable';
 		events:
-			| { type: 'OPEN'; currency: WebsiteCurrency }
+			| { type: 'OPEN'; currency: WebsiteCurrency; country: CountryCode | null }
 			| { type: 'OPEN_FROM_FORM'; context: DonationAmountContext }
 			| { type: 'RESUME'; context: DonationAmountContext; step: ResumableWizardStep }
 			| {
@@ -142,7 +143,7 @@ export const donationWizardMachine = setup({
 				OPEN: {
 					target: 'loadingCommunityStats',
 					actions: assign(({ event }) => ({
-						...getInitialWizardContext(event.currency),
+						...getInitialWizardContext(event.currency, event.country),
 						pendingStep: 'stepAmount' as const,
 					})),
 				},
