@@ -15,6 +15,11 @@ const redirects: Redirects = [
 		destination: '/:lang/:currency/mission',
 		permanent: true,
 	},
+	{
+		source: '/portal/programs/:programId/payout-forecast',
+		destination: '/portal/programs/:programId/finances',
+		permanent: true,
+	},
 	{ source: '/about-us', destination: '/en/usd/mission', permanent: true },
 	{ source: '/:lang(en|de|fr|it)/:currency(chf|eur|usd)/app', destination: '/:lang/:currency/mobile-app', permanent: true },
 	{ source: '/app', destination: '/en/usd/mobile-app', permanent: true },
