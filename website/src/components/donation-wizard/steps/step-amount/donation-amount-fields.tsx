@@ -110,6 +110,8 @@ export const DonationAmountFields = ({
 				getDonationWizardCardClass('stepAmount'),
 				placement === 'hero' && 'mx-0 max-w-none px-7 pt-6 pb-7 sm:px-7 sm:pt-6 lg:mx-auto lg:w-[400px]',
 				'text-foreground md:px-9 md:py-9',
+				// In the dialog on phones the sheet already frames the form
+				placement === 'wizard' && 'max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none',
 			)}
 			data-testid="donation-wizard-step-amount"
 		>

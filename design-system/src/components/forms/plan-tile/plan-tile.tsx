@@ -5,7 +5,6 @@ type PlanTileProps = {
 	label?: string;
 	amount: string;
 	caption?: string;
-	// Stays the same when the tile is selected, so choosing a plan only changes the top part
 	footer: ReactNode;
 	selected: boolean;
 	onSelect: () => void;
@@ -18,14 +17,12 @@ export const PlanTile = ({ label, amount, caption, footer, selected, onSelect, t
 		data-testid={testId}
 		aria-pressed={selected}
 		onClick={onSelect}
-		className="bg-secondary text-foreground ring-input/60 focus-visible:ring-ring flex w-full min-w-0 flex-col rounded-2xl ring-1 focus-visible:ring-2 focus-visible:outline-hidden"
+		className={cn(
+			'bg-secondary text-foreground focus-visible:ring-ring flex w-full min-w-0 flex-col rounded-2xl transition-shadow focus-visible:ring-2 focus-visible:outline-hidden',
+			selected ? 'ring-primary ring-2' : 'ring-input/60 ring-1',
+		)}
 	>
-		<span
-			className={cn(
-				'bg-card flex flex-1 flex-col rounded-2xl px-4 pt-4 pb-4 text-left shadow-sm transition-shadow',
-				selected ? 'ring-primary ring-2' : 'ring-input/60 ring-1',
-			)}
-		>
+		<span className={cn('bg-card ring-input/60 flex flex-1 flex-col rounded-2xl px-4 pt-4 pb-4 text-left shadow-sm ring-1')}>
 			<span className="mb-3 flex items-center justify-between gap-2">
 				{label ? (
 					<span
