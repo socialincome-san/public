@@ -27,18 +27,14 @@
 		"above-maximum": "Höchstens {amount}"
 	},
 	"stepPlan": {
-		"upsell-subtitle": "Die Hälfte des Betrags, monatlich.\nDas hilft uns noch mehr.",
 		"upsell-preferred": "Empfohlen",
-		"upsell-benefit-cancel": "Jederzeit kündbar",
 		"per-month": "/Monat",
 		"plan-1x": "1 %-Plan",
 		"plan-2x": "2 %-Plan",
 		"double-impact-badge": "Wirkung verdoppeln",
-		"benefit-beneficiaries": "{directCount} direkte, {indirectCount} indirekte Begünstigte",
-		"benefit-community": "Werde Teil einer Community mit {count} Unterstützern",
-		"benefit-double-impact": "Verdopple deine Wirkung",
 		"back": "Zurück",
-		"choose-payment": "Zahlungsmethode wählen"
+		"choose-payment": "Zahlungsmethode wählen",
+		"impact-short": "<b>{directCount}</b> direkt · <b>{indirectCount}</b> indirekt"
 	},
 	"stepStripeCheckout": {
 		"loading": "Zahlungsformular wird geladen…",

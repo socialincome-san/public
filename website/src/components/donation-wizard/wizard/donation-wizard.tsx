@@ -18,7 +18,11 @@ export const DonationWizard = ({ state, send }: DonationWizardStepProps) => {
 					</div>
 					{shell.showImpactPanel && (
 						<div className="w-full min-w-0 md:flex-1">
-							<DonationImpactPanel cadence={shell.cadence} communityStats={shell.communityStats} />
+							<DonationImpactPanel
+								cadence={shell.cadence}
+								communityStats={shell.communityStats}
+								showBenefits={!shell.isPlanStep}
+							/>
 						</div>
 					)}
 					{shell.showQrHintsPanel && (

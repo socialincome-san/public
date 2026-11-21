@@ -27,18 +27,14 @@
 		"above-maximum": "At most {amount}"
 	},
 	"stepPlan": {
-		"upsell-subtitle": "Half the amount, paid monthly.\nIt helps us even more.",
 		"upsell-preferred": "Preferred",
-		"upsell-benefit-cancel": "Cancel anytime",
 		"per-month": "/month",
 		"plan-1x": "1 % Plan",
 		"plan-2x": "2 % Plan",
 		"double-impact-badge": "Double the impact",
-		"benefit-beneficiaries": "{directCount} direct, {indirectCount} indirect beneficiaries",
-		"benefit-community": "Join a community of {count} supporters",
-		"benefit-double-impact": "Double the impact",
 		"back": "Back",
-		"choose-payment": "Choose Payment Method"
+		"choose-payment": "Choose Payment Method",
+		"impact-short": "<b>{directCount}</b> direct · <b>{indirectCount}</b> indirect"
 	},
 	"stepStripeCheckout": {
 		"loading": "Loading payment form…",

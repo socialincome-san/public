@@ -207,8 +207,8 @@ export const DonationModalProvider = ({ children }: Props) => {
 						<>
 							<div
 								className={cn(
-									'flex shrink-0 flex-col gap-1 px-4 pb-3 sm:px-6 sm:pb-6 md:pl-9',
-									canGoBack || isPlanStep ? 'pt-10 sm:pt-10' : 'pt-4 pr-16 sm:pt-6 sm:pr-20',
+									'flex shrink-0 flex-col gap-1 px-4 pb-5 sm:px-6 sm:pb-4 md:pl-9',
+									canGoBack || isPlanStep ? 'pt-10 sm:pt-4' : 'pt-4 pr-16 sm:pt-6 sm:pr-20',
 								)}
 							>
 								<div className="flex min-h-9 items-center justify-between gap-2 sm:gap-3">

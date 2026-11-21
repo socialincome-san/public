@@ -18,9 +18,11 @@ const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
 type Props = {
 	cadence: Cadence;
 	communityStats: ContributorCommunityStats | null;
+	// The plan step lists these benefits under its button already
+	showBenefits: boolean;
 };
 
-export const DonationImpactPanel = ({ cadence, communityStats }: Props) => {
+export const DonationImpactPanel = ({ cadence, communityStats, showBenefits }: Props) => {
 	const t = useTranslations('donation-wizard');
 	const language = useLocale();
 	const isSwissVisitor = useIsSwissVisitor();
@@ -34,9 +36,9 @@ export const DonationImpactPanel = ({ cadence, communityStats }: Props) => {
 	];
 
 	return (
-		<div className="flex w-full flex-col gap-5 md:gap-6 md:px-6 md:pt-5">
-			<h3 className="text-left text-lg leading-none font-medium md:text-xl">{t('impact.title')}</h3>
-			{checklist.length > 0 ? (
+		<div className={cn('flex w-full flex-col gap-5 md:gap-6 md:px-6', showBenefits && 'md:pt-5')}>
+			{showBenefits ? <h3 className="text-left text-lg leading-none font-medium md:text-xl">{t('impact.title')}</h3> : null}
+			{showBenefits && checklist.length > 0 ? (
 				<ul className="flex flex-col gap-4">
 					{checklist.map((item) => (
 						<li key={item} className={donationImpactChecklistItemClass}>
@@ -46,7 +48,7 @@ export const DonationImpactPanel = ({ cadence, communityStats }: Props) => {
 					))}
 				</ul>
 			) : null}
-			<div className="border-border flex flex-col border-t">
+			<div className={cn('border-border flex flex-col', showBenefits && 'border-t')}>
 				{isSwissVisitor && (
 					<a
 						href={ZEWO_HOMEPAGE_URL}
