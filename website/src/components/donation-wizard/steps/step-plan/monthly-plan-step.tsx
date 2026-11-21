@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { selectMonthlyPlanView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
-import { PlanBenefits } from './plan-benefits';
 import { PlanTileImpact } from './plan-tile-impact';
 
 export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
@@ -37,7 +36,7 @@ export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 				/>
 			</div>
 
-			<div className="flex flex-col gap-6">
+			<div>
 				<Button
 					type="button"
 					fullWidth
@@ -46,7 +45,6 @@ export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 				>
 					{t('stepPlan.choose-payment')}
 				</Button>
-				<PlanBenefits context={state.context} cancelable />
 			</div>
 		</div>
 	);

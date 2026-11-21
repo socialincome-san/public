@@ -1,0 +1,62 @@
+'use client';
+
+import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
+import { OUTFLOW_REACH_PERCENT } from '@/components/outflows/outflows-spend';
+import { ImpactPaymentLogos } from '@/components/payment-logos/impact-payment-logos';
+import { useIsSwissVisitor } from '@/lib/geo/visitor-country';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { CertificationBadge } from '@socialincome/design-system/data-display/certification-badge/certification-badge';
+import { CheckList } from '@socialincome/design-system/data-display/check-list/check-list';
+import { Separator } from '@socialincome/design-system/data-display/separator/separator';
+import { useLocale, useTranslations } from 'next-intl';
+import { getSupportersImpactLabel } from '../../utils/community-stats';
+import { getDonationExplainerVideo } from '../../utils/donation-explainer-video';
+import type { DonationWizardContext } from '../../wizard/donation-wizard-context';
+import { ZEWO_NPO_DETAIL_URL } from '../step-amount/donation-amount-fields';
+
+type Props = {
+	context: DonationWizardContext;
+};
+
+export const PlanInfoCard = ({ context }: Props) => {
+	const t = useTranslations('donation-wizard');
+	const language = useLocale();
+	const isSwissVisitor = useIsSwissVisitor();
+	const explainerVideo = getDonationExplainerVideo(language);
+	const whyOnePercent = t('impact.why-one-percent');
+	const supporters = getSupportersImpactLabel(t, language, context.communityStats);
+	const cancelable = context.cadence === 'monthly' || context.oneTimePlanChoice === 'monthly-half';
+
+	return (
+		<Card padding="compact" elevation="flat">
+			<div className="flex flex-col gap-5">
+				<CheckList
+					items={[
+						...(cancelable ? [t('impact.cancel-anytime')] : []),
+						t('calculator.reach', { percent: OUTFLOW_REACH_PERCENT }),
+						...(supporters ? [supporters] : []),
+					]}
+				/>
+				<Separator />
+				<div className="flex flex-col gap-4">
+					{isSwissVisitor ? (
+						<CertificationBadge label={t('impact.zewo')} imageSrc="/assets/zewo.svg" href={ZEWO_NPO_DETAIL_URL} />
+					) : null}
+					<ExplainerVideoTrigger
+						layout="inline"
+						label={whyOnePercent}
+						embedUrl={explainerVideo.embedUrl}
+						thumbnailSrc={explainerVideo.thumbnailSrc}
+						thumbnailAlt={whyOnePercent}
+						dialogTitle={whyOnePercent}
+					/>
+				</div>
+				<Separator />
+				<div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm">
+					{t('impact.pay-with')}
+					<ImpactPaymentLogos />
+				</div>
+			</div>
+		</Card>
+	);
+};
