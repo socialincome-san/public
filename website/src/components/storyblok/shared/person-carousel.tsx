@@ -13,6 +13,7 @@ import {
 } from '@socialincome/design-system/data-display/carousel/carousel';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
+import { useTranslations } from 'next-intl';
 
 type PersonCarouselSidebar = {
 	title?: string;
@@ -41,6 +42,7 @@ export const PersonCarousel = ({
 }: Props) => {
 	const hasSidebar = Boolean(sidebar?.title ?? sidebar?.heading ?? sidebar?.description);
 	const isSmall = size === 'small';
+	const t = useTranslations('website-common');
 
 	if (!persons.length) {
 		return null;
@@ -70,7 +72,7 @@ export const PersonCarousel = ({
 							</CarouselItem>
 						))}
 					</CarouselContent>
-					<CarouselScrollNextButton aria-label="Show next person" />
+					<CarouselScrollNextButton aria-label={t('countries-page.person-carousel-next-button-aria')} />
 				</Carousel>
 			</div>
 		</div>
