@@ -22,6 +22,7 @@ const mockGetStoryblokAsset = jest.fn();
 const mockDownloadStoryblokAssetBuffer = jest.fn();
 const mockDeleteStoryblokAsset = jest.fn();
 const mockDeleteStoryblokStory = jest.fn();
+const mockNotifyStaffOfCampaignCreated = jest.fn();
 
 jest.mock('@/integrations/turnstile/turnstile.integration', () => ({
 	verifyTurnstileToken: mockVerifyTurnstileToken,
@@ -29,6 +30,10 @@ jest.mock('@/integrations/turnstile/turnstile.integration', () => ({
 
 jest.mock('@/modules/programs/program-public-submission.service', () => ({
 	isProgramEligibleForPublicSubmission: mockIsProgramEligibleForPublicSubmission,
+}));
+
+jest.mock('./campaign-notification.service', () => ({
+	notifyStaffOfCampaignCreated: mockNotifyStaffOfCampaignCreated,
 }));
 
 jest.mock('./campaign.repository.read', () => ({
@@ -192,6 +197,9 @@ describe('submitCampaign', () => {
 				quote: 'Thank you for your support!',
 			}),
 		);
+		expect(mockNotifyStaffOfCampaignCreated).toHaveBeenCalledWith(
+			expect.objectContaining({ id: 'campaign-1', slug: 'my-campaign', title: 'My Campaign', hasAccount: false }),
+		);
 	});
 
 	test('submit connects contributor when contributorId is provided', async () => {
@@ -203,6 +211,7 @@ describe('submitCampaign', () => {
 		}
 		expect(mockCreateCampaign).toHaveBeenCalledWith(guestAudit, expect.objectContaining({ contributorId: 'contributor-1' }));
 		expect(mockCreateCampaignPending).not.toHaveBeenCalled();
+		expect(mockNotifyStaffOfCampaignCreated).toHaveBeenCalledWith(expect.objectContaining({ hasAccount: true }));
 	});
 
 	test('submit omits contributor connect when contributorId is null', async () => {
@@ -301,6 +310,7 @@ describe('submitCampaign', () => {
 		expect(mockDeleteStoryblokAsset).toHaveBeenCalledWith(10);
 		expect(mockDeleteStoryblokAsset).toHaveBeenCalledWith(11);
 		expect(mockDeleteCampaign).toHaveBeenCalledWith(guestAudit, ['campaign-1']);
+		expect(mockNotifyStaffOfCampaignCreated).not.toHaveBeenCalled();
 	});
 
 	test('submit cleans up successful uploads when a parallel Storyblok upload fails', async () => {

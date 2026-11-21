@@ -8,7 +8,10 @@ const mockUpdatePublishedCampaignStory = jest.fn<Promise<unknown>, [number, Reco
 const mockUploadStoryblokAsset = jest.fn();
 const mockGetStoryblokAsset = jest.fn();
 const mockDeleteStoryblokAsset = jest.fn();
-const mockSendMail = jest.fn<Promise<unknown>, [{ to: string[]; subject: string; text: string }]>();
+const mockSendNotification = jest.fn<
+	Promise<unknown>,
+	[{ type: string; campaignId?: string; data: { changedFields: string[]; hadUnpublishedChanges: boolean } }]
+>();
 
 jest.mock('./campaign.repository.read', () => ({
 	findCampaignForEdit: mockFindCampaignForEdit,
@@ -31,7 +34,7 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 }));
 
 jest.mock('@/modules/mail/mail.service', () => ({
-	sendMail: mockSendMail,
+	sendNotification: mockSendNotification,
 }));
 
 jest.mock('@/integrations/storyblok/storyblok-management.integration', () => ({
@@ -100,7 +103,6 @@ const keepImages = {
 describe('updateOwnCampaign', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		process.env.CAMPAIGN_EDIT_NOTIFICATION_RECIPIENTS = 'staff@example.org';
 		mockFindCampaignForEdit.mockResolvedValue({
 			id: 'campaign-1',
 			slug: 'my-campaign',
@@ -112,7 +114,7 @@ describe('updateOwnCampaign', () => {
 		mockGetCampaignStory.mockResolvedValue({ success: true, data: { storyId: 42, content: storyContent } });
 		mockUpdatePublishedCampaignStory.mockResolvedValue({ success: true, data: { allLanguagesPublished: true } });
 		mockUpdateCampaignDetails.mockResolvedValue({ id: 'campaign-1' });
-		mockSendMail.mockResolvedValue({ success: true, data: undefined });
+		mockSendNotification.mockResolvedValue({ success: true, data: { sent: 1, skipped: 0 } });
 		mockGetStoryblokAsset.mockResolvedValue({ success: true, data: null });
 	});
 
@@ -129,7 +131,7 @@ describe('updateOwnCampaign', () => {
 
 		expect(result.success).toBe(true);
 		expect(mockUpdatePublishedCampaignStory).not.toHaveBeenCalled();
-		expect(mockSendMail).not.toHaveBeenCalled();
+		expect(mockSendNotification).not.toHaveBeenCalled();
 	});
 
 	test('keeps fields only staff edit and notifies staff', async () => {
@@ -157,9 +159,10 @@ describe('updateOwnCampaign', () => {
 			currency: 'CHF',
 			endDate,
 		});
-		const mail = mockSendMail.mock.calls[0]?.[0];
-		expect(mail?.to).toEqual(['staff@example.org']);
-		expect(mail?.text).toContain('Changed: title, profilePicture, goal');
+		const mail = mockSendNotification.mock.calls[0]?.[0];
+		expect(mail?.type).toBe('campaign-edited');
+		expect(mail?.campaignId).toBe('campaign-1');
+		expect(mail?.data.changedFields).toEqual(['title', 'profilePicture', 'goal']);
 	});
 
 	test('deletes a removed image only from the campaign asset folder', async () => {
@@ -214,7 +217,7 @@ describe('updateOwnCampaign', () => {
 			currency: 'CHF',
 			endDate,
 		});
-		expect(mockSendMail).not.toHaveBeenCalled();
+		expect(mockSendNotification).not.toHaveBeenCalled();
 	});
 
 	test('leaves the database untouched when only story fields change', async () => {
@@ -260,7 +263,7 @@ describe('updateOwnCampaign', () => {
 
 		await updateOwnCampaign(audit, 'contributor-1', 'campaign-1', { ...fields, title: 'New title' }, keepImages);
 
-		expect(mockSendMail.mock.calls[0]?.[0].text).toContain('unpublished changes');
+		expect(mockSendNotification.mock.calls[0]?.[0].data.hadUnpublishedChanges).toBe(true);
 	});
 
 	test('keeps an asset that another image field still uses', async () => {

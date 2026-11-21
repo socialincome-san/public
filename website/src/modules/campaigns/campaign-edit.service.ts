@@ -9,13 +9,10 @@ import {
 } from '@/integrations/storyblok/storyblok-management.integration';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
-import { defaultCurrency, defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
-import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
-import { sendMail } from '@/modules/mail/mail.service';
 import { getCampaignBySlug } from '@/modules/storyblok-content/storyblok-content.cache';
 import { format } from 'date-fns';
+import { notifyStaffOfCampaignEdit } from './campaign-notification.service';
 import { resolveImage } from './campaign-submission.service';
 import * as campaignRepository from './campaign.repository.read';
 import * as campaignWriteRepository from './campaign.repository.write';
@@ -216,43 +213,6 @@ const listChangedFields = (
 	...(['goal', 'currency', 'endDate'] as const).filter((field) => before[field] !== after[field]),
 ];
 
-const getEditNotificationRecipients = () =>
-	(process.env.CAMPAIGN_EDIT_NOTIFICATION_RECIPIENTS ?? '')
-		.split(',')
-		.map((recipient) => recipient.trim())
-		.filter(Boolean);
-
-const notifyStaffOfCampaignEdit = async (
-	audit: AuditContext,
-	campaign: { slug: string; title: string; storyId: number; hadUnpublishedChanges: boolean },
-	changedFields: string[],
-) => {
-	const recipients = getEditNotificationRecipients();
-	if (recipients.length === 0) {
-		console.warn('Campaign edit notification recipients not set', { slug: campaign.slug });
-
-		return;
-	}
-
-	const baseUrl = process.env.BASE_URL?.replace(TRAILING_SLASHES_REGEX, '') ?? '';
-	const campaignUrl = `${baseUrl}${getWebsitePublicPath(defaultLanguage, defaultCurrency, `campaigns/${campaign.slug}`)}`;
-	const storyblokUrl = `https://app.storyblok.com/#/me/spaces/${campaignSubmissionConfig.storyblokSpaceId}/stories/0/0/${campaign.storyId}`;
-	const text = `Hi,
-
-${audit.actor.name ?? audit.actor.id} edited the campaign "${campaign.title}". The changes are live.
-
-Changed: ${changedFields.join(', ')}
-${campaign.hadUnpublishedChanges ? '\nThe story had unpublished changes in Storyblok, which are now published too.\n' : ''}
-Campaign: ${campaignUrl}
-Storyblok: ${storyblokUrl}
-`;
-
-	const mailResult = await sendMail({ to: recipients, subject: `Campaign edited: ${campaign.title}`, text });
-	if (!mailResult.success) {
-		console.error('Campaign edit notification failed', { slug: campaign.slug, error: mailResult.error });
-	}
-};
-
 // Assets uploaded for campaigns live in their own folder; anything else may be shared with other content.
 const deleteReplacedCampaignAssets = async (assetIds: number[]) => {
 	await Promise.all(
@@ -377,11 +337,15 @@ export const updateOwnCampaign = async (
 		await Promise.all([
 			// A language that kept its previous version may still show the replaced images.
 			updateResult.data.allLanguagesPublished ? deleteReplacedCampaignAssets(replacedAssetIds) : Promise.resolve(),
-			notifyStaffOfCampaignEdit(
-				audit,
-				{ slug: campaign.slug, title: updatedContent.title, storyId, hadUnpublishedChanges: hasUnpublishedChanges },
+			notifyStaffOfCampaignEdit({
+				id: campaign.id,
+				slug: campaign.slug,
+				title: updatedContent.title,
+				storyId,
+				editorName: audit.actor.name ?? audit.actor.id,
 				changedFields,
-			),
+				hadUnpublishedChanges: hasUnpublishedChanges,
+			}),
 		]);
 
 		return resultOk({ slug: campaign.slug });

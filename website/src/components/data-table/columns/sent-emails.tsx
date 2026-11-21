@@ -18,6 +18,16 @@ export const makeSentEmailColumns = (): ColumnDef<SentEmailTableViewRow>[] => [
 		cell: (ctx) => <TextCell ctx={ctx} />,
 	},
 	{
+		accessorKey: 'type',
+		header: (ctx) => <SortableHeader ctx={ctx}>Type</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
+		accessorKey: 'status',
+		header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
 		accessorKey: 'subject',
 		header: (ctx) => <SortableHeader ctx={ctx}>Subject</SortableHeader>,
 		cell: (ctx) => <TextCell ctx={ctx} />,
@@ -25,6 +35,11 @@ export const makeSentEmailColumns = (): ColumnDef<SentEmailTableViewRow>[] => [
 	{
 		accessorKey: 'body',
 		header: 'Body',
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
+		accessorKey: 'errorMessage',
+		header: 'Error',
 		cell: (ctx) => <TextCell ctx={ctx} />,
 	},
 	{

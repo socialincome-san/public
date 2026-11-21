@@ -701,20 +701,41 @@ model PaymentEvent {
   @@map("payment_event")
 }
 
+enum SentEmailStatus {
+  queued
+  sent
+  failed
+  deferred
+  delivered
+  opened
+  bounced
+  dropped
+  spam_reported
+}
+
 model SentEmail {
-  id        String   @id @default(cuid()) @map("id")
-  toEmail   String   @map("email_address")
-  fromEmail String   @map("from_email")
-  contactId String?  @map("contact_id")
-  contact   Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
-  subject   String   @map("subject")
-  body      String   @map("body")
-  sentAt    DateTime @default(now()) @map("sent_at") @db.Timestamptz(3)
+  id                String          @id @default(cuid()) @map("id")
+  toEmail           String          @map("email_address")
+  fromEmail         String          @map("from_email")
+  contactId         String?         @map("contact_id")
+  contact           Contact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  subject           String          @map("subject")
+  body              String          @map("body")
+  sentAt            DateTime        @default(now()) @map("sent_at") @db.Timestamptz(3)
+  type              String?         @map("type")
+  status            SentEmailStatus @default(sent) @map("status")
+  statusUpdatedAt   DateTime?       @map("status_updated_at") @db.Timestamptz(3)
+  errorMessage      String?         @map("error_message")
+  providerMessageId String?         @map("provider_message_id")
+  idempotencyKey    String?         @unique @map("idempotency_key")
+  campaignId        String?         @map("campaign_id")
+  campaign          Campaign?       @relation(fields: [campaignId], references: [id], onDelete: SetNull)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@index([sentAt])
+  @@index([campaignId])
   @@map("sent_email")
 }
 
@@ -968,6 +989,7 @@ model Campaign {
   contributions    Contribution[]
   subscriptions    Subscription[]
   campaignPendings CampaignPending[]
+  sentEmails       SentEmail[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
