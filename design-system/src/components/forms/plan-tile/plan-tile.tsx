@@ -22,7 +22,7 @@ export const PlanTile = ({ label, amount, caption, footer, selected, onSelect, t
 	>
 		<span
 			className={cn(
-				'bg-card flex flex-1 flex-col rounded-2xl px-4 pt-4 pb-4 text-left transition-shadow',
+				'bg-card flex flex-1 flex-col rounded-2xl px-4 pt-4 pb-4 text-left shadow-sm transition-shadow',
 				selected ? 'ring-primary ring-2' : 'ring-input/60 ring-1',
 			)}
 		>
