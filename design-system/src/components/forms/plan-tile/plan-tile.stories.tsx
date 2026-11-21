@@ -11,7 +11,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'A selectable plan: label, large amount and caption on a white card, with a tinted footer below it, e.g. for the impact of the plan. Selecting only highlights the white card. Place two side by side for a single choice.',
+					'A selectable plan: a label flag and a radio on top, a large amount and caption on a white card, with a tinted footer below it, e.g. for the impact of the plan. Selecting only highlights the white card. Place two side by side for a single choice.',
 			},
 		},
 	},
