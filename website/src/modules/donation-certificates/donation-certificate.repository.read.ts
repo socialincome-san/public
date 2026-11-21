@@ -65,6 +65,24 @@ export const findPaginatedContributorDonationCertificates = async (
 	return { certificates, totalCount };
 };
 
+export const findDonationCertificateContributorsForYear = (year: number) =>
+	prisma.donationCertificate.findMany({
+		where: { year },
+		distinct: ['contributorId'],
+		select: {
+			contributor: {
+				select: {
+					contact: {
+						select: {
+							firstName: true,
+							email: true,
+						},
+					},
+				},
+			},
+		},
+	});
+
 const buildDonationCertificateWhere = (
 	programIds: string[],
 	contributorId: string | undefined,
