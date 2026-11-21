@@ -41,10 +41,6 @@ export const getDonationWizardLayout = (step: ActiveDonationWizardStep | null) =
 
 export const getDonationWizardCardClass = (step: ActiveDonationWizardStep) => getDonationWizardLayout(step).cardClass;
 
-export const donationImpactChecklistItemClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
-
-export const donationImpactRowClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
-
 /**
  * Size of the generic amount card in the desktop hero slot (lg+), measured in Chrome, English, default form state.
  * The generic card sizes itself to its content (the income row drives the width, so FR renders ~385px and DE hits

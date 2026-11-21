@@ -134,7 +134,6 @@
 		}
 	},
 	"impact": {
-		"title": "Direct cash to people in need",
 		"cancel-anytime": "Cancel anytime",
 		"supporters": "{supporterCount} supporters from {countryCount} countries",
 		"supporters-no-countries": "{supporterCount} supporters worldwide",

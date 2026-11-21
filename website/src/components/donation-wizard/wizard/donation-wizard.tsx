@@ -2,8 +2,7 @@
 
 import { cn } from '@socialincome/design-system/cn';
 import type { ReactNode } from 'react';
-import { DonationImpactPanel } from '../shared/donation-impact-panel';
-import { PlanInfoCard } from '../steps/step-plan/plan-info-card';
+import { DonationInfoCard } from '../shared/donation-info-card';
 import { QrContactHintsPanel } from '../steps/step-qr-contact/qr-contact-hints-panel';
 import { selectWizardShellView } from './donation-machine-selectors';
 import { DonationSteps } from './donation-steps';
@@ -19,7 +18,7 @@ export const DonationWizard = ({ state, send, header }: DonationWizardStepProps 
 				<div
 					className={cn(
 						'mx-auto flex w-full max-w-[890px] flex-col items-stretch gap-8 md:flex-row',
-						shell.isPlanStep && 'gap-14 md:gap-8',
+						shell.showImpactPanel && 'gap-14 md:gap-8',
 						!shell.isPlanStep && 'md:items-start',
 					)}
 				>
@@ -28,11 +27,7 @@ export const DonationWizard = ({ state, send, header }: DonationWizardStepProps 
 					</div>
 					{shell.showImpactPanel && (
 						<div className="w-full min-w-0 md:flex-1">
-							{shell.isPlanStep ? (
-								<PlanInfoCard context={state.context} />
-							) : (
-								<DonationImpactPanel cadence={shell.cadence} communityStats={shell.communityStats} />
-							)}
+							<DonationInfoCard context={state.context} />
 						</div>
 					)}
 					{shell.showQrHintsPanel && (

@@ -9,16 +9,16 @@ import { CertificationBadge } from '@socialincome/design-system/data-display/cer
 import { CheckList } from '@socialincome/design-system/data-display/check-list/check-list';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
 import { useLocale, useTranslations } from 'next-intl';
-import { getSupportersImpactLabel } from '../../utils/community-stats';
-import { getDonationExplainerVideo } from '../../utils/donation-explainer-video';
-import type { DonationWizardContext } from '../../wizard/donation-wizard-context';
-import { ZEWO_NPO_DETAIL_URL } from '../step-amount/donation-amount-fields';
+import { ZEWO_NPO_DETAIL_URL } from '../steps/step-amount/donation-amount-fields';
+import { getSupportersImpactLabel } from '../utils/community-stats';
+import { getDonationExplainerVideo } from '../utils/donation-explainer-video';
+import type { DonationWizardContext } from '../wizard/donation-wizard-context';
 
 type Props = {
 	context: DonationWizardContext;
 };
 
-export const PlanInfoCard = ({ context }: Props) => {
+export const DonationInfoCard = ({ context }: Props) => {
 	const t = useTranslations('donation-wizard');
 	const language = useLocale();
 	const isSwissVisitor = useIsSwissVisitor();
