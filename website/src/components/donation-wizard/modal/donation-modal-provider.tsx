@@ -115,6 +115,15 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
 	const { isPlanStep } = getDonationWizardLayout(getActiveWizardStep(state));
 	const canGoBack = state.can({ type: 'BACK' });
+	const title = <DialogTitle size="xl">{t('modal.title')}</DialogTitle>;
+	const currencySelect = canChangeCurrency ? (
+		<div className="w-fit shrink-0">
+			<DonationCurrencySelect
+				value={state.context.currency}
+				onChange={(currency) => send({ type: 'SET_CURRENCY', value: currency })}
+			/>
+		</div>
+	) : null;
 	const cadenceOptions = [
 		{ value: 'monthly', label: t('stepAmount.monthly') },
 		{ value: 'one-time', label: t('stepAmount.one-time') },
@@ -193,6 +202,8 @@ export const DonationModalProvider = ({ children }: Props) => {
 							/>
 						) : undefined
 					}
+					toolbarStart={showWizardHeader ? title : undefined}
+					toolbarEnd={showWizardHeader ? currencySelect : undefined}
 					data-testid="donation-wizard-modal"
 					data-clarity-mask="true"
 				>
@@ -205,30 +216,29 @@ export const DonationModalProvider = ({ children }: Props) => {
 						</>
 					) : (
 						<>
-							<div
-								className={cn(
-									'flex shrink-0 flex-col gap-1 px-4 pb-5 sm:px-6 sm:pb-4 md:pl-9',
-									canGoBack || isPlanStep ? 'pt-10 sm:pt-4' : 'pt-4 pr-16 sm:pt-6 sm:pr-20',
-								)}
-							>
-								<div className="flex min-h-9 items-center justify-between gap-2 sm:gap-3">
-									<DialogTitle size="xl">{t('modal.title')}</DialogTitle>
-									{canChangeCurrency ? (
-										<div className="w-fit shrink-0">
-											<DonationCurrencySelect
-												value={state.context.currency}
-												onChange={(currency) => send({ type: 'SET_CURRENCY', value: currency })}
-											/>
+							<DonationWizard
+								state={state}
+								send={send}
+								header={
+									// Scrolls with the content in the drawer; the centered dialog shows it in the toolbar
+									<div
+										className={cn(
+											'flex flex-col gap-1 pb-5 sm:pt-0 sm:pb-5',
+											canGoBack || isPlanStep ? 'pt-10' : 'pt-4 pr-12',
+										)}
+									>
+										<div className="flex min-h-9 items-center justify-between gap-2 sm:hidden">
+											{title}
+											{currencySelect}
 										</div>
-									) : null}
-								</div>
-								{campaignId && campaignTitle ? (
-									<p className="text-muted-foreground line-clamp-2 text-sm leading-snug font-normal">
-										{t('modal.campaign-for', { title: campaignTitle })}
-									</p>
-								) : null}
-							</div>
-							<DonationWizard state={state} send={send} />
+										{campaignId && campaignTitle ? (
+											<p className="text-muted-foreground line-clamp-2 text-sm leading-snug font-normal sm:pt-4">
+												{t('modal.campaign-for', { title: campaignTitle })}
+											</p>
+										) : null}
+									</div>
+								}
+							/>
 						</>
 					)}
 				</DialogContent>

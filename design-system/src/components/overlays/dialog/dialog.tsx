@@ -137,6 +137,9 @@ type DialogContentProps = WithoutClassName<React.ComponentPropsWithoutRef<typeof
 	backLabel?: string;
 	/** Centered between the back and close buttons, e.g. a segmented toggle. Also turns on the toolbar. */
 	toolbar?: React.ReactNode;
+	/** Next to the back button and the close button, shown only in the centered dialog, e.g. a title and a currency select. */
+	toolbarStart?: React.ReactNode;
+	toolbarEnd?: React.ReactNode;
 };
 
 const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Content>, DialogContentProps>(
@@ -152,6 +155,8 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 			onBack,
 			backLabel = 'Back',
 			toolbar,
+			toolbarStart,
+			toolbarEnd,
 			onInteractOutside,
 			onEscapeKeyDown,
 			onOpenAutoFocus,
@@ -161,7 +166,9 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 	) => {
 		const { isDrawer, dismissible } = React.use(DialogModeContext);
 		const showClose = dismissible && !hideCloseButton;
-		const hasToolbar = onBack !== undefined || toolbar !== undefined;
+		const sideSlots = isDrawer ? null : { start: toolbarStart, end: toolbarEnd };
+		const hasToolbar =
+			onBack !== undefined || toolbar !== undefined || sideSlots?.start !== undefined || sideSlots?.end !== undefined;
 		const close = (
 			<DialogPrimitive.Close className={roundButtonClassName}>
 				<X aria-hidden />
@@ -170,17 +177,21 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 		);
 		const closeButton = showClose && !hasToolbar && <div className={closeButtonPositionClassName}>{close}</div>;
 		const toolbarRow = hasToolbar && (
-			<div className="-mx-(--dialog-px) grid shrink-0 grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2 px-4 pt-4 sm:px-6 sm:pt-6">
-				{onBack ? (
-					<button type="button" onClick={onBack} className={roundButtonClassName} data-testid="dialog-back">
-						<ArrowLeft aria-hidden />
-						<span className="sr-only">{backLabel}</span>
-					</button>
-				) : (
-					<span />
-				)}
+			<div className="-mx-(--dialog-px) grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 pt-4 sm:px-6 sm:pt-6">
+				<div className="flex min-w-0 items-center gap-4">
+					{onBack ? (
+						<button type="button" onClick={onBack} className={roundButtonClassName} data-testid="dialog-back">
+							<ArrowLeft aria-hidden />
+							<span className="sr-only">{backLabel}</span>
+						</button>
+					) : null}
+					{sideSlots?.start}
+				</div>
 				<div className="flex min-w-0 justify-center">{toolbar}</div>
-				{showClose ? close : <span />}
+				<div className="flex min-w-0 items-center justify-end gap-3">
+					{sideSlots?.end}
+					{showClose ? close : null}
+				</div>
 			</div>
 		);
 

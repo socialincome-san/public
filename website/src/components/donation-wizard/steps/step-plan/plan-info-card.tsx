@@ -29,11 +29,12 @@ export const PlanInfoCard = ({ context }: Props) => {
 
 	return (
 		<Card
-			padding="compact"
+			padding="sm"
 			elevation="flat"
+			fullHeight
 			footer={
 				<>
-					<span className="flex flex-wrap items-center gap-3">
+					<span className="flex flex-wrap items-center gap-2">
 						{t('impact.pay-with')}
 						<ImpactPaymentLogos />
 					</span>
@@ -43,8 +44,9 @@ export const PlanInfoCard = ({ context }: Props) => {
 				</>
 			}
 		>
-			<div className="flex flex-col gap-5">
+			<div className="flex h-full flex-col justify-between gap-3">
 				<CheckList
+					size="sm"
 					items={[
 						...(cancelable ? [t('impact.cancel-anytime')] : []),
 						t('calculator.reach', { percent: OUTFLOW_REACH_PERCENT }),
@@ -53,7 +55,7 @@ export const PlanInfoCard = ({ context }: Props) => {
 				/>
 				<Separator />
 				<ExplainerVideoTrigger
-					layout="inline"
+					layout="compact"
 					label={whyOnePercent}
 					embedUrl={explainerVideo.embedUrl}
 					thumbnailSrc={explainerVideo.thumbnailSrc}

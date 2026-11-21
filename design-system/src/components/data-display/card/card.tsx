@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 
 const cardVariants = cva('relative overflow-hidden rounded-3xl transition-all', {
@@ -7,6 +8,7 @@ const cardVariants = cva('relative overflow-hidden rounded-3xl transition-all', 
 		padding: {
 			default: 'px-6 py-8 sm:p-10',
 			compact: 'p-6',
+			sm: 'p-4',
 			none: '',
 		},
 		elevation: {
@@ -49,9 +51,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 		}
 
 		return (
-			<div className="bg-secondary overflow-hidden rounded-3xl">
-				{card}
-				<div className="text-foreground flex flex-wrap items-center gap-x-6 gap-y-3 px-6 py-4 text-sm font-medium">
+			<div className={cn('bg-secondary flex flex-col overflow-hidden rounded-3xl', fullHeight && 'h-full')}>
+				<div className="flex flex-1 flex-col [&>*]:flex-1">{card}</div>
+				<div
+					className={cn(
+						'text-foreground flex flex-wrap items-center gap-x-6 gap-y-3 font-medium',
+						padding === 'sm' ? 'px-4 py-3 text-xs' : 'px-6 py-4 text-sm',
+					)}
+				>
 					{footer}
 				</div>
 			</div>
