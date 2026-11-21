@@ -19,6 +19,7 @@ export const DonationWizard = ({ state, send, header }: DonationWizardStepProps 
 				<div
 					className={cn(
 						'mx-auto flex w-full max-w-[890px] flex-col items-stretch gap-8 md:flex-row',
+						shell.isPlanStep && 'gap-14 md:gap-8',
 						!shell.isPlanStep && 'md:items-start',
 					)}
 				>
