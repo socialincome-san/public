@@ -173,12 +173,6 @@ export const isWizardQrCurrencySupported = (currency: string): boolean =>
 const resolveWizardPaymentMethod = (paymentMethod: PaymentMethod, currency: string): PaymentMethod =>
 	paymentMethod === 'qr' && !isWizardQrCurrencySupported(currency) ? 'online' : paymentMethod;
 
-export const selectCadenceSwitchView = (currentCadence: Cadence) => ({
-	targetCadence: currentCadence === 'monthly' ? ('one-time' as const) : ('monthly' as const),
-	labelKey:
-		currentCadence === 'monthly' ? ('stepPlan.switch-to-one-time' as const) : ('stepPlan.switch-to-monthly' as const),
-});
-
 export const selectWizardShellView = (state: DonationWizardState) => {
 	const activeStep = getActiveWizardStep(state);
 

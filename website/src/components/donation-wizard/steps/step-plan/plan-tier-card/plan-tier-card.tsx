@@ -1,8 +1,9 @@
 'use client';
 
-import { SelectableCard } from '@socialincome/design-system/forms/selectable-card/selectable-card';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { PlanOption } from '@socialincome/design-system/forms/plan-option/plan-option';
+import { Heart } from 'lucide-react';
 import type { PlanTierBenefit } from './plan-tier-benefit';
-import { PlanTierCardContent } from './plan-tier-card-content';
 
 type Props = {
 	amount: number;
@@ -27,19 +28,23 @@ export const PlanTierCard = ({
 	benefits,
 	onSelect,
 }: Props) => (
-	<SelectableCard
+	<PlanOption
+		amount={`${currency} ${amount}`}
+		suffix={perMonthLabel}
+		badge={
+			planLabel ? (
+				<Badge variant={badgeVariant === 'preferred' ? 'verified' : 'default'} size="sm">
+					{planLabel}
+					{badgeVariant === 'plan' &&
+						Array.from({ length: heartCount }).map((_, index) => (
+							<Heart key={index} className="size-2 fill-current" aria-hidden />
+						))}
+				</Badge>
+			) : undefined
+		}
+		items={benefits}
 		selected={selected}
 		onSelect={onSelect}
 		testId={heartCount === 2 ? 'donation-wizard-plan-tier-2x' : 'donation-wizard-plan-tier-1x'}
-	>
-		<PlanTierCardContent
-			amount={amount}
-			currency={currency}
-			perMonthLabel={perMonthLabel}
-			planLabel={planLabel}
-			badgeVariant={badgeVariant}
-			heartCount={heartCount}
-			benefits={benefits}
-		/>
-	</SelectableCard>
+	/>
 );

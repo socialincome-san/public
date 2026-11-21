@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { X } from 'lucide-react';
+import { ArrowLeft, X } from 'lucide-react';
 import * as React from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 
@@ -119,8 +119,10 @@ const paddingVariants = cva('', {
 	},
 });
 
-const closeButtonClassName =
-	'ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden focus-visible:ring-[3px] disabled:pointer-events-none sm:top-6 sm:right-6';
+const roundButtonClassName =
+	'border-input/60 bg-background text-foreground hover:bg-muted focus-visible:ring-ring grid size-10 shrink-0 place-items-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:outline-hidden [&_svg]:size-5';
+
+const closeButtonPositionClassName = 'absolute top-4 right-4 sm:top-6 sm:right-6';
 
 type DialogContentProps = WithoutClassName<React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>> & {
 	size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -130,6 +132,11 @@ type DialogContentProps = WithoutClassName<React.ComponentPropsWithoutRef<typeof
 	/** For confirmations whose footer already offers a way out. */
 	hideCloseButton?: boolean;
 	closeLabel?: string;
+	/** Shows a back button in a toolbar above the content, for dialogs with steps. */
+	onBack?: () => void;
+	backLabel?: string;
+	/** Centered between the back and close buttons, e.g. a segmented toggle. Also turns on the toolbar. */
+	toolbar?: React.ReactNode;
 };
 
 const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Content>, DialogContentProps>(
@@ -142,6 +149,9 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 			height = 'auto',
 			hideCloseButton = false,
 			closeLabel = 'Close',
+			onBack,
+			backLabel = 'Back',
+			toolbar,
 			onInteractOutside,
 			onEscapeKeyDown,
 			onOpenAutoFocus,
@@ -150,11 +160,28 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 		ref,
 	) => {
 		const { isDrawer, dismissible } = React.use(DialogModeContext);
-		const closeButton = dismissible && !hideCloseButton && (
-			<DialogPrimitive.Close className={closeButtonClassName}>
-				<X className="h-6 w-6" aria-hidden />
+		const showClose = dismissible && !hideCloseButton;
+		const hasToolbar = onBack !== undefined || toolbar !== undefined;
+		const close = (
+			<DialogPrimitive.Close className={roundButtonClassName}>
+				<X aria-hidden />
 				<span className="sr-only">{closeLabel}</span>
 			</DialogPrimitive.Close>
+		);
+		const closeButton = showClose && !hasToolbar && <div className={closeButtonPositionClassName}>{close}</div>;
+		const toolbarRow = hasToolbar && (
+			<div className="-mx-(--dialog-px) grid shrink-0 grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2 px-4 pt-4 sm:px-6 sm:pt-6">
+				{onBack ? (
+					<button type="button" onClick={onBack} className={roundButtonClassName} data-testid="dialog-back">
+						<ArrowLeft aria-hidden />
+						<span className="sr-only">{backLabel}</span>
+					</button>
+				) : (
+					<span />
+				)}
+				<div className="flex min-w-0 justify-center">{toolbar}</div>
+				{showClose ? close : <span />}
+			</div>
 		);
 
 		if (isDrawer) {
@@ -176,7 +203,11 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 						}}
 						{...props}
 					>
-						{dismissible && <div aria-hidden className="bg-border mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full" />}
+						{/* Sits on the overlay above the drawer, so it stays visible on any drawer surface */}
+						{dismissible && (
+							<div aria-hidden className="absolute -top-5 left-1/2 h-1 w-16 -translate-x-1/2 rounded-full bg-white/90" />
+						)}
+						{toolbarRow}
 						{/* The drawer itself blocks touch scrolling for its swipe gesture, so the content scrolls in here */}
 						<div
 							className={cn('flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain', paddingVariants({ padding }))}
@@ -215,6 +246,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 					onOpenAutoFocus={onOpenAutoFocus}
 					{...props}
 				>
+					{toolbarRow}
 					{children}
 					{closeButton}
 				</DialogPrimitive.Content>
@@ -231,7 +263,7 @@ type DialogSectionProps = WithoutClassName<React.HTMLAttributes<HTMLDivElement>>
 
 const DialogHeader = ({ divided = true, ...props }: DialogSectionProps) => (
 	<div
-		className={cn('-mx-(--dialog-px) flex shrink-0 flex-col gap-1.5 px-6 pr-12 text-left', divided && 'border-b pb-6')}
+		className={cn('-mx-(--dialog-px) flex shrink-0 flex-col gap-1.5 px-6 pr-16 text-left', divided && 'border-b pb-6')}
 		{...props}
 	/>
 );
@@ -258,6 +290,7 @@ const dialogTitleVariants = cva('text-primary leading-snug font-medium tracking-
 		size: {
 			default: 'text-xl',
 			lg: 'text-xl sm:text-2xl',
+			xl: 'text-2xl',
 		},
 		visuallyHidden: {
 			true: 'sr-only',

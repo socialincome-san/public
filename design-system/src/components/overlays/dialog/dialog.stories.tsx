@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState, type ComponentProps } from 'react';
 
 import { Button } from '../../actions/button/button';
+import { SegmentedToggle } from '../../actions/segmented-toggle/segmented-toggle';
 import { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './dialog';
 
 const meta = {
@@ -12,7 +13,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'A centered dialog on desktop and a bottom drawer on mobile (below the `sm` breakpoint) that closes with a swipe down. `size` only sets the desktop width: `sm` for confirmations and short messages, `md` for forms and content, `lg` for editors, wizards and media, `xl` for workspaces such as image editors (with `height="full"`). Turn `dismissible` off while work is in flight, so nothing closes it halfway. Turn `drawerOnMobile` off when the content has its own drag gestures.',
+					'A centered dialog on desktop and a bottom drawer on mobile (below the `sm` breakpoint) that closes with a swipe down. `size` only sets the desktop width: `sm` for confirmations and short messages, `md` for forms and content, `lg` for editors, wizards and media, `xl` for workspaces such as image editors (with `height="full"`). Turn `dismissible` off while work is in flight, so nothing closes it halfway. Turn `drawerOnMobile` off when the content has its own drag gestures. Dialogs with steps pass `onBack` and, for a control such as a segmented toggle, `toolbar`: both turn on a toolbar with back and close buttons above the content.',
 			},
 		},
 	},
@@ -185,4 +186,38 @@ export const MobileDrawer: Story = {
 		viewport: { defaultViewport: 'mobile1' },
 	},
 	render: () => <ScrollingDialogExample />,
+};
+
+const cadenceOptions = [
+	{ value: 'monthly', label: 'Monthly' },
+	{ value: 'one-time', label: 'One-time' },
+] as const;
+
+const ToolbarDialogExample = () => {
+	const [open, setOpen] = useState(false);
+	const [cadence, setCadence] = useState('monthly');
+
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Open dialog</Button>
+			<Dialog open={open} onOpenChange={setOpen}>
+				<DialogContent
+					size="md"
+					onBack={() => setOpen(false)}
+					toolbar={<SegmentedToggle options={cadenceOptions} value={cadence} onValueChange={setCadence} />}
+				>
+					<DialogHeader divided={false}>
+						<DialogTitle>Donate</DialogTitle>
+					</DialogHeader>
+					<DialogFooter divided={false}>
+						<Button onClick={() => setOpen(false)}>Choose payment method</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</>
+	);
+};
+
+export const WithToolbar: Story = {
+	render: () => <ToolbarDialogExample />,
 };

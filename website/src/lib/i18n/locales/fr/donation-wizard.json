@@ -27,10 +27,6 @@
 		"above-maximum": "Au maximum {amount}"
 	},
 	"stepPlan": {
-		"monthly-title": "Don mensuel",
-		"one-time-title": "Don unique",
-		"switch-to-one-time": "Unique",
-		"switch-to-monthly": "Mensuel",
 		"upsell-subtitle": "La moitié du montant, chaque mois.\nCela nous aide encore plus.",
 		"upsell-preferred": "Recommandé",
 		"upsell-benefit-cancel": "Annulable à tout moment",

@@ -3,6 +3,8 @@
 import { trackEvent } from '@/lib/analytics/analytics';
 import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { getPaidStripeCheckoutDonationAction } from '@/modules/stripe-payments/stripe-payment.actions';
+import { SegmentedToggle } from '@socialincome/design-system/actions/segmented-toggle/segmented-toggle';
+import { cn } from '@socialincome/design-system/cn';
 import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useTranslations } from 'next-intl';
@@ -25,10 +27,12 @@ import {
 	STRIPE_CHECKOUT_SESSION_ID_PARAM,
 } from '../steps/step-stripe-checkout/stripe-checkout-return';
 import type { DonationAmountContext } from '../utils/donation-amount';
+import { getDonationWizardLayout } from '../utils/donation-wizard-layout';
 import { getDonationCompletedEvent, getDonationFunnelEvent } from '../wizard/donation-analytics';
 import { donationWizardMachine } from '../wizard/donation-machine';
 import { DonationSteps } from '../wizard/donation-steps';
 import { DonationWizard } from '../wizard/donation-wizard';
+import { getActiveWizardStep } from '../wizard/get-active-wizard-step';
 import type { DonationWizardSend } from '../wizard/types';
 
 type Props = {
@@ -109,6 +113,12 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const canChangeCurrency = state.hasTag('currencyEditable');
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
+	const { isPlanStep } = getDonationWizardLayout(getActiveWizardStep(state));
+	const canGoBack = state.can({ type: 'BACK' });
+	const cadenceOptions = [
+		{ value: 'monthly', label: t('stepAmount.monthly') },
+		{ value: 'one-time', label: t('stepAmount.one-time') },
+	] as const;
 
 	useEffect(() => {
 		const url = new URL(window.location.href);
@@ -166,8 +176,23 @@ export const DonationModalProvider = ({ children }: Props) => {
 			>
 				<DialogContent
 					size={isThankYou ? 'sm' : 'lg'}
-					surface="gradient"
 					padding="none"
+					onBack={showWizardHeader && canGoBack ? () => send({ type: 'BACK' }) : undefined}
+					backLabel={t('stepPlan.back')}
+					toolbar={
+						showWizardHeader && isPlanStep ? (
+							<SegmentedToggle
+								options={cadenceOptions}
+								value={state.context.cadence}
+								onValueChange={(value) => {
+									const option = cadenceOptions.find((cadence) => cadence.value === value);
+									if (option) {
+										send({ type: 'SET_CADENCE', value: option.value });
+									}
+								}}
+							/>
+						) : undefined
+					}
 					data-testid="donation-wizard-modal"
 					data-clarity-mask="true"
 				>
@@ -180,11 +205,16 @@ export const DonationModalProvider = ({ children }: Props) => {
 						</>
 					) : (
 						<>
-							<div className="flex shrink-0 flex-col gap-1 px-4 pt-4 pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
+							<div
+								className={cn(
+									'flex shrink-0 flex-col gap-1 px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-6 md:pl-9',
+									!canGoBack && !isPlanStep && 'pr-16 sm:pr-20',
+								)}
+							>
 								<div className="flex min-h-9 items-center justify-between gap-2 sm:gap-3">
-									<DialogTitle size="lg">{t('modal.title')}</DialogTitle>
+									<DialogTitle size="xl">{t('modal.title')}</DialogTitle>
 									{canChangeCurrency ? (
-										<div className="w-24 shrink-0">
+										<div className="w-fit shrink-0">
 											<DonationCurrencySelect
 												value={state.context.currency}
 												onChange={(currency) => send({ type: 'SET_CURRENCY', value: currency })}

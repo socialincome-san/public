@@ -7,13 +7,14 @@ const COLUMN_FULL = 'w-full min-w-0';
 const CARD_BASE = cn('border-input bg-card rounded-3xl border shadow-xs', 'px-4 pt-4 pb-6 sm:px-6 sm:pt-5 sm:pb-7');
 
 const CARD_NARROW = cn(CARD_BASE, 'mx-auto w-full max-w-[400px]');
+// The plan options are cards themselves, so they sit on the dialog without another frame
+const PLAIN_NARROW = 'mx-auto w-full max-w-[400px]';
 const CARD_FULL = cn(CARD_BASE, 'mx-0 w-full max-w-none');
 
 /** Full-width column: payment method, Stripe checkout, QR bill. */
 const FULL_WIDTH_COLUMN_STEPS = new Set<ActiveDonationWizardStep>(['stepPayment', 'stepStripeCheckout', 'stepQrBill']);
 
-/** Narrow centered card: amount and plan steps in the split layout. */
-const NARROW_CARD_STEPS = new Set<ActiveDonationWizardStep>(['stepAmount', 'stepPlanMonthly', 'stepPlanOneTime']);
+const PLAN_STEPS = new Set<ActiveDonationWizardStep>(['stepPlanMonthly', 'stepPlanOneTime']);
 
 type SidePanel = 'impact' | 'qr-hints';
 
@@ -27,19 +28,18 @@ const SIDE_PANEL_BY_STEP: Partial<Record<ActiveDonationWizardStep, SidePanel>> =
 export const getDonationWizardLayout = (step: ActiveDonationWizardStep | null) => {
 	const sidePanel = step ? (SIDE_PANEL_BY_STEP[step] ?? null) : null;
 	const isFullWidthColumn = step !== null && FULL_WIDTH_COLUMN_STEPS.has(step);
-	const isNarrowCard = step !== null && NARROW_CARD_STEPS.has(step);
+	const isPlanStep = step !== null && PLAN_STEPS.has(step);
 
 	return {
 		columnClass: isFullWidthColumn ? COLUMN_FULL : COLUMN_NARROW,
-		cardClass: isNarrowCard ? CARD_NARROW : CARD_FULL,
+		cardClass: isPlanStep ? PLAIN_NARROW : step === 'stepAmount' ? CARD_NARROW : CARD_FULL,
+		isPlanStep,
 		showImpactPanel: sidePanel === 'impact',
 		showQrHintsPanel: sidePanel === 'qr-hints',
 	};
 };
 
 export const getDonationWizardCardClass = (step: ActiveDonationWizardStep) => getDonationWizardLayout(step).cardClass;
-
-export const donationStepTitleRowClass = cn('mb-5 flex items-start justify-between gap-3');
 
 export const donationImpactChecklistItemClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
 

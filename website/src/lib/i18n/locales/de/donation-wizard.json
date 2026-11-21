@@ -27,10 +27,6 @@
 		"above-maximum": "Höchstens {amount}"
 	},
 	"stepPlan": {
-		"monthly-title": "Monatliche Spende",
-		"one-time-title": "Einmalige Spende",
-		"switch-to-one-time": "Einmalig",
-		"switch-to-monthly": "Monatlich",
 		"upsell-subtitle": "Die Hälfte des Betrags, monatlich.\nDas hilft uns noch mehr.",
 		"upsell-preferred": "Empfohlen",
 		"upsell-benefit-cancel": "Jederzeit kündbar",
@@ -40,7 +36,7 @@
 		"double-impact-badge": "Wirkung verdoppeln",
 		"benefit-beneficiaries": "{directCount} direkte, {indirectCount} indirekte Begünstigte",
 		"benefit-community": "Werde Teil einer Community mit {count} Unterstützern",
-		"benefit-double-impact": "Verdoppeln Sie die Wirkung",
+		"benefit-double-impact": "Verdopple deine Wirkung",
 		"back": "Zurück",
 		"choose-payment": "Zahlungsmethode wählen"
 	},

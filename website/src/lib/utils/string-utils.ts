@@ -9,24 +9,16 @@ import {
 	WHITESPACE_SPLIT_REGEX,
 } from './regex';
 
-const LOCALE_APOSTROPHE_REGEX = /['\u2018\u2019\u02BC]/g;
-
-const normalizeIntlOutput = (value: string): string => {
-	return value.replace(LOCALE_APOSTROPHE_REGEX, ',');
-};
-
 export const slugify = (value: string): string => {
 	return value.toLowerCase().trim().replace(NON_ALPHANUMERIC_DASH_REGEX, '-').replace(LEADING_TRAILING_DASHES_REGEX, '');
 };
 
 export const formatCurrency = (value: number): string => {
-	return normalizeIntlOutput(
-		new Intl.NumberFormat('de-CH', {
-			style: 'currency',
-			currency: 'CHF',
-			maximumFractionDigits: 0,
-		}).format(value),
-	);
+	return new Intl.NumberFormat('de-CH', {
+		style: 'currency',
+		currency: 'CHF',
+		maximumFractionDigits: 0,
+	}).format(value);
 };
 
 export const formatCurrencyLocale = (
@@ -51,33 +43,27 @@ export const formatCurrencyLocale = (
 
 	if (Math.abs(amount) >= compactThreshold) {
 		try {
-			return normalizeIntlOutput(
-				new Intl.NumberFormat(compactLocale, {
-					style: 'currency',
-					currency,
-					notation: 'compact',
-					compactDisplay: 'short',
-					maximumFractionDigits: compactMaximumFractionDigits,
-				}).format(amount),
-			);
+			return new Intl.NumberFormat(compactLocale, {
+				style: 'currency',
+				currency,
+				notation: 'compact',
+				compactDisplay: 'short',
+				maximumFractionDigits: compactMaximumFractionDigits,
+			}).format(amount);
 		} catch {
 			// Fallback to regular currency formatting below.
 		}
 	}
 
 	try {
-		return normalizeIntlOutput(
-			new Intl.NumberFormat(locale, {
-				style: 'currency',
-				currency,
-				minimumFractionDigits,
-				maximumFractionDigits,
-			}).format(amount),
-		);
+		return new Intl.NumberFormat(locale, {
+			style: 'currency',
+			currency,
+			minimumFractionDigits,
+			maximumFractionDigits,
+		}).format(amount);
 	} catch {
-		const num = normalizeIntlOutput(
-			new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(amount),
-		);
+		const num = new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(amount);
 
 		return `${num} ${currency}`;
 	}
@@ -176,16 +162,14 @@ export const formatNumberLocale = (
 	} = options;
 
 	if (Math.abs(value) >= compactThreshold) {
-		return normalizeIntlOutput(
-			new Intl.NumberFormat(compactLocale, {
-				notation: 'compact',
-				compactDisplay: 'short',
-				maximumFractionDigits: compactMaximumFractionDigits,
-			}).format(value),
-		);
+		return new Intl.NumberFormat(compactLocale, {
+			notation: 'compact',
+			compactDisplay: 'short',
+			maximumFractionDigits: compactMaximumFractionDigits,
+		}).format(value);
 	}
 
-	return normalizeIntlOutput(new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(value));
+	return new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(value);
 };
 
 const COMPACT_THOUSAND_SUFFIX: Record<string, string> = {
@@ -201,23 +185,19 @@ const formatThousandsCompact = (value: number, locale: string): string => {
 	const abs = Math.abs(value);
 	const sign = value < 0 ? '-' : '';
 	const maximumFractionDigits = abs < 10_000 ? 1 : 0;
-	const intlCompact = normalizeIntlOutput(
-		new Intl.NumberFormat(locale, {
-			notation: 'compact',
-			compactDisplay: 'short',
-			maximumFractionDigits,
-		}).format(abs),
-	);
-	const fullFormatted = normalizeIntlOutput(new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(abs));
+	const intlCompact = new Intl.NumberFormat(locale, {
+		notation: 'compact',
+		compactDisplay: 'short',
+		maximumFractionDigits,
+	}).format(abs);
+	const fullFormatted = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(abs);
 
 	if (intlCompact !== fullFormatted) {
 		return `${sign}${intlCompact}`;
 	}
 
 	const scaled = abs / 1_000;
-	const scaledFormatted = normalizeIntlOutput(
-		new Intl.NumberFormat(locale, { maximumFractionDigits, minimumFractionDigits: 0 }).format(scaled),
-	);
+	const scaledFormatted = new Intl.NumberFormat(locale, { maximumFractionDigits, minimumFractionDigits: 0 }).format(scaled);
 	const suffix = COMPACT_THOUSAND_SUFFIX[getLocaleLanguage(locale)] ?? COMPACT_THOUSAND_SUFFIX.en;
 
 	return `${sign}${scaledFormatted}${suffix}`;
@@ -235,13 +215,11 @@ export const formatCompactNumberLocale = (value: number, locale: string): string
 	}
 
 	if (abs >= 1_000_000) {
-		return normalizeIntlOutput(
-			new Intl.NumberFormat(locale, {
-				notation: 'compact',
-				compactDisplay: 'short',
-				maximumFractionDigits: 2,
-			}).format(value),
-		);
+		return new Intl.NumberFormat(locale, {
+			notation: 'compact',
+			compactDisplay: 'short',
+			maximumFractionDigits: 2,
+		}).format(value);
 	}
 
 	return formatThousandsCompact(value, locale);
@@ -267,7 +245,7 @@ export const formatDateLocale = (
 	}
 	const d = typeof date === 'string' ? new Date(date) : date;
 	try {
-		return normalizeIntlOutput(new Intl.DateTimeFormat(locale, options).format(d));
+		return new Intl.DateTimeFormat(locale, options).format(d);
 	} catch {
 		return '—';
 	}

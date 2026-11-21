@@ -9,7 +9,6 @@ import {
 	selectMonthlyPlanView,
 } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
-import { PlanStepHeader } from './plan-step-header';
 import { PlanTierCard } from './plan-tier-card/plan-tier-card';
 
 export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
@@ -22,8 +21,6 @@ export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div className={getDonationWizardCardClass('stepPlanMonthly')} data-testid="donation-wizard-step-monthly-plan">
-			<PlanStepHeader titleKey="stepPlan.monthly-title" cadence="monthly" send={send} />
-
 			<div className="mb-5 flex flex-col gap-3">
 				<PlanTierCard
 					amount={view.tier1x}
@@ -55,7 +52,6 @@ export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 			</div>
 
 			<DonationStepFooter
-				onBack={() => send({ type: 'BACK' })}
 				onContinue={() => send({ type: 'PROCEED_TO_PAYMENT' })}
 				continueLabel={t('stepPlan.choose-payment')}
 			/>

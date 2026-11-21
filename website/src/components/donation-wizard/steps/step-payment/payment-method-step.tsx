@@ -75,7 +75,6 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 			)}
 
 			<DonationStepFooter
-				onBack={() => send({ type: 'BACK' })}
 				onContinue={() => {
 					if (view.paymentMethod === 'online') {
 						const checkoutContext = {
