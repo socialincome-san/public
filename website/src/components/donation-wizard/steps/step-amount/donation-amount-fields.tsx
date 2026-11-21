@@ -64,6 +64,8 @@ type Props = {
 	placement?: 'wizard' | 'hero';
 	currency: WebsiteCurrency;
 	showTitle?: boolean;
+	// Off where a cadence toggle sits elsewhere, e.g. in the dialog toolbar
+	showCadenceLink?: boolean;
 };
 
 export const DonationAmountFields = ({
@@ -73,6 +75,7 @@ export const DonationAmountFields = ({
 	placement = 'wizard',
 	currency,
 	showTitle = true,
+	showCadenceLink = true,
 }: Props) => {
 	const t = useTranslations('donation-wizard');
 	const isSwissVisitor = useIsSwissVisitor();
@@ -231,17 +234,19 @@ export const DonationAmountFields = ({
 			>
 				{amount === null ? t('stepAmount.donate-now') : t(submitLabelKeys[values.cadence], { amount })}
 			</Button>
-			<button
-				type="button"
-				data-testid={`donation-wizard-cadence-${otherCadence}`}
-				disabled={!values.isValid}
-				onClick={() => onSubmit(otherCadence)}
-				className="text-muted-foreground hover:text-foreground mt-4 -mb-2 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors disabled:pointer-events-none disabled:opacity-50 md:-mb-4"
-			>
-				{amount === null
-					? t(switchCadenceLabelKeys[otherCadence].withoutAmount)
-					: t(switchCadenceLabelKeys[otherCadence].withAmount, { amount })}
-			</button>
+			{showCadenceLink ? (
+				<button
+					type="button"
+					data-testid={`donation-wizard-cadence-${otherCadence}`}
+					disabled={!values.isValid}
+					onClick={() => onSubmit(otherCadence)}
+					className="text-muted-foreground hover:text-foreground mt-4 -mb-2 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors disabled:pointer-events-none disabled:opacity-50 md:-mb-4"
+				>
+					{amount === null
+						? t(switchCadenceLabelKeys[otherCadence].withoutAmount)
+						: t(switchCadenceLabelKeys[otherCadence].withAmount, { amount })}
+				</button>
+			) : null}
 		</div>
 	);
 };

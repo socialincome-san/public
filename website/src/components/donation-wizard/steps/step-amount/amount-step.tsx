@@ -13,6 +13,7 @@ export const AmountStep = ({ state, send }: DonationWizardStepProps) => {
 			values={selectStep1FormView(state.context)}
 			actions={createStep1Actions(send)}
 			showTitle={false}
+			showCadenceLink={false}
 			onSubmit={(cadence) => {
 				send({ type: 'SET_CADENCE', value: cadence });
 				send({ type: 'SUBMIT' });

@@ -113,7 +113,9 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const canChangeCurrency = state.hasTag('currencyEditable');
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
-	const { isPlanStep } = getDonationWizardLayout(getActiveWizardStep(state));
+	const activeStep = getActiveWizardStep(state);
+	const { isPlanStep } = getDonationWizardLayout(activeStep);
+	const showCadenceToggle = isPlanStep || activeStep === 'stepAmount';
 	const canGoBack = state.can({ type: 'BACK' });
 	const title = <DialogTitle size="xl">{t('modal.title')}</DialogTitle>;
 	const currencySelect = canChangeCurrency ? (
@@ -189,7 +191,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 					onBack={showWizardHeader && canGoBack ? () => send({ type: 'BACK' }) : undefined}
 					backLabel={t('stepPlan.back')}
 					toolbar={
-						showWizardHeader && isPlanStep ? (
+						showWizardHeader && showCadenceToggle ? (
 							<SegmentedToggle
 								options={cadenceOptions}
 								value={state.context.cadence}
@@ -224,7 +226,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 									<div
 										className={cn(
 											'flex flex-col gap-1 pb-5 sm:pt-0 sm:pb-5',
-											canGoBack || isPlanStep ? 'pt-10' : 'pt-4 pr-12',
+											canGoBack || showCadenceToggle ? 'pt-10' : 'pt-4 pr-12',
 										)}
 									>
 										<div className="flex min-h-9 items-center justify-between gap-2 sm:hidden">
