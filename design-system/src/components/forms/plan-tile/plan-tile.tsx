@@ -5,13 +5,15 @@ type PlanTileProps = {
 	label?: string;
 	amount: string;
 	caption?: string;
+	// A secondary fact under the amount, e.g. the yearly total
+	detail?: string;
 	footer: ReactNode;
 	selected: boolean;
 	onSelect: () => void;
 	testId?: string;
 };
 
-export const PlanTile = ({ label, amount, caption, footer, selected, onSelect, testId }: PlanTileProps) => (
+export const PlanTile = ({ label, amount, caption, detail, footer, selected, onSelect, testId }: PlanTileProps) => (
 	<button
 		type="button"
 		data-testid={testId}
@@ -22,8 +24,8 @@ export const PlanTile = ({ label, amount, caption, footer, selected, onSelect, t
 			selected ? 'ring-primary ring-2' : 'ring-input/60 ring-1',
 		)}
 	>
-		<span className={cn('bg-card ring-input/60 flex flex-1 flex-col rounded-2xl px-4 pt-4 pb-4 text-left shadow-sm ring-1')}>
-			<span className="mb-3 flex items-center justify-between gap-2">
+		<span className={cn('bg-card ring-input/60 flex flex-1 flex-col rounded-2xl px-4 pt-4 pb-5 text-left shadow-sm ring-1')}>
+			<span className="mb-4 flex items-center justify-between gap-2">
 				{label ? (
 					<span
 						className={cn(
@@ -46,7 +48,8 @@ export const PlanTile = ({ label, amount, caption, footer, selected, onSelect, t
 			</span>
 			<span className="text-2xl font-semibold tracking-tight">{amount}</span>
 			{caption ? <span className="text-muted-foreground text-sm">{caption}</span> : null}
+			{detail ? <span className="border-input/60 text-muted-foreground mt-4 border-t pt-3 text-sm">{detail}</span> : null}
 		</span>
-		<span className="block px-4 py-2.5 text-left text-sm leading-snug">{footer}</span>
+		<span className="block px-4 py-3 text-left text-sm leading-snug">{footer}</span>
 	</button>
 );

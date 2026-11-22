@@ -80,7 +80,6 @@
 		"your-donation": "Your donation",
 		"generate-qr-code": "Generate QR-Code",
 		"pay-online": "Pay online",
-		"cover-costs-description": "Ensure your full donation reaches us.",
 		"cover-costs-label-monthly": "Cover transaction fees of {fee}/month",
 		"cover-costs-label-one-time": "Cover transaction fees of {fee}",
 		"cover-costs-tooltip-aria": "How transaction costs are calculated",

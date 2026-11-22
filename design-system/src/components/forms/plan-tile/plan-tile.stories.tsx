@@ -11,7 +11,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'A selectable plan: a label flag and a radio on top, a large amount and caption on a white card, with a tinted footer below it, e.g. for the impact of the plan. Selecting outlines the whole tile. Place two side by side for a single choice.',
+					'A selectable plan: a label flag and a radio on top, a large amount and caption with an optional detail line on a white card, with a tinted footer below it, e.g. for the impact of the plan. Selecting outlines the whole tile. Place two side by side for a single choice.',
 			},
 		},
 	},
@@ -19,6 +19,7 @@ const meta = {
 		label: '1% plan',
 		amount: 'CHF 50',
 		caption: 'per month',
+		detail: 'CHF 600 in one year',
 		footer: '1 direct · 6 indirect',
 		selected: true,
 		onSelect: () => undefined,
@@ -44,6 +45,7 @@ const PlanChoiceExample = () => {
 				label="1% plan"
 				amount="CHF 50"
 				caption="per month"
+				detail="CHF 600 in one year"
 				footer="1 direct · 6 indirect"
 				selected={selected === '1x'}
 				onSelect={() => setSelected('1x')}
@@ -52,6 +54,7 @@ const PlanChoiceExample = () => {
 				label="2% plan"
 				amount="CHF 100"
 				caption="per month"
+				detail="CHF 1200 in one year"
 				footer="3 direct · 18 indirect"
 				selected={selected === '2x'}
 				onSelect={() => setSelected('2x')}

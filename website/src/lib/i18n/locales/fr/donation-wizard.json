@@ -80,7 +80,6 @@
 		"your-donation": "Ton don",
 		"generate-qr-code": "Générer le code QR",
 		"pay-online": "Payer en ligne",
-		"cover-costs-description": "Assure-toi que l'intégralité de ton don nous parvienne.",
 		"cover-costs-label-monthly": "Couvrir les frais de transaction de {fee}/mois",
 		"cover-costs-label-one-time": "Couvrir les frais de transaction de {fee}",
 		"cover-costs-tooltip-aria": "Comment les frais de transaction sont calculés",

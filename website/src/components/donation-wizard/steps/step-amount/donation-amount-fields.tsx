@@ -115,7 +115,7 @@ export const DonationAmountFields = ({
 				'text-foreground',
 				placement === 'hero' && 'md:px-9 md:py-9',
 				// In the dialog the sheet already frames the form
-				placement === 'wizard' && 'border-0 bg-transparent p-0 shadow-none sm:p-0 md:p-0',
+				placement === 'wizard' && 'flex h-full flex-col border-0 bg-transparent p-0 shadow-none sm:p-0 md:p-0',
 			)}
 			data-testid="donation-wizard-step-amount"
 		>
@@ -226,15 +226,17 @@ export const DonationAmountFields = ({
 				/>
 			</div>
 
-			<Button
-				type="button"
-				data-testid="donation-wizard-amount-continue"
-				fullWidth
-				disabled={!values.isValid}
-				onClick={() => onSubmit(values.cadence)}
-			>
-				{amount === null ? t('stepAmount.donate-now') : t(submitLabelKeys[values.cadence], { amount })}
-			</Button>
+			<div className="mt-auto">
+				<Button
+					type="button"
+					data-testid="donation-wizard-amount-continue"
+					fullWidth
+					disabled={!values.isValid}
+					onClick={() => onSubmit(values.cadence)}
+				>
+					{amount === null ? t('stepAmount.donate-now') : t(submitLabelKeys[values.cadence], { amount })}
+				</Button>
+			</div>
 			{showCadenceLink ? (
 				<button
 					type="button"

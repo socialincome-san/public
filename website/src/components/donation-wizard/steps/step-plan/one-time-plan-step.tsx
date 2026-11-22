@@ -15,7 +15,7 @@ export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div className={getDonationWizardCardClass('stepPlanOneTime')} data-testid="donation-wizard-step-one-time-plan">
-			<div className="mb-6 grid grid-cols-2 gap-2.5 pt-0.5">
+			<div className="mb-6 grid flex-1 grid-cols-2 gap-2.5 pt-0.5">
 				<PlanTile
 					label={t('stepAmount.one-time')}
 					amount={`${currency} ${view.oneTimeAmount}`}
@@ -28,6 +28,7 @@ export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 					label={t('stepAmount.monthly')}
 					amount={`${currency} ${view.monthlyUpsellAmount}`}
 					caption={t('calculator.per-month')}
+					detail={t('calculator.per-year', { amount: `${currency} ${view.monthlyUpsellAmount * 12}` })}
 					footer={<strong>{t('stepPlan.upsell-preferred')}</strong>}
 					selected={view.oneTimePlanChoice === 'monthly-half'}
 					onSelect={() => send({ type: 'SET_ONE_TIME_PLAN_CHOICE', value: 'monthly-half' })}

@@ -19,7 +19,8 @@ export const DonationWizard = ({ state, send, header }: DonationWizardStepProps 
 					className={cn(
 						'mx-auto flex w-full max-w-[890px] flex-col items-stretch gap-8 md:flex-row',
 						shell.showImpactPanel && 'gap-14 md:gap-8',
-						!shell.isPlanStep && 'md:items-start',
+						// The measured content height of the monthly plan step; re-measure when its tiles or info card change
+						shell.hasSharedHeight ? 'md:min-h-[286px]' : 'md:items-start',
 					)}
 				>
 					<div className={shell.columnClass}>

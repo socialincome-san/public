@@ -8,13 +8,18 @@ const CARD_BASE = cn('border-input bg-card rounded-3xl border shadow-xs', 'px-4 
 
 const CARD_NARROW = cn(CARD_BASE, 'mx-auto w-full max-w-[400px]');
 // The plan options are cards themselves, so they sit on the dialog without another frame
-const PLAIN_NARROW = 'mx-auto w-full max-w-[400px]';
+const PLAIN_NARROW = 'mx-auto flex h-full w-full max-w-[400px] flex-col';
 const CARD_FULL = cn(CARD_BASE, 'mx-0 w-full max-w-none');
+// Unframed like the plan step, so moving between the two keeps the dialog at a similar height
+const PLAIN_FULL = 'h-full w-full';
 
 /** Full-width column: payment method, Stripe checkout, QR bill. */
 const FULL_WIDTH_COLUMN_STEPS = new Set<ActiveDonationWizardStep>(['stepPayment', 'stepStripeCheckout', 'stepQrBill']);
 
 const PLAN_STEPS = new Set<ActiveDonationWizardStep>(['stepPlanMonthly', 'stepPlanOneTime']);
+
+// Donors move back and forth between these, so on desktop they share the plan step's height and the dialog stays put
+const SAME_HEIGHT_STEPS = new Set<ActiveDonationWizardStep>([...PLAN_STEPS, 'stepAmount', 'stepPayment']);
 
 type SidePanel = 'impact' | 'qr-hints';
 
@@ -29,11 +34,19 @@ export const getDonationWizardLayout = (step: ActiveDonationWizardStep | null) =
 	const sidePanel = step ? (SIDE_PANEL_BY_STEP[step] ?? null) : null;
 	const isFullWidthColumn = step !== null && FULL_WIDTH_COLUMN_STEPS.has(step);
 	const isPlanStep = step !== null && PLAN_STEPS.has(step);
+	const hasSharedHeight = step !== null && SAME_HEIGHT_STEPS.has(step);
 
 	return {
 		columnClass: isFullWidthColumn ? COLUMN_FULL : COLUMN_NARROW,
-		cardClass: isPlanStep ? PLAIN_NARROW : step === 'stepAmount' ? CARD_NARROW : CARD_FULL,
+		cardClass: isPlanStep
+			? PLAIN_NARROW
+			: step === 'stepAmount'
+				? CARD_NARROW
+				: step === 'stepPayment'
+					? PLAIN_FULL
+					: CARD_FULL,
 		isPlanStep,
+		hasSharedHeight,
 		showImpactPanel: sidePanel === 'impact',
 		showQrHintsPanel: sidePanel === 'qr-hints',
 	};

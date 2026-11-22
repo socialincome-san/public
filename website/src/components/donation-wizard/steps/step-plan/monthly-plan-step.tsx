@@ -15,11 +15,12 @@ export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div className={getDonationWizardCardClass('stepPlanMonthly')} data-testid="donation-wizard-step-monthly-plan">
-			<div className="mb-6 grid grid-cols-2 gap-2.5 pt-0.5">
+			<div className="mb-6 grid flex-1 grid-cols-2 gap-2.5 pt-0.5">
 				<PlanTile
 					label={view.usesMonthlyIncomeAmount ? t('stepPlan.plan-1x') : undefined}
 					amount={`${currency} ${view.tier1x}`}
 					caption={t('calculator.per-month')}
+					detail={t('calculator.per-year', { amount: `${currency} ${view.tier1x * 12}` })}
 					footer={<PlanTileImpact {...view.tier1Impact} />}
 					selected={view.selectedTier === '1x'}
 					onSelect={() => send({ type: 'SET_TIER', value: '1x' })}
@@ -29,6 +30,7 @@ export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 					label={view.usesMonthlyIncomeAmount ? t('stepPlan.plan-2x') : t('stepPlan.double-impact-badge')}
 					amount={`${currency} ${view.tier2x}`}
 					caption={t('calculator.per-month')}
+					detail={t('calculator.per-year', { amount: `${currency} ${view.tier2x * 12}` })}
 					footer={<PlanTileImpact {...view.tier2Impact} />}
 					selected={view.selectedTier === '2x'}
 					onSelect={() => send({ type: 'SET_TIER', value: '2x' })}

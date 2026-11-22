@@ -44,9 +44,8 @@ export const DonationInfoCard = ({ context }: Props) => {
 				</>
 			}
 		>
-			<div className="flex h-full flex-col justify-between gap-3">
+			<div className="flex h-full flex-col justify-between gap-4">
 				<CheckList
-					size="sm"
 					items={[
 						...(cancelable ? [t('impact.cancel-anytime')] : []),
 						t('calculator.reach', { percent: OUTFLOW_REACH_PERCENT }),
