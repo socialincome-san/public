@@ -241,13 +241,17 @@ export const getJournalPersonPageData = async (
 			storyblokContent.getArticleCountByAuthorForDefaultLang(person.uuid),
 		);
 		const persons = personsResult.success ? personsResult.data : [];
+		// Previous and next step through the same people the "See all" count covers
+		const navigablePersons = persons.filter(
+			(other) => other.uuid === person.uuid || other.content.volunteerStatus === 'active',
+		);
 
 		return resultOk({
 			person,
 			articles,
 			showMoreArticlesLink: totalInDefault > articles.length,
 			pathname: createWebsitePersonLink(slug, lang, currency),
-			neighbors: getPersonNeighbors(persons, person.uuid, lang),
+			neighbors: getPersonNeighbors(navigablePersons, person.uuid, lang),
 			activePeopleCount: persons.filter((other) => other.content.volunteerStatus === 'active').length,
 			roleLabels,
 			circleLabels,
