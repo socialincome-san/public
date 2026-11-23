@@ -230,7 +230,8 @@ export const getPersonAssessments = async (
 
 			return [
 				{
-					title: typeof story.content.title === 'string' && story.content.title.trim() ? story.content.title.trim() : story.name,
+					title:
+						typeof story.content.title === 'string' && story.content.title.trim() ? story.content.title.trim() : story.name,
 					href: getWebsitePublicPath(language, currency, getWebsitePathTailFromStoryblokSlug(story.full_slug)),
 					countryCode: toCountryCode(story.content.countryIsoCode?.toString()) ?? undefined,
 					roles,
