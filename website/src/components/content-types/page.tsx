@@ -30,6 +30,7 @@ import { OutflowsBlock } from '@/components/content-blocks/outflows-block';
 import { PageIntroBlock } from '@/components/content-blocks/page-intro';
 import { PartnershipsCardBlock } from '@/components/content-blocks/partnerships-card';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
+import { PeoplePillBlock } from '@/components/content-blocks/people-pill';
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import { ReservesBlock } from '@/components/content-blocks/reserves-block';
@@ -65,15 +66,20 @@ type PageContentTypeProps = {
 	currency: WebsiteCurrency;
 	searchParams?: Promise<AnySearchParams>;
 	afterHero?: ReactNode;
-	// uuid of the story, for blocks that depend on where they are shown
+} & StoryContext;
+
+// For blocks that depend on where they are shown
+type StoryContext = {
 	storyUuid: string;
+	// Set on the page of a circle, e.g. "operation"
+	circleSlug?: string;
 };
 
 const renderPageBlock = (
 	block: PageBlock | NestedPageBlock,
 	lang: WebsiteLanguage,
 	currency: WebsiteCurrency,
-	storyUuid: string,
+	{ storyUuid, circleSlug }: StoryContext,
 	searchParams?: Promise<AnySearchParams>,
 ): ReactNode => {
 	switch (block.component) {
@@ -143,6 +149,8 @@ const renderPageBlock = (
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'partnershipsCard':
 			return <PartnershipsCardBlock blok={block} />;
+		case 'peoplePill':
+			return <PeoplePillBlock blok={block} lang={lang} currency={currency} circleSlug={circleSlug} />;
 		case 'personGrid':
 			return <PersonGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'localPartnerGrid':
@@ -178,7 +186,7 @@ const renderPageBlock = (
 				column.length > 0
 					? column.map((columnBlock) => (
 							<Fragment key={columnBlock._uid}>
-								{renderPageBlock(columnBlock, lang, currency, storyUuid, searchParams)}
+								{renderPageBlock(columnBlock, lang, currency, { storyUuid, circleSlug }, searchParams)}
 							</Fragment>
 						))
 					: undefined;
@@ -210,16 +218,23 @@ type PageBlocksProps = {
 	blocks: PageBlock[];
 	lang: WebsiteLanguage;
 	currency: WebsiteCurrency;
-	storyUuid: string;
 	searchParams?: Promise<AnySearchParams>;
-};
+} & StoryContext;
 
-export const PageBlocks = ({ blocks, lang, currency, storyUuid, searchParams }: PageBlocksProps) =>
+export const PageBlocks = ({ blocks, lang, currency, storyUuid, circleSlug, searchParams }: PageBlocksProps) =>
 	blocks.map((block) => (
-		<Fragment key={block._uid}>{renderPageBlock(block, lang, currency, storyUuid, searchParams)}</Fragment>
+		<Fragment key={block._uid}>{renderPageBlock(block, lang, currency, { storyUuid, circleSlug }, searchParams)}</Fragment>
 	));
 
-export default function PageContentType({ blok, lang, currency, searchParams, afterHero, storyUuid }: PageContentTypeProps) {
+export default function PageContentType({
+	blok,
+	lang,
+	currency,
+	searchParams,
+	afterHero,
+	storyUuid,
+	circleSlug,
+}: PageContentTypeProps) {
 	const blocks = blok.content ?? [];
 	const heroCount = blocks[0]?.component === 'heroVideo' ? 1 : 0;
 
@@ -230,6 +245,7 @@ export default function PageContentType({ blok, lang, currency, searchParams, af
 				lang={lang}
 				currency={currency}
 				storyUuid={storyUuid}
+				circleSlug={circleSlug}
 				searchParams={searchParams}
 			/>
 			{afterHero}
@@ -238,6 +254,7 @@ export default function PageContentType({ blok, lang, currency, searchParams, af
 				lang={lang}
 				currency={currency}
 				storyUuid={storyUuid}
+				circleSlug={circleSlug}
 				searchParams={searchParams}
 			/>
 		</>

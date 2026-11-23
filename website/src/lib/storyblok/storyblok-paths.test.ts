@@ -3,6 +3,8 @@ import {
 	STORYBLOK_FAQ_FOLDER,
 	STORYBLOK_LAYOUT_PATH,
 	getCampaignsOverviewStoryPath,
+	getCircleSlugFromStoryblokSlug,
+	getCirclesOverviewStoryPath,
 	getCountriesOverviewStoryPath,
 	getCountryStoryPath,
 	getFocusStoryPath,
@@ -27,6 +29,12 @@ import {
 } from './storyblok-paths';
 
 describe('storyblok-paths', () => {
+	it('reads the circle slug from a circle story slug', () => {
+		expect(getCircleSlugFromStoryblokSlug('pages/circle/operation')).toBe('operation');
+		expect(getCircleSlugFromStoryblokSlug(getCirclesOverviewStoryPath())).toBeUndefined();
+		expect(getCircleSlugFromStoryblokSlug('pages/about')).toBeUndefined();
+	});
+
 	it('builds page story paths at the space root', () => {
 		expect(getPageStoryPath('about')).toBe('pages/about');
 		expect(getHomeStoryPath()).toBe('pages/home');

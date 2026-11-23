@@ -823,6 +823,7 @@ export interface Page {
     | TabNavigation
     | AfricaMap
     | LocalPartnerGrid
+    | PeoplePill
   )[];
   communityEnabled?: boolean;
   communityContributors?: CommunityContributorGroup[];
@@ -884,6 +885,18 @@ export interface PartnershipsCarousel {
   marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
   marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "partnershipsCarousel";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface PeoplePill {
+  people: (ISbStoryData<Person> | string)[];
+  subline?: "" | "role" | "country" | "volunteerSince" | "circle";
+  alignment?: "" | "left" | "center";
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  component: "peoplePill";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -1319,6 +1332,7 @@ export interface TwoColumn {
     | TransparencyCountries
     | ReservesBlock
     | IframeEmbed
+    | PeoplePill
   )[];
   rightColumn: (
     | DonationsTotal
@@ -1353,6 +1367,7 @@ export interface TwoColumn {
     | TransparencyCountries
     | ReservesBlock
     | IframeEmbed
+    | PeoplePill
   )[];
   columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   disableMarginTop?: boolean;

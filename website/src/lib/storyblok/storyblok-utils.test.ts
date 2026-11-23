@@ -2,6 +2,7 @@ import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import {
 	formatArticleAuthorNames,
 	formatStoryblokDateMedium,
+	formatStoryblokMonthYear,
 	formatStoryblokResizeUrl,
 	formatStoryblokUrl,
 	getArticleAuthors,
@@ -141,6 +142,19 @@ describe('Storyblok date utilities', () => {
 		expect(parts('2026-01-25 23:00')).toEqual({ unit: 'months', months: 6, isAnniversary: true });
 		expect(formatStoryblokDateMedium('2026-06-25 22:00', 'en')).toBe('Jun 26, 2026');
 		expect(formatStoryblokDateMedium('2026-01-25 23:00', 'en')).toBe('Jan 26, 2026');
+	});
+});
+
+describe('formatStoryblokMonthYear', () => {
+	it('formats the month and year in the page language', () => {
+		expect(formatStoryblokMonthYear('2019-12-19 23:00', 'en')).toBe('Dec 2019');
+		expect(formatStoryblokMonthYear('2019-12-19 23:00', 'de')).toBe('Dez. 2019');
+		expect(formatStoryblokMonthYear('2019-12-19 23:00', 'fr')).toBe('déc. 2019');
+		expect(formatStoryblokMonthYear('2019-12-19 23:00', 'it')).toBe('dic 2019');
+	});
+
+	it('returns an empty string without a date', () => {
+		expect(formatStoryblokMonthYear(undefined, 'en')).toBe('');
 	});
 });
 

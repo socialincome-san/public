@@ -33,15 +33,24 @@ const AvatarImage = React.forwardRef<
 >((props, ref) => <AvatarPrimitive.Image ref={ref} className="aspect-square size-full object-cover" {...props} />);
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
+const avatarFallbackVariants = cva('bg-muted flex h-full w-full items-center justify-center rounded-full font-medium', {
+	variants: {
+		tone: {
+			default: 'text-foreground',
+			muted: 'text-muted-foreground',
+		},
+	},
+	defaultVariants: {
+		tone: 'default',
+	},
+});
+
 const AvatarFallback = React.forwardRef<
 	React.ElementRef<typeof AvatarPrimitive.Fallback>,
-	WithoutClassName<React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>>
->((props, ref) => (
-	<AvatarPrimitive.Fallback
-		ref={ref}
-		className="bg-muted text-foreground flex h-full w-full items-center justify-center rounded-full font-medium"
-		{...props}
-	/>
+	WithoutClassName<React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>> &
+		VariantProps<typeof avatarFallbackVariants>
+>(({ tone, ...props }, ref) => (
+	<AvatarPrimitive.Fallback ref={ref} className={avatarFallbackVariants({ tone })} {...props} />
 ));
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 

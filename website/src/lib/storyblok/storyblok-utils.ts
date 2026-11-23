@@ -230,6 +230,15 @@ export const formatStoryblokDateMedium = (date: string | null | undefined, langu
 	return dateObject.isValid ? dateObject.toLocaleString(DateTime.DATE_MED) : '';
 };
 
+export const formatStoryblokMonthYear = (date: string | null | undefined, language: string) => {
+	if (!date) {
+		return '';
+	}
+	const dateObject = toDateObject(date, language);
+
+	return dateObject.isValid ? dateObject.toLocaleString({ month: 'short', year: 'numeric' }) : '';
+};
+
 /** The year of a date field. A field that held only the year ("2024") before it became a date reads the same. */
 export const getStoryblokYear = (date: string | null | undefined) => {
 	const dateObject = date ? toDateObject(date.trim(), defaultLanguage) : undefined;
