@@ -18,15 +18,15 @@ export const SegmentedToggle = ({ value, onValueChange, options }: SegmentedTogg
 			type="single"
 			value={value}
 			onValueChange={(v) => v && onValueChange(v)}
-			className="bg-muted/40 border-input inline-flex rounded-full border p-1"
+			className="bg-muted inline-flex h-9 rounded-full p-[3px]"
 		>
 			{options.map((opt) => (
 				<ToggleGroupPrimitive.Item
 					key={opt.value}
 					value={opt.value}
 					className={cn(
-						'text-muted-foreground data-[state=on]:text-foreground hover:text-foreground rounded-full px-3 py-1 text-sm transition-colors',
-						'data-[state=on]:bg-background data-[state=on]:shadow-2xs',
+						'text-muted-foreground data-[state=on]:text-foreground hover:text-foreground rounded-full px-3.5 text-sm font-medium whitespace-nowrap transition-colors',
+						'data-[state=on]:bg-background focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-hidden data-[state=on]:shadow-xs',
 					)}
 				>
 					{opt.label}

@@ -155,6 +155,7 @@ const meta = {
 				'outline-solid',
 				'destructive',
 				'verified',
+				'positive',
 				'country',
 				'fundraising',
 				'video',
@@ -202,6 +203,7 @@ export const Variants: Story = {
 			<Badge variant="outline-solid">Outline Solid</Badge>
 			<Badge variant="destructive">Destructive</Badge>
 			<Badge variant="verified">Verified</Badge>
+			<Badge variant="positive">Positive</Badge>
 			<Badge variant="country">Country</Badge>
 			<Badge variant="fundraising">Fundraising</Badge>
 			<Badge variant="primary">Primary</Badge>

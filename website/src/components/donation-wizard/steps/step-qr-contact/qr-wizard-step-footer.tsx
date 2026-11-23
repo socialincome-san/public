@@ -2,7 +2,6 @@
 
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { CheckoutFooter } from '@socialincome/design-system/navigation/checkout-footer/checkout-footer';
-import { ChevronLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';
 
@@ -13,38 +12,26 @@ type Summary = {
 };
 
 type QrWizardStepFooterProps = {
-	onBack?: () => void;
 	onContinue: () => void;
 	continueLabel: string;
 	continueDisabled?: boolean;
 	continueVariant?: 'default' | 'foreground';
 	continueTestId?: string;
-	showBack?: boolean;
 	summary?: Summary;
 };
 
 export const QrWizardStepFooter = ({
-	onBack,
 	onContinue,
 	continueLabel,
 	continueDisabled = false,
 	continueVariant = 'default',
 	continueTestId = 'donation-wizard-continue',
-	showBack = true,
 	summary,
 }: QrWizardStepFooterProps) => {
 	const t = useTranslations('donation-wizard');
 
 	return (
 		<CheckoutFooter
-			back={
-				showBack && onBack ? (
-					<Button type="button" data-testid="donation-wizard-back" variant="outline" onClick={onBack}>
-						<ChevronLeft className="size-4" aria-hidden />
-						{t('stepPlan.back')}
-					</Button>
-				) : undefined
-			}
 			summary={
 				summary
 					? {

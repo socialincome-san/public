@@ -13,16 +13,22 @@ const Select = SelectPrimitive.Root;
 const SelectValue = SelectPrimitive.Value;
 
 const selectTriggerVariants = cva(
-	'border-input ring-offset-background data-placeholder:text-muted-foreground focus:ring-ring flex w-full items-center justify-between gap-2 rounded-full border bg-transparent px-3 text-sm whitespace-nowrap shadow-xs focus:ring-1 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+	'ring-offset-background data-placeholder:text-muted-foreground focus:ring-ring flex w-full items-center justify-between gap-2 rounded-full border px-3 text-sm whitespace-nowrap focus:ring-1 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
 	{
 		variants: {
 			size: {
 				default: 'h-10',
 				sm: 'h-8',
 			},
+			// Subtle sits as a compact pill next to round icon buttons, e.g. in a dialog header
+			variant: {
+				default: 'border-input bg-transparent shadow-xs',
+				subtle: 'border-input/60 bg-background font-medium',
+			},
 		},
 		defaultVariants: {
 			size: 'default',
+			variant: 'default',
 		},
 	},
 );
@@ -31,8 +37,8 @@ const SelectTrigger = React.forwardRef<
 	React.ElementRef<typeof SelectPrimitive.Trigger>,
 	WithoutClassName<React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>> &
 		VariantProps<typeof selectTriggerVariants>
->(({ size, children, ...props }, ref) => (
-	<SelectPrimitive.Trigger ref={ref} className={selectTriggerVariants({ size })} {...props}>
+>(({ size, variant, children, ...props }, ref) => (
+	<SelectPrimitive.Trigger ref={ref} className={selectTriggerVariants({ size, variant })} {...props}>
 		{children}
 		<SelectPrimitive.Icon asChild>
 			<ChevronDown className="h-4 w-4 opacity-50" />

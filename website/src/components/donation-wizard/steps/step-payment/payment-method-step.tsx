@@ -40,9 +40,9 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 			className={cn(getDonationWizardCardClass('stepPayment'), 'text-foreground flex w-full max-w-full min-w-0 flex-col')}
 			data-testid="donation-wizard-step-payment"
 		>
-			<h3 className="mb-4 text-base font-medium sm:text-lg">{t('stepPayment.title')}</h3>
+			<h3 className="mb-2 text-base font-medium sm:text-lg">{t('stepPayment.title')}</h3>
 
-			<div className="mb-5 flex flex-col gap-3">
+			<div className="mb-2 flex flex-col gap-2">
 				<PaymentMethodOption
 					label={t('stepPayment.qr-payment')}
 					badge={t('stepPayment.minimal-costs')}
@@ -63,7 +63,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 			</div>
 
 			{view.paymentMethod === 'online' && (
-				<div className="mb-5">
+				<div className="mb-2">
 					<CoverTransactionCostsToggle
 						cadence={view.cadence}
 						currency={currency}
@@ -74,38 +74,39 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				</div>
 			)}
 
-			<DonationStepFooter
-				onBack={() => send({ type: 'BACK' })}
-				onContinue={() => {
-					if (view.paymentMethod === 'online') {
-						const checkoutContext = {
-							...state.context,
-							paymentMethod: 'online' as const,
-							coverTransactionCosts: view.coverTransactionCosts,
-						};
+			<div className="mt-auto">
+				<DonationStepFooter
+					onContinue={() => {
+						if (view.paymentMethod === 'online') {
+							const checkoutContext = {
+								...state.context,
+								paymentMethod: 'online' as const,
+								coverTransactionCosts: view.coverTransactionCosts,
+							};
 
-						if (state.context.paymentMethod !== 'online') {
-							send({ type: 'SET_PAYMENT_METHOD', value: 'online' });
+							if (state.context.paymentMethod !== 'online') {
+								send({ type: 'SET_PAYMENT_METHOD', value: 'online' });
+							}
+							if (state.context.coverTransactionCosts !== view.coverTransactionCosts) {
+								send({ type: 'SET_COVER_TRANSACTION_COSTS', value: view.coverTransactionCosts });
+							}
+
+							send({ type: 'START_STRIPE_CHECKOUT' });
+							void requestStripeEmbeddedCheckout(checkoutContext, send);
+
+							return;
 						}
-						if (state.context.coverTransactionCosts !== view.coverTransactionCosts) {
-							send({ type: 'SET_COVER_TRANSACTION_COSTS', value: view.coverTransactionCosts });
-						}
 
-						send({ type: 'START_STRIPE_CHECKOUT' });
-						void requestStripeEmbeddedCheckout(checkoutContext, send);
-
-						return;
-					}
-
-					send({ type: 'START_QR_FLOW' });
-				}}
-				continueLabel={t(view.paymentMethod === 'qr' ? 'stepPayment.generate-qr-code' : 'stepPayment.pay-online')}
-				summary={{
-					amount: view.summary.amount,
-					currency,
-					showPerMonth: view.summary.showPerMonth,
-				}}
-			/>
+						send({ type: 'START_QR_FLOW' });
+					}}
+					continueLabel={t(view.paymentMethod === 'qr' ? 'stepPayment.generate-qr-code' : 'stepPayment.pay-online')}
+					summary={{
+						amount: view.summary.amount,
+						currency,
+						showPerMonth: view.summary.showPerMonth,
+					}}
+				/>
+			</div>
 		</div>
 	);
 };

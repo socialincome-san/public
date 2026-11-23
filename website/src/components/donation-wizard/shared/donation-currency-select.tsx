@@ -27,7 +27,7 @@ export const DonationCurrencySelect = ({ value, onChange }: Props) => {
 				}
 			}}
 		>
-			<SelectTrigger size="sm" aria-label={t('modal.currency')} data-testid="donation-wizard-currency">
+			<SelectTrigger variant="subtle" aria-label={t('modal.currency')} data-testid="donation-wizard-currency">
 				<SelectValue />
 			</SelectTrigger>
 			<SelectContent>

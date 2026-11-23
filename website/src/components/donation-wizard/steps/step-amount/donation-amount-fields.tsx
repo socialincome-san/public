@@ -64,6 +64,8 @@ type Props = {
 	placement?: 'wizard' | 'hero';
 	currency: WebsiteCurrency;
 	showTitle?: boolean;
+	// Off where a cadence toggle sits elsewhere, e.g. in the dialog toolbar
+	showCadenceLink?: boolean;
 };
 
 export const DonationAmountFields = ({
@@ -73,6 +75,7 @@ export const DonationAmountFields = ({
 	placement = 'wizard',
 	currency,
 	showTitle = true,
+	showCadenceLink = true,
 }: Props) => {
 	const t = useTranslations('donation-wizard');
 	const isSwissVisitor = useIsSwissVisitor();
@@ -109,7 +112,10 @@ export const DonationAmountFields = ({
 			className={cn(
 				getDonationWizardCardClass('stepAmount'),
 				placement === 'hero' && 'mx-0 max-w-none px-7 pt-6 pb-7 sm:px-7 sm:pt-6 lg:mx-auto lg:w-[400px]',
-				'text-foreground md:px-9 md:py-9',
+				'text-foreground',
+				placement === 'hero' && 'md:px-9 md:py-9',
+				// In the dialog the sheet already frames the form
+				placement === 'wizard' && 'flex h-full flex-col border-0 bg-transparent p-0 shadow-none sm:p-0 md:p-0',
 			)}
 			data-testid="donation-wizard-step-amount"
 		>
@@ -220,26 +226,30 @@ export const DonationAmountFields = ({
 				/>
 			</div>
 
-			<Button
-				type="button"
-				data-testid="donation-wizard-amount-continue"
-				fullWidth
-				disabled={!values.isValid}
-				onClick={() => onSubmit(values.cadence)}
-			>
-				{amount === null ? t('stepAmount.donate-now') : t(submitLabelKeys[values.cadence], { amount })}
-			</Button>
-			<button
-				type="button"
-				data-testid={`donation-wizard-cadence-${otherCadence}`}
-				disabled={!values.isValid}
-				onClick={() => onSubmit(otherCadence)}
-				className="text-muted-foreground hover:text-foreground mt-4 -mb-2 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors disabled:pointer-events-none disabled:opacity-50 md:-mb-4"
-			>
-				{amount === null
-					? t(switchCadenceLabelKeys[otherCadence].withoutAmount)
-					: t(switchCadenceLabelKeys[otherCadence].withAmount, { amount })}
-			</button>
+			<div className="mt-auto">
+				<Button
+					type="button"
+					data-testid="donation-wizard-amount-continue"
+					fullWidth
+					disabled={!values.isValid}
+					onClick={() => onSubmit(values.cadence)}
+				>
+					{amount === null ? t('stepAmount.donate-now') : t(submitLabelKeys[values.cadence], { amount })}
+				</Button>
+			</div>
+			{showCadenceLink ? (
+				<button
+					type="button"
+					data-testid={`donation-wizard-cadence-${otherCadence}`}
+					disabled={!values.isValid}
+					onClick={() => onSubmit(otherCadence)}
+					className="text-muted-foreground hover:text-foreground mt-4 -mb-2 block w-full cursor-pointer text-center text-xs font-medium underline underline-offset-4 transition-colors disabled:pointer-events-none disabled:opacity-50 md:-mb-4"
+				>
+					{amount === null
+						? t(switchCadenceLabelKeys[otherCadence].withoutAmount)
+						: t(switchCadenceLabelKeys[otherCadence].withAmount, { amount })}
+				</button>
+			) : null}
 		</div>
 	);
 };

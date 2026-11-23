@@ -27,22 +27,19 @@
 		"above-maximum": "At most {amount}"
 	},
 	"stepPlan": {
-		"monthly-title": "Monthly Donation",
-		"one-time-title": "One-time Donation",
-		"switch-to-one-time": "One-time",
-		"switch-to-monthly": "Monthly",
-		"upsell-subtitle": "Half the amount, paid monthly.\nIt helps us even more.",
-		"upsell-preferred": "Preferred",
-		"upsell-benefit-cancel": "Cancel anytime",
 		"per-month": "/month",
 		"plan-1x": "1 % Plan",
 		"plan-2x": "2 % Plan",
+		"your-amount": "Your amount",
+		"double-amount": "2× your amount",
+		"per-year": "{amount} a year",
+		"helps-more": "help us even more",
 		"double-impact-badge": "Double the impact",
-		"benefit-beneficiaries": "{directCount} direct, {indirectCount} indirect beneficiaries",
-		"benefit-community": "Join a community of {count} supporters",
-		"benefit-double-impact": "Double the impact",
 		"back": "Back",
-		"choose-payment": "Choose Payment Method"
+		"choose-payment": "Choose Payment Method",
+		"impact-short": "<b>{directCount}</b> direct · <b>{indirectCount}</b> indirect",
+		"impact-tooltip": "Direct: people who receive a monthly income through your donation. Indirect: people in their household and community who benefit too, around {factor} per person.",
+		"impact-tooltip-aria": "What direct and indirect mean"
 	},
 	"stepStripeCheckout": {
 		"loading": "Loading payment form…",
@@ -88,7 +85,6 @@
 		"your-donation": "Your donation",
 		"generate-qr-code": "Generate QR-Code",
 		"pay-online": "Pay online",
-		"cover-costs-description": "Ensure your full donation reaches us.",
 		"cover-costs-label-monthly": "Cover transaction fees of {fee}/month",
 		"cover-costs-label-one-time": "Cover transaction fees of {fee}",
 		"cover-costs-tooltip-aria": "How transaction costs are calculated",
@@ -142,7 +138,6 @@
 		}
 	},
 	"impact": {
-		"title": "Direct cash to people in need",
 		"cancel-anytime": "Cancel anytime",
 		"supporters": "{supporterCount} supporters from {countryCount} countries",
 		"supporters-no-countries": "{supporterCount} supporters worldwide",
@@ -158,6 +153,7 @@
 	"calculator": {
 		"your-donation": "Your donation",
 		"per-month": "per month",
+		"once": "once",
 		"per-year": "{amount} in one year",
 		"beneficiaries": "{directCount, plural, one {# person gets} other {# people get}} an income, {indirectCount} more benefit",
 		"reach": "{percent} % reaches recipients directly"

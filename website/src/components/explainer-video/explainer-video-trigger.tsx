@@ -12,7 +12,7 @@ type Props = {
 	thumbnailSrc?: string;
 	thumbnailAlt?: string;
 	dialogTitle?: string;
-	layout?: 'stacked' | 'row' | 'inline';
+	layout?: 'stacked' | 'row' | 'inline' | 'compact';
 };
 
 export const ExplainerVideoTrigger = ({
@@ -30,7 +30,11 @@ export const ExplainerVideoTrigger = ({
 		<span
 			className={cn(
 				'relative shrink-0 overflow-hidden shadow-md',
-				layout === 'stacked' ? 'aspect-video h-12 rounded-full md:h-16' : 'aspect-video h-10 w-16 rounded-full',
+				layout === 'stacked'
+					? 'aspect-video h-12 rounded-full md:h-16'
+					: layout === 'compact'
+						? 'aspect-video h-8 w-12 rounded-full'
+						: 'aspect-video h-10 w-16 rounded-full',
 			)}
 		>
 			<NextImage src={thumbnailSrc} alt={accessibleLabel} fill sizes="176px" className="object-cover" />
@@ -38,7 +42,7 @@ export const ExplainerVideoTrigger = ({
 			<span
 				className={cn(
 					'bg-foreground/35 absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition-transform duration-200 ease-out group-hover:scale-105',
-					layout === 'stacked' ? 'h-8 w-8 md:h-12 md:w-12' : 'h-8 w-8',
+					layout === 'stacked' ? 'h-8 w-8 md:h-12 md:w-12' : layout === 'compact' ? 'h-6 w-6' : 'h-8 w-8',
 				)}
 			>
 				<PlayIcon className={cn('text-primary-foreground', layout === 'stacked' ? 'size-6' : 'size-4')} />
@@ -58,13 +62,14 @@ export const ExplainerVideoTrigger = ({
 					layout === 'stacked' && 'gap-2 self-start text-sm font-medium md:flex-col md:gap-4 md:self-center',
 					layout === 'row' && 'border-border hover:bg-muted/50 w-full gap-2 border-b px-2 py-4 text-sm font-medium',
 					layout === 'inline' && 'gap-3 text-base',
+					layout === 'compact' && 'gap-2.5 text-sm font-medium',
 				)}
 			>
 				{thumbnail}
 				<span className={layout === 'stacked' ? 'group-hover:underline' : undefined}>{label}</span>
 			</button>
 
-			{/* Centered on phones too, so it opens over an open drawer instead of stacking a second drawer */}
+			{/* Centered on phones too, so it opens over the donation drawer instead of stacking a second drawer */}
 			<Dialog open={isOpen} onOpenChange={setIsOpen} drawerOnMobile={false}>
 				<DialogContent size="lg" padding="none" backdrop="opaque">
 					<DialogTitle visuallyHidden>{dialogTitle ?? label}</DialogTitle>

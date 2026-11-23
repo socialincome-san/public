@@ -97,7 +97,6 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 			<QrBillPaymentCard display={qrBillDisplay} paymentTypeLabel={paymentTypeLabel} />
 
 			<QrWizardStepFooter
-				showBack={false}
 				onContinue={() => void onConfirm()}
 				continueLabel={confirming ? t('stepQrBill.confirming') : confirmLabel}
 				continueDisabled={confirming}

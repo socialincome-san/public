@@ -27,22 +27,19 @@
 		"above-maximum": "Al massimo {amount}"
 	},
 	"stepPlan": {
-		"monthly-title": "Donazione mensile",
-		"one-time-title": "Donazione una tantum",
-		"switch-to-one-time": "Una tantum",
-		"switch-to-monthly": "Mensile",
-		"upsell-subtitle": "La metà dell'importo, ogni mese.\nCi aiuta ancora di più.",
-		"upsell-preferred": "Consigliato",
-		"upsell-benefit-cancel": "Annullabile in qualsiasi momento",
 		"per-month": "/mese",
 		"plan-1x": "Piano 1 %",
 		"plan-2x": "Piano 2 %",
+		"your-amount": "Il tuo importo",
+		"double-amount": "2× il tuo importo",
+		"per-year": "{amount} all'anno",
+		"helps-more": "ci aiutano ancora di più",
 		"double-impact-badge": "Raddoppia l'impatto",
-		"benefit-beneficiaries": "{directCount} beneficiari diretti, {indirectCount} indiretti",
-		"benefit-community": "Unisciti a una community di {count} sostenitori",
-		"benefit-double-impact": "Raddoppia l'impatto",
 		"back": "Indietro",
-		"choose-payment": "Scegli metodo di pagamento"
+		"choose-payment": "Scegli metodo di pagamento",
+		"impact-short": "<b>{directCount}</b> {directCount, plural, one {diretto} other {diretti}} · <b>{indirectCount}</b> {indirectCount, plural, one {indiretto} other {indiretti}}",
+		"impact-tooltip": "Diretti: persone che ricevono un reddito mensile grazie alla tua donazione. Indiretti: persone della loro famiglia e comunità che ne beneficiano a loro volta, circa {factor} per persona.",
+		"impact-tooltip-aria": "Cosa significano diretto e indiretto"
 	},
 	"stepStripeCheckout": {
 		"loading": "Caricamento del modulo di pagamento…",
@@ -88,7 +85,6 @@
 		"your-donation": "La tua donazione",
 		"generate-qr-code": "Genera codice QR",
 		"pay-online": "Paga online",
-		"cover-costs-description": "Assicurati che l'intera donazione ci arrivi.",
 		"cover-costs-label-monthly": "Copri le commissioni di transazione di {fee}/mese",
 		"cover-costs-label-one-time": "Copri le commissioni di transazione di {fee}",
 		"cover-costs-tooltip-aria": "Come vengono calcolati i costi di transazione",
@@ -142,7 +138,6 @@
 		}
 	},
 	"impact": {
-		"title": "Contanti diretti a persone in difficoltà",
 		"cancel-anytime": "Annullabile in qualsiasi momento",
 		"supporters": "{supporterCount} sostenitori da {countryCount} paesi",
 		"supporters-no-countries": "{supporterCount} sostenitori in tutto il mondo",
@@ -158,6 +153,7 @@
 	"calculator": {
 		"your-donation": "La tua donazione",
 		"per-month": "al mese",
+		"once": "una volta",
 		"per-year": "{amount} in un anno",
 		"beneficiaries": "{directCount, plural, one {# persona riceve} other {# persone ricevono}} un reddito, altre {indirectCount} ne beneficiano",
 		"reach": "Il {percent} % va direttamente ai beneficiari"

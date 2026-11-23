@@ -96,3 +96,12 @@ export const WithContent: Story = {
 		),
 	},
 };
+
+export const WithFooter: Story = {
+	args: {
+		padding: 'compact',
+		elevation: 'flat',
+		children: 'Card content',
+		footer: 'Footer on a tinted strip',
+	},
+};

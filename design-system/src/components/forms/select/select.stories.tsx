@@ -82,6 +82,25 @@ export const SelectedValue: Story = {
 	),
 };
 
+export const Subtle: Story = {
+	render: () => (
+		<div className="w-24">
+			<Select defaultValue="chf">
+				<SelectTrigger variant="subtle" aria-label="Currency">
+					<SelectValue />
+				</SelectTrigger>
+				<SelectContent>
+					{currencies.slice(0, 3).map((currency) => (
+						<SelectItem key={currency.value} value={currency.value}>
+							{currency.value.toUpperCase()}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+		</div>
+	),
+};
+
 export const Disabled: Story = {
 	render: () => (
 		<Select disabled>
