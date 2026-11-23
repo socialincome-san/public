@@ -49,10 +49,7 @@ export const renderFollowUpSections = async ({
 	for (const followUp of resolvedFollowUps) {
 		const triggerCount = followUp.triggerOption?.count ?? followUp.followUpQuestion.answeredCount;
 		sections.push(
-			<div
-				key={`${question.name}-${followUp.childName}`}
-				className="border-border border-t px-4 pt-5 pb-8 sm:px-6 sm:pt-6 sm:pb-10"
-			>
+			<div key={`${question.name}-${followUp.childName}`} className="border-border border-t px-7 pt-5 pb-8 sm:pt-6 sm:pb-10">
 				<div className="grid gap-6 lg:grid-cols-2">
 					<div className="text-foreground space-y-4">
 						<p className="text-sm">

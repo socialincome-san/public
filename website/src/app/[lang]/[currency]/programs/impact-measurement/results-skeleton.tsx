@@ -6,7 +6,7 @@ const SkeletonCard = () => (
 	<BlockWrapper marginTop="none" marginBottom="none">
 		<div className="border-border bg-muted overflow-hidden rounded-3xl border shadow-sm">
 			<div className="border-border bg-card rounded-none border-b p-0 shadow-none">
-				<div className="grid gap-6 px-4 pt-6 pb-8 sm:px-6 sm:pt-8 sm:pb-12 lg:grid-cols-2">
+				<div className="grid gap-6 px-7 pt-6 pb-8 sm:pt-8 sm:pb-12 lg:grid-cols-2">
 					<div className="space-y-5">
 						<div className={cn(skeletonBarClassName, 'h-4 w-40')} />
 						<div className={cn(skeletonBarClassName, 'h-8 w-4/5')} />
