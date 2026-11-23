@@ -26,6 +26,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 			href: `${basePath}/dashboard/donation-certificates`,
 			label: t('sections.contributions.donation-certificates-long'),
 		},
+		{ href: `${basePath}/dashboard/campaigns`, label: t('sections.campaigns') },
 		{ href: `${basePath}/dashboard/profile`, label: t('profile.link') },
 	];
 

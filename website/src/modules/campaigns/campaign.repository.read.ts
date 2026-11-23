@@ -150,3 +150,16 @@ export const findCampaignPendingByClaimId = async (claimId: string) =>
 			},
 		},
 	});
+
+export const findCampaignsByContributor = async (contributorId: string) =>
+	prisma.campaign.findMany({
+		where: { contributorId, slug: { not: null } },
+		select: { id: true, slug: true, endDate: true, goal: true, currency: true },
+		orderBy: [{ createdAt: 'desc' }],
+	});
+
+export const findCampaignForEdit = async (campaignId: string) =>
+	prisma.campaign.findUnique({
+		where: { id: campaignId },
+		select: { id: true, slug: true, contributorId: true, goal: true, currency: true, endDate: true },
+	});

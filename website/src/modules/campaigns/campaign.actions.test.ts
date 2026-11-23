@@ -35,6 +35,11 @@ jest.mock('./campaign-submission.service', () => ({
 	submitCampaign: mockSubmit,
 }));
 
+jest.mock('./campaign-edit.service', () => ({
+	getOwnCampaignForEdit: jest.fn(),
+	updateOwnCampaign: jest.fn(),
+}));
+
 jest.mock('./campaign-pending-claim.service', () => ({
 	claimPendingCampaigns: mockClaimPendingCampaigns,
 }));

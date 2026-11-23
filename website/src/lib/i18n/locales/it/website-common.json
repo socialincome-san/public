@@ -347,6 +347,17 @@
 		"about": "Informazioni su",
 		"create-campaign": "Crea campagna",
 		"submission": {
+			"markdown": {
+				"toolbar": "Formattazione",
+				"write": "Scrivi",
+				"preview": "Anteprima",
+				"empty-preview": "Ancora niente da mostrare.",
+				"bold": "Grassetto",
+				"italic": "Corsivo",
+				"bullet-list": "Elenco puntato",
+				"link": "Link",
+				"hint": "Usa i pulsanti per grassetto, corsivo, elenchi e link. Una riga vuota inizia un nuovo paragrafo."
+			},
 			"program-step-title": "Per quale programma vorresti creare una campagna?",
 			"details-step-title": "Dettagli della campagna",
 			"about-step-title": "Informazioni",
@@ -457,6 +468,7 @@
 				"program-not-eligible": "Il programma selezionato non è idoneo.",
 				"slug-exists": "Esiste già una campagna con questo slug.",
 				"submission-failed": "Non siamo riusciti a completare l'invio. Riprova tra qualche minuto.",
+				"campaign-not-found": "Non abbiamo trovato questa campagna nel tuo account.",
 				"turnstile-required": "Completa la verifica prima di inviare.",
 				"turnstile-invalid": "Verifica non riuscita. Riprova.",
 				"first-name-required": "Il nome è obbligatorio.",

@@ -6,6 +6,7 @@ import { CampaignCreationTeaser } from '@/components/campaign/campaign-creation-
 import { CampaignFaqSection } from '@/components/campaign/campaign-faq-section';
 import { CampaignHero } from '@/components/campaign/campaign-hero';
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
+import { CampaignMarkdown } from '@/components/campaign/campaign-markdown';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import { CampaignProgramTeaser } from '@/components/campaign/campaign-program-teaser';
 import { Community } from '@/components/community/community';
@@ -98,7 +99,9 @@ export const CampaignDetail = async ({
 			</div>
 			{trimmedDescription ? (
 				<BlockWrapper marginTop="lg" marginBottom="lg">
-					<p className="text-foreground max-w-2xl text-lg whitespace-pre-wrap">{trimmedDescription}</p>
+					<div className="max-w-2xl">
+						<CampaignMarkdown size="lg">{trimmedDescription}</CampaignMarkdown>
+					</div>
 				</BlockWrapper>
 			) : null}
 			<CampaignAboutSection

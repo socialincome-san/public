@@ -13,6 +13,7 @@ import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/b
 import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
 import type { CSSProperties, ReactNode } from 'react';
+import { CampaignMarkdown } from './campaign-markdown';
 
 const SECTION_IMAGE_MAX_WIDTH = 500;
 
@@ -129,7 +130,7 @@ export const CampaignAboutSection = ({
 					<div className="bg-card flex min-w-0 flex-col rounded-3xl p-8 shadow-lg md:p-10">
 						<div className="flex flex-col items-start gap-5">
 							<h2 className="text-foreground text-3xl leading-none font-semibold text-pretty">{heading}</h2>
-							{description ? <p className="text-foreground text-base leading-6 whitespace-pre-wrap">{description}</p> : null}
+							{description ? <CampaignMarkdown>{description}</CampaignMarkdown> : null}
 							{hasLinks ? (
 								<div className="flex flex-wrap items-center gap-2">
 									{tiktok ? (
