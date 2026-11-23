@@ -38,8 +38,10 @@ export const isReadyForFirstPayoutInterval = async (programId: string): Promise<
 
 		const costPerInterval = cohorts.activeRecipientsCount * Number(program.payoutPerInterval);
 		const rates = await getLatestRatesOrUndefined();
-		const costPerIntervalChf =
-			convertAmount(costPerInterval, program.country.currency, Currency.CHF, rates) ?? costPerInterval;
+		const costPerIntervalChf = convertAmount(costPerInterval, program.country.currency, Currency.CHF, rates);
+		if (costPerIntervalChf === undefined) {
+			return resultFail('Could not check program readiness');
+		}
 		const contributionsChf = program.campaigns.reduce(
 			(campaignTotal, campaign) =>
 				campaignTotal +
@@ -124,32 +126,45 @@ export const getProgramDashboardStats = async (programId: string): Promise<Resul
 		const cohorts = splitRecipientCohorts(program, nowDate, totalExpectedIntervals);
 		const rates = await getLatestRatesOrUndefined();
 		const costPerIntervalProgramCurrency = cohorts.activeRecipientsCount * payoutPerInterval;
-		const costPerIntervalChf =
-			convertAmount(costPerIntervalProgramCurrency, program.country.currency, Currency.CHF, rates) ??
-			costPerIntervalProgramCurrency;
-		const payouts = computePayouts(program);
-		const projection = computeProjectedRemaining({
+		const costPerIntervalChf = convertAmount(costPerIntervalProgramCurrency, program.country.currency, Currency.CHF, rates);
+		const projectedRemaining = computeProjectedRemaining({
 			recipients: program.recipients,
 			expectedIntervals: totalExpectedIntervals,
 			nowDate,
 			payoutPerInterval,
 		});
-		const projectedRemainingChf =
-			convertAmount(projection.projectedRemainingProgramCurrency, program.country.currency, Currency.CHF, rates) ??
-			projection.projectedRemainingProgramCurrency;
+		const projectedRemainingChf = convertAmount(
+			projectedRemaining.projectedRemainingProgramCurrency,
+			program.country.currency,
+			Currency.CHF,
+			rates,
+		);
+		if (costPerIntervalChf === undefined || projectedRemainingChf === undefined) {
+			return resultFail('Could not load program dashboard stats');
+		}
+		const payouts = computePayouts(program);
 		const totalProgramCostsProgramCurrency =
-			payouts.paidOutSoFarProgramCurrency + projection.projectedRemainingProgramCurrency;
+			payouts.paidOutSoFarProgramCurrency + projectedRemaining.projectedRemainingProgramCurrency;
 		const totalProgramCostsChf = payouts.paidOutSoFarChf + projectedRemainingChf;
 		const contributions = computeContributions(program, totalProgramCostsChf);
 		const availableCreditsChf = contributions.contributedToProgramSoFarChf - payouts.paidOutSoFarChf;
+		const availableCreditsProgramCurrency = convertAmount(
+			availableCreditsChf,
+			Currency.CHF,
+			program.country.currency,
+			rates,
+		);
+		if (availableCreditsProgramCurrency === undefined) {
+			return resultFail('Could not load program dashboard stats');
+		}
 		const surveys = computeSurveys(program);
 
 		return resultOk({
 			...contributions,
 			totalProgramCostsChf,
 			...payouts,
-			remainingPayoutsCount: projection.remainingPayoutsCount,
-			remainingIntervalsCount: projection.remainingIntervalsCount,
+			remainingPayoutsCount: projectedRemaining.remainingPayoutsCount,
+			remainingIntervalsCount: projectedRemaining.remainingIntervalsCount,
 			payoutPerInterval,
 			payoutInterval: program.payoutInterval,
 			payoutCurrency: program.country.currency,
@@ -162,8 +177,7 @@ export const getProgramDashboardStats = async (programId: string): Promise<Resul
 			payoutProgressExchangeRateText: getExchangeRateText(Currency.CHF, program.country.currency, rates),
 			totalProgramCostsProgramCurrency,
 			availableCreditsChf,
-			availableCreditsProgramCurrency:
-				convertAmount(availableCreditsChf, Currency.CHF, program.country.currency, rates) ?? availableCreditsChf,
+			availableCreditsProgramCurrency,
 			availableCreditsInIntervals: costPerIntervalChf > 0 ? availableCreditsChf / costPerIntervalChf : 0,
 			totalExpectedIntervals,
 			...surveys,

@@ -22,7 +22,18 @@ jest.mock('./program.repository.read', () => ({
 	findProgramDashboardSource: mockFindProgramDashboardSource,
 }));
 
-import { calculateProgramBudget, isReadyForFirstPayoutInterval } from './program-stats.service';
+import { calculateProgramBudget, getProgramDashboardStats, isReadyForFirstPayoutInterval } from './program-stats.service';
+import type { ProgramDashboardSource } from './program.types';
+
+const programDashboardSource = {
+	coveredByReserves: false,
+	programDurationInMonths: 12,
+	payoutPerInterval: 100,
+	payoutInterval: PayoutInterval.monthly,
+	country: { currency: Currency.SLE },
+	recipients: [],
+	campaigns: [],
+} satisfies ProgramDashboardSource;
 
 describe('program stats service', () => {
 	beforeEach(() => {
@@ -67,5 +78,40 @@ describe('program stats service', () => {
 		mockGetExpectedIntervals.mockReturnValue(resultOk(12));
 
 		await expect(isReadyForFirstPayoutInterval('program-1')).resolves.toEqual(resultOk(true));
+	});
+
+	it('fails to load dashboard stats when a non-CHF projection cannot be converted', async () => {
+		mockFindProgramDashboardSource.mockResolvedValue(programDashboardSource);
+		mockGetExpectedIntervals.mockReturnValue(resultOk(12));
+		mockGetLatestRates.mockResolvedValue(resultOk({ [Currency.CHF]: 1 }));
+
+		await expect(getProgramDashboardStats('program-1')).resolves.toEqual({
+			success: false,
+			error: 'Could not load program dashboard stats',
+		});
+	});
+
+	it('fails the readiness check when a non-CHF payout cannot be converted', async () => {
+		mockFindProgramDashboardSource.mockResolvedValue({
+			...programDashboardSource,
+			recipients: [
+				{
+					id: 'recipient-1',
+					startDate: new Date('2026-01-01T00:00:00.000Z'),
+					suspendedAt: null,
+					payouts: [],
+					surveys: [],
+				},
+			],
+		});
+		mockGetExpectedIntervals.mockReturnValue(resultOk(12));
+		mockCountPaidOrConfirmedPayouts.mockReturnValue(resultOk(0));
+		mockGetRecipientLifecycleStatus.mockReturnValue(resultOk('active'));
+		mockGetLatestRates.mockResolvedValue(resultOk({ [Currency.CHF]: 1 }));
+
+		await expect(isReadyForFirstPayoutInterval('program-1')).resolves.toEqual({
+			success: false,
+			error: 'Could not check program readiness',
+		});
 	});
 });
