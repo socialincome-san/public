@@ -87,10 +87,11 @@ export const DonationModalProvider = ({ children }: Props) => {
 			) {
 				// Only a checkout that Stripe reports as paid counts as a completed donation.
 				const resumableVersion = getResumableDonationVersion();
+				const expressPaymentType = event.type === 'OPEN_FROM_STRIPE_RETURN' ? event.expressPaymentType : undefined;
 				void getPaidStripeCheckoutDonationAction(stripeCheckoutSessionId).then((result) => {
 					if (result.success) {
 						clearResumableDonation(resumableVersion);
-						const completedEvent = getDonationCompletedEvent(result.data);
+						const completedEvent = getDonationCompletedEvent(result.data, expressPaymentType);
 						trackEvent(completedEvent.name, completedEvent.properties);
 					}
 				});
@@ -141,12 +142,12 @@ export const DonationModalProvider = ({ children }: Props) => {
 		}
 	};
 
-	const openWizardAfterPayment = (context: DonationAmountContext, sessionId: string) => {
+	const openWizardAfterPayment = (context: DonationAmountContext, sessionId: string, expressPaymentType: string) => {
 		// The wallet sheet may finish while the donor has opened the wizard; onboarding only starts from closed.
 		if (!actorRef.getSnapshot().matches('closed')) {
 			send({ type: 'CLOSE' });
 		}
-		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: context.currency });
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId, currency: context.currency, expressPaymentType });
 	};
 
 	return (

@@ -326,14 +326,19 @@ export const createStripeCheckoutSession = async (
 	}
 };
 
-export const retrieveStripeCheckoutSession = async (sessionId: string): Promise<Result<StripeApiCheckoutSession>> => {
+export const retrieveStripeCheckoutSession = async (
+	sessionId: string,
+	expand?: string[],
+): Promise<Result<StripeApiCheckoutSession>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
 	}
 
 	try {
-		return resultOk(await clientResult.data.checkout.sessions.retrieve(sessionId));
+		return resultOk(
+			await clientResult.data.checkout.sessions.retrieve(sessionId, expand && expand.length > 0 ? { expand } : undefined),
+		);
 	} catch (error) {
 		console.error('Could not retrieve Stripe checkout session', { error });
 

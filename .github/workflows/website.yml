@@ -121,7 +121,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:18-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+        image: postgres:19-alpine@sha256:8b0ff4cdf221f0c53d7fcda681d3b461be725c492cd881c5ec9c0ad25023f188
         env:
           POSTGRES_USER: social-income
           POSTGRES_PASSWORD: social-income
@@ -153,7 +153,7 @@ jobs:
     steps:
       # Snapshot commits pushed with the CI app token trigger the checks again;
       # pushes made with GITHUB_TOKEN don't, which left PRs waiting forever.
-      - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+      - uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         id: app-token
         if: env.SKIP_SNAPSHOT_UPDATE != 'true'
         with:

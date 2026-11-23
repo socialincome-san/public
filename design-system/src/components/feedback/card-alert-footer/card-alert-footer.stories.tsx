@@ -39,6 +39,13 @@ export const WithAction: Story = {
 	},
 };
 
+export const LongTextWithAction: Story = {
+	args: {
+		...WithAction.args,
+		text: 'Build your own program with up to 39 recipients from Alliance for African Women Initiative',
+	},
+};
+
 export const LargeInset: Story = {
 	args: { inset: 'lg' },
 };

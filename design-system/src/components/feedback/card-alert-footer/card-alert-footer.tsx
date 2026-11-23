@@ -1,10 +1,9 @@
 import { cva } from 'class-variance-authority';
 import { type ReactNode } from 'react';
-import { cn } from '../../../cn';
 
 export type CardAlertFooterVariant = 'confirm' | 'secondary';
 
-const footerVariants = cva('flex flex-wrap items-center gap-x-2 gap-y-1', {
+const footerVariants = cva('flex flex-wrap items-center gap-2', {
 	variants: {
 		inset: {
 			sm: 'rounded-b-2xl px-4 py-2',
@@ -13,7 +12,7 @@ const footerVariants = cva('flex flex-wrap items-center gap-x-2 gap-y-1', {
 	},
 });
 
-const textVariants = cva('text-foreground min-w-0 font-medium', {
+const textVariants = cva('text-foreground min-w-0 flex-1 font-medium', {
 	variants: {
 		inset: {
 			sm: 'text-xs',
@@ -42,8 +41,9 @@ export const CardAlertFooter = ({ text, variant, trailingText, action, inset = '
 		) : null}
 		<p className={textVariants({ inset })}>{text}</p>
 		{trailingText ? (
-			<p className={cn('text-foreground min-w-0 text-xs font-medium', !action && 'ml-auto')}>{trailingText}</p>
+			<p className="text-foreground max-w-1/2 min-w-0 text-right text-xs font-medium">{trailingText}</p>
 		) : null}
+		{/* Stays at the end when it wraps onto a line of its own */}
 		{action ? <div className="ml-auto shrink-0">{action}</div> : null}
 	</div>
 );

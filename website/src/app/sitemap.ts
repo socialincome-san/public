@@ -1,45 +1,28 @@
 import { findPathTails, getLinkPathTails } from '@/app/[lang]/[currency]/page-metadata';
 import { getCampaignStoryblokSlug } from '@/components/storyblok/campaign/campaign.utils';
-import { defaultCurrency, defaultLanguage, mainWebsiteLanguages, type WebsiteLanguage } from '@/lib/i18n/utils';
-import {
-	getWebsitePathTailFromStoryblokSlug,
-	getWebsitePublicPath,
-	WEBSITE_JOURNAL_PATH_SEGMENT,
-} from '@/lib/storyblok/storyblok-paths';
-import { type LanguagePathTails } from '@/lib/utils/metadata';
+import { defaultLanguage, mainWebsiteLanguages } from '@/lib/i18n/utils';
+import { getWebsitePathTailFromStoryblokSlug, WEBSITE_JOURNAL_PATH_SEGMENT } from '@/lib/storyblok/storyblok-paths';
+import { getCanonicalPath, getHreflangPaths } from '@/lib/utils/metadata';
 import { WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
 import { getCampaigns, getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { StoryblokPublishedLink } from '@/modules/storyblok-content/storyblok-content.types';
 import type { MetadataRoute } from 'next';
 
-// Only the canonical currency: the other currencies show the same content with converted amounts.
-const absoluteUrl = (lang: WebsiteLanguage, pathTail: string) =>
-	`${WEBSITE_ORIGIN}${getWebsitePublicPath(lang, defaultCurrency, pathTail)}`;
+// Resolved like the head's canonical and hreflang, which Next.js resolves against metadataBase.
+const absoluteUrl = (path: string) => new URL(path, WEBSITE_ORIGIN).href;
 
-const collectStoryblokEntries = (links: StoryblokPublishedLink[]): LanguagePathTails[] => {
-	const entries: LanguagePathTails[] = [];
-
-	for (const link of links) {
-		if (link.is_folder || !link.published) {
-			continue;
-		}
-
+const collectStoryblokPathTails = (links: StoryblokPublishedLink[]) =>
+	links.flatMap((link) => {
 		// Campaigns are listed from their own stories below.
-		if (getWebsitePathTailFromStoryblokSlug(link.slug).startsWith('campaigns/')) {
-			continue;
+		if (link.is_folder || !link.published || getWebsitePathTailFromStoryblokSlug(link.slug).startsWith('campaigns/')) {
+			return [];
 		}
 
-		const languages = getLinkPathTails(link);
-		if (languages.size > 0) {
-			entries.push(languages);
-		}
-	}
+		return [...getLinkPathTails(link).values()];
+	});
 
-	return entries;
-};
-
-// Only listed campaigns, in the languages their page metadata names.
-const collectCampaignEntries = async (links: StoryblokPublishedLink[]): Promise<LanguagePathTails[]> => {
+// Only listed campaigns
+const collectCampaignPathTails = async () => {
 	const result = await getCampaigns(defaultLanguage);
 	if (!result.success) {
 		return [];
@@ -47,91 +30,53 @@ const collectCampaignEntries = async (links: StoryblokPublishedLink[]): Promise<
 
 	return result.data.flatMap((story) => {
 		const slug = getCampaignStoryblokSlug(story).trim();
-		if (!slug) {
-			return [];
-		}
 
-		return [findPathTails(links, `campaigns/${slug}`)];
+		return slug ? [`campaigns/${slug}`] : [];
 	});
 };
 
 // Pages without a Storyblok story
 const STATIC_PATH_TAILS = [WEBSITE_JOURNAL_PATH_SEGMENT, 'open-research/country-eligibility'];
 
-const ensureStaticPages = (entries: LanguagePathTails[]) => {
-	for (const staticPathTail of STATIC_PATH_TAILS) {
-		const isListed = entries.some((languages) => [...languages.values()].some((pathTail) => pathTail === staticPathTail));
+/**
+ * One entry per language URL that is its own canonical. A language without a published translation renders
+ * the fallback content with the translation as canonical, so it is neither listed nor named as an alternate.
+ * Every entry of a page carries the hreflang set its head renders. Only the canonical currency is listed: the
+ * other currencies show the same content with converted amounts.
+ */
+const buildEntries = (links: StoryblokPublishedLink[], pathTail: string): MetadataRoute.Sitemap => {
+	const pathTails = findPathTails(links, pathTail);
+	const languages = Object.fromEntries(
+		Object.entries(getHreflangPaths(pathTails)).map(([hreflang, path]) => [hreflang, absoluteUrl(path)]),
+	);
 
-		if (!isListed) {
-			entries.push(new Map(mainWebsiteLanguages.map((lang) => [lang, staticPathTail])));
-		}
-	}
-};
+	const changeFrequency = pathTail.startsWith('journal/') ? 'monthly' : 'weekly';
 
-const getPrimaryEntry = (languages: LanguagePathTails) => {
-	if (languages.has(defaultLanguage)) {
-		return { lang: defaultLanguage, pathTail: languages.get(defaultLanguage)! };
-	}
+	return mainWebsiteLanguages.flatMap((lang) => {
+		const canonicalPath = pathTails.get(lang) === pathTail ? getCanonicalPath(lang, pathTails) : undefined;
 
-	const [lang, pathTail] = languages.entries().next().value ?? [];
-	if (!lang || pathTail === undefined) {
-		return undefined;
-	}
-
-	return { lang, pathTail };
-};
-
-const dedupeEntries = (entries: LanguagePathTails[]) => {
-	const byPathTail = new Map<string, LanguagePathTails>();
-
-	for (const languages of entries) {
-		const primary = getPrimaryEntry(languages);
-		if (primary && !byPathTail.has(primary.pathTail)) {
-			byPathTail.set(primary.pathTail, languages);
-		}
-	}
-
-	return [...byPathTail.values()];
-};
-
-const buildEntry = (languages: LanguagePathTails): MetadataRoute.Sitemap => {
-	const primary = getPrimaryEntry(languages);
-	if (!primary) {
-		return [];
-	}
-
-	return [
-		{
-			url: absoluteUrl(primary.lang, primary.pathTail),
-			alternates: {
-				languages: Object.fromEntries(
-					[...languages.entries()].map(([lang, pathTail]) => [lang, absoluteUrl(lang, pathTail)]),
-				),
-			},
-			changeFrequency: primary.pathTail.startsWith('journal/') ? 'monthly' : 'weekly',
-		},
-	];
+		return canonicalPath ? [{ url: absoluteUrl(canonicalPath), alternates: { languages }, changeFrequency }] : [];
+	});
 };
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 	try {
 		const linksResult = await getPublishedPageLinks();
 		if (!linksResult.success) {
-			throw new Error(linksResult.error ?? 'Failed to fetch Storyblok page links');
+			console.error('Failed to generate sitemap', linksResult.error);
+
+			return [];
 		}
 
-		const entries = dedupeEntries([
-			...collectStoryblokEntries(linksResult.data),
-			...(await collectCampaignEntries(linksResult.data)),
+		const pathTails = new Set([
+			...collectStoryblokPathTails(linksResult.data),
+			...(await collectCampaignPathTails()),
+			...STATIC_PATH_TAILS,
 		]);
 
-		ensureStaticPages(entries);
-
-		entries.sort((left, right) =>
-			(getPrimaryEntry(left)?.pathTail ?? '').localeCompare(getPrimaryEntry(right)?.pathTail ?? ''),
-		);
-
-		return entries.flatMap(buildEntry);
+		return [...pathTails]
+			.sort((left, right) => left.localeCompare(right))
+			.flatMap((pathTail) => buildEntries(linksResult.data, pathTail));
 	} catch (error) {
 		console.error('Failed to generate sitemap', error);
 
