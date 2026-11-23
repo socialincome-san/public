@@ -19,7 +19,7 @@ export const StudyCard = ({ study, lang, currency }: Props) => {
 	const href = resolvedHref && resolvedHref !== '#' && isSafeHref(resolvedHref) ? resolvedHref : null;
 
 	return (
-		<article className="border-border bg-card shadow-card flex flex-col gap-4 rounded-3xl border px-10 py-8">
+		<article className="border-border bg-card shadow-card flex flex-col gap-4 rounded-3xl border px-7 pt-6 pb-7 sm:px-10 sm:py-8">
 			<h3 className="text-foreground line-clamp-3 text-2xl font-bold">{title}</h3>
 			<p className="text-foreground line-clamp-5 text-base font-normal">{description}</p>
 			{metadata && <p className="text-foreground text-base font-light">{metadata}</p>}
