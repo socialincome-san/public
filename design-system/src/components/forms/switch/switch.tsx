@@ -10,8 +10,9 @@ const Switch = (props: WithoutClassName<React.ComponentProps<typeof SwitchPrimit
 		<SwitchPrimitive.Root
 			data-slot="switch"
 			className={cn(
-				'relative inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full',
-				'border border-transparent bg-origin-border shadow-xs outline-hidden transition-all',
+				// 24px tall: the minimum touch target of WCAG 2.5.8
+				'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full',
+				'border-2 border-transparent bg-origin-border shadow-xs outline-hidden transition-all',
 				'focus-visible:ring-ring/50 focus-visible:ring-[3px]',
 				'disabled:cursor-not-allowed disabled:opacity-50',
 				'bg-input',
@@ -22,9 +23,9 @@ const Switch = (props: WithoutClassName<React.ComponentProps<typeof SwitchPrimit
 			<SwitchPrimitive.Thumb
 				data-slot="switch-thumb"
 				className={cn(
-					'bg-background pointer-events-none block size-4 rounded-full shadow-sm',
+					'bg-background pointer-events-none block size-5 rounded-full shadow-sm',
 					'transition-transform',
-					'data-[state=checked]:translate-x-[calc(100%-2px)]',
+					'data-[state=checked]:translate-x-5',
 					'data-[state=unchecked]:translate-x-0',
 				)}
 			/>
