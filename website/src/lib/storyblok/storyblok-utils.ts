@@ -239,6 +239,13 @@ export const formatStoryblokMonthYear = (date: string | null | undefined, langua
 	return dateObject.isValid ? dateObject.toLocaleString({ month: 'short', year: 'numeric' }) : '';
 };
 
+/** The year of a date field. A field that held only the year ("2024") before it became a date reads the same. */
+export const getStoryblokYear = (date: string | null | undefined) => {
+	const dateObject = date ? toDateObject(date.trim(), defaultLanguage) : undefined;
+
+	return dateObject?.isValid ? String(dateObject.year) : '';
+};
+
 export type VolunteerDurationParts =
 	| { unit: 'days'; days: number }
 	| { unit: 'months'; months: number; isAnniversary: boolean }

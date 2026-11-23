@@ -3,6 +3,7 @@ import { ArrowRight, ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
 import { cn } from '../../../cn';
+import { Badge } from '../badge/badge';
 import { Card } from '../card/card';
 
 const imageVariants = cva('', {
@@ -32,8 +33,8 @@ type LinkCardProps = {
 	title: string;
 	href: string;
 	description?: string;
-	// Small label above the title, e.g. who the link is for
-	eyebrow?: string;
+	// Below the title, e.g. who the link is for
+	badge?: string;
 	// Decorative: the title already says where the link goes
 	imageSrc?: string;
 	imageFit?: 'cover' | 'contain';
@@ -45,7 +46,7 @@ export const LinkCard = ({
 	title,
 	href,
 	description,
-	eyebrow,
+	badge,
 	imageSrc,
 	imageFit = 'cover',
 	external = false,
@@ -74,10 +75,14 @@ export const LinkCard = ({
 					) : null}
 					<div className={bodyVariants({ hasDescription: Boolean(description) })}>
 						<div className={cn('flex min-w-0 flex-1 flex-col gap-2', description && 'self-start')}>
-							{eyebrow ? <p className="text-muted-foreground text-xs font-bold tracking-wide uppercase">{eyebrow}</p> : null}
 							<p className="text-foreground group-hover:text-primary text-xl leading-snug font-bold transition-colors">
 								{title}
 							</p>
+							{badge ? (
+								<div className="flex">
+									<Badge size="lg">{badge}</Badge>
+								</div>
+							) : null}
 							{description ? <p className="text-muted-foreground">{description}</p> : null}
 						</div>
 						<span

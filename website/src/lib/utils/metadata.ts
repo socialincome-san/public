@@ -137,6 +137,21 @@ export const getCanonicalPath = (lang: WebsiteLanguage, pathTails: LanguagePathT
 	return contentLanguage ? getWebsitePath(contentLanguage, pathTails.get(contentLanguage) ?? '') : undefined;
 };
 
+/**
+ * The hreflang set of a page: the path of each published translation, plus x-default at the English one. The
+ * head and the sitemap both render this map, so they name the same language URLs.
+ */
+export const getHreflangPaths = (pathTails: LanguagePathTails): Record<string, string> => {
+	const paths = mainWebsiteLanguages.flatMap((language) => {
+		const pathTail = pathTails.get(language);
+
+		return pathTail === undefined ? [] : [[language, getWebsitePath(language, pathTail)] as const];
+	});
+	const defaultPath = paths.find(([language]) => language === defaultLanguage)?.[1];
+
+	return Object.fromEntries(defaultPath === undefined ? paths : [...paths, ['x-default', defaultPath]]);
+};
+
 export type WebsitePageMetadata = {
 	title?: string | null;
 	description?: string | null;
@@ -161,7 +176,6 @@ export const getWebsitePageMetadata = async (
 ): Promise<Metadata> => {
 	const languages = mainWebsiteLanguages.filter((language) => pathTails.has(language));
 	const contentLanguage = getContentLanguage(lang, pathTails);
-	const path = (language: WebsiteLanguage) => getWebsitePath(language, pathTails.get(language) ?? '');
 	const canonical = getCanonicalPath(lang, pathTails);
 
 	const defaults = await getMetadata(lang, 'website-common');
@@ -189,10 +203,7 @@ export const getWebsitePageMetadata = async (
 		description: pageDescription,
 		alternates: {
 			canonical,
-			languages: {
-				...Object.fromEntries(languages.map((language) => [language, path(language)])),
-				...(pathTails.has(defaultLanguage) ? { 'x-default': path(defaultLanguage) } : {}),
-			},
+			languages: getHreflangPaths(pathTails),
 		},
 		openGraph: article ? { ...openGraph, type: 'article', ...article } : { ...openGraph, type: 'website' },
 		twitter: {

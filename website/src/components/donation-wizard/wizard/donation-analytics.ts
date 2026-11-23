@@ -54,13 +54,24 @@ export const getDonationFunnelEvent = (
 	};
 };
 
-export const getDonationCompletedEvent = (donation: PaidCheckoutDonation) => ({
+const purchasePaymentMethods = new Map([
+	['card', 'credit_card'],
+	['twint', 'twint'],
+	['apple_pay', 'apple_pay'],
+	['google_pay', 'google_pay'],
+]);
+
+/**
+ * `expressPaymentType` is the wallet the donation bar was paid with; without it the type Stripe stored for the
+ * checkout counts.
+ */
+export const getDonationCompletedEvent = (donation: PaidCheckoutDonation, expressPaymentType?: string) => ({
 	name: 'donation_completed',
 	properties: {
 		value: donation.amount,
 		currency: donation.currency,
 		donation_type: donation.recurring ? 'recurring' : 'one_time',
-		payment_method: 'credit_card',
+		payment_method: purchasePaymentMethods.get(expressPaymentType ?? donation.paymentMethodType ?? '') ?? 'unknown',
 		// Pushed even when unknown: Tag Manager would otherwise keep the value of an earlier event.
 		donor_status: donation.donorStatus,
 		transaction_id: donation.checkoutSessionId,

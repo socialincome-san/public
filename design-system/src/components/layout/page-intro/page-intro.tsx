@@ -35,7 +35,7 @@ const headingVariants = cva('text-foreground', {
 		variant: {
 			page: 'text-5xl leading-tight font-bold md:text-6xl',
 			// Set in the regular weight; words wrapped in <strong> are bold
-			landing: 'text-5xl leading-tight md:text-6xl [&_strong]:font-bold',
+			landing: 'text-4xl leading-tight sm:text-5xl md:text-6xl [&_strong]:font-bold',
 			section: 'text-4xl font-normal break-words',
 		},
 	},

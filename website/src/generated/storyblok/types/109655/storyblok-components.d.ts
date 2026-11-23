@@ -547,6 +547,7 @@ export interface Layout {
 
 export interface LinkCard {
   title: string;
+  badge?: string;
   description?: string;
   image?: StoryblokAsset;
   imageFit?: "" | "cover" | "contain";

@@ -62,7 +62,7 @@ const GroupColumn = ({ group, surface }: { group: SiteMenuGroup; surface?: strin
 				<Image src={group.illustrationSrc} alt="" width={112} height={112} className="size-28 object-contain" />
 			)}
 		</div>
-		<ul className="divide-border border-border divide-y border-y">
+		<ul className="divide-foreground/12 border-foreground/12 divide-y border-y">
 			{group.links.map((link) => (
 				<li key={link.id}>
 					<RowLink link={link} />
