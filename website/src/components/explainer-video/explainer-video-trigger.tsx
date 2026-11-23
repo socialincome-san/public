@@ -64,8 +64,9 @@ export const ExplainerVideoTrigger = ({
 				<span className={layout === 'stacked' ? 'group-hover:underline' : undefined}>{label}</span>
 			</button>
 
-			<Dialog open={isOpen} onOpenChange={setIsOpen}>
-				<DialogContent size="lg" padding="none">
+			{/* Centered on phones too, so it opens over an open drawer instead of stacking a second drawer */}
+			<Dialog open={isOpen} onOpenChange={setIsOpen} drawerOnMobile={false}>
+				<DialogContent size="lg" padding="none" backdrop="opaque">
 					<DialogTitle visuallyHidden>{dialogTitle ?? label}</DialogTitle>
 					<iframe
 						src={embedUrl}

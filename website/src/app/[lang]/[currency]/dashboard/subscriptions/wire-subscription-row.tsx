@@ -155,13 +155,14 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 			<Dialog open={isQrOpen} onOpenChange={setQrDialogOpen}>
 				<DialogContent size="lg">
 					<DialogHeader>
-						<div className="flex w-full items-start gap-4 pr-8">
+						{/* On mobile the download drops below the title, so the title keeps the full width */}
+						<div className="flex w-full flex-col items-start gap-3 pr-8 sm:flex-row sm:gap-4">
 							<div className="flex min-w-0 flex-col gap-1">
 								<DialogTitle>{labels.qrDialogTitle}</DialogTitle>
 								<DialogDescription visuallyHidden>{labels.qrDialogTitle}</DialogDescription>
 							</div>
 							{qrBillDisplay && qrBill && (
-								<div className="flex min-w-0 flex-1 items-start justify-end">
+								<div className="flex min-w-0 items-start sm:flex-1 sm:justify-end">
 									<QrBillPdfDownloadLink variant="subscription" subscriptionId={id} />
 								</div>
 							)}
