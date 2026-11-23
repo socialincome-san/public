@@ -203,7 +203,7 @@ export const CountriesSectionClient = ({
 										<span className="bg-muted size-4 shrink-0 rounded-full" aria-hidden="true" />
 									)}
 									<span className="min-w-0 flex-1 truncate">{segment.countryName || otherCountriesLabel}</span>
-									<span className="text-muted-foreground shrink-0 tabular-nums">{segment.formattedAmount}</span>
+									<span className="text-muted-foreground shrink-0">{segment.formattedAmount}</span>
 									<span className="w-12 shrink-0 text-right font-semibold tabular-nums">{segment.formattedPercentage}</span>
 								</>
 							);
@@ -241,7 +241,7 @@ export const CountriesSectionClient = ({
 								<li key={country.countryCode} className="flex items-center gap-3 py-2">
 									<CountryFlag country={country.countryCode} size="sm" decorative />
 									<span className="min-w-0 flex-1 truncate">{country.countryName}</span>
-									<span className="shrink-0 tabular-nums">{country.formattedAmount}</span>
+									<span className="shrink-0">{country.formattedAmount}</span>
 								</li>
 							))}
 						</ul>

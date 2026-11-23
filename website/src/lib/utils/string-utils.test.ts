@@ -86,32 +86,32 @@ describe('string-utils', () => {
 	});
 
 	describe('formatCurrency', () => {
-		test('formats CHF with de-CH locale', () => {
-			const amount = 1234;
-			const expected = normalizeTestIntlOutput(
-				new Intl.NumberFormat('de-CH', {
-					style: 'currency',
-					currency: 'CHF',
-					maximumFractionDigits: 0,
-				}).format(amount),
-			);
-			expect(formatCurrency(amount)).toBe(expected);
+		test('formats CHF the Swiss way', () => {
+			expect(formatCurrency(3788)).toBe("CHF\u00a03'788");
 		});
 	});
 
 	describe('formatCurrencyLocale', () => {
-		test('formats given currency and locale', () => {
-			const amount = 9876.54;
-			const expected = normalizeTestIntlOutput(
-				new Intl.NumberFormat('de-CH', {
-					style: 'currency',
-					currency: 'CHF',
-					minimumFractionDigits: 2,
-					maximumFractionDigits: 2,
-				}).format(amount),
-			);
-			expect(formatCurrencyLocale(amount, 'CHF', 'de-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })).toBe(
-				expected,
+		test('writes CHF the Swiss way of each language', () => {
+			expect(formatCurrencyLocale(3788, 'CHF', 'de')).toBe("CHF\u00a03'788");
+			expect(formatCurrencyLocale(3788, 'CHF', 'fr')).toBe("3'788\u00a0CHF");
+			expect(formatCurrencyLocale(37880, 'CHF', 'it')).toBe("CHF\u00a037'880");
+			expect(formatCurrencyLocale(3788, 'CHF', 'en')).toBe("CHF\u00a03'788");
+			expect(formatCurrencyLocale(3788, 'CHF', 'de-CH')).toBe("CHF\u00a03'788");
+		});
+
+		test('writes other currencies the way of the language', () => {
+			expect(formatCurrencyLocale(3788, 'USD', 'de')).toBe('3.788\u00a0$');
+			expect(formatCurrencyLocale(3788, 'USD', 'en')).toBe('$3,788');
+		});
+
+		test('uses a visible no-break space instead of the narrow one', () => {
+			expect(formatCurrencyLocale(3788, 'EUR', 'fr')).toBe('3\u00a0788\u00a0€');
+		});
+
+		test('keeps the given fraction digits', () => {
+			expect(formatCurrencyLocale(9876.54, 'CHF', 'de-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })).toBe(
+				"CHF\u00a09'876.54",
 			);
 		});
 
@@ -121,32 +121,11 @@ describe('string-utils', () => {
 		});
 
 		test('uses compact currency format when threshold is reached', () => {
-			const amount = 294_104_200;
-			const expected = normalizeTestIntlOutput(
-				new Intl.NumberFormat('en', {
-					style: 'currency',
-					currency: 'CHF',
-					notation: 'compact',
-					compactDisplay: 'short',
-					maximumFractionDigits: 1,
-				}).format(amount),
-			);
-
-			expect(formatCurrencyLocale(amount, 'CHF', 'de-CH', { compactThreshold: 1_000_000 })).toBe(expected);
+			expect(formatCurrencyLocale(294_104_200, 'CHF', 'de-CH', { compactThreshold: 1_000_000 })).toBe('CHF\u00a0294.1M');
 		});
 
 		test('keeps regular currency format when below compact threshold', () => {
-			const amount = 999_999;
-			const expected = normalizeTestIntlOutput(
-				new Intl.NumberFormat('de-CH', {
-					style: 'currency',
-					currency: 'CHF',
-					minimumFractionDigits: 0,
-					maximumFractionDigits: 0,
-				}).format(amount),
-			);
-
-			expect(formatCurrencyLocale(amount, 'CHF', 'de-CH', { compactThreshold: 1_000_000 })).toBe(expected);
+			expect(formatCurrencyLocale(999_999, 'CHF', 'de-CH', { compactThreshold: 1_000_000 })).toBe("CHF\u00a0999'999");
 		});
 	});
 
