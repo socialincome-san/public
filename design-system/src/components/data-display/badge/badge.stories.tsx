@@ -159,6 +159,7 @@ const meta = {
 				'fundraising',
 				'video',
 				'frosted',
+				'ghost',
 				'primary',
 				'primary-outline',
 				'gradient-outline',
@@ -216,6 +217,17 @@ export const OnMedia: Story = {
 		<div className="bg-muted-foreground flex flex-wrap items-center gap-3 rounded-3xl p-8">
 			<Badge variant="video">Video</Badge>
 			<Badge variant="frosted">Frosted</Badge>
+		</div>
+	),
+};
+
+export const OnDarkSurface: Story = {
+	render: () => (
+		<div className="bg-foreground flex flex-wrap items-center gap-3 rounded-3xl p-8 scheme-dark">
+			<Badge variant="ghost" size="lg">
+				<CountryFlag country="ch" size="inline" decorative />
+				Switzerland
+			</Badge>
 		</div>
 	),
 };

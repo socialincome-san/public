@@ -11,6 +11,8 @@ export const journalPageRequestSchema = z.object({
 	homeLabel: z.string(),
 });
 
+export const journalPersonPageRequestSchema = journalPageRequestSchema.pick({ lang: true, currency: true, slug: true });
+
 export const journalArticleRequestSchema = z.object({
 	language: journalLanguageSchema,
 	slug: z.string().trim().min(1),

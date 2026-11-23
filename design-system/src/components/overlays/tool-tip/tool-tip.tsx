@@ -49,9 +49,9 @@ const Tooltip = ({
 
 	return (
 		<TooltipProvider>
-			<TooltipContext.Provider value={{ open: currentOpen, openRef, setOpen }}>
+			<TooltipContext value={{ open: currentOpen, openRef, setOpen }}>
 				<TooltipPrimitive.Root data-slot="tooltip" open={currentOpen} onOpenChange={setOpen} {...props} />
-			</TooltipContext.Provider>
+			</TooltipContext>
 		</TooltipProvider>
 	);
 };
@@ -62,7 +62,7 @@ const TooltipTrigger = ({
 	onPointerCancel,
 	...props
 }: WithoutClassName<React.ComponentProps<typeof TooltipPrimitive.Trigger>>) => {
-	const tooltip = React.useContext(TooltipContext);
+	const tooltip = React.use(TooltipContext);
 	// Set per press: touch on a device whose primary pointer is a mouse (e.g. a touchscreen laptop) counts as a tap too
 	const tapRef = React.useRef(false);
 
@@ -100,21 +100,40 @@ const TooltipTrigger = ({
 
 // z-[110] keeps tooltips above dialogs and the mobile navigation overlay
 const tooltipContentVariants = cva(
-	'bg-foreground text-background animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-[110] w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md leading-snug text-balance',
+	'animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-[110] w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md leading-snug text-balance',
 	{
 		variants: {
+			// `light` for tooltips on dark surfaces
+			variant: {
+				default: 'bg-foreground text-background',
+				light: 'bg-background text-foreground shadow-overlay',
+			},
 			size: {
 				default: 'max-w-xs px-3 py-1.5 text-xs',
 				lg: 'max-w-[min(36rem,calc(100vw-2rem))] px-4 py-3 text-sm',
 			},
 		},
 		defaultVariants: {
+			variant: 'default',
 			size: 'default',
 		},
 	},
 );
 
+const tooltipArrowVariants = cva('z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-xs', {
+	variants: {
+		variant: {
+			default: 'bg-foreground fill-foreground',
+			light: 'bg-background fill-background',
+		},
+	},
+	defaultVariants: {
+		variant: 'default',
+	},
+});
+
 const TooltipContent = ({
+	variant,
 	size,
 	sideOffset = 0,
 	children,
@@ -126,11 +145,11 @@ const TooltipContent = ({
 			<TooltipPrimitive.Content
 				data-slot="tooltip-content"
 				sideOffset={sideOffset}
-				className={tooltipContentVariants({ size })}
+				className={tooltipContentVariants({ variant, size })}
 				{...props}
 			>
 				{children}
-				<TooltipPrimitive.Arrow className="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-xs" />
+				<TooltipPrimitive.Arrow className={tooltipArrowVariants({ variant })} />
 			</TooltipPrimitive.Content>
 		</TooltipPrimitive.Portal>
 	);

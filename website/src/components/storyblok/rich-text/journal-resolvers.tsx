@@ -1,10 +1,10 @@
 'use client';
 
+import { resolveRichTextHref } from '@/components/storyblok/rich-text/resolve-rich-text-href';
 import type { RichTextAlignmentProps, RichTextHeadingProps } from '@/components/storyblok/rich-text/rich-text.types';
 import {
 	buildLinkRel,
 	getRichTextAlignmentClassName,
-	resolveRichTextHref,
 	storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/shared-resolvers';
 import { cn } from '@socialincome/design-system/cn';

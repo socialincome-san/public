@@ -4,7 +4,6 @@ const mockGetOverviewAuthors = jest.fn();
 const mockGetOverviewArticleTypes = jest.fn();
 const mockGetPrimaryRoleLabels = jest.fn();
 const mockGetCircleLabels = jest.fn();
-const mockGetTimeCommitmentLabels = jest.fn();
 const mockGetWorkStyleLabels = jest.fn();
 const mockGetTag = jest.fn();
 const mockGetArticleType = jest.fn();
@@ -32,7 +31,6 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getOverviewArticleTypes: mockGetOverviewArticleTypes,
 	getPrimaryRoleLabels: mockGetPrimaryRoleLabels,
 	getCircleLabels: mockGetCircleLabels,
-	getTimeCommitmentLabels: mockGetTimeCommitmentLabels,
 	getWorkStyleLabels: mockGetWorkStyleLabels,
 	getTag: mockGetTag,
 	getArticleType: mockGetArticleType,
@@ -114,7 +112,6 @@ beforeEach(() => {
 	mockGetOverviewArticleTypes.mockResolvedValue({ success: true, data: [articleType] });
 	mockGetPrimaryRoleLabels.mockResolvedValue({ success: true, data: { editor: 'Editor' } });
 	mockGetCircleLabels.mockResolvedValue({ success: true, data: { 'tech-circle': 'tech-circle' } });
-	mockGetTimeCommitmentLabels.mockResolvedValue({ success: true, data: { 'On a break': 'Pause' } });
 	mockGetWorkStyleLabels.mockResolvedValue({ success: true, data: { 'Ad Hoc': 'Spontan' } });
 	mockGetArticlesByTag.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByArticleType.mockResolvedValue({ success: true, data: [article] });
@@ -258,20 +255,16 @@ describe('getJournalPersonPageData', () => {
 			lang: 'de',
 			currency: 'CHF',
 			slug: 'ada',
-			parentLabel: 'People',
-			homeLabel: 'Home',
 		});
 
 		expect(result.success && result.data.otherPersons.map((person) => person.uuid)).toEqual(['same-circle', 'other-circle']);
 	});
 
-	test('resolves articles, option labels, pagination, and person breadcrumbs', async () => {
+	test('resolves articles, option labels and pagination', async () => {
 		const result = await getJournalPersonPageData({
 			lang: 'de',
 			currency: 'CHF',
 			slug: 'ada',
-			parentLabel: 'People',
-			homeLabel: 'Home',
 		});
 
 		expect(result.success).toBe(true);
@@ -283,16 +276,32 @@ describe('getJournalPersonPageData', () => {
 			articles: [article],
 			roleLabels: { editor: 'Editor' },
 			circleLabels: { 'tech-circle': 'tech-circle' },
-			timeCommitmentLabels: { 'On a break': 'Pause' },
 			workStyleLabels: { 'Ad Hoc': 'Spontan' },
 			showMoreArticlesLink: true,
 			pathname: '/de/chf/person/ada',
-			breadcrumbs: [
-				{ label: 'Home', href: '/de/chf' },
-				{ label: 'People', href: '/de/chf/people' },
-				{ label: 'Ada Lovelace', href: '/de/chf/person/ada' },
-			],
+			neighbors: null,
+			activePeopleCount: 0,
 		});
+	});
+
+	test('steps previous and next only through the active volunteers, by first name', async () => {
+		mockGetAllPersons.mockResolvedValue({
+			success: true,
+			data: [volunteer('zoe', []), volunteer('author-1', []), volunteer('bea', [], { volunteerStatus: 'inactive' })].map(
+				(person, index) => ({
+					...person,
+					content: { ...person.content, firstName: ['Zoe', 'Ada', 'Bea'][index], lastName: '' },
+				}),
+			),
+		});
+
+		const result = await getJournalPersonPageData({ lang: 'en', currency: 'CHF', slug: 'ada' });
+
+		expect(result.success && result.data.activePeopleCount).toBe(2);
+		expect(result.success && [result.data.neighbors?.previous.uuid, result.data.neighbors?.next.uuid]).toEqual([
+			'zoe',
+			'zoe',
+		]);
 	});
 });
 

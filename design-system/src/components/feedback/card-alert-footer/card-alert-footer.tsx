@@ -1,5 +1,6 @@
 import { cva } from 'class-variance-authority';
 import { type ReactNode } from 'react';
+import { StatusDot } from '../status-dot/status-dot';
 
 export type CardAlertFooterVariant = 'confirm' | 'secondary';
 
@@ -33,12 +34,7 @@ type Props = {
 
 export const CardAlertFooter = ({ text, variant, trailingText, action, inset = 'sm' }: Props) => (
 	<div className={footerVariants({ inset })}>
-		{variant === 'confirm' ? (
-			<span className="relative flex size-2 shrink-0" aria-hidden>
-				<span className="bg-confirm animation-duration-[2s] absolute inline-flex size-full animate-ping rounded-full opacity-75 motion-reduce:animate-none" />
-				<span className="bg-confirm relative inline-flex size-2 rounded-full" />
-			</span>
-		) : null}
+		{variant === 'confirm' ? <StatusDot variant="live" /> : null}
 		<p className={textVariants({ inset })}>{text}</p>
 		{trailingText ? (
 			<p className="text-foreground max-w-1/2 min-w-0 text-right text-xs font-medium">{trailingText}</p>

@@ -36,6 +36,23 @@ export const LongContent: Story = {
 	),
 };
 
+export const OnDarkSurface: Story = {
+	render: (args) => (
+		<div className="bg-foreground text-primary-foreground rounded-3xl p-10 scheme-dark">
+			<Tooltip {...args}>
+				<TooltipTrigger asChild>
+					<button type="button" className="cursor-help text-sm underline decoration-dotted underline-offset-4">
+						years volunteering
+					</button>
+				</TooltipTrigger>
+				<TooltipContent variant="light" sideOffset={8}>
+					Volunteering since Mar 1, 2019
+				</TooltipContent>
+			</Tooltip>
+		</div>
+	),
+};
+
 export const Placement: Story = {
 	render: () => (
 		<div className="flex flex-wrap items-center gap-4 p-16">
