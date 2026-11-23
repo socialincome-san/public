@@ -12,7 +12,8 @@ const meta = {
 		layout: 'padded',
 		docs: {
 			description: {
-				component: 'Short benefits, each with a check mark.',
+				component:
+					'Short benefits, each with a check mark. An item can show a seal with a link instead, e.g. a certification.',
 			},
 		},
 	},
@@ -23,3 +24,22 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const Small: Story = {
+	args: { size: 'sm' },
+};
+
+export const Large: Story = {
+	args: { size: 'lg' },
+};
+
+export const WithSeal: Story = {
+	args: {
+		size: 'lg',
+		items: [
+			'Cancel anytime',
+			'88 % reaches recipients directly',
+			{ label: 'ZEWO certified', imageSrc: '/assets/storybook/zewo.svg', href: 'https://zewo.ch' },
+		],
+	},
+};

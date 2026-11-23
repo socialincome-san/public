@@ -23,6 +23,8 @@ const badgeVariants = cva(
 				'outline-solid': 'border-foreground text-foreground bg-transparent',
 				destructive: 'bg-destructive-foreground border-destructive/30 text-destructive scheme-light',
 				verified: 'bg-confirm-foreground border-confirm/30 text-confirm scheme-light',
+				// A gentle benefit, e.g. of a plan to favour: the mint surface of the local partner program card
+				positive: 'bg-confirm-foreground text-foreground border-transparent font-medium scheme-light',
 				country: 'bg-background border-border text-foreground scheme-light',
 				fundraising:
 					'bg-confirm-foreground border-confirm/30 text-foreground text-sm leading-none font-medium whitespace-nowrap scheme-light',

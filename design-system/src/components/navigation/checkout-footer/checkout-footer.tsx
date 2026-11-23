@@ -26,11 +26,11 @@ export const CheckoutFooter = ({ back, primary, summary }: CheckoutFooterProps) 
 	<div className="flex flex-col gap-3">
 		{summary ? (
 			<div
-				className="border-border flex items-center justify-between gap-2 border-y py-2.5 text-sm sm:hidden"
+				className="flex items-baseline justify-between gap-2 py-3 text-sm sm:hidden"
 				data-testid={summary.testId ? `${summary.testId}-mobile` : undefined}
 			>
 				<span className="text-muted-foreground shrink-0">{summary.label}</span>
-				<div className="flex min-w-0 items-center gap-1.5">
+				<div className="flex min-w-0 items-baseline gap-1.5">
 					<Amount {...summary} />
 				</div>
 			</div>
@@ -43,7 +43,7 @@ export const CheckoutFooter = ({ back, primary, summary }: CheckoutFooterProps) 
 			>
 				{summary ? (
 					<div
-						className="hidden min-w-0 items-center gap-1.5 text-sm sm:flex"
+						className="hidden min-w-0 items-baseline gap-1.5 text-sm sm:flex"
 						data-testid={summary.testId}
 						aria-live="polite"
 					>

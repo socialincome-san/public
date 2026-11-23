@@ -3,6 +3,8 @@
 import { trackEvent } from '@/lib/analytics/analytics';
 import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { getPaidStripeCheckoutDonationAction } from '@/modules/stripe-payments/stripe-payment.actions';
+import { SegmentedToggle } from '@socialincome/design-system/actions/segmented-toggle/segmented-toggle';
+import { cn } from '@socialincome/design-system/cn';
 import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useTranslations } from 'next-intl';
@@ -25,10 +27,12 @@ import {
 	STRIPE_CHECKOUT_SESSION_ID_PARAM,
 } from '../steps/step-stripe-checkout/stripe-checkout-return';
 import type { DonationAmountContext } from '../utils/donation-amount';
+import { getDonationWizardLayout } from '../utils/donation-wizard-layout';
 import { getDonationCompletedEvent, getDonationFunnelEvent } from '../wizard/donation-analytics';
 import { donationWizardMachine } from '../wizard/donation-machine';
 import { DonationSteps } from '../wizard/donation-steps';
 import { DonationWizard } from '../wizard/donation-wizard';
+import { getActiveWizardStep } from '../wizard/get-active-wizard-step';
 import type { DonationWizardSend } from '../wizard/types';
 
 type Props = {
@@ -110,6 +114,23 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const canChangeCurrency = state.hasTag('currencyEditable');
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
+	const activeStep = getActiveWizardStep(state);
+	const { isPlanStep } = getDonationWizardLayout(activeStep);
+	const showCadenceToggle = isPlanStep || activeStep === 'stepAmount';
+	const canGoBack = state.can({ type: 'BACK' });
+	const title = <DialogTitle size="xl">{t('modal.title')}</DialogTitle>;
+	const currencySelect = canChangeCurrency ? (
+		<div className="w-fit shrink-0">
+			<DonationCurrencySelect
+				value={state.context.currency}
+				onChange={(currency) => send({ type: 'SET_CURRENCY', value: currency })}
+			/>
+		</div>
+	) : null;
+	const cadenceOptions = [
+		{ value: 'monthly', label: t('stepAmount.monthly') },
+		{ value: 'one-time', label: t('stepAmount.one-time') },
+	] as const;
 
 	useEffect(() => {
 		const url = new URL(window.location.href);
@@ -167,8 +188,25 @@ export const DonationModalProvider = ({ children }: Props) => {
 			>
 				<DialogContent
 					size={isThankYou ? 'sm' : 'lg'}
-					surface="gradient"
 					padding="none"
+					onBack={showWizardHeader && canGoBack ? () => send({ type: 'BACK' }) : undefined}
+					backLabel={t('stepPlan.back')}
+					toolbar={
+						showWizardHeader && showCadenceToggle ? (
+							<SegmentedToggle
+								options={cadenceOptions}
+								value={state.context.cadence}
+								onValueChange={(value) => {
+									const option = cadenceOptions.find((cadence) => cadence.value === value);
+									if (option) {
+										send({ type: 'SET_CADENCE', value: option.value });
+									}
+								}}
+							/>
+						) : undefined
+					}
+					toolbarStart={showWizardHeader ? title : undefined}
+					toolbarEnd={showWizardHeader ? currencySelect : undefined}
 					data-testid="donation-wizard-modal"
 					data-clarity-mask="true"
 				>
@@ -181,25 +219,29 @@ export const DonationModalProvider = ({ children }: Props) => {
 						</>
 					) : (
 						<>
-							<div className="flex shrink-0 flex-col gap-1 px-4 pt-4 pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
-								<div className="flex min-h-9 items-center justify-between gap-2 sm:gap-3">
-									<DialogTitle size="lg">{t('modal.title')}</DialogTitle>
-									{canChangeCurrency ? (
-										<div className="w-24 shrink-0">
-											<DonationCurrencySelect
-												value={state.context.currency}
-												onChange={(currency) => send({ type: 'SET_CURRENCY', value: currency })}
-											/>
+							<DonationWizard
+								state={state}
+								send={send}
+								header={
+									// Scrolls with the content in the drawer; the centered dialog shows it in the toolbar
+									<div
+										className={cn(
+											'flex flex-col gap-1 pb-5 sm:pt-0 sm:pb-9',
+											canGoBack || showCadenceToggle ? 'pt-6' : 'pt-4 pr-12',
+										)}
+									>
+										<div className="flex min-h-9 items-center justify-between gap-2 sm:hidden">
+											{title}
+											{currencySelect}
 										</div>
-									) : null}
-								</div>
-								{campaignId && campaignTitle ? (
-									<p className="text-muted-foreground line-clamp-2 text-sm leading-snug font-normal">
-										{t('modal.campaign-for', { title: campaignTitle })}
-									</p>
-								) : null}
-							</div>
-							<DonationWizard state={state} send={send} />
+										{campaignId && campaignTitle ? (
+											<p className="text-muted-foreground line-clamp-2 text-sm leading-snug font-normal sm:pt-4">
+												{t('modal.campaign-for', { title: campaignTitle })}
+											</p>
+										) : null}
+									</div>
+								}
+							/>
 						</>
 					)}
 				</DialogContent>

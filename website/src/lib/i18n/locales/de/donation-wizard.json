@@ -27,22 +27,19 @@
 		"above-maximum": "Höchstens {amount}"
 	},
 	"stepPlan": {
-		"monthly-title": "Monatliche Spende",
-		"one-time-title": "Einmalige Spende",
-		"switch-to-one-time": "Einmalig",
-		"switch-to-monthly": "Monatlich",
-		"upsell-subtitle": "Die Hälfte des Betrags, monatlich.\nDas hilft uns noch mehr.",
-		"upsell-preferred": "Empfohlen",
-		"upsell-benefit-cancel": "Jederzeit kündbar",
 		"per-month": "/Monat",
 		"plan-1x": "1 %-Plan",
 		"plan-2x": "2 %-Plan",
+		"your-amount": "Dein Betrag",
+		"double-amount": "2× dein Betrag",
+		"per-year": "{amount} pro Jahr",
+		"helps-more": "helfen uns mehr",
 		"double-impact-badge": "Wirkung verdoppeln",
-		"benefit-beneficiaries": "{directCount} direkte, {indirectCount} indirekte Begünstigte",
-		"benefit-community": "Werde Teil einer Community mit {count} Unterstützern",
-		"benefit-double-impact": "Verdoppeln Sie die Wirkung",
 		"back": "Zurück",
-		"choose-payment": "Zahlungsmethode wählen"
+		"choose-payment": "Zahlungsmethode wählen",
+		"impact-short": "<b>{directCount}</b> direkt · <b>{indirectCount}</b> indirekt",
+		"impact-tooltip": "Direkt: Menschen, die durch deine Spende ein monatliches Einkommen erhalten. Indirekt: Menschen in ihrem Haushalt und Umfeld, die ebenfalls profitieren, rund {factor} pro Person.",
+		"impact-tooltip-aria": "Was direkt und indirekt bedeutet"
 	},
 	"stepStripeCheckout": {
 		"loading": "Zahlungsformular wird geladen…",
@@ -88,7 +85,6 @@
 		"your-donation": "Ihre Spende",
 		"generate-qr-code": "QR-Code generieren",
 		"pay-online": "Online bezahlen",
-		"cover-costs-description": "Stelle sicher, dass deine vollständige Spende bei uns ankommt.",
 		"cover-costs-label-monthly": "Transaktionsgebühren von {fee}/Monat übernehmen",
 		"cover-costs-label-one-time": "Transaktionsgebühren von {fee} übernehmen",
 		"cover-costs-tooltip-aria": "So werden die Transaktionskosten berechnet",
@@ -142,7 +138,6 @@
 		}
 	},
 	"impact": {
-		"title": "Direktes Bargeld für Menschen in Not",
 		"cancel-anytime": "Jederzeit kündbar",
 		"supporters": "{supporterCount} Unterstützer aus {countryCount} Ländern",
 		"supporters-no-countries": "{supporterCount} Unterstützer weltweit",
@@ -158,6 +153,7 @@
 	"calculator": {
 		"your-donation": "Deine Spende",
 		"per-month": "pro Monat",
+		"once": "einmalig",
 		"per-year": "{amount} in einem Jahr",
 		"beneficiaries": "{directCount, plural, one {# Person erhält} other {# Personen erhalten}} ein Einkommen, {indirectCount} weitere profitieren",
 		"reach": "{percent} % gehen direkt an die Empfänger:innen"

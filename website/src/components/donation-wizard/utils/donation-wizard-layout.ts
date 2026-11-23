@@ -7,13 +7,19 @@ const COLUMN_FULL = 'w-full min-w-0';
 const CARD_BASE = cn('border-input bg-card rounded-3xl border shadow-xs', 'px-4 pt-4 pb-6 sm:px-6 sm:pt-5 sm:pb-7');
 
 const CARD_NARROW = cn(CARD_BASE, 'mx-auto w-full max-w-[400px]');
+// The plan options are cards themselves, so they sit on the dialog without another frame
+const PLAIN_NARROW = 'mx-auto flex h-full w-full max-w-[400px] flex-col';
 const CARD_FULL = cn(CARD_BASE, 'mx-0 w-full max-w-none');
+// Unframed like the plan step, so moving between the two keeps the dialog at a similar height
+const PLAIN_FULL = 'h-full w-full';
 
 /** Full-width column: payment method, Stripe checkout, QR bill. */
 const FULL_WIDTH_COLUMN_STEPS = new Set<ActiveDonationWizardStep>(['stepPayment', 'stepStripeCheckout', 'stepQrBill']);
 
-/** Narrow centered card: amount and plan steps in the split layout. */
-const NARROW_CARD_STEPS = new Set<ActiveDonationWizardStep>(['stepAmount', 'stepPlanMonthly', 'stepPlanOneTime']);
+const PLAN_STEPS = new Set<ActiveDonationWizardStep>(['stepPlanMonthly', 'stepPlanOneTime']);
+
+// Donors move back and forth between these, so on desktop they share the plan step's height and the dialog stays put
+const SAME_HEIGHT_STEPS = new Set<ActiveDonationWizardStep>([...PLAN_STEPS, 'stepAmount', 'stepPayment']);
 
 type SidePanel = 'impact' | 'qr-hints';
 
@@ -27,23 +33,26 @@ const SIDE_PANEL_BY_STEP: Partial<Record<ActiveDonationWizardStep, SidePanel>> =
 export const getDonationWizardLayout = (step: ActiveDonationWizardStep | null) => {
 	const sidePanel = step ? (SIDE_PANEL_BY_STEP[step] ?? null) : null;
 	const isFullWidthColumn = step !== null && FULL_WIDTH_COLUMN_STEPS.has(step);
-	const isNarrowCard = step !== null && NARROW_CARD_STEPS.has(step);
+	const isPlanStep = step !== null && PLAN_STEPS.has(step);
+	const hasSharedHeight = step !== null && SAME_HEIGHT_STEPS.has(step);
 
 	return {
 		columnClass: isFullWidthColumn ? COLUMN_FULL : COLUMN_NARROW,
-		cardClass: isNarrowCard ? CARD_NARROW : CARD_FULL,
+		cardClass: isPlanStep
+			? PLAIN_NARROW
+			: step === 'stepAmount'
+				? CARD_NARROW
+				: step === 'stepPayment'
+					? PLAIN_FULL
+					: CARD_FULL,
+		isPlanStep,
+		hasSharedHeight,
 		showImpactPanel: sidePanel === 'impact',
 		showQrHintsPanel: sidePanel === 'qr-hints',
 	};
 };
 
 export const getDonationWizardCardClass = (step: ActiveDonationWizardStep) => getDonationWizardLayout(step).cardClass;
-
-export const donationStepTitleRowClass = cn('mb-5 flex items-start justify-between gap-3');
-
-export const donationImpactChecklistItemClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
-
-export const donationImpactRowClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
 
 /**
  * Size of the generic amount card in the desktop hero slot (lg+), measured in Chrome, English, default form state.

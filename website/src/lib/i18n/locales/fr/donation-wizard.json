@@ -27,22 +27,19 @@
 		"above-maximum": "Au maximum {amount}"
 	},
 	"stepPlan": {
-		"monthly-title": "Don mensuel",
-		"one-time-title": "Don unique",
-		"switch-to-one-time": "Unique",
-		"switch-to-monthly": "Mensuel",
-		"upsell-subtitle": "La moitié du montant, chaque mois.\nCela nous aide encore plus.",
-		"upsell-preferred": "Recommandé",
-		"upsell-benefit-cancel": "Annulable à tout moment",
 		"per-month": "/mois",
 		"plan-1x": "Plan 1 %",
 		"plan-2x": "Plan 2 %",
+		"your-amount": "Ton montant",
+		"double-amount": "2× ton montant",
+		"per-year": "{amount} par an",
+		"helps-more": "nous aident encore plus",
 		"double-impact-badge": "Doublez l'impact",
-		"benefit-beneficiaries": "{directCount} bénéficiaires directs, {indirectCount} indirects",
-		"benefit-community": "Rejoignez une communauté de {count} supporters",
-		"benefit-double-impact": "Doublez l'impact",
 		"back": "Retour",
-		"choose-payment": "Choisir le mode de paiement"
+		"choose-payment": "Choisir le mode de paiement",
+		"impact-short": "<b>{directCount}</b> {directCount, plural, one {direct} other {directs}} · <b>{indirectCount}</b> {indirectCount, plural, one {indirect} other {indirects}}",
+		"impact-tooltip": "Directs : personnes qui reçoivent un revenu mensuel grâce à ton don. Indirects : personnes de leur foyer et de leur communauté qui en profitent aussi, environ {factor} par personne.",
+		"impact-tooltip-aria": "Ce que signifient direct et indirect"
 	},
 	"stepStripeCheckout": {
 		"loading": "Chargement du formulaire de paiement…",
@@ -88,7 +85,6 @@
 		"your-donation": "Ton don",
 		"generate-qr-code": "Générer le code QR",
 		"pay-online": "Payer en ligne",
-		"cover-costs-description": "Assure-toi que l'intégralité de ton don nous parvienne.",
 		"cover-costs-label-monthly": "Couvrir les frais de transaction de {fee}/mois",
 		"cover-costs-label-one-time": "Couvrir les frais de transaction de {fee}",
 		"cover-costs-tooltip-aria": "Comment les frais de transaction sont calculés",
@@ -142,7 +138,6 @@
 		}
 	},
 	"impact": {
-		"title": "Argent liquide direct aux personnes dans le besoin",
 		"cancel-anytime": "Annulable à tout moment",
 		"supporters": "{supporterCount} supporters de {countryCount} pays",
 		"supporters-no-countries": "{supporterCount} supporters dans le monde",
@@ -158,6 +153,7 @@
 	"calculator": {
 		"your-donation": "Ton don",
 		"per-month": "par mois",
+		"once": "une fois",
 		"per-year": "{amount} en un an",
 		"beneficiaries": "{directCount, plural, one {# personne reçoit} other {# personnes reçoivent}} un revenu, {indirectCount} autres en profitent",
 		"reach": "{percent} % vont directement aux bénéficiaires"

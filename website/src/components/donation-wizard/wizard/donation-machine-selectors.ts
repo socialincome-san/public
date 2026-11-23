@@ -1,7 +1,3 @@
-import type { LanguageCode } from '@/lib/types/language';
-import { formatNumberLocale } from '@/lib/utils/string-utils';
-import { type useTranslations } from 'next-intl';
-import type { PlanTierBenefit } from '../steps/step-plan/plan-tier-card/plan-tier-benefit';
 import {
 	getBeneficiaryImpact,
 	getDonationBaseAmount,
@@ -24,53 +20,6 @@ import type { DonationWizardContext } from './donation-wizard-context';
 import { getActiveWizardStep } from './get-active-wizard-step';
 import type { DonationWizardSend, DonationWizardState } from './types';
 
-const localeForLanguage = (language: LanguageCode): string => (language === 'de' ? 'de-CH' : language);
-
-const formatCommunityCount = (value: number, language: LanguageCode): string =>
-	formatNumberLocale(value, localeForLanguage(language));
-
-type Translate = ReturnType<typeof useTranslations<'donation-wizard'>>;
-
-export type PlanBenefitDescriptor =
-	| { id: string; type: 'beneficiaries'; directCount: number; indirectCount: number }
-	| { id: string; type: 'double-impact' }
-	| { id: string; type: 'community'; supporterCount: number | null }
-	| { id: string; type: 'upsell-subtitle' }
-	| { id: string; type: 'upsell-cancel' };
-
-export const resolvePlanBenefit = (
-	descriptor: PlanBenefitDescriptor,
-	t: Translate,
-	language: LanguageCode,
-): PlanTierBenefit => {
-	switch (descriptor.type) {
-		case 'beneficiaries':
-			return {
-				id: descriptor.id,
-				label: t('stepPlan.benefit-beneficiaries', {
-					directCount: descriptor.directCount,
-					indirectCount: descriptor.indirectCount,
-				}),
-			};
-		case 'double-impact':
-			return { id: descriptor.id, label: t('stepPlan.benefit-double-impact') };
-		case 'community':
-			return {
-				id: descriptor.id,
-				label: t('stepPlan.benefit-community', {
-					count: descriptor.supporterCount === null ? '' : formatCommunityCount(descriptor.supporterCount, language),
-				}),
-				icon: 'heart',
-				emphasis: true,
-				placeholder: descriptor.supporterCount === null,
-			};
-		case 'upsell-subtitle':
-			return { id: descriptor.id, label: t('stepPlan.upsell-subtitle') };
-		case 'upsell-cancel':
-			return { id: descriptor.id, label: t('stepPlan.upsell-benefit-cancel') };
-	}
-};
-
 export const selectStep1FormView = (context: DonationAmountContext) => ({
 	monthlyIncome: context.monthlyIncome,
 	selectedAmount: context.selectedAmount,
@@ -90,52 +39,28 @@ export const createStep1Actions = (send: DonationWizardSend) => ({
 	setCadence: (value: Cadence) => send({ type: 'SET_CADENCE', value }),
 });
 
-// While the stats load, a placeholder row keeps the card from growing once they arrive.
-const getCommunityBenefit = (context: DonationWizardContext, communityStatsLoading: boolean): PlanBenefitDescriptor[] => {
-	if (communityStatsLoading) {
-		return [{ id: 'community', type: 'community', supporterCount: null }];
-	}
-	const supporterCount = context.communityStats?.supporterCount ?? 0;
-
-	return supporterCount > 0 ? [{ id: 'community', type: 'community', supporterCount }] : [];
-};
-
-export const selectMonthlyPlanView = (context: DonationWizardContext, communityStatsLoading: boolean) => {
-	const baseAmount = getMonthlyPlanBaseAmount(context);
-	const { tier1x, tier2x } = getTierAmounts(baseAmount);
-	const tier1Impact = getBeneficiaryImpact(tier1x);
-	const tier2Impact = getBeneficiaryImpact(tier2x);
-	const communityBenefit = getCommunityBenefit(context, communityStatsLoading);
-	const usesMonthlyIncomeAmount = context.selectedAmount === null;
+export const selectMonthlyPlanView = (context: DonationWizardContext) => {
+	const { tier1x, tier2x } = getTierAmounts(getMonthlyPlanBaseAmount(context));
 
 	return {
 		selectedTier: context.selectedTier,
-		showPlanBadges: usesMonthlyIncomeAmount,
-		showDoubleImpactBadge: !usesMonthlyIncomeAmount,
+		usesMonthlyIncomeAmount: context.selectedAmount === null,
 		tier1x,
 		tier2x,
-		tier1Benefits: [{ id: 'beneficiaries', type: 'beneficiaries' as const, ...tier1Impact }, ...communityBenefit],
-		tier2Benefits: [
-			{ id: 'double', type: 'double-impact' as const },
-			{ id: 'beneficiaries', type: 'beneficiaries' as const, ...tier2Impact },
-		],
+		tier1Impact: getBeneficiaryImpact(tier1x),
+		tier2Impact: getBeneficiaryImpact(tier2x),
 	};
 };
 
-export const selectOneTimePlanView = (context: DonationWizardContext, communityStatsLoading: boolean) => {
+export const selectOneTimePlanView = (context: DonationWizardContext) => {
 	const oneTimeAmount = resolveAmount(context) ?? 0;
-	const oneTimeImpact = getBeneficiaryImpact(oneTimeAmount);
-	const communityBenefit = getCommunityBenefit(context, communityStatsLoading);
+	const monthlyUpsellAmount = getMonthlyUpsellAmount(oneTimeAmount);
 
 	return {
 		oneTimePlanChoice: context.oneTimePlanChoice,
 		oneTimeAmount,
-		monthlyUpsellAmount: getMonthlyUpsellAmount(oneTimeAmount),
-		oneTimeBenefits: [{ id: 'beneficiaries', type: 'beneficiaries' as const, ...oneTimeImpact }, ...communityBenefit],
-		upsellBenefits: [
-			{ id: 'help', type: 'upsell-subtitle' as const },
-			{ id: 'cancel', type: 'upsell-cancel' as const },
-		],
+		monthlyUpsellAmount,
+		oneTimeImpact: getBeneficiaryImpact(oneTimeAmount),
 	};
 };
 
@@ -172,12 +97,6 @@ export const isWizardQrCurrencySupported = (currency: string): boolean =>
 
 const resolveWizardPaymentMethod = (paymentMethod: PaymentMethod, currency: string): PaymentMethod =>
 	paymentMethod === 'qr' && !isWizardQrCurrencySupported(currency) ? 'online' : paymentMethod;
-
-export const selectCadenceSwitchView = (currentCadence: Cadence) => ({
-	targetCadence: currentCadence === 'monthly' ? ('one-time' as const) : ('monthly' as const),
-	labelKey:
-		currentCadence === 'monthly' ? ('stepPlan.switch-to-one-time' as const) : ('stepPlan.switch-to-monthly' as const),
-});
 
 export const selectWizardShellView = (state: DonationWizardState) => {
 	const activeStep = getActiveWizardStep(state);

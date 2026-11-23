@@ -19,7 +19,6 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 	const language = useLocale();
 	const { contributorSession } = useContributorSession();
 	const isLoading = state.context.qrBillStatus === 'loading';
-	const canGoBack = state.context.qrContributorReferenceId === null;
 
 	const form = useForm<QrContactFields>({
 		defaultValues: {
@@ -118,8 +117,6 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 					</div>
 
 					<QrWizardStepFooter
-						showBack={canGoBack}
-						onBack={canGoBack ? () => send({ type: 'BACK' }) : undefined}
 						onContinue={() => void form.handleSubmit(onSubmit)()}
 						continueLabel={isLoading ? t('stepQrContact.generating') : t('stepQrContact.generateCta')}
 						continueDisabled={isLoading || !canSubmit}
