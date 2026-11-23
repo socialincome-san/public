@@ -1,4 +1,4 @@
-export type PaymentLogoId = 'visa' | 'mastercard' | 'twint' | 'qr-payment' | 'apple-pay';
+export type PaymentLogoId = 'visa' | 'mastercard' | 'twint' | 'qr-payment' | 'apple-pay' | 'google-pay';
 
 export const paymentLogos: Record<
 	PaymentLogoId,
@@ -9,6 +9,14 @@ export const paymentLogos: Record<
 	twint: { src: '/assets/payments/twint.svg', alt: 'TWINT', width: 62, height: 24 },
 	'qr-payment': { src: '/assets/payments/qr-payment.svg', alt: 'QR Payment', width: 62, height: 24 },
 	'apple-pay': { src: '/assets/payments/apple-pay.svg', alt: 'Apple Pay', width: 43, height: 24 },
+	'google-pay': { src: '/assets/payments/google-pay.svg', alt: 'Google Pay', width: 43, height: 24 },
 };
 
-export const impactPaymentLogoIds: PaymentLogoId[] = ['apple-pay', 'qr-payment', 'visa', 'mastercard', 'twint'];
+export const impactPaymentLogoIds: PaymentLogoId[] = [
+	'apple-pay',
+	'google-pay',
+	'qr-payment',
+	'visa',
+	'mastercard',
+	'twint',
+];

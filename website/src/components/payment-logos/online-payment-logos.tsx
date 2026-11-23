@@ -6,5 +6,6 @@ export const OnlinePaymentLogos = () => (
 		<PaymentMethodLogo id="mastercard" />
 		<PaymentMethodLogo id="twint" />
 		<PaymentMethodLogo id="apple-pay" />
+		<PaymentMethodLogo id="google-pay" />
 	</div>
 );
