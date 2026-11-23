@@ -215,7 +215,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 							</StatGrid>
 						</StatPanel>
 
-						<StatPanel href={`/portal/programs/${programId}/payout-forecast`}>
+						<StatPanel href={`/portal/programs/${programId}/finances`}>
 							<StatHeadline
 								title="Available Credits"
 								value={`${formatNumber(stats.availableCreditsInIntervals, 1)} intervals`}
