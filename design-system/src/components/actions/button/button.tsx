@@ -10,9 +10,9 @@ const buttonVariants = cva(
 			// Dark variants set scheme-dark, so content such as AnimatedCircleIcon switches to its light colors
 			variant: {
 				default: [
-					'text-primary-foreground shadow-sm bg-primary/90 scheme-dark',
+					'text-primary-foreground shadow-sm bg-violet/90 scheme-dark',
 					// Gradients can't be transitioned, so the gradient fades out on a pseudo element instead
-					'after:bg-linear-to-r after:from-[hsl(var(--gradient-button-from))] after:to-[hsl(var(--gradient-button-to))] after:inset-0 after:-z-10 after:rounded-full after:absolute after:opacity-100 hover:after:opacity-0 focus:after:opacity-0 after:transition-opacity',
+					'after:bg-linear-to-r after:from-[hsl(var(--gradient-violet-from))] after:to-[hsl(var(--gradient-violet-to))] after:inset-0 after:-z-10 after:rounded-full after:absolute after:opacity-100 hover:after:opacity-0 focus:after:opacity-0 after:transition-opacity',
 				].join(' '),
 				destructive: 'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90',
 				'destructive-outline':

@@ -50,6 +50,7 @@
 	--color-banner-yellow: hsl(var(--banner-yellow));
 	--color-backstage: hsl(var(--backstage));
 	--color-highlight: hsl(var(--highlight));
+	--color-violet: hsl(var(--violet));
 
 	--text-2xs: 0.625rem;
 	--text-2xs--line-height: 0.875rem;

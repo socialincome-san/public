@@ -66,6 +66,7 @@ const colorGroups: { title: string; tokens: ColorToken[] }[] = [
 		tokens: [
 			{ name: 'highlight', swatchClass: 'bg-highlight' },
 			{ name: 'banner-blue', swatchClass: 'bg-banner-blue' },
+			{ name: 'violet', swatchClass: 'bg-violet' },
 			{ name: 'banner-yellow', swatchClass: 'bg-banner-yellow' },
 			{ name: 'backstage', swatchClass: 'bg-backstage' },
 			{ name: 'white', swatchClass: 'bg-white' },
@@ -95,6 +96,10 @@ const gradients = [
 	{
 		name: '--gradient-button-from/-to',
 		previewClass: 'bg-linear-to-r from-[hsl(var(--gradient-button-from))] to-[hsl(var(--gradient-button-to))]',
+	},
+	{
+		name: '--gradient-violet-from/-to',
+		previewClass: 'bg-linear-to-r from-[hsl(var(--gradient-violet-from))] to-[hsl(var(--gradient-violet-to))]',
 	},
 	{
 		name: '--gradient-card-from/-to',
