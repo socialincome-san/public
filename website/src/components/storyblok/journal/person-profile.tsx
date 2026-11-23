@@ -1,4 +1,5 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
+import { CountryFlag } from '@/components/country-flag';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
@@ -21,7 +22,7 @@ import {
 	type PersonCircle,
 } from '@/lib/storyblok/storyblok-utils';
 import { HOURS_RANGE_REGEX } from '@/lib/utils/regex';
-import type { PersonContribution } from '@/modules/community/community.types';
+import type { PersonAssessment, PersonContribution } from '@/modules/community/community.types';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { ShowMoreToggle } from '@socialincome/design-system/actions/show-more-toggle/show-more-toggle';
@@ -50,6 +51,7 @@ type Props = {
 	person: ISbStoryData<Person>;
 	articles: ISbStoryData<JournalArticle>[];
 	contributions: PersonContribution[];
+	assessments: PersonAssessment[];
 	otherPersons: ISbStoryData<Person>[];
 	lang: string;
 	currency: WebsiteCurrency;
@@ -76,6 +78,7 @@ export const PersonProfile = ({
 	person,
 	articles,
 	contributions,
+	assessments,
 	otherPersons,
 	lang,
 	currency,
@@ -143,6 +146,16 @@ export const PersonProfile = ({
 		variant: circle.status === 'interested' ? ('light' as const) : ('solid' as const),
 	});
 
+	const contributionPerson = () => (
+		<ContributionCardPerson name={shortName} fullName={name} imageSrc={getPersonAvatarSrc(person)} />
+	);
+	const bold = (chunks: ReactNode) => <strong>{chunks}</strong>;
+	const contributionCardLabels = {
+		// The card fills in the numbers as rows are revealed
+		showMoreLabel: t('person.contributions-show-more', { count: '{count}' }),
+		counterLabel: t('person.contributions-counter', { shown: '{shown}', total: '{total}' }),
+	};
+
 	const externalLinkCue = (
 		<>
 			<ArrowUpRight aria-hidden />
@@ -197,29 +210,45 @@ export const PersonProfile = ({
 				}
 			/>
 
-			{contributions.length > 0 && (
+			{(contributions.length > 0 || assessments.length > 0) && (
 				<>
 					<Separator />
 					<Section title={t('person.contributions-title')}>
 						{/* One card per kind of contribution; they sit side by side where there is room */}
 						<div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))] items-start gap-3 sm:gap-4">
-							<ContributionCard
-								summary={t.rich('person.contributions-pages', {
-									count: contributions.length,
-									person: () => (
-										<ContributionCardPerson name={shortName} fullName={name} imageSrc={getPersonAvatarSrc(person)} />
-									),
-									b: (chunks) => <strong>{chunks}</strong>,
-								})}
-								items={contributions.map((contribution) => ({
-									title: contribution.title,
-									href: contribution.href,
-									badges: contribution.roles,
-								}))}
-								// The card fills in the numbers as rows are revealed
-								showMoreLabel={t('person.contributions-show-more', { count: '{count}' })}
-								counterLabel={t('person.contributions-counter', { shown: '{shown}', total: '{total}' })}
-							/>
+							{contributions.length > 0 && (
+								<ContributionCard
+									summary={t.rich('person.contributions-pages', {
+										count: contributions.length,
+										person: contributionPerson,
+										b: bold,
+									})}
+									items={contributions.map((contribution) => ({
+										title: contribution.title,
+										href: contribution.href,
+										badges: contribution.roles,
+									}))}
+									{...contributionCardLabels}
+								/>
+							)}
+							{assessments.length > 0 && (
+								<ContributionCard
+									summary={t.rich('person.contributions-assessments', {
+										count: assessments.length,
+										person: contributionPerson,
+										b: bold,
+									})}
+									items={assessments.map((assessment) => ({
+										title: assessment.title,
+										href: assessment.href,
+										icon: assessment.countryCode ? (
+											<CountryFlag country={assessment.countryCode} size="md" decorative />
+										) : undefined,
+										badges: assessment.roles.map((role) => t(`person.contributions-assessment-${role}`)),
+									}))}
+									{...contributionCardLabels}
+								/>
+							)}
 						</div>
 					</Section>
 				</>

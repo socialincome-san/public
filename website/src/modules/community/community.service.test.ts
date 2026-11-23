@@ -4,6 +4,7 @@ const mockGetPrimaryRoleLabels = jest.fn();
 const mockGetArticlesByUuids = jest.fn();
 const mockGetCommunityPages = jest.fn();
 const mockGetContributionAreaLabels = jest.fn();
+const mockGetLocalPartners = jest.fn();
 
 jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getCommunityGlobals: mockGetCommunityGlobals,
@@ -12,10 +13,11 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getArticlesByUuids: mockGetArticlesByUuids,
 	getCommunityPages: mockGetCommunityPages,
 	getContributionAreaLabels: mockGetContributionAreaLabels,
+	getLocalPartners: mockGetLocalPartners,
 }));
 
 import type { CommunityPage } from './community.schemas';
-import { getCommunityPanelData, getPersonContributions } from './community.service';
+import { getCommunityPanelData, getPersonAssessments, getPersonContributions } from './community.service';
 
 const person = (uuid: string, firstName: string, volunteerStatus: string, country: string) => ({
 	uuid,
@@ -169,5 +171,43 @@ describe('getPersonContributions', () => {
 		const result = await getPersonContributions('p1', 'en', 'USD');
 
 		expect(result.success).toBe(false);
+	});
+});
+
+describe('getPersonAssessments', () => {
+	const partner = (name: string, slug: string, content: Record<string, unknown>) => ({
+		name,
+		full_slug: `pages/local-partners/${slug}`,
+		content: { title: '', ...content },
+	});
+
+	it('lists the local partners whose assessment the person led or reviewed', async () => {
+		mockGetLocalPartners.mockResolvedValue({
+			success: true,
+			data: [
+				partner('aurora', 'aurora', { title: ' Aurora Foundation ', countryIsoCode: 'sl', assessmentLead: ['p1'] }),
+				partner('Jamil', 'jamil', { assessmentLead: [{ uuid: 'p2' }], assessmentReviewer: [{ uuid: 'p1' }] }),
+				partner('Both', 'both', { countryIsoCode: 'xx', assessmentLead: ['p1'], assessmentReviewer: ['p1'] }),
+				partner('Others', 'others', { assessmentLead: ['p2'] }),
+				partner('Unassessed', 'unassessed', {}),
+			],
+		});
+
+		const result = await getPersonAssessments('p1', 'de', 'USD');
+
+		expect(result).toEqual({
+			success: true,
+			data: [
+				{ title: 'Aurora Foundation', href: '/de/usd/local-partners/aurora', countryCode: 'SL', roles: ['lead'] },
+				{ title: 'Jamil', href: '/de/usd/local-partners/jamil', countryCode: undefined, roles: ['reviewer'] },
+				{ title: 'Both', href: '/de/usd/local-partners/both', countryCode: undefined, roles: ['lead', 'reviewer'] },
+			],
+		});
+	});
+
+	it('fails when the local partners cannot be loaded', async () => {
+		mockGetLocalPartners.mockResolvedValue({ success: false, error: 'Could not fetch Storyblok local partners' });
+
+		expect((await getPersonAssessments('p1', 'en', 'USD')).success).toBe(false);
 	});
 });
