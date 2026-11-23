@@ -89,8 +89,64 @@ describe('getPaidCheckoutDonation donor status', () => {
 
 		expect(await getPaidCheckoutDonation('cs_123')).toEqual({
 			success: true,
-			data: { checkoutSessionId: 'cs_123', amount: 50, currency: 'CHF', recurring: false, donorStatus: undefined },
+			data: {
+				checkoutSessionId: 'cs_123',
+				amount: 50,
+				currency: 'CHF',
+				recurring: false,
+				paymentMethodType: undefined,
+				donorStatus: undefined,
+			},
 		});
+	});
+});
+
+describe('getPaidCheckoutDonation payment method type', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockFindContributor.mockResolvedValue({ success: true, data: null });
+	});
+
+	const getPaymentMethodType = async (session: object) => {
+		mockRetrieveStripeCheckoutSession.mockResolvedValue({ success: true, data: { ...paidSession, ...session } });
+		const result = await getPaidCheckoutDonation('cs_123');
+		if (!result.success) {
+			throw new Error(result.error);
+		}
+
+		return result.data.paymentMethodType;
+	};
+
+	it('reads the type from the PaymentIntent of a one-time donation', async () => {
+		expect(await getPaymentMethodType({ payment_intent: { payment_method: { type: 'twint' } } })).toBe('twint');
+		expect(mockRetrieveStripeCheckoutSession).toHaveBeenCalledWith('cs_123', [
+			'payment_intent.payment_method',
+			'subscription.default_payment_method',
+		]);
+	});
+
+	it('reads the type from the subscription of a recurring donation', async () => {
+		const session = {
+			mode: 'subscription',
+			payment_intent: null,
+			subscription: { default_payment_method: { type: 'card', card: { wallet: null } } },
+		};
+
+		expect(await getPaymentMethodType(session)).toBe('card');
+	});
+
+	it('reports the wallet of a card paid with Apple Pay or Google Pay', async () => {
+		const withWallet = (type: string) => ({
+			payment_intent: { payment_method: { type: 'card', card: { wallet: { type } } } },
+		});
+
+		expect(await getPaymentMethodType(withWallet('apple_pay'))).toBe('apple_pay');
+		expect(await getPaymentMethodType(withWallet('google_pay'))).toBe('google_pay');
+		expect(await getPaymentMethodType(withWallet('link'))).toBe('card');
+	});
+
+	it('is undefined when Stripe returns no payment method', async () => {
+		expect(await getPaymentMethodType({ payment_intent: 'pi_123' })).toBeUndefined();
 	});
 });
 

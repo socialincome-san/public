@@ -9,6 +9,8 @@ const frameVariants = cva(
 			// `media` keeps the shape of a video, `content` grows with what is inside
 			size: {
 				media: 'aspect-video max-h-[80vh] min-h-112 md:min-h-160',
+				// On small screens it grows with its content (`MediaHero` `mobileMedia="fade"`)
+				fade: 'lg:aspect-video lg:max-h-[80vh] lg:min-h-160',
 				content: '',
 			},
 			expanded: {

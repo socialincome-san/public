@@ -21,11 +21,11 @@ runs:
         gpg --keyserver keyserver.ubuntu.com --recv-keys 5BE8A3F6C8A5C01D106C0AD820B1A390B168D356
 
     - name: Setup Node.js
-      uses: jdx/mise-action@236a21c3b91f5db6d4e174b348674a0f0caac06d # v5
+      uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78 # v5
       env:
         MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}/website
       with:
-        version: 2026.11.8
+        version: 2026.11.12
         working_directory: website
         install: ${{ inputs.installDependencies == 'true' }}
         cache: true

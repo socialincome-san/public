@@ -52,6 +52,11 @@ const badgeVariants = cva(
 				className: 'px-2',
 			},
 			{
+				variant: ['primary', 'primary-outline'],
+				size: 'default',
+				className: 'px-2.5',
+			},
+			{
 				// After the size classes, so an icon sits on the text baseline in every size. No wrapping: the ring square is sized from the width
 				variant: [...gradientOutlineVariants],
 				className: 'items-baseline justify-center gap-[0.3em] whitespace-nowrap',

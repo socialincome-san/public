@@ -43,6 +43,8 @@ export const donationWizardMachine = setup({
 					context: DonationAmountContext | null;
 					sessionId: string;
 					currency: WebsiteCurrency;
+					// Only for analytics: the wallet of a payment made in the donation bar
+					expressPaymentType?: string;
 			  }
 			| { type: 'CLOSE' }
 			| { type: 'SET_CURRENCY'; value: WebsiteCurrency }

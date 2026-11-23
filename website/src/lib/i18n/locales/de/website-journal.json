@@ -39,16 +39,14 @@
 		"about": "Über {name}",
 		"articles": "Artikel von {name}",
 		"opens-in-new-tab": "(öffnet in neuem Tab)",
-		"contributions-title": "Beiträge zur Website",
-		"contributions-description": "{name} hat an {count, plural, one {# Seite} other {# Seiten}} dieser Website mitgearbeitet.",
-		"contributions-show-all": "Alle {count} Seiten anzeigen",
-		"contributions-all": "Alle Seiten",
-		"contributions-filter": "Seiten nach Rolle filtern",
-		"contributions-show-fewer": "Weniger Seiten anzeigen",
+		"volunteering-since": "Freiwillig seit",
+		"contributions-title": "Beiträge",
+		"contributions-pages": "<person></person> betreut <b>{count, plural, one {# Seite} other {# Seiten}}</b> dieser Website.",
+		"contributions-show-more": "{count} weitere anzeigen",
+		"contributions-counter": "{shown} von {total}",
 		"more-people": "Weitere Menschen hinter Social Income",
 		"articles-show-all": "Alle {count} Artikel anzeigen",
-		"articles-show-fewer": "Weniger Artikel anzeigen",
-		"volunteering-since": "Freiwillig seit"
+		"articles-show-fewer": "Weniger Artikel anzeigen"
 	},
 	"article": {
 		"keep-reading": "Weiterlesen",

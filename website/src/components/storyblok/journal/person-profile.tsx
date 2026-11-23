@@ -6,12 +6,14 @@ import { PersonHero } from '@/components/storyblok/journal/person-hero';
 import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { getBioSegments } from '@/lib/storyblok/person-bio';
-import { getPersonFirstName } from '@/lib/storyblok/storyblok-utils';
+import { getPersonAvatarSrc, getPersonDisplayName, getPersonFirstName } from '@/lib/storyblok/storyblok-utils';
 import type { JournalPersonPageData } from '@/modules/journal/journal.types';
 import { ShowMoreToggle } from '@socialincome/design-system/actions/show-more-toggle/show-more-toggle';
-import { LinkList } from '@socialincome/design-system/data-display/link-list/link-list';
+import {
+	ContributionCard,
+	ContributionCardPerson,
+} from '@socialincome/design-system/data-display/contribution-card/contribution-card';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
-import { AsideSection } from '@socialincome/design-system/layout/aside-section/aside-section';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
@@ -88,25 +90,32 @@ export const PersonProfile = ({
 				{hasContributions && (
 					<>
 						{hasBio && <Separator />}
-						<AsideSection
-							title={t('person.contributions-title')}
-							description={t('person.contributions-description', { name: shortName, count: contributions.length })}
-						>
-							<LinkList
-								items={contributions.map((contribution) => ({
-									label: contribution.title,
-									href: contribution.href,
-									tags: contribution.roles,
-								}))}
-								// The list fills in the count of the current filter
-								showMoreLabel={t('person.contributions-show-all', { count: '{count}' })}
-								showLessLabel={t('person.contributions-show-fewer')}
-								tagFilter={{
-									allLabel: t('person.contributions-all'),
-									ariaLabel: t('person.contributions-filter'),
-								}}
-							/>
-						</AsideSection>
+						<Section title={t('person.contributions-title')}>
+							{/* One card per kind of contribution; they sit side by side where there is room */}
+							<div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))] items-start gap-3 sm:gap-4">
+								<ContributionCard
+									summary={t.rich('person.contributions-pages', {
+										count: contributions.length,
+										person: () => (
+											<ContributionCardPerson
+												name={shortName}
+												fullName={getPersonDisplayName(person)}
+												imageSrc={getPersonAvatarSrc(person)}
+											/>
+										),
+										b: (chunks) => <strong>{chunks}</strong>,
+									})}
+									items={contributions.map((contribution) => ({
+										title: contribution.title,
+										href: contribution.href,
+										badges: contribution.roles,
+									}))}
+									// The card fills in the numbers as rows are revealed
+									showMoreLabel={t('person.contributions-show-more', { count: '{count}' })}
+									counterLabel={t('person.contributions-counter', { shown: '{shown}', total: '{total}' })}
+								/>
+							</div>
+						</Section>
 					</>
 				)}
 

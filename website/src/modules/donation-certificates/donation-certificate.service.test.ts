@@ -10,16 +10,19 @@ type DonationCertificateCreateInput = {
 };
 
 const mockIsFirebaseStorageConfigured = jest.fn();
+const mockDownloadFirebaseStorageFile = jest.fn();
 const mockUploadFileToFirebaseStorage = jest.fn();
 const mockGetSucceededForContributorAndYear = jest.fn();
 const mockGetContributorsByIds = jest.fn();
 const mockGetContributorFilterOption = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 const mockFindPaginatedDonationCertificates = jest.fn();
+const mockFindDonationCertificateForPrograms = jest.fn();
 const mockFindPaginatedContributorDonationCertificates = jest.fn();
 const mockCreateDonationCertificate = jest.fn<Promise<void>, [unknown, DonationCertificateCreateInput]>();
 
 jest.mock('@/integrations/firebase/firebase-storage.integration', () => ({
+	downloadFirebaseStorageFile: mockDownloadFirebaseStorageFile,
 	isFirebaseStorageConfigured: mockIsFirebaseStorageConfigured,
 	uploadFileToFirebaseStorage: mockUploadFileToFirebaseStorage,
 }));
@@ -38,6 +41,7 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 }));
 
 jest.mock('./donation-certificate.repository.read', () => ({
+	findDonationCertificateForPrograms: mockFindDonationCertificateForPrograms,
 	findPaginatedDonationCertificates: mockFindPaginatedDonationCertificates,
 	findPaginatedContributorDonationCertificates: mockFindPaginatedContributorDonationCertificates,
 }));
@@ -49,6 +53,7 @@ jest.mock('./donation-certificate.repository.write', () => ({
 import {
 	createDonationCertificateForContributor,
 	createDonationCertificatesForUser,
+	downloadDonationCertificateForUser,
 	getPaginatedDonationCertificates,
 } from './donation-certificate.service';
 
@@ -86,11 +91,22 @@ const expectFailure = (result: Result<unknown>, error: string): void => {
 	expect(result.error).toBe(error);
 };
 
+const originalStorageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+
 describe('donation certificate service', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
+		process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = 'test-bucket';
 		mockIsFirebaseStorageConfigured.mockReturnValue(true);
 		mockCreateDonationCertificate.mockResolvedValue(undefined);
+	});
+
+	afterAll(() => {
+		if (originalStorageBucket === undefined) {
+			delete process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+		} else {
+			process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = originalStorageBucket;
+		}
 	});
 
 	test('limits the management table to programs with operator access', async () => {
@@ -131,7 +147,6 @@ describe('donation certificate service', () => {
 						contributorFirstName: 'Ada',
 						contributorLastName: 'Lovelace',
 						email: 'ada@example.org',
-						storagePath: 'users/auth-1/donation-certificates/2025_en.pdf',
 						createdAt: new Date('2026-01-01T00:00:00.000Z'),
 					},
 				],
@@ -139,6 +154,47 @@ describe('donation certificate service', () => {
 				contributorFilterOptions: [],
 			},
 		});
+	});
+
+	test('downloads a certificate only for a contributor in an operated program', async () => {
+		const contents = Buffer.from('%PDF-1.7');
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [
+				{ programId: 'operator-program', programName: 'Operator', permission: ProgramPermission.operator },
+				{ programId: 'owner-program', programName: 'Owner', permission: ProgramPermission.owner },
+			],
+		});
+		mockFindDonationCertificateForPrograms.mockResolvedValue({
+			year: 2025,
+			storagePath: 'users/auth-1/donation-certificates/2025_en.pdf',
+		});
+		mockDownloadFirebaseStorageFile.mockResolvedValue({ success: true, data: contents });
+
+		const result = await downloadDonationCertificateForUser('user-1', 'certificate-1');
+
+		expect(mockFindDonationCertificateForPrograms).toHaveBeenCalledWith('certificate-1', ['operator-program']);
+		expect(mockDownloadFirebaseStorageFile).toHaveBeenCalledWith(
+			'test-bucket',
+			'users/auth-1/donation-certificates/2025_en.pdf',
+		);
+		expect(result).toEqual({
+			success: true,
+			data: { contents, filename: 'donation-certificate-2025.pdf' },
+		});
+	});
+
+	test('does not download certificates outside operated programs', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [{ programId: 'owner-program', programName: 'Owner', permission: ProgramPermission.owner }],
+		});
+
+		const result = await downloadDonationCertificateForUser('user-1', 'certificate-1');
+
+		expectFailure(result, 'Donation certificate not found');
+		expect(mockFindDonationCertificateForPrograms).not.toHaveBeenCalled();
+		expect(mockDownloadFirebaseStorageFile).not.toHaveBeenCalled();
 	});
 
 	test('filters by an accessible contributor and offers it as filter option', async () => {

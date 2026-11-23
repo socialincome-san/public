@@ -9,6 +9,7 @@ import {
 	getScaledAssetDimensions,
 	getStoryblokImageObjectPosition,
 	getStoryblokMetadataImage,
+	getStoryblokYear,
 	getTranslatedStoryName,
 	getVolunteerDurationParts,
 	getVolunteeringStat,
@@ -156,6 +157,23 @@ describe('getVolunteeringStat', () => {
 	it('has nothing before a full month or without a start date', () => {
 		expect(getVolunteeringStat({ unit: 'days', days: 12 })).toBeNull();
 		expect(getVolunteeringStat(null)).toBeNull();
+	});
+});
+
+describe('getStoryblokYear', () => {
+	it('reads the year of a date in the space time zone', () => {
+		expect(getStoryblokYear('2024-01-01 00:00')).toBe('2024');
+		expect(getStoryblokYear('2023-12-31 23:00')).toBe('2024');
+	});
+
+	it('keeps a value that is only a year', () => {
+		expect(getStoryblokYear('2024')).toBe('2024');
+	});
+
+	it('is empty without a readable date', () => {
+		expect(getStoryblokYear(undefined)).toBe('');
+		expect(getStoryblokYear('')).toBe('');
+		expect(getStoryblokYear('early days')).toBe('');
 	});
 });
 

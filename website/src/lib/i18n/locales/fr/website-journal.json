@@ -39,16 +39,14 @@
 		"about": "À propos de {name}",
 		"articles": "Articles de {name}",
 		"opens-in-new-tab": "(s’ouvre dans un nouvel onglet)",
-		"contributions-title": "Contributions au site",
-		"contributions-description": "{name} a contribué à {count, plural, one {# page} other {# pages}} de ce site.",
-		"contributions-show-all": "Afficher les {count} pages",
-		"contributions-all": "Toutes les pages",
-		"contributions-filter": "Filtrer les pages par rôle",
-		"contributions-show-fewer": "Afficher moins de pages",
+		"volunteering-since": "Bénévole depuis",
+		"contributions-title": "Contributions",
+		"contributions-pages": "<person></person> s’occupe de <b>{count, plural, one {# page} other {# pages}}</b> de ce site.",
+		"contributions-show-more": "Afficher {count} de plus",
+		"contributions-counter": "{shown} sur {total}",
 		"more-people": "Les autres personnes derrière Social Income",
 		"articles-show-all": "Afficher les {count} articles",
-		"articles-show-fewer": "Afficher moins d’articles",
-		"volunteering-since": "Bénévole depuis"
+		"articles-show-fewer": "Afficher moins d’articles"
 	},
 	"article": {
 		"keep-reading": "Lire la suite",

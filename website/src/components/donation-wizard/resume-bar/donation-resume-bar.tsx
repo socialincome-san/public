@@ -123,9 +123,9 @@ export const DonationResumeBar = () => {
 					onConfirm={(paymentMethod) =>
 						trackEvent('sticky_bar_wallet_click', getDonationBarEventProperties(amount, currency, cadence, paymentMethod))
 					}
-					onPaid={(sessionId) => {
+					onPaid={(sessionId, paymentMethod) => {
 						trackEvent('sticky_bar_donation_complete', trackingProperties);
-						openWizardAfterPayment(walletDonation, sessionId);
+						openWizardAfterPayment(walletDonation, sessionId, paymentMethod);
 					}}
 				/>
 			}
