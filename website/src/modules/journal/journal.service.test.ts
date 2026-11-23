@@ -281,7 +281,7 @@ describe('getJournalPersonPageData', () => {
 		});
 	});
 
-	test('finds the people before and after, by first name, and counts the active volunteers', async () => {
+	test('steps previous and next only through the active volunteers, by first name', async () => {
 		mockGetAllPersons.mockResolvedValue({
 			success: true,
 			data: [volunteer('zoe', []), volunteer('author-1', []), volunteer('bea', [], { volunteerStatus: 'inactive' })].map(
@@ -297,7 +297,7 @@ describe('getJournalPersonPageData', () => {
 		expect(result.success && result.data.activePeopleCount).toBe(2);
 		expect(result.success && [result.data.neighbors?.previous.uuid, result.data.neighbors?.next.uuid]).toEqual([
 			'zoe',
-			'bea',
+			'zoe',
 		]);
 	});
 });

@@ -44,7 +44,7 @@ describe('MediaHero', () => {
 		expect(img).not.toBeNull();
 		expect(img?.className).toContain('object-cover');
 		expect(img?.className).toContain('[object-position:var(--media-hero-object-position)]');
-		const frame = img?.parentElement;
+		const frame = img?.parentElement?.parentElement;
 		expect(frame?.style.getPropertyValue('--media-hero-object-position')).toBe('25% 35%');
 
 		act(() => root.unmount());
@@ -71,7 +71,7 @@ describe('MediaHero', () => {
 		expect(img).not.toBeNull();
 		expect(img?.className).toContain('object-cover');
 		expect(img?.className).not.toContain('[object-position:var(--media-hero-object-position)]');
-		const frame = img?.parentElement;
+		const frame = img?.parentElement?.parentElement;
 		expect(frame?.style.getPropertyValue('--media-hero-object-position')).toBe('');
 
 		act(() => root.unmount());
