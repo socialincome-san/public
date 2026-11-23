@@ -25,6 +25,7 @@ export const LinkCardsBlock = async ({ blok, lang, currency }: Props) => {
 						<LinkCard
 							title={card.title}
 							description={card.description}
+							badge={card.badge}
 							href={resolveStoryblokLink(card.link, lang, currency)}
 							imageSrc={card.image?.filename ?? undefined}
 							imageFit={card.imageFit === 'contain' ? 'contain' : 'cover'}

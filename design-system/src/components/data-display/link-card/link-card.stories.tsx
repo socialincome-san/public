@@ -17,7 +17,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'A card that links to a page, with an optional image, a small label above the title and a description. Cards in a `CardGrid` stretch to the tallest card in their row.',
+					'A card that links to a page, with an optional image, a badge below the title and a description. Cards in a `CardGrid` stretch to the tallest card in their row.',
 			},
 		},
 	},
@@ -29,8 +29,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const WithEyebrow: Story = {
-	args: { eyebrow: 'For companies', title: 'Start a cash program' },
+export const WithBadge: Story = {
+	args: { badge: 'For companies', title: 'Start a cash program' },
 };
 
 export const Illustration: Story = {
@@ -58,13 +58,13 @@ export const InGrid: Story = {
 	render: (args) => (
 		<CardGrid emptyMessage="No cards">
 			<CardGridItem>
-				<LinkCard {...args} eyebrow="For individuals" />
+				<LinkCard {...args} badge="For individuals" />
 			</CardGridItem>
 			<CardGridItem>
-				<LinkCard {...args} eyebrow="For companies" title="Donate as a company" description={undefined} />
+				<LinkCard {...args} badge="For companies" title="Donate as a company" description={undefined} />
 			</CardGridItem>
 			<CardGridItem>
-				<LinkCard {...args} eyebrow="For NGOs" title="Become a local partner" imageSrc={undefined} />
+				<LinkCard {...args} badge="For NGOs" title="Become a local partner" imageSrc={undefined} />
 			</CardGridItem>
 		</CardGrid>
 	),
