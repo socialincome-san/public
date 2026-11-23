@@ -1,3 +1,4 @@
+import { CountryFlag } from '@/components/country-flag';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
@@ -25,6 +26,7 @@ type Props = Pick<
 	| 'person'
 	| 'articles'
 	| 'contributions'
+	| 'assessments'
 	| 'otherPersons'
 	| 'neighbors'
 	| 'activePeopleCount'
@@ -52,6 +54,7 @@ export const PersonProfile = ({
 	person,
 	articles,
 	contributions,
+	assessments,
 	otherPersons,
 	neighbors,
 	activePeopleCount,
@@ -68,7 +71,17 @@ export const PersonProfile = ({
 	const shortName = getPersonFirstName(person);
 	// A line separates each section from the one before it, so the first section on the page has none
 	const hasBio = getBioSegments(person.content.bio).length > 0;
-	const hasContributions = contributions.length > 0;
+	const personName = getPersonDisplayName(person);
+	const contributionPerson = () => (
+		<ContributionCardPerson name={shortName} fullName={personName} imageSrc={getPersonAvatarSrc(person)} />
+	);
+	const bold = (chunks: ReactNode) => <strong>{chunks}</strong>;
+	const contributionCardLabels = {
+		// The card fills in the numbers as rows are revealed
+		showMoreLabel: t('person.contributions-show-more', { count: '{count}' }),
+		counterLabel: t('person.contributions-counter', { shown: '{shown}', total: '{total}' }),
+	};
+	const hasContributions = contributions.length > 0 || assessments.length > 0;
 	const hasArticles = articles.length > 0;
 
 	return (
@@ -93,27 +106,39 @@ export const PersonProfile = ({
 						<Section title={t('person.contributions-title')}>
 							{/* One card per kind of contribution; they sit side by side where there is room */}
 							<div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))] items-start gap-3 sm:gap-4">
-								<ContributionCard
-									summary={t.rich('person.contributions-pages', {
-										count: contributions.length,
-										person: () => (
-											<ContributionCardPerson
-												name={shortName}
-												fullName={getPersonDisplayName(person)}
-												imageSrc={getPersonAvatarSrc(person)}
-											/>
-										),
-										b: (chunks) => <strong>{chunks}</strong>,
-									})}
-									items={contributions.map((contribution) => ({
-										title: contribution.title,
-										href: contribution.href,
-										badges: contribution.roles,
-									}))}
-									// The card fills in the numbers as rows are revealed
-									showMoreLabel={t('person.contributions-show-more', { count: '{count}' })}
-									counterLabel={t('person.contributions-counter', { shown: '{shown}', total: '{total}' })}
-								/>
+								{contributions.length > 0 && (
+									<ContributionCard
+										summary={t.rich('person.contributions-pages', {
+											count: contributions.length,
+											person: contributionPerson,
+											b: bold,
+										})}
+										items={contributions.map((contribution) => ({
+											title: contribution.title,
+											href: contribution.href,
+											badges: contribution.roles,
+										}))}
+										{...contributionCardLabels}
+									/>
+								)}
+								{assessments.length > 0 && (
+									<ContributionCard
+										summary={t.rich('person.contributions-assessments', {
+											count: assessments.length,
+											person: contributionPerson,
+											b: bold,
+										})}
+										items={assessments.map((assessment) => ({
+											title: assessment.title,
+											href: assessment.href,
+											icon: assessment.countryCode ? (
+												<CountryFlag country={assessment.countryCode} size="md" decorative />
+											) : undefined,
+											badges: assessment.roles.map((role) => t(`person.contributions-assessment-${role}`)),
+										}))}
+										{...contributionCardLabels}
+									/>
+								)}
 							</div>
 						</Section>
 					</>

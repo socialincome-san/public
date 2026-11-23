@@ -45,7 +45,7 @@ const initialsOf = (name: string) =>
 		.split(/\s+/)
 		.filter(Boolean)
 		.slice(0, 2)
-		.map((part) => part[0])
+		.map((part) => Array.from(part)[0])
 		.join('')
 		.toUpperCase();
 

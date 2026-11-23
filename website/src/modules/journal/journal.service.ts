@@ -225,15 +225,23 @@ export const getJournalPersonPageData = async (
 			return resultFail('Journal person not found', personResult.status);
 		}
 		const person = personResult.data;
-		const [articlesResult, roleLabelsResult, circleLabelsResult, workStyleLabelsResult, personsResult, contributionsResult] =
-			await Promise.all([
-				storyblokContent.getArticlesByAuthor(person.uuid, lang),
-				storyblokContent.getPrimaryRoleLabels(lang),
-				storyblokContent.getCircleLabels(lang),
-				storyblokContent.getWorkStyleLabels(lang),
-				storyblokContent.getAllPersons(lang),
-				community.getPersonContributions(person.uuid, lang, currency),
-			]);
+		const [
+			articlesResult,
+			roleLabelsResult,
+			circleLabelsResult,
+			workStyleLabelsResult,
+			personsResult,
+			contributionsResult,
+			assessmentsResult,
+		] = await Promise.all([
+			storyblokContent.getArticlesByAuthor(person.uuid, lang),
+			storyblokContent.getPrimaryRoleLabels(lang),
+			storyblokContent.getCircleLabels(lang),
+			storyblokContent.getWorkStyleLabels(lang),
+			storyblokContent.getAllPersons(lang),
+			community.getPersonContributions(person.uuid, lang, currency),
+			community.getPersonAssessments(person.uuid, lang, currency),
+		]);
 		const articles = articlesResult.success ? articlesResult.data : [];
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 		const circleLabels = circleLabelsResult.success ? circleLabelsResult.data : {};
@@ -257,6 +265,7 @@ export const getJournalPersonPageData = async (
 			circleLabels,
 			workStyleLabels: workStyleLabelsResult.success ? workStyleLabelsResult.data : {},
 			contributions: contributionsResult.success ? contributionsResult.data : [],
+			assessments: assessmentsResult.success ? assessmentsResult.data : [],
 			otherPersons: pickOtherPersons(person, persons),
 		});
 	} catch (error) {

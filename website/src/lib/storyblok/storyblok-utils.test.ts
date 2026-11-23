@@ -2,6 +2,7 @@ import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import {
 	formatArticleAuthorNames,
 	formatStoryblokDateMedium,
+	formatStoryblokMonthYear,
 	formatStoryblokResizeUrl,
 	formatStoryblokUrl,
 	getArticleAuthors,
@@ -157,6 +158,19 @@ describe('getVolunteeringStat', () => {
 	it('has nothing before a full month or without a start date', () => {
 		expect(getVolunteeringStat({ unit: 'days', days: 12 })).toBeNull();
 		expect(getVolunteeringStat(null)).toBeNull();
+	});
+});
+
+describe('formatStoryblokMonthYear', () => {
+	it('formats the month and year in the page language', () => {
+		expect(formatStoryblokMonthYear('2019-12-19 23:00', 'en')).toBe('Dec 2019');
+		expect(formatStoryblokMonthYear('2019-12-19 23:00', 'de')).toBe('Dez. 2019');
+		expect(formatStoryblokMonthYear('2019-12-19 23:00', 'fr')).toBe('déc. 2019');
+		expect(formatStoryblokMonthYear('2019-12-19 23:00', 'it')).toBe('dic 2019');
+	});
+
+	it('returns an empty string without a date', () => {
+		expect(formatStoryblokMonthYear(undefined, 'en')).toBe('');
 	});
 });
 

@@ -1,9 +1,10 @@
 import { AfricaMapBlock } from '@/components/content-blocks/africa-map';
+import { PeoplePillBlock } from '@/components/content-blocks/people-pill';
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { ArticleRichText } from '@/components/storyblok/journal/article-rich-text';
 import { OriginalLanguageLink } from '@/components/storyblok/journal/original-language-link';
 import { TagBadge } from '@/components/storyblok/journal/tag-badge';
-import type { AfricaMap } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { AfricaMap, PeoplePill } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getRichTextBloks } from '@/lib/storyblok/storyblok-richtext';
 import type { JournalArticle } from '@/modules/journal/journal.types';
@@ -18,24 +19,28 @@ type Props = {
 	currency: WebsiteCurrency;
 };
 
-const isAfricaMap = (blok: unknown): blok is AfricaMap =>
+const isServerBlok = (blok: unknown): blok is AfricaMap | PeoplePill =>
 	typeof blok === 'object' &&
 	blok !== null &&
 	'component' in blok &&
-	blok.component === 'africaMap' &&
+	(blok.component === 'africaMap' || blok.component === 'peoplePill') &&
 	'_uid' in blok &&
 	typeof blok._uid === 'string';
 
 export const ArticleDetailBody = async ({ story, slug, lang, currency }: Props) => {
 	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('common')]);
 	const article = story.content;
-	// The rich text renders on the client, but a map loads its country pages on the server
-	const africaMaps = Object.fromEntries(
+	// The rich text renders on the client, but maps and people pills load their data on the server
+	const serverBloks = Object.fromEntries(
 		getRichTextBloks(article.content)
-			.filter(isAfricaMap)
+			.filter(isServerBlok)
 			.map((blok) => [
 				blok._uid,
-				<AfricaMapBlock key={blok._uid} blok={blok} lang={lang} currency={currency} placement="article" />,
+				blok.component === 'africaMap' ? (
+					<AfricaMapBlock key={blok._uid} blok={blok} lang={lang} currency={currency} placement="article" />
+				) : (
+					<PeoplePillBlock key={blok._uid} blok={blok} lang={lang} currency={currency} placement="article" />
+				),
 			]),
 	);
 
@@ -55,7 +60,7 @@ export const ArticleDetailBody = async ({ story, slug, lang, currency }: Props) 
 					document={article.content as StoryblokRichtext}
 					lang={lang}
 					donationForm={<DonationForm />}
-					africaMaps={africaMaps}
+					serverBloks={serverBloks}
 				/>
 			</div>
 

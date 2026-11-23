@@ -4,7 +4,12 @@ import { cacheResult } from '@/lib/result-cache';
 import { cacheTag } from 'next/cache';
 import type { CommunityPage } from './community.schemas';
 import * as service from './community.service';
-import { COMMUNITY_CACHE_TAG, type CommunityPanelData, type PersonContribution } from './community.types';
+import {
+	COMMUNITY_CACHE_TAG,
+	type CommunityPanelData,
+	type PersonAssessment,
+	type PersonContribution,
+} from './community.types';
 
 export const getCommunityPanelData = async (
 	page: CommunityPage,
@@ -26,4 +31,15 @@ export const getPersonContributions = async (
 	cacheTag(COMMUNITY_CACHE_TAG);
 
 	return cacheResult(service.getPersonContributions(personUuid, language, currency));
+};
+
+export const getPersonAssessments = async (
+	personUuid: string,
+	language: string,
+	currency: WebsiteCurrency,
+): Promise<Result<PersonAssessment[]>> => {
+	'use cache';
+	cacheTag(COMMUNITY_CACHE_TAG);
+
+	return cacheResult(service.getPersonAssessments(personUuid, language, currency));
 };

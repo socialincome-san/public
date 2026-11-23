@@ -6,7 +6,7 @@ import { pickCommunityPage } from '@/components/community/pick-community-page';
 import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
-import { isFolderOverviewStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
+import { getCircleSlugFromStoryblokSlug, isFolderOverviewStoryblokSlug } from '@/lib/storyblok/storyblok-paths';
 import { getPageStoryMetadata } from '@/lib/storyblok/storyblok-richtext';
 import { getStoryblokMetadataImage, getTranslatedStoryName } from '@/lib/storyblok/storyblok-utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
@@ -82,6 +82,7 @@ export const ContentPage = async ({ storyPath, lang, currency, searchParams, chi
 				currency={toWebsiteCurrency(currency)}
 				searchParams={searchParams}
 				storyUuid={story.uuid}
+				circleSlug={getCircleSlugFromStoryblokSlug(story.full_slug)}
 				afterHero={
 					<BlockWrapper marginTop="none" marginBottom="none">
 						<div className="pt-9">

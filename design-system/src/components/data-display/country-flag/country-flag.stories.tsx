@@ -18,7 +18,7 @@ const meta = {
 		},
 		size: {
 			control: 'select',
-			options: ['sm', 'lg'],
+			options: ['sm', 'md', 'lg'],
 		},
 		decorative: {
 			control: 'boolean',
@@ -35,6 +35,12 @@ export const Large: Story = {};
 export const Small: Story = {
 	args: {
 		size: 'sm',
+	},
+};
+
+export const Medium: Story = {
+	args: {
+		size: 'md',
 	},
 };
 
