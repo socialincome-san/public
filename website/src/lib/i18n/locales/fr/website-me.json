@@ -57,7 +57,8 @@
 			"payments": "Paiements",
 			"subscriptions": "Souscriptions",
 			"donation-certificates-long": "Attestations de don"
-		}
+		},
+		"campaigns": "Campagnes"
 	},
 	"donate-now": "Faire un don",
 	"contributions": {
@@ -216,5 +217,25 @@
 		"go-to-portal": "Aller au portail",
 		"go-to-dashboard": "Aller au tableau de bord",
 		"go-to-partner-space": "Aller à l’espace partenaire"
+	},
+	"campaigns": {
+		"empty": "Vous n'avez pas encore créé de campagne.",
+		"error": "Nous n'avons pas pu charger vos campagnes. Veuillez réessayer plus tard.",
+		"edit": "Modifier",
+		"view": "Voir",
+		"save": "Enregistrer les modifications",
+		"saving": "Enregistrement…",
+		"saved-title": "Modifications enregistrées",
+		"saved-description": "Vos modifications sont en ligne",
+		"raised": "Collecté",
+		"goal": "Objectif",
+		"contributions": "Contributions",
+		"days-left": "Jours restants",
+		"status": {
+			"listed": "Publiée",
+			"awaiting-approval": "En attente d'approbation",
+			"private": "Privée",
+			"ended": "Terminée"
+		}
 	}
 }

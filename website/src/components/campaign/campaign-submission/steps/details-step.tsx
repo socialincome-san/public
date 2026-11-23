@@ -5,6 +5,7 @@ import { cn } from '@socialincome/design-system/cn';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { Label } from '@socialincome/design-system/forms/label/label';
+import { MarkdownEditor } from '@socialincome/design-system/forms/markdown-editor/markdown-editor';
 import { RadioCard } from '@socialincome/design-system/forms/radio-card/radio-card';
 import { RadioGroup } from '@socialincome/design-system/forms/radio-group/radio-group';
 import {
@@ -18,6 +19,7 @@ import { Switch } from '@socialincome/design-system/forms/switch/switch';
 import { addDays, format } from 'date-fns';
 import { Camera, Check, Trash2 } from 'lucide-react';
 import { useEffect, useId, useRef } from 'react';
+import { CampaignMarkdown } from '../../campaign-markdown';
 import { endDateFromDurationPreset } from '../campaign-submission.client';
 import { ImageFocusPoint } from '../image-focus-point';
 import type { DetailsStepProps } from '../types';
@@ -72,6 +74,7 @@ export const DetailsStep = ({
 	const { inputRef, previewUrl, focus, setFocus, error: imageError, onChange: onPrimaryImageChange } = primaryImage;
 	const imageHintId = useId();
 	const imageFocusHintId = useId();
+	const hasFocusPicker = imageSelection?.type === 'upload' && Boolean(setFocus);
 	const imageErrorId = useId();
 	const imageErrorRef = useRef<HTMLParagraphElement>(null);
 	const durationPreset = form.watch('durationPreset');
@@ -85,11 +88,7 @@ export const DetailsStep = ({
 		}
 	}, [imageError]);
 
-	const imageDescribedBy = [
-		imageHintId,
-		imageSelection?.type === 'upload' ? imageFocusHintId : null,
-		imageError ? imageErrorId : null,
-	]
+	const imageDescribedBy = [imageHintId, hasFocusPicker ? imageFocusHintId : null, imageError ? imageErrorId : null]
 		.filter(Boolean)
 		.join(' ');
 
@@ -98,7 +97,7 @@ export const DetailsStep = ({
 			? previewUrl
 			: imageSelection?.type === 'default'
 				? (defaultImages.find((image) => image.id === imageSelection.id)?.url ?? null)
-				: null;
+				: (imageSelection?.url ?? null);
 
 	const setDurationPreset = (preset: CampaignSubmissionDurationPreset) => {
 		form.setValue('durationPreset', preset, { shouldDirty: true, shouldValidate: true });
@@ -129,13 +128,11 @@ export const DetailsStep = ({
 					<FormItem>
 						<FormLabel>{labels.description}</FormLabel>
 						<FormControl>
-							<textarea
+							<MarkdownEditor
 								{...field}
-								rows={4}
-								className={cn(
-									'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
-									'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-								)}
+								rows={6}
+								labels={labels.markdown}
+								renderPreview={(value) => <CampaignMarkdown>{value}</CampaignMarkdown>}
 							/>
 						</FormControl>
 						<FormMessage />
@@ -187,7 +184,16 @@ export const DetailsStep = ({
 						)}
 					/>
 				) : (
-					<input type="hidden" {...form.register('endDate')} />
+					<FormField
+						control={form.control}
+						name="endDate"
+						render={({ field }) => (
+							<FormItem>
+								<input type="hidden" {...field} />
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 				)}
 			</div>
 
@@ -291,7 +297,7 @@ export const DetailsStep = ({
 
 				{previewSrc ? (
 					<div className="border-border relative aspect-[16/10] w-full overflow-hidden rounded-2xl border">
-						{imageSelection?.type === 'upload' && previewUrl ? (
+						{hasFocusPicker && previewUrl && setFocus ? (
 							<ImageFocusPoint
 								previewUrl={previewUrl}
 								focus={focus}
@@ -399,7 +405,7 @@ export const DetailsStep = ({
 				<p id={imageHintId} className="text-muted-foreground text-xs">
 					{labels.imageHint}
 				</p>
-				{imageSelection?.type === 'upload' ? (
+				{hasFocusPicker ? (
 					<p id={imageFocusHintId} className="text-muted-foreground text-xs">
 						{labels.imageFocusHint}
 					</p>

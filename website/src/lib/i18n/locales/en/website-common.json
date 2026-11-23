@@ -347,6 +347,17 @@
 		"about": "About",
 		"create-campaign": "Create campaign",
 		"submission": {
+			"markdown": {
+				"toolbar": "Formatting",
+				"write": "Write",
+				"preview": "Preview",
+				"empty-preview": "Nothing to preview yet.",
+				"bold": "Bold",
+				"italic": "Italic",
+				"bullet-list": "Bullet list",
+				"link": "Link",
+				"hint": "Use the buttons for bold, italic, lists and links. An empty line starts a new paragraph."
+			},
 			"program-step-title": "Which program would you like to create a campaign for?",
 			"details-step-title": "Campaign Details",
 			"about-step-title": "About",
@@ -457,6 +468,7 @@
 				"program-not-eligible": "Selected program is not eligible.",
 				"slug-exists": "A campaign with this slug already exists.",
 				"submission-failed": "We could not complete your submission. Please try again in a few minutes.",
+				"campaign-not-found": "We could not find this campaign in your account.",
 				"turnstile-required": "Please complete the verification before submitting.",
 				"turnstile-invalid": "Verification failed. Please try again.",
 				"first-name-required": "First name is required.",

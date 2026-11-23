@@ -57,7 +57,8 @@
 			"payments": "Payments",
 			"subscriptions": "Subscriptions",
 			"donation-certificates-long": "Donation certificates"
-		}
+		},
+		"campaigns": "Campaigns"
 	},
 	"donate-now": "Donate now",
 	"contributions": {
@@ -216,5 +217,25 @@
 		"go-to-portal": "Go to portal",
 		"go-to-dashboard": "Go to dashboard",
 		"go-to-partner-space": "Go to partner space"
+	},
+	"campaigns": {
+		"empty": "You haven't created a campaign yet.",
+		"error": "We could not load your campaigns. Please try again later.",
+		"edit": "Edit",
+		"view": "View",
+		"save": "Save changes",
+		"saving": "Saving…",
+		"saved-title": "Changes saved",
+		"saved-description": "Your changes are live",
+		"raised": "Raised",
+		"goal": "Goal",
+		"contributions": "Contributions",
+		"days-left": "Days left",
+		"status": {
+			"listed": "Listed",
+			"awaiting-approval": "Awaiting approval",
+			"private": "Private",
+			"ended": "Ended"
+		}
 	}
 }

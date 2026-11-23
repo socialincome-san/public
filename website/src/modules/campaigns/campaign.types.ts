@@ -160,6 +160,50 @@ export type CampaignDefaultImageOption = {
 	alt: string | null;
 };
 
+export type OwnCampaignListItem = {
+	id: string;
+	slug: string;
+	title: string;
+	isPublic: boolean;
+	isListed: boolean;
+	isActive: boolean;
+	daysLeft: number;
+	contributionsCount: number;
+	amountCollected: number | null;
+	goal: number | null;
+	currency: Currency;
+};
+
+export type EditableCampaign = {
+	id: string;
+	slug: string;
+	title: string;
+	description: string;
+	goal: number | null;
+	currency: CampaignSubmissionAllowedCurrency;
+	endDate: string;
+	isPublic: boolean;
+	creatorName: string;
+	quote: string;
+	sectionDescription: string;
+	instagramHandle: string;
+	xHandle: string;
+	linkWebsite: string;
+	tiktokHandle: string;
+	primaryImageUrl: string | null;
+	profilePictureUrl: string | null;
+	sectionImageUrl: string | null;
+};
+
+export type CampaignUpdateOptionalImage =
+	{ kind: 'keep' } | { kind: 'remove' } | { kind: 'replace'; image: CampaignSubmissionImageValidation };
+
+export type CampaignUpdateImages = {
+	primaryImage: { kind: 'keep' } | CampaignSubmissionImageSource;
+	profilePicture: CampaignUpdateOptionalImage;
+	sectionImage: CampaignUpdateOptionalImage;
+};
+
 export const turnstileResponseFieldName = 'cf-turnstile-response';
 
 export const campaignSubmissionDefaultCurrency = Currency.CHF;
@@ -225,6 +269,7 @@ export const campaignSubmissionErrorCodes = [
 	'program-not-eligible',
 	'slug-exists',
 	'submission-failed',
+	'campaign-not-found',
 	'turnstile-required',
 	'turnstile-invalid',
 	'first-name-required',

@@ -7,6 +7,7 @@ import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-s
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getStoryblokYear } from '@/lib/storyblok/storyblok-utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { getLocalPartnerProgramSummariesAction } from '@/modules/local-partners/local-partner.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -125,7 +126,7 @@ export const LocalPartnerDetail = async ({
 						lang={lang}
 						currency={currency}
 						mission={mission}
-						partnerSince={partnerSince}
+						partnerSince={getStoryblokYear(partnerSince)}
 						foundingYear={foundingYear}
 						location={location}
 						assessmentLead={assessmentLead}

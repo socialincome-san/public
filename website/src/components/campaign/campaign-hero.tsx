@@ -62,6 +62,7 @@ export const CampaignHero = async ({ campaign, title, creatorName, quote, primar
 		<MediaHero
 			image={heroImageSrc ? { src: heroImageSrc, alt: heroImageAlt, objectPosition } : null}
 			overlay="strong"
+			mobileMedia="fade"
 			top={fundraisingPillLabels.length > 0 ? <CampaignFundraisingPills labels={fundraisingPillLabels} /> : null}
 			aside={isActive ? <CampaignDonationFormServer {...donationFormProps} /> : null}
 			mobileAside={isActive ? <CampaignDonationFormServer {...donationFormProps} /> : null}

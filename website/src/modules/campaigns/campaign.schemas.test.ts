@@ -1,5 +1,6 @@
 import {
 	appendCampaignSubmissionFormData,
+	createCampaignEditFormSchema,
 	createCampaignSubmissionDetailsSchema,
 	createCampaignSubmissionFormSchema,
 	createCampaignSubmissionPersonalSchema,
@@ -299,6 +300,26 @@ describe('campaign-submission-input', () => {
 		expect(valid.success).toBe(true);
 	});
 
+	test('parseCampaignSubmissionFields keeps line breaks in descriptions only', () => {
+		const formData = withAboutFields(new FormData());
+		formData.set('title', 'Campaign\nTitle');
+		formData.set('description', 'First paragraph\r\n\r\nSecond paragraph\t');
+		formData.set('goal', '');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('hasAdditionalInformation', 'true');
+		formData.set('sectionDescription', 'Line one\nLine two');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.title).toBe('CampaignTitle');
+			expect(result.data.description).toBe('First paragraph\n\nSecond paragraph');
+			expect(result.data.sectionDescription).toBe('Line one\nLine two');
+		}
+	});
+
 	test('parseCampaignSubmissionFields clears additional information when disabled', () => {
 		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
@@ -362,6 +383,16 @@ describe('campaign-submission-input', () => {
 			expect(messages).toContain('program-required');
 			expect(messages).toContain('goal-positive');
 		}
+	});
+
+	test('createCampaignEditFormSchema requires a quote and keeps an unchanged end date', () => {
+		const pastEndDate = format(addDays(startOfDay(new Date()), 2), 'yyyy-MM-dd');
+		const schema = createCampaignEditFormSchema((code) => code, pastEndDate);
+
+		expect(schema.safeParse(validFormValues({ endDate: pastEndDate })).success).toBe(true);
+		const result = schema.safeParse(validFormValues({ endDate: pastEndDate, quote: '  ' }));
+		expect(result.success).toBe(false);
+		expect(result.error?.issues.map((issue) => issue.message)).toContain('quote-required');
 	});
 
 	test('createCampaignSubmissionFormSchema requires creator name and allows empty quote', () => {

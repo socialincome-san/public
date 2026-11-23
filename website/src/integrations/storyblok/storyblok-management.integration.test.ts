@@ -4,6 +4,7 @@ import {
 	campaignStoryExists,
 	downloadStoryblokAssetBuffer,
 	listCampaignDefaultImages,
+	updatePublishedCampaignStory,
 } from './storyblok-management.integration';
 
 const jsonResponse = (body: unknown, status = 200) => ({
@@ -176,5 +177,69 @@ describe('downloadStoryblokAssetBuffer', () => {
 			error: 'Storyblok request failed.',
 			status: 413,
 		});
+	});
+});
+
+describe('updatePublishedCampaignStory', () => {
+	const originalFetch = global.fetch;
+	const content = {
+		component: 'Campaign' as const,
+		_uid: 'uid-1',
+		portalSlug: 'my-campaign',
+		title: 'My Campaign',
+		description: 'Description',
+		creatorName: 'Alex',
+		quote: 'Thanks!',
+		primaryImage: {
+			id: 1,
+			filename: 'https://a.storyblok.com/f/109655/1.png',
+			fieldtype: 'asset' as const,
+			alt: null,
+			name: '',
+			title: null,
+			focus: null,
+		},
+	};
+
+	afterEach(() => {
+		global.fetch = originalFetch;
+		jest.restoreAllMocks();
+	});
+
+	test('publishes every space language and ignores a failed language publish', async () => {
+		process.env.STORYBLOK_MANAGEMENT_TOKEN = 'test-token';
+		jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		const fetchMock = jest.fn((url: string) => {
+			if (url.endsWith('/publish?lang=de')) {
+				return Promise.resolve(jsonResponse({}, 500));
+			}
+			if (url.endsWith(`/spaces/${campaignSubmissionConfig.storyblokSpaceId}`)) {
+				return Promise.resolve(jsonResponse({ space: { languages: [{ code: 'de' }, { code: 'fr' }] } }));
+			}
+
+			return Promise.resolve(jsonResponse({ story: { id: 42 } }));
+		});
+		global.fetch = fetchMock as unknown as typeof fetch;
+
+		const result = await updatePublishedCampaignStory(42, content);
+
+		expect(result).toEqual({ success: true, data: { allLanguagesPublished: false } });
+		const urls = fetchMock.mock.calls.map(([url]) => url);
+		expect(urls).toEqual(
+			expect.arrayContaining([
+				expect.stringContaining('/stories/42/publish?lang=de'),
+				expect.stringContaining('/stories/42/publish?lang=fr'),
+			]),
+		);
+	});
+
+	test('fails when the story update fails', async () => {
+		process.env.STORYBLOK_MANAGEMENT_TOKEN = 'test-token';
+		jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		global.fetch = jest.fn().mockResolvedValue(jsonResponse({}, 422)) as typeof fetch;
+
+		const result = await updatePublishedCampaignStory(42, content);
+
+		expect(result.success).toBe(false);
 	});
 });

@@ -15,7 +15,6 @@ export const findPaginatedDonationCertificates = async (
 			select: {
 				id: true,
 				year: true,
-				storagePath: true,
 				createdAt: true,
 				contributor: {
 					select: {
@@ -39,6 +38,23 @@ export const findPaginatedDonationCertificates = async (
 
 	return { certificates, totalCount };
 };
+
+export const findDonationCertificateForPrograms = async (certificateId: string, programIds: string[]) =>
+	prisma.donationCertificate.findFirst({
+		where: {
+			id: certificateId,
+			contributor: {
+				contributions: {
+					some: {
+						campaign: {
+							programId: { in: programIds },
+						},
+					},
+				},
+			},
+		},
+		select: { year: true, storagePath: true },
+	});
 
 export const findPaginatedContributorDonationCertificates = async (
 	contributorId: string,
@@ -100,7 +116,6 @@ const buildDonationCertificateWhere = (
 					{ contributor: { contact: { firstName: { contains: search, mode: 'insensitive' } } } },
 					{ contributor: { contact: { lastName: { contains: search, mode: 'insensitive' } } } },
 					{ contributor: { contact: { email: { contains: search, mode: 'insensitive' } } } },
-					{ storagePath: { contains: search, mode: 'insensitive' } },
 					...(hasYearFilter ? [{ year: parsedYear }] : []),
 				],
 			},
@@ -133,7 +148,7 @@ const buildDonationCertificateOrderBy = (
 	query: DonationCertificateTableQuery,
 ): Prisma.DonationCertificateOrderByWithRelationInput[] => {
 	const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-	const sortBy = toSortKey(query.sortBy, ['id', 'year', 'contributor', 'email', 'storagePath', 'createdAt'] as const);
+	const sortBy = toSortKey(query.sortBy, ['id', 'year', 'contributor', 'email', 'createdAt'] as const);
 
 	switch (sortBy) {
 		case 'id':
@@ -144,8 +159,6 @@ const buildDonationCertificateOrderBy = (
 			return [{ contributor: { contact: { firstName: direction } } }, { contributor: { contact: { lastName: direction } } }];
 		case 'email':
 			return [{ contributor: { contact: { email: direction } } }];
-		case 'storagePath':
-			return [{ storagePath: direction }];
 		case 'createdAt':
 			return [{ createdAt: direction }];
 		default:

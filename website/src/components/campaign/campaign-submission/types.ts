@@ -2,10 +2,12 @@ import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CampaignDefaultImageOption } from '@/modules/campaigns/campaign.actions';
 import { type CampaignSubmissionErrorCode, type CampaignSubmissionFormValues } from '@/modules/campaigns/campaign.types';
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
+import type { MarkdownEditorLabels } from '@socialincome/design-system/forms/markdown-editor/markdown-editor';
 import type { RefObject } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 
 export type SubmissionLabels = {
+	markdown: MarkdownEditorLabels;
 	programStepTitle: string;
 	detailsStepTitle: string;
 	aboutStepTitle: string;
@@ -86,7 +88,8 @@ export type CampaignSubmissionStepId = 'program' | 'details' | 'about' | 'person
 
 export type { CampaignSubmissionFormValues };
 
-export type CampaignImageSelection = { type: 'default'; id: number } | { type: 'upload'; file: File } | null;
+export type CampaignImageSelection =
+	{ type: 'current'; url: string } | { type: 'default'; id: number } | { type: 'upload'; file: File } | null;
 
 export type CampaignSubmissionImageUploadField = {
 	inputRef: RefObject<HTMLInputElement | null>;
@@ -94,7 +97,8 @@ export type CampaignSubmissionImageUploadField = {
 	focus: string | null;
 	error: string | null;
 	onChange: (file: File | null) => void;
-	setFocus: (focus: string | null) => void;
+	// Without it the image shows without a focus point picker, e.g. an image that is already saved
+	setFocus?: (focus: string | null) => void;
 	setError: (error: string | null) => void;
 	clear: () => void;
 };

@@ -34,17 +34,27 @@ const asErrorCode: ErrorMessage = (code) => code;
 
 const SOCIAL_HANDLE_REGEX = /^[a-zA-Z0-9._]+$/;
 
-const sanitizeText = (value: string) =>
-	Array.from(value)
+const removeControlCharacters = (value: string, keepNewlines: boolean) =>
+	Array.from(value.replace(/\r\n?/g, '\n'))
 		.filter((character) => {
 			const code = character.charCodeAt(0);
 
-			return code > 31 && code !== 127;
+			return (code > 31 && code !== 127) || (keepNewlines && character === '\n');
 		})
 		.join('')
 		.trim();
 
-const optionalSanitizedText = (maxLength: number, tooLongCode: CampaignSubmissionErrorCode, msg: ErrorMessage) =>
+const sanitizeText = (value: string) => removeControlCharacters(value, false);
+
+// Descriptions are shown with their line breaks.
+const sanitizeMultilineText = (value: string) => removeControlCharacters(value, true);
+
+const optionalSanitizedText = (
+	maxLength: number,
+	tooLongCode: CampaignSubmissionErrorCode,
+	msg: ErrorMessage,
+	sanitize = sanitizeText,
+) =>
 	z
 		.union([z.string(), z.null(), z.undefined()])
 		.transform((value) => {
@@ -52,7 +62,7 @@ const optionalSanitizedText = (maxLength: number, tooLongCode: CampaignSubmissio
 				return null;
 			}
 
-			const sanitized = sanitizeText(value);
+			const sanitized = sanitize(value);
 
 			return sanitized.length > 0 ? sanitized : null;
 		})
@@ -112,7 +122,7 @@ const optionalWebsiteUrlSchema = (msg: ErrorMessage) =>
 		msg('link-unsafe'),
 	);
 
-const isAllowedCurrency = (value: string): value is CampaignSubmissionAllowedCurrency =>
+export const isAllowedCurrency = (value: string): value is CampaignSubmissionAllowedCurrency =>
 	campaignSubmissionConfig.allowedCurrencies.some((currency) => currency === value);
 
 const parseCampaignSubmissionGoalInput = (value: string | number | null | undefined): number | null | 'invalid' => {
@@ -158,71 +168,77 @@ const quoteRule = (msg: ErrorMessage) =>
 
 const programIdRule = (msg: ErrorMessage) => z.string().trim().min(1, msg('program-required'));
 
-const campaignSubmissionFieldsSchema = z
-	.object({
-		title: z.string().transform(sanitizeText).pipe(titleRule(asErrorCode)),
-		description: z.string().transform(sanitizeText).pipe(descriptionRule(asErrorCode)),
-		goal: z.union([z.string(), z.number(), z.null()]).transform((value, ctx) => {
-			const parsed = parseCampaignSubmissionGoalInput(value);
-			if (parsed === 'invalid') {
-				ctx.addIssue({ code: 'custom', message: 'goal-positive' });
+const campaignSubmissionFieldsObjectSchema = z.object({
+	title: z.string().transform(sanitizeText).pipe(titleRule(asErrorCode)),
+	description: z.string().transform(sanitizeMultilineText).pipe(descriptionRule(asErrorCode)),
+	goal: z.union([z.string(), z.number(), z.null()]).transform((value, ctx) => {
+		const parsed = parseCampaignSubmissionGoalInput(value);
+		if (parsed === 'invalid') {
+			ctx.addIssue({ code: 'custom', message: 'goal-positive' });
 
-				return z.NEVER;
-			}
-
-			return parsed;
-		}),
-		currency: z
-			.string()
-			.transform((value) => value.trim().toUpperCase())
-			.refine(isAllowedCurrency, 'currency-unsupported'),
-		endDate: z.string().transform((value, ctx) => {
-			const date = parseCampaignSubmissionEndDate(value);
-			if (!date) {
-				ctx.addIssue({ code: 'custom', message: 'end-date-invalid' });
-
-				return z.NEVER;
-			}
-
-			return date;
-		}),
-		programId: programIdRule(asErrorCode),
-		public: z.union([z.boolean(), z.string()]).transform((value) => {
-			if (typeof value === 'boolean') {
-				return value;
-			}
-
-			return value.trim().toLowerCase() === 'true';
-		}),
-		creatorName: z.string().transform(sanitizeText).pipe(creatorNameRule(asErrorCode)),
-		quote: z.string().transform(sanitizeText).pipe(quoteRule(asErrorCode)),
-		hasAdditionalInformation: z.boolean(),
-		sectionDescription: optionalSanitizedText(
-			campaignSubmissionConfig.maxSectionDescriptionLength,
-			'section-description-too-long',
-			asErrorCode,
-		),
-		instagramHandle: optionalSocialHandleSchema(asErrorCode),
-		xHandle: optionalSocialHandleSchema(asErrorCode),
-		linkWebsite: optionalWebsiteUrlSchema(asErrorCode),
-		tiktokHandle: optionalSocialHandleSchema(asErrorCode),
-	})
-	.transform((values) => {
-		if (values.hasAdditionalInformation) {
-			return values;
+			return z.NEVER;
 		}
 
-		return {
-			...values,
-			sectionDescription: null,
-			instagramHandle: null,
-			xHandle: null,
-			linkWebsite: null,
-			tiktokHandle: null,
-		};
-	});
+		return parsed;
+	}),
+	currency: z
+		.string()
+		.transform((value) => value.trim().toUpperCase())
+		.refine(isAllowedCurrency, 'currency-unsupported'),
+	endDate: z.string().transform((value, ctx) => {
+		const date = parseCampaignSubmissionEndDate(value);
+		if (!date) {
+			ctx.addIssue({ code: 'custom', message: 'end-date-invalid' });
+
+			return z.NEVER;
+		}
+
+		return date;
+	}),
+	programId: programIdRule(asErrorCode),
+	public: z.union([z.boolean(), z.string()]).transform((value) => {
+		if (typeof value === 'boolean') {
+			return value;
+		}
+
+		return value.trim().toLowerCase() === 'true';
+	}),
+	creatorName: z.string().transform(sanitizeText).pipe(creatorNameRule(asErrorCode)),
+	quote: z.string().transform(sanitizeText).pipe(quoteRule(asErrorCode)),
+	hasAdditionalInformation: z.boolean(),
+	sectionDescription: optionalSanitizedText(
+		campaignSubmissionConfig.maxSectionDescriptionLength,
+		'section-description-too-long',
+		asErrorCode,
+		sanitizeMultilineText,
+	),
+	instagramHandle: optionalSocialHandleSchema(asErrorCode),
+	xHandle: optionalSocialHandleSchema(asErrorCode),
+	linkWebsite: optionalWebsiteUrlSchema(asErrorCode),
+	tiktokHandle: optionalSocialHandleSchema(asErrorCode),
+});
+
+const clearAdditionalInformation = <T extends { hasAdditionalInformation: boolean }>(values: T) =>
+	values.hasAdditionalInformation
+		? values
+		: {
+				...values,
+				sectionDescription: null,
+				instagramHandle: null,
+				xHandle: null,
+				linkWebsite: null,
+				tiktokHandle: null,
+			};
+
+const campaignSubmissionFieldsSchema = campaignSubmissionFieldsObjectSchema.transform(clearAdditionalInformation);
+
+const campaignUpdateFieldsSchema = campaignSubmissionFieldsObjectSchema
+	.omit({ programId: true })
+	.transform(clearAdditionalInformation);
 
 export type CampaignSubmissionFields = z.infer<typeof campaignSubmissionFieldsSchema>;
+
+export type CampaignUpdateFields = z.infer<typeof campaignUpdateFieldsSchema>;
 
 const parseCampaignSubmissionEndDate = (value: string): Date | null => {
 	const trimmed = value.trim();
@@ -352,6 +368,20 @@ export const parseCampaignSubmissionFields = (
 	return { success: true, data: parsed.data };
 };
 
+// The end date is checked by the service, which only applies the duration limits when it changes.
+export const parseCampaignUpdateFields = (
+	formData: FormData,
+): { success: true; data: CampaignUpdateFields } | { success: false; error: CampaignSubmissionErrorCode } => {
+	const parsed = campaignUpdateFieldsSchema.safeParse(readCampaignSubmissionFormDataFields(formData));
+	if (!parsed.success) {
+		const message = parsed.error.issues[0]?.message;
+
+		return { success: false, error: message && isCampaignSubmissionErrorCode(message) ? message : 'invalid-submission' };
+	}
+
+	return { success: true, data: parsed.data };
+};
+
 export const parseCampaignSubmissionDefaultImageId = (
 	value: FormDataEntryValue | null,
 ): { success: true; data: number } | { success: false; error: CampaignSubmissionErrorCode } => {
@@ -435,7 +465,7 @@ const detectImageMimeType = (buffer: Buffer): CampaignSubmissionPermittedImageMi
 const isPermittedImageMimeType = (value: string): value is CampaignSubmissionPermittedImageMimeType =>
 	campaignSubmissionConfig.permittedImageMimeTypes.some((mimeType) => mimeType === value);
 
-const parseHasAdditionalInformation = (value: FormDataEntryValue | null) =>
+export const parseFormDataFlag = (value: FormDataEntryValue | null) =>
 	typeof value === 'string' && value.trim().toLowerCase() === 'true';
 
 const readCampaignSubmissionFormDataFields = (formData: FormData) => ({
@@ -448,7 +478,7 @@ const readCampaignSubmissionFormDataFields = (formData: FormData) => ({
 	public: formData.get('public') ?? 'true',
 	creatorName: formData.get('creatorName') ?? '',
 	quote: formData.get('quote') ?? '',
-	hasAdditionalInformation: parseHasAdditionalInformation(formData.get('hasAdditionalInformation')),
+	hasAdditionalInformation: parseFormDataFlag(formData.get('hasAdditionalInformation')),
 	sectionDescription: formData.get('sectionDescription'),
 	instagramHandle: formData.get('instagramHandle'),
 	xHandle: formData.get('xHandle'),

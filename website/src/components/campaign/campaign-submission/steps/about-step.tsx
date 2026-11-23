@@ -4,8 +4,10 @@ import { cn } from '@socialincome/design-system/cn';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { Label } from '@socialincome/design-system/forms/label/label';
+import { MarkdownEditor } from '@socialincome/design-system/forms/markdown-editor/markdown-editor';
 import { Switch } from '@socialincome/design-system/forms/switch/switch';
 import { useEffect, useRef } from 'react';
+import { CampaignMarkdown } from '../../campaign-markdown';
 import { CampaignSubmissionFormCard } from '../form-layout';
 import { ImageUploadField } from '../image-upload-field';
 import { TurnstileWidget } from '../turnstile/turnstile-widget';
@@ -165,12 +167,13 @@ export const AboutStep = ({
 									<FormItem>
 										<FormLabel>{labels.sectionDescription}</FormLabel>
 										<FormControl>
-											<textarea
+											<MarkdownEditor
 												{...field}
 												value={field.value ?? ''}
-												rows={4}
+												rows={6}
 												disabled={isSubmitting}
-												className={textareaClassName}
+												labels={labels.markdown}
+												renderPreview={(value) => <CampaignMarkdown>{value}</CampaignMarkdown>}
 											/>
 										</FormControl>
 										<FormMessage />

@@ -1,7 +1,12 @@
+import { getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { StoryblokPublishedLink } from '@/modules/storyblok-content/storyblok-content.types';
-import { findPathTails, getLinkPathTails } from './page-metadata';
+import { findPathTails, getLinkPathTails, getPageMetadata } from './page-metadata';
 
 jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({ getPublishedPageLinks: jest.fn() }));
+jest.mock('next-intl/server', () => ({
+	getMessages: () =>
+		Promise.resolve({ 'website-common': { metadata: { title: 'Social Income', description: 'Description' } } }),
+}));
 
 const homeLink: StoryblokPublishedLink = {
 	uuid: 'home',
@@ -29,5 +34,28 @@ describe('getLinkPathTails', () => {
 describe('findPathTails', () => {
 	it('lists only the published translations of the home page', () => {
 		expect([...findPathTails([homeLink], '').keys()]).toEqual(['en', 'de']);
+	});
+});
+
+describe('getPageMetadata', () => {
+	beforeEach(() => {
+		jest.mocked(getPublishedPageLinks).mockResolvedValue({ success: true, data: [homeLink] });
+	});
+
+	it('names only the published translations and x-default in hreflang', async () => {
+		const { alternates } = await getPageMetadata('en', '', {});
+
+		expect(alternates?.languages).toEqual({ en: '/en/usd', de: '/de/usd', 'x-default': '/en/usd' });
+	});
+
+	it('renders the same hreflang set on every language, with the fallback as canonical of an unpublished one', async () => {
+		const english = await getPageMetadata('en', '', {});
+		const german = await getPageMetadata('de', '', {});
+		const french = await getPageMetadata('fr', '', {});
+
+		expect(german.alternates?.languages).toEqual(english.alternates?.languages);
+		expect(french.alternates?.languages).toEqual(english.alternates?.languages);
+		expect(german.alternates?.canonical).toBe('/de/usd');
+		expect(french.alternates?.canonical).toBe('/en/usd');
 	});
 });
