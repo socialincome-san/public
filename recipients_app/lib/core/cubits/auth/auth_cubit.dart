@@ -96,6 +96,13 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> refreshRecipient() async {
+    final user = state.firebaseUser;
+    if (user != null && state.status != AuthStatus.updatingRecipient) {
+      await _listenToRecipient(user);
+    }
+  }
+
   /// Use the RecipientSelfUpdate model to update the recipient.
   Future<bool> updateRecipient({required RecipientSelfUpdate selfUpdate}) async {
     emit(state.copyWith(status: AuthStatus.updatingRecipient));
