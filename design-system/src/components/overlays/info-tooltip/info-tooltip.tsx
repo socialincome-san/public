@@ -17,7 +17,12 @@ type InfoTooltipProps = {
 export const InfoTooltip = ({ label, children, size = 'md' }: InfoTooltipProps) => (
 	<Tooltip>
 		<TooltipTrigger asChild>
-			<button type="button" aria-label={label} className="text-muted-foreground hover:text-foreground inline-flex shrink-0">
+			{/* The icon stays small, the touch area is 24px: the minimum target of WCAG 2.5.8 */}
+			<button
+				type="button"
+				aria-label={label}
+				className="text-muted-foreground hover:text-foreground relative inline-flex shrink-0 after:absolute after:top-1/2 after:left-1/2 after:size-6 after:-translate-1/2"
+			>
 				<Info className={iconSizes[size]} aria-hidden />
 			</button>
 		</TooltipTrigger>
