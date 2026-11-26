@@ -15,18 +15,28 @@ const normalizeIntlOutput = (value: string): string => {
 	return value.replace(LOCALE_APOSTROPHE_REGEX, ',');
 };
 
+// Our fonts draw this space, used by French grouping, with almost no width, so 1 280 would read as 1280
+const NARROW_NO_BREAK_SPACE_REGEX = /\u202F/g;
+
+const normalizeCurrencyOutput = (value: string): string => {
+	return value.replace(NARROW_NO_BREAK_SPACE_REGEX, '\u00A0');
+};
+
+// CHF follows the Swiss convention of each language (CHF 3'788, 3'788 CHF); other currencies follow the language
+const getCurrencyLocale = (currency: string, locale: string): string => {
+	return currency === 'CHF' ? `${new Intl.Locale(locale).language}-CH` : locale;
+};
+
 export const slugify = (value: string): string => {
 	return value.toLowerCase().trim().replace(NON_ALPHANUMERIC_DASH_REGEX, '-').replace(LEADING_TRAILING_DASHES_REGEX, '');
 };
 
 export const formatCurrency = (value: number): string => {
-	return normalizeIntlOutput(
-		new Intl.NumberFormat('de-CH', {
-			style: 'currency',
-			currency: 'CHF',
-			maximumFractionDigits: 0,
-		}).format(value),
-	);
+	return new Intl.NumberFormat('de-CH', {
+		style: 'currency',
+		currency: 'CHF',
+		maximumFractionDigits: 0,
+	}).format(value);
 };
 
 export const formatCurrencyLocale = (
@@ -51,7 +61,7 @@ export const formatCurrencyLocale = (
 
 	if (Math.abs(amount) >= compactThreshold) {
 		try {
-			return normalizeIntlOutput(
+			return normalizeCurrencyOutput(
 				new Intl.NumberFormat(compactLocale, {
 					style: 'currency',
 					currency,
@@ -65,9 +75,11 @@ export const formatCurrencyLocale = (
 		}
 	}
 
+	const currencyLocale = getCurrencyLocale(currency, locale);
+
 	try {
-		return normalizeIntlOutput(
-			new Intl.NumberFormat(locale, {
+		return normalizeCurrencyOutput(
+			new Intl.NumberFormat(currencyLocale, {
 				style: 'currency',
 				currency,
 				minimumFractionDigits,
@@ -75,8 +87,8 @@ export const formatCurrencyLocale = (
 			}).format(amount),
 		);
 	} catch {
-		const num = normalizeIntlOutput(
-			new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(amount),
+		const num = normalizeCurrencyOutput(
+			new Intl.NumberFormat(currencyLocale, { minimumFractionDigits, maximumFractionDigits }).format(amount),
 		);
 
 		return `${num} ${currency}`;
