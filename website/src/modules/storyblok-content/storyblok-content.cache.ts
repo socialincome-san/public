@@ -24,6 +24,8 @@ import {
 	type StoryTitleData,
 } from './storyblok-content.types';
 
+export { STORYBLOK_CACHE_TAG };
+
 const withStoryblokCache = <T>(pending: Promise<Result<T>>): Promise<Result<T>> => {
 	cacheTag(STORYBLOK_CACHE_TAG);
 

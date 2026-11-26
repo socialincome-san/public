@@ -8,6 +8,7 @@ import { getOptionalContributor, getSessionByType } from '@/modules/auth/session
 import { getOrCreateContributorFromEmailAndName } from '@/modules/contributors/contributor.service';
 import { getEligibleProgramsForPublicSubmission } from '@/modules/programs/program-public-submission.service';
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
+import { STORYBLOK_CACHE_TAG } from '@/modules/storyblok-content/storyblok-content.cache';
 import { revalidatePath, updateTag } from 'next/cache';
 import { getOwnCampaignForEdit, updateOwnCampaign } from './campaign-edit.service';
 import { claimPendingCampaigns } from './campaign-pending-claim.service';
@@ -342,6 +343,8 @@ export const updateOwnCampaignAction = async (
 	}
 
 	updateTag(CAMPAIGN_CACHE_TAG);
+	// The edited text lives in Storyblok; without this it only shows once Storyblok's publish webhook arrives.
+	updateTag(STORYBLOK_CACHE_TAG);
 
 	return resultOk(result.data);
 };
