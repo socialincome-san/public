@@ -9,7 +9,7 @@ export const validateTwilioOtpConfiguration = async (): Promise<Result<boolean>>
 
 	const clientResult = await getTwilioClient();
 
-	return clientResult.success ? resultOk(true) : resultFail(clientResult.error);
+	return clientResult.success ? resultOk(true) : clientResult;
 };
 
 export const requestTwilioOtp = async (phoneNumber: string): Promise<Result<boolean>> => {
@@ -33,7 +33,14 @@ export const requestTwilioOtp = async (phoneNumber: string): Promise<Result<bool
 	} catch (error) {
 		console.error('Failed to request Twilio OTP', { error });
 
-		return resultFail('Failed to request OTP');
+		if (hasHttpStatus(error, 429)) {
+			return resultFail('Too many OTP requests', 429);
+		}
+		if (PHONE_NUMBER_ERROR_CODES.some((code) => hasNumericCode(error, code))) {
+			return resultFail('Twilio rejected the phone number', 400);
+		}
+
+		return resultFail('Failed to request OTP', 502);
 	}
 };
 
@@ -68,14 +75,22 @@ export const verifyTwilioOtp = async (phoneNumber: string, otp: string): Promise
 const getVerifyServiceSid = (): Result<string> => {
 	const serviceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
 	if (!serviceSid) {
-		return resultFail('Missing TWILIO_VERIFY_SERVICE_SID');
+		return resultFail('Missing TWILIO_VERIFY_SERVICE_SID', 500);
 	}
 	if (!serviceSid.startsWith('VA')) {
-		return resultFail('Invalid TWILIO_VERIFY_SERVICE_SID format');
+		return resultFail('Invalid TWILIO_VERIFY_SERVICE_SID format', 500);
 	}
 
 	return resultOk(serviceSid);
 };
 
+// Twilio also answers 400 for faults on our side, so only its error code can blame the number:
+// 60200 is an invalid `To` (the only parameter that varies), 60006 a well-formed number the carrier
+// does not know, 60205 a landline that cannot receive SMS.
+const PHONE_NUMBER_ERROR_CODES = [60200, 60006, 60205];
+
 const hasNumericCode = (error: unknown, expectedCode: number): boolean =>
 	typeof error === 'object' && error !== null && 'code' in error && error.code === expectedCode;
+
+const hasHttpStatus = (error: unknown, expectedStatus: number): boolean =>
+	typeof error === 'object' && error !== null && 'status' in error && error.status === expectedStatus;

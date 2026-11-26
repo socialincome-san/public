@@ -207,12 +207,12 @@ const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<Resul
 
 const normalizePhoneNumber = (phoneNumber: string | undefined): Result<string> => {
 	if (!phoneNumber) {
-		return resultFail('Phone number is required');
+		return resultFail('Phone number is required', 400);
 	}
 
 	const normalized = phoneNumber.startsWith('+') ? phoneNumber : `+${phoneNumber}`;
 	if (!/^\+[1-9]\d{1,14}$/.test(normalized)) {
-		return resultFail('Phone number must be in valid E.164 format (e.g., +12345678901)');
+		return resultFail('Phone number must be in valid E.164 format (e.g., +12345678901)', 400);
 	}
 
 	return resultOk(normalized);

@@ -830,6 +830,18 @@ abstract class AppLocalizations {
   /// **'Invalid phone number. Please check your phone number and try again.'**
   String get invalidPhoneNumberError;
 
+  /// No description provided for @tooManyVerificationRequestsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait a few minutes and try again.'**
+  String get tooManyVerificationRequestsError;
+
+  /// No description provided for @verificationCodeNotSentError.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not send the verification code. Please try again later.'**
+  String get verificationCodeNotSentError;
+
   /// No description provided for @failedSentVerificationCodeError.
   ///
   /// In en, this message translates to:

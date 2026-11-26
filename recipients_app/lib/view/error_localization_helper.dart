@@ -144,6 +144,8 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
       "invalid-app-check-token" => localizations.invalidAppCheckTokenError,
       "play-integrity-unavailable" => localizations.playIntegrityUnavailableError,
       "invalid-phone-number" => localizations.invalidPhoneNumberError,
+      "too-many-verification-requests" => localizations.tooManyVerificationRequestsError,
+      "verification-code-not-sent" => localizations.verificationCodeNotSentError,
       _ => ex.toString(),
     };
   }

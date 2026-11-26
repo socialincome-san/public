@@ -181,6 +181,8 @@
     },
     "mySurveysTitle": "Mi sɔve dɛm",
     "invalidPhoneNumberError": "Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.",
+    "tooManyVerificationRequestsError": "Tumɔs tray fɔ tray. Duya wet fɔ sɔm minit ɛn tray bak.",
+    "verificationCodeNotSentError": "Wi nɔ bin ebul fɔ sɛn di kɔd fɔ di verifyeshɔn. Duya tray bak leta.",
     "failedSentVerificationCodeError": "Failed fɔ sɛn verifyeshɔn kɔd. Duya chɛk yu Intanɛt ɛn tray bak. {errorMessage}",
     "@failedSentVerificationCodeError": {
         "placeholders": {

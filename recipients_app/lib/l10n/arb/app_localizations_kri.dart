@@ -395,6 +395,12 @@ class AppLocalizationsKri extends AppLocalizations {
   String get invalidPhoneNumberError => 'Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.';
 
   @override
+  String get tooManyVerificationRequestsError => 'Tumɔs tray fɔ tray. Duya wet fɔ sɔm minit ɛn tray bak.';
+
+  @override
+  String get verificationCodeNotSentError => 'Wi nɔ bin ebul fɔ sɛn di kɔd fɔ di verifyeshɔn. Duya tray bak leta.';
+
+  @override
   String failedSentVerificationCodeError(String errorMessage) {
     return 'Failed fɔ sɛn verifyeshɔn kɔd. Duya chɛk yu Intanɛt ɛn tray bak. $errorMessage';
   }
