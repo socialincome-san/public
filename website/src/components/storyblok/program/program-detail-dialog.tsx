@@ -41,10 +41,13 @@ export const ProgramDetailDialog = ({
 			<Dialog open={isOpen} onOpenChange={handleOpenChange}>
 				<DialogContent size="lg" closeLabel={closeAriaLabel}>
 					<DialogHeader>
-						<div className="flex items-start justify-between gap-4">
-							<DialogTitle size="lg">{title}</DialogTitle>
+						{/* On mobile the actions drop below the title, so they never run under the close button */}
+						<div className="flex flex-col items-start gap-3 sm:flex-row sm:justify-between sm:gap-4">
+							<div className="pr-8 sm:pr-0">
+								<DialogTitle size="lg">{title}</DialogTitle>
+							</div>
 							{headerActions ? (
-								<div className="mr-4 flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">{headerActions}</div>
+								<div className="flex flex-wrap items-center gap-2 sm:mr-4 sm:shrink-0">{headerActions}</div>
 							) : null}
 						</div>
 					</DialogHeader>

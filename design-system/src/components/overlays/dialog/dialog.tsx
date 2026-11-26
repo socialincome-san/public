@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { X } from 'lucide-react';
+import { ArrowLeft, X } from 'lucide-react';
 import * as React from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 
@@ -18,7 +18,9 @@ const subscribeToDrawerQuery = (onChange: () => void) => {
 	return () => query.removeEventListener('change', onChange);
 };
 
-const DialogModeContext = React.createContext({ isDrawer: false, dismissible: true });
+const DialogModeContext = React.createContext({ isDrawer: false, dismissible: true, open: false });
+// Whether content scrolls beneath the top of the dialog, so its header can show the scroll shadow
+const DialogScrolledContext = React.createContext(false);
 
 type DialogProps = {
 	open: boolean;
@@ -50,7 +52,7 @@ const Dialog = ({ open, onOpenChange, dismissible = true, drawerOnMobile = true,
 	const isDrawer = openedAsDrawer ?? matchesDrawer ?? false;
 
 	return (
-		<DialogModeContext value={{ isDrawer, dismissible }}>
+		<DialogModeContext value={{ isDrawer, dismissible, open }}>
 			{isDrawer ? (
 				<DrawerPrimitive.Root open={open} onOpenChange={onOpenChange} dismissible={dismissible} autoFocus>
 					{children}
@@ -65,7 +67,15 @@ const Dialog = ({ open, onOpenChange, dismissible = true, drawerOnMobile = true,
 };
 
 // z-[110] keeps dialogs above the navigation (including the mobile menu overlay at z-100)
-const overlayClassName = 'bg-foreground/80 fixed inset-0 z-[110]';
+const overlayVariants = cva('fixed inset-0 z-[110]', {
+	variants: {
+		backdrop: {
+			default: 'bg-foreground/80',
+			// Hides the page, e.g. for a video that should hold all attention
+			opaque: 'bg-foreground',
+		},
+	},
+});
 
 const dialogFrameVariants = cva(
 	'text-primary data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-[110] flex max-h-[90dvh] w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] flex-col overflow-y-auto overscroll-contain rounded-3xl duration-200',
@@ -119,17 +129,28 @@ const paddingVariants = cva('', {
 	},
 });
 
-const closeButtonClassName =
-	'ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden focus-visible:ring-[3px] disabled:pointer-events-none sm:top-6 sm:right-6';
+const roundButtonClassName =
+	'border-input/60 bg-background text-foreground hover:bg-muted focus-visible:ring-ring grid size-10 shrink-0 place-items-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:outline-hidden [&_svg]:size-5';
+
+const closeButtonPositionClassName = 'absolute top-4 right-4 sm:top-6 sm:right-6';
 
 type DialogContentProps = WithoutClassName<React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>> & {
 	size?: 'sm' | 'md' | 'lg' | 'xl';
 	surface?: 'default' | 'gradient';
 	padding?: 'default' | 'vertical' | 'none';
 	height?: 'auto' | 'fixed' | 'full';
+	backdrop?: 'default' | 'opaque';
 	/** For confirmations whose footer already offers a way out. */
 	hideCloseButton?: boolean;
 	closeLabel?: string;
+	/** Shows a back button in a toolbar above the content, for dialogs with steps. */
+	onBack?: () => void;
+	backLabel?: string;
+	/** Centered between the back and close buttons, e.g. a segmented toggle. Also turns on the toolbar. */
+	toolbar?: React.ReactNode;
+	/** Next to the back button and the close button, shown only in the centered dialog, e.g. a title and a currency select. */
+	toolbarStart?: React.ReactNode;
+	toolbarEnd?: React.ReactNode;
 };
 
 const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Content>, DialogContentProps>(
@@ -140,8 +161,14 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 			surface = 'default',
 			padding = 'default',
 			height = 'auto',
+			backdrop = 'default',
 			hideCloseButton = false,
 			closeLabel = 'Close',
+			onBack,
+			backLabel = 'Back',
+			toolbar,
+			toolbarStart,
+			toolbarEnd,
 			onInteractOutside,
 			onEscapeKeyDown,
 			onOpenAutoFocus,
@@ -149,23 +176,62 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 		},
 		ref,
 	) => {
-		const { isDrawer, dismissible } = React.use(DialogModeContext);
-		const closeButton = dismissible && !hideCloseButton && (
-			<DialogPrimitive.Close className={closeButtonClassName}>
-				<X className="h-6 w-6" aria-hidden />
+		const { isDrawer, dismissible, open } = React.use(DialogModeContext);
+		// Captured from any scrolling element inside, as content such as a wizard may scroll in its own container
+		const [isScrolled, setIsScrolled] = React.useState(false);
+		// The content stays mounted while it animates out, so reopening would otherwise start with the shadow
+		if (!open && isScrolled) {
+			setIsScrolled(false);
+		}
+		const trackScroll = (event: React.UIEvent<HTMLDivElement>) => {
+			if (event.target instanceof HTMLElement) {
+				setIsScrolled(event.target.scrollTop > 0);
+			}
+		};
+		const showClose = dismissible && !hideCloseButton;
+		const sideSlots = isDrawer ? null : { start: toolbarStart, end: toolbarEnd };
+		const hasToolbar =
+			onBack !== undefined || toolbar !== undefined || sideSlots?.start !== undefined || sideSlots?.end !== undefined;
+		const close = (
+			<DialogPrimitive.Close className={roundButtonClassName}>
+				<X aria-hidden />
 				<span className="sr-only">{closeLabel}</span>
 			</DialogPrimitive.Close>
+		);
+		const closeButton = showClose && !hasToolbar && <div className={closeButtonPositionClassName}>{close}</div>;
+		const toolbarRow = hasToolbar && (
+			// Once content scrolls beneath: a strip of the surface as bottom padding, then a soft shadow, without moving the content
+			<div
+				data-scrolled={isScrolled}
+				className="after:from-foreground/10 before:bg-background relative z-10 -mx-(--dialog-px) grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 pt-4 before:pointer-events-none before:absolute before:inset-x-0 before:top-full before:h-3 before:opacity-0 before:transition-opacity after:pointer-events-none after:absolute after:inset-x-0 after:top-[calc(100%+--spacing(3))] after:h-3 after:bg-linear-to-b after:to-transparent after:opacity-0 after:transition-opacity data-[scrolled=true]:before:opacity-100 data-[scrolled=true]:after:opacity-100 sm:px-6 sm:pt-6"
+			>
+				<div className="flex min-w-0 items-center gap-4">
+					{onBack ? (
+						<button type="button" onClick={onBack} className={roundButtonClassName} data-testid="dialog-back">
+							<ArrowLeft aria-hidden />
+							<span className="sr-only">{backLabel}</span>
+						</button>
+					) : null}
+					{sideSlots?.start}
+				</div>
+				<div className="flex min-w-0 justify-center">{toolbar}</div>
+				<div className="flex min-w-0 items-center justify-end gap-3">
+					{sideSlots?.end}
+					{showClose ? close : null}
+				</div>
+			</div>
 		);
 
 		if (isDrawer) {
 			return (
 				<DrawerPrimitive.Portal>
-					<DrawerPrimitive.Overlay className={overlayClassName} />
+					<DrawerPrimitive.Overlay className={overlayVariants({ backdrop })} />
 					<DrawerPrimitive.Content
 						ref={ref}
 						className={cn(drawerFrameVariants({ height }), surfaceVariants({ surface }))}
 						onInteractOutside={onInteractOutside}
 						onEscapeKeyDown={onEscapeKeyDown}
+						onScrollCapture={trackScroll}
 						onOpenAutoFocus={(event) => {
 							onOpenAutoFocus?.(event);
 							// Focusing the first field would open the keyboard over the drawer, so focus the drawer itself
@@ -176,12 +242,16 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 						}}
 						{...props}
 					>
-						{dismissible && <div aria-hidden className="bg-border mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full" />}
+						{/* Sits on the overlay above the drawer, so it stays visible on any drawer surface */}
+						{dismissible && (
+							<div aria-hidden className="absolute -top-5 left-1/2 h-1 w-16 -translate-x-1/2 rounded-full bg-white/90" />
+						)}
+						{toolbarRow}
 						{/* The drawer itself blocks touch scrolling for its swipe gesture, so the content scrolls in here */}
 						<div
 							className={cn('flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain', paddingVariants({ padding }))}
 						>
-							{children}
+							<DialogScrolledContext value={isScrolled}>{children}</DialogScrolledContext>
 						</div>
 						{closeButton}
 					</DrawerPrimitive.Content>
@@ -193,7 +263,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 			<DialogPrimitive.Portal>
 				<DialogPrimitive.Overlay
 					className={cn(
-						overlayClassName,
+						overlayVariants({ backdrop }),
 						'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
 					)}
 				/>
@@ -213,9 +283,11 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 						onEscapeKeyDown?.(event);
 					}}
 					onOpenAutoFocus={onOpenAutoFocus}
+					onScrollCapture={trackScroll}
 					{...props}
 				>
-					{children}
+					{toolbarRow}
+					<DialogScrolledContext value={isScrolled}>{children}</DialogScrolledContext>
 					{closeButton}
 				</DialogPrimitive.Content>
 			</DialogPrimitive.Portal>
@@ -229,12 +301,26 @@ type DialogSectionProps = WithoutClassName<React.HTMLAttributes<HTMLDivElement>>
 	divided?: boolean;
 };
 
-const DialogHeader = ({ divided = true, ...props }: DialogSectionProps) => (
-	<div
-		className={cn('-mx-(--dialog-px) flex shrink-0 flex-col gap-1.5 px-6 pr-12 text-left', divided && 'border-b pb-6')}
-		{...props}
-	/>
-);
+type DialogHeaderProps = WithoutClassName<React.HTMLAttributes<HTMLDivElement>> & {
+	/** Separates the header from the body: the scroll shadow of the toolbar, once content scrolls beneath. Turn off for compact dialogs such as confirmations. */
+	divided?: boolean;
+};
+
+const DialogHeader = ({ divided = true, ...props }: DialogHeaderProps) => {
+	const isScrolled = React.use(DialogScrolledContext);
+
+	return (
+		<div
+			data-scrolled={divided && isScrolled}
+			className={cn(
+				'-mx-(--dialog-px) flex shrink-0 flex-col gap-1.5 px-6 pr-16 text-left',
+				divided &&
+					'after:from-foreground/10 relative z-10 pb-6 after:pointer-events-none after:absolute after:inset-x-0 after:top-full after:h-3 after:bg-linear-to-b after:to-transparent after:opacity-0 after:transition-opacity data-[scrolled=true]:after:opacity-100',
+			)}
+			{...props}
+		/>
+	);
+};
 DialogHeader.displayName = 'DialogHeader';
 
 const DialogBody = (props: WithoutClassName<React.HTMLAttributes<HTMLDivElement>>) => (
@@ -258,6 +344,7 @@ const dialogTitleVariants = cva('text-primary leading-snug font-medium tracking-
 		size: {
 			default: 'text-xl',
 			lg: 'text-xl sm:text-2xl',
+			xl: 'text-2xl',
 		},
 		visuallyHidden: {
 			true: 'sr-only',
