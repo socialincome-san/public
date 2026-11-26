@@ -10,6 +10,7 @@ import {
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
+import { getOperatorProgramCountriesForUser } from '@/modules/program-access/program-access.service';
 import { recipientAuditedEntity } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import * as candidateRepository from './candidate.repository.read';
@@ -59,6 +60,27 @@ export const getPaginatedCandidateTableView = async (
 	}
 
 	return getPaginatedCandidates(query);
+};
+
+export const getPaginatedCandidateTableViewForOperator = async (
+	userId: string,
+	query: CandidatesTableQuery,
+): Promise<Result<CandidatesPaginatedTableView>> => {
+	const countriesResult = await getOperatorProgramCountriesForUser(userId);
+	if (!countriesResult.success) {
+		return resultFail(countriesResult.error);
+	}
+	if (!countriesResult.data.length) {
+		return resultOk({
+			tableRows: [],
+			totalCount: 0,
+			countryFilterOptions: [],
+			genderFilterOptions: [],
+			localPartnerFilterOptions: [],
+		});
+	}
+
+	return getPaginatedCandidates(query, undefined, countriesResult.data);
 };
 
 export const getPaginatedCandidateTableViewByLocalPartner = async (
@@ -425,6 +447,7 @@ export const assignRandomCandidatesToProgram = async (
 const getPaginatedCandidates = async (
 	query: CandidatesTableQuery,
 	localPartnerId?: string,
+	allowedCountryCodes?: CountryCode[],
 ): Promise<Result<CandidatesPaginatedTableView>> => {
 	try {
 		const country = Object.values(CountryCode).find((value) => value === query.country?.trim());
@@ -434,6 +457,7 @@ const getPaginatedCandidates = async (
 			localPartnerId,
 			country,
 			gender,
+			allowedCountryCodes,
 		});
 		const tableRows: CandidatesTableViewRow[] = candidates.map((candidate) => ({
 			id: candidate.id,
